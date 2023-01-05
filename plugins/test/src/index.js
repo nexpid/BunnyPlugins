@@ -1,4 +1,4 @@
-import { logger } from "vendetta";
+const { logger } = vendetta;
 
 export function onLoad() {
     logger.log("Hello world!");
