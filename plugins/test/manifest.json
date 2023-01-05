@@ -1,0 +1,14 @@
+{
+    "name": "Template Plugin",
+    "description": "A plugin for use as a template.",
+    "authors": [
+        {
+            "name": "You!",
+            "id": "YOUR_ID_HERE"
+        }
+    ],
+    "main": "src/index.js",
+    "vendetta": {
+        "icon": "ic_mail"
+    }
+}
