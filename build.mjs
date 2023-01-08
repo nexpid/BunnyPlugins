@@ -37,9 +37,9 @@ for (let plug of await readdir("./plugins")) {
         manifest.main = outName;
         await writeFile(`./dist/${plug}/manifest.json`, JSON.stringify(manifest));
     
-        console.log("Build successful!");
+        console.log(`Successfully built ${manifest.name}!`);
     } catch (e) {
-        console.error("Build failed...", e);
+        console.error("Failed to build plugin...", e);
         process.exit(1);
     }
 }
