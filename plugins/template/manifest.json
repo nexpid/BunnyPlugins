@@ -9,6 +9,6 @@
     ],
     "main": "src/index.js",
     "vendetta": {
-        "icon": "ic_mail"
+        "icon": "ic_badge_staff"
     }
 }
