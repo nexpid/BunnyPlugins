@@ -1,4 +1,4 @@
-const { FormText } = vendetta.ui.components.Forms;
+import { FormText } from "@vendetta/ui/components/Forms";
 
 export default () => (
     <FormText>

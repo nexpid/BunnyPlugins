@@ -1,4 +1,4 @@
-const { logger } = vendetta;
+import { logger } from "@vendetta";
 import Settings from "./Settings";
 
 export default {

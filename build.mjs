@@ -26,6 +26,14 @@ for (let plug of await readdir("./plugins")) {
     
         await bundle.write({
             file: outPath,
+            globals(id) {
+                if (id.startsWith("@vendetta")) return id.substring(1).replace(/\//g, ".");
+                const map = {
+                    react: "window.React",
+                };
+
+                return map[id] || null;
+            },
             format: "iife",
             compact: true,
             exports: "named",
