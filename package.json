@@ -9,6 +9,17 @@
 		"esbuild": "^0.16.14",
 		"rollup": "^3.9.1",
 		"rollup-plugin-esbuild": "^5.0.0",
+        "@react-native-clipboard/clipboard": "1.10.0",
+        "@types/react": "18.0.27",
+        "@types/react-native": "0.70.6",
 		"vendetta-types": "*"
-	}
+	},
+    "pnpm": {
+        "peerDependencyRules": {
+            "ignoreMissing": [
+                "react",
+                "react-native"
+            ]
+        }
+    }
 }
