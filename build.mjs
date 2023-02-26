@@ -1,9 +1,11 @@
-import { rollup } from "rollup";
 import { readFile, writeFile, readdir } from "fs/promises";
 import { createHash } from "crypto";
+
+import { rollup } from "rollup";
+import { swc } from "rollup-plugin-swc3";
 import esbuild from "rollup-plugin-esbuild";
-import nodeResolve from "@rollup/plugin-node-resolve";
 import commonjs from "@rollup/plugin-commonjs";
+import nodeResolve from "@rollup/plugin-node-resolve";
 
 for (let plug of await readdir("./plugins")) {
     const manifest = JSON.parse(await readFile(`./plugins/${plug}/manifest.json`));
@@ -16,10 +18,16 @@ for (let plug of await readdir("./plugins")) {
             plugins: [
                 nodeResolve(),
                 commonjs(),
-                esbuild({
-                    target: "esnext",
-                    minify: true,
-                })
+                swc({
+                    env: {
+                        targets: "defaults",
+                        include: [
+                            "transform-classes",
+                            "transform-arrow-functions",
+                        ],
+                    },
+                }),
+                esbuild({ minify: true }),
             ],
         });
     

@@ -6,9 +6,11 @@
 	"devDependencies": {
 		"@rollup/plugin-commonjs": "^24.0.0",
 		"@rollup/plugin-node-resolve": "^15.0.1",
+		"@swc/core": "^1.3.35",
 		"esbuild": "^0.16.14",
 		"rollup": "^3.9.1",
 		"rollup-plugin-esbuild": "^5.0.0",
+		"rollup-plugin-swc3": "^0.8.0",
 		"vendetta-types": "latest"
 	},
 	"pnpm": {
