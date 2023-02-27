@@ -18,6 +18,7 @@ for (let plug of await readdir("./plugins")) {
             plugins: [
                 nodeResolve(),
                 commonjs(),
+                esbuild({ minify: true }),
                 swc({
                     env: {
                         targets: "defaults",
@@ -27,7 +28,6 @@ for (let plug of await readdir("./plugins")) {
                         ],
                     },
                 }),
-                esbuild({ minify: true }),
             ],
         });
     
