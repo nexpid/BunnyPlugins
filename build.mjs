@@ -2,10 +2,40 @@ import { readFile, writeFile, readdir } from "fs/promises";
 import { createHash } from "crypto";
 
 import { rollup } from "rollup";
-import { swc } from "rollup-plugin-swc3";
 import esbuild from "rollup-plugin-esbuild";
 import commonjs from "@rollup/plugin-commonjs";
 import nodeResolve from "@rollup/plugin-node-resolve";
+import swc from "@swc/core";
+
+/** @type import("rollup").InputPluginOption */
+const plugins = [
+    nodeResolve(),
+    commonjs(),
+    {
+        name: "swc",
+        async transform(code, id) {
+            const result = await swc.transform(code, {
+                filename: id,
+                jsc: {
+                    externalHelpers: true,
+                    parser: {
+                        syntax: "typescript",
+                        tsx: true,
+                    },
+                },
+                env: {
+                    targets: "defaults",
+                    include: [
+                        "transform-classes",
+                        "transform-arrow-functions",
+                    ],
+                },
+            });
+            return result.code;
+        },
+    },
+    esbuild({ minify: true }),
+];
 
 for (let plug of await readdir("./plugins")) {
     const manifest = JSON.parse(await readFile(`./plugins/${plug}/manifest.json`));
@@ -15,20 +45,7 @@ for (let plug of await readdir("./plugins")) {
         const bundle = await rollup({
             input: `./plugins/${plug}/${manifest.main}`,
             onwarn: () => {},
-            plugins: [
-                nodeResolve(),
-                commonjs(),
-                esbuild({ minify: true }),
-                swc({
-                    env: {
-                        targets: "defaults",
-                        include: [
-                            "transform-classes",
-                            "transform-arrow-functions",
-                        ],
-                    },
-                }),
-            ],
+            plugins,
         });
     
         await bundle.write({
