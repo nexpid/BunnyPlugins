@@ -1,4 +1,5 @@
 import { readFile, writeFile, readdir } from "fs/promises";
+import { extname } from "path";
 import { createHash } from "crypto";
 
 import { rollup } from "rollup";
@@ -7,6 +8,8 @@ import commonjs from "@rollup/plugin-commonjs";
 import nodeResolve from "@rollup/plugin-node-resolve";
 import swc from "@swc/core";
 
+const extensions = [".js", ".jsx", ".mjs", ".ts", ".tsx", ".cts", ".mts"];
+
 /** @type import("rollup").InputPluginOption */
 const plugins = [
     nodeResolve(),
@@ -14,13 +17,21 @@ const plugins = [
     {
         name: "swc",
         async transform(code, id) {
+            const ext = extname(id);
+            if (!extensions.includes(ext)) return null;
+
+            const ts = ext.includes("ts");
+            const tsx = ts ? ext.endsWith("x") : undefined;
+            const jsx = !ts ? ext.endsWith("x") : undefined;
+
             const result = await swc.transform(code, {
                 filename: id,
                 jsc: {
                     externalHelpers: true,
                     parser: {
-                        syntax: "typescript",
-                        tsx: true,
+                        syntax: ts ? "typescript" : "ecmascript",
+                        tsx,
+                        jsx,
                     },
                 },
                 env: {
