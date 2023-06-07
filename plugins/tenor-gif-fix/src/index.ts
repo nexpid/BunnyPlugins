@@ -6,6 +6,9 @@ export default {
     FluxDispatcher.subscribe("DOWNLOAD_FILE", (...hi) =>
       logger.log("MAYBE IT WORKED??", ...hi)
     );
+    logger.log("super awesome plugin enabled");
   },
-  onUnload: () => {},
+  onUnload: () => {
+    logger.log("super awesome plugin disabled");
+  },
 };
