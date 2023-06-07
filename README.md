@@ -1,7 +1,7 @@
-# Vendetta Plugins Template
-This repo contains a template for creating [Vendetta](https://github.com/vendetta-mod/Vendetta) plugins.
+# Vendetta Plugins
 
-# How to install?
-Paste a plugin URL into the Plugins page of Vendetta, following a basic format of:
+A repo of all my horrible plugins for Vendetta.
 
-https://`YOUR_GITHUB_USERNAME`.github.io/`REPO_NAME`/`PLUGIN_NAME`
+# List
+
+- TenorGifFix — copies Tenor links as gifs instead of videos [\[copy link\]](https://Gabe616.github.io/VendettaPlugins/tenor-gif-fix)

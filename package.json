@@ -1,26 +1,29 @@
 {
-	"private": true,
-	"scripts": {
-		"build": "node build.mjs"
-	},
-	"dependencies": {
-		"@swc/helpers": "^0.4.14"
-	},
-	"devDependencies": {
-		"@rollup/plugin-commonjs": "^24.0.0",
-		"@rollup/plugin-node-resolve": "^15.0.1",
-		"@swc/core": "^1.3.35",
-		"esbuild": "^0.16.14",
-		"rollup": "^3.9.1",
-		"rollup-plugin-esbuild": "^5.0.0",
-		"vendetta-types": "latest"
-	},
-	"pnpm": {
-		"peerDependencyRules": {
-			"ignoreMissing": [
-				"react",
-				"react-native"
-			]
-		}
-	}
+  "private": true,
+  "scripts": {
+    "build": "node build.mjs"
+  },
+  "dependencies": {
+    "@swc/helpers": "^0.4.14"
+  },
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^24.0.0",
+    "@rollup/plugin-node-resolve": "^15.0.1",
+    "@swc/core": "^1.3.35",
+    "esbuild": "^0.16.14",
+    "rollup": "^3.9.1",
+    "rollup-plugin-esbuild": "^5.0.0",
+    "vendetta-types": "latest"
+  },
+  "pnpm": {
+    "peerDependencyRules": {
+      "ignoreMissing": [
+        "react",
+        "react-native"
+      ]
+    }
+  },
+  "repository": "https://github.com/Gabe616/VendettaPlugins",
+  "author": "Gabe616 (https://github.com/Gabe616)",
+  "license": "MIT"
 }
