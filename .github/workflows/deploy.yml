@@ -22,7 +22,7 @@ jobs:
       - run: npm install --global yarn
 
       - name: Install deps
-        run: yarn i
+        run: yarn install
 
       - name: Build plugin(s)
         run: node ./build.mjs
