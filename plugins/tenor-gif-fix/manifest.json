@@ -1,10 +1,14 @@
 {
   "name": "TenorGifFix",
-  "description": "Copies Tenor links as gifs instead of videos",
+  "description": "Downloads Tenor links as GIFs instead of MP4s (thanks to rosie <3)",
   "authors": [
     {
       "name": "nexpid",
       "id": "853550207039832084"
+    },
+    {
+      "name": "acquite",
+      "id": "581573474296791211"
     }
   ],
   "main": "src/index.ts",
