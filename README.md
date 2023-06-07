@@ -1,6 +1,6 @@
 # Vendetta Plugins
 
-A repo of all my horrible plugins for Vendetta.
+A collection of all my horrible plugins for Vendetta
 
 # List
 
