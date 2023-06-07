@@ -1,14 +1,8 @@
-import { logger } from "@vendetta";
-import { FluxDispatcher } from "@vendetta/metro/common";
-
 export default {
   onLoad: () => {
-    FluxDispatcher.subscribe("DOWNLOAD_FILE", (...hi) =>
-      logger.log("MAYBE IT WORKED??", ...hi)
-    );
-    logger.log("super awesome plugin enabled");
+    console.log("hi");
   },
   onUnload: () => {
-    logger.log("super awesome plugin disabled");
+    console.log("test");
   },
 };
