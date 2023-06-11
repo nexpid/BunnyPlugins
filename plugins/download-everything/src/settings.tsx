@@ -1,3 +1,4 @@
+import { findByProps } from "@vendetta/metro";
 import { storage } from "@vendetta/plugin";
 import { useProxy } from "@vendetta/storage";
 import { getAssetIDByName } from "@vendetta/ui/assets";
@@ -15,8 +16,9 @@ export const vstorage = storage as Record<
   boolean | undefined
 >;
 
-const { ScrollView } = General;
-const { FormSection, FormDivider, FormIcon, FormSwitchRow } = Forms;
+const { ScrollView, View } = General;
+const { FormDivider, FormIcon, FormSwitchRow } = Forms;
+const { TableRowGroup } = findByProps("TableRowGroup");
 
 export const settingsThing = [
   {
@@ -96,22 +98,24 @@ export default () => {
 
   return (
     <ScrollView>
-      {...settingsThing.map((x) => (
-        <FormSection title={x.title}>
-          {...x.children.map((y) => (
-            <>
-              <FormSwitchRow
-                label={y.name}
-                subLabel={y.action}
-                leading={<FormIcon source={getAssetIDByName(y.icon)} />}
-                onValueChange={(v) => (vstorage[y.key] = v)}
-                value={vstorage[y.key]}
-              />
-              <FormDivider />
-            </>
-          ))}
-        </FormSection>
-      ))}
+      <View style={{ marginTop: 16, marginHorizontal: 16 }}>
+        {...settingsThing.map((x) => (
+          <TableRowGroup title={x.title} hasIcons={false}>
+            {...x.children.map((y) => (
+              <>
+                <FormSwitchRow
+                  label={y.name}
+                  subLabel={y.action}
+                  leading={<FormIcon source={getAssetIDByName(y.icon)} />}
+                  onValueChange={(v) => (vstorage[y.key] = v)}
+                  value={vstorage[y.key]}
+                />
+                <FormDivider />
+              </>
+            ))}
+          </TableRowGroup>
+        ))}
+      </View>
     </ScrollView>
   );
 };
