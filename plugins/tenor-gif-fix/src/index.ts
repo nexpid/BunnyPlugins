@@ -40,7 +40,7 @@ export default {
         if (action !== "MediaShareActionSheet") return;
 
         const data = args?.syncer?.sources?.[0];
-        if (!data) return;
+        if (!data || typeof data.uri !== "string") return;
 
         const parsed = parseURL(data.uri);
         if (parsed) {
