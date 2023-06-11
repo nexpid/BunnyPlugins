@@ -59,3 +59,33 @@ export interface GuildMemberProfile {
   pronouns?: string;
   badges: any[];
 }
+
+// ...
+
+export interface ReactionEvent {
+  channelId: string;
+  messageId: string;
+  userId: string;
+  emoji: { name: string; id?: string; animated?: boolean };
+  burst: boolean;
+  colors: string[];
+  messageAuthorId: string;
+}
+
+// ...
+
+export function getUserAvatar(user: User, animated?: boolean): string {
+  const isPomelo = user.discriminator === "0";
+
+  return user.avatar
+    ? `https://cdn.discordapp.com/avatars/${user.id}/${
+        animated && user.avatar.startsWith("a_")
+          ? `${user.avatar}.gif`
+          : `${user.avatar}.png`
+      }`
+    : `https://cdn.discordapp.com/embed/avatars/${
+        isPomelo
+          ? (parseInt(user.id) >> 22) % 6
+          : parseInt(user.discriminator) % 5
+      }`;
+}
