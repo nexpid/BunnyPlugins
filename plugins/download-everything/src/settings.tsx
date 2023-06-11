@@ -100,20 +100,22 @@ export default () => {
     <ScrollView>
       <View style={{ marginTop: 16, marginHorizontal: 16 }}>
         {...settingsThing.map((x) => (
-          <TableRowGroup title={x.title} hasIcons={false}>
-            {...x.children.map((y) => (
-              <>
-                <FormSwitchRow
-                  label={y.name}
-                  subLabel={y.action}
-                  leading={<FormIcon source={getAssetIDByName(y.icon)} />}
-                  onValueChange={(v) => (vstorage[y.key] = v)}
-                  value={vstorage[y.key]}
-                />
-                <FormDivider />
-              </>
-            ))}
-          </TableRowGroup>
+          <View style={{ marginBottom: 16 }}>
+            <TableRowGroup title={x.title} hasIcons={false}>
+              {...x.children.map((y) => (
+                <>
+                  <FormSwitchRow
+                    label={y.name}
+                    subLabel={y.action}
+                    leading={<FormIcon source={getAssetIDByName(y.icon)} />}
+                    onValueChange={(v) => (vstorage[y.key] = v)}
+                    value={vstorage[y.key]}
+                  />
+                  <FormDivider />
+                </>
+              ))}
+            </TableRowGroup>
+          </View>
         ))}
       </View>
     </ScrollView>
