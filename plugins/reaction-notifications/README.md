@@ -1,3 +1,3 @@
 # ReactionNotifications
 
-plugin status: unfinished
+plugin status: coding paused
