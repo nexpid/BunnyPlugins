@@ -1,6 +1,6 @@
 import { storage } from "@vendetta/plugin";
 import { findByProps } from "@vendetta/metro";
-import Settings, { hosts } from "./settings";
+import settings, { hosts } from "./settings";
 import { patcher } from "@vendetta";
 
 const sendMessage = findByProps("sendMessage", "receiveMessage");
@@ -26,5 +26,5 @@ export default {
     });
   },
   onUnload: () => unpatch?.(),
-  settings: Settings,
+  settings,
 };
