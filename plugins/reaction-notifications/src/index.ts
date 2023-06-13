@@ -2,6 +2,7 @@ import { FluxDispatcher } from "@vendetta/metro/common";
 import settings, { vstorage } from "./settings";
 import { ReactionEvent, User, getUserAvatar } from "../../../types";
 import { findByProps, findByStoreName } from "@vendetta/metro";
+import { storage } from "@vendetta/plugin";
 
 const SelectedChannelStore = findByStoreName("SelectedChannelStore");
 const UserStore = findByStoreName("UserStore");
@@ -32,6 +33,7 @@ const reactionAddHandler = (reaction: ReactionEvent) => {
   const emojiFormatted = reaction.emoji.id
     ? `:${reaction.emoji.name}:`
     : reaction.emoji.name;
+  console.log("debug: send notification");
   // somehow show notification
 };
 
@@ -40,5 +42,5 @@ export default {
     FluxDispatcher.subscribe("MESSAGE_REACTION_ADD", reactionAddHandler),
   onUnload: () =>
     FluxDispatcher.unsubscribe("MESSAGE_REACTION_ADD", reactionAddHandler),
-  settings: settings,
+  settings,
 };
