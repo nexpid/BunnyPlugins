@@ -1,0 +1,14 @@
+{
+  "name": "BetterTimestamps",
+  "description": "Send timestamps using text shortcuts (port from Vencord)",
+  "authors": [
+    {
+      "name": "nexpid",
+      "id": "853550207039832084"
+    }
+  ],
+  "main": "src/index.ts",
+  "vendetta": {
+    "icon": "clock"
+  }
+}

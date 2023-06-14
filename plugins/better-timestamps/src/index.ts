@@ -1,0 +1,89 @@
+import { findByProps, findByStoreName } from "@vendetta/metro";
+import settings, { vstorage } from "./settings";
+import { after, before } from "@vendetta/patcher";
+
+export const ThemeStore = findByStoreName("ThemeStore");
+export const Colors = findByProps("colors", "meta") as {
+  colors: any;
+  meta: {
+    resolveSemanticColor: (theme: string, color: string) => string | undefined;
+  };
+};
+export const MessageSender = findByProps("sendMessage", "receiveMessage");
+export const { parseTimestamp } = findByProps(
+  "parseTimestamp",
+  "unparseTimestamp"
+);
+
+let unpatch;
+
+export default {
+  onLoad: () => {
+    unpatch = before("sendMessage", MessageSender, (args) => {
+      const message = args[1];
+      const content = message?.content as string;
+      if (typeof content !== "string" || typeof message !== "object") return;
+
+      const j = vstorage.reqBackticks ? "`" : "";
+      /*const regex = new RegExp(
+        `${j}${
+          vstorage.reqMinutes
+            ? `(${reg.hour}:${reg.min})${reg.abrv}?`
+            : `(${reg.hour})${reg.abrv}`
+        }${j}`,
+        "gi"
+      );*/
+      const reg = {
+        otN: "[0-9]{1,2}",
+        tN: `[0-9]{2}`,
+        abrv: " ?(AM|PM)",
+      };
+      /*const regex = new RegExp(
+        `${j}([0-9]{1,2}(:[0-9]{2}))? ?(AM|PM)?${j}`,
+        "gi"
+      );*/
+      const regexes = [
+        `(${reg.otN})${reg.abrv}`,
+        `(${reg.otN}:${reg.tN})${reg.abrv}`,
+        `(${reg.otN}:${reg.tN}:${reg.tN})${reg.abrv}`,
+      ].map((x) => new RegExp(`${j}${x}${j}`, "gi"));
+
+      for (const reg of regexes) {
+        message.content = content.replace(
+          reg,
+          (str, time: string, abrv?: string) => {
+            if (parseInt(time) === undefined) return str;
+
+            let [hours, minutes, seconds] = time
+              .split(":")
+              .map((x) => parseInt(x)) as [
+              number,
+              number | undefined,
+              number | undefined
+            ];
+            if (hours < 0 || hours > 24) return str;
+            if (typeof minutes === "number" && (minutes < 0 || minutes > 60))
+              return str;
+            if (typeof seconds === "number" && (seconds < 0 || seconds > 60))
+              return str;
+
+            // why tf does US time work this way
+            if (abrv) {
+              if (abrv.toLowerCase() === "pm" && hours !== 12) hours += 12;
+              else if (abrv.toLowerCase() === "am" && hours === 12) hours = 0;
+            }
+
+            const date = new Date();
+            date.setHours(hours, minutes ?? 0, seconds ?? 0, 0);
+
+            return `<t:${Math.floor(date.getTime() / 1000)}:${
+              vstorage.alwaysLong ? "T" : "t"
+            }>`;
+          }
+        );
+      }
+    });
+  },
+  onUnload: () => unpatch?.(),
+  settings,
+};
