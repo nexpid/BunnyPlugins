@@ -124,16 +124,20 @@ export default () => {
 
   return (
     <ScrollView>
-      <BetterTableRowGroup title="Info" padding={true}>
+      <BetterTableRowGroup
+        title="Info"
+        icon={getAssetIDByName("ic_info_24px")}
+        padding={true}
+      >
         <Text style={style.mainText}>
           Send a message with a time code (in
-          {<Text style={style.boldText}>HH:MM</Text>} or
-          {<Text style={style.boldText}>HH:MM:SS</Text>} format) and
+          {<Text style={style.boldText}> HH:MM</Text>} or
+          {<Text style={style.boldText}> HH:MM:SS</Text>} format) and
           automatically turn it into a timestamp{"\n\n"}
           <TimeExample style={style} />
         </Text>
       </BetterTableRowGroup>
-      <BetterTableRowGroup title="Settings">
+      <BetterTableRowGroup title="Settings" icon={getAssetIDByName("settings")}>
         <FormSwitchRow
           label="Require Backticks"
           subLabel="Require time to be surrounded by backticks"

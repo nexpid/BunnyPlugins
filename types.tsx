@@ -1,9 +1,10 @@
 import { findByProps, findByStoreName } from "@vendetta/metro";
 import { constants, stylesheet } from "@vendetta/metro/common";
 import { semanticColors } from "@vendetta/ui";
-import { General } from "@vendetta/ui/components";
+import { Forms, General } from "@vendetta/ui/components";
 
 const { View, Text } = General;
+const { FormRow } = Forms;
 
 export interface DisplayProfileData {
   displayProfile: {
@@ -106,10 +107,12 @@ export function getUserAvatar(user: User, animated?: boolean): string {
 
 export function BetterTableRowGroup({
   title,
+  icon,
   children,
   padding,
 }: {
   title: string;
+  icon?: number;
   children: React.ReactNode;
   padding?: boolean;
 }): React.JSX.Element {
@@ -133,7 +136,19 @@ export function BetterTableRowGroup({
 
   return (
     <View style={{ marginHorizontal: 16, marginTop: 16 }}>
-      <View style={{ marginBottom: 8 }}>
+      <View
+        style={{
+          marginBottom: 8,
+          flexDirection: "row",
+          justifyContent: "flex-start",
+          alignItems: "center",
+        }}
+      >
+        {icon && (
+          <View style={{ marginRight: 4 }}>
+            <FormRow.Icon source={icon} size="small" />
+          </View>
+        )}
         <Text style={styles.mainText}>{title}</Text>
       </View>
       <View style={styles.main}>
