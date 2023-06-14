@@ -25,23 +25,12 @@ export default {
       if (typeof content !== "string" || typeof message !== "object") return;
 
       const j = vstorage.reqBackticks ? "`" : "";
-      /*const regex = new RegExp(
-        `${j}${
-          vstorage.reqMinutes
-            ? `(${reg.hour}:${reg.min})${reg.abrv}?`
-            : `(${reg.hour})${reg.abrv}`
-        }${j}`,
-        "gi"
-      );*/
+
       const reg = {
         otN: "[0-9]{1,2}",
         tN: `[0-9]{2}`,
         abrv: " ?(AM|PM)",
       };
-      /*const regex = new RegExp(
-        `${j}([0-9]{1,2}(:[0-9]{2}))? ?(AM|PM)?${j}`,
-        "gi"
-      );*/
       const regexes = [
         `(${reg.otN})${reg.abrv}`,
         `(${reg.otN}:${reg.tN})${reg.abrv}`,
