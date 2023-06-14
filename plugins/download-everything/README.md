@@ -1,4 +1,4 @@
 # DownloadEverything
 
-plugin status: unfinished
+plugin status: unfinished  
 debug port: 9585

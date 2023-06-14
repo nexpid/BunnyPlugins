@@ -1,4 +1,4 @@
 # ReactionNotifications
 
-plugin status: coding paused
+plugin status: coding paused  
 debug port: 9586

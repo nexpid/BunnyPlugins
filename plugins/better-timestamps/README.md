@@ -1,4 +1,4 @@
 # BetterTimestamps
 
-plugin status: finished
+plugin status: finished  
 debug port: 9587

@@ -1,4 +1,4 @@
 # FxTwitter
 
-plugin status: discontinued
+plugin status: discontinued  
 debug port: 9584
