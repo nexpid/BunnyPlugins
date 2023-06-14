@@ -21,7 +21,7 @@ export default {
   onLoad: () => {
     unpatch = before("sendMessage", MessageSender, (args) => {
       const message = args[1];
-      const content = message?.content as string;
+      let content = message?.content as string;
       if (typeof content !== "string" || typeof message !== "object") return;
 
       const j = vstorage.reqBackticks ? "`" : "";
@@ -29,20 +29,18 @@ export default {
       const reg = {
         otN: "[0-9]{1,2}",
         tN: `[0-9]{2}`,
-        abrv: " ?(AM|PM)",
+        abrv: "( ?(AM|PM))",
       };
       const regexes = [
+        `(${reg.otN}:${reg.tN}:${reg.tN})${reg.abrv}?`,
+        `(${reg.otN}:${reg.tN})${reg.abrv}?`,
         `(${reg.otN})${reg.abrv}`,
-        `(${reg.otN}:${reg.tN})${reg.abrv}`,
-        `(${reg.otN}:${reg.tN}:${reg.tN})${reg.abrv}`,
       ].map((x) => new RegExp(`${j}${x}${j}`, "gi"));
 
       for (const reg of regexes) {
-        message.content = content.replace(
+        content = content.replace(
           reg,
-          (str, time: string, abrv?: string) => {
-            if (parseInt(time) === undefined) return str;
-
+          (str, time: string, _?: string, abrv?: string) => {
             let [hours, minutes, seconds] = time
               .split(":")
               .map((x) => parseInt(x)) as [
@@ -50,6 +48,7 @@ export default {
               number | undefined,
               number | undefined
             ];
+
             if (hours < 0 || hours > 24) return str;
             if (typeof minutes === "number" && (minutes < 0 || minutes > 60))
               return str;
@@ -71,6 +70,8 @@ export default {
           }
         );
       }
+
+      message.content = content;
     });
   },
   onUnload: () => unpatch?.(),
