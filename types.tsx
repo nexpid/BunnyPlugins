@@ -113,7 +113,7 @@ export function BetterTableRowGroup({
 }: {
   title: string;
   icon?: number;
-  children: React.ReactNode;
+  children?: React.ReactNode;
   padding?: boolean;
 }): React.JSX.Element {
   const styles = stylesheet.createThemedStyleSheet({
