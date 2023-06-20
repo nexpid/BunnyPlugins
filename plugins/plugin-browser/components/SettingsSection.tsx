@@ -14,11 +14,9 @@ export default () => {
       <FormRow
         label="Plugin Browser"
         leading={
-          <FormRow.Icon
-            source={getAssetIDByName("ic_search_items_24px")}
-            trailing={FormRow.Arrow}
-          />
+          <FormRow.Icon source={getAssetIDByName("ic_search_items_24px")} />
         }
+        trailing={FormRow.Arrow}
         onPress={() =>
           navigation.push("VendettaCustomPage", {
             render: PluginBrowserPage,
