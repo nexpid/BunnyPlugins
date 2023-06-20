@@ -49,9 +49,9 @@ export default () => {
 
   if (!data.parsed && !isBusy) {
     setIsBusy(true);
-    safeFetch(
-      "https://raw.githubusercontent.com/vd-plugins/proxy/trunk/plugins-full.json"
-    )
+    safeFetch("https://vd-plugins.github.io/proxy/plugins-full.json", {
+      cache: "no-store",
+    })
       .then((x) => x.json())
       .then((x) => {
         setData({
