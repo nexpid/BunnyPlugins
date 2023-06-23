@@ -35,7 +35,7 @@ const styles = stylesheet.createThemedStyleSheet({
 
 export default (props: props) => {
   //@ts-ignore react is a UMD global 🤓
-  const [rerender, forceRerender] = React.useState(0);
+  const [, forceUpdate] = React.useReducer((x) => ~x, 0);
 
   return (
     <RN.View style={[styles.card, { marginBottom: 10 }]}>
@@ -52,7 +52,7 @@ export default (props: props) => {
               <SuperAwesomeIconEl
                 icon={icon}
                 onPress={() => {
-                  onPress(() => forceRerender(rerender + 1));
+                  onPress(() => forceUpdate());
                 }}
                 style="card"
                 destructive={destructive ?? false}
