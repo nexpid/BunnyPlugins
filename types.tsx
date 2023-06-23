@@ -3,6 +3,7 @@ import { constants, stylesheet } from "@vendetta/metro/common";
 import { semanticColors } from "@vendetta/ui";
 import { Forms, General } from "@vendetta/ui/components";
 
+const { TextStyleSheet } = findByProps("TextStyleSheet");
 const { View, Text } = General;
 const { FormRow } = Forms;
 
@@ -162,4 +163,28 @@ export function BetterTableRowGroup({
       </View>
     </View>
   );
+}
+
+export function LineDivider(): React.JSX.Element {
+  const styles = stylesheet.createThemedStyleSheet({
+    line: {
+      width: "100%",
+      height: 2,
+      backgroundColor: resolveSemanticColor(semanticColors.BACKGROUND_ACCENT),
+      marginTop: 16,
+      marginBottom: 16,
+    },
+  });
+
+  return <View style={styles.line} />;
+}
+
+export namespace RichText {
+  export function Bold({
+    children,
+  }: {
+    children?: (string | React.JSX.Element) | (string | React.JSX.Element)[];
+  }): React.JSX.Element {
+    return <Text style={TextStyleSheet["text-md/bold"]}>{children}</Text>;
+  }
 }
