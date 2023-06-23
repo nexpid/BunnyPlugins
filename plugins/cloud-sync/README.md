@@ -1,0 +1,3 @@
+# CloudSync
+
+plugin status: finished
