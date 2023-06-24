@@ -1,7 +1,7 @@
 import { ReactNative as RN, stylesheet } from "@vendetta/metro/common";
 import { semanticColors } from "@vendetta/ui";
 import { Forms } from "@vendetta/ui/components";
-import SuperAwesomeIcon from "./SuperAwesomeIcon";
+import { SuperAwesomeIcon } from "../../../types";
 
 const { FormRow } = Forms;
 

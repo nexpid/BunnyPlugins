@@ -3,7 +3,6 @@ import {
   ReactNative as RN,
   stylesheet,
 } from "@vendetta/metro/common";
-import SuperAwesomeIcon from "./SuperAwesomeIcon";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { PluginsFullJson } from "../src/types";
 import { safeFetch } from "@vendetta/utils";
@@ -15,6 +14,7 @@ import { openProfile, refetchPlugin } from "../src";
 import { showToast } from "@vendetta/ui/toasts";
 import { semanticColors } from "@vendetta/ui";
 import { findByProps } from "@vendetta/metro";
+import { SuperAwesomeIcon } from "../../../types";
 
 const { showSimpleActionSheet } = findByProps("showSimpleActionSheet");
 const { TextStyleSheet } = findByProps("TextStyleSheet");
