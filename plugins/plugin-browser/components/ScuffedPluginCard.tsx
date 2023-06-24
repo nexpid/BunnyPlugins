@@ -1,7 +1,7 @@
 import { ReactNative as RN, stylesheet } from "@vendetta/metro/common";
 import { semanticColors } from "@vendetta/ui";
 import { Forms } from "@vendetta/ui/components";
-import { SuperAwesomeIconEl } from "./SuperAwesomeIcon";
+import SuperAwesomeIcon from "./SuperAwesomeIcon";
 
 const { FormRow } = Forms;
 
@@ -49,7 +49,7 @@ export default (props: props) => {
         trailing={
           <RN.View style={styles.actions}>
             {props.actions?.().map(({ icon, onPress, destructive }) => (
-              <SuperAwesomeIconEl
+              <SuperAwesomeIcon
                 icon={icon}
                 onPress={() => {
                   onPress(() => forceUpdate());

@@ -24,12 +24,7 @@ const styles = stylesheet.createThemedStyleSheet({
   },
 });
 
-export const SuperAwesomeIconEl = ({
-  onPress,
-  icon,
-  style,
-  destructive,
-}: props) => (
+export default ({ onPress, icon, style, destructive }: props) => (
   <RN.TouchableOpacity onPress={onPress}>
     <RN.Image
       style={[
@@ -40,9 +35,3 @@ export const SuperAwesomeIconEl = ({
     />
   </RN.TouchableOpacity>
 );
-
-export default ({ onPress, icon, style }: props) => {
-  return () => {
-    return <SuperAwesomeIconEl onPress={onPress} icon={icon} style={style} />;
-  };
-};

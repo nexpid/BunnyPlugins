@@ -1,7 +1,6 @@
 import {
   NavigationNative,
   ReactNative as RN,
-  constants,
   stylesheet,
 } from "@vendetta/metro/common";
 import SuperAwesomeIcon from "./SuperAwesomeIcon";
@@ -17,6 +16,7 @@ import { showToast } from "@vendetta/ui/toasts";
 import { semanticColors } from "@vendetta/ui";
 import { findByProps } from "@vendetta/metro";
 
+const { showSimpleActionSheet } = findByProps("showSimpleActionSheet");
 const { TextStyleSheet } = findByProps("TextStyleSheet");
 const styles = stylesheet.createThemedStyleSheet({
   text: {
@@ -29,12 +29,21 @@ const styles = stylesheet.createThemedStyleSheet({
   },
 });
 
-const { Text } = General;
+const { Text, View } = General;
+
+enum Filter {
+  Newest = "Newest",
+  Oldest = "Oldest",
+  Alphabetical = "Alphabetical",
+  ReverseAlphabetical = "Reverse Alphabetical",
+}
 
 export default () => {
   const busyPlugins = {};
   //@ts-ignore react is a UMD global 🤓
   const [isBusy, setIsBusy] = React.useState(false);
+  //@ts-ignore react is a UMD global 🤓
+  const [filter, setFilter] = React.useState(Filter.Newest);
   //@ts-ignore react is a UMD global 🤓
   const [data, setData] = React.useState<{ parsed?: PluginsFullJson }>({});
   //@ts-ignore react is a UMD global 🤓
@@ -43,6 +52,7 @@ export default () => {
   //@ts-ignore react is a UMD global 🤓
   React.useEffect(() => {
     setSearch("");
+    setFilter(Filter.Newest);
   }, []);
 
   const navigation = NavigationNative.useNavigation();
@@ -55,7 +65,7 @@ export default () => {
       .then((x) => x.json())
       .then((x) => {
         setData({
-          parsed: x.reverse(),
+          parsed: x,
         });
         setIsBusy(false);
       });
@@ -63,16 +73,49 @@ export default () => {
 
   navigation.setOptions({
     title: "Plugin Browser",
-    headerRight: SuperAwesomeIcon({
-      onPress: () => !isBusy && setData({ parsed: undefined }),
-      icon: getAssetIDByName("ic_sync_24px"),
-      style: "header",
-    }),
+    headerRight: () => (
+      <View style={{ flexDirection: "row-reverse" }}>
+        <SuperAwesomeIcon
+          onPress={() => !isBusy && setData({ parsed: undefined })}
+          icon={getAssetIDByName("ic_sync_24px")}
+          style="header"
+        />
+        <SuperAwesomeIcon
+          onPress={() =>
+            !isBusy &&
+            showSimpleActionSheet({
+              key: "CardOverflow",
+              options: Object.values(Filter).map((x) => ({
+                label: x,
+                onPress: () => setFilter(x),
+              })),
+            })
+          }
+          icon={getAssetIDByName("ic_filter")}
+          style="header"
+        />
+      </View>
+    ),
   });
 
-  return isBusy || !data.parsed ? (
-    <RN.ActivityIndicator size={"large"} style={{ flex: 1 }} />
-  ) : (
+  if (isBusy || !data.parsed)
+    return <RN.ActivityIndicator size={"large"} style={{ flex: 1 }} />;
+
+  let sortedData = data.parsed.filter(
+    (i) =>
+      i.name?.toLowerCase().includes(search) ||
+      i.authors?.some((x) => x.name?.toLowerCase().includes(search)) ||
+      i.description?.toLowerCase().includes(search)
+  );
+
+  if ([Filter.Alphabetical, Filter.ReverseAlphabetical].includes(filter))
+    sortedData = sortedData.sort((a, b) =>
+      a.name < b.name ? -1 : a.name > b.name ? 1 : 0
+    );
+  if ([Filter.ReverseAlphabetical, Filter.Newest].includes(filter))
+    sortedData.reverse();
+
+  return (
     <RN.FlatList
       ListHeaderComponent={
         <Search
@@ -82,12 +125,7 @@ export default () => {
       }
       style={{ paddingHorizontal: 10, paddingTop: 10 }}
       contentContainerStyle={{ paddingBottom: 20 }}
-      data={data.parsed.filter(
-        (i) =>
-          i.name?.toLowerCase().includes(search) ||
-          i.authors?.some((x) => x.name?.toLowerCase().includes(search)) ||
-          i.description?.toLowerCase().includes(search)
-      )}
+      data={sortedData}
       renderItem={({ item, index }) => {
         return (
           <ScuffedPluginCard
