@@ -1,5 +1,9 @@
 import { findByProps, findByStoreName } from "@vendetta/metro";
-import { constants, stylesheet } from "@vendetta/metro/common";
+import {
+  ReactNative as RN,
+  constants,
+  stylesheet,
+} from "@vendetta/metro/common";
 import { semanticColors } from "@vendetta/ui";
 import { Forms, General } from "@vendetta/ui/components";
 
@@ -187,4 +191,44 @@ export namespace RichText {
   }): React.JSX.Element {
     return <Text style={TextStyleSheet["text-md/bold"]}>{children}</Text>;
   }
+}
+
+export function SuperAwesomeIcon({
+  onPress,
+  icon,
+  style,
+  destructive,
+}: {
+  onPress?: () => void;
+  destructive?: boolean;
+  icon: number;
+  style: "header" | "card";
+}): React.JSX.Element {
+  const styles = stylesheet.createThemedStyleSheet({
+    headerStyleIcon: {
+      marginRight: 10,
+      tintColor: semanticColors.HEADER_PRIMARY,
+    },
+    cardStyleIcon: {
+      width: 22,
+      height: 22,
+      marginLeft: 5,
+      tintColor: semanticColors.INTERACTIVE_NORMAL,
+    },
+    destructiveIcon: {
+      tintColor: semanticColors.TEXT_DANGER,
+    },
+  });
+
+  return (
+    <RN.TouchableOpacity onPress={onPress}>
+      <RN.Image
+        style={[
+          style === "header" ? styles.headerStyleIcon : styles.cardStyleIcon,
+          destructive && styles.destructiveIcon,
+        ].filter((x) => !!x)}
+        source={icon}
+      />
+    </RN.TouchableOpacity>
+  );
 }

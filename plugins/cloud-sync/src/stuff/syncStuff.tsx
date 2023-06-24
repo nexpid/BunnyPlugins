@@ -1,7 +1,7 @@
 import { createMMKVBackend } from "@vendetta/storage";
 import { DBSave } from "../types/api/latest";
 import { plugins, themes } from "@vendetta";
-import { cache, promptOrRun } from "..";
+import { cache, promptOrRun, vstorage } from "..";
 import { installPlugin } from "@vendetta/plugins";
 import { fetchTheme, installTheme } from "@vendetta/themes";
 import { showToast } from "@vendetta/ui/toasts";
@@ -17,7 +17,13 @@ export async function grabEverything(): Promise<DBSave.SaveSync> {
   } as DBSave.SaveSync;
 
   for (const x of Object.values(plugins.plugins)) {
-    const options = (await createMMKVBackend(x.id).get()) as any;
+    const config = vstorage.pluginSettings[x.id];
+    if (config?.syncPlugin === false) continue;
+
+    const options =
+      config?.syncStorage === false
+        ? {}
+        : ((await createMMKVBackend(x.id).get()) as any);
     sync.plugins.push({
       id: x.id,
       enabled: x.enabled,

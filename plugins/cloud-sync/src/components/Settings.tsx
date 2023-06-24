@@ -9,7 +9,8 @@ import { openOauth2Modal } from "../stuff/oauth2";
 import { deleteSaveData } from "../stuff/api";
 import DataManagementButtons from "./DataManagementButtons";
 import { showToast } from "@vendetta/ui/toasts";
-import { clipboard } from "@vendetta/metro/common";
+import { NavigationNative, clipboard } from "@vendetta/metro/common";
+import PluginSettingsPage from "./PluginSettingsPage";
 
 const { ScrollView, View } = General;
 const { FormRow, FormSwitchRow } = Forms;
@@ -28,6 +29,8 @@ export default function () {
     },
     []
   );
+
+  const navigation = NavigationNative.useNavigation();
 
   return (
     <ScrollView>
@@ -59,8 +62,8 @@ export default function () {
         </BetterTableRowGroup>
       }
       <BetterTableRowGroup
-        title="Automation"
-        icon={getAssetIDByName("ic_robot_24px")}
+        title="Settings"
+        icon={getAssetIDByName("ic_cog_24px")}
       >
         <FormSwitchRow
           label="Auto Sync"
@@ -70,6 +73,16 @@ export default function () {
           }
           onValueChange={() => (vstorage.autoSync = !vstorage.autoSync)}
           value={vstorage.autoSync}
+        />
+        <FormRow
+          label="Plugin Settings"
+          leading={<FormRow.Icon source={getAssetIDByName("debug")} />}
+          trailing={<FormRow.Arrow />}
+          onPress={() =>
+            navigation.push("VendettaCustomPage", {
+              render: PluginSettingsPage,
+            })
+          }
         />
       </BetterTableRowGroup>
       <BetterTableRowGroup
@@ -123,7 +136,7 @@ export default function () {
       </BetterTableRowGroup>
       <BetterTableRowGroup
         title="Data Management"
-        icon={getAssetIDByName("ic_cog_24px")}
+        icon={getAssetIDByName("ic_message_edit")}
         padding={true}
       >
         <DataManagementButtons />

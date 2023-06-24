@@ -12,6 +12,13 @@ import { showConfirmationAlert } from "@vendetta/ui/alerts";
 export const vstorage: {
   authorization?: string;
   autoSync?: boolean;
+  pluginSettings?: Record<
+    string,
+    {
+      syncPlugin: boolean;
+      syncStorage: boolean;
+    }
+  >;
 } = storage;
 
 export const cache: {
@@ -29,6 +36,7 @@ export async function fillCache() {
 }
 
 vstorage.autoSync ??= false;
+vstorage.pluginSettings ??= {};
 
 let patches = [];
 const autoSync = async () => {
