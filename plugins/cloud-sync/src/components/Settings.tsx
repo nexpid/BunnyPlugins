@@ -9,20 +9,18 @@ import { openOauth2Modal } from "../stuff/oauth2";
 import { deleteSaveData } from "../stuff/api";
 import DataManagementButtons from "./DataManagementButtons";
 import { showToast } from "@vendetta/ui/toasts";
-import { NavigationNative, clipboard } from "@vendetta/metro/common";
+import { NavigationNative, React, clipboard } from "@vendetta/metro/common";
 import PluginSettingsPage from "./PluginSettingsPage";
 
 const { ScrollView, View } = General;
 const { FormRow, FormSwitchRow } = Forms;
 
 export default function () {
-  //@ts-ignore react is a UMD global 🤓
   const [, forceUpdate] = React.useReducer((x) => ~x, 0);
 
   useProxy(vstorage);
 
   index.cacheUpd.push(forceUpdate);
-  //@ts-ignore react is a UMD global 🤓
   React.useEffect(
     () => () => {
       (index.cacheUpd as any) = index.cacheUpd.filter((x) => x !== forceUpdate);

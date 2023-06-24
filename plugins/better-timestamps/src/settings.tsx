@@ -1,4 +1,4 @@
-import { constants } from "@vendetta/metro/common";
+import { React, ReactNative, constants } from "@vendetta/metro/common";
 import { findByProps } from "@vendetta/metro";
 import { stylesheet } from "@vendetta/metro/common";
 import { storage } from "@vendetta/plugin";
@@ -19,7 +19,6 @@ const { ScrollView, Text } = General;
 const { FormSwitchRow, FormIcon } = Forms;
 
 export function TimeExample({ style }: { style: any }): React.JSX.Element {
-  //@ts-ignore
   const [refVal, setRefVal] = React.useState(false);
 
   const nextSecond = new Date();

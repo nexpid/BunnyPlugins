@@ -1,6 +1,7 @@
 import {
   NavigationNative,
   ReactNative as RN,
+  React,
   stylesheet,
 } from "@vendetta/metro/common";
 import { getAssetIDByName } from "@vendetta/ui/assets";
@@ -40,16 +41,11 @@ enum Filter {
 
 export default () => {
   const busyPlugins = {};
-  //@ts-ignore react is a UMD global 🤓
   const [isBusy, setIsBusy] = React.useState(false);
-  //@ts-ignore react is a UMD global 🤓
   const [filter, setFilter] = React.useState(Filter.Newest);
-  //@ts-ignore react is a UMD global 🤓
   const [data, setData] = React.useState<{ parsed?: PluginsFullJson }>({});
-  //@ts-ignore react is a UMD global 🤓
   const [search, setSearch] = React.useState("");
 
-  //@ts-ignore react is a UMD global 🤓
   React.useEffect(() => {
     setSearch("");
     setFilter(Filter.Newest);

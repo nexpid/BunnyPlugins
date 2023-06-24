@@ -1,4 +1,4 @@
-import { ReactNative as RN, stylesheet } from "@vendetta/metro/common";
+import { ReactNative as RN, React, stylesheet } from "@vendetta/metro/common";
 import { semanticColors } from "@vendetta/ui";
 import { Forms } from "@vendetta/ui/components";
 import { SuperAwesomeIcon } from "../../../types";
@@ -34,7 +34,6 @@ const styles = stylesheet.createThemedStyleSheet({
 });
 
 export default (props: props) => {
-  //@ts-ignore react is a UMD global 🤓
   const [, forceUpdate] = React.useReducer((x) => ~x, 0);
 
   return (

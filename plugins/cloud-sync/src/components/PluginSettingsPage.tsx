@@ -1,4 +1,8 @@
-import { NavigationNative, ReactNative as RN } from "@vendetta/metro/common";
+import {
+  NavigationNative,
+  ReactNative as RN,
+  React,
+} from "@vendetta/metro/common";
 import { SuperAwesomeIcon } from "../../../../types";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { showConfirmationAlert } from "@vendetta/ui/alerts";
@@ -10,12 +14,9 @@ import { plugins } from "@vendetta";
 const { FormSwitchRow } = Forms;
 
 export default (): React.JSX.Element => {
-  //@ts-ignore react is a UMD global 🤓
   const [search, setSearch] = React.useState("");
-  //@ts-ignore react is a UMD global 🤓
   const [, forceUpdate] = React.useReducer((x) => ~x, 0);
 
-  //@ts-ignore react is a UMD global 🤓
   React.useEffect(() => {
     setSearch("");
   }, []);

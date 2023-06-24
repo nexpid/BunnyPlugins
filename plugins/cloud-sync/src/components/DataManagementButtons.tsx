@@ -1,6 +1,6 @@
 import { Button, Forms, General } from "@vendetta/ui/components";
 import { semanticColors } from "@vendetta/ui";
-import { stylesheet } from "@vendetta/metro/common";
+import { React, stylesheet } from "@vendetta/metro/common";
 import { cache, cacheUpdated, vstorage } from "..";
 import { findByProps } from "@vendetta/metro";
 import { grabEverything, syncEverything } from "../stuff/syncStuff";
@@ -27,7 +27,6 @@ const styles = stylesheet.createThemedStyleSheet({
 
 // this exists just so i can make cool loading buttons :nyaboom:
 export default function () {
-  //@ts-ignore react is a UMD global 🤓
   const [loadingBtns, setLoadingBtns] = React.useState<Record<number, boolean>>(
     {}
   );
