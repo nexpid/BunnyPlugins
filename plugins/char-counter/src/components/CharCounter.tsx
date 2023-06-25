@@ -8,7 +8,7 @@ const { TextStyleSheet } = findByProps("TextStyleSheet");
 const { Text } = General;
 const styles = stylesheet.createThemedStyleSheet({
   text: {
-    ...TextStyleSheet["text-sm/medium"],
+    ...TextStyleSheet["text-sm/semibold"],
     textAlign: "right",
     marginRight: 8,
     marginBottom: 4,
