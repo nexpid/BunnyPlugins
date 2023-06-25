@@ -174,7 +174,9 @@ export function LineDivider(): React.JSX.Element {
     line: {
       width: "100%",
       height: 2,
-      backgroundColor: resolveSemanticColor(semanticColors.BACKGROUND_ACCENT),
+      backgroundColor: resolveSemanticColor(
+        semanticColors.BACKGROUND_MODIFIER_ACCENT
+      ),
       marginTop: 16,
       marginBottom: 16,
     },
