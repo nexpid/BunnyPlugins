@@ -5,9 +5,15 @@ const { canUseIncreasedMessageLength } = findByProps(
   "canUseIncreasedMessageLength"
 );
 
-export function stringify(x: number): string {
-  if (x === Infinity) return "∞";
-  else return x.toString();
+// thanks rosie
+export function prettify(x: number): string {
+  return x
+    .toString()
+    .split("")
+    .reverse()
+    .map((x, i, a) => (i % 3 === 0 && a.length > 3 && i !== 0 ? `${x},` : x))
+    .reverse()
+    .join("");
 }
 
 export default () => {
