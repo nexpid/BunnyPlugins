@@ -9,6 +9,12 @@ import nodeResolve from "@rollup/plugin-node-resolve";
 import swc from "@swc/core";
 
 const extensions = [".js", ".jsx", ".mjs", ".ts", ".tsx", ".cts", ".mts"];
+const ignorePlugins = [
+    "better-spotify-preview",
+    "customrpc",
+    "download-everything",
+    "fxtwitter"
+]
 
 /** @type import("rollup").InputPluginOption */
 const plugins = [
@@ -49,6 +55,7 @@ const plugins = [
 ];
 
 for (let plug of await readdir("./plugins")) {
+    if (ignorePlugins.includes(plug)) continue;
     const manifest = JSON.parse(await readFile(`./plugins/${plug}/manifest.json`));
     const outPath = `./dist/${plug}/index.js`;
 
