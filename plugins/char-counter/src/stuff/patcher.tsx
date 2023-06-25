@@ -4,6 +4,7 @@ import { findInReactTree } from "@vendetta/utils";
 import CharCounter from "../components/CharCounter";
 
 const { ChatInput } = findByProps("ChatInput");
+const { MessagesWrapper } = findByProps("MessagesWrapper");
 
 export let patches = [];
 
@@ -28,6 +29,22 @@ export default () => {
       props.onChangeText = (txt: string) => thing.runner(txt);
 
       children.unshift(<CharCounter thing={thing} />);
+    })
+  );
+
+  patches.push(
+    after("render", MessagesWrapper.prototype, (_, ret) => {
+      const jump = findInReactTree(
+        ret,
+        (x) => typeof x?.props?.accessibilityLabel === "string"
+      );
+      if (!jump) return;
+
+      patches.push(
+        after("type", jump, (_, rat) => {
+          if (rat?.props?.style) rat.props.style[1].bottom += 32;
+        })
+      );
     })
   );
 

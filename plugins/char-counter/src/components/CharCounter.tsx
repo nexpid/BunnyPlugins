@@ -13,7 +13,7 @@ const styles = stylesheet.createThemedStyleSheet({
     borderRadius: 8,
     textAlign: "right",
     marginRight: 8,
-    marginTop: -4,
+    marginTop: -12,
     paddingHorizontal: 8,
     paddingVertical: 8,
   },
@@ -45,6 +45,7 @@ export default ({
         position: "absolute",
         right: 0,
         top: -elY,
+        zIndex: 1,
       }}
     >
       <Text
