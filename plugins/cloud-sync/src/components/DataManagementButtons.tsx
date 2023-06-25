@@ -82,7 +82,7 @@ export default function () {
             loading={loadingBtns[i]}
             style={{
               ...styles.button,
-              ...(!DeviceManager.isTablet
+              ...(DeviceManager.isTablet
                 ? { marginLeft: off }
                 : { marginTop: off }),
             }}
