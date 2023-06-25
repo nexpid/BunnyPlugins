@@ -7,9 +7,4 @@ package-lock.json
 plugins/better-spotify-preview
 plugins/customrpc
 
-# for char-counter
-dist/better-timestamps
-dist/cloud-sync
-dist/plugin-browser
-dist/reaction-notifications
-dist/tenor-gif-fix
+dist
