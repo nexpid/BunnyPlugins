@@ -73,7 +73,7 @@ export default (): React.JSX.Element => {
         return (
           <Summary
             label={item.manifest.name}
-            icon={item.manifest.vendetta.icon}
+            icon={item.manifest.vendetta.icon ?? ":3"}
           >
             <FormSwitchRow
               label="Sync Plugin"
