@@ -1,32 +1,12 @@
-import { findByName, findByProps } from "@vendetta/metro";
+import { findByName } from "@vendetta/metro";
 import { i18n } from "@vendetta/metro/common";
 import { after } from "@vendetta/patcher";
 import { findInReactTree } from "@vendetta/utils";
 import SettingsSection from "../components/SettingsSection";
-import { PluginsFullJson } from "./types";
 import { Forms } from "@vendetta/ui/components";
 
 const { FormSection } = Forms;
 const settingsModule = findByName("UserSettingsOverviewWrapper", false);
-
-function getCircularReplacer() {
-  const ancestors = [];
-  return function (key, value) {
-    if (typeof value !== "object" || value === null) {
-      return value;
-    }
-    // `this` is the object that value is contained in,
-    // i.e., its direct parent.
-    while (ancestors.length > 0 && ancestors.at(-1) !== this) {
-      ancestors.pop();
-    }
-    if (ancestors.includes(value)) {
-      return "[Circular]";
-    }
-    ancestors.push(value);
-    return value;
-  };
-}
 
 export default (): (() => void) => {
   let patches = [];
