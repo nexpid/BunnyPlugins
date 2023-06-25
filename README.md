@@ -10,6 +10,7 @@ A collection of all my horrible plugins for Vendetta
 - BetterTimestamps — copies Tenor links as gifs instead of videos [\[copy link\]](https://Gabe616.github.io/VendettaPlugins/better-timestamps) [\[view code\]](https://github.com/Gabe616/VendettaPlugins/tree/main/plugins/better-timestamps)
 - PluginBrowser — browse all proxied plugins [\[copy link\]](https://Gabe616.github.io/VendettaPlugins/plugin-browser) [\[view code\]](https://github.com/Gabe616/VendettaPlugins/tree/main/plugins/plugin-browser)
 - CloudSync — sync your plugins and themes to the cloud [\[copy link\]](https://Gabe616.github.io/VendettaPlugins/cloud-sync) [\[view code\]](https://github.com/Gabe616/VendettaPlugins/tree/main/plugins/cloud-sync) [\[view backend code\]](https://github.com/Gabe616/VendettaCloudSync)
+- CharCounter — adds a counter above the chat input [\[copy link\]](https://Gabe616.github.io/VendettaPlugins/char-counter) [\[view code\]](https://github.com/Gabe616/VendettaPlugins/tree/main/plugins/char-counter)
 
 ## Unfinished
 
