@@ -1,5 +1,15 @@
 node_modules/
-dist/
 pnpm-lock.yaml
 yarn.lock
 package-lock.json
+
+# shhh
+plugins/better-spotify-preview
+plugins/customrpc
+
+# for char-counter
+dist/better-timestamps
+dist/cloud-sync
+dist/plugin-browser
+dist/reaction-notifications
+dist/tenor-gif-fix
