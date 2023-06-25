@@ -36,13 +36,13 @@ export default () => {
     after("render", MessagesWrapper.prototype, (_, ret) => {
       const jump = findInReactTree(
         ret,
-        (x) => typeof x?.props?.accessibilityLabel === "string"
+        (x) => x?.type?.name === "JumpToPresentButton"
       );
       if (!jump) return;
 
       patches.push(
         after("type", jump, (_, rat) => {
-          if (rat?.props?.style) rat.props.style[1].bottom += 32;
+          if (rat?.props?.style) rat.props.style[1].bottom += 32 + 8;
         })
       );
     })
