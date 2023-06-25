@@ -1,12 +1,14 @@
 import { createMMKVBackend } from "@vendetta/storage";
 import { DBSave } from "../types/api/latest";
-import { plugins, themes } from "@vendetta";
+import { plugins } from "@vendetta/plugins";
+import { themes } from "@vendetta/themes";
 import { cache, promptOrRun, vstorage } from "..";
 import { installPlugin } from "@vendetta/plugins";
 import { fetchTheme, installTheme } from "@vendetta/themes";
 import { showToast } from "@vendetta/ui/toasts";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { RichText } from "../../../../types";
+import { canLoadPlugin, isPluginProxied } from "./pluginSecurity";
 
 const BundleUpdaterManager = window.nativeModuleProxy.BundleUpdaterManager;
 
@@ -16,7 +18,7 @@ export async function grabEverything(): Promise<DBSave.SaveSync> {
     plugins: [],
   } as DBSave.SaveSync;
 
-  for (const x of Object.values(plugins.plugins)) {
+  for (const x of Object.values(plugins)) {
     const config = vstorage.pluginSettings[x.id];
     if (config?.syncPlugin === false) continue;
 
@@ -30,7 +32,7 @@ export async function grabEverything(): Promise<DBSave.SaveSync> {
       options,
     });
   }
-  for (const x of Object.values(themes.themes)) {
+  for (const x of Object.values(themes)) {
     sync.themes.push({
       id: x.id,
       enabled: x.selected,
@@ -46,7 +48,7 @@ export async function syncEverything(shouldPrompt?: boolean) {
   let syncedAnything = false;
 
   const newPlugins = cache.save.sync.plugins.filter(
-    (x) => !Object.keys(plugins.plugins).includes(x.id)
+    (x) => !Object.keys(plugins).includes(x.id) && canLoadPlugin(x.id)
   );
   if (newPlugins.length > 0)
     await promptOrRun(
@@ -69,7 +71,7 @@ export async function syncEverything(shouldPrompt?: boolean) {
 
   let toEnableTheme;
   const newThemes = cache.save.sync.themes.filter(
-    (x) => !Object.keys(themes.themes).includes(x.id)
+    (x) => !Object.keys(themes).includes(x.id)
   );
   if (newThemes.length > 0)
     await promptOrRun(

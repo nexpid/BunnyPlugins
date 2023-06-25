@@ -9,7 +9,7 @@ import { showConfirmationAlert } from "@vendetta/ui/alerts";
 import { useProxy } from "@vendetta/storage";
 import { vstorage } from "..";
 import { Forms, Search, Summary } from "@vendetta/ui/components";
-import { plugins } from "@vendetta";
+import { plugins } from "@vendetta/plugins";
 
 const { FormSwitchRow } = Forms;
 
@@ -54,7 +54,7 @@ export default (): React.JSX.Element => {
       }
       style={{ paddingHorizontal: 10, paddingTop: 10 }}
       contentContainerStyle={{ paddingBottom: 20 }}
-      data={Object.entries(plugins.plugins).filter((x) =>
+      data={Object.entries(plugins).filter((x) =>
         x[1].manifest.name?.toLowerCase().includes(search)
       )}
       renderItem={({ item: [id, item] }) => {

@@ -186,10 +186,33 @@ export function LineDivider(): React.JSX.Element {
 export namespace RichText {
   export function Bold({
     children,
+    onPress,
   }: {
     children?: (string | React.JSX.Element) | (string | React.JSX.Element)[];
+    onPress?: () => void;
   }): React.JSX.Element {
-    return <Text style={TextStyleSheet["text-md/bold"]}>{children}</Text>;
+    return (
+      <Text
+        style={{ fontFamily: TextStyleSheet["text-md/bold"].fontFamily }}
+        onPress={onPress}
+      >
+        {children}
+      </Text>
+    );
+  }
+
+  export function Underline({
+    children,
+    onPress,
+  }: {
+    children?: (string | React.JSX.Element) | (string | React.JSX.Element)[];
+    onPress?: () => void;
+  }): React.JSX.Element {
+    return (
+      <Text style={{ textDecorationLine: "underline" }} onPress={onPress}>
+        {children}
+      </Text>
+    );
   }
 }
 
