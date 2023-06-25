@@ -52,7 +52,7 @@ export default function () {
 
   return (
     <ScrollView>
-      {!isSelfProxied() && (
+      {isSelfProxied() && (
         <View
           style={{
             flex: 1,
