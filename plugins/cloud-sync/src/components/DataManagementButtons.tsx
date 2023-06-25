@@ -9,7 +9,7 @@ import { showToast } from "@vendetta/ui/toasts";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 const DeviceManager = findByProps("isTablet");
 
-const { Text } = General;
+const { Text, View } = General;
 const { FormRow } = Forms;
 
 const { TextStyleSheet } = findByProps("TextStyleSheet");
@@ -32,8 +32,13 @@ export default function () {
   );
 
   return vstorage.authorization ? (
-    <>
-      {...[
+    <View
+      style={{
+        flexDirection: DeviceManager.isTablet ? "row" : "column",
+        justifyContent: "flex-end",
+      }}
+    >
+      {[
         {
           text: "Sync Data",
           onPress: async (setLoad) => {
@@ -59,7 +64,7 @@ export default function () {
             setLoad(false);
           },
         },
-      ].map((x, i, a) => {
+      ].map((x, i) => {
         const off = i !== 0 ? 8 : 0;
 
         return (
@@ -77,14 +82,14 @@ export default function () {
             loading={loadingBtns[i]}
             style={{
               ...styles.button,
-              ...(DeviceManager.isTablet
-                ? { flex: `0.${a.length}`, marginLeft: off }
+              ...(!DeviceManager.isTablet
+                ? { marginLeft: off }
                 : { marginTop: off }),
             }}
           />
         );
       })}
-    </>
+    </View>
   ) : (
     <Text style={{ ...styles.text, textAlign: "center" }}>
       Authenticate first to manage your data

@@ -8,10 +8,14 @@ import venPlugins from "@vendetta/plugins";
 import venThemes from "@vendetta/themes";
 import venStorage from "@vendetta/storage";
 import { showConfirmationAlert } from "@vendetta/ui/alerts";
+import { FluxDispatcher } from "@vendetta/metro/common";
+import { hsync } from "./stuff/http";
+import patcher from "./stuff/patcher";
 
 export const vstorage: {
   authorization?: string;
   autoSync?: boolean;
+  addToSettings?: boolean;
   pluginSettings?: Record<
     string,
     {
@@ -36,6 +40,7 @@ export async function fillCache() {
 }
 
 vstorage.autoSync ??= false;
+vstorage.addToSettings ??= true;
 vstorage.pluginSettings ??= {};
 
 let patches = [];
@@ -44,8 +49,10 @@ const autoSync = async () => {
 
   const everything = await grabEverything();
   if (JSON.stringify(cache.save) !== JSON.stringify(everything)) {
-    cache.save = await syncSaveData(everything);
-    cacheUpdated();
+    hsync(async () => {
+      cache.save = await syncSaveData(everything);
+      cacheUpdated();
+    });
   }
 };
 
@@ -55,7 +62,6 @@ export async function promptOrRun(
   text: (string | React.JSX.Element) | (string | React.JSX.Element)[],
   callback?: () => Promise<void>
 ): Promise<void> {
-  console.log("ran promptOrRun with: ", shouldPrompt, title, text);
   if (shouldPrompt)
     return new Promise((res) => {
       showConfirmationAlert({
@@ -71,8 +77,24 @@ export async function promptOrRun(
   else return await callback?.();
 }
 
+const patchMMKV = () => {
+  patches.push(
+    after("createMMKVBackend", venStorage, (_, x) => {
+      patches.push(after("set", x, () => autoSync()));
+    })
+  );
+};
+
+let i18nLoaded = false;
+let pluginLoaded = false;
+FluxDispatcher.subscribe("I18N_LOAD_SUCCESS", () => {
+  i18nLoaded = true;
+  if (pluginLoaded) patchMMKV();
+});
+
 export default {
   onLoad: () => {
+    pluginLoaded = true;
     if (vstorage.authorization) fillCache();
 
     ["installPlugin", "startPlugin", "stopPlugin", "removePlugin"].forEach(
@@ -82,12 +104,13 @@ export default {
       patches.push(after(x, venThemes, () => autoSync()))
     );
 
-    patches.push(
-      after("createMMKVBackend", venStorage, (_, x) => {
-        patches.push(after("set", x, () => autoSync()));
-      })
-    );
+    if (i18nLoaded) patchMMKV();
+
+    patches.push(patcher());
   },
-  onUnload: () => patches.forEach((x) => x()),
+  onUnload: () => {
+    pluginLoaded = false;
+    patches.forEach((x) => x());
+  },
   settings: Settings,
 };

@@ -30,6 +30,10 @@ export default function () {
 
   const navigation = NavigationNative.useNavigation();
 
+  navigation.setOptions({
+    title: "Cloud Sync Settings",
+  });
+
   return (
     <ScrollView>
       {
@@ -71,6 +75,15 @@ export default function () {
           }
           onValueChange={() => (vstorage.autoSync = !vstorage.autoSync)}
           value={vstorage.autoSync}
+        />
+        <FormSwitchRow
+          label="Add To Settings"
+          subLabel="Add Cloud Sync to the settings page"
+          leading={<FormRow.Icon source={getAssetIDByName("ic_message_pin")} />}
+          onValueChange={() =>
+            (vstorage.addToSettings = !vstorage.addToSettings)
+          }
+          value={vstorage.addToSettings}
         />
         <FormRow
           label="Plugin Settings"
