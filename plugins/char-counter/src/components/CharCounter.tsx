@@ -1,11 +1,47 @@
-import { React } from "@vendetta/metro/common";
-import { patches } from "../stuff/patcher";
-import { after } from "@vendetta/patcher";
+import { React, stylesheet } from "@vendetta/metro/common";
+import { General } from "@vendetta/ui/components";
+import getMessageLength, { stringify } from "../stuff/getMessageLength";
+import { findByProps } from "@vendetta/metro";
+import { semanticColors } from "@vendetta/ui";
 
-export default ({ props }: { props: any }) => {
+const { TextStyleSheet } = findByProps("TextStyleSheet");
+const { Text } = General;
+const styles = stylesheet.createThemedStyleSheet({
+  text: {
+    ...TextStyleSheet["text-sm/medium"],
+    textAlign: "right",
+    marginRight: 8,
+    marginBottom: 4,
+  },
+  normal: {
+    color: semanticColors.TEXT_NORMAL,
+  },
+  jinkies: {
+    color: semanticColors.TEXT_DANGER,
+  },
+});
+
+export default ({
+  thing,
+}: {
+  thing: { runner: (txt: string) => void };
+}): React.JSX.Element => {
   const [text, setText] = React.useState("");
 
-  React.useEffect(() => {
-    patches.push(after("onChangeText", props, (args) => setText(args[0])));
-  }, []);
+  thing.runner = (txt) => setText(txt);
+
+  const curLength = text.length,
+    maxLength = getMessageLength();
+
+  return (
+    <Text
+      style={{
+        ...styles.text,
+        color:
+          curLength <= maxLength ? styles.normal.color : styles.jinkies.color,
+      }}
+    >
+      {curLength}/{stringify(maxLength)}
+    </Text>
+  );
 };
