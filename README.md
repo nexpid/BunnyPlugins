@@ -23,4 +23,12 @@ A collection of all my horrible plugins for Vendetta
 - FxTwitter — automatically converts twitter.com links to fxtwitter.com [\[view code\]](https://github.com/Gabe616/VendettaPlugins/tree/main/plugins/fxtwitter)
   - discontinued for: vendetta already has this
 
-<!-- debug port: 8731 >
+<!-- debug port: 8731
+plugin status colors:
+  unfinished-E57373
+  finished-AED581
+  proxied-4DD0E1
+  discontinued-E0E0E0
+
+from: https://m2.material.io/design/color/the-color-system.html#tools-for-picking-colors
+using 300-->
