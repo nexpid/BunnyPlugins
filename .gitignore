@@ -3,6 +3,7 @@ node_modules/
 pnpm-lock.yaml
 yarn.lock
 package-lock.json
+snippet.txt
 
 # shhh
 plugins/better-spotify-preview
