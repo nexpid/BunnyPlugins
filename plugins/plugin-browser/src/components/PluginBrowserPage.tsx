@@ -5,17 +5,17 @@ import {
   stylesheet,
 } from "@vendetta/metro/common";
 import { getAssetIDByName } from "@vendetta/ui/assets";
-import { PluginsFullJson } from "../src/types";
+import { PluginsFullJson } from "../types";
 import { safeFetch } from "@vendetta/utils";
 import { General, Search } from "@vendetta/ui/components";
 import ScuffedPluginCard from "./ScuffedPluginCard";
 import { plugins } from "@vendetta";
 import { installPlugin, removePlugin } from "@vendetta/plugins";
-import { openProfile, refetchPlugin } from "../src";
+import { openProfile, refetchPlugin } from "..";
 import { showToast } from "@vendetta/ui/toasts";
 import { semanticColors } from "@vendetta/ui";
 import { findByProps } from "@vendetta/metro";
-import { SuperAwesomeIcon } from "../../../types";
+import { SuperAwesomeIcon } from "../../../../stuff/types";
 
 const { showSimpleActionSheet } = findByProps("showSimpleActionSheet");
 const { TextStyleSheet } = findByProps("TextStyleSheet");

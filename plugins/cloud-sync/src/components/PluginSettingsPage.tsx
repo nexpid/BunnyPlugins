@@ -3,7 +3,7 @@ import {
   ReactNative as RN,
   React,
 } from "@vendetta/metro/common";
-import { SuperAwesomeIcon } from "../../../../types";
+import { SuperAwesomeIcon } from "../../../../stuff/types";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { showConfirmationAlert } from "@vendetta/ui/alerts";
 import { useProxy } from "@vendetta/storage";

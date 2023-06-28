@@ -1,3 +1,5 @@
+![Plugin Status](https://img.shields.io/badge/plugin_status-unfinished-E57373?style=for-the-badge)
+
 # CloudSync
 
-plugin status: finished
+Syncs your plugins and themes to the cloud

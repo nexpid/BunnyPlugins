@@ -1,20 +1,8 @@
 import { findByProps } from "@vendetta/metro";
-import { storage } from "@vendetta/plugin";
 import { useProxy } from "@vendetta/storage";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { Forms, General } from "@vendetta/ui/components";
-
-export const vstorage = storage as Record<
-  | "voice_messages"
-  | "stickers"
-  | "emojis"
-  | "guild_icon"
-  | "guild_banner"
-  | "guild_invite_background"
-  | "user_avatar"
-  | "user_banner",
-  boolean | undefined
->;
+import { vstorage } from "..";
 
 const { ScrollView, View } = General;
 const { FormDivider, FormIcon, FormSwitchRow } = Forms;

@@ -1,8 +1,12 @@
-import { createMMKVBackend, useProxy } from "@vendetta/storage";
+import { useProxy } from "@vendetta/storage";
 import * as index from "..";
 import { cache, cacheUpdated, vstorage } from "..";
 import { Forms, General } from "@vendetta/ui/components";
-import { BetterTableRowGroup, LineDivider, RichText } from "../../../../types";
+import {
+  BetterTableRowGroup,
+  LineDivider,
+  RichText,
+} from "../../../../stuff/types";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import DataStat from "./DataStat";
 import { openOauth2Modal } from "../stuff/oauth2";

@@ -7,7 +7,7 @@ import { installPlugin } from "@vendetta/plugins";
 import { fetchTheme, installTheme } from "@vendetta/themes";
 import { showToast } from "@vendetta/ui/toasts";
 import { getAssetIDByName } from "@vendetta/ui/assets";
-import { RichText } from "../../../../types";
+import { RichText } from "../../../../stuff/types";
 import { canLoadPlugin, isPluginProxied } from "./pluginSecurity";
 
 const BundleUpdaterManager = window.nativeModuleProxy.BundleUpdaterManager;

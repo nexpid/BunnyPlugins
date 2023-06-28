@@ -1,6 +1,6 @@
 import { FluxDispatcher } from "@vendetta/metro/common";
-import settings, { vstorage } from "./settings";
-import { ReactionEvent, User, getUserAvatar } from "../../../types";
+import settings from "./components/Settings";
+import { ReactionEvent, User, getUserAvatar } from "../../../stuff/types";
 import { findByProps, findByStoreName } from "@vendetta/metro";
 import { storage } from "@vendetta/plugin";
 
@@ -9,6 +9,11 @@ const UserStore = findByStoreName("UserStore");
 const MessageStore = findByStoreName("MessageStore");
 const { jumpToMessage } = findByProps("jumpToMessage");
 const { markdownToHtml } = findByProps("markdownToHtml");
+
+export const vstorage = storage as Record<
+  "reactions" | "superreactions" | "ignorebotreactions",
+  boolean | undefined
+>;
 
 const reactionAddHandler = (reaction: ReactionEvent) => {
   if (!reaction.messageAuthorId) return;

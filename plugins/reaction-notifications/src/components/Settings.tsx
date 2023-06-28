@@ -4,22 +4,17 @@ import { useProxy } from "@vendetta/storage";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { Forms, General } from "@vendetta/ui/components";
 import { showToast } from "@vendetta/ui/toasts";
-
-export const vstorage = storage as Record<
-  "reactions" | "superreactions" | "ignorebotreactions",
-  boolean | undefined
->;
+import { vstorage } from "..";
 
 const { ScrollView, View } = General;
 const { FormSwitchRow, FormIcon, FormDivider, FormRow } = Forms;
 const { TableRowGroup } = findByProps("TableRowGroup");
 
 export default () => {
-  useProxy(vstorage);
-
   vstorage.reactions ??= true;
   vstorage.superreactions ??= true;
   vstorage.ignorebotreactions ??= true;
+  useProxy(vstorage);
 
   return (
     <ScrollView>

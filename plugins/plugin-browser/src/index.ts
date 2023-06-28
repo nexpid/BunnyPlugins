@@ -1,5 +1,5 @@
 import { fetchPlugin, startPlugin, stopPlugin } from "@vendetta/plugins";
-import patcher from "./patcher";
+import patcher from "./stuff/patcher";
 import { findByProps, findByStoreName } from "@vendetta/metro";
 
 const UserStore = findByStoreName("UserStore");
