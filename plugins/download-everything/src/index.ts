@@ -1,7 +1,8 @@
-import { after, before } from "@vendetta/patcher";
-import settings from "./settings";
+import { before } from "@vendetta/patcher";
+import settings from "./components/Settings";
 import { findByProps, findByStoreName } from "@vendetta/metro";
-import { interceptGuildActions, interceptUserActions } from "./actions";
+import { interceptGuildActions, interceptUserActions } from "./stuff/actions";
+import { storage } from "@vendetta/plugin";
 
 export const LazyActionSheet = findByProps("openLazy", "hideActionSheet");
 export const UserProfile = findByProps(
@@ -18,8 +19,19 @@ export const Colors = findByProps("colors", "meta") as {
   };
 };
 
-let patches = [];
+export const vstorage = storage as Record<
+  | "voice_messages"
+  | "stickers"
+  | "emojis"
+  | "guild_icon"
+  | "guild_banner"
+  | "guild_invite_background"
+  | "user_avatar"
+  | "user_banner",
+  boolean | undefined
+>;
 
+let patches = [];
 export default {
   onLoad: () => {
     patches.push(
@@ -44,5 +56,5 @@ export default {
     for (const x of patches) x();
     patches = [];
   },
-  settings: settings,
+  settings,
 };

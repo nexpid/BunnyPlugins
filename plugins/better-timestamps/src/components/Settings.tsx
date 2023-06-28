@@ -1,19 +1,12 @@
-import { React, ReactNative, constants } from "@vendetta/metro/common";
-import { findByProps } from "@vendetta/metro";
+import { React, constants } from "@vendetta/metro/common";
 import { stylesheet } from "@vendetta/metro/common";
-import { storage } from "@vendetta/plugin";
 import { useProxy } from "@vendetta/storage";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { Forms, General } from "@vendetta/ui/components";
-import { Colors, ThemeStore, parseTimestamp } from ".";
+import { Colors, ThemeStore, parseTimestamp, vstorage } from "..";
 import { semanticColors } from "@vendetta/ui";
 import { showToast } from "@vendetta/ui/toasts";
-import { BetterTableRowGroup } from "../../../stuff/types";
-
-export const vstorage: Record<
-  "reqBackticks" | "reqMinutes" | "alwaysLong",
-  boolean | undefined
-> = storage;
+import { BetterTableRowGroup } from "../../../../stuff/types";
 
 const { ScrollView, Text } = General;
 const { FormSwitchRow, FormIcon } = Forms;

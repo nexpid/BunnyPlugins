@@ -1,6 +1,7 @@
 import { findByProps, findByStoreName } from "@vendetta/metro";
-import settings, { vstorage } from "./settings";
-import { after, before } from "@vendetta/patcher";
+import settings from "./components/Settings";
+import { before } from "@vendetta/patcher";
+import { storage } from "@vendetta/plugin";
 
 export const ThemeStore = findByStoreName("ThemeStore");
 export const Colors = findByProps("colors", "meta") as {
@@ -15,8 +16,12 @@ export const { parseTimestamp } = findByProps(
   "unparseTimestamp"
 );
 
-let unpatch;
+export const vstorage: Record<
+  "reqBackticks" | "reqMinutes" | "alwaysLong",
+  boolean | undefined
+> = storage;
 
+let unpatch;
 export default {
   onLoad: () => {
     unpatch = before("sendMessage", MessageSender, (args) => {

@@ -2,14 +2,14 @@ import { clipboard, React, ReactNative as RN } from "@vendetta/metro/common";
 import { after } from "@vendetta/patcher";
 import { baseCdn, cdnFormatAnimated } from "./cdn";
 import { Forms, General } from "@vendetta/ui/components";
-import { Colors, LazyActionSheet, ThemeStore } from ".";
+import { Colors, LazyActionSheet, ThemeStore } from "..";
 import { components, semanticColors } from "@vendetta/ui";
 import { findInReactTree } from "@vendetta/utils";
 import { common, findByProps } from "@vendetta/metro";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { showToast } from "@vendetta/ui/toasts";
-import { vstorage } from "./settings";
-import { DisplayProfileData } from "../../../stuff/types";
+import { vstorage } from "..";
+import { DisplayProfileData } from "../../../../stuff/types";
 
 const { FormDivider, FormLabel } = Forms;
 const { View } = General;
