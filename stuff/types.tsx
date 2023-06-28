@@ -169,14 +169,19 @@ export function BetterTableRowGroup({
   );
 }
 
-export function LineDivider(): React.JSX.Element {
+export function LineDivider({
+  addPadding,
+}: {
+  addPadding?: boolean;
+}): React.JSX.Element {
   const styles = stylesheet.createThemedStyleSheet({
     line: {
       width: "100%",
+      marginHorizontal: addPadding && 16,
       height: 2,
       backgroundColor: resolveSemanticColor(semanticColors.BACKGROUND_ACCENT),
-      marginTop: 16,
-      marginBottom: 16,
+      marginTop: 8,
+      marginBottom: 8,
     },
   });
 
@@ -191,6 +196,39 @@ export namespace RichText {
   }): React.JSX.Element {
     return <Text style={TextStyleSheet["text-md/bold"]}>{children}</Text>;
   }
+}
+
+export function SimpleText({
+  variant,
+  lineClamp,
+  color,
+  align,
+  style,
+  onPress,
+  children,
+}: {
+  variant?: string;
+  lineClamp?: number;
+  color?: string;
+  align?: "left" | "right" | "center";
+  style?: Record<string, any>;
+  onPress?: () => void;
+  children?: React.ReactNode;
+}) {
+  return (
+    <Text
+      style={[
+        variant ? TextStyleSheet[variant] : {},
+        color ? { color: resolveSemanticColor(semanticColors[color]) } : {},
+        align ? { textAlign: align } : {},
+        style ?? {},
+      ]}
+      numberOfLines={lineClamp}
+      onPress={onPress}
+    >
+      {children}
+    </Text>
+  );
 }
 
 export function SuperAwesomeIcon({

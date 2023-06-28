@@ -1,7 +1,7 @@
 import { useProxy } from "@vendetta/storage";
 import { vstorage } from "..";
 import { Forms, General } from "@vendetta/ui/components";
-import { BetterTableRowGroup } from "../../../../types";
+import { BetterTableRowGroup } from "../../../../stuff/types";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 
 const { ScrollView } = General;

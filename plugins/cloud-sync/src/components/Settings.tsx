@@ -2,7 +2,7 @@ import { useProxy } from "@vendetta/storage";
 import * as index from "..";
 import { cache, cacheUpdated, vstorage } from "..";
 import { Forms, General } from "@vendetta/ui/components";
-import { BetterTableRowGroup, LineDivider } from "../../../../types";
+import { BetterTableRowGroup, LineDivider } from "../../../../stuff/types";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import DataStat from "./DataStat";
 import { openOauth2Modal } from "../stuff/oauth2";

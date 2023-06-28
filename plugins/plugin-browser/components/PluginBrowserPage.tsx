@@ -15,7 +15,7 @@ import { openProfile, refetchPlugin } from "../src";
 import { showToast } from "@vendetta/ui/toasts";
 import { semanticColors } from "@vendetta/ui";
 import { findByProps } from "@vendetta/metro";
-import { SuperAwesomeIcon } from "../../../types";
+import { SuperAwesomeIcon } from "../../../stuff/types";
 
 const { showSimpleActionSheet } = findByProps("showSimpleActionSheet");
 const { TextStyleSheet } = findByProps("TextStyleSheet");

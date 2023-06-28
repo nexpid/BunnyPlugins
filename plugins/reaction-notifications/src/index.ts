@@ -1,6 +1,6 @@
 import { FluxDispatcher } from "@vendetta/metro/common";
 import settings, { vstorage } from "./settings";
-import { ReactionEvent, User, getUserAvatar } from "../../../types";
+import { ReactionEvent, User, getUserAvatar } from "../../../stuff/types";
 import { findByProps, findByStoreName } from "@vendetta/metro";
 import { storage } from "@vendetta/plugin";
 

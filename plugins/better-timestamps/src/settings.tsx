@@ -8,7 +8,7 @@ import { Forms, General } from "@vendetta/ui/components";
 import { Colors, ThemeStore, parseTimestamp } from ".";
 import { semanticColors } from "@vendetta/ui";
 import { showToast } from "@vendetta/ui/toasts";
-import { BetterTableRowGroup } from "../../../types";
+import { BetterTableRowGroup } from "../../../stuff/types";
 
 export const vstorage: Record<
   "reqBackticks" | "reqMinutes" | "alwaysLong",
