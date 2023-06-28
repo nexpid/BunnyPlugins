@@ -1,5 +1,7 @@
-![Plugin Status](https://img.shields.io/badge/plugin_status-unfinished-E57373?style=for-the-badge)
+![Plugin Status](https://img.shields.io/badge/plugin_status-proxied-4DD0E1?style=for-the-badge)
 
 # CloudSync
 
-Syncs your plugins and themes to the cloud
+Allows you to sync your plugins and themes to the cloud
+
+## [Copy Proxied Link](https://vd-plugins.github.io/proxy/gabe616.github.io/VendettaPlugins/cloud-sync/)
