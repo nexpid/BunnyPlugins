@@ -6,6 +6,7 @@ import {
   BetterTableRowGroup,
   LineDivider,
   RichText,
+  SuperAwesomeIcon,
 } from "../../../../stuff/types";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import DataStat from "./DataStat";
@@ -19,15 +20,16 @@ import {
   ReactNative as RN,
   clipboard,
   stylesheet,
+  url,
 } from "@vendetta/metro/common";
 import PluginSettingsPage from "./PluginSettingsPage";
-import { isSelfProxied } from "../stuff/pluginSecurity";
+import { isPluginProxied, isSelfProxied } from "../stuff/pluginSecurity";
 import { findByProps } from "@vendetta/metro";
 import { semanticColors } from "@vendetta/ui";
 import { showConfirmationAlert } from "@vendetta/ui/alerts";
-import { id } from "@vendetta/plugin";
-import { installPlugin, plugins, removePlugin } from "@vendetta/plugins";
+import { plugins } from "@vendetta/plugins";
 import constants from "../constants";
+import { getIssueUrl } from "../../../../stuff/getIssueUrl";
 
 const { ScrollView, View, Text } = General;
 const { FormRow, FormSwitchRow } = Forms;
@@ -52,70 +54,67 @@ export default function () {
     },
     []
   );
+
   const navigation = NavigationNative.useNavigation();
+  React.useEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <SuperAwesomeIcon
+          icon={getAssetIDByName("ic_report_message")}
+          style="header"
+          onPress={() => url.openURL(getIssueUrl("cloud-sync"))}
+        />
+      ),
+    });
+  }, []);
 
   return (
     <ScrollView>
-      {isSelfProxied() && (
-        <View
-          style={{
-            flex: 1,
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "center",
-            marginTop: 8,
-          }}
-        >
-          <RN.Image
-            source={getAssetIDByName("ic_warning_24px")}
+      {isSelfProxied() &&
+        Object.keys(plugins).filter((x) => !isPluginProxied(x)).length > 0 && (
+          <View
             style={{
-              width: styles.warning.fontSize,
-              height: styles.warning.fontSize,
-              tintColor: styles.warning.color,
-              marginRight: 4,
+              flex: 1,
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "center",
+              marginTop: 8,
             }}
-          />
-          <Text style={styles.warning}>
-            Can load only proxied plugins.{" "}
-            <RichText.Underline
-              onPress={() =>
-                showConfirmationAlert({
-                  title: "Only Proxied Plugins",
-                  content:
-                    "As requested by Vendetta staff, the proxied version of this plugin cannot load unproxied plugins. To get around this, you can install the unproxied version of this plugin.",
-                  isDismissable: true,
-                  confirmText: "Ok",
-                  confirmColor: "grey" as ButtonColors,
-                  secondaryConfirmText: "Install unproxied version",
-                  onConfirm: () => {},
-                  onConfirmSecondary: async () => {
-                    if (plugins[constants.unproxiedURL]) return;
-
-                    try {
-                      await installPlugin(constants.unproxiedURL, false);
-                      // TODO make this work ↓
-                      // createMMKVBackend(constants.unproxiedURL).set(vstorage);
-                      removePlugin(id);
-                      navigation.goBack();
-                      showToast(
-                        "Installed unproxied version",
-                        getAssetIDByName("Check")
-                      );
-                    } catch {
-                      showToast(
-                        "Failed to install unproxied version",
-                        getAssetIDByName("Small")
-                      );
-                    }
-                  },
-                })
-              }
-            >
-              Learn more
-            </RichText.Underline>
-          </Text>
-        </View>
-      )}
+          >
+            <RN.Image
+              source={getAssetIDByName("ic_warning_24px")}
+              style={{
+                width: styles.warning.fontSize,
+                height: styles.warning.fontSize,
+                tintColor: styles.warning.color,
+                marginRight: 4,
+              }}
+            />
+            <Text style={styles.warning}>
+              Can load only proxied plugins.{" "}
+              <RichText.Underline
+                onPress={() =>
+                  showConfirmationAlert({
+                    title: "Only Proxied Plugins",
+                    content:
+                      "As requested by Vendetta staff, the proxied version of this plugin cannot load unproxied plugins.",
+                    isDismissable: true,
+                    confirmText: "Ok",
+                    confirmColor: "grey" as ButtonColors,
+                    secondaryConfirmText: "Copy unproxied plugin link",
+                    onConfirm: () => {},
+                    onConfirmSecondary: async () => {
+                      clipboard.setString(constants.unproxiedURL);
+                      showToast("Copied", getAssetIDByName("Check"));
+                    },
+                  })
+                }
+              >
+                Learn more
+              </RichText.Underline>
+            </Text>
+          </View>
+        )}
       <BetterTableRowGroup
         title="Current Data"
         icon={getAssetIDByName("ic_contact_sync")}
