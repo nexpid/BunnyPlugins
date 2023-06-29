@@ -27,7 +27,7 @@ A collection of all my horrible plugins for Vendetta
 - PluginBrowser — browse all proxied plugins
   - [![](https://img.shields.io/badge/copy%20proxied%20link-263238?style=for-the-badge)](https://vd-plugins.github.io/proxy/gabe616.github.io/VendettaPlugins/plugin-browser) [![](https://img.shields.io/badge/view%20code-263238?style=for-the-badge)](https://github.com/Gabe616/VendettaPlugins/tree/main/plugins/plugin-browser)
 - CloudSync — sync your plugins and themes to the cloud
-  - [![](https://img.shields.io/badge/copy%20proxied%20link-263238?style=for-the-badge)](https://vd-plugins.github.io/proxy/gabe616.github.io/VendettaPlugins/cloud-sync) [![](https://img.shields.io/badge/view%20code-263238?style=for-the-badge)](https://github.com/Gabe616/VendettaPlugins/tree/main/plugins/cloud-sync) [![](https://img.shields.io/badge/view%20backend%20code-263238?style=for-the-badge)](https://github.com/Gabe616/VendettaCloudSync)
+  - [![](https://img.shields.io/badge/copy%20link-263238?style=for-the-badge)](https://gabe616.github.io/VendettaPlugins/cloud-sync) [![](https://img.shields.io/badge/view%20code-263238?style=for-the-badge)](https://github.com/Gabe616/VendettaPlugins/tree/main/plugins/cloud-sync) [![](https://img.shields.io/badge/view%20backend%20code-263238?style=for-the-badge)](https://github.com/Gabe616/VendettaCloudSync)
 - CharCounter — adds a counter above the chat input
   - [![](https://img.shields.io/badge/copy%20proxied%20link-263238?style=for-the-badge)](https://vd-plugins.github.io/proxy/gabe616.github.io/VendettaPlugins/char-counter) [![](https://img.shields.io/badge/view%20code-263238?style=for-the-badge)](https://github.com/Gabe616/VendettaPlugins/tree/main/plugins/char-counter)
 
