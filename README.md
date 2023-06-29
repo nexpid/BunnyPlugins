@@ -39,6 +39,8 @@ A collection of all my horrible plugins for Vendetta
   - [![](https://img.shields.io/badge/view%20code-263238?style=for-the-badge)](https://github.com/Gabe616/VendettaPlugins/tree/main/plugins/download-everything)
 - CustomRPC — displays a custom RPC activity on your profile (idea from Vencord)
   - **NOTE:** the entire source code for this plugin was deleted by accident
+- MessageMarkdownPreview — preview markdown when typing a message
+  - [![](https://img.shields.io/badge/view%20code-263238?style=for-the-badge)](https://github.com/Gabe616/VendettaPlugins/tree/message-markdown-preview-plugin/plugins/message-markdown-preview)
 
 ## 🎫 Discontinued
 

@@ -14,6 +14,7 @@ const ignorePlugins = [
   "react-notifications",
   "download-everything",
   "fxtwitter",
+  "customrpc",
 ];
 
 /** @type import("rollup").InputPluginOption */
