@@ -48,10 +48,10 @@ A collection of all my horrible plugins for Vendetta
 
 <!-- debug port: 8731
 plugin status colors:
-  unfinished-E57373
-  finished-AED581
-  proxied-4DD0E1
-  discontinued-E0E0E0
+  unfinished-EF9A9A
+  finished-C5E1A5
+  proxied-80DEEA
+  discontinued-EEEEEE
 
 from: https://m2.material.io/design/color/the-color-system.html#tools-for-picking-colors
-using 300-->
+using 200-->
