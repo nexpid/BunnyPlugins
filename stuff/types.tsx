@@ -8,7 +8,7 @@ import { semanticColors } from "@vendetta/ui";
 import { Forms, General } from "@vendetta/ui/components";
 
 const { TextStyleSheet } = findByProps("TextStyleSheet");
-const { View, Text } = General;
+const { View, Text, Pressable } = General;
 const { FormRow } = Forms;
 
 export interface DisplayProfileData {
@@ -192,7 +192,7 @@ export namespace RichText {
   export function Bold({
     children,
   }: {
-    children?: (string | React.JSX.Element) | (string | React.JSX.Element)[];
+    children?: React.ReactNode[];
   }): React.JSX.Element {
     return <Text style={TextStyleSheet["text-md/bold"]}>{children}</Text>;
   }
@@ -240,7 +240,7 @@ export function SuperAwesomeIcon({
   onPress?: () => void;
   destructive?: boolean;
   icon: number;
-  style: "header" | "card";
+  style: "header" | "card" | Record<string, any>;
 }): React.JSX.Element {
   const styles = stylesheet.createThemedStyleSheet({
     headerStyleIcon: {
@@ -262,7 +262,11 @@ export function SuperAwesomeIcon({
     <RN.TouchableOpacity onPress={onPress}>
       <RN.Image
         style={[
-          style === "header" ? styles.headerStyleIcon : styles.cardStyleIcon,
+          typeof style === "string"
+            ? style === "header"
+              ? styles.headerStyleIcon
+              : styles.cardStyleIcon
+            : style,
           destructive && styles.destructiveIcon,
         ].filter((x) => !!x)}
         source={icon}
