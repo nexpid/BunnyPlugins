@@ -30,6 +30,8 @@ A collection of all my horrible plugins for Vendetta
   - [![](https://img.shields.io/badge/copy%20link-263238?style=for-the-badge)](https://gabe616.github.io/VendettaPlugins/cloud-sync) [![](https://img.shields.io/badge/view%20code-263238?style=for-the-badge)](https://github.com/Gabe616/VendettaPlugins/tree/main/plugins/cloud-sync) [![](https://img.shields.io/badge/view%20backend%20code-263238?style=for-the-badge)](https://github.com/Gabe616/VendettaCloudSync)
 - CharCounter — adds a counter above the chat input
   - [![](https://img.shields.io/badge/copy%20proxied%20link-263238?style=for-the-badge)](https://vd-plugins.github.io/proxy/gabe616.github.io/VendettaPlugins/char-counter) [![](https://img.shields.io/badge/view%20code-263238?style=for-the-badge)](https://github.com/Gabe616/VendettaPlugins/tree/main/plugins/char-counter)
+- MessageMarkdownPreview — preview markdown when typing a message
+  - [![](https://img.shields.io/badge/copy%20link-263238?style=for-the-badge)](https://gabe616.github.io/VendettaPlugins/message-markdown-preview) [![](https://img.shields.io/badge/view%20code-263238?style=for-the-badge)](https://github.com/Gabe616/VendettaPlugins/tree/message-markdown-preview-plugin/plugins/message-markdown-preview)
 
 ## ❌ Unfinished
 
@@ -39,8 +41,6 @@ A collection of all my horrible plugins for Vendetta
   - [![](https://img.shields.io/badge/view%20code-263238?style=for-the-badge)](https://github.com/Gabe616/VendettaPlugins/tree/main/plugins/download-everything)
 - CustomRPC — displays a custom RPC activity on your profile (idea from Vencord)
   - **NOTE:** the entire source code for this plugin was deleted by accident
-- MessageMarkdownPreview — preview markdown when typing a message
-  - [![](https://img.shields.io/badge/view%20code-263238?style=for-the-badge)](https://github.com/Gabe616/VendettaPlugins/tree/message-markdown-preview-plugin/plugins/message-markdown-preview)
 
 ## 🎫 Discontinued
 
