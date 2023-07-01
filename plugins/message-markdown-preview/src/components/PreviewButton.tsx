@@ -8,10 +8,8 @@ import { findByProps } from "@vendetta/metro";
 
 const { Pressable, Text } = General;
 
-const { defaultRules, reactParserFor } = findByProps(
-  "defaultRules",
-  "reactParserFor"
-);
+// thanks replugged
+const { parse } = findByProps("parse", "parseTopic");
 
 export default ({
   thing,
@@ -48,19 +46,17 @@ export default ({
   const [text, setText] = React.useState("");
   thing.runner = (txt) => setText(txt);
 
-  // this took me SO LONG to figure out ffs
-  // TODO this is semi decent, but it's not using the same parser as messages are
-  const parser = reactParserFor(defaultRules);
-
   const run = () => {
-    const out = parser(text, true, {
+    const ast = parse(text, true, {
       allowHeading: true,
+      allowLinks: false,
       allowList: true,
-      disableAutoBlockNewLines: true,
+      previewLinkTarget: false,
     });
 
     showConfirmationAlert({
-      content: <Text>{out}</Text>,
+      title: "Markdown Preview",
+      content: <Text>{ast}</Text>,
       confirmText: "Ok",
       confirmColor: "grey" as ButtonColors,
       onConfirm: () => undefined,
