@@ -1,18 +1,13 @@
+# main
 node_modules/
 pnpm-lock.yaml
 yarn.lock
 package-lock.json
 snippet.txt
 
-# shhh
+# hidden plugins
 plugins/better-spotify-preview
 plugins/customrpc
 
-# remove this once PR is closed
-#dist
-dist/better-timestamps
-dist/char-counter
-dist/cloud-sync
-dist/customrpc
-dist/plugin-browser
-dist/tenor-gif-fix
+# pull requests
+dist
