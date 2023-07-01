@@ -1,4 +1,3 @@
-dist
 node_modules/
 pnpm-lock.yaml
 yarn.lock
@@ -8,3 +7,12 @@ snippet.txt
 # shhh
 plugins/better-spotify-preview
 plugins/customrpc
+
+# remove this once PR is closed
+#dist
+dist/better-timestamps
+dist/char-counter
+dist/cloud-sync
+dist/customrpc
+dist/plugin-browser
+dist/tenor-gif-fix
