@@ -26,7 +26,17 @@ export default () => {
       let thing: { runner: (txt: string) => void } = {
         runner: () => undefined,
       };
-      props.onChangeText = (txt: string) => thing.runner(txt);
+      if (!props.onChangeText)
+        props.onChangeText = (txt: string) => thing.runner(txt);
+      else
+        patches.push(
+          after(
+            "onChangeText",
+            props,
+            ([txt]: [string]) => thing.runner(txt),
+            true
+          )
+        );
 
       children.unshift(<CharCounter thing={thing} />);
     })

@@ -25,11 +25,16 @@ export default () => {
       let thing: { runner: (txt: string) => void } = {
         runner: () => undefined,
       };
-      if (props.onChangeText)
+      if (!props.onChangeText)
         props.onChangeText = (txt: string) => thing.runner(txt);
       else
         patches.push(
-          after("onChangeText", props, ([txt]: [string]) => thing.runner(txt))
+          after(
+            "onChangeText",
+            props,
+            ([txt]: [string]) => thing.runner(txt),
+            true
+          )
         );
 
       children.unshift(<PreviewButton thing={thing} />);
