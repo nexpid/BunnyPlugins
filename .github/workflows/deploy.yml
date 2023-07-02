@@ -1,9 +1,10 @@
 name: Build and deploy
 
 on:
-  push:
-    branches: [main]
-  workflow_dispatch:
+  workflow_run:
+    workflows: [Make readmes]
+    types:
+      - completed
 
 jobs:
   deploy:

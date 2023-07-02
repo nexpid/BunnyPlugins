@@ -6,6 +6,8 @@ on:
 
 jobs:
   readmes:
+    name: Make readmes
+
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -30,6 +32,6 @@ jobs:
         env:
           commit_message: "style(readmes): update readmes"
         run: |
-          git add */README.md README.md
+          git add plugins/**/README.md README.md -f
           git commit -m "${{ env.commit_message }}"
           git push
