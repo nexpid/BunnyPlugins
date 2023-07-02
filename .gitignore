@@ -1,10 +1,18 @@
-dist
+# main
 node_modules/
 pnpm-lock.yaml
 yarn.lock
 package-lock.json
 snippet.txt
 
-# shhh
+# hidden plugins
 plugins/better-spotify-preview
 plugins/customrpc
+
+# pull requests
+
+# actions
+dist
+archive
+*/README.md
+README.md
