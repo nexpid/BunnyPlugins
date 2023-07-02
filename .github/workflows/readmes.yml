@@ -30,7 +30,7 @@ jobs:
 
       - name: Publish changes
         env:
-          commit_author: "Gabe616"
+          commit_author: "actions"
           commit_message: "style(readmes): update readmes"
         run: |
           git config --global user.name "${{ env.commit_author }}"

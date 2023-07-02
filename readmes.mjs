@@ -305,12 +305,12 @@ const mreadme = `<div align="center">
 )}
 \t${makeHref(
   "https://github.com/Gabe616/VendettaPlugins/issues",
-  `<img alt="GitHub stars" src="https://img.shields.io/github/issues/Gabe616/VendettaPlugins?style=for-the-badge&color=BBDEFB&labelColor=${labelColor}">`,
+  `<img alt="GitHub issues" src="https://img.shields.io/github/issues/Gabe616/VendettaPlugins?style=for-the-badge&color=C5CAE9&labelColor=${labelColor}">`,
   1
 )}
 \t${makeHref(
   "https://github.com/Gabe616/VendettaPlugins/pulls",
-  `<img alt="GitHub stars" src="https://img.shields.io/github/issues-pr/Gabe616/VendettaPlugins?style=for-the-badge&color=BBDEFB&labelColor=${labelColor}">`,
+  `<img alt="GitHub pull requests" src="https://img.shields.io/github/issues-pr/Gabe616/VendettaPlugins?style=for-the-badge&color=D1C4E9&labelColor=${labelColor}">`,
   1
 )}
 </div>
@@ -355,15 +355,15 @@ ${plist.join("\n\n")}${
     ? `
 
 > **Note**  
-> [**${invalidPlugins.length}** plugin${plur(
+> **${invalidPlugins.length}** plugin${plur(
         invalidPlugins.length,
         "s aren't",
         " isn't"
-      )} being shown due to being incorrectly formatted.](## "${invalidPlugins
-        .map((x) => `${x[0]} — ${x[1]}`)
-        .join("\n")}")`
+      )} being shown due to being formatted incorrectly:  
+${invalidPlugins.map((x) => `> - ${x[0]}  `).join("\n")}`
     : ""
 }`;
+// TODO make use of the second parameter in invalidPlugins
 
 if (existsSync("./READMEE.md")) await unlink("./READMEE.md");
 await writeFile("./README.md", mreadme);
