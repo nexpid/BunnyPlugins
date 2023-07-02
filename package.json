@@ -4,7 +4,8 @@
     "build": "node build.mjs"
   },
   "dependencies": {
-    "@swc/helpers": "^0.4.14"
+    "@swc/helpers": "^0.4.14",
+    "smol-toml": "^1.1.0"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^24.0.0",

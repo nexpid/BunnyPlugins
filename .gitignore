@@ -10,4 +10,9 @@ plugins/better-spotify-preview
 plugins/customrpc
 
 # pull requests
+
+# actions
 dist
+archive
+*/README.md
+README.md

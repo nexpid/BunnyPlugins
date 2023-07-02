@@ -1,0 +1,35 @@
+name: Make readmes
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  readmes:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Prepare environment
+        uses: actions/setup-node@v3
+        with:
+          node-version: "16"
+
+      - run: npm install --global yarn
+
+      - name: Install deps
+        run: yarn install --prod=true
+
+      - name: Write readmes
+        run: node ./readmes.mjs
+
+      - name: Publish changes
+        env:
+          commit_message: style(readmes): update readmes
+        run: |
+          git add */README.md README.md
+          git commit -m "${{ env.commit_message }}"
+          git push 
