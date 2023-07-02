@@ -11,9 +11,10 @@ import swc from "@swc/core";
 const extensions = [".js", ".jsx", ".mjs", ".ts", ".tsx", ".cts", ".mts"];
 const ignorePlugins = [
   "better-spotify-preview",
-  "react-notifications",
+  "reaction-notifications",
   "download-everything",
   "fxtwitter",
+  "customrpc",
 ];
 
 /** @type import("rollup").InputPluginOption */

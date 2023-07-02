@@ -1,10 +1,9 @@
 import { findByProps } from "@vendetta/metro";
 import { after } from "@vendetta/patcher";
 import { findInReactTree } from "@vendetta/utils";
-import CharCounter from "../components/CharCounter";
+import PreviewButton from "../components/PreviewButton";
 
 const { ChatInput } = findByProps("ChatInput");
-const { MessagesWrapper } = findByProps("MessagesWrapper");
 
 export let patches = [];
 
@@ -21,7 +20,7 @@ export default () => {
         (x) =>
           x?.type?.displayName === "View" && Array.isArray(x?.props?.children)
       )?.props?.children;
-      if (!children) return console.log("no children");
+      if (!children) return;
 
       let thing: { runner: (txt: string) => void } = {
         runner: () => undefined,
@@ -38,23 +37,7 @@ export default () => {
           )
         );
 
-      children.unshift(<CharCounter thing={thing} />);
-    })
-  );
-
-  patches.push(
-    after("render", MessagesWrapper.prototype, (_, ret) => {
-      const jump = findInReactTree(
-        ret,
-        (x) => x?.type?.name === "JumpToPresentButton"
-      );
-      if (!jump) return;
-
-      patches.push(
-        after("type", jump, (_, rat) => {
-          if (rat?.props?.style) rat.props.style[1].bottom += 32 + 8;
-        })
-      );
+      children.unshift(<PreviewButton thing={thing} />);
     })
   );
 
