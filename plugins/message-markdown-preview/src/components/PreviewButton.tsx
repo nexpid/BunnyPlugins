@@ -8,8 +8,9 @@ import { findByProps } from "@vendetta/metro";
 
 const { Pressable, Text } = General;
 
-// thanks replugged
-const { parse } = findByProps("parse", "parseTopic");
+const { default: renderMessageMarkup } = findByProps(
+  "renderMessageMarkupToAST"
+);
 
 export default ({
   thing,
@@ -47,16 +48,24 @@ export default ({
   thing.runner = (txt) => setText(txt);
 
   const run = () => {
-    const ast = parse(text, true, {
-      allowHeading: true,
-      allowLinks: false,
-      allowList: true,
-      previewLinkTarget: false,
-    });
+    const markup = renderMessageMarkup(
+      {
+        content: text,
+        embeds: [],
+      },
+      {
+        hideSimpleEmbedContent: true,
+        formatInline: false,
+        allowHeading: true,
+        allowList: true,
+        allowLinks: false,
+        previewLinkTarget: false,
+      }
+    ).content;
 
     showConfirmationAlert({
       title: "Markdown Preview",
-      content: <Text>{ast}</Text>,
+      content: markup,
       confirmText: "Ok",
       confirmColor: "grey" as ButtonColors,
       onConfirm: () => undefined,
