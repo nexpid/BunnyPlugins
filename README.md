@@ -3,10 +3,10 @@
 		<img alt="GitHub stars" src="https://img.shields.io/github/stars/Gabe616/VendettaPlugins?style=for-the-badge&color=BBDEFB&labelColor=263238">
 	</a>
 	<a href="https://github.com/Gabe616/VendettaPlugins/issues">
-		<img alt="GitHub stars" src="https://img.shields.io/github/issues/Gabe616/VendettaPlugins?style=for-the-badge&color=BBDEFB&labelColor=263238">
+		<img alt="GitHub issues" src="https://img.shields.io/github/issues/Gabe616/VendettaPlugins?style=for-the-badge&color=C5CAE9&labelColor=263238">
 	</a>
 	<a href="https://github.com/Gabe616/VendettaPlugins/pulls">
-		<img alt="GitHub stars" src="https://img.shields.io/github/issues-pr/Gabe616/VendettaPlugins?style=for-the-badge&color=BBDEFB&labelColor=263238">
+		<img alt="GitHub pull requests" src="https://img.shields.io/github/issues-pr/Gabe616/VendettaPlugins?style=for-the-badge&color=D1C4E9&labelColor=263238">
 	</a>
 </div>
 <br/>
@@ -56,4 +56,5 @@ I'm working on **2** plugins, and **1** plugin is discontinued.
 	- [<img alt="view_code" src="https://img.shields.io/badge/view_code-263238?style=for-the-badge" />](https://github.com/Gabe616/VendettaPlugins/tree/main/plugins/fxtwitter)
 
 > **Note**  
-> [**1** plugin isn't being shown due to being incorrectly formatted.](## "cloud-sync — no status.toml")
+> **1** plugin isn't being shown due to being formatted incorrectly:  
+> - cloud-sync  
