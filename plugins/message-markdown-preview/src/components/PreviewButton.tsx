@@ -1,16 +1,25 @@
-import { React, ReactNative as RN, stylesheet } from "@vendetta/metro/common";
+import {
+  moment,
+  React,
+  ReactNative as RN,
+  stylesheet,
+} from "@vendetta/metro/common";
 import { showConfirmationAlert } from "@vendetta/ui/alerts";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { General } from "@vendetta/ui/components";
 import { semanticColors } from "@vendetta/ui";
-import { FadeInView } from "../../../../stuff/animations";
-import { findByProps } from "@vendetta/metro";
+import { FadeView } from "../../../../stuff/animations";
+import { findByName, findByProps, findByStoreName } from "@vendetta/metro";
+import { before, instead } from "@vendetta/patcher";
 
-const { Pressable, Text } = General;
+const { Pressable } = General;
 
 const { default: renderMessageMarkup } = findByProps(
   "renderMessageMarkupToAST"
 );
+const MessagePreview = findByName("MessagePreview", false);
+const UserStore = findByStoreName("UserStore");
+const SelectedChannelStore = findByStoreName("SelectedChannelStore");
 
 export default ({
   thing,
@@ -63,9 +72,61 @@ export default ({
       }
     ).content;
 
+    /*before(
+      "default",
+      MessagePreview,
+      ([thing]) => {
+        console.log("did thing :3");
+        return [thing, {}];
+      },
+      true
+    );
+    instead(
+      "hasClydeAiThoughtsEmbed",
+      findByProps("hasClydeAiThoughtsEmbed"),
+      () => false,
+      true
+    );
+
+    const channel = SelectedChannelStore.getChannelId();*/
+
     showConfirmationAlert({
       title: "Markdown Preview",
       content: markup,
+      /*content: (
+        <MessagePreview.default
+          massage={{
+            id: "1125085582033436692",
+            type: 0,
+            channel_id: channel,
+            getChannelId: () => channel,
+            author: UserStore.getCurrentUser(),
+            content: text,
+            attachments: [],
+            embeds: [],
+            mentions: [],
+            mentionRoles: [],
+            mentionChannels: [],
+            mentioned: false,
+            pinned: false,
+            mentionEveryone: false,
+            tts: false,
+            codedLinks: [],
+            giftCodes: [],
+            state: "SENT",
+            blocked: false,
+            bot: false,
+            reactions: [],
+            flags: 0,
+            isSearchHit: false,
+            stickers: [],
+            stickerItems: [],
+            components: [],
+            nick: "byte",
+            timestamp: moment(),
+          }}
+        />
+      ),*/
       confirmText: "Ok",
       confirmColor: "grey" as ButtonColors,
       onConfirm: () => undefined,
@@ -73,37 +134,36 @@ export default ({
   };
 
   return (
-    text.length > 0 && (
-      <FadeInView
-        style={{
-          flexDirection: "row",
-          position: "absolute",
-          left: 0,
-          top: -size,
-          zIndex: 3,
+    <FadeView
+      style={{
+        flexDirection: "row",
+        position: "absolute",
+        left: 0,
+        top: -size,
+        zIndex: 3,
+      }}
+      duration={100}
+      fade={text.length > 0 ? "in" : "out"}
+    >
+      <Pressable
+        android_ripple={styles.androidRipple}
+        disabled={false}
+        accessibilityRole={"button"}
+        accessibilityState={{
+          disabled: false,
+          expanded: false,
         }}
-        duration={100}
-      >
-        <Pressable
-          android_ripple={styles.androidRipple}
-          disabled={false}
-          accessibilityRole={"button"}
-          accessibilityState={{
-            disabled: false,
-            expanded: false,
-          }}
-          accessibilityLabel="Open markdown preview"
-          accessibilityHint="Open a modal which shows your message's markdown preview"
-          onPress={run}
-          style={styles.actionButton}
-          children={
-            <RN.Image
-              style={styles.actionIcon}
-              source={getAssetIDByName("ic_eye")}
-            />
-          }
-        />
-      </FadeInView>
-    )
+        accessibilityLabel="Open markdown preview"
+        accessibilityHint="Open a modal which shows your message's markdown preview"
+        onPress={run}
+        style={styles.actionButton}
+        children={
+          <RN.Image
+            style={styles.actionIcon}
+            source={getAssetIDByName("ic_eye")}
+          />
+        }
+      />
+    </FadeView>
   );
 };

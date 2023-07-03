@@ -3,9 +3,10 @@ import { General } from "@vendetta/ui/components";
 import getMessageLength, { prettify } from "../stuff/getMessageLength";
 import { findByProps } from "@vendetta/metro";
 import { semanticColors } from "@vendetta/ui";
+import { FadeView } from "../../../../stuff/animations";
 
 const { TextStyleSheet } = findByProps("TextStyleSheet");
-const { Text, View } = General;
+const { Text } = General;
 const styles = stylesheet.createThemedStyleSheet({
   text: {
     ...TextStyleSheet["text-xs/semibold"],
@@ -39,7 +40,8 @@ export default ({
   const elY = styles.text.fontSize * 2 + styles.text.paddingVertical;
 
   return (
-    <View
+    <FadeView
+      duration={100}
       style={{
         flexDirection: "row-reverse",
         position: "absolute",
@@ -47,6 +49,7 @@ export default ({
         top: -elY,
         zIndex: 1,
       }}
+      fade={curLength === 0 ? "out" : "in"}
     >
       <Text
         style={{
@@ -58,6 +61,6 @@ export default ({
         {prettify(curLength)}/
         {maxLength !== Infinity ? prettify(maxLength) : "∞"}
       </Text>
-    </View>
+    </FadeView>
   );
 };
