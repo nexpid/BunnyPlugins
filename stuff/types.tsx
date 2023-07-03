@@ -1,6 +1,7 @@
 import { findByProps, findByStoreName } from "@vendetta/metro";
 import {
   ReactNative as RN,
+  React,
   constants,
   stylesheet,
 } from "@vendetta/metro/common";
@@ -8,7 +9,7 @@ import { semanticColors } from "@vendetta/ui";
 import { Forms, General } from "@vendetta/ui/components";
 
 const { TextStyleSheet } = findByProps("TextStyleSheet");
-const { View, Text, Pressable } = General;
+const { View, Text } = General;
 const { FormRow } = Forms;
 
 export interface DisplayProfileData {
@@ -128,10 +129,10 @@ export function BetterTableRowGroup({
       letterSpacing: undefined,
       lineHeight: 18,
       textTransform: "none",
-      color: resolveSemanticColor(semanticColors.HEADER_SECONDARY),
+      color: semanticColors.HEADER_SECONDARY,
     },
     main: {
-      backgroundColor: resolveSemanticColor(semanticColors.BACKGROUND_TERTIARY),
+      backgroundColor: semanticColors.BACKGROUND_TERTIARY,
       borderRadius: 16,
       overflow: "hidden",
       flex: 1,
@@ -202,7 +203,9 @@ export function SimpleText({
   align,
   style,
   onPress,
+  getChildren,
   children,
+  liveUpdate,
 }: React.PropsWithChildren<{
   variant?: string;
   lineClamp?: number;
@@ -210,7 +213,14 @@ export function SimpleText({
   align?: "left" | "right" | "center";
   style?: any;
   onPress?: () => void;
+  getChildren?: () => React.ReactNode | undefined;
+  liveUpdate?: boolean;
 }>) {
+  const [_, forceUpdate] = React.useReducer((x) => ~x, 0);
+
+  const nextSecond = new Date().setMilliseconds(1000);
+  if (liveUpdate) setTimeout(() => forceUpdate(), nextSecond - Date.now());
+
   return (
     <Text
       style={[
@@ -222,7 +232,7 @@ export function SimpleText({
       numberOfLines={lineClamp}
       onPress={onPress}
     >
-      {children}
+      {getChildren?.() ?? children}
     </Text>
   );
 }
