@@ -1,25 +1,15 @@
-import { findByProps, findByStoreName } from "@vendetta/metro";
+import { findByProps } from "@vendetta/metro";
 import settings from "./components/Settings";
 import { before } from "@vendetta/patcher";
 import { storage } from "@vendetta/plugin";
 
-export const ThemeStore = findByStoreName("ThemeStore");
-export const Colors = findByProps("colors", "meta") as {
-  colors: any;
-  meta: {
-    resolveSemanticColor: (theme: string, color: string) => string | undefined;
-  };
-};
-export const MessageSender = findByProps("sendMessage", "receiveMessage");
-export const { parseTimestamp } = findByProps(
-  "parseTimestamp",
-  "unparseTimestamp"
-);
+const MessageSender = findByProps("sendMessage", "receiveMessage");
 
-export const vstorage: Record<
-  "reqBackticks" | "reqMinutes" | "alwaysLong",
-  boolean | undefined
-> = storage;
+export const vstorage: {
+  reqBackticks?: boolean;
+  reqMinutes?: boolean;
+  alwaysLong?: boolean;
+} = storage;
 
 let unpatch;
 export default {
