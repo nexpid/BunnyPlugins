@@ -18,11 +18,11 @@ export const { parseTimestamp } = findByProps(
 );
 
 export function TimeExample({ style }: { style: any }): React.JSX.Element {
-  const [refVal, setRefVal] = React.useState(false);
+  const [_, forceUpdate] = React.useReducer((x) => ~x, 0);
 
   const nextSecond = new Date();
-  nextSecond.setSeconds(nextSecond.getSeconds() + 1, 0);
-  setTimeout(() => setRefVal(!refVal), nextSecond.getTime() - Date.now());
+  nextSecond.setMilliseconds(1000);
+  setTimeout(() => forceUpdate(), nextSecond.getTime() - Date.now());
 
   const current = new Date();
   const examples = [
