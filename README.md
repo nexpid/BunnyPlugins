@@ -32,33 +32,31 @@ I'm working on **3** plugins, and **1** plugin is discontinued.
 ## ✅ Finished
 
 - BetterTimestamps — Send timestamps using text shortcuts (port from Vencord)
-  - [<img alt="copy_proxied_link" src="https://img.shields.io/badge/copy_proxied_link-263238?style=for-the-badge" />](https://vd-plugins.github.io/proxy/gabe616.github.io/VendettaPlugins/better-timestamps) [<img alt="view_code" src="https://img.shields.io/badge/view_code-263238?style=for-the-badge" />](https://github.com/Gabe616/VendettaPlugins/tree/main/plugins/better-timestamps)
+	- [<img alt="copy_proxied_link" src="https://img.shields.io/badge/copy_proxied_link-263238?style=for-the-badge" />](https://vd-plugins.github.io/proxy/gabe616.github.io/VendettaPlugins/better-timestamps) [<img alt="view_code" src="https://img.shields.io/badge/view_code-263238?style=for-the-badge" />](https://github.com/Gabe616/VendettaPlugins/tree/main/plugins/better-timestamps)
 - CharCounter — Adds a counter above the chat input
-  - [<img alt="copy_proxied_link" src="https://img.shields.io/badge/copy_proxied_link-263238?style=for-the-badge" />](https://vd-plugins.github.io/proxy/gabe616.github.io/VendettaPlugins/char-counter) [<img alt="view_code" src="https://img.shields.io/badge/view_code-263238?style=for-the-badge" />](https://github.com/Gabe616/VendettaPlugins/tree/main/plugins/char-counter)
+	- [<img alt="copy_proxied_link" src="https://img.shields.io/badge/copy_proxied_link-263238?style=for-the-badge" />](https://vd-plugins.github.io/proxy/gabe616.github.io/VendettaPlugins/char-counter) [<img alt="view_code" src="https://img.shields.io/badge/view_code-263238?style=for-the-badge" />](https://github.com/Gabe616/VendettaPlugins/tree/main/plugins/char-counter)
 - MessageMarkdownPreview — Preview markdown when typing a message
-  - [<img alt="copy_link" src="https://img.shields.io/badge/copy_link-263238?style=for-the-badge" />](https://gabe616.github.io/VendettaPlugins/message-markdown-preview) [<img alt="view_code" src="https://img.shields.io/badge/view_code-263238?style=for-the-badge" />](https://github.com/Gabe616/VendettaPlugins/tree/main/plugins/message-markdown-preview)
+	- [<img alt="copy_link" src="https://img.shields.io/badge/copy_link-263238?style=for-the-badge" />](https://gabe616.github.io/VendettaPlugins/message-markdown-preview) [<img alt="view_code" src="https://img.shields.io/badge/view_code-263238?style=for-the-badge" />](https://github.com/Gabe616/VendettaPlugins/tree/main/plugins/message-markdown-preview)
 - PluginBrowser — Browse all proxied plugins
-  - [<img alt="copy_proxied_link" src="https://img.shields.io/badge/copy_proxied_link-263238?style=for-the-badge" />](https://vd-plugins.github.io/proxy/gabe616.github.io/VendettaPlugins/plugin-browser) [<img alt="view_code" src="https://img.shields.io/badge/view_code-263238?style=for-the-badge" />](https://github.com/Gabe616/VendettaPlugins/tree/main/plugins/plugin-browser)
+	- [<img alt="copy_proxied_link" src="https://img.shields.io/badge/copy_proxied_link-263238?style=for-the-badge" />](https://vd-plugins.github.io/proxy/gabe616.github.io/VendettaPlugins/plugin-browser) [<img alt="view_code" src="https://img.shields.io/badge/view_code-263238?style=for-the-badge" />](https://github.com/Gabe616/VendettaPlugins/tree/main/plugins/plugin-browser)
 - TenorGifFix — Download and share Tenor links as GIFs instead of MP4s (thanks to rosie <3)
-  - [<img alt="copy_proxied_link" src="https://img.shields.io/badge/copy_proxied_link-263238?style=for-the-badge" />](https://vd-plugins.github.io/proxy/gabe616.github.io/VendettaPlugins/tenor-gif-fix) [<img alt="view_code" src="https://img.shields.io/badge/view_code-263238?style=for-the-badge" />](https://github.com/Gabe616/VendettaPlugins/tree/main/plugins/tenor-gif-fix)
+	- [<img alt="copy_proxied_link" src="https://img.shields.io/badge/copy_proxied_link-263238?style=for-the-badge" />](https://vd-plugins.github.io/proxy/gabe616.github.io/VendettaPlugins/tenor-gif-fix) [<img alt="view_code" src="https://img.shields.io/badge/view_code-263238?style=for-the-badge" />](https://github.com/Gabe616/VendettaPlugins/tree/main/plugins/tenor-gif-fix)
 
 ## ❌ Unfinished
 
 - CustomRPC — Displays a custom RPC activity on your profile! (idea from Vencord) (RECODED)
-  - [<img alt="view_code" src="https://img.shields.io/badge/view_code-263238?style=for-the-badge" />](https://github.com/Gabe616/VendettaPlugins/tree/main/plugins/customrpc)
+	- [<img alt="view_code" src="https://img.shields.io/badge/view_code-263238?style=for-the-badge" />](https://github.com/Gabe616/VendettaPlugins/tree/main/plugins/customrpc)
 - DownloadEverything — Allows you to download stickers, voice messages, emojis and more!
-  - [<img alt="view_code" src="https://img.shields.io/badge/view_code-263238?style=for-the-badge" />](https://github.com/Gabe616/VendettaPlugins/tree/main/plugins/download-everything)
+	- [<img alt="view_code" src="https://img.shields.io/badge/view_code-263238?style=for-the-badge" />](https://github.com/Gabe616/VendettaPlugins/tree/main/plugins/download-everything)
 - ReactionNotifications — Get notified about message reactions (ported from ItzOnlyAnimal/AliuPlugins/ReactionNotifier)
-  - [<img alt="view_code" src="https://img.shields.io/badge/view_code-263238?style=for-the-badge" />](https://github.com/Gabe616/VendettaPlugins/tree/main/plugins/reaction-notifications)
+	- [<img alt="view_code" src="https://img.shields.io/badge/view_code-263238?style=for-the-badge" />](https://github.com/Gabe616/VendettaPlugins/tree/main/plugins/reaction-notifications)
 
 ## 🎫 Discontinued
 
 - FxTwitter — Automatically converts twitter.com links to fxtwitter.com
-  - **Discontinued For:** Vendetta already has this
-  - [<img alt="view_code" src="https://img.shields.io/badge/view_code-263238?style=for-the-badge" />](https://github.com/Gabe616/VendettaPlugins/tree/main/plugins/fxtwitter)
+	- **Discontinued For:** Vendetta already has this
+	- [<img alt="view_code" src="https://img.shields.io/badge/view_code-263238?style=for-the-badge" />](https://github.com/Gabe616/VendettaPlugins/tree/main/plugins/fxtwitter)
 
 > **Note**  
-> **2** plugins aren't being shown due to being formatted incorrectly:
->
-> - better-spotify-preview
-> - cloud-sync
+> **1** plugin isn't being shown due to being formatted incorrectly:  
+> - cloud-sync  

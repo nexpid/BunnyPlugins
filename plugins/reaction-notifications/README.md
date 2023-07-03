@@ -1,5 +1,5 @@
 <div align="center">
-	<img alt="plugin_status" src="https://img.shields.io/badge/plugin_status-unfinished-EF9A9A?style=for-the-badge&labelColor=263238" />
+	<img alt="plugin_status" src="https://img.shields.io/badge/plugin_status-unfinished-EEEEEE?style=for-the-badge&labelColor=263238" />
 </div>
 <br/>
 <div align="center">
