@@ -23,16 +23,16 @@ https://m2.material.io/design/color/the-color-system.html#tools-for-picking-colo
 using value 200 (500 for pie chart)
 */
 const statuses = {
-  unfinished: "EF9A9A",
+  unfinished: "EEEEEE",
   finished: "C5E1A5",
   proxied: "80DEEA",
-  discontinued: "EEEEEE",
+  discontinued: "EF9A9A",
 };
 const pieStatuses = {
-  unfinished: "#F44336",
+  unfinished: "#9E9E9E",
   finished: "#8BC34A",
   proxied: "#00BCD4",
-  discontinued: "#9E9E9E",
+  discontinued: "#F44336",
 };
 const labelColor = "263238";
 
