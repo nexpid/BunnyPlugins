@@ -13,6 +13,5 @@ plugins/better-spotify-preview
 # actions
 dist
 archive
-**/README.md
-**/test.txt
+*/README.md
 README.md
