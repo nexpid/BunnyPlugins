@@ -7,20 +7,22 @@ export function FadeView({
   children,
   style,
   fade,
+  customOpacity,
 }: React.PropsWithChildren<{
   duration: number;
-  style: any;
+  style?: any;
   fade: "in" | "out";
+  customOpacity?: number;
 }>): React.JSX.Element {
   const anim = React.useRef(new Animated.Value(fade === "in" ? 0 : 1)).current;
 
   React.useEffect(() => {
     Animated.timing(anim, {
-      toValue: fade === "in" ? 1 : 0,
+      toValue: customOpacity ?? (fade === "in" ? 1 : 0),
       duration,
       useNativeDriver: true,
     }).start();
-  }, [anim, fade]);
+  }, [anim, fade, customOpacity]);
 
   return (
     <Animated.View style={[style, { opacity: anim }]}>{children}</Animated.View>
