@@ -131,6 +131,10 @@ export function BetterTableRowGroup({
       textTransform: "none",
       color: semanticColors.HEADER_SECONDARY,
     },
+    icon: {
+      height: 14,
+      tintColor: semanticColors.HEADER_SECONDARY,
+    },
     main: {
       backgroundColor: semanticColors.BACKGROUND_TERTIARY,
       borderRadius: 16,
@@ -151,7 +155,7 @@ export function BetterTableRowGroup({
       >
         {icon && (
           <View style={{ marginRight: 4 }}>
-            <FormRow.Icon source={icon} size="small" />
+            <FormRow.Icon style={styles.icon} source={icon} size="small" />
           </View>
         )}
         <Text style={styles.mainText}>{title}</Text>
@@ -179,7 +183,7 @@ export function LineDivider({
       width: "100%",
       marginHorizontal: addPadding && 16,
       height: 2,
-      backgroundColor: resolveSemanticColor(semanticColors.BACKGROUND_ACCENT),
+      backgroundColor: semanticColors.BACKGROUND_ACCENT,
       marginTop: 8,
       marginBottom: 8,
     },
@@ -191,8 +195,28 @@ export function LineDivider({
 export namespace RichText {
   export function Bold({
     children,
-  }: React.PropsWithChildren): React.JSX.Element {
-    return <Text style={TextStyleSheet["text-md/bold"]}>{children}</Text>;
+    onPress,
+  }: React.PropsWithChildren<{
+    onPress?: () => void;
+  }>): React.JSX.Element {
+    return (
+      <SimpleText variant={"text-md/bold"} onPress={onPress}>
+        {children}
+      </SimpleText>
+    );
+  }
+
+  export function Underline({
+    children,
+    onPress,
+  }: React.PropsWithChildren<{
+    onPress?: () => void;
+  }>): React.JSX.Element {
+    return (
+      <Text style={{ textDecorationLine: "underline" }} onPress={onPress}>
+        {children}
+      </Text>
+    );
   }
 }
 
