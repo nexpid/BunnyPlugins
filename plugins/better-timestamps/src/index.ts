@@ -19,7 +19,7 @@ export default {
       let content = message?.content as string;
       if (typeof content !== "string" || typeof message !== "object") return;
 
-      const j = vstorage.reqBackticks ? "`" : "\\b";
+      const j = vstorage.reqBackticks ? "`" : "\\s";
 
       const reg = {
         otN: "[0-9]{1,2}",
