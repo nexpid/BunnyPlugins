@@ -29,7 +29,7 @@ const styles = stylesheet.createThemedStyleSheet({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: semanticColors.BACKGROUND_SECONDARY,
+    backgroundColor: semanticColors.BACKGROUND_SECONDARY_ALT,
 
     marginLeft: 8,
     marginTop: -4,
@@ -41,7 +41,9 @@ const styles = stylesheet.createThemedStyleSheet({
   },
 });
 
-const { default: ChatItemWrapper } = findByProps("DCDAutoModerationSystemMessageView");
+const { default: ChatItemWrapper } = findByProps(
+  "DCDAutoModerationSystemMessageView"
+);
 const MessageRecord = findByName("MessageRecord");
 const RowManager = findByName("RowManager");
 const SelectedChannelStore = findByStoreName("SelectedChannelStore");
@@ -51,12 +53,12 @@ export default ({ inputProps }): JSX.Element => {
   const textRef = React.useRef<string>(null);
 
   if (!inputProps.onChangeText) {
-    inputProps.onChangeText = (text: string) => textRef.current = text;
+    inputProps.onChangeText = (text: string) => (textRef.current = text);
   } else {
     after(
       "onChangeText",
       inputProps,
-      ([text]: [string]) => textRef.current = text,
+      ([text]: [string]) => (textRef.current = text),
       true
     );
   }
@@ -67,21 +69,25 @@ export default ({ inputProps }): JSX.Element => {
       onConfirm: () => void 0,
       // @ts-ignore -- a valid property that's unadded in typings
       children: (
-        <ScrollView style={{
-          marginVertical: 12,
-          maxHeight: ReactNative.Dimensions.get('window').height * 0.7,
-        }}>
+        <ScrollView
+          style={{
+            marginVertical: 12,
+            maxHeight: ReactNative.Dimensions.get("window").height * 0.7,
+          }}
+        >
           <ChatItemWrapper
-            rowGenerator={new RowManager}
-            message={new MessageRecord({
-              id: "0",
-              channel_id: SelectedChannelStore.getChannelId(),
-              author: UserStore.getCurrentUser(),
-              content: textRef.current
-            })}
+            rowGenerator={new RowManager()}
+            message={
+              new MessageRecord({
+                id: "0",
+                channel_id: SelectedChannelStore.getChannelId(),
+                author: UserStore.getCurrentUser(),
+                content: textRef.current,
+              })
+            }
           />
         </ScrollView>
-      )
+      ),
     });
   };
 
