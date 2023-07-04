@@ -4,9 +4,11 @@ import getMessageLength, { prettify } from "../stuff/getMessageLength";
 import { findByProps } from "@vendetta/metro";
 import { semanticColors } from "@vendetta/ui";
 import { FadeView } from "../../../../stuff/animations";
+import { after } from "@vendetta/patcher";
+
+const { Text } = General;
 
 const { TextStyleSheet } = findByProps("TextStyleSheet");
-const { Text } = General;
 const styles = stylesheet.createThemedStyleSheet({
   text: {
     ...TextStyleSheet["text-xs/semibold"],
@@ -26,16 +28,21 @@ const styles = stylesheet.createThemedStyleSheet({
   },
 });
 
-export default ({
-  thing,
-}: {
-  thing: { runner: (txt: string) => void };
-}): React.JSX.Element => {
-  const [text, setText] = React.useState("");
+export default ({ inputProps }: { inputProps: any }): React.JSX.Element => {
+  const textRef = React.useRef<string>(null);
 
-  thing.runner = (txt) => setText(txt);
+  if (!inputProps.onChangeText) {
+    inputProps.onChangeText = (text: string) => (textRef.current = text);
+  } else {
+    after(
+      "onChangeText",
+      inputProps,
+      ([text]: [string]) => (textRef.current = text),
+      true
+    );
+  }
 
-  const curLength = text.length,
+  const curLength = textRef.current?.length ?? 0,
     maxLength = getMessageLength();
   const elY = styles.text.fontSize * 2 + styles.text.paddingVertical;
 
