@@ -12,7 +12,7 @@ import { FadeView } from "../../../../stuff/animations";
 import { findByName, findByProps, findByStoreName } from "@vendetta/metro";
 import { after } from "@vendetta/patcher";
 
-const { ScrollView, Pressable } = General;
+const { ScrollView, Pressable, View } = General;
 
 const ACTION_ICON_SIZE = 40;
 const styles = stylesheet.createThemedStyleSheet({
@@ -91,6 +91,9 @@ export default ({ inputProps }): JSX.Element => {
     });
   };
 
+  const shouldAppear = textRef.current?.length > 0;
+  const UseComponent = shouldAppear ? Pressable : View;
+
   return (
     <FadeView
       style={{
@@ -101,9 +104,9 @@ export default ({ inputProps }): JSX.Element => {
         zIndex: 3,
       }}
       duration={100}
-      fade={textRef.current?.length > 0 ? "in" : "out"}
+      fade={shouldAppear ? "in" : "out"}
     >
-      <Pressable
+      <UseComponent
         android_ripple={styles.androidRipple}
         disabled={false}
         accessibilityRole={"button"}
@@ -113,15 +116,14 @@ export default ({ inputProps }): JSX.Element => {
         }}
         accessibilityLabel="Open markdown preview"
         accessibilityHint="Open a modal which shows your message's markdown preview"
-        onPress={onPress}
+        onPress={shouldAppear ? onPress : undefined}
         style={styles.actionButton}
-        children={
-          <RN.Image
-            style={styles.actionIcon}
-            source={getAssetIDByName("ic_eye")}
-          />
-        }
-      />
+      >
+        <RN.Image
+          style={styles.actionIcon}
+          source={getAssetIDByName("ic_eye")}
+        />
+      </UseComponent>
     </FadeView>
   );
 };
