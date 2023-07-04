@@ -16,29 +16,15 @@ export default () => {
         (x) => typeof x?.placeholder === "string"
       );
       if (!props?.onChangeText) return;
+
       const children = findInReactTree(
         ret,
         (x) =>
           x?.type?.displayName === "View" && Array.isArray(x?.props?.children)
       )?.props?.children;
-      if (!children) return console.log("no children");
+      if (!children) return;
 
-      let thing: { runner: (txt: string) => void } = {
-        runner: () => undefined,
-      };
-      if (!props.onChangeText)
-        props.onChangeText = (txt: string) => thing.runner(txt);
-      else
-        patches.push(
-          after(
-            "onChangeText",
-            props,
-            ([txt]: [string]) => thing.runner(txt),
-            true
-          )
-        );
-
-      children.unshift(<CharCounter thing={thing} />);
+      children.unshift(<CharCounter inputProps={props} />);
     })
   );
 
