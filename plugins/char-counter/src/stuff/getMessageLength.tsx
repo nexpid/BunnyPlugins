@@ -18,11 +18,10 @@ export function prettify(x: number): string {
 }
 
 export function hasSLM() {
-  return (
+  return !!(
     vstorage.supportSLM &&
-    !!Object.values(plugins).find(
-      (x) => x.manifest.name === "SplitLargeMessages"
-    )
+    Object.values(plugins).find((x) => x.manifest.name === "SplitLargeMessages")
+      ?.enabled
   );
 }
 
