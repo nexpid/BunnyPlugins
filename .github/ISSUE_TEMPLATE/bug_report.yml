@@ -14,18 +14,21 @@ body:
         - label: I have checked that this bug hasn't already been reported
           required: true
   - type: input
+    id: discord-username
     attributes:
       label: Discord username
       description: Enter your discord username (@User#0000 / @user)
     validations:
       required: true
   - type: textarea
+    id: detailed-info
     attributes:
       label: Detailed Info
       description: Detailed information about the bug
     validations:
       required: false
   - type: textarea
+    id: steps
     attributes:
       label: Steps to Reproduce
       description: How to reproduce this bug
@@ -37,22 +40,25 @@ body:
     validations:
       required: true
   - type: textarea
+    id: crash-info
     attributes:
       label: Crash Info
       description: If this bug causes a crash, enter the Message and Stack Trace
     validations:
       required: false
   - type: textarea
+    id: bug-screenshot
     attributes:
       label: Bug Screenshot
       description: If this bug doesn't cause a crash, enter a screenshot of it
     validations:
       required: false
   - type: textarea
+    id: sysinfo
     attributes:
       label: System Info
       description: Enter your system information (use the **sysinfo** plugin if you need hep)
-      placeholder: |
+      value: |
         Device: 
         Manufacturer: 
         Brand: 
