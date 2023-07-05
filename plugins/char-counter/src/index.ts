@@ -4,6 +4,7 @@ import Settings from "./components/Settings";
 
 export const vstorage: {
   commas?: boolean;
+  supportSLM?: boolean;
 } = storage;
 
 let unpatch;

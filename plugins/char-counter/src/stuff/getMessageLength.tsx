@@ -1,10 +1,8 @@
-import { findByProps } from "@vendetta/metro";
+import { findByProps, findByStoreName } from "@vendetta/metro";
 import { plugins } from "@vendetta/plugins";
 import { vstorage } from "..";
 
-const { canUseIncreasedMessageLength } = findByProps(
-  "canUseIncreasedMessageLength"
-);
+const UserStore = findByStoreName("UserStore");
 
 // thanks rosie
 export function prettify(x: number): string {
@@ -19,9 +17,16 @@ export function prettify(x: number): string {
       .join("");
 }
 
+export function hasSLM() {
+  return (
+    vstorage.supportSLM &&
+    !!Object.values(plugins).find(
+      (x) => x.manifest.name === "SplitLargeMessages"
+    )
+  );
+}
+
 export default () => {
-  if (Object.keys(plugins).find((x) => x.includes("SplitLargeMessages")))
-    return Infinity;
-  else if (canUseIncreasedMessageLength()) return 4000;
+  if (UserStore.getCurrentUser().premiumType === 2) return 4000;
   else return 2000;
 };
