@@ -35,58 +35,44 @@ export const getCustomActivity = (from?: any) =>
 
 export const stringVariables: {
   match: string;
-  meta: {
-    description: string;
-  };
+  description: string;
   types: VariableType[];
   replace: () => string;
 }[] = [
   {
     match: "{user.name}",
-    meta: {
-      description: "your username",
-    },
+    description: "your username",
     types: [VariableType.CurrentUser],
     replace: () => UserStore.getCurrentUser().username,
   },
   {
     match: "{user.displayname}",
-    meta: {
-      description: "your display name",
-    },
+    description: "your display name",
     types: [VariableType.CurrentUser],
     replace: () => UserStore.getCurrentUser().globalName,
   },
   {
     match: "{user.status}",
-    meta: {
-      description: "your status",
-    },
+    description: "your status",
     types: [VariableType.CurrentUserPresence],
     replace: () => getCustomActivity()?.label ?? "No Status",
   },
   {
     match: "{user.presence}",
-    meta: {
-      description: "your presence (online/dnd/idle/invisible)",
-    },
+    description: "your presence (online/dnd/idle/invisible)",
     types: [VariableType.CurrentUserPresence],
     replace: () => PresenceStore.getStatus(UserStore.getCurrentUser().id),
   },
 
   {
     match: "{spotify.track}",
-    meta: {
-      description: "your playing Spotify track (Thot K)",
-    },
+    description: "your playing Spotify track (Thot K)",
     types: [VariableType.CurrentUserPresence],
     replace: () => SpotifyStore.getActivity()?.details ?? "No Spotify Track",
   },
   {
     match: "{spotify.track.url}",
-    meta: {
-      description: "your playing Spotify track's share link",
-    },
+    description: "your playing Spotify track's share link",
     types: [VariableType.CurrentUserPresence],
     replace: () => {
       const track = SpotifyStore.getActivity()?.sync_id;
@@ -95,9 +81,7 @@ export const stringVariables: {
   },
   {
     match: "{spotify.artist}",
-    meta: {
-      description: "your playing Spotify track's artist(s) (iluvern!)",
-    },
+    description: "your playing Spotify track's artist(s) (iluvern!)",
     types: [VariableType.CurrentUserPresence],
     replace: () =>
       (varCache.presence.spotify = SpotifyStore.getActivity())?.state ??
@@ -105,9 +89,7 @@ export const stringVariables: {
   },
   {
     match: "{spotify.album}",
-    meta: {
-      description: "your playing Spotify track's album (iluvern!)",
-    },
+    description: "your playing Spotify track's album (iluvern!)",
     types: [VariableType.CurrentUserPresence],
     replace: () =>
       (varCache.presence.spotify = SpotifyStore.getActivity())?.assets
@@ -145,7 +127,7 @@ export const timestampVariables: {
 }[] = [
   {
     title: "Spotify Track Start",
-    description: "The timestamp when your playing Spotify track sarstarted",
+    description: "The timestamp when your playing Spotify track started",
     format: "spotify.track.start",
     type: VariableType.CurrentUserPresence,
     replace: () =>

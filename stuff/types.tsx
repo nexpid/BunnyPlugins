@@ -299,6 +299,8 @@ export function SuperAwesomeIcon({
 }): React.JSX.Element {
   const styles = stylesheet.createThemedStyleSheet({
     headerStyleIcon: {
+      width: 24,
+      height: 24,
       marginRight: 10,
       tintColor: semanticColors.HEADER_PRIMARY,
     },

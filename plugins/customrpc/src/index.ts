@@ -8,6 +8,8 @@ import {
 import settings from "./components/Settings";
 import { registerDefaultChanges, unregisterChanges } from "./stuff/autochange";
 
+const { MMKVManager } = window.nativeModuleProxy;
+
 export const vstorage: {
   settings?: {
     edit: boolean;
@@ -15,6 +17,7 @@ export const vstorage: {
     debug?: {
       enabled?: boolean;
       visible?: boolean;
+      boykisserDead?: boolean;
     };
   };
   activity?: {
@@ -33,7 +36,9 @@ export const debug: {
 };
 
 export default {
-  onLoad: () => {
+  onLoad: async () => {
+    vstorage.settings.debug.boykisserDead =
+      (await MMKVManager.getItem("CRPC_boykisser")) === "true";
     dispatchActivityIfPossible();
     registerDefaultChanges();
   },
