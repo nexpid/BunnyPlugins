@@ -2,16 +2,19 @@ import { constants } from "@vendetta";
 import { find, findByProps } from "@vendetta/metro";
 import { showConfirmationAlert, showInputAlert } from "@vendetta/ui/alerts";
 import { getAssetIDByName } from "@vendetta/ui/assets";
-import { Forms, General } from "@vendetta/ui/components";
+import { ErrorBoundary, Forms, General } from "@vendetta/ui/components";
 import { showToast } from "@vendetta/ui/toasts";
 import { getExternalAsset } from "./api";
 import { showRichAssetList } from "../components/pages/RichAssetList";
 import { showApplicationList } from "../components/pages/ApplicationList";
 import { ActivityType, isActivitySaved } from "./activity";
 import { activityTypePreview } from "../components/Settings";
-import { React } from "@vendetta/metro/common";
-import { RichText } from "../../../../stuff/types";
+import { React, stylesheet } from "@vendetta/metro/common";
+import { RichText, SimpleText } from "../../../../stuff/types";
 import { vstorage } from "..";
+import { unparseTimestamp } from "./util";
+import { imageVariables, timestampVariables } from "./variables";
+import { semanticColors } from "@vendetta/ui";
 
 const { View, ScrollView } = General;
 const { FormRow, FormRadioRow } = Forms;
@@ -28,7 +31,7 @@ const { ActionSheetTitleHeader, ActionSheetCloseButton } = findByProps(
 );
 const DatePicker = findByProps("DatePickerModes");
 
-const SheetFooter = () => <View style={{ marginBottom: 30 }} />;
+const SheetFooter = () => <View style={{ marginBottom: 16 }} />;
 
 export function openSheet(sheet: any, props: any) {
   ActionSheet
@@ -41,6 +44,51 @@ export function openSheet(sheet: any, props: any) {
         "You cannot open ActionSheets on this version! Update to 163+",
         getAssetIDByName("Small")
       );
+}
+
+const styles = stylesheet.createThemedStyleSheet({
+  destructiveIcon: {
+    tintColor: semanticColors.TEXT_DANGER,
+  },
+});
+const destructiveText = {
+  color: "TEXT_DANGER",
+  variant: "text-md/semibold",
+};
+
+export function ImageVariableActionSheet({
+  role,
+  update,
+}: {
+  role: string;
+  update: (v: string) => void;
+}) {
+  return (
+    <ActionSheet>
+      <ScrollView>
+        <ActionSheetTitleHeader
+          title={`${role} Image Variable`}
+          trailing={
+            <ActionSheetCloseButton
+              onPress={() => LazyActionSheet.hideActionSheet()}
+            />
+          }
+        />
+        {imageVariables.map((x) => (
+          <FormRow
+            label={x.title}
+            subLabel={x.description}
+            trailing={<FormRow.Arrow />}
+            onPress={() => {
+              update(x.format);
+              LazyActionSheet.hideActionSheet();
+            }}
+          />
+        ))}
+      </ScrollView>
+      <SheetFooter />
+    </ActionSheet>
+  );
 }
 
 export let richAssetListCallback: (prop: string) => void;
@@ -68,6 +116,19 @@ export function ImageActionSheet({
           }
         />
         <FormRow
+          label="Set Image Variable"
+          leading={
+            <FormRow.Icon source={getAssetIDByName("ic_essentials_sparkle")} />
+          }
+          trailing={<FormRow.Arrow />}
+          onPress={() =>
+            openSheet(ImageVariableActionSheet, {
+              role,
+              update: (v: string) => update(v),
+            })
+          }
+        />
+        <FormRow
           label="Use Custom Image"
           subLabel="Make sure your image is in a square aspect ratio"
           leading={<FormRow.Icon source={getAssetIDByName("ic_link")} />}
@@ -75,20 +136,17 @@ export function ImageActionSheet({
             showInputAlert({
               title: "Enter the link to your image link",
               placeholder: "can be a discord attachment CDN link",
-              confirmText: "Done",
-              confirmColor: "grey" as ButtonColors,
+              confirmText: "Proxy",
+              confirmColor: "brand" as ButtonColors,
               cancelText: "Cancel",
               onConfirm: async function (d) {
-                const s = d.match(constants.HTTP_REGEX_MULTI)?.[0];
-                if (!s)
+                const url = d.match(constants.HTTP_REGEX_MULTI)?.[0];
+                if (!url)
                   return showToast("Invalid URL", getAssetIDByName("Small"));
                 showToast("Proxying image...", getAssetIDByName("ic_clock"));
                 try {
-                  let p = (await getExternalAsset(s))[0].external_asset_path;
-                  if (p.startsWith("https://media.discordapp.net/"))
-                    p = p.split("/").slice(3).join("/");
-                  update(`mp:${p}`),
-                    showToast("Proxied image", getAssetIDByName("Check"));
+                  update(`mp:${await getExternalAsset(url)}`);
+                  showToast("Proxied image", getAssetIDByName("Check"));
                 } catch (p) {
                   console.log(p);
                   showToast("Failed to proxy image", getAssetIDByName("Small"));
@@ -124,8 +182,13 @@ export function ImageActionSheet({
         />
         {image && (
           <FormRow
-            label="Remove Image"
-            leading={<FormRow.Icon source={getAssetIDByName("trash")} />}
+            label={<SimpleText {...destructiveText}>Remove Image</SimpleText>}
+            leading={
+              <FormRow.Icon
+                style={styles.destructiveIcon}
+                source={getAssetIDByName("trash")}
+              />
+            }
             onPress={() => {
               update(undefined);
               LazyActionSheet.hideActionSheet();
@@ -147,10 +210,7 @@ export function ButtonActionSheet({
   role: string;
   text: string | undefined;
   url: string | undefined;
-  update: (props: {
-    text: string | undefined;
-    url: string | undefined;
-  }) => void;
+  update: (props: { text: string; url: string | undefined }) => void;
 }) {
   return (
     <ActionSheet>
@@ -187,10 +247,32 @@ export function ButtonActionSheet({
             })
           }
         />
+        {url && (
+          <FormRow
+            label={
+              <SimpleText {...destructiveText}>Remove Button URL</SimpleText>
+            }
+            leading={
+              <FormRow.Icon
+                style={styles.destructiveIcon}
+                source={getAssetIDByName("trash")}
+              />
+            }
+            onPress={() => {
+              update({ text, url: undefined });
+              LazyActionSheet.hideActionSheet();
+            }}
+          />
+        )}
         {text && (
           <FormRow
-            label="Remove Button"
-            leading={<FormRow.Icon source={getAssetIDByName("trash")} />}
+            label={<SimpleText {...destructiveText}>Remove Button</SimpleText>}
+            leading={
+              <FormRow.Icon
+                style={styles.destructiveIcon}
+                source={getAssetIDByName("trash")}
+              />
+            }
             onPress={() => {
               update(undefined);
               LazyActionSheet.hideActionSheet();
@@ -245,6 +327,7 @@ export function ApplicationActionSheet({
         <FormRow
           label="Select Application"
           leading={<FormRow.Icon source={getAssetIDByName("ic_robot_24px")} />}
+          trailing={<FormRow.Arrow />}
           onPress={() => {
             applicationListCallback = (props) => {
               applicationListCallback = undefined;
@@ -256,8 +339,15 @@ export function ApplicationActionSheet({
         />
         {appId && (
           <FormRow
-            label="Remove Application"
-            leading={<FormRow.Icon source={getAssetIDByName("trash")} />}
+            label={
+              <SimpleText {...destructiveText}>Remove Application</SimpleText>
+            }
+            leading={
+              <FormRow.Icon
+                style={styles.destructiveIcon}
+                source={getAssetIDByName("trash")}
+              />
+            }
             onPress={() => {
               update(undefined);
               LazyActionSheet.hideActionSheet();
@@ -308,16 +398,50 @@ export function ActivityTypeActionSheet({
   );
 }
 
+export function TimestampVariableActionSheet({
+  role,
+  update,
+}: {
+  role: string;
+  update: (v: string) => void;
+}) {
+  return (
+    <ActionSheet>
+      <ScrollView>
+        <ActionSheetTitleHeader
+          title={`Set ${role} Time Variable`}
+          trailing={
+            <ActionSheetCloseButton
+              onPress={() => LazyActionSheet.hideActionSheet()}
+            />
+          }
+        />
+        {timestampVariables.map((x) => (
+          <FormRow
+            label={x.title}
+            subLabel={x.description}
+            trailing={<FormRow.Arrow />}
+            onPress={() => {
+              update(x.format);
+              LazyActionSheet.hideActionSheet();
+            }}
+          />
+        ))}
+      </ScrollView>
+      <SheetFooter />
+    </ActionSheet>
+  );
+}
 export function TimestampActionSheet({
   start,
   end,
   update,
 }: {
-  start: number | undefined;
-  end: number | undefined;
+  start: string | number | undefined;
+  end: string | number | undefined;
   update: (props: {
-    start: number | undefined;
-    end: number | undefined;
+    start: string | number | undefined;
+    end: string | number | undefined;
   }) => void;
 }) {
   const prompt = ({
@@ -325,13 +449,15 @@ export function TimestampActionSheet({
     onSubmit,
   }: {
     role: string;
-    onSubmit: (time: any) => void;
+    onSubmit: (time: number) => void;
   }) => {
     const sOD = new Date().setHours(0, 0, 0, 0);
     const eOD = new Date().setHours(23, 59, 59, 999);
 
     LazyActionSheet.openLazy(Promise.resolve(DatePicker), "DatePicker", {
-      onSubmit,
+      onSubmit: (x: any) => {
+        return onSubmit(unparseTimestamp(x._d.getTime()));
+      },
       title: `Timestamp ${role} Time`,
       startDate: new Date(),
       minimumDate: new Date(sOD),
@@ -353,21 +479,44 @@ export function TimestampActionSheet({
           }
         />
         <FormRow
-          label="Edit Start Time"
+          label="Set Start Time Variable"
           leading={
-            <FormRow.Icon source={getAssetIDByName("ic_message_edit")} />
+            <FormRow.Icon source={getAssetIDByName("ic_essentials_sparkle")} />
           }
+          trailing={<FormRow.Arrow />}
           onPress={() =>
-            prompt({
+            openSheet(TimestampVariableActionSheet, {
               role: "Start",
-              onSubmit: (v) => update({ start: v._d.getTime(), end }),
+              update: (v: string) => update({ start: v, end }),
             })
           }
         />
-        {start && (
+        {typeof start !== "string" && (
           <FormRow
-            label="Remove Start Time"
-            leading={<FormRow.Icon source={getAssetIDByName("trash")} />}
+            label="Edit Start Time"
+            leading={
+              <FormRow.Icon source={getAssetIDByName("ic_message_edit")} />
+            }
+            trailing={<FormRow.Arrow />}
+            onPress={() =>
+              prompt({
+                role: "Start",
+                onSubmit: (v) => update({ start: v, end }),
+              })
+            }
+          />
+        )}
+        {start !== undefined && (
+          <FormRow
+            label={
+              <SimpleText {...destructiveText}>Remove Start Time</SimpleText>
+            }
+            leading={
+              <FormRow.Icon
+                style={styles.destructiveIcon}
+                source={getAssetIDByName("trash")}
+              />
+            }
             onPress={() => {
               update({ start: undefined, end });
               LazyActionSheet.hideActionSheet();
@@ -375,21 +524,43 @@ export function TimestampActionSheet({
           />
         )}
         <FormRow
-          label="Edit End Time"
+          label="Set End Time Variable"
           leading={
-            <FormRow.Icon source={getAssetIDByName("ic_message_edit")} />
+            <FormRow.Icon source={getAssetIDByName("ic_essentials_sparkle")} />
           }
+          trailing={<FormRow.Arrow />}
           onPress={() =>
-            prompt({
+            openSheet(TimestampVariableActionSheet, {
               role: "End",
-              onSubmit: (v) => update({ start, end: v._d.getTime() }),
+              update: (v: string) => update({ start, end: v }),
             })
           }
         />
-        {end && (
+        {typeof end !== "string" && (
           <FormRow
-            label="Remove End Time"
-            leading={<FormRow.Icon source={getAssetIDByName("trash")} />}
+            label="Edit End Time"
+            leading={
+              <FormRow.Icon source={getAssetIDByName("ic_message_edit")} />
+            }
+            onPress={() =>
+              prompt({
+                role: "End",
+                onSubmit: (v) => update({ start, end: v }),
+              })
+            }
+          />
+        )}
+        {end !== undefined && (
+          <FormRow
+            label={
+              <SimpleText {...destructiveText}>Remove End Time</SimpleText>
+            }
+            leading={
+              <FormRow.Icon
+                style={styles.destructiveIcon}
+                source={getAssetIDByName("trash")}
+              />
+            }
             onPress={() => {
               update({ start, end: undefined });
               LazyActionSheet.hideActionSheet();
@@ -446,9 +617,9 @@ export const simpleInput = ({
   update: (txt: string) => void;
 }) =>
   showInputAlert({
-    title: `Enter New ${role} Text`,
-    confirmText: "Done",
-    confirmColor: "grey" as ButtonColors,
+    title: `Enter New ${role}`,
+    confirmText: "Change",
+    confirmColor: "brand" as ButtonColors,
     cancelText: "Cancel",
     initialValue: current,
     placeholder: `really cool ${role.toLowerCase()}`,

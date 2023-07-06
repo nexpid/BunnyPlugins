@@ -9,7 +9,7 @@ import { semanticColors } from "@vendetta/ui";
 import { Forms, General } from "@vendetta/ui/components";
 
 const { TextStyleSheet } = findByProps("TextStyleSheet");
-const { View, Text } = General;
+const { View, Text, Pressable } = General;
 const { FormRow } = Forms;
 
 export interface DisplayProfileData {
@@ -95,7 +95,14 @@ export function resolveSemanticColor(color: string) {
   return colors.meta.resolveSemanticColor(ThemeStore.theme, color);
 }
 
-export function getUserAvatar(user: User, animated?: boolean): string {
+export function getUserAvatar(
+  user: {
+    discriminator: string;
+    avatar?: string;
+    id: string;
+  },
+  animated?: boolean
+): string {
   const isPomelo = user.discriminator === "0";
 
   return user.avatar
@@ -113,15 +120,20 @@ export function getUserAvatar(user: User, animated?: boolean): string {
 
 export function BetterTableRowGroup({
   title,
+  onTitlePress,
   icon,
   children,
   padding,
 }: React.PropsWithChildren<{
   title: string;
+  onTitlePress?: () => void;
   icon?: number;
   padding?: boolean;
 }>): React.JSX.Element {
   const styles = stylesheet.createThemedStyleSheet({
+    androidRipple: {
+      color: semanticColors.ANDROID_RIPPLE,
+    },
     mainText: {
       fontFamily: constants.Fonts.PRIMARY_SEMIBOLD,
       fontSize: 14,
@@ -143,9 +155,15 @@ export function BetterTableRowGroup({
     },
   });
 
+  const UseCompontent = onTitlePress ? Pressable : View;
+
   return (
     <View style={{ marginHorizontal: 16, marginTop: 16 }}>
-      <View
+      <UseCompontent
+        android_ripple={styles.androidRipple}
+        disabled={false}
+        accessibilityRole={"button"}
+        onPress={onTitlePress}
         style={{
           marginBottom: 8,
           flexDirection: "row",
@@ -159,7 +177,7 @@ export function BetterTableRowGroup({
           </View>
         )}
         <Text style={styles.mainText}>{title}</Text>
-      </View>
+      </UseCompontent>
       <View style={styles.main}>
         {padding ? (
           <View style={{ paddingHorizontal: 16, paddingVertical: 16 }}>
@@ -181,15 +199,22 @@ export function LineDivider({
   const styles = stylesheet.createThemedStyleSheet({
     line: {
       width: "100%",
-      marginHorizontal: addPadding && 16,
       height: 2,
       backgroundColor: semanticColors.BACKGROUND_ACCENT,
-      marginTop: 8,
-      marginBottom: 8,
+      borderRadius: 2147483647,
     },
   });
 
-  return <View style={styles.line} />;
+  return (
+    <View
+      style={[
+        { marginTop: 16, marginBottom: 16 },
+        addPadding && { marginHorizontal: 16 },
+      ]}
+    >
+      <View style={styles.line} />
+    </View>
+  );
 }
 
 export namespace RichText {
@@ -303,4 +328,8 @@ export function SuperAwesomeIcon({
       />
     </RN.TouchableOpacity>
   );
+}
+
+export function isObject(x: Record<any, any>) {
+  return typeof x === "object" && !Array.isArray(x);
 }

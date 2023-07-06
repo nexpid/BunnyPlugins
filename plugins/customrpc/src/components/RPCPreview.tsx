@@ -5,7 +5,7 @@ import {
   settingsActivityToRaw,
 } from "../stuff/activity";
 import { NavigationNative, React, stylesheet } from "@vendetta/metro/common";
-import { General } from "@vendetta/ui/components";
+import { Button, General } from "@vendetta/ui/components";
 import { semanticColors } from "@vendetta/ui";
 import { SimpleText } from "../../../../stuff/types";
 import {
@@ -16,12 +16,13 @@ import {
 import {
   ActivityTypeActionSheet,
   ApplicationActionSheet,
+  ButtonActionSheet,
   ImageActionSheet,
   TimestampActionSheet,
   openSheet,
   simpleInput,
 } from "../stuff/prompts";
-import { parseTimestamp, stringifyTimeDiff } from "../stuff/util";
+import { displayImage, parseTimestamp, stringifyTimeDiff } from "../stuff/util";
 
 const UserStore = findByStoreName("UserStore");
 
@@ -52,6 +53,8 @@ const styles = stylesheet.createThemedStyleSheet({
   },
 });
 
+export let forceUpdateRPCPreview: () => void;
+
 export default ({
   edit,
   act,
@@ -60,6 +63,8 @@ export default ({
   act: SettingsActivity;
 }): React.JSX.Element => {
   const [_, forceUpdate] = React.useReducer((x) => ~x, 0);
+  forceUpdateRPCPreview = forceUpdate;
+
   const navigation = NavigationNative.useNavigation();
   const update = () => {
     forceUpdate();
@@ -94,7 +99,7 @@ export default ({
                   onPress={() =>
                     openSheet(ImageActionSheet, {
                       appId: act.app.id,
-                      role: "Big",
+                      role: "Large",
                       image: act.assets.largeImg,
                       navigation,
                       update: (x: string) => {
@@ -106,13 +111,9 @@ export default ({
                 >
                   <Image
                     source={{
-                      uri: act.assets.largeImg?.startsWith("mp:")
-                        ? `https://media.discordapp.net/${act.assets.largeImg.slice(
-                            3
-                          )}`
-                        : act.assets.largeImg
-                        ? `https://cdn.discordapp.com/app-assets/${act.app.id}/${act.assets.largeImg}.png?size=56`
-                        : placeholders.image,
+                      uri:
+                        displayImage(act.assets.largeImg ?? ".", act.app.id) ??
+                        placeholders.image,
                     }}
                     style={{ borderRadius: 3, width: 56, height: 56 }}
                   />
@@ -134,13 +135,11 @@ export default ({
                   >
                     <Image
                       source={{
-                        uri: act.assets.smallImg?.startsWith("mp:")
-                          ? `https://media.discordapp.net/${act.assets.smallImg.slice(
-                              3
-                            )}`
-                          : act.assets.smallImg
-                          ? `https://cdn.discordapp.com/app-assets/${act.app.id}/${act.assets.smallImg}.png?size=56`
-                          : placeholders.image,
+                        uri:
+                          displayImage(
+                            act.assets.smallImg ?? ".",
+                            act.app.id
+                          ) ?? placeholders.image,
                       }}
                       style={{ borderRadius: 14, width: 28, height: 28 }}
                     />
@@ -160,9 +159,9 @@ export default ({
                         x: { name?: string; id?: string } | undefined
                       ) => {
                         if (x?.id !== act.app.id) {
-                          if (!act.assets.smallImg.startsWith("mp:"))
+                          if (!Number.isNaN(Number(act.assets.smallImg)))
                             delete act.assets.smallImg;
-                          if (!act.assets.largeImg.startsWith("mp:"))
+                          if (!Number.isNaN(Number(act.assets.largeImg)))
                             delete act.assets.largeImg;
                         }
 
@@ -223,18 +222,82 @@ export default ({
                   }
                   liveUpdate={true}
                   getChildren={() =>
-                    act.timestamps.end
+                    typeof act.timestamps.end === "string"
+                      ? `{${act.timestamps.end}}`
+                      : typeof act.timestamps.end === "number"
                       ? `${stringifyTimeDiff(
                           parseTimestamp(act.timestamps.end) - Date.now()
                         )} left`
-                      : act.timestamps.start
+                      : typeof act.timestamps.start === "string"
+                      ? `{${act.timestamps.start}}`
+                      : typeof act.timestamps.start === "number"
                       ? `${stringifyTimeDiff(
                           Date.now() - parseTimestamp(act.timestamps.start)
-                        )} passed`
+                        )} elapsed`
                       : placeholders.timestamp
                   }
                 />
               </View>
+            </View>
+            <View style={{ marginTop: 16 }}>
+              <Button
+                text={act.buttons[0]?.text ?? placeholders.button1}
+                style={{ backgroundColor: "grey" }}
+                size={"small"}
+                onPress={() =>
+                  openSheet(ButtonActionSheet, {
+                    role: "1",
+                    text: act.buttons[0]?.text,
+                    url: act.buttons[0]?.url,
+                    update: ({
+                      text,
+                      url,
+                    }: {
+                      text: string;
+                      url: string | undefined;
+                    }) => {
+                      if (!text && !url) act.buttons[0] = undefined;
+                      else
+                        act.buttons[0] = {
+                          text,
+                          url,
+                        };
+
+                      update();
+                    },
+                  })
+                }
+              />
+            </View>
+            <View style={{ marginTop: 10 }}>
+              <Button
+                text={act.buttons[1]?.text ?? placeholders.button2}
+                style={{ backgroundColor: "grey" }}
+                size={"small"}
+                onPress={() =>
+                  openSheet(ButtonActionSheet, {
+                    role: "2",
+                    text: act.buttons[1]?.text,
+                    url: act.buttons[1]?.url,
+                    update: ({
+                      text,
+                      url,
+                    }: {
+                      text: string;
+                      url: string | undefined;
+                    }) => {
+                      if (!text && !url) act.buttons[1] = undefined;
+                      else
+                        act.buttons[1] = {
+                          text,
+                          url,
+                        };
+
+                      update();
+                    },
+                  })
+                }
+              />
             </View>
           </View>
         </View>
@@ -244,7 +307,7 @@ export default ({
     return (
       <UserActivityContainer
         user={UserStore.getCurrentUser()}
-        activity={settingsActivityToRaw(act)}
+        activity={settingsActivityToRaw(act).activity}
       />
     );
 };

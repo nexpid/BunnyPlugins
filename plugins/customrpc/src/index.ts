@@ -1,5 +1,6 @@
 import { storage } from "@vendetta/plugin";
 import {
+  RawActivity,
   SettingsActivity,
   dispatchActivity,
   dispatchActivityIfPossible,
@@ -11,6 +12,10 @@ export const vstorage: {
   settings?: {
     edit: boolean;
     display: boolean;
+    debug?: {
+      enabled?: boolean;
+      visible?: boolean;
+    };
   };
   activity?: {
     profile?: string;
@@ -19,13 +24,21 @@ export const vstorage: {
   profiles?: Record<string, SettingsActivity>;
 } = storage;
 
+export const debug: {
+  lastRawActivity: RawActivity | undefined;
+  lastRawActivityTimestamp: number | undefined;
+} = {
+  lastRawActivity: undefined,
+  lastRawActivityTimestamp: undefined,
+};
+
 export default {
   onLoad: () => {
     dispatchActivityIfPossible();
     registerDefaultChanges();
   },
   onUnload: () => {
-    dispatchActivity({});
+    dispatchActivity();
     unregisterChanges(true);
   },
   settings,

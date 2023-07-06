@@ -1,4 +1,5 @@
 import {
+  clipboard,
   NavigationNative,
   React,
   ReactNative as RN,
@@ -7,19 +8,30 @@ import { showConfirmationAlert, showInputAlert } from "@vendetta/ui/alerts";
 import { vstorage } from "../..";
 import { showToast } from "@vendetta/ui/toasts";
 import { getAssetIDByName } from "@vendetta/ui/assets";
-import { Forms, Search } from "@vendetta/ui/components";
+import { Forms, General, Search } from "@vendetta/ui/components";
 import { activitySavedPrompt } from "../../stuff/prompts";
 import { SuperAwesomeIcon } from "../../../../../stuff/types";
 import { findByProps } from "@vendetta/metro";
-import { makeEmptySettingsActivity } from "../../stuff/activity";
+import {
+  checkSettingsActivity,
+  makeEmptySettingsActivity,
+  SettingsActivity,
+} from "../../stuff/activity";
 import { forceUpdateSettings } from "../Settings";
 
-const { FormRow } = Forms;
+const { View } = General;
+const { FormRadioRow, FormRow } = Forms;
 
 const { showSimpleActionSheet } = findByProps("showSimpleActionSheet");
 const LazyActionSheet = findByProps("openLazy", "hideActionSheet");
 
-let headerRightCallback: () => any;
+let headerRightCallbacks: {
+  import?: () => void;
+  add?: () => void;
+} = {
+  import: undefined,
+  add: undefined,
+};
 
 export const ProfileList = (): React.JSX.Element => {
   const navigation = NavigationNative.useNavigation();
@@ -30,22 +42,24 @@ export const ProfileList = (): React.JSX.Element => {
     setSearch("");
   }, []);
 
-  headerRightCallback = () =>
+  headerRightCallbacks.add = () =>
     showInputAlert({
       title: "Enter new profile name",
       placeholder: "Super Awesome RPC",
-      confirmText: "Done",
-      confirmColor: "grey" as ButtonColors,
+      confirmText: "Add",
+      confirmColor: "brand" as ButtonColors,
       cancelText: "Cancel",
       onConfirm: (txt) => {
+        if (txt.match(/^\s*$/))
+          return showToast(
+            "Profile name cannot be empty",
+            getAssetIDByName("Small")
+          );
+        txt = txt.trim();
+
         if (vstorage.profiles[txt])
           return showToast(
             "A profile with that name already exists",
-            getAssetIDByName("Small")
-          );
-        if (txt.length < 3)
-          return showToast(
-            "Profile name must be atleast 2 chars long",
             getAssetIDByName("Small")
           );
 
@@ -57,6 +71,29 @@ export const ProfileList = (): React.JSX.Element => {
         showToast("Created profile", getAssetIDByName("Check"));
       },
     });
+  headerRightCallbacks.import = async () => {
+    let activity: SettingsActivity;
+    try {
+      activity = JSON.parse(await clipboard.getString());
+    } catch {
+      return showToast("Failed to parse JSON");
+    }
+
+    if (!checkSettingsActivity(activity))
+      return showToast("Invalid profile data", getAssetIDByName("Small"));
+
+    let counter = 0,
+      name = "Imported Profile";
+    while (vstorage.profiles[name]) {
+      counter++;
+      name = `Imported Profile (${counter})`;
+    }
+
+    vstorage.profiles[name] = activity;
+    vstorage.activity.profile = name;
+    forceUpdate();
+    showToast("Imported profile", getAssetIDByName("Check"));
+  };
 
   let wentBack = false;
 
@@ -74,7 +111,7 @@ export const ProfileList = (): React.JSX.Element => {
         x.toLowerCase().includes(search)
       )}
       renderItem={({ item }) => (
-        <FormRow
+        <FormRadioRow
           label={item}
           onLongPress={() =>
             showSimpleActionSheet({
@@ -85,6 +122,16 @@ export const ProfileList = (): React.JSX.Element => {
               },
               options: [
                 {
+                  label: "Copy Profile",
+                  icon: getAssetIDByName("copy"),
+                  onPress: () => {
+                    clipboard.setString(
+                      JSON.stringify(vstorage.profiles[item], undefined, 3)
+                    );
+                    showToast("Copied", getAssetIDByName("toast_copy_link"));
+                  },
+                },
+                {
                   label: "Rename Profile",
                   icon: getAssetIDByName("ic_message_edit"),
                   onPress: () =>
@@ -92,18 +139,20 @@ export const ProfileList = (): React.JSX.Element => {
                       title: "Enter new profile name",
                       placeholder: "Super Awesome RPC 2.0",
                       initialValue: item,
-                      confirmText: "Done",
-                      confirmColor: "grey" as ButtonColors,
+                      confirmText: "Rename",
+                      confirmColor: "brand" as ButtonColors,
                       cancelText: "Cancel",
                       onConfirm: function (txt) {
+                        if (txt.match(/^\s*$/))
+                          return showToast(
+                            "Profile name cannot be empty",
+                            getAssetIDByName("Small")
+                          );
+                        txt = txt.trim();
+
                         if (vstorage.profiles[txt])
                           return showToast(
                             "A profile with that name already exists",
-                            getAssetIDByName("Small")
-                          );
-                        if (txt.length < 3)
-                          return showToast(
-                            "Profile name must be atleast 2 chars long",
                             getAssetIDByName("Small")
                           );
 
@@ -120,6 +169,7 @@ export const ProfileList = (): React.JSX.Element => {
                 {
                   label: "Delete Profile",
                   icon: getAssetIDByName("trash"),
+                  isDestructive: true,
                   onPress: () =>
                     showConfirmationAlert({
                       title: "Delete Profile",
@@ -174,6 +224,8 @@ export const ProfileList = (): React.JSX.Element => {
               },
             });
           }}
+          trailing={<FormRow.Arrow />}
+          selected={vstorage.activity.profile === item}
         />
       )}
     />
@@ -185,11 +237,18 @@ export function showProfileList(navigation: any) {
     render: ProfileList,
     title: "Profiles",
     headerRight: () => (
-      <SuperAwesomeIcon
-        style="header"
-        icon={getAssetIDByName("ic_add_24px")}
-        onPress={() => headerRightCallback?.()}
-      />
+      <View style={{ flexDirection: "row-reverse" }}>
+        <SuperAwesomeIcon
+          style="header"
+          icon={getAssetIDByName("ic_add_24px")}
+          onPress={() => headerRightCallbacks.add?.()}
+        />
+        <SuperAwesomeIcon
+          style="header"
+          icon={getAssetIDByName("ic_file_upload_24px")}
+          onPress={() => headerRightCallbacks.import?.()}
+        />
+      </View>
     ),
   });
 }
