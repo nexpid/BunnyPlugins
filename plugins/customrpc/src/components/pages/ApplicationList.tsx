@@ -119,7 +119,7 @@ export function showApplicationList(navigation) {
     headerRight: () => (
       <SuperAwesomeIcon
         style="header"
-        icon={getAssetIDByName("")}
+        icon={getAssetIDByName("ic_custom_color")}
         onPress={() => headerRightCallback?.()}
       />
     ),
