@@ -286,8 +286,8 @@ export function ButtonActionSheet({
 }
 
 export let applicationListCallback: (props: {
-  id: string;
-  name: string;
+  id?: string;
+  name?: string;
 }) => void;
 export function ApplicationActionSheet({
   appId,
@@ -331,7 +331,10 @@ export function ApplicationActionSheet({
           onPress={() => {
             applicationListCallback = (props) => {
               applicationListCallback = undefined;
-              update(props);
+              update({
+                id: props.id ?? appId,
+                name: props.name ?? appName,
+              });
             };
             showApplicationList(navigation);
             LazyActionSheet.hideActionSheet();

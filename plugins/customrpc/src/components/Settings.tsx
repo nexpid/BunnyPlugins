@@ -37,6 +37,8 @@ import { semanticColors } from "@vendetta/ui";
 const { ScrollView, View, Pressable } = General;
 const { FormSwitchRow, FormIcon, FormRow } = Forms;
 
+const allowBoykisser = false;
+
 export const placeholders = {
   image: "https://discord.com/assets/cb1043c312ec65507573c06c37f6ee63.gif",
   appName: "Enter App Name...",
@@ -321,34 +323,40 @@ export default (): React.JSX.Element => {
               if (changes > 0) dispatchActivityIfPossible();
             }}
           />
-          <LineDivider addPadding={true} />
 
-          <View style={{ paddingHorizontal: 16, paddingBottom: 16 }}>
-            <Pressable
-              android_ripple={styles.androidRipple}
-              disabled={false}
-              accessibilityRole={"button"}
-              accessibilityLabel="boykisser"
-              accessibilityHint="tap to boykiss"
-              onPress={() => {
-                const messages = "nya,mwah,uwu,nya~,guh,blehhh >:P".split(",");
-                showToast(
-                  messages[Math.floor(Math.random() * messages.length)]
-                );
-              }}
-            >
-              <RN.Image
-                source={{
-                  uri: "https://cdn.discordapp.com/attachments/919655852724604978/1126175249424191548/723.gif",
-                }}
-                style={{
-                  borderRadius: 8,
-                  width: "100%",
-                  aspectRatio: 1,
-                }}
-              />
-            </Pressable>
-          </View>
+          {allowBoykisser && (
+            <>
+              <LineDivider addPadding={true} />
+              <View style={{ paddingHorizontal: 16, paddingBottom: 16 }}>
+                <Pressable
+                  android_ripple={styles.androidRipple}
+                  disabled={false}
+                  accessibilityRole={"button"}
+                  accessibilityLabel="boykisser"
+                  accessibilityHint="tap to boykiss"
+                  onPress={() => {
+                    const messages = "nya,mwah,uwu,nya~,guh,blehhh >:P".split(
+                      ","
+                    );
+                    showToast(
+                      messages[Math.floor(Math.random() * messages.length)]
+                    );
+                  }}
+                >
+                  <RN.Image
+                    source={{
+                      uri: "https://cdn.discordapp.com/attachments/919655852724604978/1126175249424191548/723.gif",
+                    }}
+                    style={{
+                      borderRadius: 8,
+                      width: "100%",
+                      aspectRatio: 1,
+                    }}
+                  />
+                </Pressable>
+              </View>
+            </>
+          )}
         </BetterTableRowGroup>
       )}
       <View style={{ marginBottom: 20 }} />

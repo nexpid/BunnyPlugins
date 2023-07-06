@@ -5,16 +5,39 @@ import {
 } from "@vendetta/metro/common";
 import { SimpleAPIApplication, getApplications } from "../../stuff/api";
 import { General, Search } from "@vendetta/ui/components";
-import { SimpleText } from "../../../../../stuff/types";
+import { SimpleText, SuperAwesomeIcon } from "../../../../../stuff/types";
 import { placeholders } from "../Settings";
 import { applicationListCallback } from "../../stuff/prompts";
+import { getAssetIDByName } from "@vendetta/ui/assets";
+import { showInputAlert } from "@vendetta/ui/alerts";
+import { showToast } from "@vendetta/ui/toasts";
 
 const { View, Image } = General;
 
+let headerRightCallback: () => void;
 export const ApplicationList = (): React.JSX.Element => {
   const navigation = NavigationNative.useNavigation();
   const [search, setSearch] = React.useState("");
   const [data, setData] = React.useState<SimpleAPIApplication[]>();
+
+  headerRightCallback = () =>
+    !wentBack &&
+    showInputAlert({
+      title: "Custom App ID",
+      placeholder: "123",
+      confirmText: "Use",
+      confirmColor: "blue" as ButtonColors,
+      onConfirm: (txt) => {
+        if (txt.match(/^\s*$/))
+          return showToast("App ID cannot be empty", getAssetIDByName("Small"));
+        if (Number.isNaN(Number(txt)))
+          return showToast("Invalid app ID", getAssetIDByName("Small"));
+
+        applicationListCallback({
+          id: txt,
+        });
+      },
+    });
 
   React.useEffect(() => {
     setSearch("");
@@ -93,5 +116,12 @@ export function showApplicationList(navigation) {
   navigation.push("VendettaCustomPage", {
     render: ApplicationList,
     title: "Select Application",
+    headerRight: () => (
+      <SuperAwesomeIcon
+        style="header"
+        icon={getAssetIDByName("")}
+        onPress={() => headerRightCallback?.()}
+      />
+    ),
   });
 }
