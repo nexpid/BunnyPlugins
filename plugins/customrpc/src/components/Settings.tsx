@@ -433,7 +433,7 @@ export default (): React.JSX.Element => {
                       if (bkCounterTimeout) clearTimeout(bkCounterTimeout);
                       bkCounterTimeout = setTimeout(() => {
                         bkCounter = -1;
-                      }, 1500);
+                      }, 3000);
                       bkCounter++;
 
                       const messages = [
