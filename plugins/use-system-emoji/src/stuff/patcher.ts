@@ -26,7 +26,7 @@ export default () => {
           if (
             (y.type === "emoji" ||
               y.type === "customEmoji" ||
-              (y.type === "text" && y.content.match(/^\s*$/))) &&
+              (y.type === "text" && y.content?.match(/^\s*$/))) &&
             y.jumboable &&
             !isHeading
           ) {
