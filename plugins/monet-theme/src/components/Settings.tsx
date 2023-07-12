@@ -149,10 +149,10 @@ export default (): React.JSX.Element => {
       message: "Dynamic colors are only available on Android.",
       onPress: () => {},
     };
-  else if (debug.os.sdk < 32)
+  else if (debug.os.sdk < 31)
     showMessage = {
       error: false,
-      message: "Dynamic colors are only available on Android 12+ (SDK 32+).",
+      message: "Dynamic colors are only available on Android 12+ (SDK 31+).",
       onPress: () => {},
     };
   else if (!syscolors)
