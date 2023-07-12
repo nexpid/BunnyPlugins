@@ -10,6 +10,7 @@ import {
   BetterTableRowGroup,
   LineDivider,
   RichText,
+  SuperAwesomeIcon,
   VendettaSysColors,
 } from "../../../../stuff/types";
 import { getAssetIDByName } from "@vendetta/ui/assets";
@@ -26,6 +27,7 @@ import { id } from "@vendetta/plugin";
 import { findByProps } from "@vendetta/metro";
 import { semanticColors } from "@vendetta/ui";
 import { getDebugInfo } from "@vendetta/debug";
+import { openPluginReportSheet } from "../../../../stuff/githubReport";
 
 const { BundleUpdaterManager } = window.nativeModuleProxy;
 
@@ -118,6 +120,16 @@ export default (): React.JSX.Element => {
         }
       });
   }, [commits]);
+
+  navigation.setOptions({
+    headerRight: () => (
+      <SuperAwesomeIcon
+        style="header"
+        icon={getAssetIDByName("ic_report_message")}
+        onPress={() => openPluginReportSheet("customrpc")}
+      />
+    ),
+  });
 
   let showMessage: {
     error: boolean;
