@@ -50,7 +50,7 @@ I'm working on **4** plugins, and **1** plugin is discontinued.
 	- [<img alt="view_code" src="https://img.shields.io/badge/view_code-263238?style=for-the-badge" />](https://github.com/Gabe616/VendettaPlugins/tree/main/plugins/customrpc)
 - DownloadEverything — Allows you to download stickers, voice messages, emojis and more!
 	- [<img alt="view_code" src="https://img.shields.io/badge/view_code-263238?style=for-the-badge" />](https://github.com/Gabe616/VendettaPlugins/tree/main/plugins/download-everything)
-- MonetTheme — Monet (MY) theme generator
+- MonetTheme — Monet (M3) theme generator
 	- [<img alt="view_code" src="https://img.shields.io/badge/view_code-263238?style=for-the-badge" />](https://github.com/Gabe616/VendettaPlugins/tree/main/plugins/monet-theme)
 - ReactionNotifications — Get notified about message reactions (ported from ItzOnlyAnimal/AliuPlugins/ReactionNotifier)
 	- [<img alt="view_code" src="https://img.shields.io/badge/view_code-263238?style=for-the-badge" />](https://github.com/Gabe616/VendettaPlugins/tree/main/plugins/reaction-notifications)

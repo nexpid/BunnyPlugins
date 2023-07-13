@@ -6,4 +6,4 @@
 	<h1>MonetTheme</h1>
 </div>
 
-Monet (MY) theme generator
+Monet (M3) theme generator
