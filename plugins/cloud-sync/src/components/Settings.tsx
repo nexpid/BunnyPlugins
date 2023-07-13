@@ -45,7 +45,7 @@ export default function () {
       <SuperAwesomeIcon
         icon={getAssetIDByName("ic_report_message")}
         style="header"
-        onPress={() => url.openURL(openPluginReportSheet("cloud-sync"))}
+        onPress={() => openPluginReportSheet("cloud-sync")}
       />
     ),
   });
