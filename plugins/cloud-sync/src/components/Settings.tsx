@@ -16,13 +16,11 @@ import { showToast } from "@vendetta/ui/toasts";
 import {
   NavigationNative,
   React,
-  ReactNative as RN,
   clipboard,
   url,
 } from "@vendetta/metro/common";
 import PluginSettingsPage from "./PluginSettingsPage";
-import { showConfirmationAlert, showCustomAlert } from "@vendetta/ui/alerts";
-import { getIssueUrl } from "../../../../stuff/getIssueUrl";
+import { openPluginReportSheet } from "../../../../stuff/githubReport";
 
 const { ScrollView, View } = General;
 const { FormRow, FormSwitchRow } = Forms;
@@ -41,17 +39,16 @@ export default function () {
   );
 
   const navigation = NavigationNative.useNavigation();
-  React.useEffect(() => {
-    navigation.setOptions({
-      headerRight: () => (
-        <SuperAwesomeIcon
-          icon={getAssetIDByName("ic_report_message")}
-          style="header"
-          onPress={() => url.openURL(getIssueUrl("cloud-sync"))}
-        />
-      ),
-    });
-  }, []);
+  navigation.setOptions({
+    title: "CloudSync",
+    headerRight: () => (
+      <SuperAwesomeIcon
+        icon={getAssetIDByName("ic_report_message")}
+        style="header"
+        onPress={() => url.openURL(openPluginReportSheet("cloud-sync"))}
+      />
+    ),
+  });
 
   return (
     <ScrollView>
@@ -106,20 +103,11 @@ export default function () {
           label="Plugin Settings"
           leading={<FormRow.Icon source={getAssetIDByName("debug")} />}
           trailing={<FormRow.Arrow />}
-          onPress={() => {
-            showConfirmationAlert({
-              title: "guh",
-              content: "gah",
-              confirmText: "hi",
-              cancelText: "no",
-              onConfirm: () => showToast("GAH"),
-              //@ts-ignore
-              onCancel: () => showToast("ZAMN"),
-            });
-            /*navigation.push("VendettaCustomPage", {
+          onPress={() =>
+            navigation.push("VendettaCustomPage", {
               render: PluginSettingsPage,
-            });*/
-          }}
+            })
+          }
         />
       </BetterTableRowGroup>
       <BetterTableRowGroup

@@ -60,7 +60,11 @@ export default function () {
           text: "Load Data",
           onPress: async (setLoad) => {
             setLoad(true);
-            await syncEverything(true);
+            try {
+              await syncEverything(true);
+            } catch (e) {
+              console.log("ZOINKS", e);
+            }
             setLoad(false);
           },
         },

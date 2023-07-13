@@ -59,9 +59,9 @@ export async function promptOrRun(
         cancelText: cancelText,
         confirmColor: "green" as ButtonColors,
         isDismissable: false,
-        onConfirm: () => (callback ? callback().then(res) : res),
+        onConfirm: () => (callback ? callback().then(res) : res()),
         //@ts-ignore
-        onCancel: () => (cancelled ? cancelled().then(res) : res),
+        onCancel: () => (cancelled ? cancelled().then(res) : res()),
       });
     });
   else return await callback?.();
@@ -94,6 +94,8 @@ const patchMMKV = () => {
   );
 };
 
+export const currentMigrationStage = 1;
+
 vstorage.autoSync ??= false;
 vstorage.addToSettings ??= true;
 vstorage.pluginSettings ??= {};
@@ -117,6 +119,31 @@ export default {
     if (i18nLoaded) patchMMKV();
 
     patches.push(patcher());
+
+    const showMsg = (title: string, content: string) =>
+      showConfirmationAlert({
+        title,
+        content,
+        onConfirm: () => {},
+        confirmText: "Dismiss",
+        confirmColor: "brand" as ButtonColors,
+        secondaryConfirmText: "Don't show again",
+        onConfirmSecondary: () =>
+          (vstorage.databaseMigrate = currentMigrationStage),
+      });
+
+    if (
+      window.CSmigrationStage === undefined ||
+      (vstorage.databaseMigrate !== currentMigrationStage &&
+        window.CSmigrationStage !== currentMigrationStage)
+    ) {
+      window.CSmigrationStage = currentMigrationStage;
+      if (currentMigrationStage === 1)
+        showMsg(
+          "Cloud Sync — DB Migration Stage 1",
+          "Hey, I'd like to quickly announce that CloudSync will be switching databases soon and your data may get ***deleted***. Make sure to keep an eye on your data for the upcoming weeks!\n\n- nexx"
+        );
+    }
   },
   onUnload: () => {
     pluginLoaded = false;

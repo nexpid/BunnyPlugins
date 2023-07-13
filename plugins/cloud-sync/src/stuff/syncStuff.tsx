@@ -53,7 +53,7 @@ export async function syncEverything(shouldPrompt?: boolean) {
 
   let loadUnproxiedPlugins = true;
   if (newUnproxiedPlugins[0])
-    return await promptOrRun(
+    await promptOrRun(
       true,
       "Unproxied Plugins",
       `Do you want to install **${
@@ -76,19 +76,17 @@ export async function syncEverything(shouldPrompt?: boolean) {
     await promptOrRun(
       shouldPrompt,
       "Install Plugins",
-      `Would you like to install **${toLoadPlugins.length}** newplugin${
+      `Would you like to install **${toLoadPlugins.length}** new plugin${
         toLoadPlugins.length !== 1 ? "s" : ""
-      }`,
+      }?`,
       "Yes",
       "No",
       async () => {
         syncedAnything = true;
         for (const x of newPlugins) {
           createMMKVBackend(x.id).set(x.options);
-          await installPlugin(x.id, false);
+          await installPlugin(x.id, x.enabled);
         }
-        for (const x of newPlugins.filter((x) => x.enabled))
-          await startPlugin(x.id);
         showToast("Synced plugins", getAssetIDByName("Check"));
       }
     );
@@ -101,9 +99,9 @@ export async function syncEverything(shouldPrompt?: boolean) {
     await promptOrRun(
       shouldPrompt,
       "Install Themes",
-      `Would you like to install **${toLoadPlugins.length}** newplugin${
-        toLoadPlugins.length !== 1 ? "s" : ""
-      }`,
+      `Would you like to install **${newThemes.length}** new theme${
+        newThemes.length !== 1 ? "s" : ""
+      }?`,
       "Yes",
       "No",
       async () => {

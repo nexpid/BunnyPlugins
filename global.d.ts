@@ -20,4 +20,6 @@ declare global {
       syscolors?: { prop: string };
     };
   }
+
+  var CSmigrationStage: number | undefined;
 }
