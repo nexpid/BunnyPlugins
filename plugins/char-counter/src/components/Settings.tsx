@@ -23,10 +23,16 @@ export default () => {
           leading={
             <FormRow.Icon source={getAssetIDByName("ic_message_edit")} />
           }
-          onValueChange={() => {
-            vstorage.commas = !vstorage.commas;
-          }}
+          onValueChange={() => (vstorage.commas = !vstorage.commas)}
           value={vstorage.commas}
+        />
+        <FormSwitchRow
+          label="Support SplitLargeMessages"
+          leading={
+            <FormRow.Icon source={getAssetIDByName("ic_message_edit")} />
+          }
+          onValueChange={() => (vstorage.supportSLM = !vstorage.supportSLM)}
+          value={vstorage.supportSLM}
         />
       </BetterTableRowGroup>
     </ScrollView>

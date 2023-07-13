@@ -30,11 +30,10 @@ jobs:
 
       - name: Publish changes
         env:
-          commit_author: "actions"
           commit_message: "style(readmes): update readmes"
         run: |
-          git config --global user.name "${{ env.commit_author }}"
-          git config --global user.email "${{ env.commit_author }}@users.noreply.github.com"
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
           git add plugins/**/README.md README.md -f
-          git commit -m "${{ env.commit_message }}"
+          git commit -m "${{ env.commit_message }}" || true
           git push

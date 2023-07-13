@@ -37,6 +37,7 @@ export function useChangelog(
               ? "TEXT_DANGER"
               : undefined
           }
+          variant="text-md/semibold"
         >
           {x}
         </SimpleText>

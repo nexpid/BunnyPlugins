@@ -59,7 +59,6 @@ export interface User {
   globalName: string;
 }
 
-// i have no clue what half of these are
 export interface GuildMemberProfile {
   userId: string;
   guildId: string;
@@ -74,8 +73,6 @@ export interface GuildMemberProfile {
   badges: any[];
 }
 
-// ...
-
 export interface ReactionEvent {
   channelId: string;
   messageId: string;
@@ -85,6 +82,26 @@ export interface ReactionEvent {
   colors: string[];
   messageAuthorId: string;
 }
+
+type VendettaSysColor = [
+  string,
+  string,
+  string,
+  string,
+  string,
+  string,
+  string,
+  string,
+  string,
+  string,
+  string,
+  string,
+  string
+];
+export type VendettaSysColors = Record<
+  "neutral1" | "neutral2" | "accent1" | "accent2" | "accent3",
+  VendettaSysColor
+>;
 
 // ...
 
@@ -117,6 +134,8 @@ export function getUserAvatar(
           : parseInt(user.discriminator) % 5
       }`;
 }
+
+// ...
 
 export function BetterTableRowGroup({
   title,
@@ -299,6 +318,8 @@ export function SuperAwesomeIcon({
 }): React.JSX.Element {
   const styles = stylesheet.createThemedStyleSheet({
     headerStyleIcon: {
+      width: 24,
+      height: 24,
       marginRight: 10,
       tintColor: semanticColors.HEADER_PRIMARY,
     },

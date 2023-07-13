@@ -1,109 +1,129 @@
-import { React, ReactNative as RN, stylesheet } from "@vendetta/metro/common";
+import {
+  React,
+  ReactNative,
+  ReactNative as RN,
+  stylesheet,
+} from "@vendetta/metro/common";
 import { showConfirmationAlert } from "@vendetta/ui/alerts";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { General } from "@vendetta/ui/components";
 import { semanticColors } from "@vendetta/ui";
-import { FadeInView } from "../../../../stuff/animations";
-import { findByProps } from "@vendetta/metro";
+import { FadeView } from "../../../../stuff/animations";
+import { findByName, findByProps, findByStoreName } from "@vendetta/metro";
+import { after } from "@vendetta/patcher";
 
-const { Pressable, Text } = General;
+const { ScrollView, Pressable, View } = General;
 
-const { default: renderMessageMarkup } = findByProps(
-  "renderMessageMarkupToAST"
+const ACTION_ICON_SIZE = 40;
+const styles = stylesheet.createThemedStyleSheet({
+  androidRipple: {
+    color: semanticColors.ANDROID_RIPPLE,
+    cornerRadius: 2147483647,
+  },
+  actionButton: {
+    borderRadius: 2147483647,
+    height: ACTION_ICON_SIZE,
+    width: ACTION_ICON_SIZE,
+    marginHorizontal: 4,
+    flexShrink: 0,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: semanticColors.BACKGROUND_SECONDARY_ALT,
+
+    marginLeft: 8,
+    marginTop: -4,
+  },
+  actionIcon: {
+    tintColor: semanticColors.INTERACTIVE_NORMAL,
+    width: ACTION_ICON_SIZE * 0.6,
+    height: ACTION_ICON_SIZE * 0.6,
+  },
+});
+
+const { default: ChatItemWrapper } = findByProps(
+  "DCDAutoModerationSystemMessageView"
 );
+const MessageRecord = findByName("MessageRecord");
+const RowManager = findByName("RowManager");
+const SelectedChannelStore = findByStoreName("SelectedChannelStore");
+const UserStore = findByStoreName("UserStore");
 
-export default ({
-  thing,
-}: {
-  thing: { runner: (txt: string) => void };
-}): React.JSX.Element => {
-  const size = 40;
-  const styles = stylesheet.createThemedStyleSheet({
-    androidRipple: {
-      color: semanticColors.ANDROID_RIPPLE,
-      cornerRadius: 2147483647,
-    },
-    actionButton: {
-      borderRadius: 2147483647,
-      height: size,
-      width: size,
-      marginHorizontal: 4,
-      flexShrink: 0,
-      flexDirection: "row",
-      alignItems: "center",
-      justifyContent: "center",
-      backgroundColor: semanticColors.BACKGROUND_SECONDARY,
+export default ({ inputProps }): JSX.Element => {
+  const textRef = React.useRef<string>(null);
 
-      marginLeft: 8,
-      marginTop: -4,
-    },
-    actionIcon: {
-      tintColor: semanticColors.INTERACTIVE_NORMAL,
-      width: size * 0.6,
-      height: size * 0.6,
-    },
-  });
+  if (!inputProps.onChangeText) {
+    inputProps.onChangeText = (text: string) => (textRef.current = text);
+  } else {
+    after(
+      "onChangeText",
+      inputProps,
+      ([text]: [string]) => (textRef.current = text),
+      true
+    );
+  }
 
-  const [text, setText] = React.useState("");
-  thing.runner = (txt) => setText(txt);
-
-  const run = () => {
-    const markup = renderMessageMarkup(
-      {
-        content: text,
-        embeds: [],
-      },
-      {
-        hideSimpleEmbedContent: true,
-        formatInline: false,
-        allowHeading: true,
-        allowList: true,
-        allowLinks: false,
-        previewLinkTarget: false,
-      }
-    ).content;
-
+  const onPress = () => {
     showConfirmationAlert({
-      title: "Markdown Preview",
-      content: markup,
-      confirmText: "Ok",
-      confirmColor: "grey" as ButtonColors,
-      onConfirm: () => undefined,
+      title: "Message Preview",
+      onConfirm: () => void 0,
+      // @ts-ignore -- a valid property that's unadded in typings
+      children: (
+        <ScrollView
+          style={{
+            marginVertical: 12,
+            maxHeight: ReactNative.Dimensions.get("window").height * 0.7,
+          }}
+        >
+          <ChatItemWrapper
+            rowGenerator={new RowManager()}
+            message={
+              new MessageRecord({
+                id: "0",
+                channel_id: SelectedChannelStore.getChannelId(),
+                author: UserStore.getCurrentUser(),
+                content: textRef.current,
+              })
+            }
+          />
+        </ScrollView>
+      ),
     });
   };
 
+  const shouldAppear = textRef.current?.length > 0;
+  const UseComponent = shouldAppear ? Pressable : View;
+
   return (
-    text.length > 0 && (
-      <FadeInView
-        style={{
-          flexDirection: "row",
-          position: "absolute",
-          left: 0,
-          top: -size,
-          zIndex: 3,
+    <FadeView
+      style={{
+        flexDirection: "row",
+        position: "absolute",
+        left: 0,
+        top: -ACTION_ICON_SIZE,
+        zIndex: 3,
+      }}
+      duration={100}
+      fade={shouldAppear ? "in" : "out"}
+    >
+      <UseComponent
+        android_ripple={styles.androidRipple}
+        disabled={false}
+        accessibilityRole={"button"}
+        accessibilityState={{
+          disabled: false,
+          expanded: false,
         }}
-        duration={100}
+        accessibilityLabel="Open markdown preview"
+        accessibilityHint="Open a modal which shows your message's markdown preview"
+        onPress={shouldAppear ? onPress : undefined}
+        style={styles.actionButton}
       >
-        <Pressable
-          android_ripple={styles.androidRipple}
-          disabled={false}
-          accessibilityRole={"button"}
-          accessibilityState={{
-            disabled: false,
-            expanded: false,
-          }}
-          accessibilityLabel="Open markdown preview"
-          accessibilityHint="Open a modal which shows your message's markdown preview"
-          onPress={run}
-          style={styles.actionButton}
-          children={
-            <RN.Image
-              style={styles.actionIcon}
-              source={getAssetIDByName("ic_eye")}
-            />
-          }
+        <RN.Image
+          style={styles.actionIcon}
+          source={getAssetIDByName("ic_eye")}
         />
-      </FadeInView>
-    )
+      </UseComponent>
+    </FadeView>
   );
 };

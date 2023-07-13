@@ -1,0 +1,36 @@
+name: Plugin Suggestion
+description: Suggest an idea for a plugin!
+title: "suggest(PLUGIN): "
+labels: [suggestion]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Thanks for taking the time to suggest a plugin feature!
+  - type: checkboxes
+    attributes:
+      label: Check all the boxes below
+      options:
+        - label: I have checked that this feature hasn't already been suggested
+          required: true
+  - type: input
+    id: discord-username
+    attributes:
+      label: Discord username
+      description: Enter your discord username (@User#0000 / @user)
+    validations:
+      required: true
+  - type: textarea
+    id: simple-description
+    attributes:
+      label: Simple description
+      description: A simple description of your suggestion
+    validations:
+      required: true
+  - type: textarea
+    id: elaborate
+    attributes:
+      label: Elaborate
+      description: A simple description of your suggestion
+    validations:
+      required: true

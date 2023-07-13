@@ -3,20 +3,25 @@ import { stylesheet } from "@vendetta/metro/common";
 import { useProxy } from "@vendetta/storage";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { Forms, General } from "@vendetta/ui/components";
-import { Colors, ThemeStore, parseTimestamp, vstorage } from "..";
+import { vstorage } from "..";
 import { semanticColors } from "@vendetta/ui";
 import { showToast } from "@vendetta/ui/toasts";
 import { BetterTableRowGroup } from "../../../../stuff/types";
+import { findByProps } from "@vendetta/metro";
 
 const { ScrollView, Text } = General;
 const { FormSwitchRow, FormIcon } = Forms;
 
-export function TimeExample({ style }: { style: any }): React.JSX.Element {
-  const [refVal, setRefVal] = React.useState(false);
+export const { parseTimestamp } = findByProps(
+  "parseTimestamp",
+  "unparseTimestamp"
+);
 
-  const nextSecond = new Date();
-  nextSecond.setSeconds(nextSecond.getSeconds() + 1, 0);
-  setTimeout(() => setRefVal(!refVal), nextSecond.getTime() - Date.now());
+export function TimeExample({ style }: { style: any }): React.JSX.Element {
+  const [_, forceUpdate] = React.useReducer((x) => ~x, 0);
+
+  const nextSecond = new Date().setMilliseconds(1000);
+  setTimeout(() => forceUpdate(), nextSecond - Date.now());
 
   const current = new Date();
   const examples = [
@@ -74,43 +79,29 @@ export default () => {
   vstorage.alwaysLong ??= false;
   useProxy(vstorage);
 
-  const theme = ThemeStore.theme;
-  const color = Colors.meta.resolveSemanticColor(
-    theme,
-    semanticColors.TEXT_NORMAL
-  );
-  const spoilerHidden = Colors.meta.resolveSemanticColor(
-    theme,
-    semanticColors.SPOILER_HIDDEN_BACKGROUND
-  );
-  const spoilerRevealed = Colors.meta.resolveSemanticColor(
-    theme,
-    semanticColors.BACKGROUND_MODIFIER_ACCENT
-  );
-
   const style = stylesheet.createThemedStyleSheet({
     mainText: {
       fontFamily: constants.Fonts.DISPLAY_NORMAL,
       includeFontPadding: false,
       fontSize: 16,
-      color,
+      color: semanticColors.TEXT_NORMAL,
     },
     boldText: {
       fontFamily: constants.Fonts.DISPLAY_BOLD,
       includeFontPadding: false,
-      color,
+      color: semanticColors.TEXT_NORMAL,
     },
     code: {
       fontFamily: constants.Fonts.CODE_SEMIBOLD,
       includeFontPadding: false,
-      color,
-      backgroundColor: spoilerHidden,
+      color: semanticColors.TEXT_NORMAL,
+      backgroundColor: semanticColors.BACKGROUND_SECONDARY,
     },
     timestamp: {
       fontFamily: constants.Fonts.DISPLAY_NORMAL,
       includeFontPadding: false,
-      color,
-      backgroundColor: spoilerRevealed,
+      color: semanticColors.TEXT_NORMAL,
+      backgroundColor: semanticColors.BACKGROUND_MODIFIER_ACCENT,
     },
   });
 

@@ -14,7 +14,6 @@ const ignorePlugins = [
   "reaction-notifications",
   "download-everything",
   "fxtwitter",
-  "customrpc",
 ];
 
 /** @type import("rollup").InputPluginOption */
@@ -49,7 +48,7 @@ const plugins = [
       return result.code;
     },
   },
-  esbuild({ minify: true }),
+  esbuild({ minify: !process.argv.includes("--nominify") }),
 ];
 
 for (let plug of await readdir("./plugins")) {

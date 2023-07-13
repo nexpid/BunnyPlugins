@@ -1,0 +1,77 @@
+name: Plugin Bug Report
+description: Report a bug in a plugin!
+title: "bug(PLUGIN): "
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Thank you for taking the time to report a plugin bug!
+  - type: checkboxes
+    attributes:
+      label: Check all the boxes below
+      options:
+        - label: I have checked that this bug hasn't already been reported
+          required: true
+  - type: input
+    id: discord-username
+    attributes:
+      label: Discord username
+      description: Enter your discord username (@User#0000 / @user)
+    validations:
+      required: true
+  - type: textarea
+    id: detailed-info
+    attributes:
+      label: Detailed Info
+      description: Detailed information about the bug
+    validations:
+      required: false
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to Reproduce
+      description: How to reproduce this bug
+      placeholder: |
+        1. Go to Settings
+        2. Do this
+        3. Do that
+        4. Discord crashes
+    validations:
+      required: true
+  - type: textarea
+    id: crash-info
+    attributes:
+      label: Crash Info
+      description: If this bug causes a crash, enter the Message and Stack Trace
+    validations:
+      required: false
+  - type: textarea
+    id: bug-screenshot
+    attributes:
+      label: Bug Screenshot
+      description: If this bug doesn't cause a crash, enter a screenshot of it
+    validations:
+      required: false
+  - type: textarea
+    id: sysinfo
+    attributes:
+      label: System Info
+      description: Enter your system information (use the **sysinfo** plugin if you need hep)
+      value: |
+        Device: 
+        Manufacturer: 
+        Brand: 
+
+        OS:
+        Version:
+
+        Discord Branch:
+        Discord Version:
+        Discord Build:
+        Vendetta Version:
+
+        React Version:
+        Hermes Bytecode:
+    validations:
+      required: true
