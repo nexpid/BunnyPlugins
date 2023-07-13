@@ -2,6 +2,7 @@ import {
   NavigationNative,
   ReactNative as RN,
   React,
+  clipboard,
   stylesheet,
   url,
 } from "@vendetta/metro/common";
@@ -10,6 +11,7 @@ import {
   BetterTableRowGroup,
   LineDivider,
   RichText,
+  SimpleText,
   SuperAwesomeIcon,
   VendettaSysColors,
 } from "../../../../stuff/types";
@@ -18,7 +20,7 @@ import Color from "./Color";
 import { commitsURL, patchesURL, vstorage } from "..";
 import { createFileBackend, useProxy } from "@vendetta/storage";
 import { showToast } from "@vendetta/ui/toasts";
-import { showConfirmationAlert } from "@vendetta/ui/alerts";
+import { showConfirmationAlert, showInputAlert } from "@vendetta/ui/alerts";
 import { build } from "../stuff/buildTheme";
 import Commit, { CommitObj } from "./Commit";
 import { openCommitsPage } from "./pages/CommitsPage";
@@ -28,10 +30,11 @@ import { findByProps } from "@vendetta/metro";
 import { semanticColors } from "@vendetta/ui";
 import { getDebugInfo } from "@vendetta/debug";
 import { openPluginReportSheet } from "../../../../stuff/githubReport";
+import { checkForURL, fetchRawTheme, parseTheme } from "../stuff/repainter";
 
 const { BundleUpdaterManager } = window.nativeModuleProxy;
 
-const { ScrollView, View, Text, Pressable } = General;
+const { ScrollView, View, Pressable } = General;
 const { FormRow } = Forms;
 
 export interface Patches {
@@ -41,22 +44,17 @@ export interface Patches {
 }
 
 const { TextStyleSheet } = findByProps("TextStyleSheet");
+const mdSize = TextStyleSheet["text-md/semibold"].fontSize;
 const styles = stylesheet.createThemedStyleSheet({
   androidRipple: {
     color: semanticColors.ANDROID_RIPPLE,
     cornerRadius: 8,
   },
   warning: {
-    ...TextStyleSheet["text-md/semibold"],
     color: semanticColors.TEXT_DANGER,
   },
   info: {
-    ...TextStyleSheet["text-md/semibold"],
     color: semanticColors.TEXT_BRAND,
-  },
-  text: {
-    ...TextStyleSheet["text-md/semibold"],
-    color: semanticColors.TEXT_NORMAL,
   },
 });
 
@@ -91,35 +89,45 @@ export default (): React.JSX.Element => {
   React.useEffect(() => {
     if (!patches)
       fetch(patchesURL, { cache: "no-store" })
-        .then(async (x) => {
-          try {
-            const text = (await x.text()).replace(/\r/g, "");
-            setPatches(parse(text));
-          } catch {
-            return showToast(
-              "Failed to parse patches.json",
-              getAssetIDByName("Small")
-            );
-          }
-        })
+        .then((x) =>
+          x.text().then((text) => {
+            try {
+              setPatches(parse(text.replace(/\r/g, "")));
+            } catch {
+              return showToast(
+                "Failed to parse patches.json",
+                getAssetIDByName("Small")
+              );
+            }
+          })
+        )
         .catch(() =>
           showToast("Failed to fetch patches.json", getAssetIDByName("Small"))
         );
   }, [patches]);
   React.useEffect(() => {
     if (!commits)
-      fetch(commitsURL, { cache: "no-store" }).then(async (x) => {
-        try {
-          const json = await x.json();
-          setCommits(json);
-        } catch {
-          return showToast(
-            "Failed to parse commits",
-            getAssetIDByName("Small")
-          );
-        }
-      });
+      fetch(commitsURL, { cache: "no-store" })
+        .then((x) =>
+          x
+            .json()
+            .then((x) => setCommits(x))
+            .catch(() =>
+              showToast("Failed to parse commits", getAssetIDByName("Small"))
+            )
+        )
+        .catch(() =>
+          showToast("Failed to fetch commits", getAssetIDByName("Small"))
+        );
   }, [commits]);
+
+  React.useEffect(() => {
+    fetchRawTheme(
+      "https://repainter.app/themes/01G8B1Y6WH72151ZTQVWXP11KT"
+    ).then((x) => {
+      console.log(JSON.stringify(parseTheme(x)));
+    });
+  }, []);
 
   navigation.setOptions({
     headerRight: () => (
@@ -203,26 +211,25 @@ export default (): React.JSX.Element => {
               showMessage.error ? "ic_warning_24px" : "ic_info_24px"
             )}
             style={{
-              width: showMessage.error
-                ? styles.warning.fontSize
-                : styles.info.fontSize,
-              height: showMessage.error
-                ? styles.warning.fontSize
-                : styles.info.fontSize,
+              width: mdSize,
+              height: mdSize,
               tintColor: showMessage.error
                 ? styles.warning.color
                 : styles.info.color,
               marginRight: 4,
             }}
           />
-          <Text style={showMessage.error ? styles.warning : styles.info}>
+          <SimpleText
+            variant="text-md/semibold"
+            color={showMessage.error ? "TEXT_DANGER" : "TEXT_BRAND"}
+          >
             {showMessage.message}
             {showMessage.cta && (
               <RichText.Underline onPress={showMessage.onPress}>
                 {showMessage.cta}
               </RichText.Underline>
             )}
-          </Text>
+          </SimpleText>
         </View>
       )}
       <BetterTableRowGroup
@@ -230,7 +237,58 @@ export default (): React.JSX.Element => {
         icon={getAssetIDByName("ic_theme_24px")}
         padding={true}
       >
-        {syscolors && (
+        <View
+          style={{
+            marginBottom: 8,
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          {syscolors && (
+            <Pressable
+              android_ripple={styles.androidRipple}
+              disabled={false}
+              accessibilityRole={"button"}
+              accessibilityState={{
+                disabled: false,
+                expanded: false,
+              }}
+              accessibilityLabel="Autofill button"
+              accessibilityHint="Autofills colors to system's dynamic colors"
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                paddingHorizontal: 4,
+                paddingVertical: 4,
+              }}
+              onPress={() => {
+                setColorsFromDynamic(syscolors);
+                showToast("Autofilled", getAssetIDByName("Check"));
+              }}
+            >
+              <RN.Image
+                source={getAssetIDByName("img_nitro_remixing")}
+                style={{
+                  width: mdSize,
+                  height: mdSize,
+                  marginRight: 4,
+                }}
+              />
+              <SimpleText variant="text-md/semibold" color="TEXT_NORMAL">
+                Autofill
+              </SimpleText>
+            </Pressable>
+          )}
+          {syscolors && (
+            <SimpleText
+              variant="text-md/semibold"
+              color="TEXT_NORMAL"
+              style={{ marginHorizontal: 5 }}
+            >
+              •
+            </SimpleText>
+          )}
           <Pressable
             android_ripple={styles.androidRipple}
             disabled={false}
@@ -239,28 +297,47 @@ export default (): React.JSX.Element => {
               disabled: false,
               expanded: false,
             }}
-            accessibilityLabel="Autofill button"
-            accessibilityHint="Autofills colors to system's dynamic colors"
+            accessibilityLabel="Use Repainter theme"
+            accessibilityHint="Inputs a Repainter theme"
             style={{
               flexDirection: "row",
               alignItems: "center",
-              justifyContent: "center",
-              marginBottom: 8,
+              paddingHorizontal: 4,
+              paddingVertical: 4,
             }}
-            onPress={() => setColorsFromDynamic(syscolors)}
+            onPress={async () => {
+              const link = checkForURL(await clipboard.getString());
+              showInputAlert({
+                title: "Enter Repainter link",
+                placeholder: "https://repainter.app/themes/123ABC",
+                initialValue: link,
+                onConfirm: async (i) => {
+                  const link = checkForURL(i);
+                  if (!link) throw new Error("No Repainter link found!");
+
+                  const theme = parseTheme(await fetchRawTheme(link));
+                  vstorage.colors = theme.colors;
+                  showToast("Imported", getAssetIDByName("toast_image_saved"));
+                },
+                confirmText: "Use",
+                confirmColor: "brand" as ButtonColors,
+                cancelText: "Cancel",
+              });
+            }}
           >
             <RN.Image
-              source={getAssetIDByName("img_nitro_remixing")}
+              source={getAssetIDByName("ic_theme_24px")}
               style={{
-                width: styles.text.fontSize,
-                height: styles.text.fontSize,
-                tintColor: styles.text.color,
+                width: mdSize,
+                height: mdSize,
                 marginRight: 4,
               }}
             />
-            <Text style={styles.text}>Autofill</Text>
+            <SimpleText variant="text-md/semibold" color="TEXT_NORMAL">
+              Use Repainter theme
+            </SimpleText>
           </Pressable>
-        )}
+        </View>
         <View
           style={{
             flexDirection: "row",
@@ -277,7 +354,7 @@ export default (): React.JSX.Element => {
       </BetterTableRowGroup>
       <BetterTableRowGroup
         title="Theme"
-        icon={getAssetIDByName("cog_24px")}
+        icon={getAssetIDByName("ic_cog_24px")}
         padding={!patches}
       >
         {!patches ? (

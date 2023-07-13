@@ -31,10 +31,12 @@ export function getLABShade(
   lab[0] += lab[0] * diff * mult;
   return chroma.lab(...lab).hex();
 }
+/*
+here lies the overcomplicated color parsing
 
-export function getSemanticFromTheme(color: string) {}
 
-/*export function getShade(color: string, shade: number): string {
+
+export function getShade(color: string, shade: number): string {
   return `#${tinycolor(color).darken(shade).toHex()}`;
 }
 export function getDiscordShades(prefix: string): Record<string, number> {
