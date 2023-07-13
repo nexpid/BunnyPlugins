@@ -31,7 +31,7 @@ export default (): React.JSX.Element => {
         onPress={() =>
           showConfirmationAlert({
             title: "Revert Settings",
-            content: "Would you like to revert all plugin settings?",
+            content: "Are you sure you want to revert all plugin settings?",
             confirmText: "Revert",
             cancelText: "Cancel",
             confirmColor: "red" as ButtonColors,

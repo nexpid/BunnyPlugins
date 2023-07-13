@@ -5,7 +5,6 @@ import { Forms, General } from "@vendetta/ui/components";
 import {
   BetterTableRowGroup,
   LineDivider,
-  RichText,
   SuperAwesomeIcon,
 } from "../../../../stuff/types";
 import { getAssetIDByName } from "@vendetta/ui/assets";
@@ -19,28 +18,14 @@ import {
   React,
   ReactNative as RN,
   clipboard,
-  stylesheet,
   url,
 } from "@vendetta/metro/common";
 import PluginSettingsPage from "./PluginSettingsPage";
-import { isPluginProxied, isSelfProxied } from "../stuff/pluginSecurity";
-import { findByProps } from "@vendetta/metro";
-import { semanticColors } from "@vendetta/ui";
-import { showConfirmationAlert } from "@vendetta/ui/alerts";
-import { plugins } from "@vendetta/plugins";
-import constants from "../constants";
+import { showConfirmationAlert, showCustomAlert } from "@vendetta/ui/alerts";
 import { getIssueUrl } from "../../../../stuff/getIssueUrl";
 
-const { ScrollView, View, Text } = General;
+const { ScrollView, View } = General;
 const { FormRow, FormSwitchRow } = Forms;
-
-const { TextStyleSheet } = findByProps("TextStyleSheet");
-const styles = stylesheet.createThemedStyleSheet({
-  warning: {
-    ...TextStyleSheet["text-md/semibold"],
-    color: semanticColors.TEXT_DANGER,
-  },
-});
 
 export default function () {
   const [, forceUpdate] = React.useReducer((x) => ~x, 0);
@@ -70,51 +55,6 @@ export default function () {
 
   return (
     <ScrollView>
-      {isSelfProxied() &&
-        Object.keys(plugins).filter((x) => !isPluginProxied(x)).length > 0 && (
-          <View
-            style={{
-              flex: 1,
-              flexDirection: "row",
-              alignItems: "center",
-              justifyContent: "center",
-              marginTop: 8,
-            }}
-          >
-            <RN.Image
-              source={getAssetIDByName("ic_warning_24px")}
-              style={{
-                width: styles.warning.fontSize,
-                height: styles.warning.fontSize,
-                tintColor: styles.warning.color,
-                marginRight: 4,
-              }}
-            />
-            <Text style={styles.warning}>
-              Can load only proxied plugins.{" "}
-              <RichText.Underline
-                onPress={() =>
-                  showConfirmationAlert({
-                    title: "Only Proxied Plugins",
-                    content:
-                      "As requested by Vendetta staff, the proxied version of this plugin cannot load unproxied plugins.",
-                    isDismissable: true,
-                    confirmText: "Ok",
-                    confirmColor: "grey" as ButtonColors,
-                    secondaryConfirmText: "Copy unproxied plugin link",
-                    onConfirm: () => {},
-                    onConfirmSecondary: async () => {
-                      clipboard.setString(constants.unproxiedURL);
-                      showToast("Copied", getAssetIDByName("Check"));
-                    },
-                  })
-                }
-              >
-                Learn more
-              </RichText.Underline>
-            </Text>
-          </View>
-        )}
       <BetterTableRowGroup
         title="Current Data"
         icon={getAssetIDByName("ic_contact_sync")}
@@ -154,8 +94,8 @@ export default function () {
           value={vstorage.autoSync}
         />
         <FormSwitchRow
-          label="Add To Settings"
-          subLabel="Add Cloud Sync to the settings page"
+          label="Pin To Settings"
+          subLabel="Pin Cloud Sync to the settings page"
           leading={<FormRow.Icon source={getAssetIDByName("ic_message_pin")} />}
           onValueChange={() =>
             (vstorage.addToSettings = !vstorage.addToSettings)
@@ -166,11 +106,20 @@ export default function () {
           label="Plugin Settings"
           leading={<FormRow.Icon source={getAssetIDByName("debug")} />}
           trailing={<FormRow.Arrow />}
-          onPress={() =>
-            navigation.push("VendettaCustomPage", {
+          onPress={() => {
+            showConfirmationAlert({
+              title: "guh",
+              content: "gah",
+              confirmText: "hi",
+              cancelText: "no",
+              onConfirm: () => showToast("GAH"),
+              //@ts-ignore
+              onCancel: () => showToast("ZAMN"),
+            });
+            /*navigation.push("VendettaCustomPage", {
               render: PluginSettingsPage,
-            })
-          }
+            });*/
+          }}
         />
       </BetterTableRowGroup>
       <BetterTableRowGroup
