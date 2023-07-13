@@ -37,8 +37,9 @@ export const debug: {
 
 export default {
   onLoad: async () => {
-    vstorage.settings.debug.boykisserDead =
-      (await MMKVManager.getItem("CRPC_boykisser")) === "true";
+    if (vstorage.settings.debug)
+      vstorage.settings.debug.boykisserDead =
+        (await MMKVManager.getItem("CRPC_boykisser")) === "true";
     dispatchActivityIfPossible();
     registerDefaultChanges();
   },
