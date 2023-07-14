@@ -1,8 +1,8 @@
 import { constants } from "@vendetta";
-import { find, findByProps } from "@vendetta/metro";
+import { findByProps } from "@vendetta/metro";
 import { showConfirmationAlert, showInputAlert } from "@vendetta/ui/alerts";
 import { getAssetIDByName } from "@vendetta/ui/assets";
-import { ErrorBoundary, Forms, General } from "@vendetta/ui/components";
+import { Forms, General } from "@vendetta/ui/components";
 import { showToast } from "@vendetta/ui/toasts";
 import { getExternalAsset } from "./api";
 import { showRichAssetList } from "../components/pages/RichAssetList";
@@ -10,7 +10,16 @@ import { showApplicationList } from "../components/pages/ApplicationList";
 import { ActivityType, isActivitySaved } from "./activity";
 import { activityTypePreview } from "../components/Settings";
 import { React, stylesheet } from "@vendetta/metro/common";
-import { RichText, SimpleText } from "../../../../stuff/types";
+import {
+  ActionSheet,
+  ActionSheetCloseButton,
+  ActionSheetTitleHeader,
+  RichText,
+  SimpleText,
+  hideActionSheet,
+  openLazy,
+  openSheet,
+} from "../../../../stuff/types";
 import { vstorage } from "..";
 import { unparseTimestamp } from "./util";
 import { imageVariables, timestampVariables } from "./variables";
@@ -19,32 +28,9 @@ import { semanticColors } from "@vendetta/ui";
 const { View, ScrollView } = General;
 const { FormRow, FormRadioRow } = Forms;
 
-const {
-  default: { render: ActionSheet },
-} = find((x) => x.default?.render?.name === "ActionSheet") ?? {
-  default: { render: false },
-};
-const LazyActionSheet = findByProps("openLazy", "hideActionSheet");
-const { ActionSheetTitleHeader, ActionSheetCloseButton } = findByProps(
-  "ActionSheetTitleHeader",
-  "ActionSheetCloseButton"
-);
 const DatePicker = findByProps("DatePickerModes");
 
 const SheetFooter = () => <View style={{ marginBottom: 16 }} />;
-
-export function openSheet(sheet: any, props: any) {
-  ActionSheet
-    ? LazyActionSheet.openLazy(
-        new Promise((x) => x({ default: sheet })),
-        "ActionSheet",
-        props
-      )
-    : showToast(
-        "You cannot open ActionSheets on this version! Update to 163+",
-        getAssetIDByName("Small")
-      );
-}
 
 const styles = stylesheet.createThemedStyleSheet({
   destructiveIcon: {
@@ -69,9 +55,7 @@ export function ImageVariableActionSheet({
         <ActionSheetTitleHeader
           title={`${role} Image Variable`}
           trailing={
-            <ActionSheetCloseButton
-              onPress={() => LazyActionSheet.hideActionSheet()}
-            />
+            <ActionSheetCloseButton onPress={() => hideActionSheet()} />
           }
         />
         {imageVariables.map((x) => (
@@ -81,7 +65,7 @@ export function ImageVariableActionSheet({
             trailing={<FormRow.Arrow />}
             onPress={() => {
               update(x.format);
-              LazyActionSheet.hideActionSheet();
+              hideActionSheet();
             }}
           />
         ))}
@@ -111,9 +95,7 @@ export function ImageActionSheet({
       <ScrollView>
         <ActionSheetTitleHeader
           title={`Edit ${role} Image`}
-          trailing={
-            <ActionSheetCloseButton onPress={LazyActionSheet.hideActionSheet} />
-          }
+          trailing={<ActionSheetCloseButton onPress={hideActionSheet} />}
         />
         <FormRow
           label="Set Image Variable"
@@ -177,7 +159,7 @@ export function ImageActionSheet({
               update(x);
             };
             showRichAssetList(navigation);
-            LazyActionSheet.hideActionSheet();
+            hideActionSheet();
           }}
         />
         {image && (
@@ -191,7 +173,7 @@ export function ImageActionSheet({
             }
             onPress={() => {
               update(undefined);
-              LazyActionSheet.hideActionSheet();
+              hideActionSheet();
             }}
           />
         )}
@@ -217,9 +199,7 @@ export function ButtonActionSheet({
       <ScrollView>
         <ActionSheetTitleHeader
           title={`Edit Button ${role}`}
-          trailing={
-            <ActionSheetCloseButton onPress={LazyActionSheet.hideActionSheet} />
-          }
+          trailing={<ActionSheetCloseButton onPress={hideActionSheet} />}
         />
         <FormRow
           label="Button Text"
@@ -260,7 +240,7 @@ export function ButtonActionSheet({
             }
             onPress={() => {
               update({ text, url: undefined });
-              LazyActionSheet.hideActionSheet();
+              hideActionSheet();
             }}
           />
         )}
@@ -275,7 +255,7 @@ export function ButtonActionSheet({
             }
             onPress={() => {
               update(undefined);
-              LazyActionSheet.hideActionSheet();
+              hideActionSheet();
             }}
           />
         )}
@@ -307,9 +287,7 @@ export function ApplicationActionSheet({
       <ScrollView>
         <ActionSheetTitleHeader
           title={"Edit Application"}
-          trailing={
-            <ActionSheetCloseButton onPress={LazyActionSheet.hideActionSheet} />
-          }
+          trailing={<ActionSheetCloseButton onPress={hideActionSheet} />}
         />
         <FormRow
           label="Application Name"
@@ -337,7 +315,7 @@ export function ApplicationActionSheet({
               });
             };
             showApplicationList(navigation);
-            LazyActionSheet.hideActionSheet();
+            hideActionSheet();
           }}
         />
         {appId && (
@@ -353,7 +331,7 @@ export function ApplicationActionSheet({
             }
             onPress={() => {
               update(undefined);
-              LazyActionSheet.hideActionSheet();
+              hideActionSheet();
             }}
           />
         )}
@@ -377,9 +355,7 @@ export function ActivityTypeActionSheet({
         <ActionSheetTitleHeader
           title="Edit Activity Type"
           trailing={
-            <ActionSheetCloseButton
-              onPress={() => LazyActionSheet.hideActionSheet()}
-            />
+            <ActionSheetCloseButton onPress={() => hideActionSheet()} />
           }
         />
         {...Object.values(ActivityType)
@@ -414,9 +390,7 @@ export function TimestampVariableActionSheet({
         <ActionSheetTitleHeader
           title={`Set ${role} Time Variable`}
           trailing={
-            <ActionSheetCloseButton
-              onPress={() => LazyActionSheet.hideActionSheet()}
-            />
+            <ActionSheetCloseButton onPress={() => hideActionSheet()} />
           }
         />
         {timestampVariables.map((x) => (
@@ -426,7 +400,7 @@ export function TimestampVariableActionSheet({
             trailing={<FormRow.Arrow />}
             onPress={() => {
               update(x.format);
-              LazyActionSheet.hideActionSheet();
+              hideActionSheet();
             }}
           />
         ))}
@@ -457,7 +431,7 @@ export function TimestampActionSheet({
     const sOD = new Date().setHours(0, 0, 0, 0);
     const eOD = new Date().setHours(23, 59, 59, 999);
 
-    LazyActionSheet.openLazy(Promise.resolve(DatePicker), "DatePicker", {
+    openLazy(Promise.resolve(DatePicker), "DatePicker", {
       onSubmit: (x: any) => {
         return onSubmit(unparseTimestamp(x._d.getTime()));
       },
@@ -476,9 +450,7 @@ export function TimestampActionSheet({
         <ActionSheetTitleHeader
           title="Edit Timestamp"
           trailing={
-            <ActionSheetCloseButton
-              onPress={() => LazyActionSheet.hideActionSheet()}
-            />
+            <ActionSheetCloseButton onPress={() => hideActionSheet()} />
           }
         />
         <FormRow
@@ -522,7 +494,7 @@ export function TimestampActionSheet({
             }
             onPress={() => {
               update({ start: undefined, end });
-              LazyActionSheet.hideActionSheet();
+              hideActionSheet();
             }}
           />
         )}
@@ -566,7 +538,7 @@ export function TimestampActionSheet({
             }
             onPress={() => {
               update({ start, end: undefined });
-              LazyActionSheet.hideActionSheet();
+              hideActionSheet();
             }}
           />
         )}

@@ -7,7 +7,7 @@ import {
 import { NavigationNative, React, stylesheet } from "@vendetta/metro/common";
 import { Button, General } from "@vendetta/ui/components";
 import { semanticColors } from "@vendetta/ui";
-import { SimpleText } from "../../../../stuff/types";
+import { SimpleText, openSheet } from "../../../../stuff/types";
 import {
   activityTypePreview,
   forceUpdateSettings,
@@ -19,7 +19,6 @@ import {
   ButtonActionSheet,
   ImageActionSheet,
   TimestampActionSheet,
-  openSheet,
   simpleInput,
 } from "../stuff/prompts";
 import { displayImage, parseTimestamp, stringifyTimeDiff } from "../stuff/util";
