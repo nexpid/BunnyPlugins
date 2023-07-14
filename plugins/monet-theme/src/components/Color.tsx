@@ -1,16 +1,22 @@
-import { stylesheet } from "@vendetta/metro/common";
+import { clipboard, stylesheet } from "@vendetta/metro/common";
 import { semanticColors } from "@vendetta/ui";
 import { General } from "@vendetta/ui/components";
-import { SimpleText } from "../../../../stuff/types";
+import { SimpleText, openSheet } from "../../../../stuff/types";
+import { findByName } from "@vendetta/metro";
+import { showToast } from "@vendetta/ui/toasts";
+import { getAssetIDByName } from "@vendetta/ui/assets";
 
+const CustomColorPickerActionSheet = findByName("CustomColorPickerActionSheet");
 const { View, Pressable } = General;
 
 export default ({
   title,
   color,
+  update,
 }: {
   title: string;
   color: string;
+  update: (color: string) => void;
 }): React.JSX.Element => {
   const styles = stylesheet.createThemedStyleSheet({
     androidRipple: {
@@ -25,6 +31,7 @@ export default ({
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
+        flex: 1 / 5,
       }}
     >
       <Pressable
@@ -43,11 +50,20 @@ export default ({
           backgroundColor: color,
           borderRadius: 2147483647,
           marginBottom: 8,
-          marginHorizontal: 10,
         }}
-        onPress={() => {}}
+        onPress={() =>
+          openSheet(CustomColorPickerActionSheet, {
+            color: parseInt(color.slice(1), 16),
+            onSelect: (clr: number) =>
+              update(`#${clr.toString(16).padStart(6, "0")}`),
+          })
+        }
+        onLongPress={() => {
+          clipboard.setString(color);
+          showToast("Copied", getAssetIDByName("toast_copy_message"));
+        }}
       />
-      <SimpleText variant="text-md/semibold" color="TEXT_NORMAL">
+      <SimpleText variant="text-sm/semibold" color="TEXT_NORMAL" align="center">
         {title}
       </SimpleText>
     </View>

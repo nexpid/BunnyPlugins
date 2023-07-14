@@ -39,7 +39,7 @@ export interface RepainterTheme {
 export function checkForURL(text: string): string | undefined {
   return text
     .match(HTTP_REGEX_MULTI)
-    .filter((x) => x.startsWith("https://repainter.app/themes/"))[0];
+    ?.filter((x) => x.startsWith("https://repainter.app/themes/"))[0];
 }
 
 export async function fetchRawTheme(link: string): Promise<RepainterRawTheme> {
@@ -61,7 +61,6 @@ export function parseTheme(theme: RepainterRawTheme): RepainterTheme {
     (clr & 0x00ffffff).toString(16).padStart(6, "0");
   const mapped = data.colors.map((x) => `#${parseClr(x)}`);
 
-  console.log(JSON.stringify({ name: data.name, colors: mapped }));
   return {
     name: data.name,
     description: data.description,

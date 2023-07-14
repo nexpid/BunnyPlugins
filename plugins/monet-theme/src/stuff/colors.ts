@@ -1,6 +1,7 @@
-import { rawColors } from "@vendetta/ui";
+import { rawColors, semanticColors } from "@vendetta/ui";
 import { chroma } from "@vendetta/metro/common";
 import { vstorage } from "..";
+import { findByProps } from "@vendetta/metro";
 
 export function parseColor(clr: string): string | undefined {
   const shade = Number(clr.split("_")[1]);
@@ -31,6 +32,7 @@ export function getLABShade(
   lab[0] += lab[0] * diff * mult;
   return chroma.lab(...lab).hex();
 }
+
 /*
 here lies the overcomplicated color parsing
 
