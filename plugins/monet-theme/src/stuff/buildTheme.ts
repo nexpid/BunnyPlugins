@@ -1,6 +1,7 @@
 import { rawColors } from "@vendetta/ui";
-import { Patches } from "../components/Settings";
+import { PatchThing, Patches } from "../components/Settings";
 import { getLABShade, parseColor } from "./colors";
+import { vstorage } from "..";
 
 export function build(patches: Patches) {
   const theme = {
@@ -21,7 +22,10 @@ export function build(patches: Patches) {
     spec: 2,
   };
 
-  for (const [x, y] of Object.entries(patches.replacers)) {
+  const get = (lk: PatchThing<any>) =>
+    Object.assign(lk.both, vstorage.lightmode ? lk.light : lk.dark);
+
+  for (const [x, y] of Object.entries(get(patches.replacers))) {
     const clr = parseColor(y[0]);
     if (!clr) continue;
 
@@ -44,11 +48,20 @@ export function build(patches: Patches) {
       theme.rawColors[c] = getLABShade(clr, shade, mult);
     }
   }
-  for (const [x, y] of Object.entries(patches.semantic))
-    theme.semanticColors[x] = [parseColor(y)];
-  for (const [x, y] of Object.entries(patches.raw))
+
+  for (const [x, y] of Object.entries(get(patches.raw)))
     theme.rawColors[x] = parseColor(y);
 
-  console.log(JSON.stringify(theme));
-  return JSON.parse(JSON.stringify(theme)); // guh
+  for (const [x, y] of Object.entries(patches.semantic.both))
+    theme.semanticColors[x] = [parseColor(y), parseColor(y)];
+  for (const [x, y] of Object.entries(patches.semantic.dark)) {
+    if (theme.semanticColors[x]) theme.semanticColors[x][0] = parseColor(y);
+    else theme.semanticColors[x] = [parseColor(y)];
+  }
+  for (const [x, y] of Object.entries(patches.semantic.light)) {
+    if (theme.semanticColors[x]) theme.semanticColors[x][1] = parseColor(y);
+    else theme.semanticColors[x] = [undefined, parseColor(y)];
+  }
+
+  return JSON.parse(JSON.stringify(theme));
 }

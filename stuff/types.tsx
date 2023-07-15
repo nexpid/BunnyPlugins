@@ -1,4 +1,4 @@
-import { findByProps, findByStoreName } from "@vendetta/metro";
+import { findByName, findByProps, findByStoreName } from "@vendetta/metro";
 import {
   ReactNative as RN,
   React,
@@ -6,11 +6,23 @@ import {
   stylesheet,
 } from "@vendetta/metro/common";
 import { semanticColors } from "@vendetta/ui";
+import { getAssetIDByName } from "@vendetta/ui/assets";
 import { Forms, General } from "@vendetta/ui/components";
+import { showToast } from "@vendetta/ui/toasts";
 
 const { TextStyleSheet } = findByProps("TextStyleSheet");
 const { View, Text, Pressable } = General;
 const { FormRow } = Forms;
+
+export const ActionSheet = findByName("ActionSheet");
+export const { openLazy, hideActionSheet } = findByProps(
+  "openLazy",
+  "hideActionSheet"
+);
+export const { ActionSheetTitleHeader, ActionSheetCloseButton } = findByProps(
+  "ActionSheetTitleHeader",
+  "ActionSheetCloseButton"
+);
 
 export interface DisplayProfileData {
   displayProfile: {
@@ -135,20 +147,26 @@ export function getUserAvatar(
       }`;
 }
 
+export function openSheet(sheet: any, props: any) {
+  ActionSheet
+    ? openLazy(new Promise((x) => x({ default: sheet })), "ActionSheet", props)
+    : showToast(
+        "You cannot open ActionSheets on this version! Update to 163+",
+        getAssetIDByName("Small")
+      );
+}
+
 // ...
 
-export function BetterTableRowGroup({
+export function BetterTableRowTitle({
   title,
-  onTitlePress,
+  onPress,
   icon,
-  children,
-  padding,
-}: React.PropsWithChildren<{
+}: {
   title: string;
-  onTitlePress?: () => void;
+  onPress?: () => void;
   icon?: number;
-  padding?: boolean;
-}>): React.JSX.Element {
+}) {
   const styles = stylesheet.createThemedStyleSheet({
     androidRipple: {
       color: semanticColors.ANDROID_RIPPLE,
@@ -166,6 +184,45 @@ export function BetterTableRowGroup({
       height: 14,
       tintColor: semanticColors.HEADER_SECONDARY,
     },
+  });
+  const UseCompontent = onPress ? Pressable : View;
+
+  return (
+    <UseCompontent
+      android_ripple={styles.androidRipple}
+      disabled={false}
+      accessibilityRole={"button"}
+      onPress={onPress}
+      style={{
+        marginBottom: 8,
+        flexDirection: "row",
+        justifyContent: "flex-start",
+        alignItems: "center",
+      }}
+    >
+      {icon && (
+        <View style={{ marginRight: 4 }}>
+          <FormRow.Icon style={styles.icon} source={icon} size="small" />
+        </View>
+      )}
+      <Text style={styles.mainText}>{title}</Text>
+    </UseCompontent>
+  );
+}
+
+export function BetterTableRowGroup({
+  title,
+  onTitlePress,
+  icon,
+  children,
+  padding,
+}: React.PropsWithChildren<{
+  title: string;
+  onTitlePress?: () => void;
+  icon?: number;
+  padding?: boolean;
+}>): React.JSX.Element {
+  const styles = stylesheet.createThemedStyleSheet({
     main: {
       backgroundColor: semanticColors.BACKGROUND_TERTIARY,
       borderRadius: 16,
@@ -174,29 +231,9 @@ export function BetterTableRowGroup({
     },
   });
 
-  const UseCompontent = onTitlePress ? Pressable : View;
-
   return (
     <View style={{ marginHorizontal: 16, marginTop: 16 }}>
-      <UseCompontent
-        android_ripple={styles.androidRipple}
-        disabled={false}
-        accessibilityRole={"button"}
-        onPress={onTitlePress}
-        style={{
-          marginBottom: 8,
-          flexDirection: "row",
-          justifyContent: "flex-start",
-          alignItems: "center",
-        }}
-      >
-        {icon && (
-          <View style={{ marginRight: 4 }}>
-            <FormRow.Icon style={styles.icon} source={icon} size="small" />
-          </View>
-        )}
-        <Text style={styles.mainText}>{title}</Text>
-      </UseCompontent>
+      <BetterTableRowTitle title={title} onPress={onTitlePress} icon={icon} />
       <View style={styles.main}>
         {padding ? (
           <View style={{ paddingHorizontal: 16, paddingVertical: 16 }}>

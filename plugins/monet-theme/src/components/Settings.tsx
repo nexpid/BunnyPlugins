@@ -9,6 +9,7 @@ import {
 import { Forms, General } from "@vendetta/ui/components";
 import {
   BetterTableRowGroup,
+  BetterTableRowTitle,
   LineDivider,
   RichText,
   SimpleText,
@@ -20,7 +21,11 @@ import Color from "./Color";
 import { commitsURL, patchesURL, vstorage } from "..";
 import { createFileBackend, useProxy } from "@vendetta/storage";
 import { showToast } from "@vendetta/ui/toasts";
-import { showConfirmationAlert, showInputAlert } from "@vendetta/ui/alerts";
+import {
+  showConfirmationAlert,
+  showCustomAlert,
+  showInputAlert,
+} from "@vendetta/ui/alerts";
 import { build } from "../stuff/buildTheme";
 import Commit, { CommitObj } from "./Commit";
 import { openCommitsPage } from "./pages/CommitsPage";
@@ -31,16 +36,22 @@ import { semanticColors } from "@vendetta/ui";
 import { getDebugInfo } from "@vendetta/debug";
 import { openPluginReportSheet } from "../../../../stuff/githubReport";
 import { checkForURL, fetchRawTheme, parseTheme } from "../stuff/repainter";
+import ThemePreview from "../../../../stuff/ThemePreview";
 
 const { BundleUpdaterManager } = window.nativeModuleProxy;
 
 const { ScrollView, View, Pressable } = General;
-const { FormRow } = Forms;
+const { FormRow, FormSwitchRow } = Forms;
 
+export interface PatchThing<value> {
+  dark: Record<string, value>;
+  light: Record<string, value>;
+  both: Record<string, value>;
+}
 export interface Patches {
-  replacers: Record<string, [string, number]>;
-  semantic: Record<string, string>;
-  raw: Record<string, string>;
+  replacers: PatchThing<[string, number]>;
+  semantic: PatchThing<string>;
+  raw: PatchThing<string>;
 }
 
 const { TextStyleSheet } = findByProps("TextStyleSheet");
@@ -55,6 +66,15 @@ const styles = stylesheet.createThemedStyleSheet({
   },
   info: {
     color: semanticColors.TEXT_BRAND,
+  },
+  experimental: {
+    backgroundColor: semanticColors.TEXT_BRAND,
+    borderRadius: 4,
+    paddingHorizontal: 3,
+    paddingVertical: 3,
+    justifyContent: "center",
+    alignItems: "center",
+    flexDirection: "row",
   },
 });
 
@@ -77,13 +97,7 @@ export default (): React.JSX.Element => {
   const [patches, setPatches] = React.useState<Patches | undefined>(undefined);
   stsCommits = commits;
 
-  vstorage.colors ??= {
-    neutral1: "#747679",
-    neutral2: "#70777C",
-    accent1: "#007FAC",
-    accent2: "#657985",
-    accent3: "#787296",
-  };
+  vstorage.lightmode ??= false;
   useProxy(vstorage);
 
   React.useEffect(() => {
@@ -120,14 +134,6 @@ export default (): React.JSX.Element => {
           showToast("Failed to fetch commits", getAssetIDByName("Small"))
         );
   }, [commits]);
-
-  React.useEffect(() => {
-    fetchRawTheme(
-      "https://repainter.app/themes/01G8B1Y6WH72151ZTQVWXP11KT"
-    ).then((x) => {
-      console.log(JSON.stringify(parseTheme(x)));
-    });
-  }, []);
 
   navigation.setOptions({
     headerRight: () => (
@@ -306,7 +312,7 @@ export default (): React.JSX.Element => {
               paddingVertical: 4,
             }}
             onPress={async () => {
-              const link = checkForURL(await clipboard.getString());
+              const link = checkForURL((await clipboard.getString()) ?? "");
               showInputAlert({
                 title: "Enter Repainter link",
                 placeholder: "https://repainter.app/themes/123ABC",
@@ -345,11 +351,31 @@ export default (): React.JSX.Element => {
             justifyContent: "center",
           }}
         >
-          <Color title="Neutral 1" color={vstorage.colors.neutral1} />
-          <Color title="Neutral 2" color={vstorage.colors.neutral2} />
-          <Color title="Accent 1" color={vstorage.colors.accent1} />
-          <Color title="Accent 2" color={vstorage.colors.accent2} />
-          <Color title="Accent 3" color={vstorage.colors.accent3} />
+          <Color
+            title={"Neutral\n"}
+            color={vstorage.colors.neutral1}
+            update={(c) => (vstorage.colors.neutral1 = c)}
+          />
+          <Color
+            title={"Neutral\nVariant"}
+            color={vstorage.colors.neutral2}
+            update={(c) => (vstorage.colors.neutral2 = c)}
+          />
+          <Color
+            title={"Primary\n"}
+            color={vstorage.colors.accent1}
+            update={(c) => (vstorage.colors.accent1 = c)}
+          />
+          <Color
+            title={"Secondary\n"}
+            color={vstorage.colors.accent2}
+            update={(c) => (vstorage.colors.accent2 = c)}
+          />
+          <Color
+            title={"Tertiary\n"}
+            color={vstorage.colors.accent3}
+            update={(c) => (vstorage.colors.accent3 = c)}
+          />
         </View>
       </BetterTableRowGroup>
       <BetterTableRowGroup
@@ -399,6 +425,25 @@ export default (): React.JSX.Element => {
                 });
               }}
             />
+            <FormSwitchRow
+              label={[
+                "Light Theme",
+                <View style={{ width: 10 }} />,
+                <View style={styles.experimental}>
+                  <SimpleText
+                    variant="text-xs/semibold"
+                    color="BACKGROUND_SECONDARY_ALT"
+                  >
+                    EXPERIMENTAL
+                  </SimpleText>
+                </View>,
+              ]}
+              leading={
+                <FormRow.Icon source={getAssetIDByName("ic_message_edit")} />
+              }
+              onValueChange={() => (vstorage.lightmode = !vstorage.lightmode)}
+              value={vstorage.lightmode}
+            />
             <FormRow
               label="Reload Theme Patches"
               leading={
@@ -412,6 +457,20 @@ export default (): React.JSX.Element => {
           </>
         )}
       </BetterTableRowGroup>
+      {patches && (
+        <View style={{ marginVertical: 16, marginHorizontal: 16 }}>
+          <BetterTableRowTitle
+            title="Theme Preview"
+            icon={getAssetIDByName("img_nitro_remixing")}
+          />
+          <ThemePreview
+            theme={{
+              theme: build(patches),
+              origin: vstorage.lightmode ? "light" : "dark",
+            }}
+          />
+        </View>
+      )}
     </ScrollView>
   );
 };
