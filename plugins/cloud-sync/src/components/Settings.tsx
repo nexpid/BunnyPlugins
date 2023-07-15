@@ -2,15 +2,25 @@ import { useProxy } from "@vendetta/storage";
 import * as index from "..";
 import { cache, cacheUpdated, vstorage } from "..";
 import { Forms, General } from "@vendetta/ui/components";
-import { BetterTableRowGroup, LineDivider } from "../../../../stuff/types";
+import {
+  BetterTableRowGroup,
+  LineDivider,
+  SuperAwesomeIcon,
+} from "../../../../stuff/types";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import DataStat from "./DataStat";
 import { openOauth2Modal } from "../stuff/oauth2";
 import { deleteSaveData } from "../stuff/api";
 import DataManagementButtons from "./DataManagementButtons";
 import { showToast } from "@vendetta/ui/toasts";
-import { NavigationNative, React, clipboard } from "@vendetta/metro/common";
+import {
+  NavigationNative,
+  React,
+  clipboard,
+  url,
+} from "@vendetta/metro/common";
 import PluginSettingsPage from "./PluginSettingsPage";
+import { openPluginReportSheet } from "../../../../stuff/githubReport";
 
 const { ScrollView, View } = General;
 const { FormRow, FormSwitchRow } = Forms;
@@ -29,40 +39,44 @@ export default function () {
   );
 
   const navigation = NavigationNative.useNavigation();
-
   navigation.setOptions({
-    title: "Cloud Sync Settings",
+    title: "CloudSync",
+    headerRight: () => (
+      <SuperAwesomeIcon
+        icon={getAssetIDByName("ic_report_message")}
+        style="header"
+        onPress={() => openPluginReportSheet("cloud-sync")}
+      />
+    ),
   });
 
   return (
     <ScrollView>
-      {
-        <BetterTableRowGroup
-          title="Current Data"
-          icon={getAssetIDByName("ic_contact_sync")}
-          padding={true}
+      <BetterTableRowGroup
+        title="Current Data"
+        icon={getAssetIDByName("ic_contact_sync")}
+        padding={true}
+      >
+        <View
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "center",
+            marginVertical: 8,
+          }}
         >
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              justifyContent: "center",
-              marginVertical: 8,
-            }}
-          >
-            <DataStat
-              count={cache.save?.sync?.plugins?.length ?? "-"}
-              subtitle="plugins"
-              contents={2}
-            />
-            <DataStat
-              count={cache.save?.sync?.themes?.length ?? "-"}
-              subtitle="themes"
-              contents={2}
-            />
-          </View>
-        </BetterTableRowGroup>
-      }
+          <DataStat
+            count={cache.save?.sync?.plugins?.length ?? "-"}
+            subtitle="plugins"
+            contents={2}
+          />
+          <DataStat
+            count={cache.save?.sync?.themes?.length ?? "-"}
+            subtitle="themes"
+            contents={2}
+          />
+        </View>
+      </BetterTableRowGroup>
       <BetterTableRowGroup
         title="Settings"
         icon={getAssetIDByName("ic_cog_24px")}
@@ -77,8 +91,8 @@ export default function () {
           value={vstorage.autoSync}
         />
         <FormSwitchRow
-          label="Add To Settings"
-          subLabel="Add Cloud Sync to the settings page"
+          label="Pin To Settings"
+          subLabel="Pin Cloud Sync to the settings page"
           leading={<FormRow.Icon source={getAssetIDByName("ic_message_pin")} />}
           onValueChange={() =>
             (vstorage.addToSettings = !vstorage.addToSettings)

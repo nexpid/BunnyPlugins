@@ -1,0 +1,4 @@
+status = "proxied"
+
+[external]
+backend = "VendettaCloudSync"

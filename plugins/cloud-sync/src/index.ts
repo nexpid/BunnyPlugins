@@ -11,6 +11,7 @@ import { showConfirmationAlert } from "@vendetta/ui/alerts";
 import { FluxDispatcher } from "@vendetta/metro/common";
 import { hsync } from "./stuff/http";
 import patcher from "./stuff/patcher";
+import { PROXY_PREFIX } from "@vendetta/constants";
 
 export const vstorage: {
   authorization?: string;
@@ -23,6 +24,7 @@ export const vstorage: {
       syncStorage: boolean;
     }
   >;
+  databaseMigrate?: number;
 } = storage;
 
 export const cache: {
@@ -39,11 +41,36 @@ export async function fillCache() {
   cacheUpdated();
 }
 
-vstorage.autoSync ??= false;
-vstorage.addToSettings ??= true;
-vstorage.pluginSettings ??= {};
+export async function promptOrRun(
+  shouldPrompt: boolean,
+  title: string,
+  text: (string | React.JSX.Element) | (string | React.JSX.Element)[],
+  confirmText: string,
+  cancelText: string,
+  callback?: () => Promise<any>,
+  cancelled?: () => Promise<any>
+): Promise<void> {
+  if (shouldPrompt)
+    return new Promise((res) => {
+      showConfirmationAlert({
+        title: title,
+        content: text,
+        confirmText: confirmText,
+        cancelText: cancelText,
+        confirmColor: "green" as ButtonColors,
+        isDismissable: false,
+        onConfirm: () => (callback ? callback().then(res) : res()),
+        //@ts-ignore
+        onCancel: () => (cancelled ? cancelled().then(res) : res()),
+      });
+    });
+  else return await callback?.();
+}
 
-let patches = [];
+export function isPluginProxied(id: string) {
+  return id.startsWith(PROXY_PREFIX);
+}
+
 const autoSync = async () => {
   if (!vstorage.autoSync) return;
 
@@ -56,27 +83,9 @@ const autoSync = async () => {
   }
 };
 
-export async function promptOrRun(
-  shouldPrompt: boolean,
-  title: string,
-  text: (string | React.JSX.Element) | (string | React.JSX.Element)[],
-  callback?: () => Promise<void>
-): Promise<void> {
-  if (shouldPrompt)
-    return new Promise((res) => {
-      showConfirmationAlert({
-        title: title,
-        content: text,
-        confirmText: "Yes",
-        cancelText: "No",
-        confirmColor: "green" as ButtonColors,
-        isDismissable: false,
-        onConfirm: () => callback?.().then(res),
-      });
-    });
-  else return await callback?.();
-}
-
+let patches = [];
+let i18nLoaded = false;
+let pluginLoaded = false;
 const patchMMKV = () => {
   patches.push(
     after("createMMKVBackend", venStorage, (_, x) => {
@@ -85,13 +94,16 @@ const patchMMKV = () => {
   );
 };
 
-let i18nLoaded = false;
-let pluginLoaded = false;
+export const currentMigrationStage = 1;
+
+vstorage.autoSync ??= false;
+vstorage.addToSettings ??= true;
+vstorage.pluginSettings ??= {};
+
 FluxDispatcher.subscribe("I18N_LOAD_SUCCESS", () => {
   i18nLoaded = true;
   if (pluginLoaded) patchMMKV();
 });
-
 export default {
   onLoad: () => {
     pluginLoaded = true;
@@ -107,6 +119,31 @@ export default {
     if (i18nLoaded) patchMMKV();
 
     patches.push(patcher());
+
+    const showMsg = (title: string, content: string) =>
+      showConfirmationAlert({
+        title,
+        content,
+        onConfirm: () => {},
+        confirmText: "Dismiss",
+        confirmColor: "brand" as ButtonColors,
+        secondaryConfirmText: "Don't show again",
+        onConfirmSecondary: () =>
+          (vstorage.databaseMigrate = currentMigrationStage),
+      });
+
+    if (
+      window.CSmigrationStage === undefined ||
+      (vstorage.databaseMigrate !== currentMigrationStage &&
+        window.CSmigrationStage !== currentMigrationStage)
+    ) {
+      window.CSmigrationStage = currentMigrationStage;
+      if (currentMigrationStage === 1)
+        showMsg(
+          "Cloud Sync — DB Migration Stage 1",
+          "Hey, I'd like to quickly announce that CloudSync will be switching databases soon and your data may get ***deleted***. Make sure to keep an eye on your data for the upcoming weeks!\n\n- nexx"
+        );
+    }
   },
   onUnload: () => {
     pluginLoaded = false;

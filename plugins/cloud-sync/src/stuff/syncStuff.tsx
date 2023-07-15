@@ -1,7 +1,8 @@
 import { createMMKVBackend } from "@vendetta/storage";
 import { DBSave } from "../types/api/latest";
-import { plugins, themes } from "@vendetta";
-import { cache, promptOrRun, vstorage } from "..";
+import { plugins, startPlugin } from "@vendetta/plugins";
+import { themes } from "@vendetta/themes";
+import { cache, isPluginProxied, promptOrRun, vstorage } from "..";
 import { installPlugin } from "@vendetta/plugins";
 import { fetchTheme, installTheme } from "@vendetta/themes";
 import { showToast } from "@vendetta/ui/toasts";
@@ -16,7 +17,7 @@ export async function grabEverything(): Promise<DBSave.SaveSync> {
     plugins: [],
   } as DBSave.SaveSync;
 
-  for (const x of Object.values(plugins.plugins)) {
+  for (const x of Object.values(plugins)) {
     const config = vstorage.pluginSettings[x.id];
     if (config?.syncPlugin === false) continue;
 
@@ -30,7 +31,7 @@ export async function grabEverything(): Promise<DBSave.SaveSync> {
       options,
     });
   }
-  for (const x of Object.values(themes.themes)) {
+  for (const x of Object.values(themes)) {
     sync.themes.push({
       id: x.id,
       enabled: x.selected,
@@ -46,17 +47,40 @@ export async function syncEverything(shouldPrompt?: boolean) {
   let syncedAnything = false;
 
   const newPlugins = cache.save.sync.plugins.filter(
-    (x) => !Object.keys(plugins.plugins).includes(x.id)
+    (x) => !Object.keys(plugins).includes(x.id) && !x.id.includes("cloud-sync")
   );
-  if (newPlugins.length > 0)
+  const newUnproxiedPlugins = newPlugins.filter((x) => !isPluginProxied(x.id));
+
+  let loadUnproxiedPlugins = true;
+  if (newUnproxiedPlugins[0])
+    await promptOrRun(
+      true,
+      "Unproxied Plugins",
+      `Do you want to install **${
+        newUnproxiedPlugins.length
+      }** unproxied plugin${
+        newUnproxiedPlugins.length !== 1 ? "s" : ""
+      }? Unproxied plugins haven't been verified by Vendetta staff and thus possibly dangerous. Are you sure you want to continue?`,
+      "Proceed",
+      "Skip",
+      undefined,
+      async () => {
+        loadUnproxiedPlugins = false;
+      }
+    );
+
+  const toLoadPlugins = newPlugins.filter((x) =>
+    !loadUnproxiedPlugins ? isPluginProxied(x.id) : true
+  );
+  if (toLoadPlugins.length > 0)
     await promptOrRun(
       shouldPrompt,
       "Install Plugins",
-      [
-        "Would you like to install ",
-        <RichText.Bold>{newPlugins.length.toString()}</RichText.Bold>,
-        ` new plugin${newPlugins.length !== 1 ? "s" : ""}?`,
-      ],
+      `Would you like to install **${toLoadPlugins.length}** new plugin${
+        toLoadPlugins.length !== 1 ? "s" : ""
+      }?`,
+      "Yes",
+      "No",
       async () => {
         syncedAnything = true;
         for (const x of newPlugins) {
@@ -67,19 +91,19 @@ export async function syncEverything(shouldPrompt?: boolean) {
       }
     );
 
-  let toEnableTheme;
+  let toEnableTheme: string;
   const newThemes = cache.save.sync.themes.filter(
-    (x) => !Object.keys(themes.themes).includes(x.id)
+    (x) => !Object.keys(themes).includes(x.id)
   );
   if (newThemes.length > 0)
     await promptOrRun(
       shouldPrompt,
       "Install Themes",
-      [
-        "Would you like to install ",
-        <RichText.Bold>{newThemes.length.toString()}</RichText.Bold>,
-        ` new theme${newThemes.length !== 1 ? "s" : ""}?`,
-      ],
+      `Would you like to install **${newThemes.length}** new theme${
+        newThemes.length !== 1 ? "s" : ""
+      }?`,
+      "Yes",
+      "No",
       async () => {
         syncedAnything = true;
         for (const x of newThemes) {
@@ -95,6 +119,8 @@ export async function syncEverything(shouldPrompt?: boolean) {
       shouldPrompt,
       "Reload Required",
       "A reload is required to apply the theme. Would you like to reload?",
+      "Reload",
+      "Skip",
       async () => {
         await fetchTheme(toEnableTheme, true);
         BundleUpdaterManager.reload();
@@ -102,5 +128,5 @@ export async function syncEverything(shouldPrompt?: boolean) {
     );
 
   if (!syncedAnything)
-    showToast("Already synced", getAssetIDByName("ic_sync_24px"));
+    showToast("Nothing to sync", getAssetIDByName("ic_sync_24px"));
 }
