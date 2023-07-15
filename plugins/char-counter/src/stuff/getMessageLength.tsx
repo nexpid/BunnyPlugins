@@ -1,4 +1,4 @@
-import { findByProps, findByStoreName } from "@vendetta/metro";
+import { findByStoreName } from "@vendetta/metro";
 import { plugins } from "@vendetta/plugins";
 import { vstorage } from "..";
 
@@ -26,6 +26,6 @@ export function hasSLM() {
 }
 
 export default () => {
-  if (UserStore.getCurrentUser().premiumType === 2) return 4000;
+  if (UserStore.getCurrentUser()?.premiumType === 2) return 4000;
   else return 2000;
 };
