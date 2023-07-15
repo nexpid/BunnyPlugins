@@ -133,9 +133,8 @@ export default {
       });
 
     if (
-      window.CSmigrationStage === undefined ||
-      (vstorage.databaseMigrate !== currentMigrationStage &&
-        window.CSmigrationStage !== currentMigrationStage)
+      vstorage.databaseMigrate !== currentMigrationStage &&
+      window.CSmigrationStage !== currentMigrationStage
     ) {
       window.CSmigrationStage = currentMigrationStage;
       if (currentMigrationStage === 1)
