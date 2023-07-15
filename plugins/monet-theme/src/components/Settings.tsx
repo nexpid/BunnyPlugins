@@ -4,7 +4,6 @@ import {
   React,
   clipboard,
   stylesheet,
-  url,
 } from "@vendetta/metro/common";
 import { Forms, General } from "@vendetta/ui/components";
 import {
@@ -21,11 +20,7 @@ import Color from "./Color";
 import { commitsURL, patchesURL, vstorage } from "..";
 import { createFileBackend, useProxy } from "@vendetta/storage";
 import { showToast } from "@vendetta/ui/toasts";
-import {
-  showConfirmationAlert,
-  showCustomAlert,
-  showInputAlert,
-} from "@vendetta/ui/alerts";
+import { showConfirmationAlert, showInputAlert } from "@vendetta/ui/alerts";
 import { build } from "../stuff/buildTheme";
 import Commit, { CommitObj } from "./Commit";
 import { openCommitsPage } from "./pages/CommitsPage";
@@ -155,7 +150,7 @@ export default (): React.JSX.Element => {
   const debug = getDebugInfo() as any;
   const syscolors = window[
     window.__vendetta_loader.features.syscolors?.prop
-  ] as VendettaSysColors | undefined;
+  ] as VendettaSysColors | null | undefined;
 
   if (debug.os.name !== "Android")
     showMessage = {
@@ -169,23 +164,17 @@ export default (): React.JSX.Element => {
       message: "Dynamic colors are only available on Android 12+ (SDK 31+).",
       onPress: () => {},
     };
-  else if (!syscolors)
+  else if (syscolors === undefined)
     showMessage = {
-      error: true,
-      message: "Dynamic colors not available. ",
-      cta: "Fix",
-      onPress: () =>
-        showConfirmationAlert({
-          title: "Enable Dynamic Colors",
-          content:
-            "To use dynamic colors, use nexx's modified VendettaXposed (until it gets merged to the normal XPosed module)",
-          onConfirm: () =>
-            url.openURL(
-              "https://github.com/Gabe616/VendettaMod-VendettaXposed#readme"
-            ),
-          confirmText: "View on GitHub",
-          cancelText: "Okay",
-        }),
+      error: false,
+      message: "Dynamic colors are only available on newest Vendetta version.",
+      onPress: () => {},
+    };
+  else if (syscolors === null)
+    showMessage = {
+      error: false,
+      message: "Dynamic colors are unavailable.",
+      onPress: () => {},
     };
 
   if (!vstorage.colors) {
@@ -384,16 +373,45 @@ export default (): React.JSX.Element => {
         padding={!patches}
       >
         {!patches ? (
-          <RN.ActivityIndicator style={{ flex: 1 }} />
+          <RN.ActivityIndicator style={{ marginVertical: 125 }} size="small" />
         ) : (
           <>
             {!commits ? (
-              <RN.ActivityIndicator style={{ flex: 1, paddingTop: 16 }} />
-            ) : (
+              <RN.ActivityIndicator
+                style={{ marginVertical: 35 }}
+                size="small"
+              />
+            ) : Array.isArray(commits) ? (
               <Commit
                 commit={commits[0]}
                 onPress={() => openCommitsPage(navigation)}
               />
+            ) : (
+              <View
+                style={{
+                  marginTop: 35,
+                  marginBottom: 20,
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <SimpleText
+                  variant="text-md/semibold"
+                  color="TEXT_DANGER"
+                  align="center"
+                >
+                  You got ratelimited by GitHub. Congrats!
+                </SimpleText>
+                <SimpleText
+                  variant="text-md/semibold"
+                  color="TEXT_DANGER"
+                  align="center"
+                  onPress={() => setCommits(undefined)}
+                >
+                  <RichText.Underline>Tap to retry</RichText.Underline>
+                </SimpleText>
+              </View>
             )}
             <LineDivider addPadding={true} />
             <FormRow
