@@ -17,7 +17,7 @@ import {
 } from "../../../../stuff/types";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import Color from "./Color";
-import { commitsURL, patchesURL, vstorage } from "..";
+import { commitsURL, devPatchesURL, patchesURL, vstorage } from "..";
 import { createFileBackend, useProxy } from "@vendetta/storage";
 import { showToast } from "@vendetta/ui/toasts";
 import { showConfirmationAlert, showInputAlert } from "@vendetta/ui/alerts";
@@ -38,15 +38,28 @@ const { BundleUpdaterManager } = window.nativeModuleProxy;
 const { ScrollView, View, Pressable } = General;
 const { FormRow, FormSwitchRow } = Forms;
 
+export type Patches = PatchV2 | PatchV3;
+export interface PatchV2 {
+  version: 2;
+  replacers: PatchThing<[string, number]>;
+  semantic: PatchThing<string>;
+  raw: PatchThing<string>;
+}
+export interface PatchV3 {
+  version: 3;
+  replacers: PatchThing<{
+    color: string;
+    ratio?: number;
+    base?: number;
+  }>;
+  semantic: PatchThing<string>;
+  raw: PatchThing<string>;
+}
+
 export interface PatchThing<value> {
   dark: Record<string, value>;
   light: Record<string, value>;
   both: Record<string, value>;
-}
-export interface Patches {
-  replacers: PatchThing<[string, number]>;
-  semantic: PatchThing<string>;
-  raw: PatchThing<string>;
 }
 
 const { TextStyleSheet } = findByProps("TextStyleSheet");
@@ -89,6 +102,7 @@ export default (): React.JSX.Element => {
   const [commits, setCommits] = React.useState<CommitObj[] | undefined>(
     undefined
   );
+  const [usePatches, setUsePatches] = React.useState<"git" | "local">("git");
   const [patches, setPatches] = React.useState<Patches | undefined>(undefined);
   stsCommits = commits;
 
@@ -97,7 +111,9 @@ export default (): React.JSX.Element => {
 
   React.useEffect(() => {
     if (!patches)
-      fetch(patchesURL, { cache: "no-store" })
+      fetch(usePatches === "git" ? patchesURL : devPatchesURL, {
+        cache: "no-store",
+      })
         .then((x) =>
           x.text().then((text) => {
             try {
@@ -192,6 +208,7 @@ export default (): React.JSX.Element => {
     return <></>;
   }
 
+  let lastThemePressTime = 0;
   return (
     <ScrollView>
       {showMessage && (
@@ -373,6 +390,17 @@ export default (): React.JSX.Element => {
         title="Theme"
         icon={getAssetIDByName("ic_cog_24px")}
         padding={!patches}
+        onTitlePress={() => {
+          if (lastThemePressTime >= Date.now()) {
+            lastThemePressTime = 0;
+            showToast(
+              `Now using: ${usePatches === "git" ? "Local" : "GitHub"} patches`
+            );
+            setUsePatches(usePatches === "git" ? "local" : "git");
+            setCommits(undefined);
+            setPatches(undefined);
+          } else lastThemePressTime = Date.now() + 500;
+        }}
       >
         {!patches ? (
           <RN.ActivityIndicator style={{ marginVertical: 125 }} size="small" />
@@ -419,13 +447,18 @@ export default (): React.JSX.Element => {
             <FormRow
               label="Load Theme"
               leading={<FormRow.Icon source={getAssetIDByName("debug")} />}
-              onPress={() => {
+              onPress={async () => {
                 let theme;
                 try {
                   theme = build(patches);
                 } catch (e) {
                   return showToast(e.toString(), getAssetIDByName("Small"));
                 }
+                await createFileBackend("vendetta_theme.json").set({
+                  id: id,
+                  selected: true,
+                  data: theme,
+                } as Theme);
 
                 showConfirmationAlert({
                   title: "Reload required",
@@ -434,14 +467,7 @@ export default (): React.JSX.Element => {
                   confirmText: "Reload",
                   confirmColor: "red" as ButtonColors,
                   cancelText: "Cancel",
-                  onConfirm: async () => {
-                    await createFileBackend("vendetta_theme.json").set({
-                      id: id,
-                      selected: true,
-                      data: theme,
-                    } as Theme);
-                    BundleUpdaterManager.reload();
-                  },
+                  onConfirm: () => BundleUpdaterManager.reload(),
                 });
               }}
             />
@@ -466,6 +492,9 @@ export default (): React.JSX.Element => {
             />
             <FormRow
               label="Reload Theme Patches"
+              subLabel={`Patch v${patches.version}, ${
+                JSON.stringify(patches).length / 100
+              }kB (using ${usePatches === "git" ? "GitHub" : "local"})`}
               leading={
                 <FormRow.Icon source={getAssetIDByName("ic_sync_24px")} />
               }

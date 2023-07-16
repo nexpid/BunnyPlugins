@@ -22,34 +22,59 @@ export function build(patches: Patches) {
     spec: 2,
   };
 
-  const get = (lk: PatchThing<any>) =>
+  const get = <T extends PatchThing<any>>(lk: T): T["both"] =>
     Object.assign(lk.both, vstorage.lightmode ? lk.light : lk.dark);
+  const entries = <T extends {}>(obj: T): [string, T[keyof T]][] =>
+    Object.entries(obj);
 
-  for (const [x, y] of Object.entries(get(patches.replacers))) {
-    const clr = parseColor(y[0]);
-    if (!clr) continue;
-
-    for (const c of Object.keys(rawColors).filter((l) =>
-      l.startsWith(`${x.split("_")[0]}_`)
-    )) {
-      const shade = Number(c.split("_")[1]);
-
-      let shouldPut = true;
-      for (const c of x.split("_").slice(1)) {
-        if (!shouldPut) break;
-        if (c.startsWith(">=")) shouldPut = shade >= Number(c.slice(2));
-        else if (c.startsWith("<=")) shouldPut = shade <= Number(c.slice(2));
-        else if (c.startsWith(">")) shouldPut = shade > Number(c.slice(1));
-        else if (c.startsWith("<")) shouldPut = shade < Number(c.slice(1));
-      }
-      if (!shouldPut) continue;
-
-      const mult = y[1];
-      theme.rawColors[c] = getLABShade(clr, shade, mult);
+  const checkShouldPut = (shade: number, checks: string[]): boolean => {
+    let shouldPut = true;
+    for (const c of checks) {
+      if (!shouldPut) break;
+      if (c.startsWith(">=")) shouldPut = shade >= Number(c.slice(2));
+      else if (c.startsWith("<=")) shouldPut = shade <= Number(c.slice(2));
+      else if (c.startsWith(">")) shouldPut = shade > Number(c.slice(1));
+      else if (c.startsWith("<")) shouldPut = shade < Number(c.slice(1));
     }
-  }
 
-  for (const [x, y] of Object.entries(get(patches.raw)))
+    return shouldPut;
+  };
+
+  if (patches.version === 2)
+    for (const [x, y] of entries(get(patches.replacers))) {
+      let clr = parseColor(y[0]);
+      if (!clr) continue;
+
+      for (const c of Object.keys(rawColors).filter((l) =>
+        l.startsWith(`${x.split("_")[0]}_`)
+      )) {
+        const shade = Number(c.split("_")[1]);
+        if (!checkShouldPut(shade, x.split("_").slice(1))) continue;
+
+        const mult = y[1];
+        theme.rawColors[c] = getLABShade(clr, shade, mult);
+      }
+    }
+  else if (patches.version === 3)
+    for (const [x, y] of entries(get(patches.replacers))) {
+      const clr = parseColor(y.color);
+      if (!clr) continue;
+
+      for (const c of Object.keys(rawColors).filter((l) =>
+        l.startsWith(`${x.split("_")[0]}_`)
+      )) {
+        const shade = Number(c.split("_")[1]);
+        if (!checkShouldPut(shade, x.split("_").slice(1))) continue;
+
+        theme.rawColors[c] = getLABShade(
+          clr,
+          y.base ? shade + (500 - y.base) : shade,
+          y.ratio
+        );
+      }
+    }
+
+  for (const [x, y] of entries(get(patches.raw)))
     theme.rawColors[x] = parseColor(y);
 
   for (const [x, y] of Object.entries(patches.semantic.both))
@@ -63,5 +88,6 @@ export function build(patches: Patches) {
     else theme.semanticColors[x] = [undefined, parseColor(y)];
   }
 
+  console.log(JSON.stringify(theme));
   return JSON.parse(JSON.stringify(theme));
 }

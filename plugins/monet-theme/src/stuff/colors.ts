@@ -1,7 +1,6 @@
-import { rawColors, semanticColors } from "@vendetta/ui";
+import { rawColors } from "@vendetta/ui";
 import { chroma } from "@vendetta/metro/common";
 import { vstorage } from "..";
-import { findByProps } from "@vendetta/metro";
 
 export function parseColor(clr: string): string | undefined {
   const shade = Number(clr.split("_")[1]);

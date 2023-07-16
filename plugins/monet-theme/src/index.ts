@@ -16,6 +16,7 @@ export const vstorage: {
 
 export const patchesURL =
   "https://raw.githubusercontent.com/Gabe616/VendettaMonetTheme/master/patches.jsonc";
+export const devPatchesURL = "http://192.168.2.22:8730/patches.jsonc";
 export const commitsURL =
   "https://api.github.com/repos/Gabe616/VendettaMonetTheme/commits?path=patches.jsonc";
 
