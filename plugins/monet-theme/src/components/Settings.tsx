@@ -130,15 +130,17 @@ export default (): React.JSX.Element => {
         );
   }, [commits]);
 
-  navigation.setOptions({
-    headerRight: () => (
-      <SuperAwesomeIcon
-        style="header"
-        icon={getAssetIDByName("ic_report_message")}
-        onPress={() => openPluginReportSheet("customrpc")}
-      />
-    ),
-  });
+  React.useEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <SuperAwesomeIcon
+          style="header"
+          icon={getAssetIDByName("ic_report_message")}
+          onPress={() => openPluginReportSheet("customrpc")}
+        />
+      ),
+    });
+  }, []);
 
   let showMessage: {
     error: boolean;
