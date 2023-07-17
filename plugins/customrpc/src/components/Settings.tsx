@@ -121,7 +121,7 @@ export default (): React.JSX.Element => {
     return <RN.ActivityIndicator style={{ flex: 1 }} />;
   }
 
-  const unsub = navigation.addEventListener("focus", () => {
+  const unsub = navigation.addListener("focus", () => {
     unsub();
     navigation.setOptions({
       headerRight: () => (

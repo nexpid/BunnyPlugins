@@ -146,7 +146,7 @@ export default (): React.JSX.Element => {
         );
   }, [commits]);
 
-  const unsub = navigation.addEventListener("focus", () => {
+  const unsub = navigation.addListener("focus", () => {
     unsub();
     navigation.setOptions({
       headerRight: () => (

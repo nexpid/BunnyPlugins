@@ -24,7 +24,7 @@ export default (): React.JSX.Element => {
   useProxy(vstorage);
   const navigation = NavigationNative.useNavigation();
 
-  const unsub = navigation.addEventListener("focus", () => {
+  const unsub = navigation.addListener("focus", () => {
     unsub();
     navigation.setOptions({
       title: "Plugin Settings",

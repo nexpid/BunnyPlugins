@@ -39,19 +39,17 @@ export default function () {
   );
 
   const navigation = NavigationNative.useNavigation();
-  const unsub = navigation.addEventListener("focus", () => {
+  const unsub = navigation.addListener("focus", () => {
     unsub();
-    React.useEffect(() => {
-      navigation.setOptions({
-        headerRight: () => (
-          <SuperAwesomeIcon
-            icon={getAssetIDByName("ic_report_message")}
-            style="header"
-            onPress={() => openPluginReportSheet("cloud-sync")}
-          />
-        ),
-      });
-    }, []);
+    navigation.setOptions({
+      headerRight: () => (
+        <SuperAwesomeIcon
+          icon={getAssetIDByName("ic_report_message")}
+          style="header"
+          onPress={() => openPluginReportSheet("cloud-sync")}
+        />
+      ),
+    });
   });
 
   return (
