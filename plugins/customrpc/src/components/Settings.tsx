@@ -121,31 +121,34 @@ export default (): React.JSX.Element => {
     return <RN.ActivityIndicator style={{ flex: 1 }} />;
   }
 
-  navigation.setOptions({
-    headerRight: () => (
-      <View style={{ flexDirection: "row-reverse" }}>
-        <SuperAwesomeIcon
-          style="header"
-          icon={getAssetIDByName("ic_report_message")}
-          onPress={() => openPluginReportSheet("customrpc")}
-        />
-        <SuperAwesomeIcon
-          style="header"
-          icon={getAssetIDByName("ic_essentials_sparkle")}
-          onPress={() =>
-            showConfirmationAlert({
-              title: "String Variables",
-              content: `String variables can be used in any text component\nHere's the entire list:\n\n${stringVariables
-                .map((x) => `**\`${x.match}\`**\n — ${x.description}`)
-                .join("\n")}`,
-              confirmText: "Okay",
-              confirmColor: "brand" as ButtonColors,
-              onConfirm: () => undefined,
-            })
-          }
-        />
-      </View>
-    ),
+  const unsub = navigation.addListener("focus", () => {
+    unsub();
+    navigation.setOptions({
+      headerRight: () => (
+        <View style={{ flexDirection: "row-reverse" }}>
+          <SuperAwesomeIcon
+            style="header"
+            icon={getAssetIDByName("ic_report_message")}
+            onPress={() => openPluginReportSheet("customrpc")}
+          />
+          <SuperAwesomeIcon
+            style="header"
+            icon={getAssetIDByName("ic_essentials_sparkle")}
+            onPress={() =>
+              showConfirmationAlert({
+                title: "String Variables",
+                content: `String variables can be used in any text component\nHere's the entire list:\n\n${stringVariables
+                  .map((x) => `**\`${x.match}\`**\n — ${x.description}`)
+                  .join("\n")}`,
+                confirmText: "Okay",
+                confirmColor: "brand" as ButtonColors,
+                onConfirm: () => undefined,
+              })
+            }
+          />
+        </View>
+      ),
+    });
   });
 
   let dbgCounter = 0,

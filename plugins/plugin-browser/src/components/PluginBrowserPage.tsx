@@ -67,31 +67,34 @@ export default () => {
       });
   }
 
-  navigation.setOptions({
-    title: "Plugin Browser",
-    headerRight: () => (
-      <View style={{ flexDirection: "row-reverse" }}>
-        <SuperAwesomeIcon
-          onPress={() => !isBusy && setData({ parsed: undefined })}
-          icon={getAssetIDByName("ic_sync_24px")}
-          style="header"
-        />
-        <SuperAwesomeIcon
-          onPress={() =>
-            !isBusy &&
-            showSimpleActionSheet({
-              key: "CardOverflow",
-              options: Object.values(Filter).map((x) => ({
-                label: x,
-                onPress: () => setFilter(x),
-              })),
-            })
-          }
-          icon={getAssetIDByName("ic_filter")}
-          style="header"
-        />
-      </View>
-    ),
+  const unsub = navigation.addListener("focus", () => {
+    unsub();
+    navigation.setOptions({
+      title: "Plugin Browser",
+      headerRight: () => (
+        <View style={{ flexDirection: "row-reverse" }}>
+          <SuperAwesomeIcon
+            onPress={() => !isBusy && setData({ parsed: undefined })}
+            icon={getAssetIDByName("ic_sync_24px")}
+            style="header"
+          />
+          <SuperAwesomeIcon
+            onPress={() =>
+              !isBusy &&
+              showSimpleActionSheet({
+                key: "CardOverflow",
+                options: Object.values(Filter).map((x) => ({
+                  label: x,
+                  onPress: () => setFilter(x),
+                })),
+              })
+            }
+            icon={getAssetIDByName("ic_filter")}
+            style="header"
+          />
+        </View>
+      ),
+    });
   });
 
   if (isBusy || !data.parsed)

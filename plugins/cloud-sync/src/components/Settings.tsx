@@ -39,15 +39,18 @@ export default function () {
   );
 
   const navigation = NavigationNative.useNavigation();
-  navigation.setOptions({
-    title: "CloudSync",
-    headerRight: () => (
-      <SuperAwesomeIcon
-        icon={getAssetIDByName("ic_report_message")}
-        style="header"
-        onPress={() => openPluginReportSheet("cloud-sync")}
-      />
-    ),
+  const unsub = navigation.addListener("focus", () => {
+    unsub();
+    navigation.setOptions({
+      title: "CloudSync",
+      headerRight: () => (
+        <SuperAwesomeIcon
+          icon={getAssetIDByName("ic_report_message")}
+          style="header"
+          onPress={() => openPluginReportSheet("cloud-sync")}
+        />
+      ),
+    });
   });
 
   return (
