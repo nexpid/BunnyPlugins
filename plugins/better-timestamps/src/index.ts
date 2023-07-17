@@ -11,6 +11,8 @@ export const vstorage: {
   alwaysLong?: boolean;
 } = storage;
 
+const isWhitespace = (x: string) => /^\s$/.test(x);
+
 let unpatch;
 export default {
   onLoad: () => {
@@ -19,7 +21,7 @@ export default {
       let content = message?.content as string;
       if (typeof content !== "string" || typeof message !== "object") return;
 
-      const j = vstorage.reqBackticks ? "`" : "\\s";
+      const j = vstorage.reqBackticks ? ["`", "`"] : ["(?:\\s|^)", "(?:\\s|$)"];
 
       const reg = {
         otN: "[0-9]{1,2}",
@@ -30,10 +32,11 @@ export default {
         `(${reg.otN}:${reg.tN}:${reg.tN})${reg.abrv}?`,
         `(${reg.otN}:${reg.tN})${reg.abrv}?`,
         `(${reg.otN})${reg.abrv}`,
-      ].map((x) => new RegExp(`${j}${x}${j}`, "gi"));
+      ].map((x) => new RegExp(`${j[0]}${x}${j[1]}`, "gi"));
 
       for (const reg of regexes) {
         content = content.replace(reg, (str, time: string, abrv?: string) => {
+          console.log(str);
           let [hours, minutes, seconds] = time
             .split(":")
             .map((x) => parseInt(x)) as [
@@ -57,9 +60,11 @@ export default {
           const date = new Date();
           date.setHours(hours, minutes ?? 0, seconds ?? 0, 0);
 
-          return `<t:${Math.floor(date.getTime() / 1000)}:${
-            vstorage.alwaysLong ? "T" : "t"
-          }>`;
+          return `${isWhitespace(str[0]) ? str[0] : ""}<t:${Math.floor(
+            date.getTime() / 1000
+          )}:${vstorage.alwaysLong ? "T" : "t"}>${
+            isWhitespace(str[str.length - 1]) ? str[str.length - 1] : ""
+          }`;
         });
       }
 
