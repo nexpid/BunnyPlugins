@@ -24,24 +24,27 @@ export default (): React.JSX.Element => {
   useProxy(vstorage);
   const navigation = NavigationNative.useNavigation();
 
-  navigation.setOptions({
-    title: "Plugin Settings",
-    headerRight: () => (
-      <SuperAwesomeIcon
-        onPress={() =>
-          showConfirmationAlert({
-            title: "Revert Settings",
-            content: "Are you sure you want to revert all plugin settings?",
-            confirmText: "Revert",
-            cancelText: "Cancel",
-            confirmColor: "red" as ButtonColors,
-            onConfirm: () => (vstorage.pluginSettings = {}),
-          })
-        }
-        icon={getAssetIDByName("ic_message_delete")}
-        style="header"
-      />
-    ),
+  const unsub = navigation.addEventListener("focus", () => {
+    unsub();
+    navigation.setOptions({
+      title: "Plugin Settings",
+      headerRight: () => (
+        <SuperAwesomeIcon
+          onPress={() =>
+            showConfirmationAlert({
+              title: "Revert Settings",
+              content: "Are you sure you want to revert all plugin settings?",
+              confirmText: "Revert",
+              cancelText: "Cancel",
+              confirmColor: "red" as ButtonColors,
+              onConfirm: () => (vstorage.pluginSettings = {}),
+            })
+          }
+          icon={getAssetIDByName("ic_message_delete")}
+          style="header"
+        />
+      ),
+    });
   });
 
   return (

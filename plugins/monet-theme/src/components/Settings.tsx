@@ -146,7 +146,8 @@ export default (): React.JSX.Element => {
         );
   }, [commits]);
 
-  React.useEffect(() => {
+  const unsub = navigation.addEventListener("focus", () => {
+    unsub();
     navigation.setOptions({
       headerRight: () => (
         <SuperAwesomeIcon
@@ -156,7 +157,7 @@ export default (): React.JSX.Element => {
         />
       ),
     });
-  }, []);
+  });
 
   let showMessage: {
     error: boolean;
