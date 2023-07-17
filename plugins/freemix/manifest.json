@@ -1,0 +1,14 @@
+{
+  "name": "Freemix",
+  "description": "Allows you to remix images for free lol",
+  "authors": [
+    {
+      "name": "nexpid",
+      "id": "853550207039832084"
+    }
+  ],
+  "main": "src/index.ts",
+  "vendetta": {
+    "icon": "img_nitro_remixing"
+  }
+}
