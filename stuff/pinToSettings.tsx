@@ -107,6 +107,25 @@ export function patchSettingsPin(
     };
     thingies.titleConfig[screenKey] = you.title;
     thingies.releationships[screenKey] = null;
+
+    const component = React.memo(({ navigation }: any) => {
+      const unsub = navigation.addListener("focus", () => {
+        unsub();
+        navigation.setOptions(without(you.page, "noErrorBoundary", "render"));
+      });
+
+      return (
+        <RN.View style={styles.container}>
+          {you.page.noErrorBoundary ? (
+            <Page />
+          ) : (
+            <ErrorBoundary>
+              <Page />
+            </ErrorBoundary>
+          )}
+        </RN.View>
+      );
+    });
     thingies.rendererConfigs[screenKey] = {
       type: "route",
       icon: you.icon,
@@ -116,27 +135,7 @@ export function patchSettingsPin(
           .camelCase()
           .upperFirst()
           .value()}`,
-        getComponent: () =>
-          React.memo(({ navigation }: any) => {
-            const unsub = navigation.addListener("focus", () => {
-              unsub();
-              navigation.setOptions(
-                without(you.page, "noErrorBoundary", "render")
-              );
-            });
-
-            return (
-              <RN.View style={styles.container}>
-                {you.page.noErrorBoundary ? (
-                  <Page />
-                ) : (
-                  <ErrorBoundary>
-                    <Page />
-                  </ErrorBoundary>
-                )}
-              </RN.View>
-            );
-          }),
+        getComponent: () => component,
       },
     };
 
