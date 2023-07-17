@@ -13,7 +13,7 @@ export default (): (() => void) => {
       () => <SettingsSection />,
       {
         key: plugin.manifest.name,
-        icon: getAssetIDByName("ic_search_items_24px"),
+        icon: getAssetIDByName("ic_contact_sync"),
         title: "Cloud Sync",
         page: {
           title: "CloudSync",
