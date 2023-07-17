@@ -17,6 +17,7 @@ export default () => {
         trailing={FormRow.Arrow}
         onPress={() =>
           navigation.push("VendettaCustomPage", {
+            title: "CloudSync",
             render: Settings,
           })
         }
