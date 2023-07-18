@@ -13,6 +13,7 @@ import { React, stylesheet } from "@vendetta/metro/common";
 import {
   ActionSheet,
   ActionSheetCloseButton,
+  ActionSheetContentContainer,
   ActionSheetTitleHeader,
   RichText,
   SimpleText,
@@ -25,7 +26,7 @@ import { unparseTimestamp } from "./util";
 import { imageVariables, timestampVariables } from "./variables";
 import { semanticColors } from "@vendetta/ui";
 
-const { View, ScrollView } = General;
+const { View } = General;
 const { FormRow, FormRadioRow } = Forms;
 
 const DatePicker = findByProps("DatePickerModes");
@@ -51,7 +52,7 @@ export function ImageVariableActionSheet({
 }) {
   return (
     <ActionSheet>
-      <ScrollView>
+      <ActionSheetContentContainer>
         <ActionSheetTitleHeader
           title={`${role} Image Variable`}
           trailing={
@@ -69,8 +70,7 @@ export function ImageVariableActionSheet({
             }}
           />
         ))}
-      </ScrollView>
-      <SheetFooter />
+      </ActionSheetContentContainer>
     </ActionSheet>
   );
 }
@@ -92,7 +92,7 @@ export function ImageActionSheet({
 }): React.JSX.Element {
   return (
     <ActionSheet>
-      <ScrollView>
+      <ActionSheetContentContainer>
         <ActionSheetTitleHeader
           title={`Edit ${role} Image`}
           trailing={<ActionSheetCloseButton onPress={hideActionSheet} />}
@@ -177,8 +177,7 @@ export function ImageActionSheet({
             }}
           />
         )}
-      </ScrollView>
-      <SheetFooter />
+      </ActionSheetContentContainer>
     </ActionSheet>
   );
 }
@@ -196,11 +195,11 @@ export function ButtonActionSheet({
 }) {
   return (
     <ActionSheet>
-      <ScrollView>
-        <ActionSheetTitleHeader
-          title={`Edit Button ${role}`}
-          trailing={<ActionSheetCloseButton onPress={hideActionSheet} />}
-        />
+      <ActionSheetTitleHeader
+        title={`Edit Button ${role}`}
+        trailing={<ActionSheetCloseButton onPress={hideActionSheet} />}
+      />
+      <ActionSheetContentContainer>
         <FormRow
           label="Button Text"
           leading={
@@ -259,8 +258,7 @@ export function ButtonActionSheet({
             }}
           />
         )}
-      </ScrollView>
-      <SheetFooter />
+      </ActionSheetContentContainer>
     </ActionSheet>
   );
 }
@@ -284,7 +282,7 @@ export function ApplicationActionSheet({
 }) {
   return (
     <ActionSheet>
-      <ScrollView>
+      <ActionSheetContentContainer>
         <ActionSheetTitleHeader
           title={"Edit Application"}
           trailing={<ActionSheetCloseButton onPress={hideActionSheet} />}
@@ -335,8 +333,7 @@ export function ApplicationActionSheet({
             }}
           />
         )}
-      </ScrollView>
-      <SheetFooter />
+      </ActionSheetContentContainer>
     </ActionSheet>
   );
 }
@@ -351,7 +348,7 @@ export function ActivityTypeActionSheet({
   const [val, setVal] = React.useState(type);
   return (
     <ActionSheet>
-      <ScrollView>
+      <ActionSheetContentContainer>
         <ActionSheetTitleHeader
           title="Edit Activity Type"
           trailing={
@@ -371,8 +368,7 @@ export function ActivityTypeActionSheet({
               }}
             />
           ))}
-      </ScrollView>
-      <SheetFooter />
+      </ActionSheetContentContainer>
     </ActionSheet>
   );
 }
@@ -386,7 +382,7 @@ export function TimestampVariableActionSheet({
 }) {
   return (
     <ActionSheet>
-      <ScrollView>
+      <ActionSheetContentContainer>
         <ActionSheetTitleHeader
           title={`Set ${role} Time Variable`}
           trailing={
@@ -404,7 +400,7 @@ export function TimestampVariableActionSheet({
             }}
           />
         ))}
-      </ScrollView>
+      </ActionSheetContentContainer>
       <SheetFooter />
     </ActionSheet>
   );
@@ -446,7 +442,7 @@ export function TimestampActionSheet({
 
   return (
     <ActionSheet>
-      <ScrollView>
+      <ActionSheetContentContainer>
         <ActionSheetTitleHeader
           title="Edit Timestamp"
           trailing={
@@ -542,8 +538,7 @@ export function TimestampActionSheet({
             }}
           />
         )}
-      </ScrollView>
-      <SheetFooter />
+      </ActionSheetContentContainer>
     </ActionSheet>
   );
 }
