@@ -1,4 +1,9 @@
-import { findByName, findByProps, findByStoreName } from "@vendetta/metro";
+import {
+  find,
+  findByName,
+  findByProps,
+  findByStoreName,
+} from "@vendetta/metro";
 import {
   ReactNative as RN,
   React,
@@ -14,14 +19,19 @@ const { TextStyleSheet } = findByProps("TextStyleSheet");
 const { View, Text, Pressable } = General;
 const { FormRow } = Forms;
 
-export const ActionSheet = findByName("ActionSheet");
+export const ActionSheet = find((x) => x.render?.name === "ActionSheet"); // thank you to @pylixonly for fixing this
 export const { openLazy, hideActionSheet } = findByProps(
   "openLazy",
   "hideActionSheet"
 );
-export const { ActionSheetTitleHeader, ActionSheetCloseButton } = findByProps(
+export const {
+  ActionSheetTitleHeader,
+  ActionSheetCloseButton,
+  ActionSheetContentContainer,
+} = findByProps(
   "ActionSheetTitleHeader",
-  "ActionSheetCloseButton"
+  "ActionSheetCloseButton",
+  "ActionSheetContentContainer"
 );
 
 export interface DisplayProfileData {
@@ -66,8 +76,8 @@ export interface User {
   phone?: string;
   nsfwAllowed?: boolean;
   guildMemberAvatars: Record<string, string>;
-  hasBouncedEmail: boolean; // ???,
-  personalConnectionId?: any; // ???,
+  hasBouncedEmail: boolean; // ???
+  personalConnectionId?: any; // ???
   globalName: string;
 }
 
@@ -149,7 +159,15 @@ export function getUserAvatar(
 
 export function openSheet(sheet: any, props: any) {
   ActionSheet
-    ? openLazy(new Promise((x) => x({ default: sheet })), "ActionSheet", props)
+    ? openLazy(
+        new Promise((x) =>
+          x({
+            default: sheet,
+          })
+        ),
+        "ActionSheet",
+        props
+      )
     : showToast(
         "You cannot open ActionSheets on this version! Update to 163+",
         getAssetIDByName("Small")
