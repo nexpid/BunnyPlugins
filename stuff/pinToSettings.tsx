@@ -33,7 +33,7 @@ export function patchSettingsPin(
   you?: {
     key: string;
     icon?: number;
-    title: string;
+    title: string | (() => string);
     page: {
       render: React.ComponentType;
       noErrorBoundary?: boolean;
@@ -86,6 +86,7 @@ export function patchSettingsPin(
     const screenKey = `VENDETTA_PLUGIN_${lodash
       .snakeCase(you.key)
       .toUpperCase()}`;
+
     patches.push(
       after("default", settingsYouScreen, (_, ret) => {
         const sec = ret.props.sections;
@@ -98,16 +99,19 @@ export function patchSettingsPin(
       })
     );
 
+    patches.push(
+      after("getSettingTitleConfig", titleConfig, (_, ret) => ({
+        ...ret,
+        ...Object.fromEntries([
+          [
+            screenKey,
+            typeof you.title === "function" ? you.title() : you.title,
+          ],
+        ]),
+      }))
+    );
+
     const Page = you.page.render;
-
-    const thingies = {
-      titleConfig: {},
-      releationships: {},
-      rendererConfigs: {},
-    };
-    thingies.titleConfig[screenKey] = you.title;
-    thingies.releationships[screenKey] = null;
-
     const component = React.memo(({ navigation }: any) => {
       const unsub = navigation.addListener("focus", () => {
         unsub();
@@ -126,30 +130,33 @@ export function patchSettingsPin(
         </RN.View>
       );
     });
-    thingies.rendererConfigs[screenKey] = {
-      type: "route",
-      icon: you.icon,
-      screen: {
-        route: `VendettaPlugin${lodash
-          .chain(you.key)
-          .camelCase()
-          .upperFirst()
-          .value()}`,
-        getComponent: () => component,
-      },
-    };
-
-    patches.push(
-      after("getSettingTitleConfig", titleConfig, (_, ret) => ({
-        ...ret,
-        ...thingies.titleConfig,
-      }))
-    );
 
     const old = stuff.SETTING_RELATIONSHIPS;
-    stuff.SETTING_RELATIONSHIPS = { ...old, ...thingies.releationships };
+    stuff.SETTING_RELATIONSHIPS = {
+      ...old,
+      ...Object.fromEntries([[screenKey, null]]),
+    };
     const oldZ = stuff.SETTING_RENDERER_CONFIGS;
-    stuff.SETTING_RENDERER_CONFIGS = { ...oldZ, ...thingies.rendererConfigs };
+    stuff.SETTING_RENDERER_CONFIGS = {
+      ...oldZ,
+      ...Object.fromEntries([
+        [
+          screenKey,
+          {
+            type: "route",
+            icon: you.icon,
+            screen: {
+              route: `VendettaPlugin${lodash
+                .chain(you.key)
+                .camelCase()
+                .upperFirst()
+                .value()}`,
+              getComponent: () => component,
+            },
+          },
+        ],
+      ]),
+    };
 
     patches.push(() => {
       stuff.SETTING_RELATIONSHIPS = old;
