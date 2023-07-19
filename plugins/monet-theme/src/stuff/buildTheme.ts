@@ -88,6 +88,5 @@ export function build(patches: Patches) {
     else theme.semanticColors[x] = [undefined, parseColor(y)];
   }
 
-  console.log(JSON.stringify(theme));
   return JSON.parse(JSON.stringify(theme));
 }
