@@ -42,7 +42,8 @@ const styles = stylesheet.createThemedStyleSheet({
 });
 
 const { default: ChatItemWrapper } = findByProps(
-  "DCDAutoModerationSystemMessageView"
+  "DCDAutoModerationSystemMessageView",
+  "default"
 );
 const MessageRecord = findByName("MessageRecord");
 const RowManager = findByName("RowManager");
