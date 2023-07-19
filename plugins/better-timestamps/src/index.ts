@@ -36,7 +36,6 @@ export default {
 
       for (const reg of regexes) {
         content = content.replace(reg, (str, time: string, abrv?: string) => {
-          console.log(str);
           let [hours, minutes, seconds] = time
             .split(":")
             .map((x) => parseInt(x)) as [
