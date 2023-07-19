@@ -166,7 +166,7 @@ const chart = {
   data: {
     labels: [
       stats.proxied > 0 && "Proxied",
-      stats.unproxied > 0 && "Unproxied",
+      stats.unproxied > 0 && "Finished",
       stats.unfinished > 0 && "Unfinished",
       stats.discontinued > 0 && "Discontinued",
     ].filter((x) => !!x),
