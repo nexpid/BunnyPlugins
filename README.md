@@ -64,3 +64,7 @@ I'm working on **5** plugins, and **1** plugin is discontinued.
 - FxTwitter — Automatically converts twitter.com links to fxtwitter.com
 	- **Discontinued For:** Vendetta already has this
 	- [<img alt="view_code" src="https://img.shields.io/badge/view_code-263238?style=for-the-badge" />](https://github.com/Gabe616/VendettaPlugins/tree/main/plugins/fxtwitter)
+
+> **Note**  
+> **1** plugin isn't being shown due to being formatted incorrectly:  
+> - spin-the-wheel  
