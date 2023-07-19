@@ -1,50 +1,35 @@
-import { findByName } from "@vendetta/metro";
-import { i18n } from "@vendetta/metro/common";
-import { after } from "@vendetta/patcher";
-import { findInReactTree } from "@vendetta/utils";
 import SettingsSection from "../components/SettingsSection";
-import { Forms } from "@vendetta/ui/components";
-
-const { FormSection } = Forms;
-const settingsModule = findByName("UserSettingsOverviewWrapper", false);
+import { patchSettingsPin } from "../../../../stuff/pinToSettings";
+import { plugin } from "@vendetta";
+import { getAssetIDByName } from "@vendetta/ui/assets";
+import PluginBrowserPage from "../components/PluginBrowserPage";
+import { getChanges, initThing } from "./pluginChecker";
 
 export default (): (() => void) => {
   let patches = [];
-  let thisShouldUnpatchAutomatically = after(
-    "default",
-    settingsModule,
-    (_, ret) => {
-      thisShouldUnpatchAutomatically();
-
-      const Overview = findInReactTree(
-        ret.props.children,
-        (i) => i.type && i.type.name === "UserSettingsOverview"
-      );
-
-      patches.push(
-        after(
-          "render",
-          Overview.type.prototype,
-          (_, { props: { children } }) => {
-            const titles = [
-              i18n.Messages["BILLING_SETTINGS"],
-              i18n.Messages["PREMIUM_SETTINGS"],
-            ];
-            children = findInReactTree(
-              children,
-              (t) => t.children[1].type === FormSection
-            ).children;
-            const index = children.findIndex((c) =>
-              titles.includes(c?.props.label)
-            );
-
-            children.splice(index === -1 ? 4 : index, 0, <SettingsSection />);
-          }
-        )
-      );
-    },
-    true
+  patches.push(
+    patchSettingsPin(
+      () => true,
+      () => (
+        <SettingsSection
+          changes={getChanges().filter((x) => x[1] === "new").length}
+        />
+      ),
+      {
+        key: plugin.manifest.name,
+        icon: getAssetIDByName("ic_search_items_24px"),
+        title: () => {
+          const changes = getChanges().filter((x) => x[1] === "new").length;
+          return `Plugin Browser${changes ? ` (+${changes})` : ""}`;
+        },
+        page: {
+          render: PluginBrowserPage,
+        },
+      }
+    )
   );
+
+  patches.push(initThing());
 
   return () => patches.forEach((x) => x());
 };

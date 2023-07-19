@@ -2,17 +2,28 @@ import { NavigationNative } from "@vendetta/metro/common";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { ErrorBoundary, Forms } from "@vendetta/ui/components";
 import PluginBrowserPage from "./PluginBrowserPage";
+import { SimpleText } from "../../../../stuff/types";
+import CustomBadgeTag from "../../../../stuff/CustomBadgeTag";
 
 const { FormRow } = Forms;
 
-export default () => {
+export default ({ changes }: { changes: number }) => {
   const navigation = NavigationNative.useNavigation();
 
   // not sure if ErrorBoundary is even required but i'll keep it here just in case
   return (
     <ErrorBoundary>
       <FormRow
-        label="Plugin Browser"
+        label={
+          <SimpleText variant="text-md/semibold" color="TEXT_NORMAL">
+            Plugin Browser
+            {changes ? (
+              <CustomBadgeTag text={changes.toString()} marginLeft={true} />
+            ) : (
+              <></>
+            )}
+          </SimpleText>
+        }
         leading={
           <FormRow.Icon source={getAssetIDByName("ic_search_items_24px")} />
         }

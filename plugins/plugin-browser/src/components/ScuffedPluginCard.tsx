@@ -8,7 +8,7 @@ const { FormRow } = Forms;
 interface propAction {
   icon: number;
   destructive?: boolean;
-  onPress: (rerender: () => void) => void;
+  onPress: () => void;
 }
 
 interface props {
@@ -34,8 +34,6 @@ const styles = stylesheet.createThemedStyleSheet({
 });
 
 export default (props: props) => {
-  const [, forceUpdate] = React.useReducer((x) => ~x, 0);
-
   return (
     <RN.View style={[styles.card, { marginBottom: 10 }]}>
       <FormRow
@@ -50,9 +48,7 @@ export default (props: props) => {
             {props.actions?.().map(({ icon, onPress, destructive }) => (
               <SuperAwesomeIcon
                 icon={icon}
-                onPress={() => {
-                  onPress(() => forceUpdate());
-                }}
+                onPress={onPress}
                 style="card"
                 destructive={destructive ?? false}
               />
