@@ -120,7 +120,6 @@ export function ImageActionSheet({
               placeholder: "can be a discord attachment CDN link",
               confirmText: "Proxy",
               confirmColor: "brand" as ButtonColors,
-              cancelText: "Cancel",
               onConfirm: async function (d) {
                 const url = d.match(constants.HTTP_REGEX_MULTI)?.[0];
                 if (!url)
@@ -134,6 +133,7 @@ export function ImageActionSheet({
                   showToast("Failed to proxy image", getAssetIDByName("Small"));
                 }
               },
+              cancelText: "Cancel",
             });
           }}
         />
@@ -148,7 +148,7 @@ export function ImageActionSheet({
               return showConfirmationAlert({
                 title: "No App Set",
                 content: "An app must be selected in order to use RPC assets",
-                confirmText: "Ok",
+                confirmText: "Dismiss",
                 confirmColor: "grey" as ButtonColors,
                 onConfirm: () => {},
               });
@@ -567,13 +567,13 @@ export const activitySavedPrompt = ({
       ],
       confirmText: button,
       confirmColor: "red" as ButtonColors,
-      cancelText: "Cancel",
       onConfirm: run,
       secondaryConfirmText: secondaryButton,
       onConfirmSecondary: () => {
         secondaryRun?.();
         run?.();
       },
+      cancelText: "Cancel",
     });
 };
 
@@ -588,10 +588,10 @@ export const simpleInput = ({
 }) =>
   showInputAlert({
     title: `Enter New ${role}`,
-    confirmText: "Change",
-    confirmColor: "brand" as ButtonColors,
-    cancelText: "Cancel",
     initialValue: current,
     placeholder: `really cool ${role.toLowerCase()}`,
+    confirmText: "Change",
+    confirmColor: "brand" as ButtonColors,
     onConfirm: update,
+    cancelText: "Cancel",
   });

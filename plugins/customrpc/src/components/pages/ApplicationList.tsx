@@ -37,6 +37,7 @@ export const ApplicationList = (): React.JSX.Element => {
           id: txt,
         });
       },
+      cancelText: "Cancel",
     });
 
   React.useEffect(() => {

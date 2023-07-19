@@ -48,7 +48,6 @@ export const ProfileList = (): React.JSX.Element => {
       placeholder: "Super Awesome RPC",
       confirmText: "Add",
       confirmColor: "brand" as ButtonColors,
-      cancelText: "Cancel",
       onConfirm: (txt) => {
         if (txt.match(/^\s*$/))
           return showToast(
@@ -70,6 +69,7 @@ export const ProfileList = (): React.JSX.Element => {
         forceUpdate();
         showToast("Created profile", getAssetIDByName("Check"));
       },
+      cancelText: "Cancel",
     });
   headerRightCallbacks.import = async () => {
     let activity: SettingsActivity;
@@ -141,7 +141,6 @@ export const ProfileList = (): React.JSX.Element => {
                       initialValue: item,
                       confirmText: "Rename",
                       confirmColor: "brand" as ButtonColors,
-                      cancelText: "Cancel",
                       onConfirm: function (txt) {
                         if (txt.match(/^\s*$/))
                           return showToast(
@@ -164,6 +163,7 @@ export const ProfileList = (): React.JSX.Element => {
 
                         showToast("Renamed profile", getAssetIDByName("Check"));
                       },
+                      cancelText: "Cancel",
                     }),
                 },
                 {
@@ -177,7 +177,6 @@ export const ProfileList = (): React.JSX.Element => {
                         "Are you sure you want to delete this profile? This cannot be undone.",
                       confirmText: "Delete",
                       confirmColor: "red" as ButtonColors,
-                      cancelText: "Cancel",
                       onConfirm: function () {
                         if (vstorage.activity.profile === item) {
                           delete vstorage.activity.profile;
@@ -190,6 +189,7 @@ export const ProfileList = (): React.JSX.Element => {
                         forceUpdateSettings?.();
                         showToast("Deleted", getAssetIDByName("Check"));
                       },
+                      cancelText: "Cancel",
                     }),
                 },
               ],
