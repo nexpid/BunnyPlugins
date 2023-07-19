@@ -451,7 +451,6 @@ export default (): React.JSX.Element => {
                       ];
 
                       if (!messages[bkCounter]) {
-                        console.log("hi");
                         vstorage.settings.debug.boykisserDead = true;
                         MMKVManager.setItem("CRPC_boykisser", "true");
                         forceUpdate();
