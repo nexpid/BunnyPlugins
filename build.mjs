@@ -16,6 +16,14 @@ const ignorePlugins = [
   "fxtwitter",
 ];
 
+await writeFile(
+  "./dist/404.md",
+  `<div align="center">
+  <h1>Well, that's awkward.</h1>
+  <h3>You probably misclicked or something lol, click <a href="/"><b>here</b></a> to go back.</h3>
+</div>`
+);
+
 /** @type import("rollup").InputPluginOption */
 const plugins = [
   nodeResolve(),
@@ -57,6 +65,21 @@ for (let plug of await readdir("./plugins")) {
     await readFile(`./plugins/${plug}/manifest.json`)
   );
   const outPath = `./dist/${plug}/index.js`;
+
+  await writeFile(
+    `./dist/${plug}/README.md`,
+    `<div align="center">
+    <h1>${manifest.name} (by ${manifest.authors
+      .map((x) => x.name)
+      .join(", ")})</h1>
+    <h3>${manifest.description}</h3>
+</div>
+
+> **Note**
+> This is just a simple landing page for **${
+      manifest.name
+    }**. The proper way to load this plugin is to go in Vendetta's Plugin settings and tapping the plus icon.`
+  );
 
   try {
     const bundle = await rollup({
