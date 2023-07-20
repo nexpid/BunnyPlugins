@@ -32,12 +32,9 @@ jobs:
         # - Copies over README so that the root of the deployed website shows it
         # - Changes 404 page to README so that you don't get lost while clicking links
         # If you remove this step then you should probably remove the enable_jekyll option in the next one
-      - name: Copy additional files
+      - name: Copy README
         run: |
           cp README.md dist/README.md
-          printf -- "---\npermalink: /404.html\n---\n" > dist/404.md
-          printf -- "> **Note:** You accessed a link that returned a 404, probably by clicking one of the plugin links. You're supposed to copy the link address and add it into Vendetta.\n\n" >> dist/404.md
-          cat README.md >> dist/404.md
 
         # Documentation: https://github.com/peaceiris/actions-gh-pages
       - name: Deploy to GitHub Pages
