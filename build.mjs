@@ -1,4 +1,5 @@
-import { readFile, writeFile, readdir } from "fs/promises";
+import { existsSync } from "fs";
+import { readFile, writeFile, readdir, mkdir } from "fs/promises";
 import { extname } from "path";
 import { createHash } from "crypto";
 
@@ -16,6 +17,7 @@ const ignorePlugins = [
   "fxtwitter",
 ];
 
+if (!existsSync("./dist")) await mkdir("./dist");
 await writeFile(
   "./dist/404.md",
   `---
@@ -69,6 +71,7 @@ for (let plug of await readdir("./plugins")) {
   );
   const outPath = `./dist/${plug}/index.js`;
 
+  if (!existsSync(`./dist/${plug}`)) await mkdir(`./dist/${plug}`);
   await writeFile(
     `./dist/${plug}/README.md`,
     `<div align="center">
