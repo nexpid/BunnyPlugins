@@ -18,7 +18,10 @@ const ignorePlugins = [
 
 await writeFile(
   "./dist/404.md",
-  `<div align="center">
+  `---
+permalink: /404.html
+---
+<div align="center">
   <h1>Well, that's awkward.</h1>
   <h3>You probably misclicked or something lol, click <a href="/"><b>here</b></a> to go back.</h3>
 </div>`
