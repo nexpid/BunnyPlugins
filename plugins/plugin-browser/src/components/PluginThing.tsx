@@ -1,7 +1,7 @@
 import { General } from "@vendetta/ui/components";
 import { PluginsFullJson } from "../types";
 import ScuffedPluginCard from "./ScuffedPluginCard";
-import CustomBadgeTag from "../../../../stuff/CustomBadgeTag";
+import CustomBadgeTag from "../../../../stuff/components/CustomBadgeTag";
 import { SimpleText } from "../../../../stuff/types";
 import { matchGithubLink, openProfile, refetchPlugin } from "..";
 import { getAssetIDByName } from "@vendetta/ui/assets";
