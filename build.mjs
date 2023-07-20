@@ -23,10 +23,11 @@ await writeFile(
   `---
 permalink: /404.html
 ---
+
 <div align="center">
   <h1>Well, that's awkward.</h1>
-  <h3>You probably misclicked or something lol, click <a href="/"><b>here</b></a> to go back.</h3>
-</div>`
+  <h3>You probably misclicked or something lol, click <a href="/VendettaPlugins"><b>here</b></a> to go back.</h3>
+</div>\n`
 );
 
 /** @type import("rollup").InputPluginOption */
@@ -84,7 +85,7 @@ for (let plug of await readdir("./plugins")) {
 > **Note**
 > This is just a simple landing page for **${
       manifest.name
-    }**. The proper way to load this plugin is to go in Vendetta's Plugin settings and tapping the plus icon.`
+    }**. The proper way to load this plugin is to go in Vendetta's Plugin settings and tapping the plus icon.\n`
   );
 
   try {
