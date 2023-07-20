@@ -3,12 +3,13 @@ import { PluginsFullJson } from "../types";
 import ScuffedPluginCard from "./ScuffedPluginCard";
 import CustomBadgeTag from "../../../../stuff/components/CustomBadgeTag";
 import { SimpleText } from "../../../../stuff/types";
-import { matchGithubLink, openProfile, refetchPlugin } from "..";
+import { matchGithubLink, refetchPlugin } from "..";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { plugins } from "@vendetta";
 import { React, url } from "@vendetta/metro/common";
 import { showToast } from "@vendetta/ui/toasts";
 import { installPlugin, removePlugin, startPlugin } from "@vendetta/plugins";
+import SmartMention from "../../../../stuff/components/SmartMention";
 
 const { View } = General;
 
@@ -48,13 +49,9 @@ export default function ({
             {item.authors[0] && " by "}
             {...item.authors.map((x, i, a) => (
               <>
-                <SimpleText
-                  onPress={() => openProfile(x.id)}
-                  variant="text-md/bold"
-                  color="TEXT_LINK"
-                >
+                <SmartMention userId={x.id} color="TEXT_LINK">
                   {x.name}
-                </SimpleText>
+                </SmartMention>
                 {i !== a.length - 1 && ", "}
               </>
             ))}

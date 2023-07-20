@@ -1,0 +1,47 @@
+import { React } from "@vendetta/metro/common";
+import { SimpleText } from "../types";
+import { findByProps, findByStoreName } from "@vendetta/metro";
+
+const { showUserProfile } = findByProps("showUserProfile");
+const { fetchProfile } = findByProps("fetchProfile");
+
+const UserStore = findByStoreName("UserStore");
+
+export default function ({
+  userId,
+  color,
+  loadUsername,
+  children,
+}: React.PropsWithChildren<{
+  userId: string;
+  color?: string;
+  loadUsername?: boolean;
+}>) {
+  const [loadedUsername, setLoadedUsername] = React.useState<false | string>(
+    false
+  );
+
+  React.useEffect(
+    () =>
+      !loadedUsername &&
+      loadUsername &&
+      (UserStore.getUser(userId)
+        ? setLoadedUsername(UserStore.getUser(userId).username)
+        : fetchProfile(userId).then((x) => setLoadedUsername(x.user.username))),
+    [loadUsername]
+  );
+
+  return (
+    <SimpleText
+      variant="text-md/bold"
+      color={color ?? "TEXT_NORMAL"}
+      onPress={() =>
+        UserStore.getUser(userId)
+          ? showUserProfile({ userId })
+          : fetchProfile(userId).then(() => showUserProfile({ userId }))
+      }
+    >
+      {loadUsername ? `@${loadedUsername ?? "..."}` : children}
+    </SimpleText>
+  );
+}
