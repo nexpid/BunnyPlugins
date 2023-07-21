@@ -168,7 +168,7 @@ export default (): React.JSX.Element => {
 
   const debug = getDebugInfo() as any;
   const syscolors = window[
-    window.__vendetta_loader.features.syscolors?.prop
+    window.__vendetta_loader.features?.syscolors?.prop
   ] as VendettaSysColors | null | undefined;
 
   if (debug.os.name !== "Android")
