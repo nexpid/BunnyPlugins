@@ -31,10 +31,12 @@ export default function ({
   const change = changes.find((x) => x[0] === proxiedLink);
 
   const githubLink = matchGithubLink(item.vendetta.original);
-  const githubBtn = githubLink && {
-    icon: getAssetIDByName("img_account_sync_github_white"),
-    onPress: () => url.openURL(githubLink),
-  };
+  const append = [];
+  if (githubLink)
+    append.push({
+      icon: getAssetIDByName("img_account_sync_github_white"),
+      onPress: () => url.openURL(githubLink),
+    });
 
   return (
     <ScuffedPluginCard
@@ -61,30 +63,29 @@ export default function ({
       headerIcon={getAssetIDByName(item.vendetta.icon)}
       descriptionLabel={item.description}
       actions={() => {
-        if (proxiedLink.includes("plugin-browser")) return [githubBtn];
+        if (proxiedLink.includes("plugin-browser")) return [append];
 
         return hasPlugin
           ? [
-              plugins.plugins[proxiedLink] &&
-                plugins.plugins[proxiedLink].manifest.hash !== item.hash && {
-                  icon: getAssetIDByName("ic_sync_24px"),
-                  onPress: () => {
-                    refetchPlugin(proxiedLink)
-                      .then(() => {
-                        showToast(
-                          `Successfully updated ${item.name}`,
-                          getAssetIDByName("ic_sync_24px")
-                        );
-                        setHasPlugin(true);
-                      })
-                      .catch(() =>
-                        showToast(
-                          `Failed to update ${item.name}!`,
-                          getAssetIDByName("Small")
-                        )
+              plugins.plugins[proxiedLink]?.manifest.hash !== item.hash && {
+                icon: getAssetIDByName("ic_sync_24px"),
+                onPress: () => {
+                  refetchPlugin(proxiedLink)
+                    .then(() => {
+                      showToast(
+                        `Successfully updated ${item.name}`,
+                        getAssetIDByName("ic_sync_24px")
                       );
-                  },
+                      setHasPlugin(true);
+                    })
+                    .catch(() =>
+                      showToast(
+                        `Failed to update ${item.name}!`,
+                        getAssetIDByName("Small")
+                      )
+                    );
                 },
+              },
               {
                 icon: getAssetIDByName("ic_message_delete"),
                 destructive: true,
@@ -104,7 +105,7 @@ export default function ({
                   }
                 },
               },
-              githubBtn,
+              ...append,
             ].filter((x) => !!x)
           : [
               {
@@ -127,8 +128,8 @@ export default function ({
                     );
                 },
               },
-              githubBtn,
-            ].filter((x) => !!x);
+              ...append,
+            ];
       }}
     />
   );

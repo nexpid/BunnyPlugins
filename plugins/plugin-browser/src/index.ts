@@ -18,7 +18,7 @@ export const pluginsURL =
 const linkMatches = {
   multiplePluginGitio: /^(.*?)(?=\.)\.github\.io\/(.*?)(?=\/)\/(.*)/,
   singlePluginGitio: /^(.*?)(?=\.)\.github\.io\/(.*)/,
-  githubReleases: /^github\.com\/(.*?)(?=\/)\/(.*?)(?=\/)\/releases/, // i think only rosie does it this way (good for you rosie)
+  githubReleases: /^github\.com\/(.*?)(?=\/)\/(.*?)(?=\/)\/releases/,
 };
 export function matchGithubLink(link: string): string | undefined {
   const multi = link.match(linkMatches.multiplePluginGitio);
@@ -28,7 +28,7 @@ export function matchGithubLink(link: string): string | undefined {
   const single =
     link.match(linkMatches.singlePluginGitio) ??
     link.match(linkMatches.githubReleases);
-  if (single?.[0]) return `https://github.com/${multi[1]}/${multi[2]}`;
+  if (single?.[0]) return `https://github.com/${single[1]}/${single[2]}`;
 }
 
 export const vstorage: {

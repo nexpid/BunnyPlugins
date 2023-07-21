@@ -5,7 +5,7 @@ import {
 } from "@vendetta/metro/common";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { PluginsFullJson } from "../types";
-import { General, Search } from "@vendetta/ui/components";
+import { ErrorBoundary, General, Search } from "@vendetta/ui/components";
 import { pluginsURL } from "..";
 import { showToast } from "@vendetta/ui/toasts";
 import { findByProps } from "@vendetta/metro";
@@ -122,7 +122,9 @@ export default () => {
       contentContainerStyle={{ paddingBottom: 20 }}
       data={sortedData}
       renderItem={({ item, index }) => (
-        <PluginThing item={item} index={index} changes={changes} />
+        <ErrorBoundary>
+          <PluginThing item={item} index={index} changes={changes} />
+        </ErrorBoundary>
       )}
       removeClippedSubviews={true}
     ></RN.FlatList>
