@@ -15,11 +15,13 @@ declare global {
     };
   }
 
-  namespace __vendetta_loader {
-    const features: {
-      syscolors?: { prop: string };
-    };
-  }
+  var __vendetta_loader:
+    | {
+        features: {
+          syscolors?: { prop: string };
+        };
+      }
+    | undefined;
   var __vendetta_theme: Theme | undefined;
 
   var CSmigrationStage: number | undefined;
