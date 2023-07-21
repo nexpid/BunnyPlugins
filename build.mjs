@@ -79,12 +79,7 @@ for (let plug of await readdir("./plugins")) {
   if (!existsSync(`./dist/${plug}`)) await mkdir(`./dist/${plug}`);
   await writeFile(
     `./dist/${plug}/README.md`,
-    `---
-title: ${title}
-description: ${manifest.description}
----
-
-<div align="center">
+    `<div align="center">
     <h1>${title}</h1>
     <h3>${manifest.description}</h3>
 </div>
