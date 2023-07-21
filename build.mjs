@@ -72,20 +72,25 @@ for (let plug of await readdir("./plugins")) {
   );
   const outPath = `./dist/${plug}/index.js`;
 
+  const title = `${manifest.name} (by ${manifest.authors
+    .map((x) => x.name)
+    .join(", ")})`;
+
   if (!existsSync(`./dist/${plug}`)) await mkdir(`./dist/${plug}`);
   await writeFile(
     `./dist/${plug}/README.md`,
-    `<div align="center">
-    <h1>${manifest.name} (by ${manifest.authors
-      .map((x) => x.name)
-      .join(", ")})</h1>
+    `---
+title: ${title}
+description: ${manifest.description}
+---
+
+<div align="center">
+    <h1>${title}</h1>
     <h3>${manifest.description}</h3>
 </div>
 
 > **Note**
-> This is just a simple landing page for **${
-      manifest.name
-    }**. The proper way to load this plugin is to go in Vendetta's Plugin settings and tapping the plus icon.\n`
+> This is just a simple landing page for **${manifest.name}**. The proper way to load this plugin is to go in Vendetta's Plugin settings and tapping the plus icon.\n`
   );
 
   try {
