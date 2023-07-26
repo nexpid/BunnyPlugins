@@ -1,5 +1,5 @@
 import { storage } from "@vendetta/plugin";
-import modules from "./stuff/modules";
+import modules from "./modules";
 import settings from "./components/Settings";
 
 export const vstorage: {

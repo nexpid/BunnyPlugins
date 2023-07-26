@@ -1,11 +1,11 @@
 import { findByName } from "@vendetta/metro";
-import { Module, ModuleCategory } from "../Module";
+import { Module, ModuleCategory } from "../stuff/Module";
 import { after, before } from "@vendetta/patcher";
 import { findInReactTree } from "@vendetta/utils";
-import ListenAlongButton from "../../components/modules/SpotifyListenAlong/ListenAlongButton";
+import ListenAlongButton from "../components/modules/SpotifyListenAlong/ListenAlongButton";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 
-const profileSection = findByName("UserProfileSection", false);
+const UserProfileSection = findByName("UserProfileSection", false);
 
 export default new Module({
   id: "spotify-listen-along",
@@ -19,7 +19,7 @@ export default new Module({
   runner: {
     onStart() {
       this.patches.add(
-        before("default", profileSection, ([arg]) => {
+        before("default", UserProfileSection, ([arg]) => {
           if (arg.title?.toLowerCase().includes("spotify")) {
             const actions = findInReactTree(
               arg.children,

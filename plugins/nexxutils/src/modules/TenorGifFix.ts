@@ -1,5 +1,5 @@
 import { getAssetIDByName } from "@vendetta/ui/assets";
-import { Module, ModuleCategory } from "../Module";
+import { Module, ModuleCategory } from "../stuff/Module";
 import { findByProps } from "@vendetta/metro";
 import { before } from "@vendetta/patcher";
 

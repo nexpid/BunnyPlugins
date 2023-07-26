@@ -1,7 +1,7 @@
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { after, before } from "@vendetta/patcher";
 import { findByProps } from "@vendetta/metro";
-import { Module, ModuleCategory } from "../Module";
+import { Module, ModuleCategory } from "../stuff/Module";
 
 const remixStuff = findByProps("useIsCurrentUserEligibleForRemix");
 const localFileStuff = findByProps("uploadLocalFiles");
