@@ -12,7 +12,7 @@ export const vstorage: {
   >;
 } = storage;
 
-export const version = "0.1.1";
+export const version = "0.1.3";
 
 export default {
   onLoad: () => {
