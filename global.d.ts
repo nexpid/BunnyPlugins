@@ -17,7 +17,8 @@ declare global {
 
   var __vendetta_loader:
     | {
-        features: {
+        features?: {
+          themes?: { prop: string };
           syscolors?: { prop: string };
         };
       }
