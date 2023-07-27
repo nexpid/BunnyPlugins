@@ -12,6 +12,7 @@ export const vstorage: {
     accent3: string;
   };
   lightmode?: boolean;
+  wallpaper?: string;
 } = storage;
 
 export const patchesURL =

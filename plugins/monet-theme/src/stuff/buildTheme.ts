@@ -3,8 +3,8 @@ import { PatchThing, Patches } from "../components/Settings";
 import { getLABShade, parseColor } from "./colors";
 import { vstorage } from "..";
 
-export function build(patches: Patches) {
-  const theme = {
+export function build(patches: Patches): ThemeData {
+  const theme: ThemeData = {
     name: "Material You Theme 1.0.43",
     description: "A Discord theme with Material You theming.",
     authors: [
@@ -87,6 +87,12 @@ export function build(patches: Patches) {
     if (theme.semanticColors[x]) theme.semanticColors[x][1] = parseColor(y);
     else theme.semanticColors[x] = [undefined, parseColor(y)];
   }
+
+  if (vstorage.wallpaper)
+    theme.background = {
+      url: vstorage.wallpaper,
+      alpha: 1,
+    };
 
   return JSON.parse(JSON.stringify(theme));
 }

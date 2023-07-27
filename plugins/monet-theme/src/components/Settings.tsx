@@ -8,7 +8,6 @@ import {
 import { Forms, General } from "@vendetta/ui/components";
 import {
   BetterTableRowGroup,
-  BetterTableRowTitle,
   LineDivider,
   RichText,
   SimpleText,
@@ -31,7 +30,7 @@ import { semanticColors } from "@vendetta/ui";
 import { getDebugInfo } from "@vendetta/debug";
 import { openPluginReportSheet } from "../../../../stuff/githubReport";
 import { checkForURL, fetchRawTheme, parseTheme } from "../stuff/repainter";
-import ThemePreview from "../../../../stuff/ThemePreview";
+import { openConfigurePage } from "./pages/ConfigurePage";
 
 const { BundleUpdaterManager } = window.nativeModuleProxy;
 
@@ -97,6 +96,7 @@ const setColorsFromDynamic = (clr: VendettaSysColors) => {
 };
 
 export let stsCommits: CommitObj[];
+export let stsPatches: Patches;
 export default (): React.JSX.Element => {
   const navigation = NavigationNative.useNavigation();
   const [commits, setCommits] = React.useState<CommitObj[] | undefined>(
@@ -105,6 +105,7 @@ export default (): React.JSX.Element => {
   const [usePatches, setUsePatches] = React.useState<"git" | "local">("git");
   const [patches, setPatches] = React.useState<Patches | undefined>(undefined);
   stsCommits = commits;
+  stsPatches = patches;
 
   vstorage.lightmode ??= false;
   useProxy(vstorage);
@@ -472,6 +473,22 @@ export default (): React.JSX.Element => {
                 });
               }}
             />
+            <FormRow
+              label="Configure Theme"
+              leading={
+                <FormRow.Icon source={getAssetIDByName("ic_message_edit")} />
+              }
+              trailing={<FormRow.Arrow />}
+              onPress={() =>
+                showConfirmationAlert({
+                  title: "hey",
+                  content: "this is a WIP",
+                  confirmText: "ok",
+                  confirmColor: "brand" as ButtonColors,
+                  onConfirm: () => openConfigurePage(navigation),
+                })
+              }
+            />
             <FormSwitchRow
               label={[
                 "Light Theme",
@@ -507,20 +524,6 @@ export default (): React.JSX.Element => {
           </>
         )}
       </BetterTableRowGroup>
-      {patches && (
-        <View style={{ marginVertical: 16, marginHorizontal: 16 }}>
-          <BetterTableRowTitle
-            title="Theme Preview"
-            icon={getAssetIDByName("img_nitro_remixing")}
-          />
-          <ThemePreview
-            theme={{
-              theme: build(patches),
-              origin: vstorage.lightmode ? "light" : "dark",
-            }}
-          />
-        </View>
-      )}
     </ScrollView>
   );
 };
