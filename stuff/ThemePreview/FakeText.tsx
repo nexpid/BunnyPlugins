@@ -16,7 +16,7 @@ export default function ({
   variant: "normal" | "medium" | "semibold" | "bold";
   color: string;
 }>) {
-  const thing = TextStyleSheet[`text-${size}/${variant}`].fontSize * 0.6;
+  const thing = TextStyleSheet[`text-${size}/${variant}`].fontSize * 0.5;
   const siz = children
     .toString()
     .split("")

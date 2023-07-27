@@ -17,24 +17,27 @@ const links = {
 };
 
 /*
-colors are from:
-https://m2.material.io/design/color/the-color-system.html#tools-for-picking-colors
-
-using value 200 (500 for pie chart)
+colors are from catppuccin
 */
-const statuses = {
-  unfinished: "EEEEEE",
-  finished: "C5E1A5",
-  proxied: "80DEEA",
-  discontinued: "EF9A9A",
+const statusColors = {
+  unfinished: "#9399b2",
+  finished: "#a6e3a1",
+  proxied: "#89dceb",
+  discontinued: "#f38ba8",
 };
-const pieStatuses = {
-  unfinished: "#9E9E9E",
-  finished: "#8BC34A",
-  proxied: "#00BCD4",
-  discontinued: "#F44336",
+const shieldLabelColor = "#1e1e2e".slice(1);
+const shieldColors = {
+  ghstars: "#b4befe".slice(1),
+  ghissues: "#74c7ec".slice(1),
+  ghpullreqs: "#a6e3a1".slice(1),
+  discord: "#eba0ac".slice(1),
 };
-const labelColor = "263238";
+const shieldLogos = {
+  ghstars: "starship&logoColor=fff",
+  ghissues: "gitbook&logoColor=fff",
+  ghpullreqs: "saucelabs&logoColor=fff",
+  discord: "discord&logoColor=fff",
+};
 
 const categories = [
   ["✅ Finished", ["proxied", "finished"]],
@@ -46,8 +49,8 @@ const makeBadge = (label, text, textColor) =>
   `<img alt="${label}" src="https://img.shields.io/badge/${label}${
     text ? `-${text}` : ""
   }${textColor && text ? `-${textColor}` : ""}${
-    !text ? `-${labelColor}` : ""
-  }?style=for-the-badge${text ? `&labelColor=${labelColor}` : ""}" />`;
+    !text ? `-${shieldLabelColor}` : ""
+  }?style=for-the-badge${text ? `&labelColor=${shieldLabelColor}` : ""}" />`;
 const makeHref = (href, text, spacing = 0) => `<a href="${href}">
 ${"\t".repeat(spacing + 1)}${text}
 ${"\t".repeat(spacing)}</a>`;
@@ -127,11 +130,15 @@ for (const x of await readdir("./plugins")) {
     };
 
     const preadme = `<div align="center">
-\t${makeBadge("plugin_status", plugin.status, statuses[plugin.status])}${
-      badges.copy || badges.external ? `\n\t<br/>` : ""
-    }${badges.copy ? "\n\t" : ""}${badges.copy ?? ""}${
-      badges.external ? "\n\t" : ""
-    }${badges.external ?? ""}
+\t${makeBadge(
+      "plugin_status",
+      plugin.status,
+      statusColors[plugin.status].slice(1)
+    )}${badges.copy || badges.external ? `\n\t<br/>` : ""}${
+      badges.copy ? "\n\t" : ""
+    }${badges.copy ?? ""}${badges.external ? "\n\t" : ""}${
+      badges.external ?? ""
+    }
 </div>
 <br/>
 <div align="center">
@@ -179,10 +186,10 @@ const chart = {
           stats.discontinued,
         ].filter((x) => x > 0),
         backgroundColor: [
-          pieStatuses.proxied,
-          pieStatuses.finished,
-          pieStatuses.unfinished,
-          pieStatuses.discontinued,
+          statusColors.proxied,
+          statusColors.finished,
+          statusColors.unfinished,
+          statusColors.discontinued,
         ],
         datalabels: {
           labels: {
@@ -300,17 +307,22 @@ const plist = categories
 const mreadme = `<div align="center">
 \t${makeHref(
   "https://github.com/Gabe616/VendettaPlugins/stargazers",
-  `<img alt="GitHub stars" src="https://img.shields.io/github/stars/Gabe616/VendettaPlugins?style=for-the-badge&color=BBDEFB&labelColor=${labelColor}">`,
+  `<img alt="GitHub stars" src="https://img.shields.io/github/stars/Gabe616/VendettaPlugins?style=for-the-badge&color=${shieldColors.ghstars}&labelColor=${shieldLabelColor}&logo=${shieldLogos.ghstars}">`,
   1
 )}
 \t${makeHref(
   "https://github.com/Gabe616/VendettaPlugins/issues",
-  `<img alt="GitHub issues" src="https://img.shields.io/github/issues/Gabe616/VendettaPlugins?style=for-the-badge&color=C5CAE9&labelColor=${labelColor}">`,
+  `<img alt="GitHub issues" src="https://img.shields.io/github/issues/Gabe616/VendettaPlugins?style=for-the-badge&color=${shieldColors.ghissues}&labelColor=${shieldLabelColor}&logo=${shieldLogos.ghissues}">`,
   1
 )}
 \t${makeHref(
   "https://github.com/Gabe616/VendettaPlugins/pulls",
-  `<img alt="GitHub pull requests" src="https://img.shields.io/github/issues-pr/Gabe616/VendettaPlugins?style=for-the-badge&color=D1C4E9&labelColor=${labelColor}">`,
+  `<img alt="GitHub pull requests" src="https://img.shields.io/github/issues-pr/Gabe616/VendettaPlugins?style=for-the-badge&color=${shieldColors.ghpullreqs}&labelColor=${shieldLabelColor}&logo=${shieldLogos.ghpullreqs}">`,
+  1
+)}
+\t${makeHref(
+  "https://discord.gg/n9QQ4XhhJP",
+  `<img alt="Discord members" src="https://img.shields.io/discord/1015931589865246730?style=for-the-badge&color=${shieldColors.discord}&labelColor=${shieldLabelColor}&logo=${shieldLogos.discord}">`,
   1
 )}
 </div>

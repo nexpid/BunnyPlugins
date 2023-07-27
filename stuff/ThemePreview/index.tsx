@@ -4,20 +4,12 @@ import { ErrorBoundary, General } from "@vendetta/ui/components";
 import Preview1 from "./previews/Preview1";
 import { ThemePreviewData } from "./util";
 
-const { ScrollView, View, Pressable } = General;
-
-export default function ({
-  theme: t,
-  fullscreen,
-}: {
-  theme: ThemePreviewData;
-  fullscreen?: boolean;
-}) {
+export default function ({ theme: t }: { theme: ThemePreviewData }) {
   const dims = RN.Dimensions.get("window");
   const styles = stylesheet.createThemedStyleSheet({
     card: {
-      width: fullscreen ? "100%" : dims.width * 0.7,
-      height: fullscreen ? "100%" : dims.height * 0.7,
+      width: dims.width * 0.6,
+      height: dims.height * 0.6,
       borderRadius: 8,
       backgroundColor: semanticColors.BACKGROUND_SECONDARY_ALT,
       marginHorizontal: 8,
