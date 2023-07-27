@@ -1,10 +1,15 @@
-import { findByName } from "@vendetta/metro";
+import { findByName, findByProps } from "@vendetta/metro";
 import { Module, ModuleCategory } from "../stuff/Module";
 import { after, before } from "@vendetta/patcher";
+import { getAssetIDByName } from "@vendetta/ui/assets";
+import { Button, Forms, General } from "@vendetta/ui/components";
 import { findInReactTree } from "@vendetta/utils";
 import ListenAlongButton from "../components/modules/SpotifyListenAlong/ListenAlongButton";
-import { getAssetIDByName } from "@vendetta/ui/assets";
 
+const { View } = General;
+const { FormRow } = Forms;
+
+const { SpotifyPlayButton } = findByProps("SpotifyPlayButton");
 const UserProfileSection = findByName("UserProfileSection", false);
 
 export default new Module({
@@ -19,33 +24,37 @@ export default new Module({
   runner: {
     onStart() {
       this.patches.add(
+        after("render", SpotifyPlayButton.prototype, (_, ret) => {
+          const aprops = ret?._owner?.stateNode?.props;
+          if (!aprops?.activity?.user) return;
+
+          const ath = ret.props;
+          return (
+            <ListenAlongButton
+              button={ath}
+              activity={aprops.activity}
+              user={aprops.activity.user}
+            />
+          );
+        })
+      );
+      this.patches.add(
         before("default", UserProfileSection, ([arg]) => {
-          if (arg.title?.toLowerCase().includes("spotify")) {
+          if (arg.title?.includes("Spotify")) {
             const actions = findInReactTree(
               arg.children,
               (x) => x?.type?.name === "Actions"
             );
 
-            if (actions) {
-              const { activityButtonColor, activity, user } = actions.props;
-              if (activityButtonColor && activity && user)
-                this.patches.add(
-                  after(
-                    "type",
-                    actions,
-                    (_, ret) =>
-                      (ret.props.children = [
-                        ret.props.children,
-                        <ListenAlongButton
-                          background={activityButtonColor}
-                          activity={activity}
-                          user={user}
-                        />,
-                      ]),
-                    true
-                  )
-                );
-            } else console.log("no actions :(");
+            if (actions)
+              this.patches.add(
+                before(
+                  "type",
+                  actions,
+                  ([a]) => (a.activity.user = a.user),
+                  true
+                )
+              );
           }
         })
       );
