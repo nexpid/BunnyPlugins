@@ -1,8 +1,8 @@
 <div align="center">
-	<img alt="plugin_status" src="https://img.shields.io/badge/plugin_status-proxied-80DEEA?style=for-the-badge&labelColor=263238" />
+	<img alt="plugin_status" src="https://img.shields.io/badge/plugin_status-proxied-89dceb?style=for-the-badge&labelColor=1e1e2e" />
 	<br/>
 	<a href="https://vd-plugins.github.io/proxy/gabe616.github.io/VendettaPlugins/tenor-gif-fix">
-		<img alt="copy_proxied_link" src="https://img.shields.io/badge/copy_proxied_link-263238?style=for-the-badge" />
+		<img alt="copy_proxied_link" src="https://img.shields.io/badge/copy_proxied_link-1e1e2e?style=for-the-badge" />
 	</a>
 </div>
 <br/>
