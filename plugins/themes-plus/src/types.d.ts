@@ -1,8 +1,9 @@
-export interface PlusStructureV1 {
+export interface PlusStructureV0 {
   icons?: {
-    [icon: string]: (string | undefined)[];
+    [icon: string]: string | (string | undefined)[];
   };
-  version: 1;
+  unreadBadgeColor?: string | (string | undefined)[];
+  version: 0;
 }
 
-export type PlusStructure = PlusStructureV1;
+export type PlusStructure = PlusStructureV0;
