@@ -1,7 +1,8 @@
 {
   "private": true,
   "scripts": {
-    "build": "node build.mjs"
+    "build": "node build.mjs --nominify",
+    "dev": "http-server dist --port 8731"
   },
   "dependencies": {
     "@swc/helpers": "^0.4.14"
