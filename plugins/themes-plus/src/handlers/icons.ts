@@ -1,6 +1,7 @@
 import { getAssetByID } from "@vendetta/ui/assets";
 import { PlusStructure } from "../types";
 import { matchTheme } from "../stuff/themeMatch";
+import { addToStyle } from "../stuff/util";
 
 export function getIconTint(
   plus: PlusStructure,

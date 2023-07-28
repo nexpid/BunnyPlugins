@@ -30,12 +30,13 @@ export default (): (() => void) => {
           const [x] = args;
           if (!x.source || typeof x.source !== "number" || x.ignore)
             return orig(...args);
+          let source = x.source;
 
           let overlay: any;
           if (plus.customOverlays) {
             overlay = getIconOverlay(
               plus,
-              x.source,
+              source,
               x.style ? (Array.isArray(x.style) ? x.style : [x.style]) : []
             );
             if (overlay) {
@@ -45,7 +46,8 @@ export default (): (() => void) => {
           }
 
           if (plus.icons) {
-            const tint = getIconTint(plus, x.source);
+            const tint = getIconTint(plus, source);
+            console.log(tint);
             if (tint)
               addToStyle(x, {
                 tintColor: tint,
