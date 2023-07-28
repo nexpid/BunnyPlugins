@@ -64,7 +64,7 @@ export default () => {
             </>
           ) : (
             <>
-              Send a message with a date (in{" "}
+              Send a message with a date code (in{" "}
               <RichText.Bold>
                 {vstorage.day.american ? "MM/DD" : "DD/MM"}/YY(YY)
               </RichText.Bold>
@@ -97,7 +97,9 @@ export default () => {
         <FormSwitchRow
           key={`${tab}_requireBackticks`}
           label="Require Backticks"
-          subLabel={`Require ${tab} to be surrounded by backticks (\`)`}
+          subLabel={`Require ${
+            tab === "day" ? "date" : "time"
+          } to be surrounded by backticks (\`)`}
           leading={<FormIcon source={getAssetIDByName("ic_message_edit")} />}
           onValueChange={() =>
             (vstorage[tab].requireBackticks = !vstorage[tab].requireBackticks)
