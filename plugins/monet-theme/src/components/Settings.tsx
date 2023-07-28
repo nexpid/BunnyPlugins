@@ -12,8 +12,8 @@ import {
   RichText,
   SimpleText,
   SuperAwesomeIcon,
-  VendettaSysColors,
 } from "../../../../stuff/types";
+import { VendettaSysColors } from "../../../../stuff/typings";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import Color from "./Color";
 import { commitsURL, devPatchesURL, patchesURL, vstorage } from "..";

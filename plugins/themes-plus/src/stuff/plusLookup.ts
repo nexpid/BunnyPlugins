@@ -1,4 +1,4 @@
-import { PlusStructure } from "../types";
+import { PlusStructure } from "../../../../stuff/typings";
 
 export function getPlusData(): PlusStructure | undefined {
   const theme = window[

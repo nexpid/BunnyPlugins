@@ -1,10 +1,10 @@
 import { findByProps } from "@vendetta/metro";
 import { ReactNative as RN, stylesheet } from "@vendetta/metro/common";
 import { getAssetByID, getAssetIDByName } from "@vendetta/ui/assets";
-import { PlusStructure } from "../types";
 import { rawColors, semanticColors } from "@vendetta/ui";
 import { asIcon } from "./icons";
 import { General } from "@vendetta/ui/components";
+import { PlusStructure } from "../../../../stuff/typings";
 
 const { View } = General;
 const { MaskedBadge } = findByProps("MaskedBadge");

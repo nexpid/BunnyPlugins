@@ -9,7 +9,7 @@ import { common, findByProps } from "@vendetta/metro";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { showToast } from "@vendetta/ui/toasts";
 import { vstorage } from "..";
-import { DisplayProfileData } from "../../../../stuff/types";
+import { DisplayProfileData } from "../../../../stuff/typings";
 
 const { FormDivider, FormLabel } = Forms;
 const { View } = General;

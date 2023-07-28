@@ -1,5 +1,5 @@
+import { PlusStructure } from "../../../../stuff/typings";
 import { matchTheme } from "../stuff/themeMatch";
-import { PlusStructure } from "../types";
 
 export function getUnreadBadgeColor(plus: PlusStructure): string | undefined {
   if (!plus.unreadBadgeColor) return;

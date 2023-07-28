@@ -9,8 +9,8 @@ import { getUnreadBadgeColor } from "../handlers/unreadBadge";
 import { getIconOverlay } from "../handlers/iconOverlays";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { General } from "@vendetta/ui/components";
-import { PlusStructure } from "../types";
 import { addToStyle } from "./util";
+import { PlusStructure } from "../../../../stuff/typings";
 
 const { View } = General;
 const MaskedBadge = findByProps("MaskedBadge");
