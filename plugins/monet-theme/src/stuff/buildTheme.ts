@@ -4,15 +4,8 @@ import { getLABShade, parseColor } from "./colors";
 import { vstorage } from "..";
 import { ThemeDataWithPlus } from "../../../../stuff/typings";
 
-const cache: {
-  lastPatches?: string;
-  lastLightmode?: boolean;
-  lastWallpaper?: string;
-  lastTheme?: ThemeDataWithPlus;
-} = {};
-
 export function build(patches: Patches): ThemeDataWithPlus {
-  const theme: ThemeData = {
+  const theme: ThemeDataWithPlus = {
     name: "Material You Theme 1.0.43",
     description: "A Discord theme with Material You theming.",
     authors: [
@@ -48,79 +41,76 @@ export function build(patches: Patches): ThemeDataWithPlus {
     return shouldPut;
   };
 
-  const string = JSON.stringify(patches);
+  if (patches.version === 2)
+    for (const [x, y] of entries(get(patches.replacers))) {
+      let clr = parseColor(y[0]);
+      if (!clr) continue;
 
-  if (
-    cache.lastPatches !== string ||
-    cache.lastLightmode !== vstorage.lightmode ||
-    !cache.lastTheme
-  ) {
-    console.log("ok...");
-    if (patches.version === 2)
-      for (const [x, y] of entries(get(patches.replacers))) {
-        let clr = parseColor(y[0]);
-        if (!clr) continue;
+      for (const c of Object.keys(rawColors).filter((l) =>
+        l.startsWith(`${x.split("_")[0]}_`)
+      )) {
+        const shade = Number(c.split("_")[1]);
+        if (!checkShouldPut(shade, x.split("_").slice(1))) continue;
 
-        for (const c of Object.keys(rawColors).filter((l) =>
-          l.startsWith(`${x.split("_")[0]}_`)
-        )) {
-          const shade = Number(c.split("_")[1]);
-          if (!checkShouldPut(shade, x.split("_").slice(1))) continue;
-
-          const mult = y[1];
-          theme.rawColors[c] = getLABShade(clr, shade, mult);
-        }
+        const mult = y[1];
+        theme.rawColors[c] = getLABShade(clr, shade, mult);
       }
-    else if (patches.version === 3)
-      for (const [x, y] of entries(get(patches.replacers))) {
-        const clr = parseColor(y.color);
-        if (!clr) continue;
+    }
+  else if (patches.version === 3)
+    for (const [x, y] of entries(get(patches.replacers))) {
+      const clr = parseColor(y.color);
+      if (!clr) continue;
 
-        for (const c of Object.keys(rawColors).filter((l) =>
-          l.startsWith(`${x.split("_")[0]}_`)
-        )) {
-          const shade = Number(c.split("_")[1]);
-          if (!checkShouldPut(shade, x.split("_").slice(1))) continue;
+      for (const c of Object.keys(rawColors).filter((l) =>
+        l.startsWith(`${x.split("_")[0]}_`)
+      )) {
+        const shade = Number(c.split("_")[1]);
+        if (!checkShouldPut(shade, x.split("_").slice(1))) continue;
 
-          theme.rawColors[c] = getLABShade(
-            clr,
-            y.base ? shade + (500 - y.base) : shade,
-            y.ratio
-          );
-        }
+        theme.rawColors[c] = getLABShade(
+          clr,
+          y.base ? shade + (500 - y.base) : shade,
+          y.ratio
+        );
       }
-
-    for (const [x, y] of entries(get(patches.raw)))
-      theme.rawColors[x] = parseColor(y);
-
-    for (const [x, y] of Object.entries(patches.semantic.both))
-      theme.semanticColors[x] = [parseColor(y), parseColor(y)];
-    for (const [x, y] of Object.entries(patches.semantic.dark)) {
-      if (theme.semanticColors[x]) theme.semanticColors[x][0] = parseColor(y);
-      else theme.semanticColors[x] = [parseColor(y)];
     }
-    for (const [x, y] of Object.entries(patches.semantic.light)) {
-      if (theme.semanticColors[x]) theme.semanticColors[x][1] = parseColor(y);
-      else theme.semanticColors[x] = [undefined, parseColor(y)];
-    }
-  } else {
-    theme.semanticColors = cache.lastTheme.semanticColors;
-    theme.rawColors = cache.lastTheme.rawColors;
+
+  for (const [x, y] of entries(get(patches.raw)))
+    theme.rawColors[x] = parseColor(y);
+
+  for (const [x, y] of Object.entries(patches.semantic.both))
+    theme.semanticColors[x] = [parseColor(y), parseColor(y)];
+  for (const [x, y] of Object.entries(patches.semantic.dark)) {
+    if (theme.semanticColors[x]) theme.semanticColors[x][0] = parseColor(y);
+    else theme.semanticColors[x] = [parseColor(y)];
   }
-  cache.lastPatches = string;
-  cache.lastLightmode = vstorage.lightmode;
+  for (const [x, y] of Object.entries(patches.semantic.light)) {
+    if (theme.semanticColors[x]) theme.semanticColors[x][1] = parseColor(y);
+    else theme.semanticColors[x] = [undefined, parseColor(y)];
+  }
 
-  if (cache.lastWallpaper !== vstorage.wallpaper || !cache.lastTheme)
-    theme.background = vstorage.wallpaper && {
+  if (vstorage.wallpaper)
+    theme.background = {
       url: vstorage.wallpaper,
       alpha: 1,
       blur: 2,
     };
-  else theme.background = cache.lastTheme.background;
 
-  cache.lastWallpaper = vstorage.wallpaper;
+  if (patches.version === 3 && patches.plus) {
+    theme.plus = {
+      version: 0,
+      customOverlays: true,
+      unreadBadgeColor: parseColor(
+        "both" in patches.plus.unreadBadgeColor
+          ? patches.plus.unreadBadgeColor.both
+          : patches.plus.unreadBadgeColor[vstorage.lightmode ? "light" : "dark"]
+      ),
+      icons: {},
+    };
 
-  const out = JSON.parse(JSON.stringify(theme));
-  cache.lastTheme = out;
-  return out;
+    for (const [x, y] of entries(get(patches.plus.icons)))
+      theme.plus.icons[x] = parseColor(y);
+  }
+
+  return JSON.parse(JSON.stringify(theme));
 }

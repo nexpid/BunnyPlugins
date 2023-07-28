@@ -14,6 +14,10 @@ export interface PatchV3 {
   }>;
   semantic: PatchThing<string>;
   raw: PatchThing<string>;
+  plus: {
+    unreadBadgeColor: PatchThingSingle<string>;
+    icons: PatchThing<string>;
+  };
 }
 
 export interface PatchThing<value> {
@@ -21,3 +25,11 @@ export interface PatchThing<value> {
   light: Record<string, value>;
   both: Record<string, value>;
 }
+export type PatchThingSingle<value> =
+  | {
+      dark: value;
+      light: value;
+    }
+  | {
+      both: value;
+    };
