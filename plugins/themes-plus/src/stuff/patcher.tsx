@@ -11,6 +11,7 @@ import { General } from "@vendetta/ui/components";
 import { addToStyle, reloadUI } from "./util";
 import { PlusStructure } from "../../../../stuff/typings";
 import resolveColor, { androidifyColor } from "./resolveColor";
+import { PatchType, active } from "..";
 
 const { View } = General;
 const MaskedBadge = findByProps("MaskedBadge");
@@ -20,12 +21,17 @@ export default (): (() => void) => {
   const patches = new Array<() => void>();
 
   const plus: PlusStructure = getPlusData();
-  let patched = false;
 
   // icon tints
+  active.patches.length = 0;
+
   if (plus?.version !== undefined) {
+    active.active = true;
     if (plus.icons || plus.customOverlays) {
-      patched = true;
+      if (plus.icons) active.patches.push(PatchType.Icons);
+      if (plus.customOverlays)
+        active.patches.push(PatchType.CustomIconOverlays);
+
       patches.push(
         instead("render", RN.Image, (args, orig) => {
           const [x] = args;
@@ -67,7 +73,8 @@ export default (): (() => void) => {
       );
     }
     if (plus.unreadBadgeColor) {
-      patched = true;
+      active.patches.push(PatchType.UnreadBadgeColor);
+
       patches.push(
         after("MaskedBadge", MaskedBadge, (_, ret) => {
           const badge =
@@ -101,7 +108,8 @@ export default (): (() => void) => {
     }
     if (plus.mentionLineColor) {
       // ty to cynthia
-      patched = true;
+      active.patches.push(PatchType.MentionLineColor);
+
       patches.push(
         after("createBackgroundHighlight", RowGeneratorUtils, ([x], ret) => {
           const clr = resolveColor(plus.mentionLineColor);
@@ -110,9 +118,9 @@ export default (): (() => void) => {
         })
       );
     }
-  }
+  } else active.active = false;
 
-  if (patched) reloadUI();
+  if (active.patches[0]) reloadUI();
 
   return () => {
     reloadUI();
