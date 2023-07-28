@@ -47,7 +47,6 @@ export default (): (() => void) => {
 
           if (plus.icons) {
             const tint = getIconTint(plus, source);
-            console.log(tint);
             if (tint)
               addToStyle(x, {
                 tintColor: tint,
