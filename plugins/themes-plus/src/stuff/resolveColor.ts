@@ -1,7 +1,7 @@
 import { findByStoreName } from "@vendetta/metro";
 import { PlusColorResolvable } from "../../../../stuff/typings";
 import { resolveSemanticColor } from "../../../../stuff/types";
-import { rawColors } from "@vendetta/ui";
+import { rawColors, semanticColors } from "@vendetta/ui";
 
 const UnsyncedUserSettingsStore = findByStoreName("UnsyncedUserSettingsStore");
 
@@ -27,15 +27,19 @@ export default function (color: PlusColorResolvable): string | undefined {
       amoled: color[2],
       darker: color[3],
     });
-  else if (color.startsWith("SC_")) return resolveSemanticColor(color.slice(3));
-  else if (color.startsWith("RC_")) return rawColors[color.slice(3)];
+  else if (color.startsWith("SC_"))
+    return semanticColors[color.slice(3)]
+      ? resolveSemanticColor(semanticColors[color.slice(3)])
+      : "#ffffff";
+  else if (color.startsWith("RC_"))
+    return rawColors[color.slice(3)] ?? "#ffffff";
   else if (color.startsWith("#") && color.length === 4)
     return `#${color[1].repeat(2)}${color[2].repeat(2)}${color[3].repeat(2)}`;
   else if (color.startsWith("#") && color.length === 7) return color;
 }
 
 export function androidifyColor(color: string, alpha = 255): number {
-  const [_, r, g, b] = color.match(/#([A-F0-9]{2})([A-F0-9]{2})([A-F0-9]{2})/);
+  const [_, r, g, b] = color.match(/#([A-F0-9]{2})([A-F0-9]{2})([A-F0-9]{2})/i);
 
   return (
     ((alpha & 0xff) << 24) |
