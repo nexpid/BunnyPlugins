@@ -105,6 +105,11 @@ export function build(patches: Patches): ThemeDataWithPlus {
           ? patches.plus.unreadBadgeColor.both
           : patches.plus.unreadBadgeColor[vstorage.lightmode ? "light" : "dark"]
       ),
+      mentionLineColor: parseColor(
+        "both" in patches.plus.mentionLineColor
+          ? patches.plus.mentionLineColor.both
+          : patches.plus.mentionLineColor[vstorage.lightmode ? "light" : "dark"]
+      ),
       icons: {},
     };
 

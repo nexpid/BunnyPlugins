@@ -16,6 +16,7 @@ export interface PatchV3 {
   raw: PatchThing<string>;
   plus: {
     unreadBadgeColor: PatchThingSingle<string>;
+    mentionLineColor: PatchThingSingle<string>;
     icons: PatchThing<string>;
   };
 }
