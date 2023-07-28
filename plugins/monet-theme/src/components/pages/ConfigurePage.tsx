@@ -18,7 +18,7 @@ const { View, ScrollView } = General;
 
 const styles = stylesheet.createThemedStyleSheet({
   thing: {
-    backgroundColor: semanticColors.BACKGROUND_PRIMARY,
+    backgroundColor: semanticColors.BACKGROUND_TERTIARY,
   },
   androidRipple: {
     color: semanticColors.ANDROID_RIPPLE,
@@ -28,18 +28,14 @@ const styles = stylesheet.createThemedStyleSheet({
 
 export const ConfigurePage = (): React.JSX.Element => {
   const [_, forceUpdate] = React.useReducer((x) => ~x, 0);
-  const [lbuild, setLBuild] = React.useState(() => build(stsPatches));
-
-  /*React.useEffect(
-    () => stsPatches && setLBuild(build(stsPatches)),
-    [stsPatches]
-  );*/
 
   if (!stsPatches)
     return <RN.ActivityIndicator size={"large"} style={{ flex: 1 }} />;
 
   const bestVariant = vstorage.lightmode ? "light" : "dark";
-  const collections = wallpapers.filter((x) => x.variant === bestVariant);
+  const collections = wallpapers.filter(
+    (x) => x.variant === bestVariant || x.variant === "any"
+  );
 
   const dims = RN.Dimensions.get("window");
   return (
@@ -53,7 +49,7 @@ export const ConfigurePage = (): React.JSX.Element => {
           <View style={{ alignItems: "center" }}>
             <ThemePreview
               theme={{
-                theme: lbuild,
+                theme: build(stsPatches),
                 origin: vstorage.lightmode ? "light" : "dark",
               }}
             />
@@ -76,9 +72,9 @@ export const ConfigurePage = (): React.JSX.Element => {
                   <View style={{ marginRight: 8, flexDirection: "column" }}>
                     <RN.TouchableOpacity
                       onPress={() => {
+                        showToast(`Set background`, getAssetIDByName("Check"));
                         vstorage.wallpaper = x.url;
                         forceUpdate();
-                        showToast(`Set background`, getAssetIDByName("Check"));
                       }}
                       style={[
                         styles.thing,

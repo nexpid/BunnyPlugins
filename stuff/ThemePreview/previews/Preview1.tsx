@@ -302,7 +302,10 @@ export default function ({
             source={getAssetIDByName("friends_toast_icon")}
             style={[
               styles.bottomIcon,
-              { tintColor: semanticFromTheme(t, "INTERACTIVE_NORMAL") },
+              {
+                tintColor: semanticFromTheme(t, "INTERACTIVE_NORMAL"),
+                opacity: 0.5,
+              },
             ]}
           />
         </View>
@@ -311,7 +314,10 @@ export default function ({
             source={getAssetIDByName("ic_search")}
             style={[
               styles.bottomIcon,
-              { tintColor: semanticFromTheme(t, "INTERACTIVE_NORMAL") },
+              {
+                tintColor: semanticFromTheme(t, "INTERACTIVE_NORMAL"),
+                opacity: 0.5,
+              },
             ]}
           />
         </View>
@@ -320,7 +326,10 @@ export default function ({
             source={getAssetIDByName("ic_notif")}
             style={[
               styles.bottomIcon,
-              { tintColor: semanticFromTheme(t, "INTERACTIVE_NORMAL") },
+              {
+                tintColor: semanticFromTheme(t, "INTERACTIVE_NORMAL"),
+                opacity: 0.5,
+              },
             ]}
           />
         </View>
@@ -329,7 +338,10 @@ export default function ({
             source={getAssetIDByName("ic_profile_24px")}
             style={[
               styles.bottomIcon,
-              { tintColor: semanticFromTheme(t, "INTERACTIVE_NORMAL") },
+              {
+                tintColor: semanticFromTheme(t, "INTERACTIVE_NORMAL"),
+                opacity: 0.5,
+              },
             ]}
           />
         </View>
