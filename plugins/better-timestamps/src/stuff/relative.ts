@@ -10,16 +10,17 @@ export function parseRelative(
     ["hours?", 1000 * 60 * 60],
   ];
 
-  const year = 365 + 1 / 4;
+  const year = 31556952000;
+  const day = 1000 * 60 * 60 * 24;
   const dateThingies = [
-    ["days?", 1],
-    ["weeks?", 7],
-    ["months?", 30.436875],
+    ["days?", day],
+    ["weeks?", day * 7],
+    ["months?", day * 30.436875],
     ["years?", year],
     ["decades?", year * 10],
     ["century", year * 100],
     ["centuries", year * 100],
-  ].map((x) => [x[0], (x[1] as number) * 1000 * 60 * 60 * 24]);
+  ];
 
   const combinedThingies = [
     ...(things.time ? timeThingies : []),

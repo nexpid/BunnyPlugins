@@ -69,7 +69,7 @@ export function TimeExample(): React.JSX.Element {
 
           const time = parseTimestamp(
             Math.floor(date.getTime() / 1000).toString(),
-            seconds === 0 ? "t" : "T"
+            date.getSeconds() === 0 ? "t" : "T"
           );
 
           slay.push(
