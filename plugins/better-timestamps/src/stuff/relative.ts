@@ -89,8 +89,6 @@ export function parseRelative(
     (x) => !!x
   ) as [string, number][];
 
-  console.log(combinedSpecial);
-
   for (const [reg, diff] of combinedSpecial)
     content = content.replace(new RegExp(reg, "gi"), (str) =>
       replacer(str, diff)
