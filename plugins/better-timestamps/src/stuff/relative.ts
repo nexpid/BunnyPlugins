@@ -31,8 +31,8 @@ export function parseRelative(
   const jTime = j(backticks.time);
   const jDate = j(backticks.date);
 
-  const formatIn = (x: string) => `in (a|[0-9]+) (${x})`;
-  const formatAgo = (x: string) => `(a|[0-9]+) (${x}) ago`;
+  const formatIn = (x: string) => `in (an?|[0-9]+) (${x})`;
+  const formatAgo = (x: string) => `(an?|[0-9]+) (${x}) ago`;
 
   const match = [
     things.time && [
