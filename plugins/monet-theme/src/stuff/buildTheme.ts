@@ -1,16 +1,17 @@
 import { rawColors } from "@vendetta/ui";
-import { PatchThing, Patches } from "../components/Settings";
+import { PatchThing, Patches } from "../types";
 import { getLABShade, parseColor } from "./colors";
 import { vstorage } from "..";
+import { ThemeDataWithPlus } from "../../../../stuff/typings";
 
 const cache: {
   lastPatches?: string;
   lastLightmode?: boolean;
   lastWallpaper?: string;
-  lastTheme?: ThemeData;
+  lastTheme?: ThemeDataWithPlus;
 } = {};
 
-export function build(patches: Patches): ThemeData {
+export function build(patches: Patches): ThemeDataWithPlus {
   const theme: ThemeData = {
     name: "Material You Theme 1.0.43",
     description: "A Discord theme with Material You theming.",
