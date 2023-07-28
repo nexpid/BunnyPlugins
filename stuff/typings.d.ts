@@ -89,11 +89,15 @@ export type VendettaSysColors = Record<
   VendettaSysColor
 >;
 
+type PlusColorResolvable =
+  | string
+  | [string, string | undefined, string | undefined, string | undefined];
 export interface PlusStructureV0 {
   icons?: {
-    [icon: string]: string | (string | undefined)[];
+    [icon: string]: PlusColorResolvable;
   };
-  unreadBadgeColor?: string | (string | undefined)[];
+  unreadBadgeColor?: PlusColorResolvable;
+  mentionLineColor?: PlusColorResolvable;
   customOverlays?: boolean;
   version: 0;
 }

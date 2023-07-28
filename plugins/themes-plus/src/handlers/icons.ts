@@ -1,7 +1,7 @@
 import { getAssetByID } from "@vendetta/ui/assets";
-import { matchTheme } from "../stuff/themeMatch";
 import { addToStyle } from "../stuff/util";
 import { PlusStructure } from "../../../../stuff/typings";
+import resolveColor from "../stuff/resolveColor";
 
 export function getIconTint(
   plus: PlusStructure,
@@ -12,15 +12,7 @@ export function getIconTint(
   if (!name) return;
   if (!plus.icons[name]) return;
 
-  const colors = plus.icons[name];
-  return Array.isArray(colors)
-    ? matchTheme({
-        dark: colors[0],
-        light: colors[1],
-        amoled: colors[2],
-        darker: colors[3],
-      })
-    : colors;
+  return resolveColor(plus.icons[name]);
 }
 
 export function asIcon(

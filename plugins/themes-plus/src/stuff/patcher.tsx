@@ -2,18 +2,19 @@ import { ReactNative as RN } from "@vendetta/metro/common";
 import { getPlusData } from "./plusLookup";
 import { after, instead } from "@vendetta/patcher";
 import { getIconTint } from "../handlers/icons";
-import { reloadUI } from "./themeMatch";
 import { findByProps } from "@vendetta/metro";
 import { findInReactTree } from "@vendetta/utils";
 import { getUnreadBadgeColor } from "../handlers/unreadBadge";
 import { getIconOverlay } from "../handlers/iconOverlays";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { General } from "@vendetta/ui/components";
-import { addToStyle } from "./util";
+import { addToStyle, reloadUI } from "./util";
 import { PlusStructure } from "../../../../stuff/typings";
+import resolveColor, { androidifyColor } from "./resolveColor";
 
 const { View } = General;
 const MaskedBadge = findByProps("MaskedBadge");
+const RowGeneratorUtils = findByProps("createBackgroundHighlight");
 
 export default (): (() => void) => {
   const patches = new Array<() => void>();
@@ -96,6 +97,17 @@ export default (): (() => void) => {
               backgroundColor: getUnreadBadgeColor(plus),
             })
         )
+      );
+    }
+    if (plus.mentionLineColor) {
+      // ty to cynthia
+      patched = true;
+      patches.push(
+        after("createBackgroundHighlight", RowGeneratorUtils, ([x], ret) => {
+          const clr = resolveColor(plus.mentionLineColor);
+          if (x.message?.mentioned && clr)
+            ret.gutterColor = androidifyColor(clr, 200);
+        })
       );
     }
   }
