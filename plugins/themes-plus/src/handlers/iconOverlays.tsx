@@ -55,7 +55,7 @@ export function getIconOverlay(
         <View style={{ position: "absolute", left: 0, top: 0 }}>
           {asIcon(
             plus,
-            `${ic}_overlay`,
+            `${ic}__overlay`,
             <RN.Image
               source={{ uri: innerCheck }}
               style={[
@@ -80,7 +80,7 @@ export function getIconOverlay(
         <View style={{ position: "absolute", left: 0, top: 0 }}>
           {asIcon(
             plus,
-            `${ic}_overlay`,
+            `${ic}__overlay`,
             <RN.Image
               source={{ uri: innerCheck }}
               style={[
