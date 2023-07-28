@@ -64,7 +64,7 @@ export function parseRelative(
 
   for (const [mult, reg] of match) {
     content = content.replace(new RegExp(reg, "gi"), (str, time, thing) => {
-      const dr = time.toLowerCase() === "a" ? 1 : Number(time);
+      const dr = time.toLowerCase().startsWith("a") ? 1 : Number(time);
       if (Number.isNaN(dr)) return str;
 
       const calc = combinedThingies.find((x) =>
