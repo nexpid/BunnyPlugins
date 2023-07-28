@@ -105,7 +105,6 @@ export default (): (() => void) => {
       patches.push(
         after("createBackgroundHighlight", RowGeneratorUtils, ([x], ret) => {
           const clr = resolveColor(plus.mentionLineColor);
-          console.log(androidifyColor);
           if (x?.message?.mentioned && clr)
             ret.gutterColor = androidifyColor(clr, 200);
         })
