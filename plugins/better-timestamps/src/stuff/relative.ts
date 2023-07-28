@@ -20,6 +20,8 @@ export function parseRelative(
     ["decades?", year * 10],
     ["century", year * 100],
     ["centuries", year * 100],
+    ["millennium", year * 1000],
+    ["millennia", year * 1000],
   ];
 
   const combinedThingies = [
