@@ -250,8 +250,21 @@ export function SimpleText({
 }>) {
   const [_, forceUpdate] = React.useReducer((x) => ~x, 0);
 
-  const nextSecond = new Date().setMilliseconds(1000);
-  if (liveUpdate) setTimeout(() => forceUpdate(), nextSecond - Date.now());
+  React.useEffect(() => {
+    if (!liveUpdate) return;
+    const nextSecond = new Date().setMilliseconds(1000);
+
+    let interval: number, timeout: number;
+    timeout = setTimeout(() => {
+      forceUpdate();
+      interval = setInterval(forceUpdate, 1000);
+    }, nextSecond - Date.now());
+
+    return () => {
+      clearTimeout(timeout);
+      clearInterval(interval);
+    };
+  }, []);
 
   return (
     <Text
