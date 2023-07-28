@@ -104,5 +104,5 @@ export type ThemeWithPlus = Theme & {
   data: ThemeDataWithPlus;
 };
 export type ThemeDataWithPlus = ThemeData & {
-  plus: PlusStructure;
+  plus?: PlusStructure;
 };
