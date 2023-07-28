@@ -3,6 +3,7 @@ export interface PlusStructureV0 {
     [icon: string]: string | (string | undefined)[];
   };
   unreadBadgeColor?: string | (string | undefined)[];
+  customOverlays?: boolean;
   version: 0;
 }
 

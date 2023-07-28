@@ -18,13 +18,13 @@ export function matchTheme(colors: {
 }
 
 export function reloadUI() {
-  const og = UnsyncedUserSettingsStore.useAMOLEDTheme;
-  FluxDispatcher.dispatch({
-    type: "UNSYNCED_USER_SETTINGS_UPDATE",
-    settings: { useAMOLEDTheme: [0, 1, 2].find((x) => x !== og) },
-  });
-  FluxDispatcher.dispatch({
-    type: "UNSYNCED_USER_SETTINGS_UPDATE",
-    settings: { useAMOLEDTheme: og },
-  });
+  // const og = UnsyncedUserSettingsStore.useAMOLEDTheme;
+  // FluxDispatcher.dispatch({
+  //   type: "UNSYNCED_USER_SETTINGS_UPDATE",
+  //   settings: { useAMOLEDTheme: [0, 1, 2].find((x) => x !== og) },
+  // });
+  // FluxDispatcher.dispatch({
+  //   type: "UNSYNCED_USER_SETTINGS_UPDATE",
+  //   settings: { useAMOLEDTheme: og },
+  // });
 }

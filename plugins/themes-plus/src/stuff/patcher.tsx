@@ -1,40 +1,66 @@
 import { ReactNative as RN } from "@vendetta/metro/common";
 import { getPlusData } from "./plusLookup";
-import { after, before } from "@vendetta/patcher";
+import { after, instead } from "@vendetta/patcher";
 import { getIconTint } from "../handlers/icons";
 import { reloadUI } from "./themeMatch";
 import { findByProps } from "@vendetta/metro";
 import { findInReactTree } from "@vendetta/utils";
-import { PlusStructure } from "../types";
 import { getUnreadBadgeColor } from "../handlers/unreadBadge";
+import { getIconOverlay } from "../handlers/iconOverlays";
+import { getAssetIDByName } from "@vendetta/ui/assets";
+import { General } from "@vendetta/ui/components";
+import { PlusStructure } from "../types";
+import { addToStyle } from "./util";
 
+const { View } = General;
 const MaskedBadge = findByProps("MaskedBadge");
-
-const addToStyle = (x: any, y: any) => {
-  x.style ??= [];
-  if (!Array.isArray(x.style)) x.style = [x.style];
-  x.style = x.style.concat(y);
-};
 
 export default (): (() => void) => {
   const patches = new Array<() => void>();
 
-  const plus = getPlusData();
+  const plus: PlusStructure = getPlusData();
   let patched = false;
 
   // icon tints
   if (plus?.version !== undefined) {
-    if (plus.icons) {
+    if (plus.icons || plus.customOverlays) {
       patched = true;
       patches.push(
-        before("render", RN.Image, ([x]) => {
-          if (!x.source || typeof x.source !== "number") return;
+        instead("render", RN.Image, (args, orig) => {
+          const [x] = args;
+          if (!x.source || typeof x.source !== "number" || x.ignore)
+            return orig(...args);
 
-          const tint = getIconTint(plus, x.source);
-          if (tint)
-            addToStyle(x, {
-              tintColor: tint,
-            });
+          let overlay: any;
+          if (plus.customOverlays) {
+            overlay = getIconOverlay(
+              plus,
+              x.source,
+              x.style ? (Array.isArray(x.style) ? x.style : [x.style]) : []
+            );
+            if (overlay) {
+              if (overlay.replace) x.source = getAssetIDByName(overlay.replace);
+              if (overlay.style) addToStyle(x, overlay.style);
+            }
+          }
+
+          if (plus.icons) {
+            const tint = getIconTint(plus, x.source);
+            if (tint)
+              addToStyle(x, {
+                tintColor: tint,
+              });
+          }
+
+          const ret = orig(...args);
+          if (overlay?.children)
+            return (
+              <View>
+                {ret}
+                {overlay.children}
+              </View>
+            );
+          else return ret;
         })
       );
     }
