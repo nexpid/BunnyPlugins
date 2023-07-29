@@ -10,21 +10,22 @@ export let patches = [];
 
 export default () => {
   patches.push(
-    after("render", ChatInput.prototype, (_, ret) => {
-      const props = findInReactTree(
-        ret,
-        (x) => typeof x?.placeholder === "string"
+    after("render", ChatInput.prototype, ([a], ret) => {
+      console.log(a?.focused);
+      const input = findInReactTree(
+        ret.props.children,
+        (x) => x?.type?.name === "ChatInput"
       );
-      if (!props?.onChangeText) return;
+      if (!input?.props?.onChangeText) return;
 
       const children = findInReactTree(
-        ret,
+        ret.props.children,
         (x) =>
           x?.type?.displayName === "View" && Array.isArray(x?.props?.children)
       )?.props?.children;
       if (!children) return;
 
-      children.unshift(<CharCounter inputProps={props} />);
+      children.unshift(<CharCounter inputProps={input.props} />);
     })
   );
 

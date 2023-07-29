@@ -6,6 +6,7 @@ import { semanticColors } from "@vendetta/ui";
 import { FadeView } from "../../../../stuff/animations";
 import { after } from "@vendetta/patcher";
 import { SimpleText } from "../../../../stuff/types";
+import { vstorage } from "..";
 
 const { Text, View, Pressable } = General;
 
@@ -79,7 +80,7 @@ export default ({ inputProps }: { inputProps: any }): React.JSX.Element => {
 
   const elY = styles.text.fontSize * 2 + styles.text.paddingVertical;
 
-  const shouldAppear = curLength > 0;
+  const shouldAppear = curLength >= (vstorage.minChars ?? 1);
   const UseComponent = shouldAppear ? Pressable : View;
 
   return (

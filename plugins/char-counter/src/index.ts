@@ -3,7 +3,9 @@ import patcher from "./stuff/patcher";
 import Settings from "./components/Settings";
 
 export const vstorage: {
+  position?: "pill" | "inside";
   commas?: boolean;
+  minChars?: number;
   supportSLM?: boolean;
 } = storage;
 
