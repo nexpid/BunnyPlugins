@@ -11,8 +11,8 @@ dependencies:
 
 devDependencies:
   '@rollup/plugin-commonjs':
-    specifier: ^24.0.0
-    version: 24.0.0(rollup@3.9.1)
+    specifier: ^25.0.0
+    version: 25.0.0(rollup@3.9.1)
   '@rollup/plugin-node-resolve':
     specifier: ^15.0.1
     version: 15.0.1(rollup@3.9.1)
@@ -248,8 +248,8 @@ packages:
         optional: true
     dev: true
 
-  /@rollup/plugin-commonjs@24.0.0(rollup@3.9.1):
-    resolution: {integrity: sha512-0w0wyykzdyRRPHOb0cQt14mIBLujfAv6GgP6g8nvg/iBxEm112t3YPPq+Buqe2+imvElTka+bjNlJ/gB56TD8g==}
+  /@rollup/plugin-commonjs@25.0.0(rollup@3.9.1):
+    resolution: {integrity: sha512-hoho2Kay9TZrLu0bnDsTTCaj4Npa+THk9snajP/XDNb9a9mmjTjh52EQM9sKl3HD1LsnihX7js+eA2sd2uKAhw==}
     engines: {node: '>=14.0.0'}
     peerDependencies:
       rollup: ^2.68.0||^3.0.0
