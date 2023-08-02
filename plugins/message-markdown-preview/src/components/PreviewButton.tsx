@@ -1,18 +1,13 @@
-import {
-  React,
-  ReactNative,
-  ReactNative as RN,
-  stylesheet,
-} from "@vendetta/metro/common";
-import { showConfirmationAlert } from "@vendetta/ui/alerts";
+import { React, ReactNative as RN, stylesheet } from "@vendetta/metro/common";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { General } from "@vendetta/ui/components";
 import { semanticColors } from "@vendetta/ui";
 import { FadeView } from "../../../../stuff/animations";
-import { findByName, findByProps, findByStoreName } from "@vendetta/metro";
 import { after } from "@vendetta/patcher";
+import { patches } from "../stuff/patcher";
+import openPreview from "../stuff/openPreview";
 
-const { ScrollView, Pressable, View } = General;
+const { Pressable, View } = General;
 
 const ACTION_ICON_SIZE = 40;
 const styles = stylesheet.createThemedStyleSheet({
@@ -41,56 +36,21 @@ const styles = stylesheet.createThemedStyleSheet({
   },
 });
 
-const { default: ChatItemWrapper } = findByProps(
-  "DCDAutoModerationSystemMessageView",
-  "default"
-);
-const MessageRecord = findByName("MessageRecord");
-const RowManager = findByName("RowManager");
-const SelectedChannelStore = findByStoreName("SelectedChannelStore");
-const UserStore = findByStoreName("UserStore");
-
 export default ({ inputProps }): JSX.Element => {
   const textRef = React.useRef<string>(null);
 
   if (!inputProps.onChangeText) {
     inputProps.onChangeText = (text: string) => (textRef.current = text);
   } else {
-    after(
-      "onChangeText",
-      inputProps,
-      ([text]: [string]) => (textRef.current = text),
-      true
+    patches.push(
+      after(
+        "onChangeText",
+        inputProps,
+        ([text]: [string]) => (textRef.current = text),
+        true
+      )
     );
   }
-
-  const onPress = () => {
-    showConfirmationAlert({
-      title: "Message Preview",
-      onConfirm: () => void 0,
-      // @ts-ignore -- a valid property that's unadded in typings
-      children: (
-        <ScrollView
-          style={{
-            marginVertical: 12,
-            maxHeight: ReactNative.Dimensions.get("window").height * 0.7,
-          }}
-        >
-          <ChatItemWrapper
-            rowGenerator={new RowManager()}
-            message={
-              new MessageRecord({
-                id: "0",
-                channel_id: SelectedChannelStore.getChannelId(),
-                author: UserStore.getCurrentUser(),
-                content: textRef.current,
-              })
-            }
-          />
-        </ScrollView>
-      ),
-    });
-  };
 
   const shouldAppear = textRef.current?.length > 0;
   const UseComponent = shouldAppear ? Pressable : View;
@@ -117,7 +77,7 @@ export default ({ inputProps }): JSX.Element => {
         }}
         accessibilityLabel="Open markdown preview"
         accessibilityHint="Open a modal which shows your message's markdown preview"
-        onPress={shouldAppear ? onPress : undefined}
+        onPress={shouldAppear ? () => openPreview() : undefined}
         style={styles.actionButton}
       >
         <RN.Image

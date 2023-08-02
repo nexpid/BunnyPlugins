@@ -1,11 +1,15 @@
-import { findByProps } from "@vendetta/metro";
+import { findByProps, findByTypeName } from "@vendetta/metro";
 import { after } from "@vendetta/patcher";
 import { findInReactTree } from "@vendetta/utils";
 import PreviewButton from "../components/PreviewButton";
+import openPreview from "./openPreview";
+import { vstorage } from "..";
+import { i18n } from "@vendetta/metro/common";
 
 const { ChatInput } = findByProps("ChatInput");
+const ChatInputActionButton = findByTypeName("ChatInputActionButton");
 
-export let patches = [];
+export const patches = [];
 
 export default () => {
   patches.push(
@@ -23,12 +27,30 @@ export default () => {
       )?.props?.children;
       if (!children) return;
 
-      children.unshift(<PreviewButton inputProps={props} />);
+      if (vstorage.buttonType === "pill")
+        children.unshift(<PreviewButton inputProps={props} />);
     })
   );
 
-  return () => {
-    patches.forEach((x) => x());
-    patches = [];
-  };
+  // thank you rosie
+  patches.push(
+    after("type", ChatInputActionButton, ([a], ret) => {
+      a?.accessibilityLabel === i18n.Messages.SEND &&
+        ret.type?.render &&
+        patches.push(
+          after(
+            "render",
+            ret.type,
+            (_, ret) => {
+              ret.props &&
+                (ret.props.onLongPress = () =>
+                  vstorage.buttonType === "send" && openPreview());
+            },
+            true
+          )
+        );
+    })
+  );
+
+  return () => patches.forEach((x) => x());
 };
