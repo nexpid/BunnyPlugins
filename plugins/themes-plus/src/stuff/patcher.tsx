@@ -22,7 +22,6 @@ export default (): (() => void) => {
 
   const plus: PlusStructure = getPlusData();
 
-  // icon tints
   active.patches.length = 0;
 
   if (plus?.version !== undefined) {

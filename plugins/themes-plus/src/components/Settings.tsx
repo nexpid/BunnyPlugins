@@ -12,7 +12,6 @@ const twemojiCDN = `https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72
 const { TextStyleSheet } = findByProps("TextStyleSheet");
 
 export default function (): React.JSX.Element {
-  console.log(`${twemojiCDN}2705.png`);
   return (
     <View
       style={{
