@@ -11,7 +11,6 @@ export let patches = [];
 export default () => {
   patches.push(
     after("render", ChatInput.prototype, ([a], ret) => {
-      console.log(a?.focused);
       const input = findInReactTree(
         ret.props.children,
         (x) => x?.type?.name === "ChatInput"
