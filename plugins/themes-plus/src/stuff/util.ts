@@ -1,7 +1,7 @@
 import { ReactNative as RN } from "@vendetta/metro/common";
 
 export function addToStyle(x: any, y: any) {
-  x.style = Object.assign(RN.StyleSheet.flatten(x.style), y);
+  x.style = Object.assign(RN.StyleSheet.flatten(x.style) ?? {}, y);
 }
 
 export function reloadUI() {
