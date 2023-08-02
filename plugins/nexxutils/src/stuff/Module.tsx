@@ -9,14 +9,14 @@ const { View } = General;
 const { FormRow, FormSwitchRow, FormDivider } = Forms;
 
 export enum ModuleCategory {
-  Unlocks,
+  Useful,
   Fixes,
 }
 export const moduleCategoryMap = [
   {
-    category: ModuleCategory.Unlocks,
-    title: "Unlocks",
-    icon: getAssetIDByName("unlocked"),
+    category: ModuleCategory.Useful,
+    title: "Useful",
+    icon: getAssetIDByName("img_nitro_remixing"),
   },
   {
     category: ModuleCategory.Fixes,

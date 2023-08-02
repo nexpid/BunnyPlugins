@@ -10,7 +10,7 @@ export default new Module({
   id: "freemix",
   label: "Freemix",
   sublabel: "Unlocks the Remix feature without nitro",
-  category: ModuleCategory.Unlocks,
+  category: ModuleCategory.Useful,
   icon: getAssetIDByName("img_nitro_remixing"),
   extra: {
     credits: ["257109471589957632"],
