@@ -1,4 +1,4 @@
-const api = "https://cloudsync.nexpid.xyz/";
+const api = "https://vd-cloudsync.nexpid.workers.dev/";
 export default {
   unproxiedURL: "https://vendetta.nexpid.xyz/cloud-sync",
   api,

@@ -2,6 +2,20 @@ import { DBSave } from "../types/api/latest";
 import { vstorage } from "..";
 import constants from "../constants";
 
+interface CloudSyncAPIErrorResponse {
+  message: string;
+  status: number;
+  error?: string;
+}
+export class CloudSyncError extends Error {
+  constructor(resp: CloudSyncAPIErrorResponse) {
+    super(
+      `${resp.status}: ${resp.message}${resp.error ? ` (${resp.error})` : ""}`
+    );
+    this.name = this.constructor.name;
+  }
+}
+
 export async function getOauth2Response(code: string): Promise<string> {
   const res = await fetch(
     `${constants.api}api/oauth2-response?code=${encodeURIComponent(
@@ -10,7 +24,7 @@ export async function getOauth2Response(code: string): Promise<string> {
   );
 
   if (res.status === 200) return await res.text();
-  else throw (await res.json())?.message;
+  else throw new CloudSyncError(await res.json());
 }
 export async function getSaveData(): Promise<DBSave.Save | undefined> {
   if (!vstorage.authorization) return;
@@ -22,7 +36,7 @@ export async function getSaveData(): Promise<DBSave.Save | undefined> {
   });
 
   if (res.status === 200) return await res.json();
-  else throw (await res.json())?.message;
+  else throw new CloudSyncError(await res.json());
 }
 export async function syncSaveData(
   data: DBSave.SaveSync
@@ -39,7 +53,7 @@ export async function syncSaveData(
   });
 
   if (res.status === 200) return await res.json();
-  else throw (await res.json())?.message;
+  else throw new CloudSyncError(await res.json());
 }
 export async function deleteSaveData(): Promise<true | undefined> {
   if (!vstorage.authorization) return;
@@ -52,5 +66,5 @@ export async function deleteSaveData(): Promise<true | undefined> {
   });
 
   if (res.status === 200) return await res.json();
-  else throw (await res.json())?.message;
+  else throw new CloudSyncError(await res.json());
 }
