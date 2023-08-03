@@ -1,3 +1,3 @@
 export default {
-  unproxiedURL: "https://gabe616.github.io/VendettaPlugins/cloud-sync",
+  unproxiedURL: "https://vendetta.nexpid.xyz/cloud-sync",
 };
