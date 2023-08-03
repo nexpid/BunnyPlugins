@@ -94,7 +94,7 @@ const patchMMKV = () => {
   );
 };
 
-export const currentMigrationStage = 1;
+export const currentMigrationStage: number = 2;
 
 vstorage.autoSync ??= false;
 vstorage.addToSettings ??= true;
@@ -141,6 +141,11 @@ export default {
         showMsg(
           "Cloud Sync — DB Migration Stage 1",
           "Hey, I'd like to quickly announce that CloudSync will be switching databases soon and your data may get ***deleted***. Make sure to keep an eye on your data for the upcoming weeks!\n\n- nexx"
+        );
+      else if (currentMigrationStage === 2)
+        showMsg(
+          "Cloud Sync — DB Migration Stage 2",
+          "CloudSync has officially switched to an SQLite database! (Cloudflare's D1) Make sure to sync your data again in case any was lost while migrating.\n\n- nexx"
         );
     }
   },

@@ -1,6 +1,6 @@
 import { DBSave } from "../types/api/latest";
 import { vstorage } from "..";
-import * as constants from "./constants";
+import constants from "../constants";
 
 export async function getOauth2Response(code: string): Promise<string> {
   const res = await fetch(
