@@ -41,47 +41,46 @@ I'm working on **4** plugins, and **4** plugins are discontinued.
 ## ✅ Finished
 
 - BetterTimestamps — Send timestamps using text shortcuts (port from Vencord)
-  - [<img alt="copy_proxied_link" src="https://img.shields.io/badge/copy_proxied_link-1e1e2e?style=for-the-badge" />](https://vd-plugins.github.io/proxy/gabe616.github.io/VendettaPlugins/better-timestamps) [<img alt="view_code" src="https://img.shields.io/badge/view_code-1e1e2e?style=for-the-badge" />](https://github.com/Gabe616/VendettaPlugins/tree/main/plugins/better-timestamps)
+	- [<img alt="copy_proxied_link" src="https://img.shields.io/badge/copy_proxied_link-1e1e2e?style=for-the-badge" />](https://vd-plugins.github.io/proxy/gabe616.github.io/VendettaPlugins/better-timestamps) [<img alt="view_code" src="https://img.shields.io/badge/view_code-1e1e2e?style=for-the-badge" />](https://github.com/Gabe616/VendettaPlugins/tree/main/plugins/better-timestamps)
 - CharCounter — Adds a counter above the chat input
-  - [<img alt="copy_proxied_link" src="https://img.shields.io/badge/copy_proxied_link-1e1e2e?style=for-the-badge" />](https://vd-plugins.github.io/proxy/gabe616.github.io/VendettaPlugins/char-counter) [<img alt="view_code" src="https://img.shields.io/badge/view_code-1e1e2e?style=for-the-badge" />](https://github.com/Gabe616/VendettaPlugins/tree/main/plugins/char-counter)
+	- [<img alt="copy_proxied_link" src="https://img.shields.io/badge/copy_proxied_link-1e1e2e?style=for-the-badge" />](https://vd-plugins.github.io/proxy/gabe616.github.io/VendettaPlugins/char-counter) [<img alt="view_code" src="https://img.shields.io/badge/view_code-1e1e2e?style=for-the-badge" />](https://github.com/Gabe616/VendettaPlugins/tree/main/plugins/char-counter)
 - MessageMarkdownPreview — Preview markdown when typing a message
-  - [<img alt="copy_proxied_link" src="https://img.shields.io/badge/copy_proxied_link-1e1e2e?style=for-the-badge" />](https://vd-plugins.github.io/proxy/gabe616.github.io/VendettaPlugins/message-markdown-preview) [<img alt="view_code" src="https://img.shields.io/badge/view_code-1e1e2e?style=for-the-badge" />](https://github.com/Gabe616/VendettaPlugins/tree/main/plugins/message-markdown-preview)
+	- [<img alt="copy_proxied_link" src="https://img.shields.io/badge/copy_proxied_link-1e1e2e?style=for-the-badge" />](https://vd-plugins.github.io/proxy/gabe616.github.io/VendettaPlugins/message-markdown-preview) [<img alt="view_code" src="https://img.shields.io/badge/view_code-1e1e2e?style=for-the-badge" />](https://github.com/Gabe616/VendettaPlugins/tree/main/plugins/message-markdown-preview)
 - MonetTheme — Monet (M3) theme generator
-  - [<img alt="copy_proxied_link" src="https://img.shields.io/badge/copy_proxied_link-1e1e2e?style=for-the-badge" />](https://vd-plugins.github.io/proxy/gabe616.github.io/VendettaPlugins/monet-theme) [<img alt="view_code" src="https://img.shields.io/badge/view_code-1e1e2e?style=for-the-badge" />](https://github.com/Gabe616/VendettaPlugins/tree/main/plugins/monet-theme)
+	- [<img alt="copy_proxied_link" src="https://img.shields.io/badge/copy_proxied_link-1e1e2e?style=for-the-badge" />](https://vd-plugins.github.io/proxy/gabe616.github.io/VendettaPlugins/monet-theme) [<img alt="view_code" src="https://img.shields.io/badge/view_code-1e1e2e?style=for-the-badge" />](https://github.com/Gabe616/VendettaPlugins/tree/main/plugins/monet-theme)
 - PluginBrowser — Browse all proxied plugins
-  - [<img alt="copy_proxied_link" src="https://img.shields.io/badge/copy_proxied_link-1e1e2e?style=for-the-badge" />](https://vd-plugins.github.io/proxy/gabe616.github.io/VendettaPlugins/plugin-browser) [<img alt="view_code" src="https://img.shields.io/badge/view_code-1e1e2e?style=for-the-badge" />](https://github.com/Gabe616/VendettaPlugins/tree/main/plugins/plugin-browser)
+	- [<img alt="copy_proxied_link" src="https://img.shields.io/badge/copy_proxied_link-1e1e2e?style=for-the-badge" />](https://vd-plugins.github.io/proxy/gabe616.github.io/VendettaPlugins/plugin-browser) [<img alt="view_code" src="https://img.shields.io/badge/view_code-1e1e2e?style=for-the-badge" />](https://github.com/Gabe616/VendettaPlugins/tree/main/plugins/plugin-browser)
 - TenorGifFix — Download and share Tenor links as GIFs instead of MP4s (thanks to rosie <3)
-  - [<img alt="copy_proxied_link" src="https://img.shields.io/badge/copy_proxied_link-1e1e2e?style=for-the-badge" />](https://vd-plugins.github.io/proxy/gabe616.github.io/VendettaPlugins/tenor-gif-fix) [<img alt="view_code" src="https://img.shields.io/badge/view_code-1e1e2e?style=for-the-badge" />](https://github.com/Gabe616/VendettaPlugins/tree/main/plugins/tenor-gif-fix)
+	- [<img alt="copy_proxied_link" src="https://img.shields.io/badge/copy_proxied_link-1e1e2e?style=for-the-badge" />](https://vd-plugins.github.io/proxy/gabe616.github.io/VendettaPlugins/tenor-gif-fix) [<img alt="view_code" src="https://img.shields.io/badge/view_code-1e1e2e?style=for-the-badge" />](https://github.com/Gabe616/VendettaPlugins/tree/main/plugins/tenor-gif-fix)
 - UseSystemEmoji — Uses system emoji instead of twemoji for messages
-  - [<img alt="copy_link" src="https://img.shields.io/badge/copy_link-1e1e2e?style=for-the-badge" />](https://gabe616.github.io/VendettaPlugins/use-system-emoji) [<img alt="view_code" src="https://img.shields.io/badge/view_code-1e1e2e?style=for-the-badge" />](https://github.com/Gabe616/VendettaPlugins/tree/main/plugins/use-system-emoji)
+	- [<img alt="copy_link" src="https://img.shields.io/badge/copy_link-1e1e2e?style=for-the-badge" />](https://vendetta.nexpid.xyz/use-system-emoji) [<img alt="view_code" src="https://img.shields.io/badge/view_code-1e1e2e?style=for-the-badge" />](https://github.com/Gabe616/VendettaPlugins/tree/main/plugins/use-system-emoji)
 
 ## ❌ Unfinished
 
 - CloudSync — Syncs your plugins and themes to the cloud
-  - [<img alt="view_code" src="https://img.shields.io/badge/view_code-1e1e2e?style=for-the-badge" />](https://github.com/Gabe616/VendettaPlugins/tree/main/plugins/cloud-sync) [<img alt="view_backend_code" src="https://img.shields.io/badge/view_backend_code-1e1e2e?style=for-the-badge" />](https://github.com/Gabe616/VendettaCloudSync)
+	- [<img alt="view_code" src="https://img.shields.io/badge/view_code-1e1e2e?style=for-the-badge" />](https://github.com/Gabe616/VendettaPlugins/tree/main/plugins/cloud-sync) [<img alt="view_backend_code" src="https://img.shields.io/badge/view_backend_code-1e1e2e?style=for-the-badge" />](https://github.com/Gabe616/VendettaCloudSync)
 - CustomRPC — Displays a custom RPC activity on your profile! (idea from Vencord) (RECODED)
-  - [<img alt="view_code" src="https://img.shields.io/badge/view_code-1e1e2e?style=for-the-badge" />](https://github.com/Gabe616/VendettaPlugins/tree/main/plugins/customrpc)
+	- [<img alt="view_code" src="https://img.shields.io/badge/view_code-1e1e2e?style=for-the-badge" />](https://github.com/Gabe616/VendettaPlugins/tree/main/plugins/customrpc)
 - NexxUtils — Nexx's utility plugins
-  - [<img alt="view_code" src="https://img.shields.io/badge/view_code-1e1e2e?style=for-the-badge" />](https://github.com/Gabe616/VendettaPlugins/tree/main/plugins/nexxutils)
+	- [<img alt="view_code" src="https://img.shields.io/badge/view_code-1e1e2e?style=for-the-badge" />](https://github.com/Gabe616/VendettaPlugins/tree/main/plugins/nexxutils)
 - Themes+ — Adds more customizability to themes
-  - [<img alt="view_code" src="https://img.shields.io/badge/view_code-1e1e2e?style=for-the-badge" />](https://github.com/Gabe616/VendettaPlugins/tree/main/plugins/themes-plus)
+	- [<img alt="view_code" src="https://img.shields.io/badge/view_code-1e1e2e?style=for-the-badge" />](https://github.com/Gabe616/VendettaPlugins/tree/main/plugins/themes-plus)
 
 ## 🎫 Discontinued
 
 - DownloadEverything — Allows you to download stickers, voice messages, emojis and more!
-  - **Discontinued For:** Demotivation + PictureLinks exists
-  - [<img alt="view_code" src="https://img.shields.io/badge/view_code-1e1e2e?style=for-the-badge" />](https://github.com/Gabe616/VendettaPlugins/tree/main/plugins/download-everything)
+	- **Discontinued For:** Demotivation + PictureLinks exists
+	- [<img alt="view_code" src="https://img.shields.io/badge/view_code-1e1e2e?style=for-the-badge" />](https://github.com/Gabe616/VendettaPlugins/tree/main/plugins/download-everything)
 - Freemix — Allows you to remix images for free lol
-  - **Discontinued For:** Not really discontinued but was replaced by NexxUtils
-  - [<img alt="view_code" src="https://img.shields.io/badge/view_code-1e1e2e?style=for-the-badge" />](https://github.com/Gabe616/VendettaPlugins/tree/main/plugins/freemix)
+	- **Discontinued For:** Not really discontinued but was replaced by NexxUtils
+	- [<img alt="view_code" src="https://img.shields.io/badge/view_code-1e1e2e?style=for-the-badge" />](https://github.com/Gabe616/VendettaPlugins/tree/main/plugins/freemix)
 - FxTwitter — Automatically converts twitter.com links to fxtwitter.com
-  - **Discontinued For:** Vendetta already has this
-  - [<img alt="view_code" src="https://img.shields.io/badge/view_code-1e1e2e?style=for-the-badge" />](https://github.com/Gabe616/VendettaPlugins/tree/main/plugins/fxtwitter)
+	- **Discontinued For:** Vendetta already has this
+	- [<img alt="view_code" src="https://img.shields.io/badge/view_code-1e1e2e?style=for-the-badge" />](https://github.com/Gabe616/VendettaPlugins/tree/main/plugins/fxtwitter)
 - ReactionNotifications — Get notified about message reactions (ported from ItzOnlyAnimal/AliuPlugins/ReactionNotifier)
-  - **Discontinued For:** As far as I'm aware this isn't possible
-  - [<img alt="view_code" src="https://img.shields.io/badge/view_code-1e1e2e?style=for-the-badge" />](https://github.com/Gabe616/VendettaPlugins/tree/main/plugins/reaction-notifications)
+	- **Discontinued For:** As far as I'm aware this isn't possible
+	- [<img alt="view_code" src="https://img.shields.io/badge/view_code-1e1e2e?style=for-the-badge" />](https://github.com/Gabe616/VendettaPlugins/tree/main/plugins/reaction-notifications)
 
 > **Note**  
-> **1** plugin isn't being shown due to being formatted incorrectly:
->
-> - spin-the-wheel
+> **1** plugin isn't being shown due to being formatted incorrectly:  
+> - spin-the-wheel  
