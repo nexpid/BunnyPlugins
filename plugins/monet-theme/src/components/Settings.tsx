@@ -74,7 +74,7 @@ const setColorsFromDynamic = (clr: VendettaSysColors) => {
 
 export let stsCommits: CommitObj[];
 export let stsPatches: Patches;
-export default (): React.JSX.Element => {
+export default () => {
   const navigation = NavigationNative.useNavigation();
   const [commits, setCommits] = React.useState<CommitObj[] | undefined>(
     undefined

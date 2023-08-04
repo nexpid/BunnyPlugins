@@ -17,7 +17,7 @@ export default ({
   title: string;
   color: string;
   update: (color: string) => void;
-}): React.JSX.Element => {
+}) => {
   const styles = stylesheet.createThemedStyleSheet({
     androidRipple: {
       color: semanticColors.ANDROID_RIPPLE,
@@ -54,8 +54,7 @@ export default ({
         onPress={() =>
           openSheet(CustomColorPickerActionSheet, {
             color: parseInt(color.slice(1), 16),
-            onSelect: (clr: number) =>
-              update(`#${clr.toString(16).padStart(6, "0")}`),
+            onSelect: (clr) => update(`#${clr.toString(16).padStart(6, "0")}`),
           })
         }
         onLongPress={() => {

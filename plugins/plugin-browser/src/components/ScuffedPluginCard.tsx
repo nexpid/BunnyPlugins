@@ -13,7 +13,7 @@ interface propAction {
 
 interface props {
   index: number;
-  headerLabel: React.JSX.Element | string;
+  headerLabel: JSX.Element | string;
   headerIcon?: number;
   descriptionLabel: string;
   actions?: () => propAction[];

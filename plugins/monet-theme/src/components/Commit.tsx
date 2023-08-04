@@ -79,7 +79,7 @@ export default ({
   commit: CommitObj;
   list?: boolean;
   onPress?: () => void;
-}): React.JSX.Element => {
+}) => {
   const styles = stylesheet.createThemedStyleSheet({
     androidRipple: {
       color: semanticColors.ANDROID_RIPPLE,

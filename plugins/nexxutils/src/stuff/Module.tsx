@@ -124,7 +124,7 @@ export class Module {
     if (this.storage.enabled) this.stop();
   }
 
-  get component(): () => React.JSX.Element {
+  get component(): React.FunctionComponent {
     return (() => {
       const [_, forceUpdate] = React.useReducer((x) => ~x, 0);
       const [hidden, setHidden] = React.useState(true);

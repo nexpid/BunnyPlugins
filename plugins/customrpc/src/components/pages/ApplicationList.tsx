@@ -15,7 +15,7 @@ import { showToast } from "@vendetta/ui/toasts";
 const { View, Image } = General;
 
 let headerRightCallback: () => void;
-export const ApplicationList = (): React.JSX.Element => {
+export const ApplicationList = () => {
   const navigation = NavigationNative.useNavigation();
   const [search, setSearch] = React.useState("");
   const [data, setData] = React.useState<SimpleAPIApplication[]>();

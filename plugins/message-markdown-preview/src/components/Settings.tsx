@@ -7,7 +7,7 @@ import { useProxy } from "@vendetta/storage";
 const { ScrollView } = General;
 const { FormRow, FormRadioRow } = Forms;
 
-export default function (): React.JSX.Element {
+export default function () {
   vstorage.buttonType ??= "pill";
   vstorage.previewType ??= "popup";
   useProxy(vstorage);

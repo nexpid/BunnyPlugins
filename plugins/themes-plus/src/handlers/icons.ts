@@ -15,11 +15,11 @@ export function getIconTint(
   return resolveColor(plus.icons[name]);
 }
 
-export function asIcon(
+export function asIcon<T extends JSX.Element>(
   plus: PlusStructure,
   customName: string,
-  img: React.JSX.Element
-): React.JSX.Element {
+  img: T
+): T {
   if (typeof img.props.source === "number") {
     const clr = getIconTint(plus, img.props.source, customName);
     if (clr)

@@ -58,7 +58,7 @@ const styles = stylesheet.createThemedStyleSheet({
   },
 });
 
-export default ({ inputProps }: { inputProps: any }): React.JSX.Element => {
+export default ({ inputProps }: { inputProps: any }) => {
   const [isToggled, setIsToggled] = React.useState(false);
   const textRef = React.useRef<string>(null);
 

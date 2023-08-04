@@ -43,7 +43,7 @@ const styles = stylesheet.createThemedStyleSheet({
   },
 });
 
-export const RichAssetList = (): React.JSX.Element => {
+export const RichAssetList = () => {
   const navigation = NavigationNative.useNavigation();
   const [search, setSearch] = React.useState("");
   const [data, setData] = React.useState<AppRichAsset[]>();

@@ -5,7 +5,7 @@ import { stsCommits } from "../Settings";
 
 const { ScrollView } = General;
 
-export const CommitsPage = (): React.JSX.Element => {
+export const CommitsPage = () => {
   if (!stsCommits)
     return <RN.ActivityIndicator style={{ flex: 1 }}></RN.ActivityIndicator>;
 

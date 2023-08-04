@@ -1,9 +1,4 @@
-import {
-  find,
-  findByName,
-  findByProps,
-  findByStoreName,
-} from "@vendetta/metro";
+import { find, findByProps, findByStoreName } from "@vendetta/metro";
 import {
   ReactNative as RN,
   React,
@@ -66,7 +61,10 @@ export function getUserAvatar(
       }`;
 }
 
-export function openSheet(sheet: any, props: any) {
+export function openSheet<T extends (...args: any[]) => React.JSX.Element>(
+  sheet: T,
+  props: Parameters<T>[0]
+) {
   ActionSheet
     ? openLazy(
         new Promise((x) =>

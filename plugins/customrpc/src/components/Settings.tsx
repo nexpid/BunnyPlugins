@@ -67,7 +67,7 @@ const styles = stylesheet.createThemedStyleSheet({
 });
 
 export let forceUpdateSettings: () => void;
-export default (): React.JSX.Element => {
+export default () => {
   const navigation = NavigationNative.useNavigation();
   const [_, forceUpdate] = React.useReducer((x) => ~x, 0);
   forceUpdateSettings = forceUpdate;

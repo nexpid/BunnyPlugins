@@ -33,7 +33,7 @@ let headerRightCallbacks: {
   add: undefined,
 };
 
-export const ProfileList = (): React.JSX.Element => {
+export const ProfileList = () => {
   const navigation = NavigationNative.useNavigation();
   const [_, forceUpdate] = React.useReducer((x) => ~x, 0);
   const [search, setSearch] = React.useState("");

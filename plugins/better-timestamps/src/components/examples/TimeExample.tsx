@@ -21,7 +21,7 @@ const styles = stylesheet.createThemedStyleSheet({
   },
 });
 
-export function TimeExample(): React.JSX.Element {
+export function TimeExample() {
   const [relativeTime, setRelativeTime] = React.useState(Date.now());
 
   React.useLayoutEffect(

@@ -54,13 +54,7 @@ const styles = stylesheet.createThemedStyleSheet({
 
 export let forceUpdateRPCPreview: () => void;
 
-export default ({
-  edit,
-  act,
-}: {
-  edit: boolean;
-  act: SettingsActivity;
-}): React.JSX.Element => {
+export default ({ edit, act }: { edit: boolean; act: SettingsActivity }) => {
   const [_, forceUpdate] = React.useReducer((x) => ~x, 0);
   forceUpdateRPCPreview = forceUpdate;
 
@@ -80,7 +74,7 @@ export default ({
             onPress={() =>
               openSheet(ActivityTypeActionSheet, {
                 type: act.type ?? ActivityType.Playing,
-                update: (x: ActivityType) => {
+                update: (x) => {
                   act.type = x;
                   update();
                 },
@@ -101,7 +95,7 @@ export default ({
                       role: "Large",
                       image: act.assets.largeImg,
                       navigation,
-                      update: (x: string) => {
+                      update: (x) => {
                         act.assets.largeImg = x;
                         update();
                       },
@@ -125,7 +119,7 @@ export default ({
                         role: "Small",
                         image: act.assets.smallImg,
                         navigation,
-                        update: (x: string) => {
+                        update: (x) => {
                           act.assets.smallImg = x;
                           update();
                         },
@@ -154,9 +148,7 @@ export default ({
                       appId: act.app.id,
                       appName: act.app.name,
                       navigation,
-                      update: (
-                        x: { name?: string; id?: string } | undefined
-                      ) => {
+                      update: (x) => {
                         if (x?.id !== act.app.id) {
                           if (!Number.isNaN(Number(act.assets.smallImg)))
                             delete act.assets.smallImg;
@@ -212,7 +204,7 @@ export default ({
                     openSheet(TimestampActionSheet, {
                       start: act.timestamps.start,
                       end: act.timestamps.end,
-                      update: (x: { start?: number; end?: number }) => {
+                      update: (x) => {
                         act.timestamps.start = x.start;
                         act.timestamps.end = x.end;
                         update();
@@ -248,13 +240,7 @@ export default ({
                     role: "1",
                     text: act.buttons[0]?.text,
                     url: act.buttons[0]?.url,
-                    update: ({
-                      text,
-                      url,
-                    }: {
-                      text: string;
-                      url: string | undefined;
-                    }) => {
+                    update: ({ text, url }) => {
                       if (!text && !url) act.buttons[0] = undefined;
                       else
                         act.buttons[0] = {
@@ -278,13 +264,7 @@ export default ({
                     role: "2",
                     text: act.buttons[1]?.text,
                     url: act.buttons[1]?.url,
-                    update: ({
-                      text,
-                      url,
-                    }: {
-                      text: string;
-                      url: string | undefined;
-                    }) => {
+                    update: ({ text, url }) => {
                       if (!text && !url) act.buttons[1] = undefined;
                       else
                         act.buttons[1] = {

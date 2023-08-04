@@ -9,7 +9,7 @@ const { View, Text } = General;
 const { FormSection } = Forms;
 
 export let forceUpdateLiveRawActivityView: () => void;
-export const LiveRawActivityView = (): React.JSX.Element => {
+export const LiveRawActivityView = () => {
   const [_, forceUpdate] = React.useReducer((x) => ~x, 0);
   forceUpdateLiveRawActivityView = forceUpdate;
 

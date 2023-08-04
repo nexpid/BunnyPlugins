@@ -26,7 +26,7 @@ const styles = stylesheet.createThemedStyleSheet({
   },
 });
 
-export const ConfigurePage = (): React.JSX.Element => {
+export const ConfigurePage = () => {
   const [_, forceUpdate] = React.useReducer((x) => ~x, 0);
 
   if (!stsPatches)

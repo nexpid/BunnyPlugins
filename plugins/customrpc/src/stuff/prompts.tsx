@@ -89,7 +89,7 @@ export function ImageActionSheet({
   image: string | undefined;
   navigation: any;
   update: (img: string | undefined) => void;
-}): React.JSX.Element {
+}) {
   return (
     <ActionSheet>
       <ActionSheetContentContainer>
@@ -106,7 +106,7 @@ export function ImageActionSheet({
           onPress={() =>
             openSheet(ImageVariableActionSheet, {
               role,
-              update: (v: string) => update(v),
+              update: (v) => update(v),
             })
           }
         />
@@ -458,7 +458,7 @@ export function TimestampActionSheet({
           onPress={() =>
             openSheet(TimestampVariableActionSheet, {
               role: "Start",
-              update: (v: string) => update({ start: v, end }),
+              update: (v) => update({ start: v, end }),
             })
           }
         />
@@ -503,7 +503,7 @@ export function TimestampActionSheet({
           onPress={() =>
             openSheet(TimestampVariableActionSheet, {
               role: "End",
-              update: (v: string) => update({ start, end: v }),
+              update: (v) => update({ start, end: v }),
             })
           }
         />
