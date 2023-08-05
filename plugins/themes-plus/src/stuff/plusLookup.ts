@@ -6,6 +6,6 @@ export function getPlusData(): PlusStructure | undefined {
   ] as Theme;
   if (!theme) return;
 
-  //@ts-ignore
+  //@ts-ignore self explanatory, plus is not apart of traditional ThemeData
   return theme?.data?.plus;
 }

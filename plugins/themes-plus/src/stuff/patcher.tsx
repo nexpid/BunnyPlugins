@@ -6,30 +6,48 @@ import { findByProps } from "@vendetta/metro";
 import { findInReactTree } from "@vendetta/utils";
 import { getUnreadBadgeColor } from "../handlers/unreadBadge";
 import { getIconOverlay } from "../handlers/iconOverlays";
-import { getAssetIDByName } from "@vendetta/ui/assets";
+import { getAssetByID, getAssetIDByName } from "@vendetta/ui/assets";
 import { General } from "@vendetta/ui/components";
 import { addToStyle, reloadUI } from "./util";
 import { PlusStructure } from "../../../../stuff/typings";
 import resolveColor, { androidifyColor } from "./resolveColor";
-import { PatchType, active } from "..";
+import { PatchType, active, enabled } from "..";
+import constants from "./constants";
+import { CoolAsset, IconPackData } from "../types";
+import FallbackImage from "../components/FallbackImage";
 
 const { View } = General;
 const MaskedBadge = findByProps("MaskedBadge");
 const RowGeneratorUtils = findByProps("createBackgroundHighlight");
 
-export default (): (() => void) => {
+export default async (): Promise<() => void> => {
   const patches = new Array<() => void>();
 
   const plus: PlusStructure = getPlusData();
 
   active.patches.length = 0;
 
+  const iconpacks = (await (
+    await fetch(constants.iconpacks.list)
+  ).json()) as IconPackData;
+  if (!enabled) return () => undefined;
+
   if (plus?.version !== undefined) {
     active.active = true;
-    if (plus.icons || plus.customOverlays) {
+    if (plus.icons || plus.customOverlays || plus.iconpack) {
       if (plus.icons) active.patches.push(PatchType.Icons);
       if (plus.customOverlays)
         active.patches.push(PatchType.CustomIconOverlays);
+      if (plus.iconpack) active.patches.push(PatchType.IconPack);
+
+      const iconpack = iconpacks.list.find((x) => x.id === plus.iconpack);
+      const iconpackURL =
+        iconpack &&
+        (iconpack.load
+          ? !iconpack.load.endsWith("/")
+            ? iconpack.load + "/"
+            : iconpack.load
+          : `${constants.iconpacks.assets}${iconpack.id}/`);
 
       patches.push(
         instead("render", RN.Image, (args, orig) => {
@@ -38,8 +56,11 @@ export default (): (() => void) => {
             return orig(...args);
           let source = x.source;
 
+          // @ts-ignore these properties are missing from the Asset type
+          const asset: CoolAsset = getAssetByID(source);
+
           let overlay: any;
-          if (plus.customOverlays) {
+          if (plus.customOverlays && !iconpack) {
             overlay = getIconOverlay(
               plus,
               source,
@@ -59,8 +80,23 @@ export default (): (() => void) => {
               });
           }
 
-          const ret = orig(...args);
-          if (overlay?.children)
+          const ret = iconpack ? (
+            <FallbackImage
+              image={{
+                uri: `${iconpackURL}${[
+                  ...asset.httpServerLocation.split("/").slice(2),
+                  `${asset.name}@2x.${asset.type}`,
+                ].join("/")}`,
+              }}
+              fallback={source}
+              style={x.style}
+              ignore={true}
+            />
+          ) : (
+            orig(...args)
+          );
+
+          if (overlay?.children && !iconpack)
             return (
               <View>
                 {ret}

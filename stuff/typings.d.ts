@@ -99,6 +99,7 @@ export interface PlusStructureV0 {
   unreadBadgeColor?: PlusColorResolvable;
   mentionLineColor?: PlusColorResolvable;
   customOverlays?: boolean;
+  iconpack?: string;
   version: 0;
 }
 
