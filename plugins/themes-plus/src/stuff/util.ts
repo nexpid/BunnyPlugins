@@ -5,8 +5,11 @@ const SelectivelySyncedUserSettingsStore = findByStoreName(
   "SelectivelySyncedUserSettingsStore"
 );
 
+export function flattenStyle(x: any) {
+  return RN.StyleSheet.flatten(x) ?? {};
+}
 export function addToStyle(x: any, y: any) {
-  x.style = Object.assign(RN.StyleSheet.flatten(x.style) ?? {}, y);
+  x.style = Object.assign(flattenStyle(x.style), y);
 }
 
 export function reloadUI() {

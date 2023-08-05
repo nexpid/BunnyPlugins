@@ -1,4 +1,4 @@
-import { ReactNative as RN } from "@vendetta/metro/common";
+import { ReactNative as RN, React } from "@vendetta/metro/common";
 import { getPlusData } from "./plusLookup";
 import { after, instead } from "@vendetta/patcher";
 import { getIconTint } from "../handlers/icons";
@@ -8,17 +8,18 @@ import { getUnreadBadgeColor } from "../handlers/unreadBadge";
 import { getIconOverlay } from "../handlers/iconOverlays";
 import { getAssetByID, getAssetIDByName } from "@vendetta/ui/assets";
 import { General } from "@vendetta/ui/components";
-import { addToStyle, reloadUI } from "./util";
+import { addToStyle, flattenStyle, reloadUI } from "./util";
 import { PlusStructure } from "../../../../stuff/typings";
 import resolveColor, { androidifyColor } from "./resolveColor";
 import { PatchType, active, enabled } from "..";
 import constants from "./constants";
 import { CoolAsset, IconPackData } from "../types";
-import FallbackImage from "../components/FallbackImage";
 
 const { View } = General;
 const MaskedBadge = findByProps("MaskedBadge");
 const RowGeneratorUtils = findByProps("createBackgroundHighlight");
+
+const iconpackNuhuhCache = new Array<string>();
 
 export default async (): Promise<() => void> => {
   const patches = new Array<() => void>();
@@ -50,7 +51,8 @@ export default async (): Promise<() => void> => {
           : `${constants.iconpacks.assets}${iconpack.id}/`);
 
       patches.push(
-        instead("render", RN.Image, (args, orig) => {
+        instead("render", RN.Image, (_args, orig) => {
+          const args = _args.slice();
           const [x] = args;
           if (!x.source || typeof x.source !== "number" || x.ignore)
             return orig(...args);
@@ -58,9 +60,10 @@ export default async (): Promise<() => void> => {
 
           // @ts-ignore these properties are missing from the Asset type
           const asset: CoolAsset = getAssetByID(source);
+          const useIconpack = !iconpackNuhuhCache.includes(asset.name);
 
           let overlay: any;
-          if (plus.customOverlays && !iconpack) {
+          if (plus.customOverlays && !useIconpack) {
             overlay = getIconOverlay(
               plus,
               source,
@@ -80,23 +83,28 @@ export default async (): Promise<() => void> => {
               });
           }
 
-          const ret = iconpack ? (
-            <FallbackImage
-              image={{
-                uri: `${iconpackURL}${[
-                  ...asset.httpServerLocation.split("/").slice(2),
-                  `${asset.name}@2x.${asset.type}`,
-                ].join("/")}`,
-              }}
-              fallback={source}
-              style={x.style}
-              ignore={true}
-            />
-          ) : (
-            orig(...args)
-          );
+          const [_, forceUpdate] = React.useReducer((x) => ~x, 0);
+          if (useIconpack) {
+            x.onError = () => {
+              if (!iconpackNuhuhCache.includes(asset.name))
+                iconpackNuhuhCache.push(asset.name);
+              forceUpdate();
+            };
 
-          if (overlay?.children && !iconpack)
+            x.source = {
+              uri: `${iconpackURL}${[
+                ...asset.httpServerLocation.split("/").slice(2),
+                `${asset.name}@2x.${asset.type}`,
+              ].join("/")}`,
+            };
+            x.style = flattenStyle(x.style);
+            x.style.width ??= asset.width;
+            x.style.height ??= asset.height;
+          }
+
+          const ret = orig(...args);
+
+          if (overlay?.children && !useIconpack)
             return (
               <View>
                 {ret}
