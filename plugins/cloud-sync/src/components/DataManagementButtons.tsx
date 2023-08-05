@@ -37,7 +37,7 @@ export default function () {
 
               showToast("Successfully synced data", getAssetIDByName("Check"));
             } catch (e) {
-              showToast(e, getAssetIDByName("Small"));
+              showToast(String(e), getAssetIDByName("Small"));
             }
 
             setLoad(false);
@@ -48,7 +48,7 @@ export default function () {
           onPress: (setLoad) => {
             if (!cache.save) return;
             openSheet(ImportActionSheet, {});
-            setImportCallback((x) => setLoad(x));
+            setImportCallback(setLoad);
           },
         },
       ].map((x, i) => {

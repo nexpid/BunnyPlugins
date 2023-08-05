@@ -38,12 +38,7 @@ export function openOauth2Modal() {
 
             showToast("Successfully authenticated", getAssetIDByName("Check"));
           } catch (e: any) {
-            showToast(
-              e?.message ??
-                e?.toString() ??
-                "An error occured during authentication",
-              getAssetIDByName("Small")
-            );
+            showToast(String(e), getAssetIDByName("Small"));
           }
         },
         dismissOAuthModal: () => popModal("oauth2-authorize"),
