@@ -27,7 +27,7 @@ export async function getAuthorization(): Promise<string> {
   let auth = currentAuthorization();
   if (!auth) throw e;
 
-  if (auth.expiresAt >= Date.now()) {
+  if (Date.now() >= auth.expiresAt) {
     const x = await fetch(
       `${
         constants.api
