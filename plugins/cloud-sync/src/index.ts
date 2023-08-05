@@ -1,20 +1,22 @@
 import { storage } from "@vendetta/plugin";
 import { DBSave } from "./types/api/latest";
 import Settings from "./components/Settings";
-import { getSaveData, syncSaveData } from "./stuff/api";
-import { after } from "@vendetta/patcher";
+import { currentAuthorization, getSaveData, syncSaveData } from "./stuff/api";
+import { before } from "@vendetta/patcher";
 import { grabEverything } from "./stuff/syncStuff";
 import venPlugins from "@vendetta/plugins";
 import venThemes from "@vendetta/themes";
-import venStorage from "@vendetta/storage";
 import { showConfirmationAlert } from "@vendetta/ui/alerts";
-import { FluxDispatcher } from "@vendetta/metro/common";
 import { hsync } from "./stuff/http";
 import patcher from "./stuff/patcher";
 import { PROXY_PREFIX } from "@vendetta/constants";
 
+export interface AuthRecord {
+  accessToken: string;
+  refreshToken: string;
+  expiresAt: number;
+}
 export const vstorage: {
-  authorization?: string;
   autoSync?: boolean;
   addToSettings?: boolean;
   pluginSettings?: Record<
@@ -24,6 +26,7 @@ export const vstorage: {
       syncStorage: boolean;
     }
   >;
+  auth?: Record<string, AuthRecord>;
   databaseMigrate?: number;
 } = storage;
 
@@ -44,7 +47,7 @@ export async function fillCache() {
 export async function promptOrRun(
   shouldPrompt: boolean,
   title: string,
-  text: (string | React.JSX.Element) | (string | React.JSX.Element)[],
+  text: string | JSX.Element | (string | JSX.Element)[],
   confirmText: string,
   cancelText: string,
   callback?: () => Promise<any>,
@@ -84,40 +87,28 @@ const autoSync = async () => {
 };
 
 let patches = [];
-let i18nLoaded = false;
-let pluginLoaded = false;
-const patchMMKV = () => {
-  patches.push(
-    after("createMMKVBackend", venStorage, (_, x) => {
-      patches.push(after("set", x, () => autoSync()));
-    })
-  );
-};
 
 export const currentMigrationStage: number = 2;
 
-vstorage.autoSync ??= false;
-vstorage.addToSettings ??= true;
-vstorage.pluginSettings ??= {};
-
-FluxDispatcher.subscribe("I18N_LOAD_SUCCESS", () => {
-  i18nLoaded = true;
-  if (pluginLoaded) patchMMKV();
-});
 export default {
   onLoad: () => {
-    pluginLoaded = true;
-    if (vstorage.authorization) fillCache();
+    if (currentAuthorization()) fillCache();
 
     ["installPlugin", "startPlugin", "stopPlugin", "removePlugin"].forEach(
-      (x) => patches.push(after(x, venPlugins, () => autoSync()))
+      (x) =>
+        patches.push(
+          before(x, venPlugins, () => {
+            autoSync();
+          })
+        )
     );
     ["installTheme", "selectTheme", "removeTheme"].forEach((x) =>
-      patches.push(after(x, venThemes, () => autoSync()))
+      patches.push(
+        before(x, venThemes, () => {
+          autoSync();
+        })
+      )
     );
-
-    if (i18nLoaded) patchMMKV();
-
     patches.push(patcher());
 
     const showMsg = (title: string, content: string) =>
@@ -149,9 +140,6 @@ export default {
         );
     }
   },
-  onUnload: () => {
-    pluginLoaded = false;
-    patches.forEach((x) => x());
-  },
+  onUnload: () => patches.forEach((x) => x()),
   settings: Settings,
 };

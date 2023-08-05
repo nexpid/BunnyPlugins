@@ -1,4 +1,4 @@
-import { findByName, findByProps } from "@vendetta/metro";
+import { findByName, findByProps, findByStoreName } from "@vendetta/metro";
 import { getOauth2Response } from "./api";
 import { fillCache, vstorage } from "..";
 import { showToast } from "@vendetta/ui/toasts";
@@ -7,6 +7,7 @@ import constants from "../constants";
 
 const { pushModal, popModal } = findByProps("pushModal", "popModal");
 const OAuth2AuthorizeModal = findByName("OAuth2AuthorizeModal");
+const UserStore = findByStoreName("UserStore");
 
 export function openOauth2Modal() {
   pushModal({
@@ -31,7 +32,8 @@ export function openOauth2Modal() {
             const code = url.searchParams.get("code");
 
             const token = await getOauth2Response(code);
-            vstorage.authorization = token;
+            vstorage.auth ??= {};
+            vstorage.auth[UserStore.getCurrentUser().id] = token;
             fillCache();
 
             showToast("Successfully authenticated", getAssetIDByName("Check"));

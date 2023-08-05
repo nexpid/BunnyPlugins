@@ -1,37 +1,24 @@
 import { Button, Forms, General } from "@vendetta/ui/components";
-import { semanticColors } from "@vendetta/ui";
-import { React, stylesheet } from "@vendetta/metro/common";
-import { cache, cacheUpdated, vstorage } from "..";
+import { React } from "@vendetta/metro/common";
+import { cache, cacheUpdated } from "..";
 import { findByProps } from "@vendetta/metro";
-import { grabEverything, syncEverything } from "../stuff/syncStuff";
-import { syncSaveData } from "../stuff/api";
+import { grabEverything, setImportCallback } from "../stuff/syncStuff";
+import { currentAuthorization, syncSaveData } from "../stuff/api";
 import { showToast } from "@vendetta/ui/toasts";
 import { getAssetIDByName } from "@vendetta/ui/assets";
+import { SimpleText, openSheet } from "../../../../stuff/types";
+import ImportActionSheet from "./sheets/ImportActionSheet";
 const DeviceManager = findByProps("isTablet");
 
-const { Text, View } = General;
+const { View } = General;
 const { FormRow } = Forms;
 
-const { TextStyleSheet } = findByProps("TextStyleSheet");
-const styles = stylesheet.createThemedStyleSheet({
-  text: {
-    ...TextStyleSheet["text-md/medium"],
-    color: semanticColors.TEXT_NORMAL,
-  },
-  button: {
-    ...TextStyleSheet["text-md/medium"],
-    color: semanticColors.TEXT_NORMAL,
-    borderRadius: 8,
-  },
-});
-
-// this exists just so i can make cool loading buttons :nyaboom:
 export default function () {
   const [loadingBtns, setLoadingBtns] = React.useState<Record<number, boolean>>(
     {}
   );
 
-  return vstorage.authorization ? (
+  return currentAuthorization() ? (
     <View
       style={{
         flexDirection: DeviceManager.isTablet ? "row" : "column",
@@ -40,7 +27,7 @@ export default function () {
     >
       {[
         {
-          text: "Sync Data",
+          text: "Save Data",
           onPress: async (setLoad) => {
             setLoad(true);
 
@@ -50,22 +37,18 @@ export default function () {
 
               showToast("Successfully synced data", getAssetIDByName("Check"));
             } catch (e) {
-              showToast(`Failed to sync data: ${e}`, getAssetIDByName("Small"));
+              showToast(e, getAssetIDByName("Small"));
             }
 
             setLoad(false);
           },
         },
         {
-          text: "Load Data",
-          onPress: async (setLoad) => {
-            setLoad(true);
-            try {
-              await syncEverything(true);
-            } catch (e) {
-              console.log("ZOINKS", e);
-            }
-            setLoad(false);
+          text: "Import Data",
+          onPress: (setLoad) => {
+            if (!cache.save) return;
+            openSheet(ImportActionSheet, {});
+            setImportCallback((x) => setLoad(x));
           },
         },
       ].map((x, i) => {
@@ -84,19 +67,16 @@ export default function () {
             }
             trailing={<FormRow.Icon source={getAssetIDByName("Check")} />}
             loading={loadingBtns[i]}
-            style={{
-              ...styles.button,
-              ...(DeviceManager.isTablet
-                ? { marginLeft: off }
-                : { marginTop: off }),
-            }}
+            style={[
+              DeviceManager.isTablet ? { marginLeft: off } : { marginTop: off },
+            ]}
           />
         );
       })}
     </View>
   ) : (
-    <Text style={{ ...styles.text, textAlign: "center" }}>
+    <SimpleText variant="text-md/semibold" color="TEXT_NORMAL" align="center">
       Authenticate first to manage your data
-    </Text>
+    </SimpleText>
   );
 }

@@ -13,7 +13,7 @@ import { plugins } from "@vendetta/plugins";
 
 const { FormSwitchRow } = Forms;
 
-export default (): React.JSX.Element => {
+export default () => {
   const [search, setSearch] = React.useState("");
   const [, forceUpdate] = React.useReducer((x) => ~x, 0);
 
@@ -61,11 +61,13 @@ export default (): React.JSX.Element => {
         x[1].manifest.name?.toLowerCase().includes(search)
       )}
       renderItem={({ item: [id, item] }) => {
+        vstorage.pluginSettings ??= {};
         const config = vstorage.pluginSettings[id] ?? {
           syncPlugin: true,
           syncStorage: true,
         };
         const updateConfig = () => {
+          vstorage.pluginSettings ??= {};
           if (config.syncPlugin === true && config.syncStorage === true)
             delete vstorage.pluginSettings[id];
           else vstorage.pluginSettings[id] = config;

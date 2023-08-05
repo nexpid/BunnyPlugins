@@ -10,20 +10,18 @@ import {
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import DataStat from "./DataStat";
 import { openOauth2Modal } from "../stuff/oauth2";
-import { deleteSaveData } from "../stuff/api";
+import { currentAuthorization, deleteSaveData } from "../stuff/api";
 import DataManagementButtons from "./DataManagementButtons";
 import { showToast } from "@vendetta/ui/toasts";
-import {
-  NavigationNative,
-  React,
-  clipboard,
-  url,
-} from "@vendetta/metro/common";
+import { NavigationNative, React, clipboard } from "@vendetta/metro/common";
 import PluginSettingsPage from "./PluginSettingsPage";
 import { openPluginReportSheet } from "../../../../stuff/githubReport";
+import { findByStoreName } from "@vendetta/metro";
 
 const { ScrollView, View } = General;
 const { FormRow, FormSwitchRow } = Forms;
+
+const UserStore = findByStoreName("UserStore");
 
 export default function () {
   const [, forceUpdate] = React.useReducer((x) => ~x, 0);
@@ -84,13 +82,13 @@ export default function () {
         icon={getAssetIDByName("ic_cog_24px")}
       >
         <FormSwitchRow
-          label="Auto Sync"
-          subLabel="Automatically sync data to cloud"
+          label="Auto Save"
+          subLabel="Automatically save data to cloud"
           leading={
             <FormRow.Icon source={getAssetIDByName("ic_contact_sync")} />
           }
           onValueChange={() => (vstorage.autoSync = !vstorage.autoSync)}
-          value={vstorage.autoSync}
+          value={vstorage.autoSync ?? false}
         />
         <FormSwitchRow
           label="Pin To Settings"
@@ -99,7 +97,7 @@ export default function () {
           onValueChange={() =>
             (vstorage.addToSettings = !vstorage.addToSettings)
           }
-          value={vstorage.addToSettings}
+          value={vstorage.addToSettings ?? false}
         />
         <FormRow
           label="Plugin Settings"
@@ -116,7 +114,7 @@ export default function () {
         title="Authentication"
         icon={getAssetIDByName("lock")}
       >
-        {vstorage.authorization ? (
+        {currentAuthorization() ? (
           <>
             <FormRow
               label="Log out"
@@ -125,7 +123,8 @@ export default function () {
                 <FormRow.Icon source={getAssetIDByName("ic_logout_24px")} />
               }
               onPress={() => {
-                delete vstorage.authorization;
+                vstorage.auth ??= {};
+                delete vstorage.auth[UserStore.getCurrentUser().id];
                 delete cache.save;
                 cacheUpdated();
 
@@ -137,11 +136,12 @@ export default function () {
             />
             <FormRow
               label="Delete data"
-              subLabel="Deletes your data and logs you out of CloudSync"
+              subLabel="Deletes your CloudSync data"
               leading={<FormRow.Icon source={getAssetIDByName("trash")} />}
               onPress={async () => {
                 await deleteSaveData();
-                delete vstorage.authorization;
+                vstorage.auth ??= {};
+                delete vstorage.auth[UserStore.getCurrentUser().id];
                 delete cache.save;
                 cacheUpdated();
 
@@ -167,7 +167,7 @@ export default function () {
         padding={true}
       >
         <DataManagementButtons />
-        {vstorage.authorization && (
+        {currentAuthorization() && (
           <>
             <LineDivider />
             <FormRow

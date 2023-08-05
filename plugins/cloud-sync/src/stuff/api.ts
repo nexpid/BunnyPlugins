@@ -1,13 +1,16 @@
 import { DBSave } from "../types/api/latest";
-import { vstorage } from "..";
+import { AuthRecord, vstorage } from "..";
 import constants from "../constants";
+import { findByStoreName } from "@vendetta/metro";
+
+const UserStore = findByStoreName("UserStore");
 
 interface CloudSyncAPIErrorResponse {
   message: string;
   status: number;
   error?: string;
 }
-export class CloudSyncError extends Error {
+export class CloudSyncAPIError extends Error {
   constructor(resp: CloudSyncAPIErrorResponse) {
     super(
       `${resp.status}: ${resp.message}${resp.error ? ` (${resp.error})` : ""}`
@@ -16,55 +19,79 @@ export class CloudSyncError extends Error {
   }
 }
 
-export async function getOauth2Response(code: string): Promise<string> {
+export function currentAuthorization(): AuthRecord | undefined {
+  return vstorage.auth?.[UserStore.getCurrentUser().id];
+}
+export async function getAuthorization(): Promise<string> {
+  const e = new Error("Unauthorized, try logging out and back in again");
+  let auth = currentAuthorization();
+  if (!auth) throw e;
+
+  if (auth.expiresAt >= Date.now()) {
+    const x = await fetch(
+      `${
+        constants.api
+      }api/refresh-access-token?refresh_token=${encodeURIComponent(
+        auth.refreshToken
+      )}`
+    );
+    if (x.status !== 200) throw new CloudSyncAPIError(await x.json());
+    auth = await x.json();
+
+    vstorage.auth ??= {};
+    vstorage.auth[UserStore.getCurrentUser().id] = auth;
+  }
+
+  return auth.accessToken;
+}
+
+export async function getOauth2Response(code: string): Promise<AuthRecord> {
   const res = await fetch(
-    `${constants.api}api/oauth2-response?code=${encodeURIComponent(
-      code
-    )}&vendetta=true`
+    `${constants.api}api/get-access-token?code=${encodeURIComponent(code)}`
   );
 
-  if (res.status === 200) return await res.text();
-  else throw new CloudSyncError(await res.json());
+  if (res.status === 200) return await res.json();
+  else throw new CloudSyncAPIError(await res.json());
 }
 export async function getSaveData(): Promise<DBSave.Save | undefined> {
-  if (!vstorage.authorization) return;
+  if (!currentAuthorization()) return;
 
   const res = await fetch(`${constants.api}api/get-data`, {
     headers: {
-      authorization: vstorage.authorization,
+      authorization: await getAuthorization(),
     },
   });
 
   if (res.status === 200) return await res.json();
-  else throw new CloudSyncError(await res.json());
+  else throw new CloudSyncAPIError(await res.json());
 }
 export async function syncSaveData(
   data: DBSave.SaveSync
 ): Promise<DBSave.Save | undefined> {
-  if (!vstorage.authorization) return;
+  if (!currentAuthorization()) return;
 
   const res = await fetch(`${constants.api}api/sync-data`, {
     method: "POST",
     headers: {
-      authorization: vstorage.authorization,
+      authorization: await getAuthorization(),
       "content-type": "application/json",
     },
     body: JSON.stringify(data),
   });
 
   if (res.status === 200) return await res.json();
-  else throw new CloudSyncError(await res.json());
+  else throw new CloudSyncAPIError(await res.json());
 }
 export async function deleteSaveData(): Promise<true | undefined> {
-  if (!vstorage.authorization) return;
+  if (!currentAuthorization()) return;
 
   const res = await fetch(`${constants.api}api/delete-data`, {
     method: "DELETE",
     headers: {
-      authorization: vstorage.authorization,
+      authorization: await getAuthorization(),
     },
   });
 
   if (res.status === 200) return await res.json();
-  else throw new CloudSyncError(await res.json());
+  else throw new CloudSyncAPIError(await res.json());
 }
