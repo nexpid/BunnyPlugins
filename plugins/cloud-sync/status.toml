@@ -1,4 +1,4 @@
-status = "unfinished"
+status = "finished"
 
 [external]
 backend = "VendettaCloudSync"
