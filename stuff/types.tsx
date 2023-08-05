@@ -61,7 +61,7 @@ export function getUserAvatar(
       }`;
 }
 
-export function openSheet<T extends (...args: any[]) => React.JSX.Element>(
+export function openSheet<T extends React.FunctionComponent>(
   sheet: T,
   props: Parameters<T>[0]
 ) {
@@ -146,7 +146,7 @@ export function BetterTableRowGroup({
   onTitlePress?: () => void;
   icon?: number;
   padding?: boolean;
-}>): React.JSX.Element {
+}>) {
   const styles = stylesheet.createThemedStyleSheet({
     main: {
       backgroundColor: semanticColors.BACKGROUND_TERTIARY,
@@ -176,7 +176,7 @@ export function LineDivider({
   addPadding,
 }: {
   addPadding?: boolean;
-}): React.JSX.Element {
+}) {
   const styles = stylesheet.createThemedStyleSheet({
     line: {
       width: "100%",
@@ -204,7 +204,7 @@ export namespace RichText {
     onPress,
   }: React.PropsWithChildren<{
     onPress?: () => void;
-  }>): React.JSX.Element {
+  }>) {
     return (
       <SimpleText variant={"text-md/bold"} onPress={onPress}>
         {children}
@@ -217,7 +217,7 @@ export namespace RichText {
     onPress,
   }: React.PropsWithChildren<{
     onPress?: () => void;
-  }>): React.JSX.Element {
+  }>) {
     return (
       <Text style={{ textDecorationLine: "underline" }} onPress={onPress}>
         {children}
@@ -290,7 +290,7 @@ export function SuperAwesomeIcon({
   destructive?: boolean;
   icon: number;
   style: "header" | "card" | any;
-}): React.JSX.Element {
+}) {
   const styles = stylesheet.createThemedStyleSheet({
     headerStyleIcon: {
       width: 24,
