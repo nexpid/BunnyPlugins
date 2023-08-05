@@ -60,7 +60,8 @@ export default async (): Promise<() => void> => {
 
           // @ts-ignore these properties are missing from the Asset type
           const asset: CoolAsset = getAssetByID(source);
-          const useIconpack = !iconpackNuhuhCache.includes(asset.name);
+          const useIconpack =
+            iconpack && !iconpackNuhuhCache.includes(asset.name);
 
           let overlay: any;
           if (plus.customOverlays && !useIconpack) {
