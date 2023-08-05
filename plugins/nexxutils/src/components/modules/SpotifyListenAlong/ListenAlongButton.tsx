@@ -1,11 +1,10 @@
 import { findByProps, findByStoreName } from "@vendetta/metro";
-import { React } from "@vendetta/metro/common";
+import { React, ReactNative as RN } from "@vendetta/metro/common";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { Button, Forms, General } from "@vendetta/ui/components";
 import { showToast } from "@vendetta/ui/toasts";
 
 const { View } = General;
-const { FormRow } = Forms;
 
 const UserStore = findByStoreName("UserStore");
 const SpotifyStore = findByStoreName("SpotifyStore");
@@ -44,12 +43,7 @@ export default function ({
           size="small"
           text=""
           style={[button.style, { width: 30 }]}
-          renderIcon={() => (
-            <FormRow.Icon
-              source={{ uri: listenAlong }}
-              style={{ tintColor: "#FFF", opacity: 1 }}
-            />
-          )}
+          renderIcon={() => <RN.Image source={{ uri: listenAlong }} />}
           onPress={() => {
             showToast("Syncing", getAssetIDByName("Check"));
             if (!SpotifyStore.getActivity()) {
