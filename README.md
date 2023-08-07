@@ -60,11 +60,11 @@ I'm working on **3** plugins, and **4** plugins are discontinued.
 ## ❌ Unfinished
 
 - CustomRPC — Displays a custom RPC activity on your profile! (idea from Vencord) (RECODED)
-	- [<img alt="view_code" src="https://img.shields.io/badge/view_code-1e1e2e?style=for-the-badge" />](https://github.com/Gabe616/VendettaPlugins/tree/main/plugins/customrpc)
+	- [<img alt="copy_link" src="https://img.shields.io/badge/copy_link-1e1e2e?style=for-the-badge" />](https://vendetta.nexpid.xyz/customrpc) [<img alt="view_code" src="https://img.shields.io/badge/view_code-1e1e2e?style=for-the-badge" />](https://github.com/Gabe616/VendettaPlugins/tree/main/plugins/customrpc)
 - NexxUtils — Nexx's utility plugins
-	- [<img alt="view_code" src="https://img.shields.io/badge/view_code-1e1e2e?style=for-the-badge" />](https://github.com/Gabe616/VendettaPlugins/tree/main/plugins/nexxutils)
+	- [<img alt="copy_link" src="https://img.shields.io/badge/copy_link-1e1e2e?style=for-the-badge" />](https://vendetta.nexpid.xyz/nexxutils) [<img alt="view_code" src="https://img.shields.io/badge/view_code-1e1e2e?style=for-the-badge" />](https://github.com/Gabe616/VendettaPlugins/tree/main/plugins/nexxutils)
 - Themes+ — Adds more customizability to themes
-	- [<img alt="view_code" src="https://img.shields.io/badge/view_code-1e1e2e?style=for-the-badge" />](https://github.com/Gabe616/VendettaPlugins/tree/main/plugins/themes-plus)
+	- [<img alt="copy_link" src="https://img.shields.io/badge/copy_link-1e1e2e?style=for-the-badge" />](https://vendetta.nexpid.xyz/themes-plus) [<img alt="view_code" src="https://img.shields.io/badge/view_code-1e1e2e?style=for-the-badge" />](https://github.com/Gabe616/VendettaPlugins/tree/main/plugins/themes-plus)
 
 ## 🎫 Discontinued
 
