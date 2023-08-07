@@ -5,10 +5,12 @@ export interface IconPack {
     authors: string[];
     source: string;
   };
-  load?: string;
+  suffix: string | null;
+  load: string | null;
 }
 
 export interface IconPackData {
+  $schema: string;
   list: IconPack[];
 }
 

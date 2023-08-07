@@ -2,7 +2,7 @@ import { ReactNative as RN, React } from "@vendetta/metro/common";
 import { getPlusData } from "./plusLookup";
 import { after, instead } from "@vendetta/patcher";
 import { getIconTint } from "../handlers/icons";
-import { findByProps } from "@vendetta/metro";
+import { findByProps, findByStoreName } from "@vendetta/metro";
 import { findInReactTree } from "@vendetta/utils";
 import { getUnreadBadgeColor } from "../handlers/unreadBadge";
 import { getIconOverlay } from "../handlers/iconOverlays";
@@ -11,13 +11,14 @@ import { General } from "@vendetta/ui/components";
 import { addToStyle, flattenStyle, reloadUI } from "./util";
 import { PlusStructure } from "../../../../stuff/typings";
 import resolveColor, { androidifyColor } from "./resolveColor";
-import { PatchType, active, enabled } from "..";
+import { PatchType, active, enabled, vstorage } from "..";
 import constants from "./constants";
-import { CoolAsset, IconPackData } from "../types";
+import { CoolAsset, IconPack, IconPackData } from "../types";
 
 const { View } = General;
 const MaskedBadge = findByProps("MaskedBadge");
 const RowGeneratorUtils = findByProps("createBackgroundHighlight");
+const UserStore = findByStoreName("UserStore");
 
 const iconpackNuhuhCache = new Array<string>();
 
@@ -28,20 +29,41 @@ export default async (): Promise<() => void> => {
 
   active.patches.length = 0;
 
-  const iconpacks = (await (
+  const iconpacks: IconPackData = (await (
     await fetch(constants.iconpacks.list)
   ).json()) as IconPackData;
   if (!enabled) return () => undefined;
 
+  const user = UserStore.getCurrentUser();
+
   if (plus?.version !== undefined) {
     active.active = true;
-    if (plus.icons || plus.customOverlays || plus.iconpack) {
+    if (
+      plus.icons ||
+      plus.customOverlays ||
+      plus.iconpack ||
+      vstorage.iconpack?.url
+    ) {
       if (plus.icons) active.patches.push(PatchType.Icons);
       if (plus.customOverlays)
         active.patches.push(PatchType.CustomIconOverlays);
-      if (plus.iconpack) active.patches.push(PatchType.IconPack);
+      if (plus.iconpack || vstorage.iconpack?.url)
+        active.patches.push(PatchType.IconPack);
 
-      const iconpack = iconpacks.list.find((x) => x.id === plus.iconpack);
+      const iconpack: IconPack = vstorage.iconpack?.url
+        ? {
+            id: "custom-iconpack",
+            description: "A custom iconpack!",
+            credits: {
+              authors: [`${user.username} <${user.id}>`],
+              source: "N/A",
+            },
+            suffix: vstorage.iconpack.suffix,
+            load: vstorage.iconpack.url,
+          }
+        : iconpacks.list.find((x) => x.id === plus.iconpack);
+      active.iconpack = iconpack ?? null;
+
       const iconpackURL =
         iconpack &&
         (iconpack.load
@@ -95,7 +117,7 @@ export default async (): Promise<() => void> => {
             x.source = {
               uri: `${iconpackURL}${[
                 ...asset.httpServerLocation.split("/").slice(2),
-                `${asset.name}@2x.${asset.type}`,
+                `${asset.name}${iconpack.suffix}.${asset.type}`,
               ].join("/")}`,
             };
             x.style = flattenStyle(x.style);

@@ -1,5 +1,7 @@
 import patcher from "./stuff/patcher";
 import Settings from "./components/Settings";
+import { storage } from "@vendetta/plugin";
+import { IconPack } from "./types";
 
 export enum PatchType {
   Icons,
@@ -8,21 +10,23 @@ export enum PatchType {
   MentionLineColor,
   IconPack,
 }
-export const patchTypeReadable = Object.fromEntries([
-  [PatchType.Icons, "Custom icon colors"],
-  [PatchType.UnreadBadgeColor, "Unread badge color"],
-  [PatchType.CustomIconOverlays, "Custom icon overlays"],
-  [PatchType.MentionLineColor, "Mention line color"],
-  [PatchType.IconPack, "Custom icon pack"],
-]);
 
 export let active: {
   active: boolean;
+  iconpack: IconPack | null;
   patches: PatchType[];
 } = {
   active: false,
+  iconpack: null,
   patches: [],
 };
+
+export const vstorage: {
+  iconpack?: {
+    url: string | null;
+    suffix: string;
+  };
+} = storage;
 
 export let enabled = false;
 let patches: () => void;

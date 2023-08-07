@@ -1,9 +1,11 @@
 import { General } from "@vendetta/ui/components";
-import { PatchType, active, patchTypeReadable } from "..";
+import { PatchType, active } from "..";
 import { findByProps } from "@vendetta/metro";
 import { ReactNative as RN, url } from "@vendetta/metro/common";
-import { SimpleText } from "../../../../stuff/types";
+import { SimpleText, openModal, openSheet } from "../../../../stuff/types";
 import { getAssetIDByName } from "@vendetta/ui/assets";
+import DevModal from "./modals/DevModal";
+import IconpackInfoSheet from "./sheets/IconpackInfoSheet";
 
 const { View } = General;
 
@@ -11,7 +13,9 @@ const twemojiCDN = `https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72
 
 const { TextStyleSheet } = findByProps("TextStyleSheet");
 
-export default function (): React.JSX.Element {
+export default function () {
+  let lastTap = 0;
+
   return (
     <View
       style={{
@@ -41,33 +45,58 @@ export default function (): React.JSX.Element {
                 marginTop: 6,
               }}
             />
-            <SimpleText variant="heading-xxl/semibold" color="TEXT_NORMAL">
+            <SimpleText
+              variant="heading-xxl/semibold"
+              color="TEXT_NORMAL"
+              onPress={() =>
+                lastTap >= Date.now()
+                  ? openModal("dev-modal", DevModal)
+                  : (lastTap = Date.now() + 500)
+              }
+            >
               Themes+ is Active
             </SimpleText>
           </View>
           <View style={{ flexDirection: "column", marginHorizontal: 16 }}>
-            {Object.values(PatchType)
-              .filter((x) => typeof x === "number")
-              .map((x: number) => (
-                <View style={{ flexDirection: "row" }}>
-                  <RN.Image
-                    source={getAssetIDByName(
-                      active.patches.includes(x)
-                        ? "ic_radio_square_checked_24px"
-                        : "ic_radio_square_24px"
-                    )}
-                    style={{
-                      marginRight: 8,
-                      height: TextStyleSheet["text-lg/semibold"].fontSize,
-                      aspectRatio: 1 / 1,
-                      marginTop: 4,
-                    }}
-                  />
-                  <SimpleText variant="text-lg/semibold" color="TEXT_NORMAL">
-                    {patchTypeReadable[x]}
-                  </SimpleText>
-                </View>
-              ))}
+            {[
+              [PatchType.Icons, ["Custom icon colors"]],
+              [PatchType.UnreadBadgeColor, ["Unread badge color"]],
+              [PatchType.CustomIconOverlays, ["Custom icon overlays"]],
+              [PatchType.MentionLineColor, ["Mention line color"]],
+              [
+                PatchType.IconPack,
+                active.iconpack
+                  ? [
+                      <SimpleText
+                        variant="text-lg/bold"
+                        color="TEXT_LINK"
+                        onPress={() => openSheet(IconpackInfoSheet, {})}
+                      >
+                        Custom icon pack
+                      </SimpleText>,
+                    ]
+                  : ["Custom icon pack"],
+              ],
+            ].map(([type, children]: [PatchType, any[]]) => (
+              <View style={{ flexDirection: "row" }}>
+                <RN.Image
+                  source={getAssetIDByName(
+                    active.patches.includes(type)
+                      ? "ic_radio_square_checked_24px"
+                      : "ic_radio_square_24px"
+                  )}
+                  style={{
+                    marginRight: 8,
+                    height: TextStyleSheet["text-lg/semibold"].fontSize,
+                    aspectRatio: 1 / 1,
+                    marginTop: 4,
+                  }}
+                />
+                <SimpleText variant="text-lg/semibold" color="TEXT_NORMAL">
+                  {children}
+                </SimpleText>
+              </View>
+            ))}
           </View>
         </>
       ) : (
@@ -83,7 +112,15 @@ export default function (): React.JSX.Element {
               marginTop: 6,
             }}
           />
-          <SimpleText variant="heading-xxl/semibold" color="TEXT_NORMAL">
+          <SimpleText
+            variant="heading-xxl/semibold"
+            color="TEXT_NORMAL"
+            onPress={() =>
+              lastTap >= Date.now()
+                ? openModal("dev-modal", DevModal)
+                : (lastTap = Date.now() + 500)
+            }
+          >
             Themes+ is not Active
           </SimpleText>
         </View>
