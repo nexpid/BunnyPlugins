@@ -46,7 +46,7 @@ export default function ({
           {change && (
             <CustomBadgeTag text={change[1] === "new" ? "New" : "Upd"} />
           )}
-          <SimpleText variant="text-md/semibold" color="TEXT_NORMAL">
+          <SimpleText variant="text-md/semibold" color="HEADER_PRIMARY">
             {item.name}
             {item.authors[0] && " by "}
             {...item.authors.map((x, i, a) => (

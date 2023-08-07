@@ -15,7 +15,7 @@ export default ({ changes }: { changes: number }) => {
     <ErrorBoundary>
       <FormRow
         label={
-          <SimpleText variant="text-md/semibold" color="TEXT_NORMAL">
+          <SimpleText variant="text-md/semibold" color="HEADER_PRIMARY">
             Plugin Browser
             {changes ? (
               <CustomBadgeTag text={changes.toString()} marginLeft={true} />
