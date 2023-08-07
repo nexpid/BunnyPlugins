@@ -1,4 +1,9 @@
-import { find, findByProps, findByStoreName } from "@vendetta/metro";
+import {
+  find,
+  findByName,
+  findByProps,
+  findByStoreName,
+} from "@vendetta/metro";
 import {
   ReactNative as RN,
   React,
@@ -9,6 +14,7 @@ import { semanticColors } from "@vendetta/ui";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { Forms, General } from "@vendetta/ui/components";
 import { showToast } from "@vendetta/ui/toasts";
+import { without } from "@vendetta/utils";
 
 const { TextStyleSheet } = findByProps("TextStyleSheet");
 const { View, Text, Pressable } = General;
@@ -28,6 +34,10 @@ export const {
   "ActionSheetCloseButton",
   "ActionSheetContentContainer"
 );
+
+export const Navigator = findByName("Navigator");
+export const { getRenderCloseButton } = findByProps("getRenderCloseButton");
+export const { popModal, pushModal } = findByProps("popModal", "pushModal");
 
 // ...
 
@@ -81,7 +91,40 @@ export function openSheet<T extends React.FunctionComponent>(
       );
 }
 
+export function openModal(key: string, modal: typeof Modal) {
+  pushModal({
+    key,
+    modal: {
+      key,
+      modal,
+      animation: "slide-up",
+      shouldPersistUnderModals: false,
+      closable: true,
+    },
+  });
+}
+
 // ...
+
+export function Modal(
+  props: React.PropsWithChildren<{
+    mkey: string;
+    headerRight?: React.FunctionComponent;
+    title?: string;
+  }>
+) {
+  return (
+    <Navigator
+      initialRouteName={props.mkey}
+      screens={{
+        [props.mkey]: Object.assign(without(props, "mkey", "children"), {
+          headerLeft: getRenderCloseButton(() => popModal(props.mkey)),
+          render: () => props.children,
+        }),
+      }}
+    />
+  );
+}
 
 export function BetterTableRowTitle({
   title,
@@ -172,11 +215,7 @@ export function BetterTableRowGroup({
   );
 }
 
-export function LineDivider({
-  addPadding,
-}: {
-  addPadding?: boolean;
-}) {
+export function LineDivider({ addPadding }: { addPadding?: boolean }) {
   const styles = stylesheet.createThemedStyleSheet({
     line: {
       width: "100%",
