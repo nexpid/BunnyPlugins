@@ -110,6 +110,7 @@ export function build(patches: Patches): ThemeDataWithPlus {
           ? patches.plus.mentionLineColor.both
           : patches.plus.mentionLineColor[vstorage.lightmode ? "light" : "dark"]
       ),
+      iconpack: "rosiecord-plumpy",
       icons: {},
     };
 

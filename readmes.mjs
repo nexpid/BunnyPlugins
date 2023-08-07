@@ -81,7 +81,7 @@ for (const x of await readdir("./plugins")) {
 
   try {
     const manifest = JSON.parse(await readFile(`${path}manifest.json`, "utf8"));
-    const { status, discontinuedFor, external } = parse(
+    const { status, usable, discontinuedFor, external } = parse(
       await readFile(`${path}status.toml`, "utf8")
     );
 
@@ -98,7 +98,7 @@ for (const x of await readdir("./plugins")) {
                 title: "copy_proxied_link",
                 link: `${links.proxied}${x}`,
               }
-            : status === "finished"
+            : status === "finished" || (status === "unfinished" && usable)
             ? {
                 title: "copy_link",
                 link: `${links.unproxied}${x}`,
