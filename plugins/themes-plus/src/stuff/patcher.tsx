@@ -14,6 +14,8 @@ import resolveColor, { androidifyColor } from "./resolveColor";
 import { PatchType, active, enabled, vstorage } from "..";
 import constants from "./constants";
 import { CoolAsset, IconPack, IconPackData } from "../types";
+import { resolveSemanticColor } from "../../../../stuff/types";
+import { semanticColors } from "@vendetta/ui";
 
 const { View } = General;
 const MaskedBadge = findByProps("MaskedBadge");
@@ -106,7 +108,12 @@ export default async (): Promise<() => void> => {
               });
           }
 
-          const [_, forceUpdate] = React.useReducer((x) => ~x, 0);
+          // thank you to @vending.machine (and @pylixonly)
+          const forceUpdate = () =>
+            (this as any)?.setState((s: any) => ({
+              forceUpdate: ~(s.forceUpdate ?? 0),
+            }));
+
           if (useIconpack) {
             x.onError = () => {
               if (!iconpackNuhuhCache.includes(asset.name))
@@ -123,6 +130,9 @@ export default async (): Promise<() => void> => {
             x.style = flattenStyle(x.style);
             x.style.width ??= asset.width;
             x.style.height ??= asset.height;
+            x.style.tintColor ??= resolveSemanticColor(
+              semanticColors.INTERACTIVE_NORMAL
+            );
           }
 
           const ret = orig(...args);
