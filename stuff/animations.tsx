@@ -19,7 +19,7 @@ export function FadeView({
   customOpacity?: number;
   setDisplay?: boolean;
   animateOnInit?: boolean;
-}>): React.JSX.Element {
+}>) {
   animateOnInit ??= true;
 
   const firstInit = React.useRef(true),
