@@ -16,6 +16,9 @@ import { Forms, General } from "@vendetta/ui/components";
 import { showToast } from "@vendetta/ui/toasts";
 import { without } from "@vendetta/utils";
 
+const ThemeStore = findByStoreName("ThemeStore");
+const colors = findByProps("colors", "meta");
+
 const { TextStyleSheet } = findByProps("TextStyleSheet");
 const { View, Text, Pressable } = General;
 const { FormRow } = Forms;
@@ -42,9 +45,6 @@ export const { popModal, pushModal } = findByProps("popModal", "pushModal");
 // ...
 
 export function resolveSemanticColor(color: string) {
-  const colors = findByProps("colors", "meta");
-  const ThemeStore = findByStoreName("ThemeStore");
-
   return colors.meta.resolveSemanticColor(ThemeStore.theme, color);
 }
 
