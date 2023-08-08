@@ -1,9 +1,21 @@
-import { React } from "@vendetta/metro/common";
+import { React, ReactNative as RN } from "@vendetta/metro/common";
 import { SimpleText } from "../../../../stuff/types";
+import { findByProps } from "@vendetta/metro";
+
+const { triggerHaptic } = findByProps("triggerHaptic");
+
+const doHaptic = async (dur: number): Promise<void> => {
+  triggerHaptic();
+  const interval = setInterval(triggerHaptic, 1);
+  return new Promise((res) =>
+    setTimeout(() => res(clearInterval(interval)), dur)
+  );
+};
 
 export default function ({ until }: { until: number }) {
   const [_, forceUpdate] = React.useReducer((x) => ~x, 0);
   const started = React.useRef(Date.now());
+  const oldThingy = React.useRef(0);
 
   React.useEffect(() => {
     if (until >= Date.now()) setTimeout(forceUpdate, 1);
@@ -14,6 +26,19 @@ export default function ({ until }: { until: number }) {
   const total = until - started.current;
 
   const done = time / total;
+
+  let hapticTimeLeft = 0;
+  if (timeLeft <= 1000) hapticTimeLeft = timeLeft % 100;
+  else if (timeLeft <= 3000) hapticTimeLeft = timeLeft % 250;
+  else if (timeLeft <= 5000) hapticTimeLeft = timeLeft % 500;
+  else hapticTimeLeft = timeLeft % 1000;
+
+  if (hapticTimeLeft > oldThingy.current)
+    RN.Platform.select<any>({
+      android: RN.Vibration.vibrate(75),
+      ios: doHaptic(75),
+    });
+  oldThingy.current = hapticTimeLeft;
 
   return (
     <SimpleText
