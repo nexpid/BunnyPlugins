@@ -34,7 +34,7 @@ const msgCallback = (data: {
 
   if (
     data.message.state === "SENDING" ||
-    data.message.author.id !== current.id ||
+    data.message.author.id === current.id ||
     RN.AppState.currentState !== "active" ||
     !shouldShow
   )
