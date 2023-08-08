@@ -15,15 +15,13 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Prepare environment
-        uses: actions/setup-node@v3
+      - uses: actions/setup-node@v3
         with:
           node-version: "18"
 
-      - run: npm install --global yarn
-
-      - name: Install deps
-        run: yarn add smol-toml
+      - run: |
+          npm install -g pnpm
+          pnpm i smol-toml
 
       - name: Write readmes
         run: node ./readmes.mjs

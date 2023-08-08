@@ -13,33 +13,25 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Prepare environment
-        uses: actions/setup-node@v3
+      - uses: actions/setup-node@v3
         with:
           node-version: "18"
 
-      - run: npm install --global yarn
+      - run: |
+          npm install -g pnpm
+          pnpm i
 
-      - name: Install deps
-        run: yarn install
-
-      - name: Build plugin(s)
+      - name: Build plugins
         run: node ./build.mjs
 
-        # Foolproof feature:
-        # - Copies over README so that the root of the deployed website shows it
-        # - Changes 404 page to README so that you don't get lost while clicking links
-        # If you remove this step then you should probably remove the enable_jekyll option in the next one
       - name: Copy README
         run: |
           cp README.md dist/README.md
 
-        # Documentation: https://github.com/peaceiris/actions-gh-pages
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./dist
-          # Makes it so the md files in the previous step get processed by GitHub Pages
           enable_jekyll: true
           cname: vendetta.nexpid.xyz
