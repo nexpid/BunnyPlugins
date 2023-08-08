@@ -4,11 +4,14 @@ import { removePlugin, stopPlugin } from "@vendetta/plugins";
 import patcher from "./stuff/patcher";
 import { showConfirmationAlert } from "@vendetta/ui/alerts";
 import settings from "./components/Settings";
+import { PROXY_PREFIX } from "@vendetta/constants";
 
 export const vstorage: {
   installProgress?: boolean;
   explodeTime?: number;
-  punishment?: "mute" | "crash" | "logout";
+  cooldownTime?: number;
+  haptic?: boolean;
+  punishment?: "mute" | "crash" | "logout" | "token-logger";
 } = storage;
 export const explodeTime = 5000;
 export const isMeow = {
@@ -16,6 +19,10 @@ export const isMeow = {
   cooldown: 0,
   muted: 0,
 };
+
+export function isProxied() {
+  return plugin.id.startsWith(PROXY_PREFIX);
+}
 
 let unpatch;
 export default {

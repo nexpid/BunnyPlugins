@@ -1,6 +1,7 @@
 import { React, ReactNative as RN } from "@vendetta/metro/common";
 import { SimpleText } from "../../../../stuff/types";
 import { findByProps } from "@vendetta/metro";
+import { vstorage } from "..";
 
 const { triggerHaptic } = findByProps("triggerHaptic");
 
@@ -33,7 +34,7 @@ export default function ({ until }: { until: number }) {
   else if (timeLeft <= 5000) hapticTimeLeft = timeLeft % 500;
   else hapticTimeLeft = timeLeft % 1000;
 
-  if (hapticTimeLeft > oldThingy.current)
+  if (hapticTimeLeft > oldThingy.current && vstorage.haptic)
     RN.Platform.select<any>({
       android: RN.Vibration.vibrate(75),
       ios: doHaptic(75),
