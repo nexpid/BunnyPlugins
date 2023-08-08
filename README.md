@@ -62,7 +62,7 @@ I'm working on **4** plugins, and **4** plugins are discontinued.
 - CustomRPC — Displays a custom RPC activity on your profile! (idea from Vencord) (RECODED)
 	- [<img alt="copy_link" src="https://img.shields.io/badge/copy_link-1e1e2e?style=for-the-badge" />](https://vendetta.nexpid.xyz/customrpc) [<img alt="view_code" src="https://img.shields.io/badge/view_code-1e1e2e?style=for-the-badge" />](https://github.com/Gabe616/VendettaPlugins/tree/main/plugins/customrpc)
 - DeadlyMeows — Be careful in which channels you talk in!
-	- [<img alt="view_code" src="https://img.shields.io/badge/view_code-1e1e2e?style=for-the-badge" />](https://github.com/Gabe616/VendettaPlugins/tree/main/plugins/deadly-meows)
+	- [<img alt="copy_link" src="https://img.shields.io/badge/copy_link-1e1e2e?style=for-the-badge" />](https://vendetta.nexpid.xyz/deadly-meows) [<img alt="view_code" src="https://img.shields.io/badge/view_code-1e1e2e?style=for-the-badge" />](https://github.com/Gabe616/VendettaPlugins/tree/main/plugins/deadly-meows)
 - NexxUtils — Nexx's utility plugins
 	- [<img alt="copy_link" src="https://img.shields.io/badge/copy_link-1e1e2e?style=for-the-badge" />](https://vendetta.nexpid.xyz/nexxutils) [<img alt="view_code" src="https://img.shields.io/badge/view_code-1e1e2e?style=for-the-badge" />](https://github.com/Gabe616/VendettaPlugins/tree/main/plugins/nexxutils)
 - Themes+ — Adds more customizability to themes
