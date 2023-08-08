@@ -29,7 +29,7 @@ export default {
       showConfirmationAlert({
         title: "Warning",
         content:
-          "This plugin can mute you in all channels, crash your discord and log you out. By pressing Okay you acknowledge this (disabling this plugin will stop this behaviour of course)",
+          "This plugin can mute you in all channels, crash your discord and log you out. By pressing Okay you acknowledge this (disabling this plugin will stop this behaviour)",
         confirmText: "Okay",
         confirmColor: "brand" as ButtonColors,
         onConfirm: () => {
