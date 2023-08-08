@@ -47,13 +47,12 @@ export default function ({
           onPress={() => {
             showToast("Syncing", getAssetIDByName("Check"));
             if (!SpotifyStore.getActivity()) {
-              play(activity, user.id);
-
               const x = () => {
                 SpotifyStore.removeChangeListener(x);
                 sync(activity, user.id);
               };
               SpotifyStore.addChangeListener(x);
+              play(activity, user.id);
             } else sync(activity, user.id);
           }}
         />
