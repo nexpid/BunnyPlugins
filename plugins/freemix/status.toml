@@ -1,2 +1,4 @@
 status = "discontinued"
-discontinuedFor = "Not really discontinued but was replaced by NexxUtils"
+discontinuedFor = "Replaced by NexxUtils"
+
+usable = true

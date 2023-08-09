@@ -1,1 +1,4 @@
-status = "proxied"
+status = "discontinued"
+discontinuedFor = "Replaced by NexxUtils"
+
+usable = true
