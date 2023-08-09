@@ -6,6 +6,10 @@
 
 <div align="center">
 	<img alt="plugin_status" src="https://img.shields.io/badge/plugin_status-discontinued-f38ba8?style=for-the-badge&labelColor=1e1e2e" />
+	<br/>
+	<a href="https://vendetta.nexpid.xyz/freemix">
+		<img alt="copy_link" src="https://img.shields.io/badge/copy_link-1e1e2e?style=for-the-badge" />
+	</a>
 </div>
 <br/>
 <div align="center">
