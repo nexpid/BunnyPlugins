@@ -27,11 +27,12 @@ jobs:
         run: node ./readmes.mjs
 
       - name: Publish changes
-        env:
-          commit_message: "style(readmes): update readmes"
         run: |
           git config --global user.name "GitHub Actions"
           git config --global user.email "actions@github.com"
+
           git add plugins/**/README.md README.md -f
-          git commit -m "${{ env.commit_message }}" || true
+
+          git commit -m "style(readmes): update readmes ($GITHUB_SHA)" || true
+
           git push
