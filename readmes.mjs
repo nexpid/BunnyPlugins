@@ -98,7 +98,7 @@ for (const x of await readdir("./plugins")) {
                 title: "copy_proxied_link",
                 link: `${links.proxied}${x}`,
               }
-            : status === "finished" || (status === "unfinished" && usable)
+            : status === "finished" || usable
             ? {
                 title: "copy_link",
                 link: `${links.unproxied}${x}`,
