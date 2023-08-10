@@ -6,7 +6,6 @@ import { before } from "@vendetta/patcher";
 import { grabEverything } from "./stuff/syncStuff";
 import venPlugins from "@vendetta/plugins";
 import venThemes from "@vendetta/themes";
-import { showConfirmationAlert } from "@vendetta/ui/alerts";
 import { hsync } from "./stuff/http";
 import patcher from "./stuff/patcher";
 import { PROXY_PREFIX } from "@vendetta/constants";
@@ -27,7 +26,6 @@ export const vstorage: {
     }
   >;
   auth?: Record<string, AuthRecord>;
-  databaseMigrate?: number;
 } = storage;
 
 export const cache: {
@@ -62,7 +60,7 @@ const autoSync = async () => {
 
 let patches = [];
 
-export const currentMigrationStage: number = 2;
+// export const currentMigrationStage: number = 2;
 
 export default {
   onLoad: () => {
@@ -85,34 +83,35 @@ export default {
     );
     patches.push(patcher());
 
-    const showMsg = (title: string, content: string) =>
-      showConfirmationAlert({
-        title,
-        content,
-        onConfirm: () => {},
-        confirmText: "Dismiss",
-        confirmColor: "brand" as ButtonColors,
-        secondaryConfirmText: "Don't show again",
-        onConfirmSecondary: () =>
-          (vstorage.databaseMigrate = currentMigrationStage),
-      });
+    if (storage.databaseMigrate) delete storage.databaseMigrate;
 
-    if (
-      vstorage.databaseMigrate !== currentMigrationStage &&
-      window.CSmigrationStage !== currentMigrationStage
-    ) {
-      window.CSmigrationStage = currentMigrationStage;
-      if (currentMigrationStage === 1)
-        showMsg(
-          "Cloud Sync — DB Migration Stage 1",
-          "Hey, I'd like to quickly announce that CloudSync will be switching databases soon and your data may get ***deleted***. Make sure to keep an eye on your data for the upcoming weeks!\n\n- nexx"
-        );
-      else if (currentMigrationStage === 2)
-        showMsg(
-          "Cloud Sync — DB Migration Stage 2",
-          "CloudSync has officially switched to an SQLite database! (Cloudflare's D1) Make sure to sync your data again in case any was lost while migrating.\n\n- nexx"
-        );
-    }
+    // const showMsg = (title: string, content: string) =>
+    //   showConfirmationAlert({
+    //     title,
+    //     content,
+    //     onConfirm: () => {},
+    //     confirmText: "Dismiss",
+    //     confirmColor: "brand" as ButtonColors,
+    //     secondaryConfirmText: "Don't show again",
+    //     onConfirmSecondary: () =>
+    //       (vstorage.databaseMigrate = currentMigrationStage),
+    //   });
+    // if (
+    //   vstorage.databaseMigrate !== currentMigrationStage &&
+    //   window.CSmigrationStage !== currentMigrationStage
+    // ) {
+    //   window.CSmigrationStage = currentMigrationStage;
+    //   if (currentMigrationStage === 1)
+    //     showMsg(
+    //       "Cloud Sync — DB Migration Stage 1",
+    //       "Hey, I'd like to quickly announce that CloudSync will be switching databases soon and your data may get ***deleted***. Make sure to keep an eye on your data for the upcoming weeks!\n\n- nexx"
+    //     );
+    //   else if (currentMigrationStage === 2)
+    //     showMsg(
+    //       "Cloud Sync — DB Migration Stage 2",
+    //       "CloudSync has officially switched to an SQLite database! (Cloudflare's D1) Make sure to sync your data again in case any was lost while migrating.\n\n- nexx"
+    //     );
+    // }
   },
   onUnload: () => patches.forEach((x) => x()),
   settings: Settings,
