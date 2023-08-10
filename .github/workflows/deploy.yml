@@ -3,6 +3,11 @@ name: Build and deploy
 on:
   push:
     branches: [main]
+    paths:
+      - .github/workflows/deploy.yml
+      - build.mjs
+      - plugins/*/manifest.json
+      - plugins/*/src/**/*.*
   workflow_dispatch:
 
 jobs:

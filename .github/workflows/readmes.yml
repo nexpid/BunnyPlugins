@@ -3,6 +3,10 @@ name: Make readmes
 on:
   push:
     branches: [main]
+    paths:
+      - .github/workflows/readmes.yml
+      - readmes.mjs
+      - plugins/*/status.toml
 
 jobs:
   readmes:
