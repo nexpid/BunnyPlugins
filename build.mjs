@@ -34,7 +34,7 @@ ${mdNote}
 
 <div align="center">
   <h1>Well, that's awkward.</h1>
-  <h3>You probably misclicked or something lol, click <a href="/VendettaPlugins"><b>here</b></a> to go back.</h3>
+  <h3>You probably misclicked or something, click <a href="/"><b>here</b></a> to go back.</h3>
 </div>\n`
 );
 
