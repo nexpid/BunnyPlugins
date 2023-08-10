@@ -130,9 +130,6 @@ export default async (): Promise<() => void> => {
             x.style = flattenStyle(x.style);
             x.style.width ??= asset.width;
             x.style.height ??= asset.height;
-            x.style.tintColor ??= resolveSemanticColor(
-              semanticColors.INTERACTIVE_NORMAL
-            );
           }
 
           const ret = orig(...args);
