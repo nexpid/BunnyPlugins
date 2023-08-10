@@ -3,6 +3,7 @@ name: Build and deploy
 on:
   push:
     branches: [main]
+  workflow_dispatch:
 
 jobs:
   build:
@@ -15,7 +16,7 @@ jobs:
 
       - uses: actions/setup-node@v3
         with:
-          node-version: "18"
+          node-version: "18.x"
 
       - run: |
           npm install -g pnpm
@@ -26,12 +27,17 @@ jobs:
 
       - name: Copy README
         run: |
-          cp README.md dist/README.md
+          cp README.md dist/index.md
+
+      - uses: actions/jekyll-build-pages@v1
+        with:
+          source: dist
+          destination: dist/_html
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v2
         with:
-          path: dist
+          path: dist/_html
       # - name: Deploy to GitHub Pages
       #   uses: peaceiris/actions-gh-pages@v3
       #   with:
