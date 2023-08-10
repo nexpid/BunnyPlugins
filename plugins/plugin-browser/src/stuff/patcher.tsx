@@ -5,6 +5,8 @@ import { getAssetIDByName } from "@vendetta/ui/assets";
 import PluginBrowserPage from "../components/PluginBrowserPage";
 import { getChanges, initThing } from "./pluginChecker";
 
+export let pluginsEmitter: Emitter;
+
 export default (): (() => void) => {
   let patches = [];
   patches.push(
@@ -28,7 +30,6 @@ export default (): (() => void) => {
       }
     )
   );
-
   patches.push(initThing());
 
   return () => patches.forEach((x) => x());

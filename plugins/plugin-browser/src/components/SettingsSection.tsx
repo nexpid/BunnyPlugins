@@ -10,7 +10,6 @@ const { FormRow } = Forms;
 export default ({ changes }: { changes: number }) => {
   const navigation = NavigationNative.useNavigation();
 
-  // not sure if ErrorBoundary is even required but i'll keep it here just in case
   return (
     <ErrorBoundary>
       <FormRow

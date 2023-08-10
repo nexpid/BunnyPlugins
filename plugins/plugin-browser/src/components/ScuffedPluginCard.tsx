@@ -9,6 +9,7 @@ interface propAction {
   icon: number;
   destructive?: boolean;
   onPress: () => void;
+  onLongPress: () => void;
 }
 
 interface props {
@@ -16,7 +17,7 @@ interface props {
   headerLabel: JSX.Element | string;
   headerIcon?: number;
   descriptionLabel: string;
-  actions?: () => propAction[];
+  actions?: propAction[];
 }
 
 const styles = stylesheet.createThemedStyleSheet({
@@ -45,14 +46,17 @@ export default (props: props) => {
         label={props.descriptionLabel}
         trailing={
           <RN.View style={styles.actions}>
-            {props.actions?.().map(({ icon, onPress, destructive }) => (
-              <SuperAwesomeIcon
-                icon={icon}
-                onPress={onPress}
-                style="card"
-                destructive={destructive ?? false}
-              />
-            ))}
+            {props.actions?.map(
+              ({ icon, onPress, onLongPress, destructive }) => (
+                <SuperAwesomeIcon
+                  icon={icon}
+                  onPress={onPress}
+                  onLongPress={onLongPress}
+                  style="card"
+                  destructive={destructive ?? false}
+                />
+              )
+            )}
           </RN.View>
         }
       />

@@ -321,11 +321,13 @@ export function SimpleText({
 
 export function SuperAwesomeIcon({
   onPress,
+  onLongPress,
   icon,
   style,
   destructive,
 }: {
   onPress?: () => void;
+  onLongPress?: () => void;
   destructive?: boolean;
   icon: number;
   style: "header" | "card" | any;
@@ -349,7 +351,7 @@ export function SuperAwesomeIcon({
   });
 
   return (
-    <RN.TouchableOpacity onPress={onPress}>
+    <RN.TouchableOpacity onPress={onPress} onLongPress={onLongPress}>
       <RN.Image
         style={[
           typeof style === "string"
