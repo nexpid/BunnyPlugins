@@ -27,7 +27,8 @@ if (!existsSync("./dist")) await mkdir("./dist");
 await writeFile(
   "./dist/404.md",
   `---
-permalink: /404.html
+title: 404
+description: You probably made a typo or something
 ---
 
 ${mdNote}
@@ -87,7 +88,12 @@ for (let plug of await readdir("./plugins")) {
   if (!existsSync(`./dist/${plug}`)) await mkdir(`./dist/${plug}`);
   await writeFile(
     `./dist/${plug}/README.md`,
-    `${mdNote}
+    `---
+title: ${title}
+description: ${manifest.description}
+---
+
+${mdNote}
 
 <div align="center">
     <h1>${title}</h1>
@@ -95,7 +101,7 @@ for (let plug of await readdir("./plugins")) {
 </div>
 
 > **Note**
-> This is just a simple landing page for **${manifest.name}**. The proper way to load this plugin is to go in Vendetta's Plugin settings and tapping the plus icon.\n`
+> This is just a simple landing page for **${manifest.name}**. The proper way to load this plugin is to go in Vendetta's settings, going to Plugins and tapping the plus icon.\n`
   );
 
   try {
