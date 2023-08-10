@@ -27,7 +27,7 @@ jobs:
 
       - name: Copy README
         run: |
-          cp README.md dist/index.md
+          cp README.md dist/README.md
 
       - uses: actions/jekyll-build-pages@v1
         with:
