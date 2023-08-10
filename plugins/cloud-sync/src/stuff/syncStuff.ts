@@ -1,4 +1,4 @@
-import { createMMKVBackend } from "@vendetta/storage";
+import { createFileBackend, createMMKVBackend } from "@vendetta/storage";
 import { DBSave } from "../types/api/latest";
 import { plugins } from "@vendetta/plugins";
 import { themes } from "@vendetta/themes";
@@ -7,6 +7,7 @@ import { installPlugin } from "@vendetta/plugins";
 import { installTheme } from "@vendetta/themes";
 import { showToast } from "@vendetta/ui/toasts";
 import { getAssetIDByName } from "@vendetta/ui/assets";
+import { showConfirmationAlert } from "@vendetta/ui/alerts";
 
 const { BundleUpdaterManager, MMKVManager } = window.nativeModuleProxy;
 
@@ -83,24 +84,64 @@ export async function importData(options: SyncImportOptions) {
     getAssetIDByName("toast_image_saved")
   );
 
+  const status = { plugins: 0, themes: 0 };
   await Promise.all([
-    (async () => {
-      for (const x of iplugins) {
-        MMKVManager.setItem(x.id, JSON.stringify(x.options));
-        await installPlugin(x.id, x.enabled);
-      }
-    })(),
-    (async () => {
-      for (const x of ithemes) await installTheme(x.id);
-    })(),
+    ...iplugins.map(
+      (x) =>
+        new Promise<void>(async (res) => {
+          MMKVManager.setItem(x.id, JSON.stringify(x.options));
+          installPlugin(x.id, x.enabled)
+            .then(() => status.plugins++)
+            .finally(res);
+        })
+    ),
+    ...ithemes.map(
+      (x) =>
+        new Promise<void>(async (res) =>
+          installTheme(x.id)
+            .then(() => status.themes++)
+            .finally(res)
+        )
+    ),
   ]);
 
   showToast(
-    `Imported ${[iplugins.length && "plugins", ithemes.length && "themes"]
-      .filter((x) => !!x)
-      .join("&")}!`,
+    `Imported ${[
+      [status.plugins, "plugin"],
+      [status.themes, "theme"],
+    ]
+      .map(([count, label]) => `${count} ${label}${count !== 1 ? "s" : ""}`)
+      .join(" and ")}!`,
     getAssetIDByName("check")
   );
+
+  const selectTheme = themes[ithemes.find((x) => x.enabled)?.id];
+  if (selectTheme) {
+    await createFileBackend("vendetta_theme.json").set(
+      Object.assign(selectTheme, {
+        selected: true,
+      })
+    );
+    await (() =>
+      new Promise<void>((res) =>
+        showConfirmationAlert({
+          title: "Theme selected",
+          content:
+            "A reload is required to see the theme. Do you want to reload now?",
+          confirmText: "Reload",
+          confirmColor: "red" as ButtonColors,
+          onConfirm: () => {
+            window.nativeModuleProxy.BundleUpdaterManager.reload();
+            res();
+          },
+          cancelText: "Skip",
+          //@ts-ignore not in typings
+          onCancel: res,
+          isDismissable: true,
+        })
+      ))();
+  }
+
   importCallback?.(false);
 }
 

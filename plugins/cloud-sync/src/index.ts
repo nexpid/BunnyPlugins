@@ -44,32 +44,6 @@ export async function fillCache() {
   cacheUpdated();
 }
 
-export async function promptOrRun(
-  shouldPrompt: boolean,
-  title: string,
-  text: string | JSX.Element | (string | JSX.Element)[],
-  confirmText: string,
-  cancelText: string,
-  callback?: () => Promise<any>,
-  cancelled?: () => Promise<any>
-): Promise<void> {
-  if (shouldPrompt)
-    return new Promise((res) => {
-      showConfirmationAlert({
-        title: title,
-        content: text,
-        confirmText: confirmText,
-        cancelText: cancelText,
-        confirmColor: "green" as ButtonColors,
-        isDismissable: false,
-        onConfirm: () => (callback ? callback().then(res) : res()),
-        //@ts-ignore
-        onCancel: () => (cancelled ? cancelled().then(res) : res()),
-      });
-    });
-  else return await callback?.();
-}
-
 export function isPluginProxied(id: string) {
   return id.startsWith(PROXY_PREFIX);
 }
