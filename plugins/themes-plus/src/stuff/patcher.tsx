@@ -11,11 +11,10 @@ import { General } from "@vendetta/ui/components";
 import { addToStyle, flattenStyle, reloadUI } from "./util";
 import { PlusStructure } from "../../../../stuff/typings";
 import resolveColor, { androidifyColor } from "./resolveColor";
-import { PatchType, active, enabled, vstorage } from "..";
+import { PatchType, active, cacheID, enabled, vstorage } from "..";
 import constants from "./constants";
-import { CoolAsset, IconPack, IconPackData } from "../types";
-import { resolveSemanticColor } from "../../../../stuff/types";
-import { semanticColors } from "@vendetta/ui";
+import { CoolAsset, IconPack, IconPackConfig, IconPackData } from "../types";
+import fixer from "../handlers/iconpacks/fixer";
 
 const { View } = General;
 const MaskedBadge = findByProps("MaskedBadge");
@@ -34,36 +33,41 @@ export default async (): Promise<() => void> => {
   const iconpacks: IconPackData = (await (
     await fetch(constants.iconpacks.list)
   ).json()) as IconPackData;
-  if (!enabled) return () => undefined;
 
   const user = UserStore.getCurrentUser();
+  const iconpack: IconPack = vstorage.iconpack?.url
+    ? {
+        id: "custom-iconpack",
+        description: "A custom iconpack!",
+        credits: {
+          authors: [`${user.username} <${user.id}>`],
+          source: "N/A",
+        },
+        config: null,
+        suffix: vstorage.iconpack.suffix,
+        load: vstorage.iconpack.url,
+      }
+    : iconpacks.list.find((x) => x.id === plus.iconpack);
+
+  const iconpackConfig: IconPackConfig = iconpack
+    ? vstorage.iconpack.url
+      ? {
+          biggerStatus: true,
+        }
+      : iconpack.config
+      ? await (await fetch(iconpack.config)).json()
+      : null
+    : null;
+  if (!enabled) return () => undefined;
 
   if (plus?.version !== undefined) {
     active.active = true;
-    if (
-      plus.icons ||
-      plus.customOverlays ||
-      plus.iconpack ||
-      vstorage.iconpack?.url
-    ) {
+    if (plus.icons || plus.customOverlays || iconpack) {
       if (plus.icons) active.patches.push(PatchType.Icons);
       if (plus.customOverlays)
         active.patches.push(PatchType.CustomIconOverlays);
-      if (plus.iconpack || vstorage.iconpack?.url)
-        active.patches.push(PatchType.IconPack);
+      if (iconpack) active.patches.push(PatchType.IconPack);
 
-      const iconpack: IconPack = vstorage.iconpack?.url
-        ? {
-            id: "custom-iconpack",
-            description: "A custom iconpack!",
-            credits: {
-              authors: [`${user.username} <${user.id}>`],
-              source: "N/A",
-            },
-            suffix: vstorage.iconpack.suffix,
-            load: vstorage.iconpack.url,
-          }
-        : iconpacks.list.find((x) => x.id === plus.iconpack);
       active.iconpack = iconpack ?? null;
 
       const iconpackURL =
@@ -125,7 +129,7 @@ export default async (): Promise<() => void> => {
               uri: `${iconpackURL}${[
                 ...asset.httpServerLocation.split("/").slice(2),
                 `${asset.name}${iconpack.suffix}.${asset.type}`,
-              ].join("/")}`,
+              ].join("/")}?_=${cacheID}`,
             };
             x.style = flattenStyle(x.style);
             x.style.width ??= asset.width;
@@ -193,10 +197,9 @@ export default async (): Promise<() => void> => {
     }
   } else active.active = false;
 
+  if (iconpackConfig) fixer(iconpackConfig);
+
   if (active.patches[0]) reloadUI();
 
-  return () => {
-    reloadUI();
-    patches.forEach((x) => x());
-  };
+  return () => patches.forEach((x) => x());
 };

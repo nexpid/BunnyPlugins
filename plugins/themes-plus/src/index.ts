@@ -1,7 +1,8 @@
 import patcher from "./stuff/patcher";
-import Settings from "./components/Settings";
+import settings from "./components/Settings";
 import { storage } from "@vendetta/plugin";
 import { IconPack } from "./types";
+import { reloadUI } from "./stuff/util";
 
 export enum PatchType {
   Icons,
@@ -28,6 +29,8 @@ export const vstorage: {
   };
 } = storage;
 
+export let cacheID = Math.floor(Math.random() * Number.MAX_SAFE_INTEGER);
+
 export let enabled = false;
 let patches: () => void;
 export default {
@@ -38,6 +41,7 @@ export default {
   onUnload: () => {
     enabled = false;
     patches?.();
+    reloadUI();
   },
-  settings: Settings,
+  settings,
 };

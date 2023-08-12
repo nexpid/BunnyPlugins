@@ -1,3 +1,7 @@
+export interface IconPackConfig {
+  biggerStatus?: boolean;
+}
+
 export interface IconPack {
   id: string;
   description: string;
@@ -5,6 +9,7 @@ export interface IconPack {
     authors: string[];
     source: string;
   };
+  config: string | null;
   suffix: string | null;
   load: string | null;
 }
