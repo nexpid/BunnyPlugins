@@ -32,15 +32,23 @@ export const vstorage: {
 export let cacheID = Math.floor(Math.random() * Number.MAX_SAFE_INTEGER);
 
 export let enabled = false;
-let patches: () => void;
+
+let unpatch: () => void;
+export async function runPatch() {
+  enabled = true;
+  unpatch = await patcher();
+}
+export function runUnpatch() {
+  enabled = false;
+  unpatch?.();
+}
+
 export default {
   onLoad: async () => {
-    enabled = true;
-    patches = await patcher();
+    runPatch();
   },
   onUnload: () => {
-    enabled = false;
-    patches?.();
+    runUnpatch();
     reloadUI();
   },
   settings,

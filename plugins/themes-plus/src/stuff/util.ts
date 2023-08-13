@@ -1,9 +1,13 @@
+import { logger } from "@vendetta";
 import { findByStoreName } from "@vendetta/metro";
-import { FluxDispatcher, ReactNative as RN } from "@vendetta/metro/common";
+import {
+  Flux,
+  FluxDispatcher,
+  ReactNative as RN,
+} from "@vendetta/metro/common";
 
-const SelectivelySyncedUserSettingsStore = findByStoreName(
-  "SelectivelySyncedUserSettingsStore"
-);
+const ThemeStore = findByStoreName("ThemeStore");
+const UnsyncedUserSettingsStore = findByStoreName("UnsyncedUserSettingsStore");
 
 export function flattenStyle(x: any) {
   return RN.StyleSheet.flatten(x) ?? {};
@@ -13,25 +17,19 @@ export function addToStyle(x: any, y: any) {
 }
 
 export function reloadUI() {
-  const theme =
-    SelectivelySyncedUserSettingsStore.getAppearanceSettings().theme.slice();
-  const callback = () => {
-    SelectivelySyncedUserSettingsStore.removeChangeListener(callback);
-    FluxDispatcher.dispatch({
-      type: "SELECTIVELY_SYNCED_USER_SETTINGS_UPDATE",
-      changes: {
-        appearance: { settings: { theme } },
-      },
-    });
-  };
-  SelectivelySyncedUserSettingsStore.addChangeListener(callback);
+  try {
+    const theme = String(ThemeStore.theme);
 
-  FluxDispatcher.dispatch({
-    type: "SELECTIVELY_SYNCED_USER_SETTINGS_UPDATE",
-    changes: {
-      appearance: {
-        settings: { theme: theme === "light" ? "dark" : "light" },
-      },
-    },
-  });
+    FluxDispatcher.dispatch({
+      type: "UPDATE_MOBILE_PENDING_THEME_INDEX",
+      mobileThemesIndex: theme === "dark" ? 1 : 0,
+    });
+    FluxDispatcher.dispatch({
+      type: "DRAWER_SELECT_TAB",
+      tab: "CHAT",
+    });
+  } catch (e) {
+    console.log(e);
+    logger.error(e);
+  }
 }

@@ -199,7 +199,7 @@ export default async (): Promise<() => void> => {
 
   if (iconpackConfig) fixer(iconpackConfig);
 
-  if (active.patches[0]) reloadUI();
+  if (active.patches.length) reloadUI();
 
   return () => patches.forEach((x) => x());
 };

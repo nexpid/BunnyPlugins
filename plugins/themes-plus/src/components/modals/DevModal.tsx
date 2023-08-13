@@ -2,11 +2,9 @@ import { React } from "@vendetta/metro/common";
 import { Button, Forms, General } from "@vendetta/ui/components";
 import { Modal, SimpleText, popModal } from "../../../../../stuff/types";
 import { findByProps } from "@vendetta/metro";
-import { vstorage } from "../..";
+import { runPatch, runUnpatch, vstorage } from "../..";
 import { useProxy } from "@vendetta/storage";
 import { HTTP_REGEX_MULTI } from "@vendetta/constants";
-import { startPlugin, stopPlugin } from "@vendetta/plugins";
-import { plugin } from "@vendetta";
 
 const { BadgableTabBar } = findByProps("BadgableTabBar");
 const { ScrollView, View } = General;
@@ -57,9 +55,9 @@ export default function () {
               color="green"
               text="Reload"
               onPress={() => {
-                stopPlugin(plugin.id, true);
                 popModal("dev-modal");
-                startPlugin(plugin.id);
+                runUnpatch();
+                runPatch();
               }}
               style={{ marginHorizontal: 16 }}
             />
