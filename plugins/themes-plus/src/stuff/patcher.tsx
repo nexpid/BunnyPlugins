@@ -50,7 +50,7 @@ export default async (): Promise<() => void> => {
     : iconpacks.list.find((x) => x.id === plus.iconpack);
 
   const iconpackConfig: IconPackConfig = iconpack
-    ? vstorage.iconpack.url
+    ? vstorage.iconpack?.url
       ? {
           biggerStatus: true,
         }
@@ -58,10 +58,12 @@ export default async (): Promise<() => void> => {
       ? await (await fetch(iconpack.config)).json()
       : null
     : null;
+
   if (!enabled) return () => undefined;
 
   if (plus?.version !== undefined) {
     active.active = true;
+    if (iconpackConfig) fixer(iconpackConfig);
     if (plus.icons || plus.customOverlays || iconpack) {
       if (plus.icons) active.patches.push(PatchType.Icons);
       if (plus.customOverlays)
@@ -196,8 +198,6 @@ export default async (): Promise<() => void> => {
       );
     }
   } else active.active = false;
-
-  if (iconpackConfig) fixer(iconpackConfig);
 
   if (active.patches.length) reloadUI();
 
