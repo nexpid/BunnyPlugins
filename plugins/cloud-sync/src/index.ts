@@ -45,6 +45,9 @@ export async function fillCache() {
 export function isPluginProxied(id: string) {
   return id.startsWith(PROXY_PREFIX);
 }
+export function canImport(id: string) {
+  return !id.includes("cloud-sync");
+}
 
 const autoSync = async () => {
   if (!vstorage.autoSync) return;

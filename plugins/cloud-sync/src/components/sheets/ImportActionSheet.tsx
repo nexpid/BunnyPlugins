@@ -8,7 +8,7 @@ import {
   openSheet,
 } from "../../../../../stuff/types";
 import { React, ReactNative as RN } from "@vendetta/metro/common";
-import { cache, isPluginProxied } from "../..";
+import { cache, canImport, isPluginProxied } from "../..";
 import { showConfirmationAlert } from "@vendetta/ui/alerts";
 import { SyncImportOptions, importData } from "../../stuff/syncStuff";
 import { plugins } from "@vendetta/plugins";
@@ -25,10 +25,10 @@ export default function ImportActionSheet({
 }) {
   const has = {
     unproxiedPlugins: cache.save.sync.plugins.filter(
-      (x) => !plugins[x.id] && !isPluginProxied(x.id)
+      (x) => !plugins[x.id] && !isPluginProxied(x.id) && canImport(x.id)
     ).length,
     plugins: cache.save.sync.plugins.filter(
-      (x) => !plugins[x.id] && isPluginProxied(x.id)
+      (x) => !plugins[x.id] && isPluginProxied(x.id) && canImport(x.id)
     ).length,
     themes: cache.save.sync.themes.filter((x) => !themes[x.id]).length,
   };

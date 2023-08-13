@@ -2,7 +2,7 @@ import { createFileBackend, createMMKVBackend } from "@vendetta/storage";
 import { DBSave } from "../types/api/latest";
 import { plugins } from "@vendetta/plugins";
 import { themes } from "@vendetta/themes";
-import { cache, isPluginProxied, vstorage } from "..";
+import { cache, canImport, isPluginProxied, vstorage } from "..";
 import { installPlugin } from "@vendetta/plugins";
 import { installTheme } from "@vendetta/themes";
 import { showToast } from "@vendetta/ui/toasts";
@@ -57,10 +57,17 @@ export async function importData(options: SyncImportOptions) {
   const iplugins = [
     ...cache.save.sync.plugins.filter(
       (x) =>
-        !plugins[x.id] && !isPluginProxied(x.id) && options.unproxiedPlugins
+        !plugins[x.id] &&
+        !isPluginProxied(x.id) &&
+        canImport(x.id) &&
+        options.unproxiedPlugins
     ),
     ...cache.save.sync.plugins.filter(
-      (x) => !plugins[x.id] && isPluginProxied(x.id) && options.plugins
+      (x) =>
+        !plugins[x.id] &&
+        isPluginProxied(x.id) &&
+        canImport(x.id) &&
+        options.plugins
     ),
   ];
   const ithemes = cache.save.sync.themes.filter(
