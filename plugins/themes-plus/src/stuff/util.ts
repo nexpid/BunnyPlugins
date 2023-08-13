@@ -20,14 +20,14 @@ export function reloadUI() {
   try {
     const theme = String(ThemeStore.theme);
 
-    FluxDispatcher.dispatch({
-      type: "UPDATE_MOBILE_PENDING_THEME_INDEX",
-      mobileThemesIndex: theme === "dark" ? 1 : 0,
-    });
-    FluxDispatcher.dispatch({
-      type: "DRAWER_SELECT_TAB",
-      tab: "CHAT",
-    });
+    // FluxDispatcher.dispatch({
+    //   type: "UPDATE_MOBILE_PENDING_THEME_INDEX",
+    //   mobileThemesIndex: theme === "dark" ? 1 : 0,
+    // });
+    // FluxDispatcher.dispatch({
+    //   type: "DRAWER_SELECT_TAB",
+    //   tab: "CHAT",
+    // });
   } catch (e) {
     console.log(e);
     logger.error(e);
