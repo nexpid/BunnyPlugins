@@ -1,4 +1,10 @@
-import { fetchPlugin, startPlugin, stopPlugin } from "@vendetta/plugins";
+import {
+  fetchPlugin,
+  plugins,
+  startPlugin,
+  stopPlugin,
+} from "@vendetta/plugins";
+import { themes } from "@vendetta/themes";
 
 export function properLink(id: string): string {
   return !id.endsWith("/") ? id + "/" : id;
@@ -51,3 +57,7 @@ export async function refetchPlugin(plugin: any) {
     if (enab) await startPlugin(plugin.id);
   }
 }
+
+export const emitterSymbol = Symbol.for("vendetta.storage.emitter");
+export const emitterAvailable =
+  !!(plugins as any)[emitterSymbol] && !!(themes as any)[emitterSymbol];

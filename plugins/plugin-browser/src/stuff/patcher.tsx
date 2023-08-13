@@ -2,7 +2,7 @@ import SettingsSection from "../components/SettingsSection";
 import { patchSettingsPin } from "../../../../stuff/pinToSettings";
 import { plugin } from "@vendetta";
 import { getAssetIDByName } from "@vendetta/ui/assets";
-import PluginBrowserPage from "../components/PluginBrowserPage";
+import PluginBrowserPage from "../components/pages/PluginBrowserPage";
 import { getChanges, initThing } from "./pluginChecker";
 
 export let pluginsEmitter: Emitter;

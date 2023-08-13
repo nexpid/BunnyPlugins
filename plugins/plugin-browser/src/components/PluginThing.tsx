@@ -10,7 +10,7 @@ import { showToast } from "@vendetta/ui/toasts";
 import { installPlugin, removePlugin } from "@vendetta/plugins";
 import SmartMention from "../../../../stuff/components/SmartMention";
 import { matchGithubLink, properLink, refetchPlugin } from "../stuff/util";
-import PluginStatusUpdater from "./PluginStatusUpdater";
+import usePlugin from "./hooks/usePlugin";
 
 const { View } = General;
 
@@ -27,9 +27,7 @@ export default function ({
     `https://vd-plugins.github.io/proxy/${item.vendetta.original}`
   );
 
-  const [hasPlugin, setHasPlugin] = React.useState(
-    plugins[proxiedLink] !== undefined
-  );
+  const hasPlugin = usePlugin(proxiedLink);
 
   const change = changes.find((x) => x[0] === proxiedLink);
 
@@ -150,7 +148,6 @@ export default function ({
               ]
         }
       />
-      <PluginStatusUpdater id={proxiedLink} set={setHasPlugin} />
     </>
   );
 }

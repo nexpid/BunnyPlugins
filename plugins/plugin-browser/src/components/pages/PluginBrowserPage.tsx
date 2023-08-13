@@ -4,15 +4,17 @@ import {
   React,
 } from "@vendetta/metro/common";
 import { getAssetIDByName } from "@vendetta/ui/assets";
-import { PluginsFullJson } from "../types";
+import { PluginsFullJson } from "../../types";
 import { ErrorBoundary, General, Search } from "@vendetta/ui/components";
-import { pluginsURL } from "..";
+import { pluginsURL } from "../..";
 import { showToast } from "@vendetta/ui/toasts";
 import { findByProps } from "@vendetta/metro";
-import { SuperAwesomeIcon } from "../../../../stuff/types";
+import { SuperAwesomeIcon } from "../../../../../stuff/types";
 import { safeFetch } from "@vendetta/utils";
-import { getChanges, updateChanges } from "../stuff/pluginChecker";
-import PluginThing from "./PluginThing";
+import { getChanges, updateChanges } from "../../stuff/pluginChecker";
+import PluginThing from "../PluginThing";
+import { emitterAvailable } from "../../stuff/util";
+import { showConfirmationAlert } from "@vendetta/ui/alerts";
 
 const { showSimpleActionSheet } = findByProps("showSimpleActionSheet");
 
@@ -28,6 +30,22 @@ enum Filter {
 let refreshCallback: () => void;
 let filterCallback: () => void;
 export default () => {
+  const navigation = NavigationNative.useNavigation();
+
+  if (!emitterAvailable) {
+    showConfirmationAlert({
+      title: "Can't use",
+      content:
+        "You must reinstall Vendetta first in order for Plugin Browser to function properly",
+      confirmText: "Dismiss",
+      confirmColor: "brand" as ButtonColors,
+      onConfirm: () => {},
+      isDismissable: true,
+    });
+    navigation.goBack();
+    return null;
+  }
+
   const [changes] = React.useState(getChanges());
   const [filter, setFilter] = React.useState(Filter.Newest);
   const [parsed, setParsed] = React.useState<PluginsFullJson>();
@@ -41,8 +59,6 @@ export default () => {
   React.useEffect(() => {
     updateChanges();
   }, []);
-
-  const navigation = NavigationNative.useNavigation();
 
   React.useEffect(() => {
     if (!parsed)
