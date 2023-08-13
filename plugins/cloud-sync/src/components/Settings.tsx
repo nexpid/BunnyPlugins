@@ -1,10 +1,10 @@
 import { useProxy } from "@vendetta/storage";
-import * as index from "..";
-import { cache, cacheUpdated, vstorage } from "..";
+import { cache, vstorage, emitterAvailable } from "..";
 import { Forms, General } from "@vendetta/ui/components";
 import {
   BetterTableRowGroup,
   LineDivider,
+  SimpleText,
   SuperAwesomeIcon,
 } from "../../../../stuff/types";
 import { getAssetIDByName } from "@vendetta/ui/assets";
@@ -24,17 +24,8 @@ const { FormRow, FormSwitchRow } = Forms;
 const UserStore = findByStoreName("UserStore");
 
 export default function () {
-  const [, forceUpdate] = React.useReducer((x) => ~x, 0);
-
+  useProxy(cache);
   useProxy(vstorage);
-
-  index.cacheUpd.push(forceUpdate);
-  React.useEffect(
-    () => () => {
-      (index.cacheUpd as any) = index.cacheUpd.filter((x) => x !== forceUpdate);
-    },
-    []
-  );
 
   const navigation = NavigationNative.useNavigation();
   const unsub = navigation.addListener("focus", () => {
@@ -90,6 +81,15 @@ export default function () {
           onValueChange={() => (vstorage.autoSync = !vstorage.autoSync)}
           value={vstorage.autoSync ?? false}
         />
+        {!emitterAvailable && vstorage.autoSync && (
+          <SimpleText
+            variant="text-md/semibold"
+            color="TEXT_DANGER"
+            style={{ marginHorizontal: 20, marginVertical: 2 }}
+          >
+            You must reinstall Vendetta in order to use Auto Save!
+          </SimpleText>
+        )}
         <FormSwitchRow
           label="Pin To Settings"
           subLabel="Pin Cloud Sync to the settings page"
@@ -126,7 +126,6 @@ export default function () {
                 vstorage.auth ??= {};
                 delete vstorage.auth[UserStore.getCurrentUser().id];
                 delete cache.save;
-                cacheUpdated();
 
                 showToast(
                   "Successfully logged out",
@@ -143,7 +142,6 @@ export default function () {
                 vstorage.auth ??= {};
                 delete vstorage.auth[UserStore.getCurrentUser().id];
                 delete cache.save;
-                cacheUpdated();
 
                 showToast(
                   "Successfully deleted data",

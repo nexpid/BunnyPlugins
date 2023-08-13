@@ -1,6 +1,6 @@
 import { Button, Forms, General } from "@vendetta/ui/components";
 import { React } from "@vendetta/metro/common";
-import { cache, cacheUpdated } from "..";
+import { cache } from "..";
 import { findByProps } from "@vendetta/metro";
 import { grabEverything, setImportCallback } from "../stuff/syncStuff";
 import { currentAuthorization, syncSaveData } from "../stuff/api";
@@ -33,7 +33,6 @@ export default function () {
 
             try {
               cache.save = await syncSaveData(await grabEverything());
-              cacheUpdated();
 
               showToast("Successfully synced data", getAssetIDByName("Check"));
             } catch (e) {
