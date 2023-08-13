@@ -9,7 +9,9 @@ export default function (config: IconPackConfig) {
 
   if (config.biggerStatus)
     patches.push(
-      before("default", Status, ([x]) => (x.size = Status.StatusSizes.LARGE))
+      before("default", Status, ([x]) => {
+        x.size *= 1.4;
+      })
     );
 
   return () => patches.forEach((x) => x());
