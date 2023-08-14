@@ -8,6 +8,9 @@ dependencies:
   '@swc/helpers':
     specifier: ^0.5.0
     version: 0.5.0
+  twemoji-parser:
+    specifier: ^14.0.0
+    version: 14.0.0
 
 devDependencies:
   '@rollup/plugin-commonjs':
@@ -688,6 +691,10 @@ packages:
 
   /tslib@2.6.0:
     resolution: {integrity: sha512-7At1WUettjcSRHXCyYtTselblcHl9PJFFVKiCAy/bY97+BPZXSQ2wbq0P9s8tK2G7dFQfNnlJnPAiArVBVBsfA==}
+    dev: false
+
+  /twemoji-parser@14.0.0:
+    resolution: {integrity: sha512-9DUOTGLOWs0pFWnh1p6NF+C3CkQ96PWmEFwhOVmT3WbecRC+68AIqpsnJXygfkFcp4aXbOp8Dwbhh/HQgvoRxA==}
     dev: false
 
   /vendetta-types@2.4.20:
