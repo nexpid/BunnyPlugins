@@ -1,13 +1,8 @@
 import { logger } from "@vendetta";
-import { findByStoreName } from "@vendetta/metro";
-import {
-  Flux,
-  FluxDispatcher,
-  ReactNative as RN,
-} from "@vendetta/metro/common";
+import { findByProps } from "@vendetta/metro";
+import { ReactNative as RN } from "@vendetta/metro/common";
 
-const ThemeStore = findByStoreName("ThemeStore");
-const UnsyncedUserSettingsStore = findByStoreName("UnsyncedUserSettingsStore");
+const { setAMOLEDThemeEnabled } = findByProps("setAMOLEDThemeEnabled");
 
 export function flattenStyle(x: any) {
   return RN.StyleSheet.flatten(x) ?? {};
@@ -18,16 +13,11 @@ export function addToStyle(x: any, y: any) {
 
 export function reloadUI() {
   try {
-    const theme = String(ThemeStore.theme);
+    const { useAMOLEDTheme } = findByProps("useAMOLEDTheme");
 
-    // FluxDispatcher.dispatch({
-    //   type: "UPDATE_MOBILE_PENDING_THEME_INDEX",
-    //   mobileThemesIndex: theme === "dark" ? 1 : 0,
-    // });
-    // FluxDispatcher.dispatch({
-    //   type: "DRAWER_SELECT_TAB",
-    //   tab: "CHAT",
-    // });
+    const state = useAMOLEDTheme === 2;
+    setAMOLEDThemeEnabled(!state);
+    setAMOLEDThemeEnabled(state);
   } catch (e) {
     console.log(e);
     logger.error(e);
