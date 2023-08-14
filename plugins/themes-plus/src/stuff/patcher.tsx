@@ -199,7 +199,11 @@ export default async (): Promise<() => void> => {
     }
   } else active.active = false;
 
-  if (active.patches.length) reloadUI();
+  if (active.patches.length) {
+    if (!window.TPfirstLoad) {
+      window.TPfirstLoad = true;
+    } else reloadUI();
+  }
 
   return () => patches.forEach((x) => x());
 };

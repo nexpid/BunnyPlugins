@@ -45,11 +45,11 @@ export function runUnpatch() {
 
 export default {
   onLoad: async () => {
-    runPatch();
+    // runPatch();
   },
   onUnload: () => {
-    runUnpatch();
-    reloadUI();
+    // runUnpatch();
+    // reloadUI();
   },
-  settings,
+  // settings,
 };
