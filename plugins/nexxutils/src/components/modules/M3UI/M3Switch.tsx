@@ -2,28 +2,7 @@ import { findByStoreName } from "@vendetta/metro";
 import { React } from "@vendetta/metro/common";
 import { ReactNative as RN, stylesheet } from "@vendetta/metro/common";
 import { rawColors } from "@vendetta/ui";
-import { General } from "@vendetta/ui/components";
-
-const { View } = General;
-const ThemeStore = findByStoreName("ThemeStore");
-
-const resolveCustomSemantic = (dark: string, light: string) =>
-  ThemeStore.theme !== "light" ? dark : light;
-const lerp = (og: string, target: string, perc: number) => {
-  const hex2rgb = (hex: string) =>
-    hex.match(/\w\w/g)?.map((x) => parseInt(x, 16)) ?? [0, 0, 0];
-  const rgb2hex = (rgb: number[]) =>
-    `#${rgb.map((x) => x.toString(16).padStart(2, "0")).join("")}`;
-
-  const ogR = hex2rgb(og);
-  const targetR = hex2rgb(target);
-
-  const result = ogR.map((ogC, i) =>
-    Math.round(ogC + (targetR[i] - ogC) * perc)
-  );
-
-  return rgb2hex(result);
-};
+import { lerp, resolveCustomSemantic } from "../../../stuff/colors";
 
 export default function ({
   disabled,
@@ -152,10 +131,11 @@ export default function ({
         styles.all.container,
         styles.activity[`container${value ? "Active" : "Inactive"}`],
         disabled && styles.disabled.containerDisabled,
+        RN.StyleSheet.flatten(style) ?? {},
       ]}
       onPress={() => onValueChange?.(!value)}
-      onPressIn={() => setPressing(true)}
-      onPressOut={() => setPressing(false)}
+      onPressIn={() => !disabled && setPressing(true)}
+      onPressOut={() => !disabled && setPressing(false)}
     >
       {!value && (
         <RN.View
@@ -192,8 +172,8 @@ export default function ({
               styles.disabled[`ball${value ? "Active" : "Inactive"}Disabled`],
           ]}
           onPress={() => onValueChange?.(!value)}
-          onPressIn={() => setPressing(true)}
-          onPressOut={() => setPressing(false)}
+          onPressIn={() => !disabled && setPressing(true)}
+          onPressOut={() => !disabled && setPressing(false)}
         />
       </RN.View>
     </RN.Pressable>

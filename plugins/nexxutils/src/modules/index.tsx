@@ -1,6 +1,6 @@
 import { Module } from "../stuff/Module";
 import Freemix from "./Freemix";
-import M3Switches from "./M3Switches";
+import M3UI from "./M3UI";
 import NoInviteToServers from "./NoInviteToServers";
 import SpotifyListenAlong from "./SpotifyListenAlong";
 import TenorGifFix from "./TenorGifFix";
@@ -10,5 +10,5 @@ export default [
   TenorGifFix,
   SpotifyListenAlong,
   NoInviteToServers,
-  M3Switches,
+  M3UI,
 ] as Module[];

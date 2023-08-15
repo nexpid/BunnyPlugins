@@ -15,7 +15,7 @@ export default new Module({
   extra: {
     credits: ["257109471589957632"],
   },
-  runner: {
+  handlers: {
     onStart() {
       [
         "useIsCurrentUserEligibleForRemix",

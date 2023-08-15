@@ -31,7 +31,7 @@ export const moduleCategoryMap = [
 
 type ModuleSetting = {
   label: string;
-  subLabel: string;
+  subLabel?: string;
   icon?: number;
 } & {
   type: "toggle";
@@ -61,11 +61,13 @@ export class Module {
   sublabel: string;
   category: ModuleCategory;
   icon?: number;
-  settings?: Record<string, ModuleSetting>;
+  settings: Record<string, ModuleSetting>;
   extra?: ModuleExtra;
 
-  #onStart: (this: Module) => void;
-  #onStop: (this: Module) => void;
+  #handlers: {
+    onStart?: (this: Module) => void;
+    onStop?: (this: Module) => void;
+  };
 
   patches = new Patches();
 
@@ -77,7 +79,7 @@ export class Module {
     icon,
     settings,
     extra,
-    runner,
+    handlers,
   }: {
     id: string;
     label: string;
@@ -86,7 +88,7 @@ export class Module {
     icon?: number;
     settings?: Record<string, ModuleSetting>;
     extra?: ModuleExtra;
-    runner: {
+    handlers: {
       onStart: (this: Module) => void;
       onStop: (this: Module) => void;
     };
@@ -96,32 +98,24 @@ export class Module {
     this.sublabel = sublabel;
     this.category = category;
     this.icon = icon;
-    this.settings = settings;
+    this.settings = settings ?? {};
     this.extra = extra;
-
-    this.#onStart = runner.onStart.bind(this);
-    this.#onStop = runner.onStop.bind(this);
+    this.#handlers = handlers;
   }
 
-  get storage() {
-    return vstorage.modules[this.id]!;
-  }
-
-  init() {
+  get storage(): {
+    enabled: boolean;
+    options: {
+      [k in keyof typeof this.settings]: (typeof this.settings)[k]["default"];
+    };
+  } {
     vstorage.modules[this.id] ??= {
       enabled: false,
-      options: this.settings
-        ? Object.fromEntries(
-            Object.entries(this.settings).map(([x, y]) => [x, y.default])
-          )
-        : {},
+      options: Object.fromEntries(
+        Object.entries(this.settings).map(([x, y]) => [x, y.default])
+      ),
     };
-
-    if (this.storage.enabled) this.start();
-    else this.stop();
-  }
-  exit() {
-    if (this.storage.enabled) this.stop();
+    return vstorage.modules[this.id];
   }
 
   get component(): React.FunctionComponent {
@@ -176,6 +170,21 @@ export class Module {
                   }}
                   value={this.storage.enabled}
                 />
+                {Object.entries(this.settings).map(
+                  ([id, setting]) =>
+                    setting.type === "toggle" && (
+                      <FormSwitchRow
+                        label={setting.label}
+                        subLabel={setting.subLabel}
+                        onValueChange={() => {
+                          this.storage.options[id] = !this.storage.options[id];
+                          this.restart();
+                          forceUpdate();
+                        }}
+                        value={this.storage.options[id]}
+                      />
+                    )
+                )}
               </RN.View>
             </>
           )}
@@ -185,17 +194,21 @@ export class Module {
   }
 
   toggle() {
-    if (this.storage.enabled) this.stop();
     this.storage.enabled = !this.storage.enabled;
-
     if (this.storage.enabled) this.start();
     else this.stop();
   }
+  restart() {
+    if (this.storage.enabled) {
+      this.stop();
+      this.start();
+    }
+  }
   start() {
-    this.#onStart();
+    this.#handlers?.onStart.bind(this)();
   }
   stop() {
-    this.#onStop();
+    this.#handlers?.onStop.bind(this)();
     this.patches.unpatch();
   }
 }

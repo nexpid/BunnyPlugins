@@ -18,7 +18,7 @@ export default new Module({
   extra: {
     credits: ["1034579679526526976"],
   },
-  runner: {
+  handlers: {
     onStart() {
       this.patches.add(
         after("render", SpotifyPlayButton.prototype, (_, ret) => {

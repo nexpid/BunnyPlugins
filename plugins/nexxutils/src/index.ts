@@ -17,9 +17,8 @@ export const version = "0.1.3";
 export default {
   onLoad: () => {
     vstorage.modules ??= {};
-
-    modules.forEach((x) => x.init());
+    modules.forEach((x) => (x.storage.enabled ? x.start() : x.stop()));
   },
-  onUnload: () => modules.forEach((x) => x.exit()),
+  onUnload: () => modules.forEach((x) => x.storage.enabled && x.stop()),
   settings,
 };
