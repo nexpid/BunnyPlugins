@@ -56,7 +56,7 @@ export default function () {
               text="Reload"
               onPress={() => {
                 popModal("dev-modal");
-                runUnpatch();
+                runUnpatch(false);
                 runPatch();
               }}
               style={{ marginHorizontal: 16 }}

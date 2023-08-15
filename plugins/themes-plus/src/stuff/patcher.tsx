@@ -8,7 +8,7 @@ import { getUnreadBadgeColor } from "../handlers/unreadBadge";
 import { getIconOverlay } from "../handlers/iconOverlays";
 import { getAssetByID, getAssetIDByName } from "@vendetta/ui/assets";
 import { General } from "@vendetta/ui/components";
-import { addToStyle, flattenStyle, reloadUI } from "./util";
+import { addToStyle, flattenStyle, queueReloadUI } from "./util";
 import { PlusStructure } from "../../../../stuff/typings";
 import resolveColor, { androidifyColor } from "./resolveColor";
 import { PatchType, active, cacheID, enabled, vstorage } from "..";
@@ -23,7 +23,7 @@ const UserStore = findByStoreName("UserStore");
 
 const iconpackNuhuhCache = new Array<string>();
 
-export default async (): Promise<() => void> => {
+export default async () => {
   const patches = new Array<() => void>();
 
   const plus: PlusStructure = getPlusData();
@@ -199,11 +199,11 @@ export default async (): Promise<() => void> => {
     }
   } else active.active = false;
 
-  if (active.patches.length) {
-    if (!window.TPfirstLoad) {
-      window.TPfirstLoad = true;
-    } else reloadUI();
-  }
+  const patched = active.patches.length;
+  if (patched) queueReloadUI();
 
-  return () => patches.forEach((x) => x());
+  return (exit: boolean) => {
+    if (patched && exit) queueReloadUI();
+    patches.forEach((x) => x());
+  };
 };

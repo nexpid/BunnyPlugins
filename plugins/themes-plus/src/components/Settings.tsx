@@ -1,17 +1,19 @@
 import { General } from "@vendetta/ui/components";
 import { PatchType, active } from "..";
-import { findByProps } from "@vendetta/metro";
+import { findByName, findByProps } from "@vendetta/metro";
 import { ReactNative as RN, url } from "@vendetta/metro/common";
 import { SimpleText, openModal, openSheet } from "../../../../stuff/types";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import DevModal from "./modals/DevModal";
 import IconpackInfoSheet from "./sheets/IconpackInfoSheet";
-
-const { View } = General;
+import { showConfirmationAlert } from "@vendetta/ui/alerts";
 
 const twemojiCDN = `https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/`;
 
+const { View } = General;
 const { TextStyleSheet } = findByProps("TextStyleSheet");
+
+const WebView = findByName("WebView") ?? findByProps("WebView").default.render;
 
 export default function () {
   let lastTap = 0;
@@ -130,22 +132,28 @@ export default function () {
         color="TEXT_LINK"
         style={{ textDecorationLine: "underline", marginTop: 32 }}
         onPress={() =>
-          url.openURL("https://github.com/Gabe616/VendettaThemesPlus#info")
+          showConfirmationAlert({
+            title: "GitHub FAQ",
+            //@ts-ignore unadded in typings
+            children: (
+              <View style={{ height: 400 }}>
+                <WebView
+                  source={{
+                    uri: "https://github.com/Gabe616/VendettaThemesPlus#faq",
+                  }}
+                  style={{ height: 400, width: "100%" }}
+                />
+              </View>
+            ),
+            confirmText: "Open in browser",
+            confirmColor: "brand" as ButtonColors,
+            onConfirm: () =>
+              url.openURL("https://github.com/Gabe616/VendettaThemesPlus#faq"),
+            isDismissable: true,
+          })
         }
       >
         Why is Themes+ inactive?
-      </SimpleText>
-      <SimpleText
-        variant="text-lg/bold"
-        color="TEXT_LINK"
-        style={{ textDecorationLine: "underline", marginTop: 4 }}
-        onPress={() =>
-          url.openURL(
-            "https://github.com/Gabe616/VendettaThemesPlus#using-vendetta-themes"
-          )
-        }
-      >
-        How to use Themes+?
       </SimpleText>
     </View>
   );

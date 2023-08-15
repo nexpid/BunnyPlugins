@@ -33,23 +33,18 @@ export let cacheID = Math.floor(Math.random() * Number.MAX_SAFE_INTEGER);
 
 export let enabled = false;
 
-let unpatch: () => void;
+let unpatch: (exit: boolean) => void;
 export async function runPatch() {
   enabled = true;
   unpatch = await patcher();
 }
-export function runUnpatch() {
+export function runUnpatch(exit: boolean) {
   enabled = false;
-  unpatch?.();
+  unpatch?.(exit);
 }
 
 export default {
-  onLoad: async () => {
-    // runPatch();
-  },
-  onUnload: () => {
-    // runUnpatch();
-    // reloadUI();
-  },
-  // settings,
+  onLoad: () => runPatch(),
+  onUnload: () => runUnpatch(true),
+  settings,
 };

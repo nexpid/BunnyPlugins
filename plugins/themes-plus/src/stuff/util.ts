@@ -1,8 +1,9 @@
 import { logger } from "@vendetta";
-import { findByProps } from "@vendetta/metro";
-import { ReactNative as RN } from "@vendetta/metro/common";
+import { findByProps, findByStoreName } from "@vendetta/metro";
+import { FluxDispatcher, ReactNative as RN } from "@vendetta/metro/common";
 
 const { setAMOLEDThemeEnabled } = findByProps("setAMOLEDThemeEnabled");
+const I18nLoaderStore = findByStoreName("I18nLoaderStore");
 
 export function flattenStyle(x: any) {
   return RN.StyleSheet.flatten(x) ?? {};
@@ -22,4 +23,18 @@ export function reloadUI() {
     console.log(e);
     logger.error(e);
   }
+}
+export async function queueReloadUI() {
+  if (I18nLoaderStore.isLoading())
+    clearInterval(
+      await (() =>
+        new Promise((res) => {
+          const int = setInterval(
+            () => !I18nLoaderStore.isLoading() && res(int),
+            10
+          );
+        }))()
+    );
+
+  reloadUI();
 }
