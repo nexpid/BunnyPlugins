@@ -1,3 +1,4 @@
+import { React } from "@vendetta/metro/common";
 import { findByName, findByProps } from "@vendetta/metro";
 import { Module, ModuleCategory } from "../stuff/Module";
 import { after, before } from "@vendetta/patcher";
@@ -25,13 +26,11 @@ export default new Module({
           if (!aprops?.activity?.user) return;
 
           const ath = ret.props;
-          return (
-            <ListenAlongButton
-              button={ath}
-              activity={aprops.activity}
-              user={aprops.activity.user}
-            />
-          );
+          return React.createElement(ListenAlongButton, {
+            button: ath,
+            activity: aprops.activity,
+            user: aprops.activity.user,
+          });
         })
       );
       this.patches.add(
