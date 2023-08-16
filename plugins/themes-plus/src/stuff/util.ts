@@ -30,7 +30,9 @@ export async function queueReloadUI() {
       await (() =>
         new Promise((res) => {
           const int = setInterval(
-            () => !I18nLoaderStore.isLoading() && res(int),
+            () =>
+              !I18nLoaderStore.isLoading() &&
+              (clearInterval(int), setTimeout(res, 2000)),
             10
           );
         }))()
