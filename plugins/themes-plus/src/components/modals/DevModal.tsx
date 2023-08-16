@@ -5,6 +5,7 @@ import { findByProps } from "@vendetta/metro";
 import { runPatch, runUnpatch, vstorage } from "../..";
 import { useProxy } from "@vendetta/storage";
 import { HTTP_REGEX_MULTI } from "@vendetta/constants";
+import { reloadUI } from "../../stuff/util";
 
 const { BadgableTabBar } = findByProps("BadgableTabBar");
 const { ScrollView, View } = General;
@@ -58,6 +59,7 @@ export default function () {
                 popModal("dev-modal");
                 runUnpatch(false);
                 runPatch();
+                reloadUI();
               }}
               style={{ marginHorizontal: 16 }}
             />

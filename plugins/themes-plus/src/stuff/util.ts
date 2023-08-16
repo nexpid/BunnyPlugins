@@ -25,18 +25,17 @@ export function reloadUI() {
   }
 }
 export async function queueReloadUI() {
-  if (I18nLoaderStore.isLoading())
-    clearInterval(
-      await (() =>
-        new Promise((res) => {
-          const int = setInterval(
-            () =>
-              !I18nLoaderStore.isLoading() &&
-              (clearInterval(int), setTimeout(res, 2000)),
-            10
-          );
-        }))()
-    );
+  const startup = window.TPfirstLoad === undefined;
+  window.TPfirstLoad = true;
 
-  reloadUI();
+  await (() =>
+    new Promise((res) => {
+      const int = setInterval(
+        () => !I18nLoaderStore.isLoading() && res(clearInterval(int)),
+        10
+      );
+    }))();
+
+  if (startup) setTimeout(reloadUI, 6_000);
+  else reloadUI();
 }
