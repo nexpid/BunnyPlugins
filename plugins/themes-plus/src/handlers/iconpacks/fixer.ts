@@ -7,10 +7,13 @@ const Status = findByName("Status", false);
 export default function (config: IconPackConfig) {
   const patches = new Array<() => void>();
 
+  // fixes status being too small sometimes
   if (config.biggerStatus)
     patches.push(
       before("default", Status, ([x]) => {
-        x.size *= 1.4;
+        const y = { ...x };
+        y.size *= 1.4;
+        return [y];
       })
     );
 

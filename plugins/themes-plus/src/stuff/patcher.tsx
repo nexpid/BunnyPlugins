@@ -15,6 +15,9 @@ import { PatchType, active, cacheID, enabled, vstorage } from "..";
 import constants from "./constants";
 import { CoolAsset, IconPack, IconPackConfig, IconPackData } from "../types";
 import fixer from "../handlers/iconpacks/fixer";
+import fixIcons from "../handlers/iconpacks/fixIcons";
+import { resolveSemanticColor } from "../../../../stuff/types";
+import { semanticColors } from "@vendetta/ui";
 
 const { View } = General;
 const MaskedBadge = findByProps("MaskedBadge");
@@ -49,15 +52,15 @@ export default async () => {
       }
     : iconpacks.list.find((x) => x.id === plus.iconpack);
 
-  const iconpackConfig: IconPackConfig = iconpack
-    ? vstorage.iconpack?.url
-      ? {
-          biggerStatus: true,
-        }
-      : iconpack.config
-      ? await (await fetch(iconpack.config)).json()
-      : null
-    : null;
+  let iconpackConfig: IconPackConfig = null;
+  if (vstorage.iconpack?.url)
+    iconpackConfig = {
+      biggerStatus: true,
+    };
+  else if (iconpack?.config)
+    try {
+      iconpackConfig = await (await fetch(iconpack.config)).json();
+    } catch {}
 
   if (!enabled) return () => undefined;
 
@@ -133,9 +136,16 @@ export default async () => {
                 `${asset.name}${iconpack.suffix}.${asset.type}`,
               ].join("/")}?_=${cacheID}`,
             };
-            x.style = flattenStyle(x.style);
             x.style.width ??= asset.width;
             x.style.height ??= asset.height;
+            x.style = flattenStyle(x.style);
+
+            const icClr = fixIcons.find((x) => x[0] === asset.name)?.[1];
+
+            if (icClr)
+              x.style.tintColor ??= semanticColors[icClr]
+                ? resolveSemanticColor(semanticColors[icClr])
+                : "#fff";
           }
 
           const ret = orig(...args);

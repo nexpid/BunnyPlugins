@@ -26,4 +26,5 @@ declare global {
   var __vendetta_theme: Theme | undefined;
 
   var CSmigrationStage: number | undefined;
+  var TPfirstLoad: boolean | undefined;
 }
