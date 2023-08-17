@@ -6,12 +6,13 @@ import FiltersActionSheet from "../sheets/FiltersActionSheet";
 import { findByName, findByProps, findByStoreName } from "@vendetta/metro";
 import { showConfirmationAlert } from "@vendetta/ui/alerts";
 import { General } from "@vendetta/ui/components";
+import Big from "big.js";
 
 const { View } = General;
 
 const MessageStore = findByStoreName("MessageStore");
 const ChannelPinsConnected = findByName("ChannelPinsConnected", false);
-const { fetchMessages } = findByProps("fetchMessages", "editMessage");
+const messages = findByProps("fetchMessages", "sendMessage");
 
 export default ({ channelId }: { channelId: string }) => {
   const [filters, setFilters] = React.useState<typeof vstorage.preferFilters>(
@@ -55,18 +56,20 @@ export default ({ channelId }: { channelId: string }) => {
       const parsed = [];
 
       const raw = getPins(channelId)?.slice().reverse() ?? [];
-      for (const m of raw) {
+      for (let i = 0; i < raw.length; i++) {
+        const m = raw[i];
+        setLocalPinned(i / raw.length);
+
         let message = MessageStore.getMessage(channelId, m.id);
         if (!message) {
-          //   const numb = new Big(m.id);
-          //   const numbers = [numb.plus(1).toFixed(), numb.minus(1).toFixed()];
+          const numb = new Big(m.id);
+          const numbers = [numb.plus(1).toFixed(), numb.minus(1).toFixed()];
 
           console.log(
-            await fetchMessages({
+            await messages.fetchMessages({
               channelId,
-              after: 0,
-              //   before: numbers[0],
-              //   after: numbers[1],
+              before: numbers[0],
+              after: numbers[1],
               limit: 1,
             })
           );
@@ -83,8 +86,8 @@ export default ({ channelId }: { channelId: string }) => {
   return Array.isArray(localPinned) ? (
     <ChannelPinsConnected.default channelId={channelId} />
   ) : (
-    <View style={{ alignItems: "center", justifyContent: "center" }}>
-      <RN.ActivityIndicator size="large" />
+    <View style={{ alignItems: "center", justifyContent: "center", flex: 1 }}>
+      <RN.ActivityIndicator size="large" style={{ marginBottom: 10 }} />
       <SimpleText variant="text-lg/semibold" color="TEXT_NORMAL" align="center">
         {Math.floor(localPinned * 100)}%
       </SimpleText>
