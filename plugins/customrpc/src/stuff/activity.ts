@@ -28,7 +28,9 @@ export interface RawActivity {
   };
   assets?: {
     large_image?: string;
+    large_text?: string;
     small_image?: string;
+    small_text?: string;
   };
   metadata?: {
     button_urls?: string[];
@@ -230,6 +232,8 @@ export function settingsActivityToRaw(activity: SettingsActivity): {
         activity.assets.smallImg && handleVar.img(activity.assets.smallImg),
     },
   };
+
+  if (at.assets.large_image) at.assets.large_text = "CRPC@VD";
 
   if (activity.buttons[0]) {
     at.metadata = {
