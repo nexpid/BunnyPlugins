@@ -136,9 +136,9 @@ export default async () => {
                 `${asset.name}${iconpack.suffix}.${asset.type}`,
               ].join("/")}?_=${cacheID}`,
             };
+            x.style = flattenStyle(x.style);
             x.style.width ??= asset.width;
             x.style.height ??= asset.height;
-            x.style = flattenStyle(x.style);
 
             const icClr = fixIcons.find((x) => x[0] === asset.name)?.[1];
 
