@@ -6,6 +6,7 @@
   },
   "dependencies": {
     "@swc/helpers": "^0.5.0",
+    "big.js": "^6.2.1",
     "twemoji-parser": "^14.0.0"
   },
   "devDependencies": {
