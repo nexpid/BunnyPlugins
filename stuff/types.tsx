@@ -139,18 +139,10 @@ export function BetterTableRowTitle({
     androidRipple: {
       color: semanticColors.ANDROID_RIPPLE,
     },
-    mainText: {
-      fontFamily: constants.Fonts.PRIMARY_SEMIBOLD,
-      fontSize: 14,
-      includeFontPadding: false,
-      letterSpacing: undefined,
-      lineHeight: 18,
-      textTransform: "none",
-      color: semanticColors.HEADER_SECONDARY,
-    },
     icon: {
-      height: 14,
+      height: 18,
       tintColor: semanticColors.HEADER_SECONDARY,
+      opacity: 0.5,
     },
   });
   const UseCompontent = onPress ? Pressable : View;
@@ -170,10 +162,12 @@ export function BetterTableRowTitle({
     >
       {icon && (
         <View style={{ marginRight: 4 }}>
-          <FormRow.Icon style={styles.icon} source={icon} size="small" />
+          <RN.Image style={styles.icon} source={icon} resizeMode="contain" />
         </View>
       )}
-      <Text style={styles.mainText}>{title}</Text>
+      <SimpleText variant="text-sm/semibold" color="HEADER_SECONDARY">
+        {title}
+      </SimpleText>
     </UseCompontent>
   );
 }
@@ -291,7 +285,7 @@ export function SimpleText({
     if (!liveUpdate) return;
     const nextSecond = new Date().setMilliseconds(1000);
 
-    let interval: number, timeout: number;
+    let interval: any, timeout: any;
     timeout = setTimeout(() => {
       forceUpdate();
       interval = setInterval(forceUpdate, 1000);
