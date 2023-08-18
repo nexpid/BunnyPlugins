@@ -28,12 +28,12 @@ A collection of all my awesome plugins for Vendetta
 # 📊 Stats
 
 I've coded a total of **19** plugins.  
-Out of the plugins I've coded, **8** are finished (**42%**) and **7** are proxied (**36%**)  
-**1** plugin I've coded is currently waiting to be proxied.  
-I'm working on **6** plugins, and **5** plugins are discontinued.
+Out of the plugins I've coded, **10** are finished (**52%**) and **7** are proxied (**36%**)  
+**3** plugins I've coded are currently waiting to be proxied.  
+I'm working on **4** plugins, and **5** plugins are discontinued.
 
 <div align="center">
-	<img alt="Stats Pie Chart" src="https://quickchart.io/chart?c=%7B%22type%22%3A%22doughnut%22%2C%22data%22%3A%7B%22labels%22%3A%5B%22Proxied%22%2C%22Finished%22%2C%22Unfinished%22%2C%22Discontinued%22%5D%2C%22datasets%22%3A%5B%7B%22data%22%3A%5B7%2C1%2C6%2C5%5D%2C%22backgroundColor%22%3A%5B%22%2389dceb%22%2C%22%23a6e3a1%22%2C%22%239399b2%22%2C%22%23f38ba8%22%5D%2C%22datalabels%22%3A%7B%22labels%22%3A%7B%22index%22%3A%7B%22color%22%3A%22%23FFF%22%2C%22font%22%3A%7B%22size%22%3A18%7D%2C%22align%22%3A%22end%22%2C%22anchor%22%3A%22end%22%2C%22formatter%22%3A(_%2C%20ctx)%20%3D%3E%20ctx.chart.data.labels%5Bctx.dataIndex%5D%7D%2C%22name%22%3A%7B%22color%22%3A%22%23222%22%2C%22backgroundColor%22%3A%22%23FFF%22%2C%22borderRadius%22%3A4%2C%22offset%22%3A0%2C%22padding%22%3A2%2C%22font%22%3A%7B%22size%22%3A16%7D%2C%22align%22%3A%22top%22%2C%22formatter%22%3A(val)%20%3D%3E%20%60%24%7BMath.floor((val%20%2F%2019)%20*%20100)%7D%25%60%7D%2C%22value%22%3A%7B%22color%22%3A%22%23FFF%22%2C%22font%22%3A%7B%22size%22%3A16%7D%2C%22padding%22%3A0%2C%22align%22%3A%22bottom%22%7D%7D%7D%7D%5D%7D%2C%22options%22%3A%7B%22legend%22%3A%7B%22display%22%3Afalse%7D%2C%22layout%22%3A%7B%22padding%22%3A%7B%22top%22%3A30%2C%22bottom%22%3A30%7D%7D%2C%22plugins%22%3A%7B%22datalabels%22%3A%7B%22display%22%3Atrue%7D%2C%22doughnutlabel%22%3A%7B%22color%22%3A%22%23FFF%22%2C%22labels%22%3A%5B%7B%22text%22%3A19%2C%22font%22%3A%7B%22size%22%3A20%2C%22weight%22%3A%22bold%22%7D%7D%2C%7B%22text%22%3A%22plugins%22%7D%5D%7D%7D%7D%7D" width=600 />
+	<img alt="Stats Pie Chart" src="https://quickchart.io/chart?c=%7B%22type%22%3A%22doughnut%22%2C%22data%22%3A%7B%22labels%22%3A%5B%22Proxied%22%2C%22Finished%22%2C%22Unfinished%22%2C%22Discontinued%22%5D%2C%22datasets%22%3A%5B%7B%22data%22%3A%5B7%2C3%2C4%2C5%5D%2C%22backgroundColor%22%3A%5B%22%2389dceb%22%2C%22%23a6e3a1%22%2C%22%239399b2%22%2C%22%23f38ba8%22%5D%2C%22datalabels%22%3A%7B%22labels%22%3A%7B%22index%22%3A%7B%22color%22%3A%22%23FFF%22%2C%22font%22%3A%7B%22size%22%3A18%7D%2C%22align%22%3A%22end%22%2C%22anchor%22%3A%22end%22%2C%22formatter%22%3A(_%2C%20ctx)%20%3D%3E%20ctx.chart.data.labels%5Bctx.dataIndex%5D%7D%2C%22name%22%3A%7B%22color%22%3A%22%23222%22%2C%22backgroundColor%22%3A%22%23FFF%22%2C%22borderRadius%22%3A4%2C%22offset%22%3A0%2C%22padding%22%3A2%2C%22font%22%3A%7B%22size%22%3A16%7D%2C%22align%22%3A%22top%22%2C%22formatter%22%3A(val)%20%3D%3E%20%60%24%7BMath.floor((val%20%2F%2019)%20*%20100)%7D%25%60%7D%2C%22value%22%3A%7B%22color%22%3A%22%23FFF%22%2C%22font%22%3A%7B%22size%22%3A16%7D%2C%22padding%22%3A0%2C%22align%22%3A%22bottom%22%7D%7D%7D%7D%5D%7D%2C%22options%22%3A%7B%22legend%22%3A%7B%22display%22%3Afalse%7D%2C%22layout%22%3A%7B%22padding%22%3A%7B%22top%22%3A30%2C%22bottom%22%3A30%7D%7D%2C%22plugins%22%3A%7B%22datalabels%22%3A%7B%22display%22%3Atrue%7D%2C%22doughnutlabel%22%3A%7B%22color%22%3A%22%23FFF%22%2C%22labels%22%3A%5B%7B%22text%22%3A19%2C%22font%22%3A%7B%22size%22%3A20%2C%22weight%22%3A%22bold%22%7D%7D%2C%7B%22text%22%3A%22plugins%22%7D%5D%7D%7D%7D%7D" width=600 />
 </div>
 
 # 📃 Plugin List
@@ -46,6 +46,10 @@ I'm working on **6** plugins, and **5** plugins are discontinued.
 	- [<img alt="copy_proxied_link" src="https://img.shields.io/badge/copy_proxied_link-1e1e2e?style=for-the-badge" />](https://vd-plugins.github.io/proxy/gabe616.github.io/VendettaPlugins/char-counter) [<img alt="view_code" src="https://img.shields.io/badge/view_code-1e1e2e?style=for-the-badge" />](https://github.com/Gabe616/VendettaPlugins/tree/main/plugins/char-counter)
 - CloudSync — Syncs your plugins and themes to the cloud
 	- [<img alt="copy_proxied_link" src="https://img.shields.io/badge/copy_proxied_link-1e1e2e?style=for-the-badge" />](https://vd-plugins.github.io/proxy/gabe616.github.io/VendettaPlugins/cloud-sync) [<img alt="view_code" src="https://img.shields.io/badge/view_code-1e1e2e?style=for-the-badge" />](https://github.com/Gabe616/VendettaPlugins/tree/main/plugins/cloud-sync) [<img alt="view_backend_code" src="https://img.shields.io/badge/view_backend_code-1e1e2e?style=for-the-badge" />](https://github.com/Gabe616/VendettaCloudSync)
+- HideServers — Allows you to locally hide servers from your server list
+	- [<img alt="copy_link" src="https://img.shields.io/badge/copy_link-1e1e2e?style=for-the-badge" />](https://vendetta.nexpid.xyz/hide-servers) [<img alt="view_code" src="https://img.shields.io/badge/view_code-1e1e2e?style=for-the-badge" />](https://github.com/Gabe616/VendettaPlugins/tree/main/plugins/hide-servers)
+- LocalPins — Pin messages locally
+	- [<img alt="copy_link" src="https://img.shields.io/badge/copy_link-1e1e2e?style=for-the-badge" />](https://vendetta.nexpid.xyz/local-pins) [<img alt="view_code" src="https://img.shields.io/badge/view_code-1e1e2e?style=for-the-badge" />](https://github.com/Gabe616/VendettaPlugins/tree/main/plugins/local-pins)
 - MessageMarkdownPreview — Preview markdown when typing a message
 	- [<img alt="copy_proxied_link" src="https://img.shields.io/badge/copy_proxied_link-1e1e2e?style=for-the-badge" />](https://vd-plugins.github.io/proxy/gabe616.github.io/VendettaPlugins/message-markdown-preview) [<img alt="view_code" src="https://img.shields.io/badge/view_code-1e1e2e?style=for-the-badge" />](https://github.com/Gabe616/VendettaPlugins/tree/main/plugins/message-markdown-preview)
 - MonetTheme — Monet (M3) theme generator
@@ -63,10 +67,6 @@ I'm working on **6** plugins, and **5** plugins are discontinued.
 	- [<img alt="copy_link" src="https://img.shields.io/badge/copy_link-1e1e2e?style=for-the-badge" />](https://vendetta.nexpid.xyz/customrpc) [<img alt="view_code" src="https://img.shields.io/badge/view_code-1e1e2e?style=for-the-badge" />](https://github.com/Gabe616/VendettaPlugins/tree/main/plugins/customrpc)
 - DeadlyMeows — Be careful in which channels you talk in!
 	- [<img alt="copy_link" src="https://img.shields.io/badge/copy_link-1e1e2e?style=for-the-badge" />](https://vendetta.nexpid.xyz/deadly-meows) [<img alt="view_code" src="https://img.shields.io/badge/view_code-1e1e2e?style=for-the-badge" />](https://github.com/Gabe616/VendettaPlugins/tree/main/plugins/deadly-meows)
-- HideServers — Allows you to locally hide servers from your server list
-	- [<img alt="view_code" src="https://img.shields.io/badge/view_code-1e1e2e?style=for-the-badge" />](https://github.com/Gabe616/VendettaPlugins/tree/main/plugins/hide-servers)
-- LocalPins — Pin messages locally
-	- [<img alt="copy_link" src="https://img.shields.io/badge/copy_link-1e1e2e?style=for-the-badge" />](https://vendetta.nexpid.xyz/local-pins) [<img alt="view_code" src="https://img.shields.io/badge/view_code-1e1e2e?style=for-the-badge" />](https://github.com/Gabe616/VendettaPlugins/tree/main/plugins/local-pins)
 - NexxUtils — Nexx's utility plugins
 	- [<img alt="copy_link" src="https://img.shields.io/badge/copy_link-1e1e2e?style=for-the-badge" />](https://vendetta.nexpid.xyz/nexxutils) [<img alt="view_code" src="https://img.shields.io/badge/view_code-1e1e2e?style=for-the-badge" />](https://github.com/Gabe616/VendettaPlugins/tree/main/plugins/nexxutils)
 - Themes+ — Adds more customizability to Themes
