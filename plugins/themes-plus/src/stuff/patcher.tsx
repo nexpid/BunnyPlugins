@@ -3,7 +3,7 @@ import { getPlusData } from "./plusLookup";
 import { after, instead } from "@vendetta/patcher";
 import { getIconTint } from "../handlers/icons";
 import { findByProps, findByStoreName } from "@vendetta/metro";
-import { findInReactTree } from "@vendetta/utils";
+import { findInReactTree, safeFetch } from "@vendetta/utils";
 import { getUnreadBadgeColor } from "../handlers/unreadBadge";
 import { getIconOverlay } from "../handlers/iconOverlays";
 import { getAssetByID, getAssetIDByName } from "@vendetta/ui/assets";
@@ -33,9 +33,15 @@ export default async () => {
 
   active.patches.length = 0;
 
-  const iconpacks: IconPackData = (await (
-    await fetch(constants.iconpacks.list)
-  ).json()) as IconPackData;
+  let iconpacks: IconPackData = {
+    $schema: "",
+    list: [],
+  };
+  try {
+    iconpacks = (await (
+      await safeFetch(`${constants.iconpacks.list}?_=${cacheID}`)
+    ).json()) as IconPackData;
+  } catch {}
 
   const user = UserStore.getCurrentUser();
   const iconpack: IconPack = vstorage.iconpack?.url
@@ -59,7 +65,9 @@ export default async () => {
     };
   else if (iconpack?.config)
     try {
-      iconpackConfig = await (await fetch(iconpack.config)).json();
+      iconpackConfig = await (
+        await safeFetch(`${iconpack.config}?_=${cacheID}`)
+      ).json();
     } catch {}
 
   if (!enabled) return () => undefined;
