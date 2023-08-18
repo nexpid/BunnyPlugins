@@ -17,10 +17,11 @@ const mdNote = `<!--
 
 const extensions = [".js", ".jsx", ".mjs", ".ts", ".tsx", ".cts", ".mts"];
 const ignorePlugins = [
-  "better-spotify-preview",
   "reaction-notifications",
   "download-everything",
   "fxtwitter",
+  "tenor-gif-fix",
+  "freemix",
 ];
 
 if (!existsSync("./dist")) await mkdir("./dist");
