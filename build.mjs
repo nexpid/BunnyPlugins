@@ -128,6 +128,16 @@ ${mdNote}
     });
     await bundle.close();
 
+    if (process.argv.includes("--debug"))
+      await writeFile(
+        `./dist/${plug}/index.js`,
+        Buffer.concat([
+          Buffer.from("vendetta=>{return "),
+          await readFile(`./dist/${plug}/index.js`),
+          Buffer.from("}\n//# sourceURL=${plugin.id}"),
+        ])
+      );
+
     const toHash = await readFile(outPath);
     manifest.hash = createHash("sha256").update(toHash).digest("hex");
     manifest.main = "index.js";

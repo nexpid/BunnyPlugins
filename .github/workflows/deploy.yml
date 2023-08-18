@@ -28,7 +28,7 @@ jobs:
           pnpm i
 
       - name: Build plugins
-        run: node ./build.mjs
+        run: "pnpm build:minify"
 
       - name: Copy README
         run: |
@@ -43,13 +43,6 @@ jobs:
         uses: actions/upload-pages-artifact@v2
         with:
           path: dist/_html
-      # - name: Deploy to GitHub Pages
-      #   uses: peaceiris/actions-gh-pages@v3
-      #   with:
-      #     github_token: ${{ secrets.GITHUB_TOKEN }}
-      #     publish_dir: ./dist
-      #     enable_jekyll: true
-      #     cname: vendetta.nexpid.xyz
 
   deploy:
     needs: build
