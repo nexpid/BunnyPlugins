@@ -52,6 +52,7 @@ export default () => {
               source={getAssetIDByName("ic_message_delete")}
             />
           }
+          trailing={<FormRow.Arrow />}
           onPress={() =>
             showConfirmationAlert({
               title: "Clear data",

@@ -65,14 +65,12 @@ export default ({ channelId }: { channelId: string }) => {
           const numb = new Big(m.id);
           const numbers = [numb.plus(1).toFixed(), numb.minus(1).toFixed()];
 
-          console.log(
-            await messages.fetchMessages({
-              channelId,
-              before: numbers[0],
-              after: numbers[1],
-              limit: 1,
-            })
-          );
+          await messages.fetchMessages({
+            channelId,
+            before: numbers[0],
+            after: numbers[1],
+            limit: 1,
+          });
           message = MessageStore.getMessage(channelId, m.id);
         }
 
