@@ -69,31 +69,18 @@ export default async () => {
     } catch {}
 
   let iconpackPaths = new Array<string>();
-  if (iconpack) {
-    let user: string, path: string[];
-    if (iconpack.load) {
-      const split = iconpack.load.split("/");
-      user = split.slice(3, 5).join("/");
-      path = split.slice(6);
-    } else {
-      user = constants.iconpacks.baseRepo;
-      path = ["assets", iconpack.id];
-    }
-
+  if (iconpack)
     try {
       iconpackPaths = (
-        (
-          await (
-            await safeFetch(
-              `https://api.github.com/repos/${user}/git/trees/master?recursive=1&_=${cacheID}`
-            )
-          ).json()
-        ).tree as { path: string }[]
+        await (
+          await safeFetch(
+            `${constants.iconpacks.tree(iconpack.id)}?_=${cacheID}`
+          )
+        ).text()
       )
-        .filter((x) => x.path.startsWith(path.join("/")))
-        .map((x) => x.path.split("/").slice(path.length).join("/"));
+        .replace(/\r/g, "")
+        .split("\n");
     } catch {}
-  }
 
   if (!enabled) return () => undefined;
 
