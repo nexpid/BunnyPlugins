@@ -10,10 +10,14 @@ export default function (config: IconPackConfig) {
   // fixes status being too small sometimes
   if (config.biggerStatus)
     patches.push(
-      before("default", Status, ([x]) => {
-        const y = { ...x };
-        y.size *= 1.4;
-        return [y];
+      before("default", Status, (args) => {
+        const c = [...args];
+
+        const sizes = Object.values(Status.StatusSizes);
+        c[0].size = sizes[sizes.findIndex((x) => c[0].size === x) + 1];
+        c[0].size ??= Status.StatusSizes.XLARGE;
+
+        return c;
       })
     );
 

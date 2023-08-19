@@ -1,9 +1,6 @@
 import { logger } from "@vendetta";
-import { findByProps, findByStoreName } from "@vendetta/metro";
-import { FluxDispatcher, ReactNative as RN } from "@vendetta/metro/common";
-
-const { setAMOLEDThemeEnabled } = findByProps("setAMOLEDThemeEnabled");
-const I18nLoaderStore = findByStoreName("I18nLoaderStore");
+import { findByProps } from "@vendetta/metro";
+import { ReactNative as RN } from "@vendetta/metro/common";
 
 export function flattenStyle(x: any) {
   return RN.StyleSheet.flatten(x) ?? {};
@@ -14,6 +11,7 @@ export function addToStyle(x: any, y: any) {
 
 export function reloadUI() {
   try {
+    const { setAMOLEDThemeEnabled } = findByProps("setAMOLEDThemeEnabled");
     const { useAMOLEDTheme } = findByProps("useAMOLEDTheme");
 
     const state = useAMOLEDTheme === 2;
@@ -24,18 +22,9 @@ export function reloadUI() {
     logger.error(e);
   }
 }
-export async function queueReloadUI() {
-  const startup = window.TPfirstLoad === undefined;
+
+export function queueReloadUI() {
+  // i give up
+  if (window.TPfirstLoad) reloadUI();
   window.TPfirstLoad = true;
-
-  await (() =>
-    new Promise((res) => {
-      const int = setInterval(
-        () => !I18nLoaderStore.isLoading() && res(clearInterval(int)),
-        10
-      );
-    }))();
-
-  if (startup) setTimeout(reloadUI, 6_000);
-  else reloadUI();
 }

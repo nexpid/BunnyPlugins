@@ -2,7 +2,7 @@ import { React } from "@vendetta/metro/common";
 import { Button, Forms, General } from "@vendetta/ui/components";
 import { Modal, SimpleText, popModal } from "../../../../../stuff/types";
 import { findByProps } from "@vendetta/metro";
-import { runPatch, runUnpatch, vstorage } from "../..";
+import { resetCacheID, runPatch, runUnpatch, vstorage } from "../..";
 import { useProxy } from "@vendetta/storage";
 import { HTTP_REGEX_MULTI } from "@vendetta/constants";
 import { reloadUI } from "../../stuff/util";
@@ -58,6 +58,7 @@ export default function () {
               onPress={() => {
                 popModal("dev-modal");
                 runUnpatch(false);
+                resetCacheID();
                 runPatch();
                 reloadUI();
               }}

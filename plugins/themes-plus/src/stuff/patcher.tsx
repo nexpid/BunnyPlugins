@@ -24,8 +24,6 @@ const MaskedBadge = findByProps("MaskedBadge");
 const RowGeneratorUtils = findByProps("createBackgroundHighlight");
 const UserStore = findByStoreName("UserStore");
 
-const iconpackNuhuhCache = new Array<string>();
-
 export default async () => {
   const patches = new Array<() => void>();
 
@@ -70,6 +68,33 @@ export default async () => {
       ).json();
     } catch {}
 
+  let iconpackPaths = new Array<string>();
+  if (iconpack) {
+    let user: string, path: string[];
+    if (iconpack.load) {
+      const split = iconpack.load.split("/");
+      user = split.slice(3, 5).join("/");
+      path = split.slice(6);
+    } else {
+      user = constants.iconpacks.baseRepo;
+      path = ["assets", iconpack.id];
+    }
+
+    try {
+      iconpackPaths = (
+        (
+          await (
+            await safeFetch(
+              `https://api.github.com/repos/${user}/git/trees/master?recursive=1&_=${cacheID}`
+            )
+          ).json()
+        ).tree as { path: string }[]
+      )
+        .filter((x) => x.path.startsWith(path.join("/")))
+        .map((x) => x.path.split("/").slice(path.length).join("/"));
+    } catch {}
+  }
+
   if (!enabled) return () => undefined;
 
   if (plus?.version !== undefined) {
@@ -101,8 +126,14 @@ export default async () => {
 
           // @ts-ignore these properties are missing from the Asset type
           const asset: CoolAsset = getAssetByID(source);
+          const assetIconpackLocation =
+            iconpack &&
+            [
+              ...asset.httpServerLocation.split("/").slice(2),
+              `${asset.name}${iconpack.suffix}.${asset.type}`,
+            ].join("/");
           const useIconpack =
-            iconpack && !iconpackNuhuhCache.includes(asset.name);
+            iconpack && iconpackPaths.includes(assetIconpackLocation);
 
           let overlay: any;
           if (plus.customOverlays && !useIconpack) {
@@ -125,31 +156,15 @@ export default async () => {
               });
           }
 
-          // thank you to @vending.machine (and @pylixonly)
-          const forceUpdate = () =>
-            (this as any)?.setState((s: any) => ({
-              forceUpdate: ~(s.forceUpdate ?? 0),
-            }));
-
           if (useIconpack) {
-            x.onError = () => {
-              if (!iconpackNuhuhCache.includes(asset.name))
-                iconpackNuhuhCache.push(asset.name);
-              forceUpdate();
-            };
-
             x.source = {
-              uri: `${iconpackURL}${[
-                ...asset.httpServerLocation.split("/").slice(2),
-                `${asset.name}${iconpack.suffix}.${asset.type}`,
-              ].join("/")}?_=${cacheID}`,
+              uri: `${iconpackURL}${assetIconpackLocation}?_=${cacheID}`,
             };
             x.style = flattenStyle(x.style);
             x.style.width ??= asset.width;
             x.style.height ??= asset.height;
 
             const icClr = fixIcons.find((x) => x[0] === asset.name)?.[1];
-
             if (icClr)
               x.style.tintColor ??= semanticColors[icClr]
                 ? resolveSemanticColor(semanticColors[icClr])
