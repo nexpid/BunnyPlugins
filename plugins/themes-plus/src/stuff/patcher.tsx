@@ -120,7 +120,10 @@ export default async () => {
               `${asset.name}${iconpack.suffix}.${asset.type}`,
             ].join("/");
           const useIconpack =
-            iconpack && iconpackPaths.includes(assetIconpackLocation);
+            iconpack &&
+            (iconpackPaths.length
+              ? iconpackPaths.includes(assetIconpackLocation)
+              : true);
 
           let overlay: any;
           if (plus.customOverlays && !useIconpack) {
