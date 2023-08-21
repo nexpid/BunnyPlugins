@@ -273,7 +273,6 @@ export async function dispatchActivity(
   FluxDispatcher.dispatch({
     type: "LOCAL_ACTIVITY_UPDATE",
     activity: send,
-    pid: 2689,
     socketId: "CustomRPC@Vendetta", // based on Last.fm plugin
   });
 }
