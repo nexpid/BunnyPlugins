@@ -12,8 +12,6 @@
     "twemoji-parser": "^14.0.0"
   },
   "devDependencies": {
-    "@commitlint/cli": "^17.7.1",
-    "@commitlint/config-conventional": "^17.7.0",
     "@rollup/plugin-commonjs": "^25.0.4",
     "@rollup/plugin-node-resolve": "^15.2.0",
     "@swc/core": "^1.3.78",
