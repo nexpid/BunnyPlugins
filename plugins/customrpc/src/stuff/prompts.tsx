@@ -191,7 +191,10 @@ export function ButtonActionSheet({
   role: string;
   text: string | undefined;
   url: string | undefined;
-  update: (props: { text: string; url: string | undefined }) => void;
+  update: (props: {
+    text: string | undefined;
+    url: string | undefined;
+  }) => void;
 }) {
   return (
     <ActionSheet>
@@ -253,7 +256,7 @@ export function ButtonActionSheet({
               />
             }
             onPress={() => {
-              update(undefined);
+              update({ text: undefined, url: undefined });
               hideActionSheet();
             }}
           />
