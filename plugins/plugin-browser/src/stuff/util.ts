@@ -20,7 +20,7 @@ const linkMatches = {
 // will update sometimes for other plugin devs
 const customLinks = {
   "vendetta.nexpid.xyz": (path: string[]) =>
-    `https://github.com/Gabe616/VendettaPlugins/tree/master/plugins/${path.join(
+    `https://github.com/nexpid/VendettaPlugins/tree/master/plugins/${path.join(
       "/"
     )}`,
   "vendetta.sdh.gay": (path: string[]) =>

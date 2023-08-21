@@ -139,7 +139,7 @@ export default function () {
               <View style={{ height: 400 }}>
                 <WebView
                   source={{
-                    uri: "https://github.com/Gabe616/VendettaThemesPlus#faq",
+                    uri: "https://github.com/nexpid/VendettaThemesPlus#faq",
                   }}
                   style={{ height: 400, width: "100%" }}
                 />
@@ -148,7 +148,7 @@ export default function () {
             confirmText: "Open in browser",
             confirmColor: "brand" as ButtonColors,
             onConfirm: () =>
-              url.openURL("https://github.com/Gabe616/VendettaThemesPlus#faq"),
+              url.openURL("https://github.com/nexpid/VendettaThemesPlus#faq"),
             isDismissable: true,
           })
         }

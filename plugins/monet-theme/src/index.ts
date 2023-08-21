@@ -16,10 +16,10 @@ export const vstorage: {
 } = storage;
 
 export const patchesURL =
-  "https://raw.githubusercontent.com/Gabe616/VendettaMonetTheme/master/patches.jsonc";
+  "https://raw.githubusercontent.com/nexpid/VendettaMonetTheme/master/patches.jsonc";
 export const devPatchesURL = "http://192.168.2.22:8730/patches.jsonc";
 export const commitsURL =
-  "https://api.github.com/repos/Gabe616/VendettaMonetTheme/commits?path=patches.jsonc";
+  "https://api.github.com/repos/nexpid/VendettaMonetTheme/commits?path=patches.jsonc";
 
 const { BundleUpdaterManager } = window.nativeModuleProxy;
 
