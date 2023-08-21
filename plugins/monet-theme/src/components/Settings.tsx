@@ -450,7 +450,7 @@ export default () => {
                 });
               }}
             />
-            <FormRow
+            {/* <FormRow
               label="Configure Theme"
               leading={
                 <FormRow.Icon source={getAssetIDByName("ic_message_edit")} />
@@ -465,7 +465,7 @@ export default () => {
                   onConfirm: () => openConfigurePage(navigation),
                 })
               }
-            />
+            /> */}
             <FormSwitchRow
               label={[
                 "Light Theme",
