@@ -16,9 +16,20 @@ const { FormSection } = Forms;
 const getScreens = findByName("getScreens");
 const settingsModule = findByName("UserSettingsOverviewWrapper", false);
 const settingsYouScreen = findByName("SettingsOverviewScreen", false);
-const stuff = findByProps("SETTING_RELATIONSHIPS", "SETTING_RENDERER_CONFIGS");
 
-const titleConfig = findByProps("getSettingTitleConfig");
+//! Changed in 194204 lol
+const OLD_stuffFunc = ["SETTING_RELATIONSHIPS", "SETTING_RENDERER_CONFIGS"];
+const NEW_stuffFunc = ["SETTING_RENDERER_CONFIG"];
+const oldStuff = findByProps(...OLD_stuffFunc);
+const newStuff = findByProps(...NEW_stuffFunc);
+
+const OLD_titleConfigFunc = "getSettingTitleConfig";
+const NEW_titleConfigFunc = "getSettingTitles";
+const oldTitleConfig = findByProps(OLD_titleConfigFunc);
+const titleConfigFunc = oldTitleConfig
+  ? OLD_titleConfigFunc
+  : NEW_titleConfigFunc;
+const titleConfig = oldTitleConfig ?? findByProps(NEW_titleConfigFunc);
 
 const styles = stylesheet.createThemedStyleSheet({
   container: {
@@ -29,7 +40,7 @@ const styles = stylesheet.createThemedStyleSheet({
 
 export function patchSettingsPin(
   shouldAppear: () => boolean,
-  render: () => React.JSX.Element,
+  render: React.FunctionComponent,
   you?: {
     key: string;
     icon?: number;
@@ -73,7 +84,7 @@ export function patchSettingsPin(
             );
 
             if (shouldAppear())
-              children.splice(index === -1 ? 4 : index, 0, render());
+              children.splice(index === -1 ? 4 : index, 0, render({}));
           }
         )
       );
@@ -100,14 +111,12 @@ export function patchSettingsPin(
     );
 
     patches.push(
-      after("getSettingTitleConfig", titleConfig, (_, ret) => ({
+      after(titleConfigFunc, titleConfig, (_, ret) => ({
         ...ret,
-        ...Object.fromEntries([
-          [
-            screenKey,
+        ...{
+          [screenKey]:
             typeof you.title === "function" ? you.title() : you.title,
-          ],
-        ]),
+        },
       }))
     );
 
@@ -131,37 +140,49 @@ export function patchSettingsPin(
       );
     });
 
-    const old = stuff.SETTING_RELATIONSHIPS;
-    stuff.SETTING_RELATIONSHIPS = {
-      ...old,
-      ...Object.fromEntries([[screenKey, null]]),
-    };
-    const oldZ = stuff.SETTING_RENDERER_CONFIGS;
-    stuff.SETTING_RENDERER_CONFIGS = {
-      ...oldZ,
-      ...Object.fromEntries([
-        [
-          screenKey,
-          {
-            type: "route",
-            icon: you.icon,
-            screen: {
-              route: `VendettaPlugin${lodash
-                .chain(you.key)
-                .camelCase()
-                .upperFirst()
-                .value()}`,
-              getComponent: () => component,
-            },
-          },
-        ],
-      ]),
+    const rendererConfig = {
+      [screenKey]: {
+        type: "route",
+        icon: you.icon,
+        screen: {
+          route: `VendettaPlugin${lodash
+            .chain(you.key)
+            .camelCase()
+            .upperFirst()
+            .value()}`,
+          getComponent: () => component,
+        },
+      },
     };
 
-    patches.push(() => {
-      stuff.SETTING_RELATIONSHIPS = old;
-      stuff.SETTING_RENDERER_CONFIGS = oldZ;
-    });
+    //! DEBUGGING REQUIRED!
+    //  The code below was not tested and may not even work
+    // TODO Testing required
+
+    if (oldStuff) {
+      const old = oldStuff.SETTING_RELATIONSHIPS;
+      oldStuff.SETTING_RELATIONSHIPS = {
+        ...old,
+        ...{ [screenKey]: null },
+      };
+      const oldZ = oldStuff.SETTING_RENDERER_CONFIGS;
+      oldStuff.SETTING_RENDERER_CONFIGS = {
+        ...oldZ,
+        ...rendererConfig,
+      };
+
+      patches.push(() => {
+        oldStuff.SETTING_RELATIONSHIPS = old;
+        oldStuff.SETTING_RENDERER_CONFIGS = oldZ;
+      });
+    } else {
+      const old = newStuff.SETTING_RENDERER_CONFIG;
+      newStuff.SETTING_RENDERER_CONFIG = { ...old, ...rendererConfig };
+
+      patches.push(() => {
+        newStuff.SETTING_RENDERER_CONFIG;
+      });
+    }
   }
 
   return () => patches.forEach((x) => x());
