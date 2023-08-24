@@ -1,8 +1,9 @@
-import { findByStoreName } from "@vendetta/metro";
 import { React } from "@vendetta/metro/common";
 import { ReactNative as RN, stylesheet } from "@vendetta/metro/common";
 import { rawColors } from "@vendetta/ui";
 import { lerp, resolveCustomSemantic } from "../../../stuff/colors";
+
+const AnimatedPressable = RN.Animated.createAnimatedComponent(RN.Pressable);
 
 export default function ({
   disabled,
@@ -21,30 +22,31 @@ export default function ({
     all: stylesheet.createThemedStyleSheet({
       container: {
         ...containerSize,
+        flexGrow: 0,
+        flexShrink: 0,
         borderRadius: 64,
+        borderWidth: 2,
+        padding: 2,
       },
 
-      ballContainer: {
-        width: "100%",
+      ballBox: {
         height: "100%",
+        aspectRatio: 1,
       },
 
       ball: {
-        height: "100%",
-        aspectRatio: 1,
         borderRadius: 2147483647,
-      },
-
-      ripple: {
-        color: resolveCustomSemantic(
-          rawColors.PRIMARY_200,
-          lerp(rawColors.BRAND_500, "#FFFFFF", 0.65)
-        ),
+        width: "100%",
+        height: "100%",
       },
     }),
     activity: stylesheet.createThemedStyleSheet({
       containerInactive: {
         backgroundColor: resolveCustomSemantic(
+          rawColors.PRIMARY_600,
+          rawColors.PRIMARY_200
+        ),
+        borderColor: resolveCustomSemantic(
           rawColors.WHITE_630,
           rawColors.BLACK_330
         ),
@@ -56,29 +58,6 @@ export default function ({
         ),
       },
 
-      insideContainerInactive: {
-        backgroundColor: resolveCustomSemantic(
-          rawColors.PRIMARY_600,
-          rawColors.PRIMARY_200
-        ),
-        width: "100%",
-        height: "100%",
-        borderRadius: 60,
-      },
-
-      ballContainerInactive: {
-        paddingHorizontal: 8,
-        paddingVertical: 8,
-      },
-      ballContainerActive: {
-        paddingHorizontal: 4,
-        paddingVertical: 4,
-      },
-      ballContainerPress: {
-        paddingHorizontal: 2,
-        paddingVertical: 2,
-      },
-
       ballInactive: {
         backgroundColor: resolveCustomSemantic(
           rawColors.WHITE_630,
@@ -86,7 +65,6 @@ export default function ({
         ),
       },
       ballActive: {
-        alignSelf: "flex-end",
         backgroundColor: resolveCustomSemantic(
           lerp(rawColors.BRAND_500, "#000000", 0.3),
           rawColors.WHITE_500
@@ -94,17 +72,20 @@ export default function ({
       },
     }),
     disabled: stylesheet.createThemedStyleSheet({
-      containerDisabled: {
-        backgroundColor: `${resolveCustomSemantic(
-          rawColors.PRIMARY_200,
-          rawColors.PRIMARY_730
-        )}1f`,
-      },
-
-      insideContainerInactiveDisabled: {
+      containerInactiveDisabled: {
         backgroundColor: `${resolveCustomSemantic(
           rawColors.WHITE_800,
           rawColors.PRIMARY_200
+        )}1f`,
+        borderColor: `${resolveCustomSemantic(
+          rawColors.WHITE_800,
+          rawColors.PRIMARY_200
+        )}1f`,
+      },
+      containerActiveDisabled: {
+        backgroundColor: `${resolveCustomSemantic(
+          rawColors.PRIMARY_200,
+          rawColors.PRIMARY_730
         )}1f`,
       },
 
@@ -125,57 +106,128 @@ export default function ({
 
   const [isPressing, setPressing] = React.useState(false);
 
+  const ballPosVal = React.useRef(new RN.Animated.Value(value ? 1 : 0)).current;
+
+  const pressScales = {
+    inactive: 16 / 24,
+    pressed: 28 / 24,
+  };
+  const pressVal = React.useRef(
+    new RN.Animated.Value(value ? 1 : pressScales.inactive)
+  ).current;
+
+  const toggle = () => {
+    onValueChange?.(!value);
+  };
+  const updatePressVal = () => {
+    RN.Animated.timing(pressVal, {
+      toValue: isPressing
+        ? pressScales.pressed
+        : value
+        ? 1
+        : pressScales.inactive,
+      duration: 150,
+      easing: RN.Easing.bezier(0.05, 0.7, 0.1, 1.0),
+      useNativeDriver: true,
+    }).start();
+  };
+
+  React.useEffect(() => {
+    RN.Animated.timing(ballPosVal, {
+      toValue: value ? 1 : 0,
+      duration: 200,
+      easing: RN.Easing.bezier(0, 0, 0, 1),
+      useNativeDriver: true,
+    }).start();
+    updatePressVal();
+  }, [value]);
+  React.useEffect(() => updatePressVal(), [isPressing]);
+
   return (
-    <RN.Pressable
+    <AnimatedPressable
       style={[
         styles.all.container,
-        styles.activity[`container${value ? "Active" : "Inactive"}`],
-        disabled && styles.disabled.containerDisabled,
+        {
+          backgroundColor: ballPosVal.interpolate({
+            inputRange: [0, 1],
+            outputRange: disabled
+              ? [
+                  styles.disabled.containerInactiveDisabled.backgroundColor,
+                  styles.disabled.containerActiveDisabled.backgroundColor,
+                ]
+              : [
+                  styles.activity.containerInactive.backgroundColor,
+                  styles.activity.containerActive.backgroundColor,
+                ],
+          }),
+          borderColor: ballPosVal.interpolate({
+            inputRange: [0, 1],
+            outputRange: disabled
+              ? [
+                  styles.disabled.containerInactiveDisabled.borderColor,
+                  styles.disabled.containerActiveDisabled.backgroundColor,
+                ]
+              : [
+                  styles.activity.containerInactive.borderColor,
+                  styles.activity.containerActive.backgroundColor,
+                ],
+          }),
+        },
         RN.StyleSheet.flatten(style) ?? {},
       ]}
-      onPress={() => onValueChange?.(!value)}
+      onPress={toggle}
+      onAccessibilityTap={toggle}
       onPressIn={() => !disabled && setPressing(true)}
       onPressOut={() => !disabled && setPressing(false)}
+      accessibilityRole="switch"
+      accessibilityState={{
+        checked: value,
+        disabled,
+      }}
+      accessible={!disabled}
+      collapsable={false}
+      disabled={false}
     >
-      {!value && (
-        <RN.View
-          style={{
-            paddingHorizontal: 2,
-            paddingVertical: 2,
-            position: "absolute",
-            left: 0,
-            top: 0,
-            width: "100%",
-            height: "100%",
-          }}
-        >
-          <RN.View
-            style={[
-              styles.activity.insideContainerInactive,
-              disabled && styles.disabled.insideContainerInactiveDisabled,
-            ]}
-          />
-        </RN.View>
-      )}
-      <RN.View
+      <RN.Animated.View
         style={[
-          styles.all.ballContainer,
-          styles.activity[`ballContainer${value ? "Active" : "Inactive"}`],
-          isPressing && styles.activity.ballContainerPress,
+          styles.all.ballBox,
+          {
+            transform: [
+              {
+                translateX: ballPosVal.interpolate({
+                  inputRange: [0, 1],
+                  outputRange: [0, containerSize.width - containerSize.height],
+                }),
+              },
+            ],
+          },
         ]}
       >
-        <RN.Pressable
+        <RN.Animated.View
           style={[
             styles.all.ball,
-            styles.activity[`ball${value ? "Active" : "Inactive"}`],
-            disabled &&
-              styles.disabled[`ball${value ? "Active" : "Inactive"}Disabled`],
+            {
+              backgroundColor: ballPosVal.interpolate({
+                inputRange: [0, 1],
+                outputRange: disabled
+                  ? [
+                      styles.disabled.ballInactiveDisabled.backgroundColor,
+                      styles.disabled.ballActiveDisabled.backgroundColor,
+                    ]
+                  : [
+                      styles.activity.ballInactive.backgroundColor,
+                      styles.activity.ballActive.backgroundColor,
+                    ],
+              }),
+              transform: [
+                {
+                  scale: pressVal,
+                },
+              ],
+            },
           ]}
-          onPress={() => onValueChange?.(!value)}
-          onPressIn={() => !disabled && setPressing(true)}
-          onPressOut={() => !disabled && setPressing(false)}
         />
-      </RN.View>
-    </RN.Pressable>
+      </RN.Animated.View>
+    </AnimatedPressable>
   );
 }
