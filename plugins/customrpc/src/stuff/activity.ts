@@ -80,7 +80,6 @@ export enum ActivityFlags {
 }
 
 export function checkSettingsActivity(activity: Partial<SettingsActivity>) {
-  // sorry to whoever is checking this code :P
   if (!isObject(activity)) return false;
 
   if (!isObject(activity.app)) return false;
@@ -165,10 +164,12 @@ export function cleanSettingsActivity(
       largeImg: activity.assets.largeImg,
       smallImg: activity.assets.smallImg,
     },
-    buttons: activity.buttons.map((x) => ({
-      text: x.text,
-      url: x.url,
-    })),
+    buttons: activity.buttons
+      .map((x) => ({
+        text: x.text,
+        url: x.url,
+      }))
+      .slice(0, 2),
     type: activity.type,
   };
 }
@@ -233,7 +234,8 @@ export function settingsActivityToRaw(activity: SettingsActivity): {
     },
   };
 
-  if (at.assets.large_image) at.assets.large_text = "CRPC@VD";
+  if (at.assets.large_image && at.type === ActivityType.Playing)
+    at.assets.large_text = "CRPC@VD";
 
   if (activity.buttons[0]) {
     at.metadata = {
