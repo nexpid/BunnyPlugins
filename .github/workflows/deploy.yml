@@ -8,6 +8,7 @@ on:
       - build.mjs
       - plugins/*/manifest.json
       - plugins/*/src/**/*.*
+      - stuff/**/*.*
   workflow_dispatch:
 
 jobs:
