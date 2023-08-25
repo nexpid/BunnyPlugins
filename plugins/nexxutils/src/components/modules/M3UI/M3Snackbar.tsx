@@ -1,14 +1,12 @@
 import { ReactNative as RN, stylesheet } from "@vendetta/metro/common";
 import { SimpleText } from "../../../../../../stuff/types";
-import { findByProps } from "@vendetta/metro";
-
-const { shadows } = findByProps("shadows");
+import { resolveCustomSemantic } from "../../../stuff/colors";
+import { rawColors } from "@vendetta/ui";
 
 export default function ({
   content,
   source,
   icon,
-  context,
 }: {
   content: string;
   source?: number;
@@ -19,7 +17,10 @@ export default function ({
 
   const styles = stylesheet.createThemedStyleSheet({
     container: {
-      backgroundColor: "#322F35",
+      backgroundColor: resolveCustomSemantic(
+        rawColors.BLACK_400,
+        rawColors.PRIMARY_200
+      ),
       width: 344,
       minHeight: 48,
       borderRadius: 4,

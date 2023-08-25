@@ -31,25 +31,13 @@ export default new Module({
     onStart() {
       if (this.storage.options.switch)
         this.patches.add(
-          after("render", RN.Switch, ([x], ret) =>
-            React.createElement(
-              CustomSwitch,
-              Object.assign(x, {
-                slot: ret,
-              })
-            )
+          after("render", RN.Switch, ([x]) =>
+            React.createElement(CustomSwitch, x)
           )
         );
       if (this.storage.options.snackbar)
         this.patches.add(
-          after("default", Toast, ([x, c]) =>
-            React.createElement(
-              CustomToast,
-              Object.assign(x, {
-                context: c,
-              })
-            )
-          )
+          after("default", Toast, ([x]) => React.createElement(CustomToast, x))
         );
     },
     onStop() {},

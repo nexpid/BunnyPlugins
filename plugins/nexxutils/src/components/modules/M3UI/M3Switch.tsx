@@ -15,7 +15,6 @@ export default function ({
   onValueChange?: (val: boolean) => void;
   style?: any;
   value?: boolean;
-  slot: any;
 }) {
   const containerSize = { width: 52, height: 32 };
   const styles = {
