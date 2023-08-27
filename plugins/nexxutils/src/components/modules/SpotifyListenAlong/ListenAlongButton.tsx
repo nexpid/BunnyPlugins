@@ -12,7 +12,7 @@ const SpotifyStore = findByStoreName("SpotifyStore");
 const { play, sync } = findByProps("play", "sync");
 
 const listenAlong =
-  "https://cdn.discordapp.com/attachments/919655852724604978/1134238120771076226/listenAlong.png";
+  "https://raw.githubusercontent.com/nexpid/VendettaPlugins/main/plugins/nexxutils/assets/SpotifyListenAlong/listenAlong.png";
 
 export default function ({
   button,
