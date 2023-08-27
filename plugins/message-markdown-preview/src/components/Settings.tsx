@@ -30,7 +30,7 @@ export default function () {
         />
         <FormRadioRow
           label="Send button"
-          subLabel="Holding the seld button"
+          subLabel="Holding the send button"
           onPress={() => (vstorage.buttonType = "send")}
           trailing={<FormRow.Arrow />}
           selected={vstorage.buttonType === "send"}
