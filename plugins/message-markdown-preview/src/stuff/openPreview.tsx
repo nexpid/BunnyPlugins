@@ -21,7 +21,7 @@ const { createBotMessage } = findByProps("createBotMessage");
 const { getText } = findByProps("openSystemKeyboard", "getText");
 
 export default function () {
-  const text = getText();
+  const text = getText(SelectedChannelStore.getChannelId());
   if (text.trim() === "") return;
 
   if (vstorage.previewType === "popup")
