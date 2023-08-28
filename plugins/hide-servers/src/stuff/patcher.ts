@@ -20,8 +20,9 @@ export default function () {
 
   patches.push(
     after("render", GuildPopoutMenu, ([{ guildId, title }], ret) => {
+      const clone = { ...ret };
       if (!isHidden(HiddenListEntryType.Guild, guildId))
-        ret.props.rows.unshift({
+        clone.props.rows.unshift({
           text: "Hide Server",
           icon: getAssetIDByName("ic_hide_password"),
           onClick: () => {
@@ -29,12 +30,14 @@ export default function () {
             showToast(`Hid ${title}`, getAssetIDByName("ic_hide_password"));
           },
         });
+      return clone;
     })
   );
   patches.push(
     after("render", FolderPopoutMenu, ([{ title, folderId }], ret) => {
+      const clone = { ...ret };
       if (!isHidden(HiddenListEntryType.Folder, folderId))
-        ret.props.rows.unshift({
+        clone.props.rows.unshift({
           text: "Hide Folder",
           icon: getAssetIDByName("ic_hide_password"),
           onClick: () => {
@@ -42,6 +45,7 @@ export default function () {
             showToast(`Hid ${title}`, getAssetIDByName("ic_hide_password"));
           },
         });
+      return clone;
     })
   );
 
