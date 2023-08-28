@@ -1,16 +1,21 @@
 import { ReactNative as RN } from "@vendetta/metro/common";
+import { getSrc } from "../stuff/twemoji";
 
-export default function ({ src, size }: { src: string; size: number }) {
+export default function ({ src, size = 16 }: { src: string; size?: number }) {
   return (
     <RN.Image
       key={`emoji-${src}`}
       source={{
-        uri: `https://twemoji.maxcdn.com/v/14.0.2/72x72/${src}.png`,
+        uri: getSrc(src),
       }}
+      resizeMode="contain"
+      fadeDuration={0}
       style={{
         height: size,
         width: size,
       }}
+      //@ts-ignore custom property
+      vanilla={true}
     />
   );
 }
