@@ -6,7 +6,7 @@ import {
   lodash,
   stylesheet,
 } from "@vendetta/metro/common";
-import { after } from "@vendetta/patcher";
+import { after, before } from "@vendetta/patcher";
 import { semanticColors } from "@vendetta/ui";
 import { ErrorBoundary, Forms } from "@vendetta/ui/components";
 import { findInReactTree, without } from "@vendetta/utils";
@@ -15,21 +15,6 @@ const { FormSection } = Forms;
 
 const getScreens = findByName("getScreens");
 const settingsModule = findByName("UserSettingsOverviewWrapper", false);
-const settingsYouScreen = findByName("SettingsOverviewScreen", false);
-
-//! Changed in 194204 lol
-const OLD_stuffFunc = ["SETTING_RELATIONSHIPS", "SETTING_RENDERER_CONFIGS"];
-const NEW_stuffFunc = ["SETTING_RENDERER_CONFIG"];
-const oldStuff = findByProps(...OLD_stuffFunc);
-const newStuff = findByProps(...NEW_stuffFunc);
-
-const OLD_titleConfigFunc = "getSettingTitleConfig";
-const NEW_titleConfigFunc = "getSettingTitles";
-const oldTitleConfig = findByProps(OLD_titleConfigFunc);
-const titleConfigFunc = oldTitleConfig
-  ? OLD_titleConfigFunc
-  : NEW_titleConfigFunc;
-const titleConfig = oldTitleConfig ?? findByProps(NEW_titleConfigFunc);
 
 const styles = stylesheet.createThemedStyleSheet({
   container: {
@@ -98,27 +83,17 @@ export function patchSettingsPin(
       .snakeCase(you.key)
       .toUpperCase()}`;
 
-    patches.push(
-      after("default", settingsYouScreen, (_, ret) => {
-        const sec = ret.props.sections;
-        const ind = sec.findIndex((x) => x.title === "Vendetta");
-        if (sec[ind] && shouldAppear()) {
-          const clone = { ...sec[ind] };
-          clone.settings = [...clone.settings, screenKey];
-          sec[ind] = clone;
-        }
-      })
-    );
-
-    patches.push(
-      after(titleConfigFunc, titleConfig, (_, ret) => ({
-        ...ret,
-        ...{
-          [screenKey]:
-            typeof you.title === "function" ? you.title() : you.title,
-        },
-      }))
-    );
+    // patches.push(
+    //   after("default", settingsYouScreen, (_, ret) => {
+    //     const sec = ret.props.sections;
+    //     const ind = sec.findIndex((x) => x.title === "Vendetta");
+    //     if (sec[ind] && shouldAppear()) {
+    //       const clone = { ...sec[ind] };
+    //       clone.settings = [...clone.settings, screenKey];
+    //       sec[ind] = clone;
+    //     }
+    //   })
+    // );
 
     const Page = you.page.render;
     const component = React.memo(({ navigation }: any) => {
@@ -143,6 +118,7 @@ export function patchSettingsPin(
     const rendererConfig = {
       [screenKey]: {
         type: "route",
+        title: typeof you.title === "function" ? you.title : () => you.title,
         icon: you.icon,
         screen: {
           route: `VendettaPlugin${lodash
@@ -155,34 +131,128 @@ export function patchSettingsPin(
       },
     };
 
-    //! DEBUGGING REQUIRED!
-    //  The code below was not tested and may not even work
-    // TODO Testing required
+    const manipulateSections = (ret: any, nw: boolean) => {
+      const cloned = [...ret];
+      const sections: any[] = nw ? cloned?.[0]?.sections : cloned;
+      if (!Array.isArray(sections)) return cloned;
 
-    if (oldStuff) {
-      const old = oldStuff.SETTING_RELATIONSHIPS;
-      oldStuff.SETTING_RELATIONSHIPS = {
-        ...old,
+      const title = "Vendetta";
+      const section = sections.find(
+        (x) => x?.title === title ?? x?.label === title
+      );
+
+      if (section) section.settings.push(screenKey);
+
+      return cloned;
+    };
+
+    const oldYouPatch = () => {
+      const layout = findByProps("useOverviewSettings");
+      const titleConfig = findByProps("getSettingTitleConfig");
+      const stuff = findByProps(
+        "SETTING_RELATIONSHIPS",
+        "SETTING_RENDERER_CONFIGS"
+      );
+
+      const OLD_getterFunction = "getSettingSearchListItems";
+      const NEW_getterFunction = "getSettingListItems";
+      const oldGettersModule = findByProps(OLD_getterFunction);
+      const usingNewGettersModule = !oldGettersModule;
+      const getterFunctionName = usingNewGettersModule
+        ? NEW_getterFunction
+        : OLD_getterFunction;
+      const getters = oldGettersModule ?? findByProps(NEW_getterFunction);
+
+      if (!getters || !layout) return false;
+
+      patches.push(
+        after("useOverviewSettings", layout, (_, ret) =>
+          manipulateSections(ret, false)
+        )
+      );
+      patches.push(
+        after("getSettingTitleConfig", titleConfig, (_, ret) => ({
+          ...ret,
+          ...{
+            [screenKey]:
+              typeof you.title === "function" ? you.title() : you.title,
+          },
+        }))
+      );
+      patches.push(
+        after(getterFunctionName, getters, ([settings], ret) => [
+          ...(settings.includes(screenKey)
+            ? [
+                {
+                  type: "setting_search_result",
+                  ancestorRendererData: rendererConfig[screenKey],
+                  setting: screenKey,
+                  title:
+                    typeof you.title === "function" ? you.title() : you.title,
+                  breadcrumbs: ["Vendetta"],
+                  icon: rendererConfig[screenKey].icon,
+                },
+              ]
+            : []),
+          ...ret,
+        ])
+      );
+
+      const oldRelationships = stuff.SETTING_RELATIONSHIPS;
+      const oldRendererConfigs = stuff.SETTING_RENDERER_CONFIGS;
+
+      stuff.SETTING_RELATIONSHIPS = {
+        ...oldRelationships,
         ...{ [screenKey]: null },
       };
-      const oldZ = oldStuff.SETTING_RENDERER_CONFIGS;
-      oldStuff.SETTING_RENDERER_CONFIGS = {
-        ...oldZ,
+      stuff.SETTING_RENDERER_CONFIGS = {
+        ...oldRendererConfigs,
         ...rendererConfig,
       };
 
       patches.push(() => {
-        oldStuff.SETTING_RELATIONSHIPS = old;
-        oldStuff.SETTING_RENDERER_CONFIGS = oldZ;
+        stuff.SETTING_RELATIONSHIPS = oldRelationships;
+        stuff.SETTING_RENDERER_CONFIGS = oldRelationships;
       });
-    } else {
-      const old = newStuff.SETTING_RENDERER_CONFIG;
-      newStuff.SETTING_RENDERER_CONFIG = { ...old, ...rendererConfig };
+
+      return true;
+    };
+
+    const newYouPatch = () => {
+      const settingsListComponents = findByProps("SearchableSettingsList");
+      const settingConstantsModule = findByProps("SETTING_RENDERER_CONFIG");
+      const gettersModule = findByProps("getSettingListItems");
+
+      if (!gettersModule || !settingsListComponents || !settingConstantsModule)
+        return false;
+
+      patches.push(
+        before("type", settingsListComponents.SearchableSettingsList, (ret) =>
+          manipulateSections(ret, true)
+        )
+      );
+
+      patches.push(
+        after("getSettingListSearchResultItems", gettersModule, (_, ret) => {
+          for (const s of ret)
+            if (s.setting === screenKey) s.breadcrumbs = ["Vendetta"];
+        })
+      );
+
+      const oldRendererConfig = settingConstantsModule.SETTING_RENDERER_CONFIG;
+      settingConstantsModule.SETTING_RENDERER_CONFIG = {
+        ...oldRendererConfig,
+        ...rendererConfig,
+      };
 
       patches.push(() => {
-        newStuff.SETTING_RENDERER_CONFIG;
+        settingConstantsModule.SETTING_RENDERER_CONFIG = oldRendererConfig;
       });
-    }
+
+      return true;
+    };
+
+    if (!newYouPatch()) oldYouPatch();
   }
 
   return () => patches.forEach((x) => x());
