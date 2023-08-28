@@ -42,6 +42,8 @@ export const Navigator = findByName("Navigator");
 export const { getRenderCloseButton } = findByProps("getRenderCloseButton");
 export const { popModal, pushModal } = findByProps("popModal", "pushModal");
 
+export type Entries<T> = [keyof T, T[keyof T]];
+
 // ...
 
 export function resolveSemanticColor(color: string) {
