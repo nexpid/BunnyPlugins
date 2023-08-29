@@ -38,8 +38,6 @@ export default async () => {
     )
   );
 
-  data.badges.nexpid = "https://i.ibb.co/sHjkdKv/fish-crop.png";
-
   const emptySymbol = Symbol("empty");
   const badgeIconPrefix = "usrpfp-";
 
