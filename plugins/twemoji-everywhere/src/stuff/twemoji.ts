@@ -12,15 +12,15 @@ export const emojipacks = {
     title: "Default (Twemoji)",
     format: (src) => `asset:/emoji-${src}.png`,
   } as EmojiPack,
-  // fluentuiStatic: {
-  //   title: "FluentUI Emoji (Static)",
-  //   format: (src) =>
-  //     `https://raw.githubusercontent.com/AdvenaHQ/fluent-emoji/main/dist/100x100/${src}.png`,
-  // } as EmojiPack,
+  fluentuiStatic: {
+    title: "FluentUI Emoji (Static)",
+    format: (src) =>
+      `https://nexpid.github.io/codepoint-emojis/fluentui-emoji-static/${src}.png`,
+  } as EmojiPack,
   // fluentuiAnimated: {
   //   title: "FluentUI Emoji (Animated)",
   //   format: (src) =>
-  //     `https://raw.githubusercontent.com/AdvenaHQ/fluent-emoji/main/dist/100x100/${src}.png`,
+  //    `https://nexpid.github.io/codepoint-emojis/fluentui-emoji-animated/${src}.gif`,
   // } as EmojiPack,
 };
 
