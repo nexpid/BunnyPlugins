@@ -38,7 +38,9 @@ const sendInvite = () => {
       },
     }
   );
-  setText(channel, "");
+
+  if (setText.length >= 2) setText(channel, "");
+  else setText("");
 };
 
 export default new Module({
