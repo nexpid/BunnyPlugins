@@ -1,0 +1,14 @@
+{
+  "name": "USRPFP",
+  "description": "https://github.com/Yeetov/USRPFP-Reborn?tab=readme-ov-file#how-to-request-a-pfp",
+  "authors": [
+    {
+      "name": "nexpid",
+      "id": "853550207039832084"
+    }
+  ],
+  "main": "src/index.ts",
+  "vendetta": {
+    "icon": "tab-you"
+  }
+}
