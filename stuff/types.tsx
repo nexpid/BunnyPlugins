@@ -1,3 +1,4 @@
+import { logger } from "@vendetta";
 import {
   find,
   findByName,
@@ -23,7 +24,9 @@ const { TextStyleSheet } = findByProps("TextStyleSheet");
 const { View, Text, Pressable } = General;
 const { FormRow } = Forms;
 
-export const ActionSheet = find((x) => x.render?.name === "ActionSheet"); // thank you to @pylixonly for fixing this
+export const ActionSheet =
+  findByProps("ActionSheet")?.ActionSheet ??
+  find((x) => x.render?.name === "ActionSheet"); // thank you to @pylixonly for fixing this
 export const { openLazy, hideActionSheet } = findByProps(
   "openLazy",
   "hideActionSheet"
@@ -77,20 +80,23 @@ export function openSheet<T extends React.FunctionComponent>(
   sheet: T,
   props: Parameters<T>[0]
 ) {
-  ActionSheet
-    ? openLazy(
-        new Promise((x) =>
-          x({
-            default: sheet,
-          })
-        ),
-        "ActionSheet",
-        props
-      )
-    : showToast(
-        "You cannot open ActionSheets on this version! Update to 163+",
-        getAssetIDByName("Small")
-      );
+  try {
+    openLazy(
+      new Promise((x) =>
+        x({
+          default: sheet,
+        })
+      ),
+      "ActionSheet",
+      props
+    );
+  } catch (e) {
+    logger.error(e.stack);
+    showToast(
+      "Got error when opening ActionSheet! Please check debug logs",
+      getAssetIDByName("Smal")
+    );
+  }
 }
 
 export function openModal(key: string, modal: typeof Modal) {
