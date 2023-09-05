@@ -5,24 +5,19 @@ import {
   findByProps,
   findByStoreName,
 } from "@vendetta/metro";
-import {
-  ReactNative as RN,
-  React,
-  constants,
-  stylesheet,
-} from "@vendetta/metro/common";
+import { ReactNative as RN, React, stylesheet } from "@vendetta/metro/common";
 import { semanticColors } from "@vendetta/ui";
 import { getAssetIDByName } from "@vendetta/ui/assets";
-import { Forms, General } from "@vendetta/ui/components";
+import { General } from "@vendetta/ui/components";
 import { showToast } from "@vendetta/ui/toasts";
 import { without } from "@vendetta/utils";
 
 const ThemeStore = findByStoreName("ThemeStore");
 const colors = findByProps("colors", "meta");
+const { triggerHaptic } = findByProps("triggerHaptic");
 
 const { TextStyleSheet } = findByProps("TextStyleSheet");
 const { View, Text, Pressable } = General;
-const { FormRow } = Forms;
 
 export const ActionSheet =
   findByProps("ActionSheet")?.ActionSheet ??
@@ -110,6 +105,14 @@ export function openModal(key: string, modal: typeof Modal) {
       closable: true,
     },
   });
+}
+
+export function doHaptic(dur: number): Promise<void> {
+  triggerHaptic();
+  const interval = setInterval(triggerHaptic, 1);
+  return new Promise((res) =>
+    setTimeout(() => res(clearInterval(interval)), dur)
+  );
 }
 
 // ...
