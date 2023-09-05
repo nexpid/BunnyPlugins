@@ -1,17 +1,6 @@
 import { React, ReactNative as RN } from "@vendetta/metro/common";
-import { SimpleText } from "../../../../stuff/types";
-import { findByProps } from "@vendetta/metro";
+import { doHaptic, SimpleText } from "../../../../stuff/types";
 import { vstorage } from "..";
-
-const { triggerHaptic } = findByProps("triggerHaptic");
-
-const doHaptic = async (dur: number): Promise<void> => {
-  triggerHaptic();
-  const interval = setInterval(triggerHaptic, 1);
-  return new Promise((res) =>
-    setTimeout(() => res(clearInterval(interval)), dur)
-  );
-};
 
 export default function ({ until }: { until: number }) {
   const [_, forceUpdate] = React.useReducer((x) => ~x, 0);
