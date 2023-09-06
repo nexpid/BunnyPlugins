@@ -37,22 +37,13 @@ const styles = stylesheet.createThemedStyleSheet({
 });
 
 export default ({ inputProps }): JSX.Element => {
-  const textRef = React.useRef<string>(null);
+  const [text, setText] = React.useState("");
 
-  if (!inputProps.onChangeText) {
-    inputProps.onChangeText = (text: string) => (textRef.current = text);
-  } else {
-    patches.push(
-      after(
-        "onChangeText",
-        inputProps,
-        ([text]: [string]) => (textRef.current = text),
-        true
-      )
-    );
-  }
+  patches.push(
+    after("onChangeText", inputProps, ([txt]: [string]) => setText(txt), true)
+  );
 
-  const shouldAppear = textRef.current?.length > 0;
+  const shouldAppear = text.length > 0;
   const UseComponent = shouldAppear ? Pressable : View;
 
   return (
