@@ -14,7 +14,7 @@ import { currentAuthorization, deleteSaveData } from "../stuff/api";
 import DataManagementButtons from "./DataManagementButtons";
 import { showToast } from "@vendetta/ui/toasts";
 import { NavigationNative, React, clipboard } from "@vendetta/metro/common";
-import PluginSettingsPage from "./PluginSettingsPage";
+import PluginSettingsPage from "./pages/PluginSettingsPage";
 import { openPluginReportSheet } from "../../../../stuff/githubReport";
 import { findByStoreName } from "@vendetta/metro";
 

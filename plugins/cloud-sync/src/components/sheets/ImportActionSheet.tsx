@@ -1,4 +1,4 @@
-import { Button, Forms, General } from "@vendetta/ui/components";
+import { Button, Forms } from "@vendetta/ui/components";
 import {
   ActionSheet,
   ActionSheetCloseButton,
@@ -14,14 +14,16 @@ import { SyncImportOptions, importData } from "../../stuff/syncStuff";
 import { plugins } from "@vendetta/plugins";
 import { themes } from "@vendetta/themes";
 import { getAssetIDByName } from "@vendetta/ui/assets";
+import { openImportLogsPage } from "../pages/ImportLogsPage";
 
-const { View } = General;
 const { FormCheckboxRow } = Forms;
 
 export default function ImportActionSheet({
   defOptions,
+  navigation,
 }: {
   defOptions?: SyncImportOptions;
+  navigation: any;
 }) {
   const has = {
     unproxiedPlugins: cache.save.sync.plugins.filter(
@@ -64,6 +66,7 @@ export default function ImportActionSheet({
                   confirmColor: "brand" as ButtonColors,
                   onConfirm: () =>
                     openSheet(ImportActionSheet, {
+                      navigation,
                       defOptions: {
                         ...options,
                         unproxiedPlugins: true,
@@ -113,6 +116,7 @@ export default function ImportActionSheet({
             />
           )}
           onPress={() => {
+            openImportLogsPage(navigation);
             importData(options);
             hideActionSheet();
           }}

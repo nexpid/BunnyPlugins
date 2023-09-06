@@ -8,8 +8,13 @@ import { installTheme } from "@vendetta/themes";
 import { showToast } from "@vendetta/ui/toasts";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { showConfirmationAlert } from "@vendetta/ui/alerts";
+import {
+  isInPage,
+  clearLogs,
+  addLog,
+} from "../components/pages/ImportLogsPage";
 
-const { BundleUpdaterManager, MMKVManager } = window.nativeModuleProxy;
+const { MMKVManager } = window.nativeModuleProxy;
 
 export async function grabEverything(): Promise<DBSave.SaveSync> {
   const sync = {
@@ -79,26 +84,42 @@ export async function importData(options: SyncImportOptions) {
     return showToast("Nothing to import", getAssetIDByName("Small"));
   }
 
-  showToast(
-    `Importing ${[
-      iplugins.length &&
-        `${iplugins.length} plugin${iplugins.length !== 1 ? "s" : ""}`,
-      ithemes.length &&
-        `${ithemes.length} theme${ithemes.length !== 1 ? "s" : ""}`,
-    ]
-      .filter((x) => !!x)
-      .join(" and ")}`,
-    getAssetIDByName("toast_image_saved")
+  clearLogs();
+  addLog(
+    "importer",
+    `Starting to import ${iplugins.length} plugin${
+      iplugins.length !== 1 ? "s" : ""
+    } and ${ithemes.length} theme${ithemes.length !== 1 ? "s" : ""}`
   );
 
-  const status = { plugins: 0, themes: 0 };
+  if (!isInPage)
+    showToast(
+      `Importing ${[
+        iplugins.length &&
+          `${iplugins.length} plugin${iplugins.length !== 1 ? "s" : ""}`,
+        ithemes.length &&
+          `${ithemes.length} theme${ithemes.length !== 1 ? "s" : ""}`,
+      ]
+        .filter((x) => !!x)
+        .join(" and ")}`,
+      getAssetIDByName("toast_image_saved")
+    );
+
+  const status = { plugins: 0, themes: 0, failed: 0 };
   await Promise.all([
     ...iplugins.map(
       (x) =>
         new Promise<void>(async (res) => {
           MMKVManager.setItem(x.id, JSON.stringify(x.options));
           installPlugin(x.id, x.enabled)
-            .then(() => status.plugins++)
+            .then(() => {
+              status.plugins++;
+              addLog("plugins", `Successfully imported plugin: ${x.id}`);
+            })
+            .catch((e) => {
+              status.failed++;
+              addLog("plugins", `Failed to import plugin: ${x.id}\n${e}`);
+            })
             .finally(res);
         })
     ),
@@ -106,29 +127,39 @@ export async function importData(options: SyncImportOptions) {
       (x) =>
         new Promise<void>(async (res) =>
           installTheme(x.id)
-            .then(() => status.themes++)
+            .then(() => {
+              status.themes++;
+              addLog("themes", `Successfully imported theme: ${x.id}`);
+            })
+            .catch((e) => {
+              status.failed++;
+              addLog("themes", `Failed to import theme: ${x.id}\n${e}`);
+            })
             .finally(res)
         )
     ),
   ]);
 
-  showToast(
-    `Imported ${[
-      [status.plugins, "plugin"],
-      [status.themes, "theme"],
-    ]
-      .map(([count, label]) => `${count} ${label}${count !== 1 ? "s" : ""}`)
-      .join(" and ")}!`,
-    getAssetIDByName("check")
-  );
+  if (!isInPage)
+    showToast(
+      `Imported ${[
+        [status.plugins, "plugin"],
+        [status.themes, "theme"],
+      ]
+        .map(([count, label]) => `${count} ${label}${count !== 1 ? "s" : ""}`)
+        .join(" and ")}! (${status.failed} failed)`,
+      getAssetIDByName("check")
+    );
 
   const selectTheme = themes[ithemes.find((x) => x.enabled)?.id];
   if (selectTheme) {
+    addLog("themes", `Selecting theme: ${selectTheme.id}`);
     await createFileBackend("vendetta_theme.json").set(
       Object.assign(selectTheme, {
         selected: true,
       })
     );
+    addLog("themes", "Prompting user to reload");
     await (() =>
       new Promise<void>((res) =>
         showConfirmationAlert({
@@ -149,95 +180,17 @@ export async function importData(options: SyncImportOptions) {
       ))();
   }
 
+  addLog(
+    "importer",
+    `Finished! Imported ${status.plugins} plugin${
+      status.plugins !== 1 ? "s" : ""
+    } and ${status.themes} theme${status.themes !== 1 ? "s" : ""}. ${
+      status.failed
+        ? `Failed to import ${status.failed} plugin${
+            status.failed !== 1 ? "s" : ""
+          }/theme${status.failed !== 1 ? "s" : ""}`
+        : "All imports were successful"
+    }`
+  );
   importCallback?.(false);
 }
-
-// export async function syncEverything(shouldPrompt?: boolean) {
-//   if (!cache.save) return;
-
-//   let syncedAnything = false;
-
-//   const newPlugins = cache.save.sync.plugins.filter(
-//     (x) => !Object.keys(plugins).includes(x.id) && !x.id.includes("cloud-sync")
-//   );
-//   const newUnproxiedPlugins = newPlugins.filter((x) => !isPluginProxied(x.id));
-
-//   let loadUnproxiedPlugins = true;
-//   if (newUnproxiedPlugins[0])
-//     await promptOrRun(
-//       true,
-//       "Unproxied Plugins",
-//       `Do you want to install **${
-//         newUnproxiedPlugins.length
-//       }** unproxied plugin${
-//         newUnproxiedPlugins.length !== 1 ? "s" : ""
-//       }? Unproxied plugins haven't been verified by Vendetta staff and thus possibly dangerous. Are you sure you want to continue?`,
-//       "Proceed",
-//       "Skip",
-//       undefined,
-//       async () => {
-//         loadUnproxiedPlugins = false;
-//       }
-//     );
-
-//   const toLoadPlugins = newPlugins.filter((x) =>
-//     !loadUnproxiedPlugins ? isPluginProxied(x.id) : true
-//   );
-//   if (toLoadPlugins.length > 0)
-//     await promptOrRun(
-//       shouldPrompt,
-//       "Install Plugins",
-//       `Would you like to install **${toLoadPlugins.length}** new plugin${
-//         toLoadPlugins.length !== 1 ? "s" : ""
-//       }?`,
-//       "Yes",
-//       "No",
-//       async () => {
-//         syncedAnything = true;
-//         for (const x of newPlugins) {
-//           createMMKVBackend(x.id).set(x.options);
-//           await installPlugin(x.id, x.enabled);
-//         }
-//         showToast("Synced plugins", getAssetIDByName("Check"));
-//       }
-//     );
-
-//   let toEnableTheme: string;
-//   const newThemes = cache.save.sync.themes.filter(
-//     (x) => !Object.keys(themes).includes(x.id)
-//   );
-//   if (newThemes.length > 0)
-//     await promptOrRun(
-//       shouldPrompt,
-//       "Install Themes",
-//       `Would you like to install **${newThemes.length}** new theme${
-//         newThemes.length !== 1 ? "s" : ""
-//       }?`,
-//       "Yes",
-//       "No",
-//       async () => {
-//         syncedAnything = true;
-//         for (const x of newThemes) {
-//           if (x.enabled) toEnableTheme = x.id;
-//           await installTheme(x.id);
-//         }
-//         showToast("Synced themes", getAssetIDByName("Check"));
-//       }
-//     );
-
-//   if (toEnableTheme)
-//     await promptOrRun(
-//       shouldPrompt,
-//       "Reload Required",
-//       "A reload is required to apply the theme. Would you like to reload?",
-//       "Reload",
-//       "Skip",
-//       async () => {
-//         await fetchTheme(toEnableTheme, true);
-//         BundleUpdaterManager.reload();
-//       }
-//     );
-
-//   if (!syncedAnything)
-//     showToast("Nothing to sync", getAssetIDByName("ic_sync_24px"));
-// }

@@ -1,5 +1,5 @@
 import { Button, Forms, General } from "@vendetta/ui/components";
-import { React } from "@vendetta/metro/common";
+import { NavigationNative, React } from "@vendetta/metro/common";
 import { cache } from "..";
 import { findByProps } from "@vendetta/metro";
 import { grabEverything, setImportCallback } from "../stuff/syncStuff";
@@ -14,6 +14,7 @@ const { View } = General;
 const { FormRow } = Forms;
 
 export default function () {
+  const navigation = NavigationNative.useNavigation();
   const [loadingBtns, setLoadingBtns] = React.useState<Record<number, boolean>>(
     {}
   );
@@ -46,7 +47,9 @@ export default function () {
           text: "Import Data",
           onPress: (setLoad) => {
             if (!cache.save) return;
-            openSheet(ImportActionSheet, {});
+            openSheet(ImportActionSheet, {
+              navigation,
+            });
             setImportCallback(setLoad);
           },
         },
