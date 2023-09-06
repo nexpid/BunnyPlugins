@@ -18,6 +18,7 @@ interface props {
   headerIcon?: number;
   descriptionLabel: string;
   actions?: propAction[];
+  loading?: boolean;
 }
 
 const styles = stylesheet.createThemedStyleSheet({
@@ -56,6 +57,15 @@ export default (props: props) => {
                   destructive={destructive ?? false}
                 />
               )
+            )}
+            {props.loading && (
+              <RN.ActivityIndicator
+                size="small"
+                style={{
+                  height: 22,
+                  width: 22,
+                }}
+              />
             )}
           </RN.View>
         }
