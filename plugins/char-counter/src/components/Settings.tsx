@@ -20,7 +20,7 @@ export default () => {
         title="Settings"
         icon={getAssetIDByName("ic_cog_24px")}
       >
-        {/*<FormRow
+        <FormRow
           label="Position"
           subLabel="Choose where Char Counter will appear"
           leading={
@@ -40,7 +40,7 @@ export default () => {
           trailing={<FormRow.Arrow />}
           selected={vstorage.position === "inside"}
           style={{ marginHorizontal: 12 }}
-        />*/}
+        />
         <FormRow
           label="Minimum Characters"
           subLabel="The minimum amount of characters for Char Counter to show up"

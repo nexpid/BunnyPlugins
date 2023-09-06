@@ -7,8 +7,9 @@ import { FadeView } from "../../../../stuff/animations";
 import { after } from "@vendetta/patcher";
 import { SimpleText } from "../../../../stuff/types";
 import { vstorage } from "..";
+import { lastText } from "../stuff/patcher";
 
-const { Text, View, Pressable } = General;
+const { View, Pressable } = General;
 
 const { TextStyleSheet } = findByProps("TextStyleSheet");
 
@@ -50,30 +51,16 @@ const styles = stylesheet.createThemedStyleSheet({
     alignItems: "center",
     zIndex: 2,
   },
-  normal: {
-    color: semanticColors.TEXT_NORMAL,
-  },
-  jinkies: {
-    color: semanticColors.TEXT_DANGER,
-  },
 });
 
 export default ({ inputProps }: { inputProps: any }) => {
   const [isToggled, setIsToggled] = React.useState(false);
-  const textRef = React.useRef<string>(null);
+  const [text, setText] = React.useState("");
 
-  if (!inputProps.onChangeText) {
-    inputProps.onChangeText = (text: string) => (textRef.current = text);
-  } else {
-    after(
-      "onChangeText",
-      inputProps,
-      ([text]: [string]) => (textRef.current = text),
-      true
-    );
-  }
+  lastText.value = text;
+  after("onChangeText", inputProps, ([txt]: [string]) => setText(txt), true);
 
-  const curLength = textRef.current?.length ?? 0,
+  const curLength = text.length,
     maxLength = getMessageLength();
   const extraMessages = hasSLM() ? Math.floor(curLength / maxLength) : 0;
   const dspLength = curLength - extraMessages * maxLength;
