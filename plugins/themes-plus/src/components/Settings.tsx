@@ -136,6 +136,7 @@ export default function () {
           style={{
             flexDirection: "row",
             maxWidth: "85%",
+            marginTop: 10,
           }}
         >
           <RN.Image
@@ -152,7 +153,7 @@ export default function () {
           <SimpleText
             variant="text-lg/semibold"
             color="TEXT_NORMAL"
-            style={{ flexWrap: "wrap", flex: 1 }}
+            style={{ flexWrap: "wrap" }}
           >
             {reason}
           </SimpleText>

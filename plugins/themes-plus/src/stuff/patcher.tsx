@@ -53,6 +53,8 @@ export default async () => {
     active.blehhh.push(InactiveReason.IconpacksListNuhUh);
   }
 
+  active.iconpackList = iconpacks.list;
+
   const user = UserStore.getCurrentUser();
   const iconpack: IconPack = vstorage.iconpack?.url
     ? {
@@ -66,7 +68,9 @@ export default async () => {
         suffix: vstorage.iconpack.suffix,
         load: vstorage.iconpack.url,
       }
-    : iconpacks.list.find((x) => x.id === plus.iconpack);
+    : iconpacks.list.find(
+        (x) => x.id === plus.iconpack || x.id === vstorage.iconpack?.force
+      );
 
   let iconpackConfig: IconPackConfig = null;
   if (vstorage.iconpack?.url)
