@@ -11,7 +11,14 @@ import { General } from "@vendetta/ui/components";
 import { addToStyle, flattenStyle, queueReloadUI } from "./util";
 import { PlusStructure } from "../../../../stuff/typings";
 import resolveColor, { androidifyColor } from "./resolveColor";
-import { PatchType, active, cacheID, enabled, vstorage } from "..";
+import {
+  InactiveReason,
+  PatchType,
+  active,
+  cacheID,
+  enabled,
+  vstorage,
+} from "..";
 import constants from "./constants";
 import { CoolAsset, IconPack, IconPackConfig, IconPackData } from "../types";
 import fixer from "../handlers/iconpacks/fixer";
@@ -27,7 +34,10 @@ const UserStore = findByStoreName("UserStore");
 export default async () => {
   const patches = new Array<() => void>();
 
-  const plus: PlusStructure = getPlusData();
+  const plus: PlusStructure | false = getPlusData();
+  if (plus === false) return active.blehhh.push(InactiveReason.NoTheme);
+  else if (!plus)
+    return active.blehhh.push(InactiveReason.ThemesPlusUnsupported);
 
   active.patches.length = 0;
 
@@ -39,7 +49,9 @@ export default async () => {
     iconpacks = (await (
       await safeFetch(`${constants.iconpacks.list}?_=${cacheID}`)
     ).json()) as IconPackData;
-  } catch {}
+  } catch {
+    active.blehhh.push(InactiveReason.IconpacksListNuhUh);
+  }
 
   const user = UserStore.getCurrentUser();
   const iconpack: IconPack = vstorage.iconpack?.url
@@ -66,7 +78,9 @@ export default async () => {
       iconpackConfig = await (
         await safeFetch(`${iconpack.config}?_=${cacheID}`)
       ).json();
-    } catch {}
+    } catch {
+      active.blehhh.push(InactiveReason.IconpackConfigNuhUh);
+    }
 
   let iconpackPaths = new Array<string>();
   if (iconpack)
@@ -80,7 +94,9 @@ export default async () => {
       )
         .replace(/\r/g, "")
         .split("\n");
-    } catch {}
+    } catch {
+      active.blehhh.push(InactiveReason.IconpackTreeNuhUh);
+    }
 
   if (!enabled) return () => undefined;
 

@@ -11,14 +11,24 @@ export enum PatchType {
   IconPack,
 }
 
+export enum InactiveReason {
+  NoTheme = "No theme selected",
+  ThemesPlusUnsupported = "Selected theme doesn't support Themes+",
+  IconpacksListNuhUh = "Couldn't fetch list of iconpacks",
+  IconpackConfigNuhUh = "Couldn't fetch iconpack config",
+  IconpackTreeNuhUh = "Couldn't fetch iconpack tree",
+}
+
 export let active: {
   active: boolean;
   iconpack: IconPack | null;
   patches: PatchType[];
+  blehhh: InactiveReason[];
 } = {
   active: false,
   iconpack: null,
   patches: [],
+  blehhh: [],
 };
 
 export const vstorage: {
