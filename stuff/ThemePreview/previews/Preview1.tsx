@@ -81,7 +81,7 @@ export default function ({
     <View
       style={[
         style,
-        { backgroundColor: semanticFromTheme(t, "ACTIVITY_CARD_BACKGROUND") },
+        { backgroundColor: semanticFromTheme(t, "BACKGROUND_TERTIARY") },
       ]}
     >
       <View
@@ -129,7 +129,7 @@ export default function ({
               height: 1,
               backgroundColor: semanticFromTheme(
                 t,
-                "BACKGROUND_MOBILE_PRIMARY"
+                "BACKGROUND_MOBILE_SECONDARY"
               ),
             }}
           />
@@ -143,10 +143,7 @@ export default function ({
             styles.round,
             styles.middle,
             {
-              backgroundColor: semanticFromTheme(
-                t,
-                "BACKGROUND_MOBILE_SECONDARY"
-              ),
+              backgroundColor: semanticFromTheme(t, "BACKGROUND_TERTIARY"),
               marginBottom: 8,
               width: "100%",
             },
