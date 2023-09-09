@@ -7,6 +7,7 @@
     "dev": "http-server dist --port 8731"
   },
   "dependencies": {
+    "@material/material-color-utilities": "^0.2.7",
     "@swc/helpers": "^0.5.1",
     "big.js": "^6.2.1",
     "twemoji-parser": "^14.0.0"

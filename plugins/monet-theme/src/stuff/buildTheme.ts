@@ -100,17 +100,6 @@ export function build(patches: Patches): ThemeDataWithPlus {
     theme.plus = {
       version: 0,
       customOverlays: true,
-      unreadBadgeColor: parseColor(
-        "both" in patches.plus.unreadBadgeColor
-          ? patches.plus.unreadBadgeColor.both
-          : patches.plus.unreadBadgeColor[vstorage.lightmode ? "light" : "dark"]
-      ),
-      mentionLineColor: parseColor(
-        "both" in patches.plus.mentionLineColor
-          ? patches.plus.mentionLineColor.both
-          : patches.plus.mentionLineColor[vstorage.lightmode ? "light" : "dark"]
-      ),
-      iconpack: "m3-materialyou",
       icons: {},
     };
 

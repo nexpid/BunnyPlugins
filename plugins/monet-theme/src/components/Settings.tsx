@@ -376,7 +376,6 @@ export default () => {
               `Now using: ${usePatches === "git" ? "Local" : "GitHub"} patches`
             );
             setUsePatches(usePatches === "git" ? "local" : "git");
-            setCommits(undefined);
             setPatches(undefined);
           } else lastThemePressTime = Date.now() + 500;
         }}
@@ -494,7 +493,6 @@ export default () => {
                 <FormRow.Icon source={getAssetIDByName("ic_sync_24px")} />
               }
               onPress={() => {
-                setCommits(undefined);
                 setPatches(undefined);
               }}
             />

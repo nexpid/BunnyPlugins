@@ -5,6 +5,9 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
+  '@material/material-color-utilities':
+    specifier: ^0.2.7
+    version: 0.2.7
   '@swc/helpers':
     specifier: ^0.5.1
     version: 0.5.1
@@ -244,6 +247,10 @@ packages:
   /@jridgewell/sourcemap-codec@1.4.15:
     resolution: {integrity: sha512-eF2rxCRulEKXHTRiDrDy6erMYWqNw4LPdQ8UQA4huuxaQsVeRPFl2oM8oDGxMFhJUWZf9McpLtJasDDZb/Bpeg==}
     dev: true
+
+  /@material/material-color-utilities@0.2.7:
+    resolution: {integrity: sha512-0FCeqG6WvK4/Cc06F/xXMd/pv4FeisI0c1tUpBbfhA2n9Y8eZEv4Karjbmf2ZqQCPUWMrGp8A571tCjizxoTiQ==}
+    dev: false
 
   /@react-native-clipboard/clipboard@1.10.0:
     resolution: {integrity: sha512-1L+I0vmeUJgMi8MnNsqI00391/RFLkmmxj9qAuOS2madpvce/oNqJb8Pwk2Fc/uxIJSxOckTpq+dQwyPU6s+7w==}
