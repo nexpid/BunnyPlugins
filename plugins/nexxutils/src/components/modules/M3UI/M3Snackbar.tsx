@@ -18,8 +18,9 @@ export default function ({
   const styles = stylesheet.createThemedStyleSheet({
     container: {
       backgroundColor: resolveCustomSemantic(
-        rawColors.BLACK_400,
-        rawColors.PRIMARY_200
+        // these should be swapped but it just looks better this way
+        rawColors.PRIMARY_600,
+        rawColors.PRIMARY_100
       ),
       width: 344,
       minHeight: 48,

@@ -1,9 +1,10 @@
 import { React, ReactNative as RN } from "@vendetta/metro/common";
-import { Forms, General } from "@vendetta/ui/components";
+import { Button, Forms, General } from "@vendetta/ui/components";
 import { vstorage } from "..";
 import { getAssetIDByName } from "@vendetta/ui/assets";
-import { SimpleText } from "../../../../stuff/types";
+import { openSheet, SimpleText } from "../../../../stuff/types";
 import SmartMention from "../../../../stuff/components/SmartMention";
+import ChooseSettingSheet from "../components/sheets/ChooseSettingSheet";
 
 const { View } = General;
 const { FormRow, FormSwitchRow, FormDivider } = Forms;
@@ -33,10 +34,21 @@ type ModuleSetting = {
   label: string;
   subLabel?: string;
   icon?: number;
-} & {
-  type: "toggle";
-  default: boolean;
-};
+} & (
+  | {
+      type: "toggle";
+      default: boolean;
+    }
+  | {
+      type: "button";
+      action: (this: Module) => void;
+    }
+  | {
+      type: "choose";
+      choices: string[];
+      default: string;
+    }
+);
 
 class Patches {
   store = new Array<() => void>();
@@ -98,7 +110,12 @@ export class Module {
     this.sublabel = sublabel;
     this.category = category;
     this.icon = icon;
-    this.settings = settings ?? {};
+    this.settings = Object.fromEntries(
+      Object.entries(settings ?? {}).map(([x, y]) => {
+        if ("default" in y) y.icon ??= getAssetIDByName("ic_message_edit");
+        return [x, y];
+      })
+    );
     this.extra = extra;
     this.#handlers = handlers;
   }
@@ -109,12 +126,22 @@ export class Module {
       [k in keyof typeof this.settings]: (typeof this.settings)[k]["default"];
     };
   } {
+    const options = Object.fromEntries(
+      Object.entries(this.settings)
+        .filter(([_, x]) => "default" in x)
+        //@ts-ignore fuck off typescript
+        .map(([x, y]) => [x, y.default])
+    );
+
     vstorage.modules[this.id] ??= {
       enabled: false,
-      options: Object.fromEntries(
-        Object.entries(this.settings).map(([x, y]) => [x, y.default])
-      ),
+      options,
     };
+    for (const [k, v] of Object.entries(options)) {
+      if (!(k in vstorage.modules[this.id].options))
+        vstorage.modules[this.id].options[k] = v;
+    }
+
     return vstorage.modules[this.id];
   }
 
@@ -168,22 +195,68 @@ export class Module {
                     this.toggle();
                     forceUpdate();
                   }}
+                  leading={
+                    <FormRow.Icon source={getAssetIDByName("ic_cog_24px")} />
+                  }
                   value={this.storage.enabled}
                 />
-                {Object.entries(this.settings).map(
-                  ([id, setting]) =>
-                    setting.type === "toggle" && (
-                      <FormSwitchRow
+                {Object.entries(this.settings).map(([id, setting]) =>
+                  setting.type === "toggle" ? (
+                    <FormSwitchRow
+                      label={setting.label}
+                      subLabel={setting.subLabel}
+                      onValueChange={() => {
+                        this.storage.options[id] = !this.storage.options[id];
+                        this.restart();
+                        forceUpdate();
+                      }}
+                      leading={<FormRow.Icon source={setting.icon} />}
+                      value={this.storage.options[id]}
+                    />
+                  ) : setting.type === "button" ? (
+                    <View style={{ marginBottom: 12 }}>
+                      <Button
+                        size="small"
+                        text={setting.label}
+                        color="brand"
+                        onPress={() => setting.action.bind(this)()}
+                        renderIcon={() => (
+                          <RN.Image
+                            style={{ marginRight: 8 }}
+                            source={setting.icon}
+                          />
+                        )}
+                      />
+                    </View>
+                  ) : (
+                    setting.type === "choose" && (
+                      <FormRow
                         label={setting.label}
                         subLabel={setting.subLabel}
-                        onValueChange={() => {
-                          this.storage.options[id] = !this.storage.options[id];
-                          this.restart();
-                          forceUpdate();
-                        }}
-                        value={this.storage.options[id]}
+                        onPress={() =>
+                          openSheet(ChooseSettingSheet, {
+                            label: setting.label,
+                            value: this.storage.options[id],
+                            choices: setting.choices,
+                            update: (val) => {
+                              this.storage.options[id] = val;
+                              this.restart();
+                              forceUpdate();
+                            },
+                          })
+                        }
+                        leading={<FormRow.Icon source={setting.icon} />}
+                        trailing={
+                          <SimpleText
+                            variant="text-md/semibold"
+                            color="TEXT_NORMAL"
+                          >
+                            {this.storage.options[id]}
+                          </SimpleText>
+                        }
                       />
                     )
+                  )
                 )}
               </RN.View>
             </>
