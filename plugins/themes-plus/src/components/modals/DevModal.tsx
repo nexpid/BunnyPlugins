@@ -89,8 +89,11 @@ export default function () {
             </SimpleText>
             <FormRow
               label="Selected Iconpack"
-              subLabel={vstorage.iconpack.force ?? "None"}
-              trailing={<FormRow.Arrow />}
+              trailing={
+                <SimpleText variant="text-md/medium" color="TEXT_MUTED">
+                  {vstorage.iconpack.force ?? "None"}
+                </SimpleText>
+              }
               onPress={() =>
                 openSheet(IconpackListSheet, {
                   value: vstorage.iconpack.force,
