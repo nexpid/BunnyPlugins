@@ -30,10 +30,12 @@ export const {
   ActionSheetTitleHeader,
   ActionSheetCloseButton,
   ActionSheetContentContainer,
+  ActionSheetRow,
 } = findByProps(
   "ActionSheetTitleHeader",
   "ActionSheetCloseButton",
-  "ActionSheetContentContainer"
+  "ActionSheetContentContainer",
+  "ActionSheetRow"
 );
 
 export const Navigator = findByName("Navigator");
@@ -197,7 +199,7 @@ export function BetterTableRowGroup({
 }>) {
   const styles = stylesheet.createThemedStyleSheet({
     main: {
-      backgroundColor: semanticColors.BACKGROUND_TERTIARY,
+      backgroundColor: semanticColors.REDESIGN_ACTIVITY_CARD_BACKGROUND,
       borderRadius: 16,
       overflow: "hidden",
       flex: 1,
