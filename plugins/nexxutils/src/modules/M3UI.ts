@@ -4,13 +4,16 @@ import { Module, ModuleCategory } from "../stuff/Module";
 import { after } from "@vendetta/patcher";
 import { ReactNative as RN } from "@vendetta/metro/common";
 import CustomSwitch from "../components/modules/M3UI/M3Switch";
-import { findByDisplayName, findByName } from "@vendetta/metro";
+import { find, findByDisplayName, findByName } from "@vendetta/metro";
 import CustomToast from "../components/modules/M3UI/M3Snackbar";
 import { showToast } from "@vendetta/ui/toasts";
 import { assets } from "@vendetta/ui";
 import CustomDialog from "../components/modules/M3UI/M3Dialog";
 import { showConfirmationAlert } from "@vendetta/ui/alerts";
 
+const { FormSwitch } = find(
+  (x) => typeof x?.FormSwitch === "function" && !("FormRow" in x)
+);
 const Toast = findByName("Toast", false);
 const Alert = findByDisplayName("FluxContainer(Alert)");
 
@@ -23,8 +26,9 @@ export default new Module({
   settings: {
     switch: {
       label: "M3 Switch",
-      type: "toggle",
-      default: true,
+      type: "choose",
+      choices: ["Disabled", "Custom", "Tabs v2"],
+      default: "Custom",
     },
     snackbar: {
       label: "M3 Snackbar",
@@ -63,12 +67,19 @@ export default new Module({
   },
   handlers: {
     onStart() {
-      if (this.storage.options.switch)
+      if (this.storage.options.switch === "Custom")
         this.patches.add(
           after("render", RN.Switch, ([x]) =>
             React.createElement(CustomSwitch, x)
           )
         );
+      else if (this.storage.options.switch === "Tabs v2")
+        this.patches.add(
+          after("render", RN.Switch, ([x]) =>
+            React.createElement(FormSwitch, x)
+          )
+        );
+
       if (this.storage.options.snackbar)
         this.patches.add(
           after("default", Toast, ([x]) => React.createElement(CustomToast, x))

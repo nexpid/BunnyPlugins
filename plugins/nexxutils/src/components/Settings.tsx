@@ -47,6 +47,7 @@ export default () => {
           </BetterTableRowGroup>
         );
       })}
+      <View style={{ height: 12 }} />
     </ScrollView>
   );
 };

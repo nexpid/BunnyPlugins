@@ -10,6 +10,7 @@ const Alerts = findByProps("openLazy", "close");
 export default function ({
   title,
   body,
+  children,
   confirmColor,
   confirmText,
   onConfirm,
@@ -18,6 +19,7 @@ export default function ({
   secondaryConfirmText,
   onConfirmSecondary,
 }: Omit<ConfirmationAlertOptions, "content"> & {
+  children?: ConfirmationAlertOptions["content"];
   body?: ConfirmationAlertOptions["content"];
 }) {
   const styles = stylesheet.createThemedStyleSheet({
@@ -28,6 +30,7 @@ export default function ({
       ),
       borderRadius: 28,
       flexDirection: "column",
+      width: RN.Dimensions.get("window").width * 0.85,
     },
     textContent: {
       width: "100%",
@@ -50,13 +53,18 @@ export default function ({
   const empty = Symbol("empty");
   const things = [
     {
-      color: confirmColor
-        ? ["grey", "lightgrey", "white", "link", "transparent"].includes(
-            confirmColor
-          )
-          ? "NORMAL"
-          : confirmColor.toUpperCase()
-        : "BRAND",
+      color:
+        {
+          brand: "BRAND",
+          red: "DANGER",
+          green: "POSITIVE",
+          primary: "PRIMARY",
+          transparent: "NORMAL",
+          grey: "NORMAL",
+          lightgrey: "NORMAL",
+          white: "NORMAL",
+          link: "NORMAL",
+        }[confirmColor] ?? "BRAND",
       text: confirmText ?? "Confirm",
       action: onConfirm,
     },
@@ -87,7 +95,7 @@ export default function ({
           {title}
         </SimpleText>
         <SimpleText variant="text-md/semibold" color="TEXT_NORMAL">
-          {body}
+          {children ?? body}
         </SimpleText>
       </RN.View>
       <RN.View style={styles.actions}>

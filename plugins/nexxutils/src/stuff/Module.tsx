@@ -138,8 +138,8 @@ export class Module {
       options,
     };
     for (const [k, v] of Object.entries(options)) {
-      if (!(k in vstorage.modules[this.id].options))
-        vstorage.modules[this.id].options[k] = v;
+      const opts = vstorage.modules[this.id].options;
+      if (typeof v !== typeof opts[k]) opts[k] = v;
     }
 
     return vstorage.modules[this.id];
@@ -214,7 +214,7 @@ export class Module {
                       value={this.storage.options[id]}
                     />
                   ) : setting.type === "button" ? (
-                    <View style={{ marginBottom: 12 }}>
+                    <View style={{ marginVertical: 12 }}>
                       <Button
                         size="small"
                         text={setting.label}
@@ -248,8 +248,8 @@ export class Module {
                         leading={<FormRow.Icon source={setting.icon} />}
                         trailing={
                           <SimpleText
-                            variant="text-md/semibold"
-                            color="TEXT_NORMAL"
+                            variant="text-md/medium"
+                            color="TEXT_MUTED"
                           >
                             {this.storage.options[id]}
                           </SimpleText>

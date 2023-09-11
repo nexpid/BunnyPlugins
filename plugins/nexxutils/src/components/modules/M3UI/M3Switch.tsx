@@ -52,8 +52,8 @@ export default function ({
       },
       containerActive: {
         backgroundColor: resolveCustomSemantic(
-          lerp(rawColors.BRAND_500, "#FFFFFF", 0.35),
-          lerp(rawColors.BRAND_500, "#000000", 0.1)
+          lerp(rawColors.BRAND_500, "#FFFFFF", 0.15),
+          lerp(rawColors.BRAND_500, "#000000", 0.2)
         ),
       },
 
@@ -65,7 +65,7 @@ export default function ({
       },
       ballActive: {
         backgroundColor: resolveCustomSemantic(
-          lerp(rawColors.BRAND_500, "#000000", 0.3),
+          lerp(rawColors.BRAND_500, "#000000", 0.65),
           rawColors.WHITE_500
         ),
       },
