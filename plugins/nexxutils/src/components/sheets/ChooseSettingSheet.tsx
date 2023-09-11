@@ -19,7 +19,7 @@ export default function ChooseSettingSheet({
   label: string;
   value: string;
   choices: string[];
-  update: (val: string) => void;
+  update: (val: any) => void;
 }) {
   const [value, setValue] = React.useState(_value);
   update(value);
