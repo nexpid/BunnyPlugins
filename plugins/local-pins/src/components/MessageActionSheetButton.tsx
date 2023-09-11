@@ -1,9 +1,7 @@
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { showToast } from "@vendetta/ui/toasts";
-import { ActionSheetRow, hideActionSheet } from "../../../../stuff/types";
+import { CoolActionSheetRow, hideActionSheet } from "../../../../stuff/types";
 import { addPin, hasPin, removePin } from "..";
-import { ReactNative as RN, stylesheet } from "@vendetta/metro/common";
-import { semanticColors } from "@vendetta/ui";
 
 export default function (message: {
   channel_id: string;
@@ -12,29 +10,11 @@ export default function (message: {
   nick?: string;
 }) {
   const isPinned = hasPin(message.channel_id, message.id);
-  const styles = stylesheet.createThemedStyleSheet({
-    iconComponent: {
-      width: 24,
-      height: 24,
-      tintColor: semanticColors.INTERACTIVE_NORMAL,
-    },
-  });
 
   return (
-    <ActionSheetRow
+    <CoolActionSheetRow
       label={isPinned ? "Unpin Message Locally" : "Pin Message Locally"}
-      icon={
-        <ActionSheetRow.Icon
-          source={getAssetIDByName("ic_message_pin")}
-          IconComponent={() => (
-            <RN.Image
-              resizeMode="cover"
-              style={styles.iconComponent}
-              source={getAssetIDByName("ic_message_pin")}
-            />
-          )}
-        />
-      }
+      icon={getAssetIDByName("ic_message_pin")}
       onPress={() => {
         if (isPinned) {
           removePin(message.channel_id, message.id);
