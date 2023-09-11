@@ -1,23 +1,35 @@
 import { General } from "@vendetta/ui/components";
 import Commit from "../Commit";
-import { ReactNative as RN, url } from "@vendetta/metro/common";
+import { ReactNative as RN, stylesheet, url } from "@vendetta/metro/common";
 import { stsCommits } from "../Settings";
+import { semanticColors } from "@vendetta/ui";
 
-const { ScrollView } = General;
+const { ScrollView, View } = General;
 
 export const CommitsPage = () => {
-  if (!stsCommits)
-    return <RN.ActivityIndicator style={{ flex: 1 }}></RN.ActivityIndicator>;
+  const styles = stylesheet.createThemedStyleSheet({
+    window: {
+      height: "100%",
+      backgroundColor: semanticColors.BACKGROUND_MOBILE_PRIMARY,
+    },
+  });
 
   return (
-    <ScrollView>
-      {stsCommits.map((x) => (
-        <Commit
-          commit={x}
-          list={true}
-          onPress={() => url.openURL(x.html_url)}
-        />
-      ))}
+    <ScrollView style={styles.window}>
+      {stsCommits ? (
+        <>
+          {stsCommits.map((x) => (
+            <Commit
+              commit={x}
+              list={true}
+              onPress={() => url.openURL(x.html_url)}
+            />
+          ))}
+          <View style={{ height: 12 }} />
+        </>
+      ) : (
+        <RN.ActivityIndicator style={{ flex: 1 }}></RN.ActivityIndicator>
+      )}
     </ScrollView>
   );
 };

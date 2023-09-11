@@ -35,6 +35,12 @@ export function getLABShade(
   return hexFromArgb(hct.toInt());
 }
 
+export function transform(color: string) {
+  const hct = Hct.fromInt(argbFromHex(color));
+  hct.tone = 50;
+  return hexFromArgb(hct.toInt());
+}
+
 /*
 here lies the overcomplicated color parsing
 

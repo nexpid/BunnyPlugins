@@ -30,8 +30,9 @@ import { semanticColors } from "@vendetta/ui";
 import { getDebugInfo } from "@vendetta/debug";
 import { openPluginReportSheet } from "../../../../stuff/githubReport";
 import { checkForURL, fetchRawTheme, parseTheme } from "../stuff/repainter";
-import { openConfigurePage } from "./pages/ConfigurePage";
 import { Patches } from "../types";
+import { transform } from "../stuff/colors";
+import { enabled, toggle } from "../stuff/livePreview";
 
 const { BundleUpdaterManager } = window.nativeModuleProxy;
 
@@ -40,42 +41,30 @@ const { FormRow, FormSwitchRow } = Forms;
 
 const { TextStyleSheet } = findByProps("TextStyleSheet");
 const mdSize = TextStyleSheet["text-md/semibold"].fontSize;
-const styles = stylesheet.createThemedStyleSheet({
-  androidRipple: {
-    color: semanticColors.ANDROID_RIPPLE,
-    cornerRadius: 8,
-  },
-  warning: {
-    color: semanticColors.TEXT_DANGER,
-  },
-  info: {
-    color: semanticColors.TEXT_BRAND,
-  },
-  experimental: {
-    backgroundColor: semanticColors.TEXT_BRAND,
-    borderRadius: 4,
-    paddingHorizontal: 3,
-    paddingVertical: 3,
-    justifyContent: "center",
-    alignItems: "center",
-    flexDirection: "row",
-  },
-});
 
-const setColorsFromDynamic = (clr: VendettaSysColors) => {
-  vstorage.colors = {
+function transformObject<T extends Record<string, string>>(obj: T): T {
+  for (const [k, v] of Object.entries(obj)) {
+    //@ts-ignore shut the fuck up typescript
+    obj[k] = transform(v);
+  }
+  return obj;
+}
+
+export function setColorsFromDynamic(clr: VendettaSysColors) {
+  vstorage.colors = transformObject({
     neutral1: clr.neutral1[7],
     neutral2: clr.neutral2[7],
     accent1: clr.accent1[7],
     accent2: clr.accent2[7],
     accent3: clr.accent3[7],
-  };
-};
+  });
+}
 
 export let stsCommits: CommitObj[];
 export let stsPatches: Patches;
 export default () => {
   const navigation = NavigationNative.useNavigation();
+  const [_, forceUpdate] = React.useReducer((x) => ~x, 0);
   const [commits, setCommits] = React.useState<CommitObj[] | undefined>(
     undefined
   );
@@ -86,6 +75,32 @@ export default () => {
 
   vstorage.lightmode ??= false;
   useProxy(vstorage);
+
+  const styles = stylesheet.createThemedStyleSheet({
+    androidRipple: {
+      color: semanticColors.ANDROID_RIPPLE,
+      cornerRadius: 8,
+    },
+    warning: {
+      color: semanticColors.TEXT_DANGER,
+    },
+    info: {
+      color: semanticColors.TEXT_BRAND,
+    },
+    experimental: {
+      backgroundColor: semanticColors.TEXT_BRAND,
+      borderRadius: 4,
+      paddingHorizontal: 3,
+      paddingVertical: 3,
+      justifyContent: "center",
+      alignItems: "center",
+      flexDirection: "row",
+    },
+    window: {
+      height: "100%",
+      backgroundColor: semanticColors.BACKGROUND_MOBILE_PRIMARY,
+    },
+  });
 
   React.useEffect(() => {
     if (!patches)
@@ -124,18 +139,23 @@ export default () => {
         );
   }, [commits]);
 
-  const unsub = navigation.addListener("focus", () => {
-    unsub();
-    navigation.setOptions({
-      headerRight: () => (
-        <SuperAwesomeIcon
-          style="header"
-          icon={getAssetIDByName("ic_report_message")}
-          onPress={() => openPluginReportSheet("customrpc")}
-        />
-      ),
+  React.useEffect(() => {
+    const unsub = navigation.addListener("focus", () => {
+      unsub();
+      navigation.setOptions({
+        headerRight: () => (
+          <SuperAwesomeIcon
+            style="header"
+            icon={getAssetIDByName("ic_report_message")}
+            onPress={() => openPluginReportSheet("customrpc")}
+          />
+        ),
+      });
     });
-  });
+    navigation.addListener("beforeRemove", () => {
+      toggle(false);
+    });
+  }, [navigation]);
 
   let showMessage: {
     error: boolean;
@@ -177,19 +197,19 @@ export default () => {
   if (!vstorage.colors) {
     if (syscolors) setColorsFromDynamic(syscolors);
     else
-      vstorage.colors = {
+      vstorage.colors = transformObject({
         neutral1: "#747679",
         neutral2: "#70777C",
         accent1: "#007FAC",
         accent2: "#657985",
         accent3: "#787296",
-      };
+      });
     return <></>;
   }
 
   let lastThemePressTime = 0;
   return (
-    <ScrollView>
+    <ScrollView style={styles.window}>
       {showMessage && (
         <View
           style={{
@@ -381,7 +401,7 @@ export default () => {
         }}
       >
         {!patches ? (
-          <RN.ActivityIndicator style={{ marginVertical: 125 }} size="small" />
+          <RN.ActivityIndicator style={{ marginVertical: 166 }} size="small" />
         ) : (
           <>
             {!commits ? (
@@ -426,6 +446,8 @@ export default () => {
               label="Load Theme"
               leading={<FormRow.Icon source={getAssetIDByName("debug")} />}
               onPress={async () => {
+                transformObject(vstorage.colors);
+
                 let theme;
                 try {
                   theme = build(patches);
@@ -437,34 +459,19 @@ export default () => {
                   selected: true,
                   data: theme,
                 } as Theme);
+                showToast("Loaded theme", getAssetIDByName("Check"));
 
                 showConfirmationAlert({
                   title: "Reload required",
                   content:
                     "A reload is required to load this theme. Do you want to reload?",
-                  confirmText: "Reload",
+                  confirmText: "Reload Now",
                   confirmColor: "red" as ButtonColors,
-                  cancelText: "Cancel",
+                  cancelText: "Later",
                   onConfirm: () => BundleUpdaterManager.reload(),
                 });
               }}
             />
-            {/* <FormRow
-              label="Configure Theme"
-              leading={
-                <FormRow.Icon source={getAssetIDByName("ic_message_edit")} />
-              }
-              trailing={<FormRow.Arrow />}
-              onPress={() =>
-                showConfirmationAlert({
-                  title: "hey",
-                  content: "this is a WIP",
-                  confirmText: "ok",
-                  confirmColor: "brand" as ButtonColors,
-                  onConfirm: () => openConfigurePage(navigation),
-                })
-              }
-            /> */}
             <FormSwitchRow
               label={[
                 "Light Theme",
@@ -484,6 +491,30 @@ export default () => {
               onValueChange={() => (vstorage.lightmode = !vstorage.lightmode)}
               value={vstorage.lightmode}
             />
+            <FormSwitchRow
+              label="Automatically Reapply Theme"
+              subLabel="Automatically reapplies the theme upon reload when your system colors change"
+              leading={
+                <FormRow.Icon source={getAssetIDByName("ic_message_edit")} />
+              }
+              onValueChange={() =>
+                (vstorage.autoReapply = !vstorage.autoReapply)
+              }
+              value={vstorage.autoReapply}
+            />
+            <FormSwitchRow
+              label="Temporary Live Preview"
+              subLabel="Temporarily enables live preview for the theme, disables when you back out of this page"
+              leading={
+                <FormRow.Icon source={getAssetIDByName("ic_message_edit")} />
+              }
+              onValueChange={() => {
+                transformObject(vstorage.colors);
+                toggle(!enabled);
+                forceUpdate();
+              }}
+              value={enabled}
+            />
             <FormRow
               label="Reload Theme Patches"
               subLabel={`Patch v${patches.version}, ${
@@ -499,6 +530,7 @@ export default () => {
           </>
         )}
       </BetterTableRowGroup>
+      <View style={{ height: 12 }} />
     </ScrollView>
   );
 };

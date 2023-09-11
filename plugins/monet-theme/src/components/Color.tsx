@@ -5,6 +5,7 @@ import { SimpleText, openSheet } from "../../../../stuff/types";
 import { findByName } from "@vendetta/metro";
 import { showToast } from "@vendetta/ui/toasts";
 import { getAssetIDByName } from "@vendetta/ui/assets";
+import { transform } from "../stuff/colors";
 
 const CustomColorPickerActionSheet = findByName("CustomColorPickerActionSheet");
 const { View, Pressable } = General;
@@ -54,7 +55,8 @@ export default ({
         onPress={() =>
           openSheet(CustomColorPickerActionSheet, {
             color: parseInt(color.slice(1), 16),
-            onSelect: (clr) => update(`#${clr.toString(16).padStart(6, "0")}`),
+            onSelect: (clr: number) =>
+              update(transform(`#${clr.toString(16).padStart(6, "0")}`)),
           })
         }
         onLongPress={() => {
