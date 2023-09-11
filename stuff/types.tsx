@@ -8,7 +8,7 @@ import {
 import { ReactNative as RN, React, stylesheet } from "@vendetta/metro/common";
 import { semanticColors } from "@vendetta/ui";
 import { getAssetIDByName } from "@vendetta/ui/assets";
-import { General } from "@vendetta/ui/components";
+import { Forms, General } from "@vendetta/ui/components";
 import { showToast } from "@vendetta/ui/toasts";
 import { without } from "@vendetta/utils";
 
@@ -18,6 +18,7 @@ const { triggerHaptic } = findByProps("triggerHaptic");
 
 const { TextStyleSheet } = findByProps("TextStyleSheet");
 const { View, Text, Pressable } = General;
+const { FormRow } = Forms;
 
 export const ActionSheet =
   findByProps("ActionSheet")?.ActionSheet ??
@@ -30,13 +31,12 @@ export const {
   ActionSheetTitleHeader,
   ActionSheetCloseButton,
   ActionSheetContentContainer,
-  ActionSheetRow,
 } = findByProps(
   "ActionSheetTitleHeader",
   "ActionSheetCloseButton",
-  "ActionSheetContentContainer",
-  "ActionSheetRow"
+  "ActionSheetContentContainer"
 );
+export const ActionSheetRow = findByProps("ActionSheetRow")?.ActionSheetRow;
 
 export const Navigator = findByName("Navigator");
 export const { getRenderCloseButton } = findByProps("getRenderCloseButton");
@@ -118,6 +118,49 @@ export function doHaptic(dur: number): Promise<void> {
 }
 
 // ...
+
+export function CoolActionSheetRow({
+  label,
+  icon,
+  onPress,
+}: {
+  label: string;
+  icon: number;
+  onPress?: () => void;
+}) {
+  const styles = stylesheet.createThemedStyleSheet({
+    iconComponent: {
+      width: 24,
+      height: 24,
+      tintColor: semanticColors.INTERACTIVE_NORMAL,
+    },
+  });
+
+  return ActionSheetRow ? (
+    <ActionSheetRow
+      label={label}
+      icon={
+        <ActionSheetRow.Icon
+          source={icon}
+          IconComponent={() => (
+            <RN.Image
+              resizeMode="cover"
+              style={styles.iconComponent}
+              source={icon}
+            />
+          )}
+        />
+      }
+      onPress={() => onPress?.()}
+    />
+  ) : (
+    <FormRow
+      label={label}
+      leading={<FormRow.Icon source={icon} />}
+      onPress={() => onPress?.()}
+    />
+  );
+}
 
 export function Modal(
   props: React.PropsWithChildren<{
