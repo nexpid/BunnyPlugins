@@ -2,9 +2,10 @@ import { findByProps } from "@vendetta/metro";
 import { ThemeDataWithPlus } from "../../../../stuff/typings";
 import { instead } from "@vendetta/patcher";
 import { chroma } from "@vendetta/metro/common";
-import { patches } from "..";
 import { build } from "./buildTheme";
 import { stsPatches } from "../components/Settings";
+import { showToast } from "@vendetta/ui/toasts";
+import { getAssetIDByName } from "@vendetta/ui/assets";
 
 // TODO keep up to date with https://github.com/vendetta-mod/Vendetta/blob/rewrite/src/lib/themes.ts
 
@@ -93,6 +94,11 @@ export function toggle(val: boolean) {
 
   unpatch?.();
   enabled = val;
+  showToast(
+    `Live theme preview ${enabled ? "enabled" : "disabled"}`,
+    getAssetIDByName("ic_info")
+  );
+
   if (val) unpatch = overwrite(build(stsPatches));
   else unpatch = undefined;
 }

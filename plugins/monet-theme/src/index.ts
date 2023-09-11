@@ -13,6 +13,17 @@ import { React } from "@vendetta/metro/common";
 import Updating from "./components/Updating";
 import { unpatch } from "./stuff/livePreview";
 
+export function migrateStorage() {
+  vstorage.config ??= {
+    style: vstorage.lightmode ? "light" : "dark",
+    wallpaper: vstorage.wallpaper ?? "null",
+  };
+  vstorage.config.style ??= vstorage.lightmode ? "light" : "dark";
+  vstorage.config.wallpaper ??= vstorage.wallpaper ?? "null";
+  if (vstorage.lightmode) delete vstorage.lightmode;
+  if (vstorage.wallpaper) delete vstorage.wallpaper;
+}
+
 export const vstorage: {
   colors?: {
     neutral1: string;
@@ -21,8 +32,14 @@ export const vstorage: {
     accent2: string;
     accent3: string;
   };
-  lightmode?: boolean;
+  config?: {
+    style: "dark" | "light" | "amoled";
+    wallpaper: string | null;
+  };
   autoReapply?: boolean;
+  /** @deprecated */
+  lightmode?: boolean;
+  /** @deprecated */
   wallpaper?: string;
   applyCache?: string;
 } = storage;

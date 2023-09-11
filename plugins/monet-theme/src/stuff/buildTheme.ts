@@ -1,10 +1,11 @@
 import { rawColors } from "@vendetta/ui";
 import { PatchThing, Patches } from "../types";
 import { getLABShade, parseColor } from "./colors";
-import { vstorage } from "..";
+import { migrateStorage, vstorage } from "..";
 import { ThemeDataWithPlus } from "../../../../stuff/typings";
 
 export function build(patches: Patches): ThemeDataWithPlus {
+  migrateStorage();
   const theme: ThemeDataWithPlus = {
     name: "Material You Theme 1.0.43",
     description: "A Discord theme with Material You theming.",
@@ -24,7 +25,10 @@ export function build(patches: Patches): ThemeDataWithPlus {
   };
 
   const get = <T extends PatchThing<any>>(lk: T): T["both"] =>
-    Object.assign(lk.both, vstorage.lightmode ? lk.light : lk.dark);
+    Object.assign(
+      lk.both,
+      vstorage.config.style === "light" ? lk.light : lk.dark
+    );
   const entries = <T extends {}>(obj: T): [string, T[keyof T]][] =>
     Object.entries(obj);
 
@@ -89,11 +93,10 @@ export function build(patches: Patches): ThemeDataWithPlus {
     else theme.semanticColors[x] = [undefined, parseColor(y)];
   }
 
-  if (vstorage.wallpaper)
+  if (vstorage.config.wallpaper)
     theme.background = {
-      url: vstorage.wallpaper,
+      url: vstorage.config.wallpaper,
       alpha: 1,
-      blur: 2,
     };
 
   if (patches.version === 3 && patches.plus) {

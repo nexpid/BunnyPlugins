@@ -16,7 +16,13 @@ import {
 import { VendettaSysColors } from "../../../../stuff/typings";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import Color from "./Color";
-import { commitsURL, devPatchesURL, patchesURL, vstorage } from "..";
+import {
+  commitsURL,
+  devPatchesURL,
+  migrateStorage,
+  patchesURL,
+  vstorage,
+} from "..";
 import { createFileBackend, useProxy } from "@vendetta/storage";
 import { showToast } from "@vendetta/ui/toasts";
 import { showConfirmationAlert, showInputAlert } from "@vendetta/ui/alerts";
@@ -32,7 +38,9 @@ import { openPluginReportSheet } from "../../../../stuff/githubReport";
 import { checkForURL, fetchRawTheme, parseTheme } from "../stuff/repainter";
 import { Patches } from "../types";
 import { transform } from "../stuff/colors";
-import { enabled, toggle } from "../stuff/livePreview";
+import { toggle } from "../stuff/livePreview";
+import { openConfigurePage } from "./pages/ConfigurePage";
+import PreviewButton from "./PreviewButton";
 
 const { BundleUpdaterManager } = window.nativeModuleProxy;
 
@@ -63,8 +71,8 @@ export function setColorsFromDynamic(clr: VendettaSysColors) {
 export let stsCommits: CommitObj[];
 export let stsPatches: Patches;
 export default () => {
+  migrateStorage();
   const navigation = NavigationNative.useNavigation();
-  const [_, forceUpdate] = React.useReducer((x) => ~x, 0);
   const [commits, setCommits] = React.useState<CommitObj[] | undefined>(
     undefined
   );
@@ -73,7 +81,6 @@ export default () => {
   stsCommits = commits;
   stsPatches = patches;
 
-  vstorage.lightmode ??= false;
   useProxy(vstorage);
 
   const styles = stylesheet.createThemedStyleSheet({
@@ -144,11 +151,14 @@ export default () => {
       unsub();
       navigation.setOptions({
         headerRight: () => (
-          <SuperAwesomeIcon
-            style="header"
-            icon={getAssetIDByName("ic_report_message")}
-            onPress={() => openPluginReportSheet("customrpc")}
-          />
+          <View style={{ flexDirection: "row-reverse" }}>
+            <SuperAwesomeIcon
+              style="header"
+              icon={getAssetIDByName("ic_report_message")}
+              onPress={() => openPluginReportSheet("customrpc")}
+            />
+            <PreviewButton />
+          </View>
         ),
       });
     });
@@ -472,24 +482,13 @@ export default () => {
                 });
               }}
             />
-            <FormSwitchRow
-              label={[
-                "Light Theme",
-                <View style={{ width: 10 }} />,
-                <View style={styles.experimental}>
-                  <SimpleText
-                    variant="text-xs/semibold"
-                    color="BACKGROUND_SECONDARY_ALT"
-                  >
-                    EXPERIMENTAL
-                  </SimpleText>
-                </View>,
-              ]}
+            <FormRow
+              label="Configure Theme"
               leading={
                 <FormRow.Icon source={getAssetIDByName("ic_message_edit")} />
               }
-              onValueChange={() => (vstorage.lightmode = !vstorage.lightmode)}
-              value={vstorage.lightmode}
+              trailing={<FormRow.Arrow />}
+              onPress={() => openConfigurePage(navigation)}
             />
             <FormSwitchRow
               label="Automatically Reapply Theme"
@@ -501,19 +500,6 @@ export default () => {
                 (vstorage.autoReapply = !vstorage.autoReapply)
               }
               value={vstorage.autoReapply}
-            />
-            <FormSwitchRow
-              label="Temporary Live Preview"
-              subLabel="Temporarily enables live preview for the theme, disables when you back out of this page"
-              leading={
-                <FormRow.Icon source={getAssetIDByName("ic_message_edit")} />
-              }
-              onValueChange={() => {
-                transformObject(vstorage.colors);
-                toggle(!enabled);
-                forceUpdate();
-              }}
-              value={enabled}
             />
             <FormRow
               label="Reload Theme Patches"

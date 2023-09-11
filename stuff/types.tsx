@@ -332,10 +332,12 @@ export function SuperAwesomeIcon({
   icon,
   style,
   destructive,
+  color,
 }: {
   onPress?: () => void;
   onLongPress?: () => void;
   destructive?: boolean;
+  color?: any;
   icon: number;
   style: "header" | "card" | any;
 }) {
@@ -367,6 +369,7 @@ export function SuperAwesomeIcon({
               : styles.cardStyleIcon
             : style,
           destructive && styles.destructiveIcon,
+          color && { tintColor: color },
         ].filter((x) => !!x)}
         source={icon}
       />
