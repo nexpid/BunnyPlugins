@@ -19,7 +19,7 @@
     "esbuild": "^0.19.2",
     "husky": "^8.0.3",
     "rollup": "^3.28.0",
-    "rollup-plugin-esbuild": "^5.0.0",
+    "rollup-plugin-esbuild": "^6.0.0",
     "vendetta-types": "latest"
   },
   "pnpm": {
