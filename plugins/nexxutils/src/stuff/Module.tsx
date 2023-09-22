@@ -1,10 +1,11 @@
-import { React, ReactNative as RN } from "@vendetta/metro/common";
+import { React, ReactNative as RN, stylesheet } from "@vendetta/metro/common";
 import { Button, Forms, General } from "@vendetta/ui/components";
 import { vstorage } from "..";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { openSheet, SimpleText } from "../../../../stuff/types";
 import SmartMention from "../../../../stuff/components/SmartMention";
 import ChooseSettingSheet from "../components/sheets/ChooseSettingSheet";
+import { semanticColors } from "@vendetta/ui";
 
 const { View } = General;
 const { FormRow, FormSwitchRow, FormDivider } = Forms;
@@ -64,7 +65,8 @@ class Patches {
 }
 
 interface ModuleExtra {
-  credits: string[];
+  credits?: string[];
+  warning?: string;
 }
 
 export class Module {
@@ -150,10 +152,54 @@ export class Module {
       const [_, forceUpdate] = React.useReducer((x) => ~x, 0);
       const [hidden, setHidden] = React.useState(true);
 
+      const styles = stylesheet.createThemedStyleSheet({
+        icon: {
+          width: 16,
+          height: 16,
+          tintColor: semanticColors.TEXT_NORMAL,
+        },
+      });
+
+      const extra: { content: any; color: string; icon: string }[] = [];
+      if (this.extra?.credits)
+        extra.push({
+          content: [
+            "Additional credits go to: ",
+            ...this.extra.credits.map((x, i, a) => (
+              <>
+                {!Number.isNaN(Number(x)) ? (
+                  <SmartMention userId={x} loadUsername={true} />
+                ) : (
+                  x
+                )}
+                {i !== a.length - 1 ? ", " : ""}
+              </>
+            )),
+          ],
+          color: "TEXT_NORMAL",
+          icon: "ic_copy_message_link",
+        });
+      if (this.extra?.warning)
+        extra.push({
+          content: this.extra.warning,
+          color: "TEXT_WARNING",
+          icon: "ic_warning_24px",
+        });
+
       return (
         <>
           <FormRow
-            label={this.label}
+            label={[
+              this.label,
+              extra[0] && <View style={{ paddingHorizontal: 4 }} />,
+              extra.map((x) => (
+                <RN.Image
+                  resizeMode="cover"
+                  style={styles.icon}
+                  source={getAssetIDByName(x.icon)}
+                />
+              )),
+            ]}
             subLabel={this.sublabel}
             leading={this.icon && <FormRow.Icon source={this.icon} />}
             trailing={
@@ -172,21 +218,13 @@ export class Module {
             <>
               <FormDivider />
               <RN.View style={{ paddingHorizontal: 15 }}>
-                {this.extra?.credits && (
+                {extra[0] && (
                   <View style={{ marginHorizontal: 12, marginVertical: 12 }}>
-                    <SimpleText variant="text-md/semibold" color="TEXT_NORMAL">
-                      Additional credits go to:{" "}
-                      {this.extra.credits.map((x, i, a) => (
-                        <>
-                          {!Number.isNaN(Number(x)) ? (
-                            <SmartMention userId={x} loadUsername={true} />
-                          ) : (
-                            x
-                          )}
-                          {i !== a.length - 1 ? ", " : ""}
-                        </>
-                      ))}
-                    </SimpleText>
+                    {extra.map((x) => (
+                      <SimpleText variant="text-md/semibold" color={x.color}>
+                        {x.content}
+                      </SimpleText>
+                    ))}
                   </View>
                 )}
                 <FormSwitchRow
