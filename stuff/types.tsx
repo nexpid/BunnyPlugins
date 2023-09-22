@@ -38,8 +38,11 @@ export const {
 );
 export const ActionSheetRow = findByProps("ActionSheetRow")?.ActionSheetRow;
 
-export const Navigator = findByName("Navigator");
-export const { getRenderCloseButton } = findByProps("getRenderCloseButton");
+export const Navigator =
+  findByName("Navigator") ?? findByProps("Navigator")?.Navigator;
+export const modalCloseButton =
+  findByProps("getRenderCloseButton")?.getRenderCloseButton ??
+  findByProps("getHeaderCloseButton")?.getHeaderCloseButton;
 export const { popModal, pushModal } = findByProps("popModal", "pushModal");
 
 export type Entries<T> = [keyof T, T[keyof T]];
@@ -97,6 +100,18 @@ export function openSheet<T extends React.FunctionComponent>(
 }
 
 export function openModal(key: string, modal: typeof Modal) {
+  const empty = Symbol("empty");
+  if (!Navigator || !modalCloseButton)
+    return showToast(
+      `${[
+        Navigator ? empty : "Navigator",
+        modalCloseButton ? empty : "modalCloseButton",
+      ]
+        .filter((x) => x !== empty)
+        .join(", ")} is missing! Please try reinstalling Vendetta`,
+      getAssetIDByName("Small")
+    );
+
   pushModal({
     key,
     modal: {
@@ -169,12 +184,13 @@ export function Modal(
     title?: string;
   }>
 ) {
+  if (!Navigator || !modalCloseButton) return null;
   return (
     <Navigator
       initialRouteName={props.mkey}
       screens={{
         [props.mkey]: Object.assign(without(props, "mkey", "children"), {
-          headerLeft: getRenderCloseButton(() => popModal(props.mkey)),
+          headerLeft: modalCloseButton?.(() => popModal(props.mkey)),
           render: () => props.children,
         }),
       }}

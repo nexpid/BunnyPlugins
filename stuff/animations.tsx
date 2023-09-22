@@ -27,7 +27,9 @@ export function FadeView({
   const anim = React.useRef(
     new Animated.Value(animateOnInit ? (fade === "in" ? 1 : 0) : 0)
   ).current;
-  const [isHidden, setIsHidden] = React.useState(true);
+  const [isHidden, setIsHidden] = React.useState(
+    animateOnInit ? (fade === "in" ? false : true) : true
+  );
 
   React.useEffect(() => {
     const id = anim.addListener(({ value }) => {
