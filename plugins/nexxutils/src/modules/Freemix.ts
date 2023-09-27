@@ -1,10 +1,9 @@
 import { getAssetIDByName } from "@vendetta/ui/assets";
-import { after, before } from "@vendetta/patcher";
-import { findByProps } from "@vendetta/metro";
+import { before, instead } from "@vendetta/patcher";
+import { findByProps, findByStoreName } from "@vendetta/metro";
 import { Module, ModuleCategory } from "../stuff/Module";
 
-const remixStuff = findByProps("useIsCurrentUserEligibleForRemix");
-const localFileStuff = findByProps("uploadLocalFiles");
+const UserStore = findByStoreName("UserStore");
 
 export default new Module({
   id: "freemix",
@@ -18,20 +17,29 @@ export default new Module({
   handlers: {
     onStart() {
       [
-        "useIsCurrentUserEligibleForRemix",
         "useIsRemixEnabledForMedia",
         "useIsRemixEnabled",
-      ].forEach((x) => this.patches.add(after(x, remixStuff, () => true)));
+        "canRemix",
+        "useCanRemix",
+      ].forEach((x) => {
+        const parent = findByProps(x);
+        if (parent) this.patches.add(instead(x, parent, () => true));
+      });
+
       this.patches.add(
-        before("uploadLocalFiles", localFileStuff, (args) =>
-          args.map((x) => {
-            x.items = x.items.map((y) => {
-              y.isRemix = false;
-              y.item.isRemix = false;
-              return y;
-            });
-            return x;
-          })
+        before(
+          "uploadLocalFiles",
+          findByProps("uploadLocalFiles"),
+          (args) =>
+            !UserStore.getCurrentUser()?.premiumType &&
+            args.map((x) => {
+              x.items = x.items.map((y) => {
+                y.isRemix = false;
+                y.item.isRemix = false;
+                return y;
+              });
+              return x;
+            })
         )
       );
     },

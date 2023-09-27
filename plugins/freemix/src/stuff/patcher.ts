@@ -1,28 +1,35 @@
-import { findByProps } from "@vendetta/metro";
-import { after, before } from "@vendetta/patcher";
+import { findByProps, findByStoreName } from "@vendetta/metro";
+import { before, instead } from "@vendetta/patcher";
 
-const remixStuff = findByProps("useIsCurrentUserEligibleForRemix");
-const localFileStuff = findByProps("uploadLocalFiles");
+const UserStore = findByStoreName("UserStore");
 
 export default function () {
   const patches = [];
 
   [
-    "useIsCurrentUserEligibleForRemix",
     "useIsRemixEnabledForMedia",
     "useIsRemixEnabled",
-  ].forEach((x) => patches.push(after(x, remixStuff, () => true)));
+    "canRemix",
+    "useCanRemix",
+  ].forEach((x) => {
+    const parent = findByProps(x);
+    if (parent) patches.push(instead(x, parent, () => true));
+  });
 
   patches.push(
-    before("uploadLocalFiles", localFileStuff, (args) =>
-      args.map((x) => {
-        x.items = x.items.map((y) => {
-          y.isRemix = false;
-          y.item.isRemix = false;
-          return y;
-        });
-        return x;
-      })
+    before(
+      "uploadLocalFiles",
+      findByProps("uploadLocalFiles"),
+      (args) =>
+        !UserStore.getCurrentUser()?.premiumType &&
+        args.map((x) => {
+          x.items = x.items.map((y) => {
+            y.isRemix = false;
+            y.item.isRemix = false;
+            return y;
+          });
+          return x;
+        })
     )
   );
 
