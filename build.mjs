@@ -21,7 +21,6 @@ const ignorePlugins = [
   "download-everything",
   "fxtwitter",
   "tenor-gif-fix",
-  "freemix",
 ];
 
 if (!existsSync("./dist")) await mkdir("./dist");
@@ -135,7 +134,7 @@ ${mdNote}
         Buffer.concat([
           Buffer.from("vendetta=>{return "),
           await readFile(`./dist/${plug}/index.js`),
-          Buffer.from("}\n//# sourceURL=${plugin.id}"),
+          Buffer.from("}\n//# sourceURL="),
         ])
       );
 
