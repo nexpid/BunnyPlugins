@@ -16,7 +16,7 @@ export default new Module({
   category: ModuleCategory.Useful,
   icon: getAssetIDByName("ic_music"),
   extra: {
-    credits: ["1034579679526526976"],
+    credits: ["1001086404203389018"],
   },
   handlers: {
     onStart() {
