@@ -1,8 +1,10 @@
+import listenAlong from "../../../../assets/SpotifyListenAlong/listenAlong.svg";
 import { findByProps, findByStoreName } from "@vendetta/metro";
-import { React, ReactNative as RN } from "@vendetta/metro/common";
+import { React } from "@vendetta/metro/common";
 import { getAssetIDByName } from "@vendetta/ui/assets";
-import { Button, Forms, General } from "@vendetta/ui/components";
+import { Button, General } from "@vendetta/ui/components";
 import { showToast } from "@vendetta/ui/toasts";
+import { SvgXml } from "../../../../../../stuff/types";
 
 const { View } = General;
 
@@ -10,9 +12,6 @@ const UserStore = findByStoreName("UserStore");
 const SpotifyStore = findByStoreName("SpotifyStore");
 
 const { play, sync } = findByProps("play", "sync");
-
-const listenAlong =
-  "https://raw.githubusercontent.com/nexpid/VendettaPlugins/main/plugins/nexxutils/assets/SpotifyListenAlong/listenAlong.png";
 
 export default function ({
   button,
@@ -43,7 +42,7 @@ export default function ({
           size="small"
           text=""
           style={[button.style, { width: 30 }]}
-          renderIcon={() => <RN.Image source={{ uri: listenAlong }} />}
+          renderIcon={() => <SvgXml width={20} height={20} xml={listenAlong} />}
           onPress={() => {
             showToast("Syncing", getAssetIDByName("Check"));
             if (!SpotifyStore.getActivity()) {
