@@ -72,14 +72,28 @@ const plugins = [
     },
   },
   {
-    name: "svg",
-    transform(code, id) {
-      if (extname(id) !== ".svg") return null;
-
-      return {
-        code: `export default ${JSON.stringify(code.trim())}`,
-        map: { mappings: "" },
+    name: "images",
+    async transform(code, id) {
+      const modes = {
+        ".svg": ["raw"],
+        ".png": ["uri", "image/png"],
       };
+
+      const [mode, arg] = modes[extname(id)] ?? [];
+      if (!mode) return null;
+
+      if (mode === "raw")
+        return { code: `export default ${JSON.stringify(code.trim())}` };
+      else if (mode === "uri" && arg) {
+        const bin = await readFile(id, "binary");
+        return {
+          code: `export default ${JSON.stringify(
+            `data:${arg};base64,${Buffer.from(bin, "binary").toString(
+              "base64"
+            )}`
+          )}`,
+        };
+      } else return null;
     },
   },
   esbuild({ minify: !process.argv.includes("--nominify") }),
