@@ -6,6 +6,7 @@ import { openSheet, SimpleText } from "../../../../stuff/types";
 import SmartMention from "../../../../stuff/components/SmartMention";
 import ChooseSettingSheet from "../components/sheets/ChooseSettingSheet";
 import { semanticColors } from "@vendetta/ui";
+import { showToast } from "@vendetta/ui/toasts";
 
 const { View } = General;
 const { FormRow, FormSwitchRow, FormDivider } = Forms;
@@ -316,10 +317,25 @@ export class Module {
     }
   }
   start() {
-    this.#handlers?.onStart.bind(this)();
+    try {
+      this.#handlers?.onStart.bind(this)();
+    } catch {
+      this.stop();
+      showToast(
+        `[NXU > ${this.label}]: Error on start`,
+        getAssetIDByName("Small")
+      );
+    }
   }
   stop() {
-    this.#handlers?.onStop.bind(this)();
-    this.patches.unpatch();
+    try {
+      this.#handlers?.onStop.bind(this)();
+      this.patches.unpatch();
+    } catch {
+      showToast(
+        `[NXU > ${this.label}]: Error on stop`,
+        getAssetIDByName("Small")
+      );
+    }
   }
 }
