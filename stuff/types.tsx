@@ -49,7 +49,7 @@ export type Entries<T> = [keyof T, T[keyof T]];
 
 // ...
 
-export function resolveSemanticColor(color: string) {
+export function resolveSemanticColor(color: any) {
   return colors.meta.resolveSemanticColor(ThemeStore.theme, color);
 }
 
