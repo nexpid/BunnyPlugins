@@ -1,6 +1,6 @@
 import { React, stylesheet } from "@vendetta/metro/common";
 import { General } from "@vendetta/ui/components";
-import getMessageLength, { hasSLM, prettify } from "../stuff/getMessageLength";
+import getMessageLength, { display, hasSLM } from "../stuff/getMessageLength";
 import { findByProps } from "@vendetta/metro";
 import { semanticColors } from "@vendetta/ui";
 import { FadeView } from "../../../../stuff/animations";
@@ -117,7 +117,7 @@ export default ({ inputProps }: { inputProps: any }) => {
             paddingVertical: 8,
           }}
         >
-          {prettify(dspLength)}/{prettify(maxLength)}
+          {display(dspLength)}
         </SimpleText>
       </UseComponent>
     </FadeView>

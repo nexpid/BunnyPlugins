@@ -4,6 +4,7 @@ import Settings from "./components/Settings";
 
 export const vstorage: {
   position?: "pill" | "inside";
+  display?: "full" | "length" | "remaining";
   commas?: boolean;
   minChars?: number;
   supportSLM?: boolean;

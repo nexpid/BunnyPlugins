@@ -9,6 +9,7 @@ const { FormSwitchRow, FormRadioRow, FormRow, FormInput } = Forms;
 
 export default () => {
   vstorage.position ??= "pill";
+  vstorage.display ??= "full";
   vstorage.commas ??= true;
   vstorage.minChars ??= 1;
   vstorage.supportSLM ??= true;
@@ -39,6 +40,37 @@ export default () => {
           onPress={() => (vstorage.position = "inside")}
           trailing={<FormRow.Arrow />}
           selected={vstorage.position === "inside"}
+          style={{ marginHorizontal: 12 }}
+        />
+        <FormRow
+          label="Display Type"
+          subLabel="Choose how the char counter text appears"
+          leading={
+            <FormRow.Icon source={getAssetIDByName("ic_message_edit")} />
+          }
+        />
+        <FormRadioRow
+          label="Full"
+          subLabel="100/300"
+          onPress={() => (vstorage.display = "full")}
+          trailing={<FormRow.Arrow />}
+          selected={vstorage.display === "full"}
+          style={{ marginHorizontal: 12 }}
+        />
+        <FormRadioRow
+          label="Length"
+          subLabel="100"
+          onPress={() => (vstorage.display = "length")}
+          trailing={<FormRow.Arrow />}
+          selected={vstorage.display === "length"}
+          style={{ marginHorizontal: 12 }}
+        />
+        <FormRadioRow
+          label="Remaining"
+          subLabel="200"
+          onPress={() => (vstorage.display = "remaining")}
+          trailing={<FormRow.Arrow />}
+          selected={vstorage.display === "remaining"}
           style={{ marginHorizontal: 12 }}
         />
         <FormRow

@@ -1,6 +1,6 @@
 import { React, stylesheet } from "@vendetta/metro/common";
 import { SimpleText } from "../../../../stuff/types";
-import getMessageLength, { hasSLM, prettify } from "../stuff/getMessageLength";
+import getMessageLength, { display, hasSLM } from "../stuff/getMessageLength";
 import { vstorage } from "..";
 import { useProxy } from "@vendetta/storage";
 import { lastText } from "../stuff/patcher";
@@ -36,7 +36,7 @@ export default function () {
         variant="text-xs/semibold"
         color={dspLength <= maxLength ? "TEXT_NORMAL" : "TEXT_DANGER"}
       >
-        {prettify(dspLength)}/{prettify(maxLength)}
+        {display(dspLength)}
       </SimpleText>
     </FadeView>
   );
