@@ -1,7 +1,8 @@
+import innerCheck from "../../assets/iconOverlays/innerCheck.png";
 import { findByProps } from "@vendetta/metro";
-import { ReactNative as RN, stylesheet } from "@vendetta/metro/common";
-import { getAssetByID, getAssetIDByName } from "@vendetta/ui/assets";
-import { rawColors, semanticColors } from "@vendetta/ui";
+import { stylesheet, ReactNative as RN } from "@vendetta/metro/common";
+import { getAssetByID } from "@vendetta/ui/assets";
+import { semanticColors } from "@vendetta/ui";
 import { asIcon } from "./icons";
 import { General } from "@vendetta/ui/components";
 import { PlusStructure } from "../../../../stuff/typings";
@@ -17,8 +18,6 @@ const styles = stylesheet.createThemedStyleSheet({
     backgroundColor: semanticColors.BACKGROUND_SECONDARY,
   },
 });
-const innerCheck =
-  "https://cdn.discordapp.com/attachments/919655852724604978/1134434803228344360/inner_check.png";
 
 export function getIconOverlay(
   plus: PlusStructure,
