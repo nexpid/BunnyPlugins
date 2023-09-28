@@ -1,10 +1,9 @@
-import { ReactNative as RN, stylesheet } from "@vendetta/metro/common";
+import { React, ReactNative as RN, stylesheet } from "@vendetta/metro/common";
 import { resolveCustomSemantic } from "../../../../stuff/colors";
 import { rawColors } from "@vendetta/ui";
 import { SimpleText } from "../../../../../../../stuff/types";
 import { findByProps } from "@vendetta/metro";
 import TextButton from "./TextButton";
-
 const Alerts = findByProps("openLazy", "close");
 
 export default function ({
@@ -14,6 +13,7 @@ export default function ({
   confirmColor,
   confirmText,
   onConfirm,
+  isConfirmButtonDisabled,
   cancelText,
   onCancel,
   secondaryConfirmText,
@@ -21,7 +21,16 @@ export default function ({
 }: Omit<ConfirmationAlertOptions, "content"> & {
   children?: ConfirmationAlertOptions["content"];
   body?: ConfirmationAlertOptions["content"];
+  isConfirmButtonDisabled?: boolean;
 }) {
+  // TODO this is BAD, find a different way
+  const isSpecial = isConfirmButtonDisabled !== undefined;
+
+  const [loader, setLoader] = React.useState({
+    confirm: false,
+    cancel: false,
+    secondaryConfirm: false,
+  });
   const styles = stylesheet.createThemedStyleSheet({
     container: {
       backgroundColor: resolveCustomSemantic(
@@ -67,12 +76,16 @@ export default function ({
         }[confirmColor] ?? "BRAND",
       text: confirmText ?? "Confirm",
       action: onConfirm,
+      base: true,
+      loading: "confirm",
     },
     cancelText
       ? {
           color: "BRAND",
           text: cancelText,
           action: onCancel,
+          base: false,
+          loading: "cancel",
         }
       : empty,
     secondaryConfirmText
@@ -80,12 +93,16 @@ export default function ({
           color: "BRAND",
           text: secondaryConfirmText,
           action: onConfirmSecondary,
+          base: false,
+          loading: "secondaryConfirm",
         }
       : empty,
   ].filter((x) => x !== empty) as {
     color: string;
     text: string;
-    action?: () => void;
+    action?: () => any;
+    base: boolean;
+    loading: keyof typeof loader;
   }[];
 
   return (
@@ -94,18 +111,38 @@ export default function ({
         <SimpleText variant="text-lg/semibold" color="TEXT_NORMAL">
           {title}
         </SimpleText>
-        <SimpleText variant="text-md/semibold" color="TEXT_NORMAL">
-          {children ?? body}
-        </SimpleText>
+        {children ? (
+          <RN.View style={{ padding: 0 }}>{children}</RN.View>
+        ) : (
+          <SimpleText variant="text-md/semibold" color="TEXT_NORMAL">
+            {body}
+          </SimpleText>
+        )}
       </RN.View>
       <RN.View style={styles.actions}>
         {things.map((x) => (
           <TextButton
             color={x.color}
             label={x.text}
-            onPress={() => {
-              Alerts.close();
-              x.action?.();
+            disabled={x.base && isConfirmButtonDisabled}
+            loading={loader[x.loading]}
+            onPress={async () => {
+              setLoader({
+                ...loader,
+                [x.loading]: true,
+              });
+              if ("action" in x && isSpecial) {
+                try {
+                  await x.action();
+                } catch {}
+                setLoader({
+                  ...loader,
+                  [x.loading]: false,
+                });
+              } else {
+                x.action?.();
+                Alerts.close();
+              }
             }}
           />
         ))}

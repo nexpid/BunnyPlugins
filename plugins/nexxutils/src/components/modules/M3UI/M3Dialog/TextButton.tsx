@@ -1,22 +1,36 @@
+import {
+  SimpleText,
+  resolveSemanticColor,
+} from "../../../../../../../stuff/types";
 import { React, ReactNative as RN, stylesheet } from "@vendetta/metro/common";
-import { SimpleText } from "../../../../../../../stuff/types";
+import { rawColors, semanticColors } from "@vendetta/ui";
 import { lerp, resolveCustomSemantic } from "../../../../stuff/colors";
-import { rawColors } from "@vendetta/ui";
 
 const AnimatedPressable = RN.Animated.createAnimatedComponent(RN.Pressable);
 
 export default ({
   label,
   color,
+  disabled,
+  loading,
   onPress,
 }: {
   label: string;
   color: string;
+  disabled?: boolean;
+  loading?: boolean;
   onPress?: () => void;
 }) => {
+  const rawVal = {
+    BRAND: rawColors.BRAND_500,
+    DANGER: rawColors.RED_500,
+    POSITIVE: rawColors.GREEN_500,
+    PRIMARAY: rawColors.PRIMARY_500,
+    NORMAL: rawColors.PRIMARY_500,
+  }[color];
   const bleh = resolveCustomSemantic(
-    lerp(rawColors.BRAND_500, "#FFFFFF", 0.25),
-    lerp(rawColors.BRAND_500, "#000000", 0.15)
+    lerp(rawVal, "#FFFFFF", 0.25),
+    lerp(rawVal, "#000000", 0.15)
   );
   const styles = stylesheet.createThemedStyleSheet({
     container: {
@@ -32,6 +46,8 @@ export default ({
       backgroundColor: `${bleh}14`,
     },
   });
+
+  const enabled = !loading && !disabled;
 
   const [isPressing, setIsPressing] = React.useState(false);
   const pressVal = React.useRef(
@@ -51,7 +67,7 @@ export default ({
     <AnimatedPressable
       style={[
         styles.container,
-        {
+        enabled && {
           backgroundColor: pressVal.interpolate({
             inputRange: [0, 1],
             outputRange: [
@@ -63,19 +79,29 @@ export default ({
       ]}
       onPressIn={() => setIsPressing(true)}
       onPressOut={() => setIsPressing(false)}
-      onPress={() => onPress?.()}
+      onPress={() => enabled && onPress?.()}
       accessibilityRole="button"
       accessibilityState={{
-        disabled: false,
+        disabled: !enabled,
       }}
-      accessible={true}
+      accessible={enabled}
       collapsable={false}
-      disabled={false}
-      pointerEvents={"box-only"}
+      disabled={!enabled}
+      pointerEvents={enabled ? "box-only" : "none"}
     >
-      <SimpleText variant="text-md/semibold" color={`TEXT_${color}`}>
-        {label}
-      </SimpleText>
+      {loading ? (
+        <RN.ActivityIndicator
+          size="small"
+          color={resolveSemanticColor(semanticColors[`TEXT_${color}`])}
+        />
+      ) : (
+        <SimpleText
+          variant="text-md/semibold"
+          color={enabled ? `TEXT_${color}` : "TEXT_MUTED"}
+        >
+          {label}
+        </SimpleText>
+      )}
     </AnimatedPressable>
   );
 };
