@@ -34,7 +34,7 @@ function componentify<T extends "before" | "after" | "instead">(
 
   if (should)
     self.patches.add(
-      //@ts-expect-error
+      //@ts-ignore
       fnc(property, origin, callback)
     );
 }
