@@ -1,7 +1,7 @@
 import { React } from "@vendetta/metro/common";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { Module, ModuleCategory } from "../stuff/Module";
-import { after } from "@vendetta/patcher";
+import { after, before, instead } from "@vendetta/patcher";
 import { ReactNative as RN } from "@vendetta/metro/common";
 import CustomSwitch from "../components/modules/M3UI/M3Switch";
 import { find, findByDisplayName, findByName } from "@vendetta/metro";
@@ -16,6 +16,28 @@ const { FormSwitch } = find(
 );
 const Toast = findByName("Toast", false);
 const Alert = findByDisplayName("FluxContainer(Alert)");
+
+function componentify<T extends "before" | "after" | "instead">(
+  self: Module,
+  should: boolean,
+  origin: any,
+  property: string,
+  replacer: T,
+  callback: T extends "before"
+    ? Parameters<typeof before>[2]
+    : T extends "after"
+    ? Parameters<typeof after>[2]
+    : Parameters<typeof instead>[2]
+) {
+  const fnc =
+    replacer === "before" ? before : replacer === "after" ? after : instead;
+
+  if (should)
+    self.patches.add(
+      //@ts-expect-error
+      fnc(property, origin, callback)
+    );
+}
 
 export default new Module({
   id: "m3-ui",
@@ -56,9 +78,12 @@ export default new Module({
         showConfirmationAlert({
           title: "Hello world!",
           content:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean elit mauris, maximus vitae rutrum et, pulvinar ac neque. Aenean nisi justo, fermentum egestas luctus a, faucibus ac orci. Nam varius metus a arcu commodo, sit amet ullamcorper tellus ornare. Phasellus nec nunc neque. Morbi non ex vel tortor varius auctor. Morbi finibus, velit eu consequat consequat, diam orci volutpat ipsum, ut fringilla risus risus non elit. Morbi nunc elit, convallis vitae molestie vitae, porttitor eget eros. Pellentesque eget quam vitae nisi cursus hendrerit. Aliquam erat volutpat. Nam quis vestibulum justo.",
+            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean elit mauris, maximus vitae rutrum et, pulvinar ac neque. Aenean nisi justo, fermentum egestas luctus a, faucibus ac orci.",
           confirmText: "K",
-          onConfirm: () => void 0,
+          onConfirm: () =>
+            new Promise((res) => {
+              setTimeout(res, 5000);
+            }),
           cancelText: "Ok",
           secondaryConfirmText: "Okay",
         });
@@ -67,29 +92,39 @@ export default new Module({
   },
   handlers: {
     onStart() {
-      if (this.storage.options.switch === "Custom")
-        this.patches.add(
-          after("render", RN.Switch, ([x]) =>
-            React.createElement(CustomSwitch, x)
-          )
-        );
-      else if (this.storage.options.switch === "Tabs v2")
-        this.patches.add(
-          after("render", RN.Switch, ([x]) =>
-            React.createElement(FormSwitch, x)
-          )
-        );
+      componentify(
+        this,
+        this.storage.options.switch === "Custom",
+        RN.Switch,
+        "render",
+        "after",
+        ([x]) => React.createElement(CustomSwitch, x)
+      );
+      componentify(
+        this,
+        this.storage.options.switch === "Tabs v2",
+        RN.Switch,
+        "render",
+        "after",
+        ([x]) => React.createElement(FormSwitch, x)
+      );
 
-      if (this.storage.options.snackbar)
-        this.patches.add(
-          after("default", Toast, ([x]) => React.createElement(CustomToast, x))
-        );
-      if (this.storage.options.dialog)
-        this.patches.add(
-          after("render", Alert.prototype, (_, ret) =>
-            React.createElement(CustomDialog, ret.props)
-          )
-        );
+      componentify(
+        this,
+        this.storage.options.snackbar,
+        Toast,
+        "default",
+        "after",
+        ([x]) => React.createElement(CustomToast, x)
+      );
+      componentify(
+        this,
+        this.storage.options.dialog,
+        Alert.prototype,
+        "render",
+        "after",
+        (_, ret) => React.createElement(CustomDialog, ret.props)
+      );
     },
     onStop() {},
   },
