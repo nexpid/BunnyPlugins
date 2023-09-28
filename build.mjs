@@ -71,6 +71,17 @@ const plugins = [
       return result.code;
     },
   },
+  {
+    name: "svg",
+    transform(code, id) {
+      if (extname(id) !== ".svg") return null;
+
+      return {
+        code: `export default ${JSON.stringify(code.trim())}`,
+        map: { mappings: "" },
+      };
+    },
+  },
   esbuild({ minify: !process.argv.includes("--nominify") }),
 ];
 
@@ -130,7 +141,7 @@ ${mdNote}
 
     if (process.argv.includes("--debug"))
       await writeFile(
-        `./dist/${plug}/index.js`,
+        outPath,
         Buffer.concat([
           Buffer.from("vendetta=>{return "),
           await readFile(`./dist/${plug}/index.js`),
