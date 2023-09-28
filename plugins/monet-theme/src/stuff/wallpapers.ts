@@ -7,7 +7,6 @@ export interface Collection {
   }[];
 }
 
-// i manually typed this out
 export default <Collection[]>[
   {
     label: "Pixel 4 XL",
@@ -15,35 +14,35 @@ export default <Collection[]>[
     content: [
       {
         title: "Cinnamon",
-        url: "https://media.discordapp.net/attachments/919655852724604978/1134393927076687912/cinnamon.png",
+        url: "https://raw.githubusercontent.com/nexpid/VendettaPlugins/main/plugins/monet-theme/assets/backgrounds/pixel4l/cinnamon.png",
       },
       {
         title: "Default",
-        url: "https://media.discordapp.net/attachments/919655852724604978/1134393927324160080/default.png",
+        url: "https://raw.githubusercontent.com/nexpid/VendettaPlugins/main/plugins/monet-theme/assets/backgrounds/pixel4l/default.png",
       },
       {
         title: "Green",
-        url: "https://media.discordapp.net/attachments/919655852724604978/1134393927663882281/green.png",
+        url: "https://raw.githubusercontent.com/nexpid/VendettaPlugins/main/plugins/monet-theme/assets/backgrounds/pixel4l/green.png",
       },
       {
         title: "Ocean",
-        url: "https://media.discordapp.net/attachments/919655852724604978/1134393927928139848/ocean.png",
+        url: "https://raw.githubusercontent.com/nexpid/VendettaPlugins/main/plugins/monet-theme/assets/backgrounds/pixel4l/ocean.png",
       },
       {
         title: "Orchid",
-        url: "https://media.discordapp.net/attachments/919655852724604978/1134393928200753152/orchid.png",
+        url: "https://raw.githubusercontent.com/nexpid/VendettaPlugins/main/plugins/monet-theme/assets/backgrounds/pixel4l/orchid.png",
       },
       {
         title: "Purple",
-        url: "https://media.discordapp.net/attachments/919655852724604978/1134393928427253840/purple.png",
+        url: "https://raw.githubusercontent.com/nexpid/VendettaPlugins/main/plugins/monet-theme/assets/backgrounds/pixel4l/purple.png",
       },
       {
         title: "Space",
-        url: "https://media.discordapp.net/attachments/919655852724604978/1134393928779567124/space.png",
+        url: "https://raw.githubusercontent.com/nexpid/VendettaPlugins/main/plugins/monet-theme/assets/backgrounds/pixel4l/space.png",
       },
       {
         title: "White",
-        url: "https://media.discordapp.net/attachments/919655852724604978/1134393929064787978/white.png",
+        url: "https://raw.githubusercontent.com/nexpid/VendettaPlugins/main/plugins/monet-theme/assets/backgrounds/pixel4l/white.png",
       },
     ],
   },

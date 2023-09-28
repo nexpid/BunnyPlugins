@@ -4,7 +4,7 @@ import { SuperAwesomeIcon } from "../../../../stuff/types";
 import { enabled, toggle } from "../stuff/livePreview";
 import { rawColors } from "@vendetta/ui";
 
-export default () => {
+export default ({ onPressExtra }: { onPressExtra: () => void }) => {
   const [_, forceUpdate] = React.useReducer((x) => ~x, 0);
 
   return (
@@ -15,6 +15,7 @@ export default () => {
       onPress={() => {
         toggle(!enabled);
         forceUpdate();
+        onPressExtra();
       }}
     />
   );

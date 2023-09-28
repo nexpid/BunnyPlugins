@@ -4,6 +4,7 @@ import {
   React,
   clipboard,
   stylesheet,
+  url,
 } from "@vendetta/metro/common";
 import { Forms, General } from "@vendetta/ui/components";
 import {
@@ -73,6 +74,7 @@ export let stsPatches: Patches;
 export default () => {
   migrateStorage();
   const navigation = NavigationNative.useNavigation();
+  const [_, forceUpdate] = React.useReducer((x) => ~x, 0);
   const [commits, setCommits] = React.useState<CommitObj[] | undefined>(
     undefined
   );
@@ -150,20 +152,12 @@ export default () => {
     const unsub = navigation.addListener("focus", () => {
       unsub();
       navigation.setOptions({
-        headerRight: () => (
-          <View style={{ flexDirection: "row-reverse" }}>
-            <SuperAwesomeIcon
-              style="header"
-              icon={getAssetIDByName("ic_report_message")}
-              onPress={() => openPluginReportSheet("customrpc")}
-            />
-            <PreviewButton />
-          </View>
-        ),
+        headerRight: () => <PreviewButton onPressExtra={forceUpdate} />,
       });
     });
     navigation.addListener("beforeRemove", () => {
       toggle(false);
+      forceUpdate();
     });
   }, [navigation]);
 
@@ -334,6 +328,7 @@ export default () => {
                 title: "Enter Repainter link",
                 placeholder: "https://repainter.app/themes/123ABC",
                 initialValue: link,
+                confirmText: "Use",
                 onConfirm: async (i) => {
                   const link = checkForURL(i);
                   if (!link) throw new Error("No Repainter link found!");
@@ -342,7 +337,6 @@ export default () => {
                   vstorage.colors = theme.colors;
                   showToast("Imported", getAssetIDByName("toast_image_saved"));
                 },
-                confirmText: "Use",
                 confirmColor: "brand" as ButtonColors,
                 cancelText: "Cancel",
               });

@@ -11,6 +11,7 @@ import {
   BetterTableRowGroup,
   SimpleText,
   openSheet,
+  resolveSemanticColor,
 } from "../../../../../stuff/types";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import wallpapers from "../../stuff/wallpapers";
@@ -30,6 +31,14 @@ export const ConfigurePage = () => {
   const styles = stylesheet.createThemedStyleSheet({
     thing: {
       backgroundColor: semanticColors.BACKGROUND_TERTIARY,
+      borderRadius: 8,
+      aspectRatio: 1 / 2,
+    },
+    emptyThing: {
+      padding: 12,
+      alignItems: "center",
+      justifyContent: "center",
+      gap: 8,
     },
     androidRipple: {
       color: semanticColors.ANDROID_RIPPLE,
@@ -93,6 +102,40 @@ export const ConfigurePage = () => {
               </SimpleText>
             </View>
             <ScrollView horizontal={true}>
+              <View style={{ marginRight: 8, flexDirection: "column" }}>
+                <RN.TouchableOpacity
+                  onPress={() => {
+                    showToast("Removed background", getAssetIDByName("Check"));
+                    delete vstorage.config.wallpaper;
+                  }}
+                  style={[
+                    styles.thing,
+                    styles.emptyThing,
+                    {
+                      width: dims.width / 4,
+                    },
+                  ]}
+                >
+                  <RN.Image
+                    source={getAssetIDByName("img_none")}
+                    style={{
+                      width: "100%",
+                      aspectRatio: 1 / 1,
+                      tintColor: resolveSemanticColor(
+                        semanticColors.TEXT_NORMAL
+                      ),
+                    }}
+                  />
+                </RN.TouchableOpacity>
+                <SimpleText
+                  variant="text-sm/semibold"
+                  color="TEXT_NORMAL"
+                  align="center"
+                  style={{ marginTop: 8 }}
+                >
+                  None
+                </SimpleText>
+              </View>
               {x.content.map((x) => (
                 <View style={{ marginRight: 8, flexDirection: "column" }}>
                   <RN.TouchableOpacity
@@ -106,9 +149,7 @@ export const ConfigurePage = () => {
                     style={[
                       styles.thing,
                       {
-                        borderRadius: 8,
                         width: dims.width / 4,
-                        aspectRatio: 1 / 2,
                       },
                     ]}
                   >
