@@ -45,6 +45,8 @@ export const modalCloseButton =
   findByProps("getHeaderCloseButton")?.getHeaderCloseButton;
 export const { popModal, pushModal } = findByProps("popModal", "pushModal");
 
+export const { SvgXml } = findByProps("SvgXml");
+
 export type Entries<T> = [keyof T, T[keyof T]];
 
 // ...
