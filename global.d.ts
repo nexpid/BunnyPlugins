@@ -1,21 +1,23 @@
-export {};
+declare module "*.svg" {
+  const content: string;
+  export default content;
+}
 
-declare global {
-  namespace nativeModuleProxy {
-    const BundleUpdaterManager: {
+interface Window {
+  nativeModuleProxy: {
+    BundleUpdaterManager: {
       reload: () => void;
     };
-    const MMKVManager: {
+    MMKVManager: {
       getItem: (key: string) => Promise<string | null>;
       removeItem: (key: string) => void;
       setItem: (key: string, value: string) => void;
       refresh: (exclude: string[]) => Promise<Record<string, string>>;
-      // uhh apparently i'm gonna get murdered if i use this function?? yeah whatever i'll use it in all my plugins lol...
       clear: () => void;
     };
-  }
+  };
 
-  var __vendetta_loader:
+  __vendetta_loader:
     | {
         features?: {
           themes?: { prop: string };
@@ -23,8 +25,8 @@ declare global {
         };
       }
     | undefined;
-  var __vendetta_theme: Theme | undefined;
+  __vendetta_theme: Theme | undefined;
 
-  var CSmigrationStage: number | undefined;
-  var TPfirstLoad: boolean | undefined;
+  CSmigrationStage: number | undefined;
+  TPfirstLoad: boolean | undefined;
 }
