@@ -1,5 +1,5 @@
 import { getAssetIDByName } from "@vendetta/ui/assets";
-import { before, instead } from "@vendetta/patcher";
+import { after, before } from "@vendetta/patcher";
 import { findByProps, findByStoreName } from "@vendetta/metro";
 import { Module, ModuleCategory } from "../stuff/Module";
 
@@ -23,7 +23,7 @@ export default new Module({
         "useCanRemix",
       ].forEach((x) => {
         const parent = findByProps(x);
-        if (parent) this.patches.add(instead(x, parent, () => true));
+        if (parent) this.patches.add(after(x, parent, () => true));
       });
 
       this.patches.add(

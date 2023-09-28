@@ -1,5 +1,5 @@
 import { findByProps, findByStoreName } from "@vendetta/metro";
-import { before, instead } from "@vendetta/patcher";
+import { after, before } from "@vendetta/patcher";
 
 const UserStore = findByStoreName("UserStore");
 
@@ -13,7 +13,7 @@ export default function () {
     "useCanRemix",
   ].forEach((x) => {
     const parent = findByProps(x);
-    if (parent) patches.push(instead(x, parent, () => true));
+    if (parent) patches.push(after(x, parent, () => true));
   });
 
   patches.push(
