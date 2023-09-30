@@ -19,6 +19,20 @@ interface Window {
       refresh: (exclude: string[]) => Promise<Record<string, string>>;
       clear: () => void;
     };
+    DCDSoundManager: {
+      pause: (soundId: number) => void;
+      play: (soundId: number) => void;
+      stop: (soundId: number) => void;
+      prepare: (
+        url: string,
+        type: "notification",
+        soundId: number,
+        callback: (
+          error: any,
+          meta: { numberOfChannels: number; duration: number }
+        ) => any
+      ) => void;
+    };
   };
 
   __vendetta_loader:
