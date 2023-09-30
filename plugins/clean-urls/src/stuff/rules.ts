@@ -124,6 +124,15 @@ const defaultRules = [
   "share_id@reddit.com",
 ];
 
+const extraRules = [
+  "ex@cdn.discordapp.com",
+  "is@cdn.discordapp.com",
+  "hm@cdn.discordapp.com",
+  "ex@media.discordapp.net",
+  "is@media.discordapp.net",
+  "hm@media.discordapp.net",
+];
+
 const reEscaper = /[\\^$.*+?()[\]{}|]/g;
 const reEscape = (str: string) => str.replace(reEscaper, "\\$&");
 
@@ -131,7 +140,7 @@ const universal = new Array<RegExp>();
 const byHost: Record<string, RegExp[]> = {};
 const hostMap: Record<string, RegExp> = {};
 
-for (const mrule of defaultRules) {
+for (const mrule of [...defaultRules, ...extraRules]) {
   const [rule, host] = mrule.split("@");
   const reRule = new RegExp(`^${reEscape(rule).replace(/\*/g, ".+?")}$`);
 
