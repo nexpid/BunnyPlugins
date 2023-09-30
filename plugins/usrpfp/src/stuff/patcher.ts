@@ -44,15 +44,17 @@ export default async () => {
   patches.push(
     after("getUserProfile", UserProfileStore, ([id], ret) => {
       const username = UserStore.getUser(id)?.username;
+      const badge = data.badges[id] ?? data.badges[username];
+
       return ret
         ? {
             ...ret,
             badges: [
-              data.badges[username]
+              badge
                 ? {
                     id: "usrpfp-custom",
                     description: `${username}'s custom USRPFP badge`,
-                    icon: badgeIconPrefix + data.badges[username],
+                    icon: badgeIconPrefix + badge,
                   }
                 : emptySymbol,
               ...ret.badges,
