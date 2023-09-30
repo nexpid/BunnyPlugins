@@ -55,19 +55,22 @@ export type SyncImportOptions = Record<
   "unproxiedPlugins" | "plugins" | "themes",
   boolean
 >;
-export async function importData(options: SyncImportOptions) {
-  if (!cache.save) return;
+export async function importData(
+  save: DBSave.Save,
+  options: SyncImportOptions
+) {
+  if (!save) return;
   importCallback?.(true);
 
   const iplugins = [
-    ...cache.save.sync.plugins.filter(
+    ...save.sync.plugins.filter(
       (x) =>
         !plugins[x.id] &&
         !isPluginProxied(x.id) &&
         canImport(x.id) &&
         options.unproxiedPlugins
     ),
-    ...cache.save.sync.plugins.filter(
+    ...save.sync.plugins.filter(
       (x) =>
         !plugins[x.id] &&
         isPluginProxied(x.id) &&
@@ -75,7 +78,7 @@ export async function importData(options: SyncImportOptions) {
         options.plugins
     ),
   ];
-  const ithemes = cache.save.sync.themes.filter(
+  const ithemes = save.sync.themes.filter(
     (x) => !themes[x.id] && options.themes
   );
 

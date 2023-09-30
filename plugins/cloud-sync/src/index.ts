@@ -26,6 +26,7 @@ export const vstorage: {
     }
   >;
   auth?: Record<string, AuthRecord>;
+  host?: string;
 } = storage;
 
 let _cache: any;

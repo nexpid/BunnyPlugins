@@ -1,45 +1,67 @@
-import { useProxy } from "@vendetta/storage";
+import { useProxy, wrapSync } from "@vendetta/storage";
 import { cache, vstorage, emitterAvailable } from "..";
 import { Forms, General } from "@vendetta/ui/components";
 import {
   BetterTableRowGroup,
   LineDivider,
   SimpleText,
-  SuperAwesomeIcon,
+  openSheet,
 } from "../../../../stuff/types";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import DataStat from "./DataStat";
 import { openOauth2Modal } from "../stuff/oauth2";
-import { currentAuthorization, deleteSaveData } from "../stuff/api";
-import DataManagementButtons from "./DataManagementButtons";
+import {
+  currentAuthorization,
+  deleteSaveData,
+  syncSaveData,
+} from "../stuff/api";
 import { showToast } from "@vendetta/ui/toasts";
-import { NavigationNative, React, clipboard } from "@vendetta/metro/common";
+import {
+  NavigationNative,
+  React,
+  ReactNative as RN,
+  url,
+} from "@vendetta/metro/common";
 import PluginSettingsPage from "./pages/PluginSettingsPage";
-import { openPluginReportSheet } from "../../../../stuff/githubReport";
-import { findByStoreName } from "@vendetta/metro";
+import { findByProps, findByStoreName } from "@vendetta/metro";
+import { showConfirmationAlert, showInputAlert } from "@vendetta/ui/alerts";
+import ImportActionSheet from "./sheets/ImportActionSheet";
+import { grabEverything, setImportCallback } from "../stuff/syncStuff";
+import { decrypt, encrypt } from "../stuff/crypt";
+import constants from "../constants";
+import { makeSound } from "../stuff/sound";
 
 const { ScrollView, View } = General;
-const { FormRow, FormSwitchRow } = Forms;
+const { FormRow, FormInput, FormSwitchRow } = Forms;
 
 const UserStore = findByStoreName("UserStore");
+const DocumentPicker = findByProps("pickSingle", "isCancel");
+
+const deltaruneCreepyJingle = wrapSync(
+  makeSound(
+    "https://cdn.discordapp.com/attachments/919655852724604978/1157612271699247215/169606667269853247.ogg" /*`${constants.raw}assets/snd_creepyjingle.ogg`*/
+  )
+);
+const undertaleMysteryGo = wrapSync(
+  makeSound(
+    "https://cdn.discordapp.com/attachments/919655852724604978/1157611323132219442/169606644669627035.ogg" /*`${constants.raw}assets/snd_mysterygo.ogg`*/
+  )
+);
 
 export default function () {
+  const [showDev, setShowDev] = React.useState(false);
+  const [isBusy, setIsBusy] = React.useState([]);
   useProxy(cache);
   useProxy(vstorage);
 
+  const setBusy = (x: string) =>
+    !isBusy.includes(x) && setIsBusy([...isBusy, x]);
+  const unBusy = (x: string) => setIsBusy(isBusy.filter((y) => x !== y));
+
+  let lastTap = 0;
+
   const navigation = NavigationNative.useNavigation();
-  const unsub = navigation.addListener("focus", () => {
-    unsub();
-    navigation.setOptions({
-      headerRight: () => (
-        <SuperAwesomeIcon
-          icon={getAssetIDByName("ic_report_message")}
-          style="header"
-          onPress={() => openPluginReportSheet("cloud-sync")}
-        />
-      ),
-    });
-  });
+  const canManageData = currentAuthorization() && cache.save;
 
   return (
     <ScrollView>
@@ -71,6 +93,15 @@ export default function () {
       <BetterTableRowGroup
         title="Settings"
         icon={getAssetIDByName("ic_cog_24px")}
+        onTitlePress={() =>
+          lastTap >= Date.now()
+            ? (showDev
+                ? undertaleMysteryGo.play()
+                : deltaruneCreepyJingle.play(),
+              setShowDev(!showDev),
+              (lastTap = 0))
+            : (lastTap = Date.now() + 500)
+        }
       >
         <FormSwitchRow
           label="Auto Save"
@@ -109,6 +140,26 @@ export default function () {
             })
           }
         />
+        {showDev && (
+          <>
+            <LineDivider addPadding={true} />
+            <FormRow
+              label="Custom Host"
+              subLabel="Custom URL for the CloudSync backend API"
+              leading={
+                <FormRow.Icon source={getAssetIDByName("ic_message_edit")} />
+              }
+            />
+            <FormInput
+              title=""
+              keyboardType="numeric"
+              placeholder="1"
+              value={constants.api}
+              onChange={(x: string) => (vstorage.host = x)}
+              style={{ marginTop: -25, marginHorizontal: 12 }}
+            />
+          </>
+        )}
       </BetterTableRowGroup>
       <BetterTableRowGroup
         title="Authentication"
@@ -162,23 +213,182 @@ export default function () {
       <BetterTableRowGroup
         title="Data Management"
         icon={getAssetIDByName("ic_message_edit")}
-        padding={true}
+        padding={!canManageData}
       >
-        <DataManagementButtons />
-        {currentAuthorization() && (
+        {canManageData ? (
           <>
-            <LineDivider />
             <FormRow
-              label="Copy Data as JSON"
-              leading={<FormRow.Icon source={getAssetIDByName("copy")} />}
+              label="Save Data"
+              subLabel="Saves your data to the CloudSync API"
+              leading={
+                isBusy.includes("save_api") ? (
+                  <RN.ActivityIndicator size="small" />
+                ) : (
+                  <FormRow.Icon
+                    source={getAssetIDByName("ic_file_upload_24px")}
+                  />
+                )
+              }
               onPress={() => {
-                clipboard.setString(
-                  JSON.stringify(cache.save ?? {}, undefined, 3)
+                showConfirmationAlert({
+                  title: "Save data",
+                  content: "Are you sure you want to overwrite your save data?",
+                  confirmText: "Overwrite",
+                  confirmColor: "BRAND" as ButtonColors,
+                  onConfirm: async () => {
+                    setBusy("save_api");
+                    try {
+                      cache.save = await syncSaveData(await grabEverything());
+
+                      showToast(
+                        "Successfully synced data",
+                        getAssetIDByName("Check")
+                      );
+                    } catch (e) {
+                      showToast(String(e), getAssetIDByName("Small"));
+                    }
+
+                    unBusy("save_api");
+                  },
+                  cancelText: "Cancel",
+                });
+              }}
+            />
+            <FormRow
+              label="Import Data"
+              subLabel="Imports data from the CloudSync API"
+              leading={
+                isBusy.includes("import_api") ? (
+                  <RN.ActivityIndicator size="small" />
+                ) : (
+                  <FormRow.Icon source={getAssetIDByName("ic_download_24px")} />
+                )
+              }
+              onPress={() => {
+                openSheet(ImportActionSheet, {
+                  navigation,
+                });
+                setImportCallback((x) =>
+                  x ? setBusy("import_api") : unBusy("import_api")
                 );
-                showToast("Copied", getAssetIDByName("Check"));
+              }}
+            />
+            <LineDivider addPadding={true} />
+            <FormRow
+              label="Export Local Data"
+              subLabel="Exports data to a .txt file"
+              leading={
+                isBusy.includes("export_local") ? (
+                  <RN.ActivityIndicator size="small" />
+                ) : (
+                  <FormRow.Icon
+                    source={getAssetIDByName("ic_file_upload_24px")}
+                  />
+                )
+              }
+              onPress={async () => {
+                showInputAlert({
+                  title: "Enter encryption key",
+                  placeholder: "secret password",
+                  confirmText: "Enter",
+                  onConfirm: async (inp) => {
+                    if (!inp) throw new Error("An encryption key must be set");
+                    if (isBusy.length) return;
+                    setBusy("local_export");
+
+                    let text: string;
+                    try {
+                      text = encrypt(JSON.stringify(cache.save), inp);
+                    } catch {
+                      unBusy("local_export");
+                      return showToast(
+                        "Failed to encrypt!",
+                        getAssetIDByName("Small")
+                      );
+                    }
+
+                    showToast(
+                      "Downloading file in your browser",
+                      getAssetIDByName("Check")
+                    );
+                    url.openURL(
+                      `${constants.api}api/download?data=${encodeURIComponent(
+                        text
+                      )}`
+                    );
+                    unBusy("local_export");
+                  },
+                });
+              }}
+            />
+            <FormRow
+              label="Import Local Data"
+              subLabel="Imports data from a .txt file"
+              leading={
+                isBusy.includes("import_local") ? (
+                  <RN.ActivityIndicator size="small" />
+                ) : (
+                  <FormRow.Icon source={getAssetIDByName("ic_download_24px")} />
+                )
+              }
+              onPress={async () => {
+                if (isBusy.length) return;
+                setBusy("import_local");
+
+                let text: string;
+                try {
+                  const { uri, type } = await DocumentPicker.pickSingle({
+                    type: DocumentPicker.types.plainText,
+                    mode: "open",
+                  });
+                  if (type === "text/plain")
+                    text = await (await fetch(uri)).text();
+                } catch (e) {
+                  if (!DocumentPicker.isCancel(e))
+                    showToast(`Got an error! ${e}`, getAssetIDByName("Small"));
+                }
+
+                unBusy("import_local");
+                if (!text) return;
+
+                showInputAlert({
+                  title: "Enter decryption key",
+                  placeholder: "secret password",
+                  confirmText: "Enter",
+                  onConfirm: async (inp) => {
+                    if (!inp) throw new Error("A decryption key must be set");
+                    if (isBusy.length) return;
+                    setBusy("import_local");
+
+                    try {
+                      const data = JSON.parse(decrypt(text, inp));
+                      openSheet(ImportActionSheet, {
+                        save: data,
+                        navigation,
+                      });
+                      setImportCallback((x) =>
+                        x ? setBusy("import_local") : unBusy("import_local")
+                      );
+                    } catch {
+                      unBusy("import_local");
+                      return showToast(
+                        "Failed to decrypt!",
+                        getAssetIDByName("Small")
+                      );
+                    }
+                  },
+                });
               }}
             />
           </>
+        ) : (
+          <SimpleText
+            variant="text-md/semibold"
+            color="TEXT_NORMAL"
+            align="center"
+          >
+            Authenticate first to manage your data
+          </SimpleText>
         )}
       </BetterTableRowGroup>
       <View style={{ height: 12 }} />

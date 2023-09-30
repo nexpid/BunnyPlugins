@@ -15,24 +15,27 @@ import { plugins } from "@vendetta/plugins";
 import { themes } from "@vendetta/themes";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { openImportLogsPage } from "../pages/ImportLogsPage";
+import { DBSave } from "../../types/api/latest";
 
 const { FormCheckboxRow } = Forms;
 
 export default function ImportActionSheet({
   defOptions,
+  save = cache.save,
   navigation,
 }: {
   defOptions?: SyncImportOptions;
+  save?: DBSave.Save;
   navigation: any;
 }) {
   const has = {
-    unproxiedPlugins: cache.save.sync.plugins.filter(
+    unproxiedPlugins: save.sync.plugins.filter(
       (x) => !plugins[x.id] && !isPluginProxied(x.id) && canImport(x.id)
     ).length,
-    plugins: cache.save.sync.plugins.filter(
+    plugins: save.sync.plugins.filter(
       (x) => !plugins[x.id] && isPluginProxied(x.id) && canImport(x.id)
     ).length,
-    themes: cache.save.sync.themes.filter((x) => !themes[x.id]).length,
+    themes: save.sync.themes.filter((x) => !themes[x.id]).length,
   };
   const [options, setOptions] = React.useState<SyncImportOptions>(
     defOptions ?? {
@@ -117,7 +120,7 @@ export default function ImportActionSheet({
           )}
           onPress={() => {
             openImportLogsPage(navigation);
-            importData(options);
+            importData(save, options);
             hideActionSheet();
           }}
           style={{
