@@ -35,9 +35,13 @@ export default async () => {
   const patches = new Array<() => void>();
 
   const plus: PlusStructure | false = getPlusData();
-  if (plus === false) return active.blehhh.push(InactiveReason.NoTheme);
-  else if (!plus)
-    return active.blehhh.push(InactiveReason.ThemesPlusUnsupported);
+  if (plus === false) {
+    active.blehhh.push(InactiveReason.NoTheme);
+    return;
+  } else if (!plus) {
+    active.blehhh.push(InactiveReason.ThemesPlusUnsupported);
+    return;
+  }
 
   active.patches.length = 0;
 
