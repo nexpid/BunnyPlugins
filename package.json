@@ -10,6 +10,7 @@
     "@material/material-color-utilities": "^0.2.7",
     "@swc/helpers": "^0.5.1",
     "big.js": "^6.2.1",
+    "react-native-crypto-js": "^1.0.0",
     "twemoji-parser": "^14.0.0"
   },
   "devDependencies": {
