@@ -28,8 +28,8 @@ A collection of all my awesome plugins for Vendetta
 # 📊 Stats
 
 I've coded a total of **21** plugins.  
-Out of the plugins I've coded, **14** are finished (**66%**), and **9** are proxied (**42%**)  
-**5** plugins I've coded are currently waiting to be proxied.  
+Out of the plugins I've coded, **14** are finished (**66%**), and **10** are proxied (**47%**)  
+**4** plugins I've coded are currently waiting to be proxied.  
 I'm working on **4** plugins, and **3** plugins are discontinued.
 
 <div align="center">
@@ -51,7 +51,7 @@ I'm working on **4** plugins, and **3** plugins are discontinued.
 - HideServers — Allows you to locally hide servers from your server list
 	- [<img alt="copy_link" src="https://img.shields.io/badge/copy_link-1e1e2e?style=for-the-badge" />](https://vendetta.nexpid.xyz/hide-servers) [<img alt="view_code" src="https://img.shields.io/badge/view_code-1e1e2e?style=for-the-badge" />](https://github.com/nexpid/VendettaPlugins/tree/main/plugins/hide-servers)
 - LocalPins — Pin messages locally
-	- [<img alt="copy_link" src="https://img.shields.io/badge/copy_link-1e1e2e?style=for-the-badge" />](https://vendetta.nexpid.xyz/local-pins) [<img alt="view_code" src="https://img.shields.io/badge/view_code-1e1e2e?style=for-the-badge" />](https://github.com/nexpid/VendettaPlugins/tree/main/plugins/local-pins)
+	- [<img alt="copy_proxied_link" src="https://img.shields.io/badge/copy_proxied_link-1e1e2e?style=for-the-badge" />](https://vd-plugins.github.io/proxy/vendetta.nexpid.xyz/local-pins) [<img alt="view_code" src="https://img.shields.io/badge/view_code-1e1e2e?style=for-the-badge" />](https://github.com/nexpid/VendettaPlugins/tree/main/plugins/local-pins)
 - MessageMarkdownPreview — Preview markdown when typing a message
 	- [<img alt="copy_proxied_link" src="https://img.shields.io/badge/copy_proxied_link-1e1e2e?style=for-the-badge" />](https://vd-plugins.github.io/proxy/vendetta.nexpid.xyz/message-markdown-preview) [<img alt="view_code" src="https://img.shields.io/badge/view_code-1e1e2e?style=for-the-badge" />](https://github.com/nexpid/VendettaPlugins/tree/main/plugins/message-markdown-preview)
 - MonetTheme — Monet (M3) theme generator
