@@ -14,8 +14,6 @@ export async function makeSound(url: string): Promise<Sound> {
     )
   )) as number;
 
-  console.log(url, duration);
-
   let playingTimeout = null;
   return {
     play() {
