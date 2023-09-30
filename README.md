@@ -28,8 +28,8 @@ A collection of all my awesome plugins for Vendetta
 # 📊 Stats
 
 I've coded a total of **21** plugins.  
-Out of the plugins I've coded, **14** are finished (**66%**), and **10** are proxied (**47%**)  
-**4** plugins I've coded are currently waiting to be proxied.  
+Out of the plugins I've coded, **14** are finished (**66%**), and **11** are proxied (**52%**)  
+**3** plugins I've coded are currently waiting to be proxied.  
 I'm working on **4** plugins, and **3** plugins are discontinued.
 
 <div align="center">
@@ -59,10 +59,10 @@ I'm working on **4** plugins, and **3** plugins are discontinued.
 - PluginBrowser — Browse all proxied plugins
 	- [<img alt="copy_proxied_link" src="https://img.shields.io/badge/copy_proxied_link-1e1e2e?style=for-the-badge" />](https://vd-plugins.github.io/proxy/vendetta.nexpid.xyz/plugin-browser) [<img alt="view_code" src="https://img.shields.io/badge/view_code-1e1e2e?style=for-the-badge" />](https://github.com/nexpid/VendettaPlugins/tree/main/plugins/plugin-browser)
 - TwemojiEverywhere — Turns system emoji into Twemoji 👋😀🎉
-	- [<img alt="copy_link" src="https://img.shields.io/badge/copy_link-1e1e2e?style=for-the-badge" />](https://vendetta.nexpid.xyz/twemoji-everywhere) [<img alt="view_code" src="https://img.shields.io/badge/view_code-1e1e2e?style=for-the-badge" />](https://github.com/nexpid/VendettaPlugins/tree/main/plugins/twemoji-everywhere)
+	- [<img alt="copy_proxied_link" src="https://img.shields.io/badge/copy_proxied_link-1e1e2e?style=for-the-badge" />](https://vd-plugins.github.io/proxy/vendetta.nexpid.xyz/twemoji-everywhere) [<img alt="view_code" src="https://img.shields.io/badge/view_code-1e1e2e?style=for-the-badge" />](https://github.com/nexpid/VendettaPlugins/tree/main/plugins/twemoji-everywhere)
 - UseSystemEmoji — Uses system emoji instead of twemoji for messages
 	- [<img alt="copy_proxied_link" src="https://img.shields.io/badge/copy_proxied_link-1e1e2e?style=for-the-badge" />](https://vd-plugins.github.io/proxy/gabe616.github.io/VendettaPlugins/use-system-emoji) [<img alt="view_code" src="https://img.shields.io/badge/view_code-1e1e2e?style=for-the-badge" />](https://github.com/nexpid/VendettaPlugins/tree/main/plugins/use-system-emoji)
-- USRPFP — https://github.com/Yeetov/USRPFP-Reborn#how-to-request-a-pfp
+- USRPFP — https://github.com/Yeetov/USRPFP-Reborn#how-to-request-a-profile-picture-pfp
 	- [<img alt="copy_link" src="https://img.shields.io/badge/copy_link-1e1e2e?style=for-the-badge" />](https://vendetta.nexpid.xyz/usrpfp) [<img alt="view_code" src="https://img.shields.io/badge/view_code-1e1e2e?style=for-the-badge" />](https://github.com/nexpid/VendettaPlugins/tree/main/plugins/usrpfp)
 
 ## ❌ Unfinished

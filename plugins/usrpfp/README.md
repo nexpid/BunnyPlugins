@@ -16,4 +16,4 @@
 	<h1>USRPFP</h1>
 </div>
 
-https://github.com/Yeetov/USRPFP-Reborn#how-to-request-a-pfp
+https://github.com/Yeetov/USRPFP-Reborn#how-to-request-a-profile-picture-pfp
