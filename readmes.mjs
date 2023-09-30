@@ -7,7 +7,8 @@ console.time("Done");
 const invalidPlugins = [];
 const plugins = [];
 const links = {
-  proxied:
+  proxied: "https://vd-plugins.github.io/proxy/vendetta.nexpid.xyz/",
+  oldProxied:
     "https://vd-plugins.github.io/proxy/gabe616.github.io/VendettaPlugins/",
   unproxied: "https://vendetta.nexpid.xyz/",
   code: `https://github.com/nexpid/VendettaPlugins/tree/main/plugins/`,
@@ -28,7 +29,6 @@ colors are from catppuccin
 const statusColors = {
   unfinished: "#9399b2",
   finished: "#a6e3a1",
-  proxied: "#89dceb",
   discontinued: "#f38ba8",
 };
 const shieldLabelColor = "#1e1e2e".slice(1);
@@ -46,9 +46,9 @@ const shieldLogos = {
 };
 
 const categories = [
-  ["✅ Finished", ["proxied", "finished"]],
-  ["❌ Unfinished", ["unfinished"]],
-  ["🎫 Discontinued", ["discontinued"]],
+  ["✅ Finished", "finished"],
+  ["❌ Unfinished", "unfinished"],
+  ["🎫 Discontinued", "discontinued"],
 ];
 
 const makeBadge = (label, text, textColor) =>
@@ -81,7 +81,7 @@ for (const x of await readdir("./plugins")) {
 
   try {
     const manifest = JSON.parse(await readFile(`${path}manifest.json`, "utf8"));
-    const { status, usable, discontinuedFor, external } = parse(
+    const { status, proxied, usable, discontinuedFor, external } = parse(
       await readFile(`${path}status.toml`, "utf8")
     );
 
@@ -91,19 +91,21 @@ for (const x of await readdir("./plugins")) {
       discontinuedFor,
       id: x,
       status,
+      proxied,
       links: {
-        copy:
-          status === "proxied"
-            ? {
-                title: "copy_proxied_link",
-                link: `${links.proxied}${x}`,
-              }
-            : status === "finished" || usable
-            ? {
-                title: "copy_link",
-                link: `${links.unproxied}${x}`,
-              }
-            : undefined,
+        copy: proxied
+          ? {
+              title: "copy_proxied_link",
+              link: `${
+                proxied === "old" ? links.oldProxied : links.proxied
+              }${x}`,
+            }
+          : status === "finished" || usable
+          ? {
+              title: "copy_link",
+              link: `${links.unproxied}${x}`,
+            }
+          : undefined,
         external: [
           external?.backend && {
             title: "view_backend_code",
@@ -165,12 +167,14 @@ ${plugin.description}`;
 
 const stats = {
   all: plugins.length,
-  finished: plugins.filter((x) => ["finished", "proxied"].includes(x.status))
+  finished: plugins.filter((x) => x.status === "finished" || x.proxied).length,
+  proxied: plugins.filter((x) => x.proxied).length,
+  unproxied: plugins.filter((x) => x.status === "finished" && !x.proxied)
     .length,
-  proxied: plugins.filter((x) => x.status === "proxied").length,
-  unproxied: plugins.filter((x) => x.status === "finished").length,
-  unfinished: plugins.filter((x) => x.status === "unfinished").length,
-  discontinued: plugins.filter((x) => x.status === "discontinued").length,
+  unfinished: plugins.filter((x) => x.status === "unfinished" && !x.proxied)
+    .length,
+  discontinued: plugins.filter((x) => x.status === "discontinued" && !x.proxied)
+    .length,
 };
 
 const plur = (x, p = "s", s = "") => (x !== 1 ? p : s);
@@ -179,25 +183,20 @@ const chart = {
   type: "doughnut",
   data: {
     labels: [
-      stats.proxied > 0 && "Proxied",
-      stats.unproxied > 0 && "Finished",
+      stats.finished > 0 && "Finished",
       stats.unfinished > 0 && "Unfinished",
       stats.discontinued > 0 && "Discontinued",
     ].filter((x) => !!x),
     datasets: [
       {
-        data: [
-          stats.proxied,
-          stats.unproxied,
-          stats.unfinished,
-          stats.discontinued,
-        ].filter((x) => x > 0),
+        data: [stats.finished, stats.unfinished, stats.discontinued].filter(
+          (x) => x > 0
+        ),
         backgroundColor: [
-          statusColors.proxied,
-          statusColors.finished,
-          statusColors.unfinished,
-          statusColors.discontinued,
-        ],
+          stats.finished > 0 && statusColors.finished,
+          stats.unfinished > 0 && statusColors.unfinished,
+          stats.discontinued > 0 && statusColors.discontinued,
+        ].filter((x) => !!x),
         datalabels: {
           labels: {
             index: {
@@ -293,10 +292,10 @@ for (const [x, y] of Object.entries(stuff))
   stringifiedChart = stringifiedChart.replace(`"${x}"`, y);
 
 const plist = categories
-  .map((x) => [x[0], plugins.filter((y) => x[1].includes(y.status))])
+  .map((x) => [x[0], plugins.filter((y) => y.status === x[1])])
   .map(
-    (x) =>
-      `## ${x[0]}\n\n${x[1]
+    ([status, plugins]) =>
+      `## ${status}\n\n${plugins
         .map(
           (y) =>
             `- ${y.name} — ${y.description}${
@@ -349,7 +348,7 @@ Out of the plugins I've coded, **${stats.finished}** ${plur(
   stats.finished,
   "are finished",
   "is finished"
-)} (**${Math.floor((stats.finished / stats.all) * 100)}%**) and **${
+)} (**${Math.floor((stats.finished / stats.all) * 100)}%**), and **${
   stats.proxied
 }** ${plur(stats.proxied, "are proxied", "is proxied")} (**${Math.floor(
   (stats.proxied / stats.all) * 100

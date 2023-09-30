@@ -1,2 +1,4 @@
 status = "discontinued"
-discontinuedFor = "Vendetta already has this"
+discontinuedFor = "TextReplace rule"
+
+usable = true
