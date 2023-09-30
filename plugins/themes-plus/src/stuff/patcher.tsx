@@ -34,14 +34,19 @@ const UserStore = findByStoreName("UserStore");
 export default async () => {
   const patches = new Array<() => void>();
 
-  const plus: PlusStructure | false = getPlusData();
-  if (plus === false) {
-    active.blehhh.push(InactiveReason.NoTheme);
-    return;
-  } else if (!plus) {
-    active.blehhh.push(InactiveReason.ThemesPlusUnsupported);
-    return;
-  }
+  const shouldForce = vstorage.iconpack?.force ?? vstorage.iconpack?.url;
+
+  const cplus: PlusStructure | false = getPlusData();
+  if (!shouldForce)
+    if (cplus === false) {
+      active.blehhh.push(InactiveReason.NoTheme);
+      return;
+    } else if (!cplus) {
+      active.blehhh.push(InactiveReason.ThemesPlusUnsupported);
+      return;
+    }
+
+  const plus: PlusStructure = cplus !== false ? cplus : { version: 0 };
 
   active.patches.length = 0;
 
