@@ -20,7 +20,7 @@ export class CloudSyncAPIError extends Error {
 }
 
 export function currentAuthorization(): AuthRecord | undefined {
-  return vstorage.auth?.[UserStore.getCurrentUser().id];
+  return vstorage.auth?.[UserStore.getCurrentUser()?.id];
 }
 export async function getAuthorization(): Promise<string> {
   const e = new Error("Unauthorized, try logging out and back in again");
