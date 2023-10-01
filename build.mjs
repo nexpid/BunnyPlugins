@@ -72,9 +72,10 @@ const plugins = [
     },
   },
   {
-    name: "images",
+    name: "content",
     async transform(code, id) {
       const modes = {
+        ".css": ["raw"],
         ".svg": ["raw"],
         ".png": ["uri", "image/png"],
       };
