@@ -1,0 +1,14 @@
+{
+  "name": "SongSpotlight",
+  "description": "Makes it so you can pin songs to your profile (Enmity port)",
+  "authors": [
+    {
+      "name": "nexpid",
+      "id": "853550207039832084"
+    }
+  ],
+  "main": "src/index.ts",
+  "vendetta": {
+    "icon": "nya"
+  }
+}
