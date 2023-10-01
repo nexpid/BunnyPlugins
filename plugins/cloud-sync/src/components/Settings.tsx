@@ -57,7 +57,9 @@ export default function () {
   let lastTap = 0;
 
   const navigation = NavigationNative.useNavigation();
-  const canManageData = currentAuthorization() && cache.save;
+
+  const isAuthed = !!currentAuthorization();
+  const hasData = !!cache.save;
 
   return (
     <ScrollView>
@@ -209,9 +211,9 @@ export default function () {
       <BetterTableRowGroup
         title="Data Management"
         icon={getAssetIDByName("ic_message_edit")}
-        padding={!canManageData}
+        padding={!isAuthed || !hasData}
       >
-        {canManageData ? (
+        {isAuthed && hasData ? (
           <>
             <FormRow
               label="Save Data"
@@ -377,7 +379,7 @@ export default function () {
               }}
             />
           </>
-        ) : (
+        ) : !isAuthed ? (
           <SimpleText
             variant="text-md/semibold"
             color="TEXT_NORMAL"
@@ -385,6 +387,8 @@ export default function () {
           >
             Authenticate first to manage your data
           </SimpleText>
+        ) : (
+          <RN.ActivityIndicator size="small" style={{ flex: 1 }} />
         )}
       </BetterTableRowGroup>
       <View style={{ height: 12 }} />
