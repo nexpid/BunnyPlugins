@@ -1,34 +1,37 @@
 import { useProxy } from "@vendetta/storage";
 import { cache, vstorage } from "..";
 import { Forms, General } from "@vendetta/ui/components";
-import {
-  BetterTableRowGroup,
-  SimpleText,
-  openSheet,
-} from "../../../../stuff/types";
+import { BetterTableRowGroup, SimpleText } from "../../../../stuff/types";
 import { getAssetIDByName } from "@vendetta/ui/assets";
-import {
-  currentAuthorization,
-  deleteSaveData,
-  syncSaveData,
-} from "../stuff/api";
+import { currentAuthorization, deleteSaveData } from "../stuff/api";
 import { findByStoreName } from "@vendetta/metro";
 import { showToast } from "@vendetta/ui/toasts";
 import { openOauth2Modal } from "../stuff/oauth2";
 import { ReactNative as RN, stylesheet } from "@vendetta/metro/common";
 import { semanticColors } from "@vendetta/ui";
-import SongSheet from "./sheets/SongSheet";
 import PendingSongName from "./PendingSongName";
-import { hsync } from "../stuff/http";
+import { check } from "../stuff/http";
+import { API } from "../types/api";
+import { showInputAlert } from "@vendetta/ui/alerts";
+import { validateSong } from "../stuff/songs";
+import { HTTP_REGEX_MULTI } from "@vendetta/constants";
 
 const { ScrollView, View } = General;
 const { FormRow } = Forms;
 
 const UserStore = findByStoreName("UserStore");
 
+const rebuildLink = (
+  service: API.Song["service"],
+  type: API.Song["type"],
+  id: API.Song["id"]
+): string =>
+  service === "spotify" ? `https://open.spotify.com/${type}/${id}` : undefined;
+
 export default function () {
   useProxy(cache);
   useProxy(vstorage);
+  check();
 
   const styles = stylesheet.createThemedStyleSheet({
     song: {
@@ -60,51 +63,94 @@ export default function () {
               gap: 8,
             }}
           >
-            {cache.data.songs.map((x, i) => {
-              const isNull = x === null || !x.id;
-              return (
-                <FormRow
-                  label={
-                    isNull ? (
-                      "Press to add song in this position"
-                    ) : (
-                      <PendingSongName
-                        service={x.service}
-                        type={x.type}
-                        id={x.id}
-                        normal={true}
-                      />
-                    )
-                  }
-                  leading={
-                    isNull ? (
-                      <View style={styles.serviceFrame} />
-                    ) : (
-                      <RN.Image
-                        style={styles.serviceFrame}
-                        source={getAssetIDByName(
-                          "img_account_sync_spotify_light_and_dark"
-                        )}
-                      />
-                    )
-                  }
-                  onPress={() =>
-                    openSheet(SongSheet, {
-                      song: x ?? {
-                        service: "spotify",
-                        type: "track",
-                        id: null,
-                      },
-                      update: (y) => {
-                        cache.data.songs[i] = y?.id ? y : null;
-                        hsync(async () => await syncSaveData(cache.data.songs));
-                      },
-                    })
-                  }
-                  style={styles.song}
-                />
-              );
-            })}
+            {cache.data.songs.map((x, i) => (
+              <FormRow
+                label={
+                  x === null ? (
+                    "Press to add song in this position"
+                  ) : (
+                    <PendingSongName
+                      service={x.service}
+                      type={x.type}
+                      id={x.id}
+                      normal={true}
+                    />
+                  )
+                }
+                leading={
+                  x === null ? (
+                    <View style={styles.serviceFrame} />
+                  ) : (
+                    <RN.Image
+                      style={styles.serviceFrame}
+                      source={getAssetIDByName(
+                        "img_account_sync_spotify_light_and_dark"
+                      )}
+                    />
+                  )
+                }
+                onPress={() =>
+                  showInputAlert({
+                    title: "Add song",
+                    placeholder: [
+                      "https://open.spotify.com/track/ABC",
+                      "https://spotify.link/track/ABC",
+                      "https://open.spotify.com/album/ABC",
+                      "https://spotify.link/album/ABC",
+                    ].sort(() => (Math.random() > 0.5 ? 1 : -1))[0],
+                    initialValue: x && rebuildLink(x.service, x.type, x.id),
+                    confirmText: "Save",
+                    onConfirm: async (val) => {
+                      if (!val) {
+                        cache.data.songs[i] = null;
+                      } else {
+                        const url = val.match(HTTP_REGEX_MULTI)?.[0];
+                        if (!url) throw new Error("Invalid link!");
+
+                        const base = new URL(url);
+                        const host = base.hostname;
+
+                        let service: API.Song["service"],
+                          type: API.Song["type"],
+                          id: string;
+
+                        if (host === "open.spotify.com") {
+                          service = "spotify";
+
+                          const [_, _type, _id] = base.pathname.split("/");
+                          if (["album", "track"].includes(_type) && _id) {
+                            type = _type as typeof type;
+                            id = _id;
+                          }
+                        } else if (host === "spotify.link") {
+                          service = "spotify";
+
+                          const baseB = new URL((await fetch(url)).url);
+                          const [_, _type, _id] = baseB.pathname.split("/");
+                          if (["album", "track"].includes(_type) && _id) {
+                            type = _type as typeof type;
+                            id = _id;
+                          }
+                        }
+
+                        if (!service || !type || !id)
+                          throw new Error("Missing service, type or id!");
+
+                        if (!(await validateSong(service, type, id)))
+                          throw new Error("Invalid song!");
+
+                        cache.data.songs[i] = {
+                          service,
+                          type,
+                          id,
+                        };
+                      }
+                    },
+                  })
+                }
+                style={styles.song}
+              />
+            ))}
           </View>
         ) : !isAuthed ? (
           <SimpleText
