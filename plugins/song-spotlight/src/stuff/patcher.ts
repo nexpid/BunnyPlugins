@@ -11,9 +11,10 @@ export default function () {
   patches.push(
     after("default", UserProfileBio, ([x], ret) => {
       return React.createElement(React.Fragment, {}, [
-        React.createElement(UserProfileSongs, {
-          userId: x.displayProfile.userId,
-        }),
+        x?.displayProfile?.userId &&
+          React.createElement(UserProfileSongs, {
+            userId: x.displayProfile.userId,
+          }),
         ret,
       ]);
     })
