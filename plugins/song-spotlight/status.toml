@@ -1,2 +1,4 @@
-status = "unfinished"
-usable = true
+status = "finished"
+
+[external]
+backend = "VendettaSongSpotlight"
