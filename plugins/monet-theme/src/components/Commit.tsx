@@ -86,7 +86,7 @@ export default ({
       cornerRadius: 8,
     },
     container: {
-      backgroundColor: semanticColors.BACKGROUND_SECONDARY,
+      backgroundColor: semanticColors.BG_MOD_FAINT,
       flexDirection: "column",
       borderRadius: 8,
     },
