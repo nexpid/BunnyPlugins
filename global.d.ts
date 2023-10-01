@@ -8,6 +8,13 @@ declare module "*.png" {
 }
 
 interface Window {
+  nx?: {
+    readonly semantic: Record<
+      string,
+      Record<"dark" | "darker" | "light" | "amoled", string>
+    >;
+    findColor: (hex: string) => any;
+  };
   nativeModuleProxy: {
     BundleUpdaterManager: {
       reload: () => void;
