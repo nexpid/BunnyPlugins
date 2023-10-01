@@ -131,6 +131,10 @@ const extraRules = [
   "ex@media.discordapp.net",
   "is@media.discordapp.net",
   "hm@media.discordapp.net",
+  "shareKey@coolapk.com",
+  "shareUid@coolapk.com",
+  "shareFrom@coolapk.com",
+  "si@spotify.link",
 ];
 
 const reEscaper = /[\\^$.*+?()[\]{}|]/g;
