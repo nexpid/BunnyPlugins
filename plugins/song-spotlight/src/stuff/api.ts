@@ -53,19 +53,27 @@ export async function getOauth2Response(code: string): Promise<AuthRecord> {
   if (res.status === 200) return await res.json();
   else throw new SongSpotlightAPIError(await res.json());
 }
-export async function getSaveData(id?: string): Promise<API.Save> {
+
+export async function getProfileData(id: string): Promise<API.Save> {
+  const params = new URLSearchParams();
+  params.append("id", id);
+
+  const res = await fetch(
+    `${constants.api}api/get-profile-data?${params.toString()}`
+  );
+
+  if (res.status === 200) return await res.json();
+  else throw new SongSpotlightAPIError(await res.json());
+}
+
+export async function getSaveData(): Promise<API.Save> {
   if (!currentAuthorization()) return;
 
-  const params = new URLSearchParams();
-  if (id) params.append("id", id);
-
-  const res = await fetch(`${constants.api}api/get-data?${params.toString()}`, {
+  const res = await fetch(`${constants.api}api/get-data`, {
     headers: {
       authorization: await getAuthorization(),
     },
   });
-
-  console.log(res);
 
   if (res.status === 200) return await res.json();
   else throw new SongSpotlightAPIError(await res.json());

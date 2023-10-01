@@ -1,6 +1,6 @@
 import { vstorage } from ".";
 
-const root = "https://songspotlight.nexpid.xyz/";
+const root = "https://songspotlight.nexpid.xyz/"; //"http://192.168.2.22:8787/"
 export default {
   get api() {
     return vstorage.host
