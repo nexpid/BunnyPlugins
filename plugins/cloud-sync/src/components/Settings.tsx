@@ -38,14 +38,10 @@ const UserStore = findByStoreName("UserStore");
 const DocumentPicker = findByProps("pickSingle", "isCancel");
 
 const deltaruneCreepyJingle = wrapSync(
-  makeSound(
-    "https://cdn.discordapp.com/attachments/919655852724604978/1157612271699247215/169606667269853247.ogg" /*`${constants.raw}assets/snd_creepyjingle.ogg`*/
-  )
+  makeSound(`${constants.raw}assets/snd_creepyjingle.ogg`)
 );
 const undertaleMysteryGo = wrapSync(
-  makeSound(
-    "https://cdn.discordapp.com/attachments/919655852724604978/1157611323132219442/169606644669627035.ogg" /*`${constants.raw}assets/snd_mysterygo.ogg`*/
-  )
+  makeSound(`${constants.raw}assets/snd_mysterygo.ogg`)
 );
 
 export default function () {
