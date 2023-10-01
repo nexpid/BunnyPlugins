@@ -5,10 +5,13 @@
 -->
 
 <div align="center">
-	<img alt="plugin_status" src="https://img.shields.io/badge/plugin_status-unfinished-9399b2?style=for-the-badge&labelColor=1e1e2e" />
+	<img alt="plugin_status" src="https://img.shields.io/badge/plugin_status-finished-a6e3a1?style=for-the-badge&labelColor=1e1e2e" />
 	<br/>
 	<a href="https://vendetta.nexpid.xyz/song-spotlight">
 		<img alt="copy_link" src="https://img.shields.io/badge/copy_link-1e1e2e?style=for-the-badge" />
+	</a>
+	<a href="https://github.com/nexpid/VendettaSongSpotlight">
+		<img alt="view_backend_code" src="https://img.shields.io/badge/view_backend_code-1e1e2e?style=for-the-badge" />
 	</a>
 </div>
 <br/>
