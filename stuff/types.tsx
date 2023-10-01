@@ -260,7 +260,7 @@ export function BetterTableRowGroup({
 }>) {
   const styles = stylesheet.createThemedStyleSheet({
     main: {
-      backgroundColor: semanticColors.REDESIGN_ACTIVITY_CARD_BACKGROUND,
+      backgroundColor: semanticColors.CARD_PRIMARY_BG,
       borderRadius: 16,
       overflow: "hidden",
       flex: 1,
