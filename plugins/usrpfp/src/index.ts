@@ -3,8 +3,7 @@ import patcher from "./stuff/patcher";
 import { stopPlugin } from "@vendetta/plugins";
 import { id } from "@vendetta/plugin";
 
-export const dataURL =
-  "https://raw.githubusercontent.com/Yeetov/USRPFP-Reborn/main/db/data.json";
+export const dataURL = "https://userpfp.github.io/UserPFP/source/data.json";
 
 export let enabled = false;
 
