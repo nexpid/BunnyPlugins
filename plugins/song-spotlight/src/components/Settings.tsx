@@ -1,7 +1,11 @@
 import { useProxy } from "@vendetta/storage";
 import { cache, vstorage } from "..";
 import { Forms, General } from "@vendetta/ui/components";
-import { BetterTableRowGroup, SimpleText } from "../../../../stuff/types";
+import {
+  BetterTableRowGroup,
+  SimpleText,
+  openSheet,
+} from "../../../../stuff/types";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { currentAuthorization, deleteSaveData } from "../stuff/api";
 import { findByStoreName } from "@vendetta/metro";
@@ -15,18 +19,13 @@ import { API } from "../types/api";
 import { showInputAlert } from "@vendetta/ui/alerts";
 import { validateSong } from "../stuff/songs";
 import { HTTP_REGEX_MULTI } from "@vendetta/constants";
+import { rebuildLink } from "../stuff/util";
+import SongInfoSheet from "./sheets/SongInfoSheet";
 
 const { ScrollView, View } = General;
 const { FormRow } = Forms;
 
 const UserStore = findByStoreName("UserStore");
-
-const rebuildLink = (
-  service: API.Song["service"],
-  type: API.Song["type"],
-  id: API.Song["id"]
-): string =>
-  service === "spotify" ? `https://open.spotify.com/${type}/${id}` : undefined;
 
 export default function () {
   useProxy(cache);
@@ -89,6 +88,13 @@ export default function () {
                     />
                   )
                 }
+                onLongPress={() =>
+                  x &&
+                  openSheet(SongInfoSheet, {
+                    song: x,
+                    remove: () => (cache.data.songs[i] = null),
+                  })
+                }
                 onPress={() =>
                   showInputAlert({
                     title: "Add song",
@@ -101,50 +107,48 @@ export default function () {
                     initialValue: x && rebuildLink(x.service, x.type, x.id),
                     confirmText: "Save",
                     onConfirm: async (val) => {
-                      if (!val) {
-                        cache.data.songs[i] = null;
-                      } else {
-                        const url = val.match(HTTP_REGEX_MULTI)?.[0];
-                        if (!url) throw new Error("Invalid link!");
+                      if (!val) return;
 
-                        const base = new URL(url);
-                        const host = base.hostname;
+                      const url = val.match(HTTP_REGEX_MULTI)?.[0];
+                      if (!url) throw new Error("Invalid link!");
 
-                        let service: API.Song["service"],
-                          type: API.Song["type"],
-                          id: string;
+                      const base = new URL(url);
+                      const host = base.hostname;
 
-                        if (host === "open.spotify.com") {
-                          service = "spotify";
+                      let service: API.Song["service"],
+                        type: API.Song["type"],
+                        id: string;
 
-                          const [_, _type, _id] = base.pathname.split("/");
-                          if (["album", "track"].includes(_type) && _id) {
-                            type = _type as typeof type;
-                            id = _id;
-                          }
-                        } else if (host === "spotify.link") {
-                          service = "spotify";
+                      if (host === "open.spotify.com") {
+                        service = "spotify";
 
-                          const baseB = new URL((await fetch(url)).url);
-                          const [_, _type, _id] = baseB.pathname.split("/");
-                          if (["album", "track"].includes(_type) && _id) {
-                            type = _type as typeof type;
-                            id = _id;
-                          }
+                        const [_, _type, _id] = base.pathname.split("/");
+                        if (["album", "track"].includes(_type) && _id) {
+                          type = _type as typeof type;
+                          id = _id;
                         }
+                      } else if (host === "spotify.link") {
+                        service = "spotify";
 
-                        if (!service || !type || !id)
-                          throw new Error("Missing service, type or id!");
-
-                        if (!(await validateSong(service, type, id)))
-                          throw new Error("Invalid song!");
-
-                        cache.data.songs[i] = {
-                          service,
-                          type,
-                          id,
-                        };
+                        const baseB = new URL((await fetch(url)).url);
+                        const [_, _type, _id] = baseB.pathname.split("/");
+                        if (["album", "track"].includes(_type) && _id) {
+                          type = _type as typeof type;
+                          id = _id;
+                        }
                       }
+
+                      if (!service || !type || !id)
+                        throw new Error("Missing service, type or id!");
+
+                      if (!(await validateSong(service, type, id)))
+                        throw new Error("Invalid song!");
+
+                      cache.data.songs[i] = {
+                        service,
+                        type,
+                        id,
+                      };
                     },
                   })
                 }
