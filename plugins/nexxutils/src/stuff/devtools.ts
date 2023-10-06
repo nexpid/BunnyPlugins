@@ -1,4 +1,5 @@
 import { findByProps } from "@vendetta/metro";
+import { after } from "@vendetta/patcher";
 import { semanticColors } from "@vendetta/ui";
 
 const {
@@ -6,6 +7,8 @@ const {
 } = findByProps("colors", "meta");
 
 export default function () {
+  const patches = new Array<() => void>();
+
   window.nx = {
     get semantic() {
       const data = {};
@@ -28,6 +31,27 @@ export default function () {
           ])
           .filter(([_, z]) => Object.entries(z)[0])
       ),
+
+    p: {
+      wipe: () => {
+        patches.forEach((x) => x());
+        patches.length = 0;
+      },
+      snipe: (
+        key: string,
+        parent: any,
+        callback?: (args: any[], ret: any) => any,
+        oneTime?: boolean
+      ) => {
+        const patch = after(
+          key,
+          parent,
+          callback ?? ((a, b) => console.log("[NX]:", a, b)),
+          oneTime ?? false
+        );
+        patches.push(patch);
+      },
+    },
   };
   return () => delete window.nx;
 }
