@@ -19,6 +19,7 @@ const { triggerHaptic } = findByProps("triggerHaptic");
 const { TextStyleSheet } = findByProps("TextStyleSheet");
 const { View, Text, Pressable } = General;
 const { FormRow } = Forms;
+const { TableRow } = findByProps("TableRow");
 
 export const ActionSheet =
   findByProps("ActionSheet")?.ActionSheet ??
@@ -46,6 +47,11 @@ export const modalCloseButton =
 export const { popModal, pushModal } = findByProps("popModal", "pushModal");
 
 export const { SvgXml } = findByProps("SvgXml");
+
+export const { useInMainTabsExperiment, isInMainTabsExperiment } = findByProps(
+  "useInMainTabsExperiment",
+  "isInMainTabsExperiment"
+);
 
 export type Entries<T> = [keyof T, T[keyof T]];
 
@@ -136,6 +142,43 @@ export function doHaptic(dur: number): Promise<void> {
 
 // ...
 
+export function AutoRow({
+  label,
+  icon,
+  onPress,
+}: {
+  label: string;
+  icon: number;
+  onPress?: () => void;
+}) {
+  const styles = stylesheet.createThemedStyleSheet({
+    icon: {
+      width: 24,
+      height: 24,
+      tintColor: semanticColors.INTERACTIVE_NORMAL,
+      opacity: 0.6,
+    },
+  });
+  const tabbed = useInMainTabsExperiment();
+
+  if (tabbed)
+    return (
+      <TableRow
+        label={label}
+        icon={<RN.Image style={styles.icon} source={icon} />}
+        onPress={onPress}
+      />
+    );
+  else
+    return (
+      <FormRow
+        label={label}
+        leading={<FormRow.Icon source={icon} />}
+        onPress={onPress}
+      />
+    );
+}
+
 export function CoolActionSheetRow({
   label,
   icon,
@@ -168,13 +211,13 @@ export function CoolActionSheetRow({
           )}
         />
       }
-      onPress={() => onPress?.()}
+      onPress={onPress}
     />
   ) : (
     <FormRow
       label={label}
       leading={<FormRow.Icon source={icon} />}
-      onPress={() => onPress?.()}
+      onPress={onPress}
     />
   );
 }
