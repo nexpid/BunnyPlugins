@@ -97,5 +97,6 @@ I'm working on **4** plugins, and **3** plugins are discontinued.
 	- [<img alt="copy_proxied_link" src="https://img.shields.io/badge/copy_proxied_link-1e1e2e?style=for-the-badge" />](https://vd-plugins.github.io/proxy/gabe616.github.io/VendettaPlugins/tenor-gif-fix) [<img alt="view_code" src="https://img.shields.io/badge/view_code-1e1e2e?style=for-the-badge" />](https://github.com/nexpid/VendettaPlugins/tree/main/plugins/tenor-gif-fix)
 
 > **Note**  
-> **1** plugin isn't being shown due to being formatted incorrectly:  
+> **2** plugins aren't being shown due to being formatted incorrectly:  
+> - app-directory  
 > - spin-the-wheel  
