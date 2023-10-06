@@ -18,6 +18,15 @@ interface Window {
       Record<"dark" | "darker" | "light" | "amoled", string>
     >;
     findColor: (hex: string) => any;
+    p: {
+      wipe: () => void;
+      snipe: (
+        key: string,
+        parent: any,
+        callback?: (args: any[], ret: any) => any,
+        oneTime?: boolean
+      ) => void;
+    };
   };
   nativeModuleProxy: {
     BundleUpdaterManager: {
