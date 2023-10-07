@@ -28,8 +28,8 @@ A collection of all my awesome plugins for Vendetta
 # 📊 Stats
 
 I've coded a total of **23** plugins.  
-Out of the plugins I've coded, **15** are finished (**65%**), and **11** are proxied (**47%**)  
-**4** plugins I've coded are currently waiting to be proxied.  
+Out of the plugins I've coded, **15** are finished (**65%**), and **13** are proxied (**56%**)  
+**2** plugins I've coded are currently waiting to be proxied.  
 I'm working on **5** plugins, and **3** plugins are discontinued.
 
 <div align="center">
@@ -45,7 +45,7 @@ I'm working on **5** plugins, and **3** plugins are discontinued.
 - CharCounter — Adds a counter above the chat input
 	- [<img alt="copy_proxied_link" src="https://img.shields.io/badge/copy_proxied_link-1e1e2e?style=for-the-badge" />](https://vd-plugins.github.io/proxy/vendetta.nexpid.xyz/char-counter) [<img alt="view_code" src="https://img.shields.io/badge/view_code-1e1e2e?style=for-the-badge" />](https://github.com/nexpid/VendettaPlugins/tree/main/plugins/char-counter)
 - CleanURLs — Removes tracking data from links (Vencord port)
-	- [<img alt="copy_link" src="https://img.shields.io/badge/copy_link-1e1e2e?style=for-the-badge" />](https://vendetta.nexpid.xyz/clean-urls) [<img alt="view_code" src="https://img.shields.io/badge/view_code-1e1e2e?style=for-the-badge" />](https://github.com/nexpid/VendettaPlugins/tree/main/plugins/clean-urls)
+	- [<img alt="copy_proxied_link" src="https://img.shields.io/badge/copy_proxied_link-1e1e2e?style=for-the-badge" />](https://vd-plugins.github.io/proxy/vendetta.nexpid.xyz/clean-urls) [<img alt="view_code" src="https://img.shields.io/badge/view_code-1e1e2e?style=for-the-badge" />](https://github.com/nexpid/VendettaPlugins/tree/main/plugins/clean-urls)
 - CloudSync — Syncs your plugins and themes to the cloud
 	- [<img alt="copy_proxied_link" src="https://img.shields.io/badge/copy_proxied_link-1e1e2e?style=for-the-badge" />](https://vd-plugins.github.io/proxy/vendetta.nexpid.xyz/cloud-sync) [<img alt="view_code" src="https://img.shields.io/badge/view_code-1e1e2e?style=for-the-badge" />](https://github.com/nexpid/VendettaPlugins/tree/main/plugins/cloud-sync) [<img alt="view_backend_code" src="https://img.shields.io/badge/view_backend_code-1e1e2e?style=for-the-badge" />](https://github.com/nexpid/VendettaCloudSync)
 - HideServers — Allows you to locally hide servers from your server list
@@ -65,7 +65,7 @@ I'm working on **5** plugins, and **3** plugins are discontinued.
 - UseSystemEmoji — Uses system emoji instead of twemoji for messages
 	- [<img alt="copy_proxied_link" src="https://img.shields.io/badge/copy_proxied_link-1e1e2e?style=for-the-badge" />](https://vd-plugins.github.io/proxy/gabe616.github.io/VendettaPlugins/use-system-emoji) [<img alt="view_code" src="https://img.shields.io/badge/view_code-1e1e2e?style=for-the-badge" />](https://github.com/nexpid/VendettaPlugins/tree/main/plugins/use-system-emoji)
 - USRPFP — https://userpfp.github.io/UserPFP/#how-to-request-a-profile-picture-pfp
-	- [<img alt="copy_link" src="https://img.shields.io/badge/copy_link-1e1e2e?style=for-the-badge" />](https://vendetta.nexpid.xyz/usrpfp) [<img alt="view_code" src="https://img.shields.io/badge/view_code-1e1e2e?style=for-the-badge" />](https://github.com/nexpid/VendettaPlugins/tree/main/plugins/usrpfp)
+	- [<img alt="copy_proxied_link" src="https://img.shields.io/badge/copy_proxied_link-1e1e2e?style=for-the-badge" />](https://vd-plugins.github.io/proxy/vendetta.nexpid.xyz/usrpfp) [<img alt="view_code" src="https://img.shields.io/badge/view_code-1e1e2e?style=for-the-badge" />](https://github.com/nexpid/VendettaPlugins/tree/main/plugins/usrpfp)
 
 ## ❌ Unfinished
 
