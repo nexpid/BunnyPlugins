@@ -423,25 +423,28 @@ export default function ({ userId, you }: { userId: string; you: boolean }) {
     <RN.ActivityIndicator size="small" style={{ flex: 1 }} />
   );
 
-  return !hide && you ? (
-    <YouScreenProfileCard>
-      <TableRowGroupTitle title="Song Spotlight" />
-      <View style={{ flexDirection: "column", gap: 8, marginTop: 4 }}>
-        {content}
-      </View>
-    </YouScreenProfileCard>
-  ) : (
-    <UserProfileSection title="Song Spotlight" showContainer={true}>
-      <View
-        style={{
-          flexDirection: "column",
-          gap: 8,
-          paddingHorizontal: 8,
-          paddingVertical: 8,
-        }}
-      >
-        {content}
-      </View>
-    </UserProfileSection>
+  return (
+    !hide &&
+    (you ? (
+      <YouScreenProfileCard>
+        <TableRowGroupTitle title="Song Spotlight" />
+        <View style={{ flexDirection: "column", gap: 8, marginTop: 4 }}>
+          {content}
+        </View>
+      </YouScreenProfileCard>
+    ) : (
+      <UserProfileSection title="Song Spotlight" showContainer={true}>
+        <View
+          style={{
+            flexDirection: "column",
+            gap: 8,
+            paddingHorizontal: 8,
+            paddingVertical: 8,
+          }}
+        >
+          {content}
+        </View>
+      </UserProfileSection>
+    ))
   );
 }
