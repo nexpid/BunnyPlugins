@@ -1,4 +1,4 @@
-import { Module } from "../stuff/Module";
+import type { Module } from "../stuff/Module";
 import Freemix from "./Freemix";
 import BetterComponents from "./BetterComponents";
 import NoInviteToServers from "./NoInviteToServers";
