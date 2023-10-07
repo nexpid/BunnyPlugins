@@ -11,6 +11,7 @@ import { getAssetIDByName } from "@vendetta/ui/assets";
 import { Forms, General } from "@vendetta/ui/components";
 import { showToast } from "@vendetta/ui/toasts";
 import { without } from "@vendetta/utils";
+import type _WebView from "react-native-webview";
 
 const ThemeStore = findByStoreName("ThemeStore");
 const colors = findByProps("colors", "meta");
@@ -56,6 +57,9 @@ export const { useInMainTabsExperiment, isInMainTabsExperiment } = findByProps(
   "useInMainTabsExperiment",
   "isInMainTabsExperiment"
 );
+
+export const WebView = find((x) => x?.WebView && !x.default)
+  .WebView as typeof _WebView;
 
 export type Entries<T> = [keyof T, T[keyof T]];
 
