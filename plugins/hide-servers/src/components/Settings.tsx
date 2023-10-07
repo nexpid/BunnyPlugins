@@ -5,7 +5,8 @@ import { semanticColors } from "@vendetta/ui";
 import { NavigationNative, stylesheet } from "@vendetta/metro/common";
 import { showConfirmationAlert } from "@vendetta/ui/alerts";
 import { storage } from "@vendetta/plugin";
-import { openManageDataPage } from "./pages/ManageDataPage";
+import { openManageHiddenServersPage } from "./pages/ManageHiddenServers";
+import { hiddenList } from "..";
 
 const { ScrollView } = General;
 const { FormRow } = Forms;
@@ -27,7 +28,17 @@ export default () => {
     <ScrollView>
       <BetterTableRowGroup title="Data" icon={getAssetIDByName("ic_cog_24px")}>
         <FormRow
-          label={<SimpleText {...destructiveText}>Clear data</SimpleText>}
+          label="Manage hidden servers"
+          leading={
+            <FormRow.Icon source={getAssetIDByName("ic_message_edit")} />
+          }
+          trailing={<FormRow.Arrow />}
+          onPress={() => openManageHiddenServersPage(navigation)}
+        />
+        <FormRow
+          label={
+            <SimpleText {...destructiveText}>Clear hidden servers</SimpleText>
+          }
           leading={
             <FormRow.Icon
               style={styles.destructiveIcon}
@@ -38,24 +49,13 @@ export default () => {
           onPress={() =>
             showConfirmationAlert({
               title: "Clear data",
-              content:
-                "Are you sure you want to clear all local hidden server data?",
+              content: `Are you sure you want to clear **${hiddenList.list.length}** hidden server(s)?`,
               confirmText: "Clear",
               confirmColor: "red" as ButtonColors,
-              onConfirm: () => {
-                storage.hiddenList = { list: [] };
-              },
+              onConfirm: () => (hiddenList.list = []),
               isDismissable: true,
             })
           }
-        />
-        <FormRow
-          label="Manage data"
-          leading={
-            <FormRow.Icon source={getAssetIDByName("ic_message_edit")} />
-          }
-          trailing={<FormRow.Arrow />}
-          onPress={() => openManageDataPage(navigation)}
         />
       </BetterTableRowGroup>
     </ScrollView>

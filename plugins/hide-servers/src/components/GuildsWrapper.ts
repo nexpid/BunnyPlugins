@@ -1,7 +1,7 @@
 import { findInReactTree } from "@vendetta/utils";
 import { hiddenList, isHidden } from "..";
 import { useProxy } from "@vendetta/storage";
-import { HiddenListEntryType } from "../types.d";
+import { HiddenListEntryType } from "../types";
 
 export default ({ ret }: { ret: any }) => {
   useProxy(hiddenList);

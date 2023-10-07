@@ -1,11 +1,19 @@
 import { find, findByName } from "@vendetta/metro";
-import { React } from "@vendetta/metro/common";
-import { after } from "@vendetta/patcher";
+import {
+  React,
+  ReactNative as RN,
+  i18n,
+  NavigationNative,
+} from "@vendetta/metro/common";
+import { after, before } from "@vendetta/patcher";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { showToast } from "@vendetta/ui/toasts";
 import { addHidden, isHidden } from "..";
 import GuildsWrapper from "../components/GuildsWrapper";
-import { HiddenListEntryType } from "../types.d";
+import { HiddenListEntryType } from "../types";
+import { openModal } from "../../../../stuff/types";
+import ManageHiddenServersModal from "../components/modals/ManageHiddenServersModal";
+import { openManageHiddenServersPage } from "../components/pages/ManageHiddenServers";
 
 const { default: GuildPopoutMenu } = find(
   (x) => x?.default?.render?.name === "GuildPopoutMenu"
@@ -53,6 +61,27 @@ export default function () {
     after("default", GuildsConnected, (_, ret) =>
       React.createElement(GuildsWrapper, { ret })
     )
+  );
+
+  patches.push(
+    before("TouchableWithoutFeedback", RN, (args) => {
+      const clone = [...args];
+      if (clone[0].accessibilityLabel === i18n.Messages.DIRECT_MESSAGES)
+        clone[0].onLongPress = () =>
+          openModal("MANAGE_HIDDEN_SERVERS", ManageHiddenServersModal);
+      return clone;
+    })
+  );
+
+  patches.push(
+    //@ts-ignore not in RN typings
+    before("render", RN.Pressable.type, (args) => {
+      const clone = [...args];
+      if (clone[0].accessibilityLabel === "Create or join a server")
+        clone[0].onLongPress = () =>
+          openModal("MANAGE_HIDDEN_SERVERS", ManageHiddenServersModal);
+      return clone;
+    })
   );
 
   return () => patches.forEach((x) => x());

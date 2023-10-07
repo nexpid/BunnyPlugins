@@ -4,7 +4,7 @@ import { createStorage, wrapSync } from "@vendetta/storage";
 import { plugins } from "@vendetta/plugins";
 import { themes } from "@vendetta/themes";
 import settings from "./components/Settings";
-import { HiddenListEntry, HiddenListEntryType } from "./types.d";
+import { HiddenListEntry, HiddenListEntryType } from "./types";
 
 export const hiddenList: { list: HiddenListEntry[] } = wrapSync(
   createStorage({

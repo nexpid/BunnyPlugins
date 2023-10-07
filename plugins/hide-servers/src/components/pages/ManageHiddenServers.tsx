@@ -3,10 +3,10 @@ import { Forms, General, Search } from "@vendetta/ui/components";
 import { hiddenList, isHidden, removeHidden } from "../..";
 import { useProxy } from "@vendetta/storage";
 import { findByProps, findByStoreName } from "@vendetta/metro";
-import { HiddenListEntryType } from "../../types.d";
-import { hideActionSheet } from "../../../../../stuff/types";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { showToast } from "@vendetta/ui/toasts";
+import { hideActionSheet } from "../../../../../stuff/types";
+import { HiddenListEntryType } from "../../types";
 
 const { View } = General;
 const { FormRow } = Forms;
@@ -119,9 +119,9 @@ export const ManageDataPage = () => {
   );
 };
 
-export function openManageDataPage(navigation: any) {
+export function openManageHiddenServersPage(navigation: any) {
   navigation.push("VendettaCustomPage", {
-    title: "Manage Data",
+    title: "Manage Hidden Servers",
     render: ManageDataPage,
   });
 }
