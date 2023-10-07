@@ -75,6 +75,7 @@ const plugins = [
     name: "content",
     async transform(code, id) {
       const modes = {
+        ".html": ["raw"],
         ".css": ["raw"],
         ".svg": ["raw"],
         ".png": ["uri", "image/png"],
