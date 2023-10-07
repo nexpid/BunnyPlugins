@@ -1,6 +1,6 @@
 import { React, ReactNative as RN, stylesheet } from "@vendetta/metro/common";
 import { resolveCustomSemantic } from "../../../../stuff/colors";
-import { rawColors } from "@vendetta/ui";
+import { rawColors, semanticColors } from "@vendetta/ui";
 import { SimpleText } from "../../../../../../../stuff/types";
 import { findByProps } from "@vendetta/metro";
 import TextButton from "./TextButton";
@@ -33,10 +33,7 @@ export default function ({
   });
   const styles = stylesheet.createThemedStyleSheet({
     container: {
-      backgroundColor: resolveCustomSemantic(
-        rawColors.PRIMARY_600,
-        rawColors.PRIMARY_100
-      ),
+      backgroundColor: semanticColors.CARD_PRIMARY_BG,
       borderRadius: 28,
       flexDirection: "column",
       width: RN.Dimensions.get("window").width * 0.85,

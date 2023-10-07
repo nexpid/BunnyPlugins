@@ -1,16 +1,12 @@
 import { ReactNative as RN, stylesheet } from "@vendetta/metro/common";
 import { SimpleText } from "../../../../../../stuff/types";
 import { resolveCustomSemantic } from "../../../stuff/colors";
-import { rawColors } from "@vendetta/ui";
+import { rawColors, semanticColors } from "@vendetta/ui";
 
 export default function (props: { content: any; source?: any; icon?: any }) {
   const styles = stylesheet.createThemedStyleSheet({
     container: {
-      backgroundColor: resolveCustomSemantic(
-        // these should be swapped but it just looks better this way
-        rawColors.PRIMARY_600,
-        rawColors.PRIMARY_100
-      ),
+      backgroundColor: semanticColors.CARD_PRIMARY_BG,
       width: 344,
       minHeight: 48,
       borderRadius: 4,

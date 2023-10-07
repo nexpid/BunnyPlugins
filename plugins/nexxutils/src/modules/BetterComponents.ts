@@ -3,13 +3,14 @@ import { getAssetIDByName } from "@vendetta/ui/assets";
 import { Module, ModuleCategory } from "../stuff/Module";
 import { after, before, instead } from "@vendetta/patcher";
 import { ReactNative as RN } from "@vendetta/metro/common";
-import CustomSwitch from "../components/modules/M3UI/M3Switch";
+import CustomSwitch from "../components/modules/BetterComponents/M3Switch";
 import { find, findByDisplayName, findByName } from "@vendetta/metro";
-import CustomToast from "../components/modules/M3UI/M3Snackbar";
+import CustomToast from "../components/modules/BetterComponents/M3Snackbar";
 import { showToast } from "@vendetta/ui/toasts";
 import { assets } from "@vendetta/ui";
-import CustomDialog from "../components/modules/M3UI/M3Dialog";
+import CustomDialog from "../components/modules/BetterComponents/M3Dialog";
 import { showConfirmationAlert } from "@vendetta/ui/alerts";
+import { article } from "../stuff/util";
 
 const { FormSwitch } = find(
   (x) => typeof x?.FormSwitch === "function" && !("FormRow" in x)
@@ -18,7 +19,7 @@ const Toast = findByName("Toast", false);
 const Alert = findByDisplayName("FluxContainer(Alert)");
 
 function componentify<T extends "before" | "after" | "instead">(
-  self: Module,
+  self: Module<any>,
   should: boolean,
   origin: any,
   property: string,
@@ -40,22 +41,34 @@ function componentify<T extends "before" | "after" | "instead">(
 }
 
 export default new Module({
-  id: "m3-ui",
-  label: "M3 UI",
-  sublabel: "Changes some Discord UI components to their M3 variants",
+  id: "better-components",
+  label: "Better Components",
+  sublabel:
+    "Changes some Discord UI components to their M3 variants (and more!)",
   category: ModuleCategory.Useful,
   icon: getAssetIDByName("img_nitro_remixing"),
   settings: {
     switch: {
-      label: "M3 Switch",
+      label: "Switch",
+      subLabel(value) {
+        return value === "Default"
+          ? "Does not modify switches"
+          : `Replaces switches with ${article(value)} ${value} variation`;
+      },
       type: "choose",
-      choices: ["Disabled", "Custom", "Tabs v2"],
-      default: "Custom",
+      choices: ["Default", "M3", "Tabs v2"],
+      default: "M3",
     },
-    snackbar: {
-      label: "M3 Snackbar",
-      type: "toggle",
-      default: true,
+    toast: {
+      label: "Toast",
+      subLabel(value) {
+        return value === "Default"
+          ? "Does not modify toasts"
+          : `Replaces toasts with ${article(value)} ${value} variation`;
+      },
+      type: "choose",
+      choices: ["Default", "M3"],
+      default: "M3",
     },
     test_toast: {
       label: "Show Test Toast",
@@ -66,10 +79,16 @@ export default new Module({
         showToast(item.name, item.id);
       },
     },
-    dialog: {
-      label: "M3 Dialog",
-      type: "toggle",
-      default: true,
+    alert: {
+      label: "Alert",
+      subLabel(value) {
+        return value === "Default"
+          ? "Does not modify alerts"
+          : `Replaces alerts with ${article(value)} ${value} variation`;
+      },
+      type: "choose",
+      choices: ["Default", "M3"],
+      default: "M3",
     },
     test_alert: {
       label: "Show Test Alert",
@@ -94,7 +113,7 @@ export default new Module({
     onStart() {
       componentify(
         this,
-        this.storage.options.switch === "Custom",
+        this.storage.options.switch === "M3",
         RN.Switch,
         "render",
         "after",
@@ -111,7 +130,7 @@ export default new Module({
 
       componentify(
         this,
-        this.storage.options.snackbar,
+        this.storage.options.alert === "M3",
         Toast,
         "default",
         "after",
@@ -119,7 +138,7 @@ export default new Module({
       );
       componentify(
         this,
-        this.storage.options.dialog,
+        this.storage.options.alert === "M3",
         Alert.prototype,
         "render",
         "after",
