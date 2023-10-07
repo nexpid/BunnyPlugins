@@ -11,7 +11,7 @@ import { currentAuthorization, deleteSaveData } from "../stuff/api";
 import { findByStoreName } from "@vendetta/metro";
 import { showToast } from "@vendetta/ui/toasts";
 import { openOauth2Modal } from "../stuff/oauth2";
-import { ReactNative as RN, stylesheet } from "@vendetta/metro/common";
+import { ReactNative as RN, stylesheet, url } from "@vendetta/metro/common";
 import { semanticColors } from "@vendetta/ui";
 import PendingSongName from "./PendingSongName";
 import { check } from "../stuff/http";

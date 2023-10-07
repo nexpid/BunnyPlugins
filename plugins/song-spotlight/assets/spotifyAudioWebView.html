@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html></html>
+<script>
+  const RNWV = window.ReactNativeWebView;
+
+  /** @type {HTMLAudioElement[]} */
+  const audios = AUDIOS_VARIABLE.map((x) => new Audio(x));
+  let position = 0;
+
+  /** @argument enabled {boolean} */
+  const playback = (enabled) => {
+    audios.forEach((x, i) => {
+      if (i === position && enabled) x.play();
+      else {
+        if (i !== position) x.currentTime = 0;
+        x.pause();
+      }
+    });
+  };
+
+  audios.forEach((x) =>
+    x.addEventListener("ended", () => RNWV.postMesssage("stop"))
+  );
+
+  window.addEventListener("message", (ev) => {
+    const { action, pos } = ev.data;
+    if (!action) return;
+
+    if (pos !== undefined) position = audios[pos] ? pos : 0;
+
+    if (action === "play") playback(true);
+    else if (action === "pause") playback(false);
+  });
+</script>

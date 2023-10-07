@@ -23,6 +23,91 @@ const getInfo = async (
   } else return false;
 };
 
+export type SpotifyEmbedEntity =
+  | {
+      type: "track";
+      name: string;
+      uri: string;
+      id: string;
+      title: string;
+      artists: {
+        name: string;
+        uri: string;
+      }[];
+      coverArt: {
+        extractedColors: {
+          colorDark: { hex: string };
+          colorLight?: { hex: string };
+        };
+        sources: {
+          url: string;
+          width: number;
+          height: number;
+        }[];
+      };
+      releaseDate: { isoString: string } | null;
+      duration: number;
+      maxDuration: number;
+      isPlayable: boolean;
+      isExplicit: boolean;
+      audioPreview: {
+        url: string;
+        format: string;
+      };
+      hasVideo: boolean;
+      relatedEntityUri: string;
+    }
+  | {
+      type: "album";
+      name: string;
+      uri: string;
+      id: string;
+      title: string;
+      subtitle: string;
+      coverArt: {
+        extractedColors: {
+          colorDark: { hex: string };
+          colorLight?: { hex: string };
+        };
+        sources: {
+          url: string;
+          width: number;
+          height: number;
+        }[];
+      };
+      releaseDate: { isoString: string } | null;
+      duration: number;
+      maxDuration: number;
+      isPlayable: boolean;
+      isExplicit: boolean;
+      hasVideo: boolean;
+      relatedEntityUri: string;
+      trackList: {
+        uri: string;
+        uid: string;
+        title: string;
+        subtitle: string;
+        isExplicit: boolean;
+        duration: number;
+        isPlayable: boolean;
+        audioPreview: {
+          format: string;
+          url: string;
+        };
+      }[];
+    };
+
+export async function getSongData(
+  service: API.Song["service"],
+  type: API.Song["type"],
+  id: string
+): Promise<SpotifyEmbedEntity | false> {
+  if (service === "spotify") {
+    const dt = await getInfo(service, type, id);
+    return dt?.props?.pageProps?.state?.data?.entity ?? false;
+  } else return false;
+}
+
 export async function getSongName(
   service: API.Song["service"],
   type: API.Song["type"],
