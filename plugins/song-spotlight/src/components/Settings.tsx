@@ -100,9 +100,9 @@ export default function () {
                     title: "Add song",
                     placeholder: [
                       "https://open.spotify.com/track/ABC",
-                      "https://spotify.link/track/ABC",
                       "https://open.spotify.com/album/ABC",
-                      "https://spotify.link/album/ABC",
+                      "https://open.spotify.com/playlist/ABC",
+                      "https://spotify.link/ABC",
                     ].sort(() => (Math.random() > 0.5 ? 1 : -1))[0],
                     initialValue: x && rebuildLink(x.service, x.type, x.id),
                     confirmText: "Save",
@@ -112,27 +112,27 @@ export default function () {
                       const url = val.match(HTTP_REGEX_MULTI)?.[0];
                       if (!url) throw new Error("Invalid link!");
 
-                      const base = new URL(url);
-                      const host = base.hostname;
+                      let base = new URL(url);
+                      let host = base.hostname;
 
                       let service: API.Song["service"],
                         type: API.Song["type"],
                         id: string;
 
+                      if (host === "spotify.link") {
+                        service = "spotify";
+
+                        base = new URL((await fetch(url)).url);
+                        host = base.hostname;
+                      }
                       if (host === "open.spotify.com") {
                         service = "spotify";
 
                         const [_, _type, _id] = base.pathname.split("/");
-                        if (["album", "track"].includes(_type) && _id) {
-                          type = _type as typeof type;
-                          id = _id;
-                        }
-                      } else if (host === "spotify.link") {
-                        service = "spotify";
-
-                        const baseB = new URL((await fetch(url)).url);
-                        const [_, _type, _id] = baseB.pathname.split("/");
-                        if (["album", "track"].includes(_type) && _id) {
+                        if (
+                          ["album", "track", "playlist"].includes(_type) &&
+                          _id
+                        ) {
                           type = _type as typeof type;
                           id = _id;
                         }

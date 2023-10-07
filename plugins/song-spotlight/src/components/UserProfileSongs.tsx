@@ -215,7 +215,7 @@ const SpotifySongEmbed = ({
         <View
           style={[
             styles.cardFirst,
-            songData.type === "album" && { height: "40%" },
+            songData.type !== "track" && { height: "40%" },
           ]}
         >
           <View style={styles.cardFirstContent}>
@@ -277,7 +277,7 @@ const SpotifySongEmbed = ({
             </RN.TouchableOpacity>
           </View>
         </View>
-        {songData.type === "album" && (
+        {songData.type !== "track" && (
           <RN.FlatList
             nestedScrollEnabled={true}
             style={styles.cardTracklist}
@@ -360,7 +360,7 @@ const SpotifySongEmbed = ({
             if (data === "ended") {
               setPlaying(false);
 
-              if (songData.type === "album") {
+              if (songData.type !== "track") {
                 const nextPos = position + 1;
                 if (nextPos < songData.trackList.length) {
                   setPosition(nextPos);

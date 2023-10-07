@@ -58,7 +58,7 @@ export type SpotifyEmbedEntity =
       relatedEntityUri: string;
     }
   | {
-      type: "album";
+      type: "album" | "playlist";
       name: string;
       uri: string;
       id: string;

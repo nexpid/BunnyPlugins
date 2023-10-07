@@ -1,7 +1,7 @@
 export namespace API {
   export interface Song {
     service: "spotify";
-    type: "track" | "album";
+    type: "track" | "album" | "playlist";
     id: string;
   }
 
