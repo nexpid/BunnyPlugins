@@ -17,7 +17,8 @@ interface Window {
       string,
       Record<"dark" | "darker" | "light" | "amoled", string>
     >;
-    findColor: (hex: string) => any;
+    searchSemantic: (query: string) => any;
+    findSemantic: (hex: string) => any;
     p: {
       wipe: () => void;
       snipe: (
