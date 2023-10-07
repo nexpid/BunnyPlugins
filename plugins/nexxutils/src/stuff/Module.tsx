@@ -34,18 +34,19 @@ export const moduleCategoryMap = [
 
 type ModuleSetting = {
   label: string;
-  subLabel?: string;
   icon?: number;
 } & (
   | {
+      subLabel?: string | ((value: boolean) => string);
       type: "toggle";
       default: boolean;
     }
   | {
       type: "button";
-      action: (this: Module) => void;
+      action: (this: Module<any>) => void;
     }
   | {
+      subLabel?: string | ((value: string) => string);
       type: "choose";
       choices: string[];
       default: string;
@@ -70,18 +71,18 @@ interface ModuleExtra {
   warning?: string;
 }
 
-export class Module {
+export class Module<Settings extends Record<string, ModuleSetting>> {
   id: string;
   label: string;
   sublabel: string;
   category: ModuleCategory;
   icon?: number;
-  settings: Record<string, ModuleSetting>;
+  settings: Settings;
   extra?: ModuleExtra;
 
-  #handlers: {
-    onStart?: (this: Module) => void;
-    onStop?: (this: Module) => void;
+  private handlers: {
+    onStart?: (this: Module<Settings>) => void;
+    onStop?: (this: Module<Settings>) => void;
   };
 
   patches = new Patches();
@@ -101,11 +102,11 @@ export class Module {
     sublabel: string;
     category: ModuleCategory;
     icon?: number;
-    settings?: Record<string, ModuleSetting>;
+    settings?: Settings;
     extra?: ModuleExtra;
     handlers: {
-      onStart: (this: Module) => void;
-      onStop: (this: Module) => void;
+      onStart: (this: Module<Settings>) => void;
+      onStop: (this: Module<Settings>) => void;
     };
   }) {
     this.id = id;
@@ -118,15 +119,25 @@ export class Module {
         if ("default" in y) y.icon ??= getAssetIDByName("ic_message_edit");
         return [x, y];
       })
-    );
+    ) as Settings;
     this.extra = extra;
-    this.#handlers = handlers;
+    this.handlers = handlers;
+  }
+
+  private callable<Args extends any[]>(
+    val: any | ((...Args) => any),
+    ...args: Args
+  ) {
+    if (typeof val === "function") return val(...args);
+    else return val;
   }
 
   get storage(): {
     enabled: boolean;
     options: {
-      [k in keyof typeof this.settings]: (typeof this.settings)[k]["default"];
+      [k in keyof Settings]: Settings[k] extends { default: infer D }
+        ? D
+        : never;
     };
   } {
     const options = Object.fromEntries(
@@ -145,7 +156,7 @@ export class Module {
       if (typeof v !== typeof opts[k]) opts[k] = v;
     }
 
-    return vstorage.modules[this.id];
+    return vstorage.modules[this.id] as any;
   }
 
   get component(): React.FunctionComponent {
@@ -243,8 +254,12 @@ export class Module {
                   setting.type === "toggle" ? (
                     <FormSwitchRow
                       label={setting.label}
-                      subLabel={setting.subLabel}
+                      subLabel={this.callable(
+                        setting.subLabel,
+                        this.storage.options[id]
+                      )}
                       onValueChange={() => {
+                        //@ts-ignore type string cannot be used to index type
                         this.storage.options[id] = !this.storage.options[id];
                         this.restart();
                         forceUpdate();
@@ -271,13 +286,18 @@ export class Module {
                     setting.type === "choose" && (
                       <FormRow
                         label={setting.label}
-                        subLabel={setting.subLabel}
+                        subLabel={this.callable(
+                          setting.subLabel,
+                          this.storage.options[id]
+                        )}
                         onPress={() =>
                           openSheet(ChooseSettingSheet, {
                             label: setting.label,
+                            //@ts-ignore type string cannot be used to index type
                             value: this.storage.options[id],
                             choices: setting.choices,
                             update: (val) => {
+                              //@ts-ignore type string cannot be used to index type
                               this.storage.options[id] = val;
                               this.restart();
                               forceUpdate();
@@ -290,6 +310,7 @@ export class Module {
                             variant="text-md/medium"
                             color="TEXT_MUTED"
                           >
+                            {/*@ts-ignore type string cannot be used to index type*/}
                             {this.storage.options[id]}
                           </SimpleText>
                         }
@@ -318,7 +339,7 @@ export class Module {
   }
   start() {
     try {
-      this.#handlers?.onStart.bind(this)();
+      this.handlers?.onStart.bind(this)();
     } catch {
       this.stop();
       showToast(
@@ -329,7 +350,7 @@ export class Module {
   }
   stop() {
     try {
-      this.#handlers?.onStop.bind(this)();
+      this.handlers?.onStop.bind(this)();
       this.patches.unpatch();
     } catch {
       showToast(
