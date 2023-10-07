@@ -22,15 +22,31 @@ export default function () {
       }
       return data;
     },
-    findColor: (hex = "#000000") =>
-      Object.fromEntries(
+    searchSemantic(query: string) {
+      query ??= "";
+      return Object.fromEntries(
+        Object.entries(window.nx.semantic).filter(([x]) =>
+          query.startsWith("^") && query.endsWith("$")
+            ? x.toLowerCase() === query.toLowerCase().slice(1, -1)
+            : query.startsWith("^")
+            ? x.toLowerCase().startsWith(query.toLowerCase().slice(1))
+            : query.endsWith("$")
+            ? x.toLowerCase().endsWith(query.toLowerCase().slice(0, -1))
+            : x.toLowerCase().includes(query.toLowerCase())
+        )
+      );
+    },
+    findSemantic(hex: string) {
+      hex ??= "";
+      return Object.fromEntries(
         Object.entries(window.nx.semantic)
           .map(([x, y]) => [
             x,
             Object.fromEntries(Object.entries(y).filter(([_, z]) => z === hex)),
           ])
           .filter(([_, z]) => Object.entries(z)[0])
-      ),
+      );
+    },
 
     p: {
       wipe: () => {
@@ -53,5 +69,8 @@ export default function () {
       },
     },
   };
-  return () => delete window.nx;
+  return () => {
+    window.nx?.p.wipe();
+    delete window.nx;
+  };
 }
