@@ -46,6 +46,10 @@ export const modalCloseButton =
   findByProps("getHeaderCloseButton")?.getHeaderCloseButton;
 export const { popModal, pushModal } = findByProps("popModal", "pushModal");
 
+const BaseSearch = findByProps("useSearchControls");
+const SettingSearch = findByProps("useSettingSearchQuery");
+const SettingSearchBar = findByName("SettingSearchBar");
+
 export const { SvgXml } = findByProps("SvgXml");
 
 export const { useInMainTabsExperiment, isInMainTabsExperiment } = findByProps(
@@ -141,6 +145,49 @@ export function doHaptic(dur: number): Promise<void> {
 }
 
 // ...
+
+// the AdvancedSearch code below was given to me by Rosie :3
+interface SearchContext {
+  type: string;
+  [key: PropertyKey]: any;
+}
+interface AdvancedSearchProps {
+  searchContext: SearchContext;
+  controls: any;
+}
+
+export const useAdvancedSearch = (searchContext: SearchContext) => {
+  const query: string = SettingSearch.useSettingSearchQuery();
+  const controls: Record<string, any> = BaseSearch.useSearchControls(
+    searchContext,
+    false,
+    () => void 0
+  );
+
+  React.useEffect(
+    () => () => {
+      SettingSearch.setSettingSearchQuery("");
+      SettingSearch.setIsSettingSearchActive(false);
+    },
+    []
+  );
+
+  return [query, controls] as const;
+};
+
+const _AdvancedSearch = (({ searchContext, controls }: AdvancedSearchProps) => (
+  <RN.ScrollView scrollEnabled={false}>
+    <BaseSearch.default searchContext={searchContext} controls={controls}>
+      <SettingSearchBar />
+    </BaseSearch.default>
+  </RN.ScrollView>
+)) as {
+  (props: AdvancedSearchProps): React.ReactElement;
+  useAdvancedSearch: typeof useAdvancedSearch;
+};
+export const AdvancedSearch = Object.assign(_AdvancedSearch, {
+  useAdvancedSearch,
+});
 
 export function AutoRow({
   label,
