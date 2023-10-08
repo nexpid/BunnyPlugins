@@ -27,13 +27,13 @@ A collection of all my awesome plugins for Vendetta
 
 # 📊 Stats
 
-I've coded a total of **23** plugins.  
-Out of the plugins I've coded, **15** are finished (**65%**), and **13** are proxied (**56%**)  
-**2** plugins I've coded are currently waiting to be proxied.  
+I've coded a total of **24** plugins.  
+Out of the plugins I've coded, **16** are finished (**66%**), and **13** are proxied (**54%**)  
+**3** plugins I've coded are currently waiting to be proxied.  
 I'm working on **5** plugins, and **3** plugins are discontinued.
 
 <div align="center">
-	<img alt="Stats Pie Chart" src="https://quickchart.io/chart?c=%7B%22type%22%3A%22doughnut%22%2C%22data%22%3A%7B%22labels%22%3A%5B%22Finished%22%2C%22Unfinished%22%2C%22Discontinued%22%5D%2C%22datasets%22%3A%5B%7B%22data%22%3A%5B15%2C5%2C3%5D%2C%22backgroundColor%22%3A%5B%22%23a6e3a1%22%2C%22%239399b2%22%2C%22%23f38ba8%22%5D%2C%22datalabels%22%3A%7B%22labels%22%3A%7B%22index%22%3A%7B%22color%22%3A%22%23FFF%22%2C%22font%22%3A%7B%22size%22%3A18%7D%2C%22align%22%3A%22end%22%2C%22anchor%22%3A%22end%22%2C%22formatter%22%3A(_%2C%20ctx)%20%3D%3E%20ctx.chart.data.labels%5Bctx.dataIndex%5D%7D%2C%22name%22%3A%7B%22color%22%3A%22%23222%22%2C%22backgroundColor%22%3A%22%23FFF%22%2C%22borderRadius%22%3A4%2C%22offset%22%3A0%2C%22padding%22%3A2%2C%22font%22%3A%7B%22size%22%3A16%7D%2C%22align%22%3A%22top%22%2C%22formatter%22%3A(val)%20%3D%3E%20%60%24%7BMath.floor((val%20%2F%2023)%20*%20100)%7D%25%60%7D%2C%22value%22%3A%7B%22color%22%3A%22%23FFF%22%2C%22font%22%3A%7B%22size%22%3A16%7D%2C%22padding%22%3A0%2C%22align%22%3A%22bottom%22%7D%7D%7D%7D%5D%7D%2C%22options%22%3A%7B%22legend%22%3A%7B%22display%22%3Afalse%7D%2C%22layout%22%3A%7B%22padding%22%3A%7B%22top%22%3A30%2C%22bottom%22%3A30%7D%7D%2C%22plugins%22%3A%7B%22datalabels%22%3A%7B%22display%22%3Atrue%7D%2C%22doughnutlabel%22%3A%7B%22color%22%3A%22%23FFF%22%2C%22labels%22%3A%5B%7B%22text%22%3A23%2C%22font%22%3A%7B%22size%22%3A20%2C%22weight%22%3A%22bold%22%7D%7D%2C%7B%22text%22%3A%22plugins%22%7D%5D%7D%7D%7D%7D" width=600 />
+	<img alt="Stats Pie Chart" src="https://quickchart.io/chart?c=%7B%22type%22%3A%22doughnut%22%2C%22data%22%3A%7B%22labels%22%3A%5B%22Finished%22%2C%22Unfinished%22%2C%22Discontinued%22%5D%2C%22datasets%22%3A%5B%7B%22data%22%3A%5B16%2C5%2C3%5D%2C%22backgroundColor%22%3A%5B%22%23a6e3a1%22%2C%22%239399b2%22%2C%22%23f38ba8%22%5D%2C%22datalabels%22%3A%7B%22labels%22%3A%7B%22index%22%3A%7B%22color%22%3A%22%23FFF%22%2C%22font%22%3A%7B%22size%22%3A18%7D%2C%22align%22%3A%22end%22%2C%22anchor%22%3A%22end%22%2C%22formatter%22%3A(_%2C%20ctx)%20%3D%3E%20ctx.chart.data.labels%5Bctx.dataIndex%5D%7D%2C%22name%22%3A%7B%22color%22%3A%22%23222%22%2C%22backgroundColor%22%3A%22%23FFF%22%2C%22borderRadius%22%3A4%2C%22offset%22%3A0%2C%22padding%22%3A2%2C%22font%22%3A%7B%22size%22%3A16%7D%2C%22align%22%3A%22top%22%2C%22formatter%22%3A(val)%20%3D%3E%20%60%24%7BMath.floor((val%20%2F%2024)%20*%20100)%7D%25%60%7D%2C%22value%22%3A%7B%22color%22%3A%22%23FFF%22%2C%22font%22%3A%7B%22size%22%3A16%7D%2C%22padding%22%3A0%2C%22align%22%3A%22bottom%22%7D%7D%7D%7D%5D%7D%2C%22options%22%3A%7B%22legend%22%3A%7B%22display%22%3Afalse%7D%2C%22layout%22%3A%7B%22padding%22%3A%7B%22top%22%3A30%2C%22bottom%22%3A30%7D%7D%2C%22plugins%22%3A%7B%22datalabels%22%3A%7B%22display%22%3Atrue%7D%2C%22doughnutlabel%22%3A%7B%22color%22%3A%22%23FFF%22%2C%22labels%22%3A%5B%7B%22text%22%3A24%2C%22font%22%3A%7B%22size%22%3A20%2C%22weight%22%3A%22bold%22%7D%7D%2C%7B%22text%22%3A%22plugins%22%7D%5D%7D%7D%7D%7D" width=600 />
 </div>
 
 # 📃 Plugin List
@@ -48,6 +48,8 @@ I'm working on **5** plugins, and **3** plugins are discontinued.
 	- [<img alt="copy_proxied_link" src="https://img.shields.io/badge/copy_proxied_link-1e1e2e?style=for-the-badge" />](https://vd-plugins.github.io/proxy/vendetta.nexpid.xyz/clean-urls) [<img alt="view_code" src="https://img.shields.io/badge/view_code-1e1e2e?style=for-the-badge" />](https://github.com/nexpid/VendettaPlugins/tree/main/plugins/clean-urls)
 - CloudSync — Syncs your plugins and themes to the cloud
 	- [<img alt="copy_proxied_link" src="https://img.shields.io/badge/copy_proxied_link-1e1e2e?style=for-the-badge" />](https://vd-plugins.github.io/proxy/vendetta.nexpid.xyz/cloud-sync) [<img alt="view_code" src="https://img.shields.io/badge/view_code-1e1e2e?style=for-the-badge" />](https://github.com/nexpid/VendettaPlugins/tree/main/plugins/cloud-sync) [<img alt="view_backend_code" src="https://img.shields.io/badge/view_backend_code-1e1e2e?style=for-the-badge" />](https://github.com/nexpid/VendettaCloudSync)
+- DOOM — play doom in a webview :D
+	- [<img alt="copy_link" src="https://img.shields.io/badge/copy_link-1e1e2e?style=for-the-badge" />](https://vendetta.nexpid.xyz/doom) [<img alt="view_code" src="https://img.shields.io/badge/view_code-1e1e2e?style=for-the-badge" />](https://github.com/nexpid/VendettaPlugins/tree/main/plugins/doom)
 - HideServers — Allows you to locally hide servers from your server list
 	- [<img alt="copy_link" src="https://img.shields.io/badge/copy_link-1e1e2e?style=for-the-badge" />](https://vendetta.nexpid.xyz/hide-servers) [<img alt="view_code" src="https://img.shields.io/badge/view_code-1e1e2e?style=for-the-badge" />](https://github.com/nexpid/VendettaPlugins/tree/main/plugins/hide-servers)
 - LocalPins — Pin messages locally
