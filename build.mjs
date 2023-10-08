@@ -23,6 +23,10 @@ const ignorePlugins = [
   "tenor-gif-fix",
 ];
 
+const onlyPlugins = process.argv.slice(2).filter((x) => !x.startsWith("--"));
+const onominify = process.argv.includes("--nominify");
+const odebug = process.argv.includes("--debug");
+
 if (!existsSync("./dist")) await mkdir("./dist");
 await writeFile(
   "./dist/404.md",
@@ -98,11 +102,15 @@ const plugins = [
       } else return null;
     },
   },
-  esbuild({ minify: !process.argv.includes("--nominify") }),
+  esbuild({ minify: !onominify }),
 ];
 
 for (let plug of await readdir("./plugins")) {
-  if (ignorePlugins.includes(plug)) continue;
+  if (
+    ignorePlugins.includes(plug) ||
+    (onlyPlugins.length && !onlyPlugins.includes(plug))
+  )
+    continue;
   const manifest = JSON.parse(
     await readFile(`./plugins/${plug}/manifest.json`)
   );
@@ -155,7 +163,7 @@ ${mdNote}
     });
     await bundle.close();
 
-    if (process.argv.includes("--debug"))
+    if (odebug)
       await writeFile(
         outPath,
         Buffer.concat([
