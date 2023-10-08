@@ -23,6 +23,19 @@ const getInfo = async (
   } else return false;
 };
 
+export interface SpotifyEmbedEntityTracklistEntry {
+  uri: string;
+  uid: string;
+  title: string;
+  subtitle: string;
+  isExplicit: boolean;
+  duration: number;
+  isPlayable: boolean;
+  audioPreview: {
+    format: string;
+    url: string;
+  };
+}
 export type SpotifyEmbedEntity =
   | {
       type: "track";
@@ -82,19 +95,7 @@ export type SpotifyEmbedEntity =
       isExplicit: boolean;
       hasVideo: boolean;
       relatedEntityUri: string;
-      trackList: {
-        uri: string;
-        uid: string;
-        title: string;
-        subtitle: string;
-        isExplicit: boolean;
-        duration: number;
-        isPlayable: boolean;
-        audioPreview: {
-          format: string;
-          url: string;
-        };
-      }[];
+      trackList: SpotifyEmbedEntityTracklistEntry[];
     };
 
 export async function getSongData(

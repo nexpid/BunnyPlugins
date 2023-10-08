@@ -19,7 +19,7 @@
   };
 
   audios.forEach((x) =>
-    x.addEventListener("ended", () => RNWV.postMesssage("stop"))
+    x.addEventListener("ended", () => RNWV.postMesssage("ended"))
   );
 
   window.addEventListener("message", (ev) => {

@@ -1,6 +1,7 @@
 import spotifyAudioWebView from "../../assets/spotifyAudioWebView.html";
 import pause from "../../assets/pause.svg";
 import play from "../../assets/play.svg";
+import next from "../../assets/next.svg";
 import { React, ReactNative as RN, stylesheet } from "@vendetta/metro/common";
 import { API } from "../types/api";
 import { findByName, findByProps, findByStoreName } from "@vendetta/metro";
@@ -10,7 +11,11 @@ import { getAssetIDByName } from "@vendetta/ui/assets";
 import { General } from "@vendetta/ui/components";
 import { semanticColors } from "@vendetta/ui";
 import { cache } from "..";
-import { getSongData, SpotifyEmbedEntity } from "../stuff/songs";
+import {
+  getSongData,
+  SpotifyEmbedEntity,
+  SpotifyEmbedEntityTracklistEntry,
+} from "../stuff/songs";
 import {
   lerp,
   resolveCustomSemantic,
@@ -24,7 +29,8 @@ import {
 import SongInfoSheet from "./sheets/SongInfoSheet";
 import { check } from "../stuff/http";
 
-const { View, ScrollView } = General;
+const { View } = General;
+const AnimatedPressable = RN.Animated.createAnimatedComponent(RN.Pressable);
 
 const UserProfileSection = findByName("UserProfileSection");
 const { YouScreenProfileCard } = findByProps("YouScreenProfileCard");
@@ -91,6 +97,13 @@ const SpotifySongEmbed = ({
       aspectRatio: ratio,
       backgroundColor: semanticColors.BG_MOD_FAINT,
       borderRadius: 12,
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    noImage: {
+      tintColor: semanticColors.TEXT_DANGER,
+      width: 36,
+      height: 36,
     },
 
     card: {
@@ -144,7 +157,7 @@ const SpotifySongEmbed = ({
     },
     cardContentTag: {
       backgroundColor: "#ffffffb3",
-      paddingHorizontal: 4,
+      paddingHorizontal: 6,
       paddingVertical: 1,
       borderRadius: 4,
     },
@@ -157,6 +170,11 @@ const SpotifySongEmbed = ({
       alignItems: "flex-end",
       padding: 10,
     },
+    cardOtherBottom: {
+      flexDirection: "row-reverse",
+      alignItems: "center",
+      gap: 4,
+    },
 
     cardTracklist: {
       height: "100%",
@@ -167,8 +185,12 @@ const SpotifySongEmbed = ({
       backgroundColor: background && lerp(background, "#000000", 0.25),
       borderRadius: 5,
       flexDirection: "column",
-      padding: 5,
+      padding: 8,
     },
+    cardTracklistEntryPlaying: {
+      backgroundColor: background && lerp(background, "#000000", 0.35),
+    },
+
     cardTracklistEntryOther: {
       position: "absolute",
       width: "100%",
@@ -186,22 +208,29 @@ const SpotifySongEmbed = ({
       opacity: 0,
     },
     secondaryText: {
-      opacity: 0.6,
+      opacity: 0.7,
+    },
+    androidRipple: {
+      color: semanticColors.ANDROID_RIPPLE,
+      cornerRadius: 2147483647,
+    },
+    androidRippleTwo: {
+      color: semanticColors.ANDROID_RIPPLE,
+      cornerRadius: 8,
     },
   });
 
-  React.useEffect(() => {
+  const trigger = () => {
+    setSongData(undefined);
     getSongData(song.service, song.type, song.id)
-      .then((x) => {
-        RN.LayoutAnimation.configureNext({ duration: 500 });
-        setSongData(x ?? false);
-      })
+      .then((x) => setSongData(x ?? false))
       .catch(
         (e) => (
           showToast(`${e}`, getAssetIDByName("Small")), setSongData(false)
         )
       );
-  }, []);
+  };
+  React.useEffect(trigger, []);
 
   const cover =
     songData &&
@@ -209,7 +238,73 @@ const SpotifySongEmbed = ({
       (a, b) => a.width * a.height - b.width * b.height
     )[0];
 
-  return songData !== false && songData ? (
+  const tracklistRef = React.useRef<import("react-native").FlatList>();
+
+  React.useEffect(() => {
+    tracklistRef.current?.scrollToIndex({
+      animated: true,
+      index: position,
+      viewOffset: 16,
+    });
+  }, [position]);
+
+  const TracklistEntry = ({
+    item,
+    selected,
+    jump,
+    more,
+  }: {
+    item: SpotifyEmbedEntityTracklistEntry;
+    selected: boolean;
+    jump: () => void;
+    more: () => void;
+  }) => {
+    return (
+      <AnimatedPressable
+        android_ripple={styles.androidRippleTwo}
+        style={[
+          styles.cardTracklistEntry,
+          selected && styles.cardTracklistEntryPlaying,
+        ]}
+        onPress={jump}
+        onLongPress={more}
+      >
+        <SimpleText
+          variant={selected ? "text-sm/bold" : "text-sm/semibold"}
+          color="TEXT_NORMAL"
+          lineClamp={1}
+        >
+          {item.title}
+        </SimpleText>
+        <View style={styles.cardContentArtist}>
+          {item.isExplicit && (
+            <SimpleText
+              variant="text-xs/semibold"
+              color="BLACK"
+              style={styles.cardContentTag}
+            >
+              E
+            </SimpleText>
+          )}
+          <SimpleText
+            variant={selected ? "text-xs/bold" : "text-xs/semibold"}
+            color="TEXT_NORMAL"
+            style={styles.secondaryText}
+            lineClamp={1}
+          >
+            {item.subtitle}
+          </SimpleText>
+        </View>
+        <View style={styles.cardTracklistEntryOther}>
+          <RN.Pressable android_ripple={styles.androidRipple} onPress={more}>
+            <RN.Image source={getAssetIDByName("ic_feed_more")} />
+          </RN.Pressable>
+        </View>
+      </AnimatedPressable>
+    );
+  };
+
+  return songData ? (
     <>
       <View style={styles.card} pointerEvents="box-none">
         <View
@@ -242,14 +337,10 @@ const SpotifySongEmbed = ({
                   <SimpleText
                     variant="text-xs/semibold"
                     color="TEXT_NORMAL"
+                    style={styles.secondaryText}
                     lineClamp={1}
                   >
-                    {songData.artists.map((x, i, a) => (
-                      <>
-                        {x.name}
-                        {i !== a.length - 1 && ", "}
-                      </>
-                    ))}
+                    {songData.artists.map((x) => x.name).join(", ")}
                   </SimpleText>
                 </View>
               ) : (
@@ -265,79 +356,67 @@ const SpotifySongEmbed = ({
             </View>
           </View>
           <View style={styles.cardOther}>
-            <RN.TouchableOpacity
+            <RN.Pressable
+              android_ripple={styles.androidRipple}
               onPress={() =>
                 openSheet(SongInfoSheet, { song, showAdd, remove })
               }
             >
               <RN.Image source={getAssetIDByName("ic_feed_more")} />
-            </RN.TouchableOpacity>
-            <RN.TouchableOpacity onPress={() => setPlaying(!playing)}>
-              <SvgXml width={30} height={30} xml={playing ? pause : play} />
-            </RN.TouchableOpacity>
+            </RN.Pressable>
+            <View style={styles.cardOtherBottom}>
+              <RN.Pressable
+                android_ripple={styles.androidRipple}
+                onPress={() => setPlaying(!playing)}
+              >
+                <SvgXml width={30} height={30} xml={playing ? pause : play} />
+              </RN.Pressable>
+              {songData.type !== "track" && (
+                <RN.Pressable
+                  android_ripple={styles.androidRipple}
+                  onPress={() => {
+                    setPlaying(false);
+                    const nextPos = position + 1;
+                    if (nextPos < songData.trackList.length) {
+                      setPosition(nextPos);
+                      setPlaying(true);
+                    } else setPosition(0);
+                  }}
+                >
+                  <SvgXml width={20} height={20} xml={next} />
+                </RN.Pressable>
+              )}
+            </View>
           </View>
         </View>
         {songData.type !== "track" && (
           <RN.FlatList
-            nestedScrollEnabled={true}
+            nestedScrollEnabled
+            ref={tracklistRef}
             style={styles.cardTracklist}
             data={songData.trackList}
             ListHeaderComponent={() => <View style={{ height: 8 }} />}
             ListFooterComponent={() => <View style={{ height: 8 }} />}
             ItemSeparatorComponent={() => <View style={{ height: 8 }} />}
             renderItem={({ item, index }) => (
-              <RN.Pressable
-                style={styles.cardTracklistEntry}
-                onPress={() => {
+              <TracklistEntry
+                item={item}
+                selected={index === position}
+                jump={() => {
                   setPosition(index);
                   setPlaying(true);
                 }}
-              >
-                <SimpleText
-                  variant={
-                    position === index ? "text-sm/bold" : "text-sm/semibold"
-                  }
-                  color="TEXT_NORMAL"
-                  lineClamp={1}
-                >
-                  {item.title}
-                </SimpleText>
-                <View style={styles.cardContentArtist}>
-                  {item.isExplicit && (
-                    <SimpleText
-                      variant="text-xs/semibold"
-                      color="BLACK"
-                      style={styles.cardContentTag}
-                    >
-                      E
-                    </SimpleText>
-                  )}
-                  <SimpleText
-                    variant="text-sm/semibold"
-                    color="TEXT_NORMAL"
-                    style={styles.secondaryText}
-                    lineClamp={1}
-                  >
-                    {item.subtitle}
-                  </SimpleText>
-                </View>
-                <View style={styles.cardTracklistEntryOther}>
-                  <RN.TouchableOpacity
-                    onPress={() =>
-                      openSheet(SongInfoSheet, {
-                        song: {
-                          service: "spotify",
-                          id: item.uid,
-                          type: "track",
-                        },
-                        showAdd,
-                      })
-                    }
-                  >
-                    <RN.Image source={getAssetIDByName("ic_feed_more")} />
-                  </RN.TouchableOpacity>
-                </View>
-              </RN.Pressable>
+                more={() =>
+                  openSheet(SongInfoSheet, {
+                    song: {
+                      service: "spotify",
+                      type: "track",
+                      id: item.uid,
+                    },
+                    showAdd,
+                  })
+                }
+              />
             )}
           />
         )}
@@ -357,7 +436,9 @@ const SpotifySongEmbed = ({
           style={styles.webview}
           mediaPlaybackRequiresUserAction={false}
           onMessage={({ nativeEvent: { data } }) => {
+            console.log(data);
             if (data === "ended") {
+              console.log("finished playing :3");
               setPlaying(false);
 
               if (songData.type !== "track") {
@@ -374,9 +455,19 @@ const SpotifySongEmbed = ({
         />
       )}
     </>
+  ) : songData === false ? (
+    <View style={styles.emptyCard}>
+      <RN.Pressable android_ripple={styles.androidRipple} onPress={trigger}>
+        <RN.Image
+          style={styles.noImage}
+          source={getAssetIDByName("ic_message_retry")}
+          resizeMode="contain"
+        />
+      </RN.Pressable>
+    </View>
   ) : (
     <View style={styles.emptyCard}>
-      <RN.ActivityIndicator size="large" style={{ flex: 1 }} />
+      <RN.ActivityIndicator size="large" />
     </View>
   );
 };
