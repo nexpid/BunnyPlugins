@@ -27,7 +27,6 @@ import { findByProps, findByStoreName } from "@vendetta/metro";
 import { showConfirmationAlert, showInputAlert } from "@vendetta/ui/alerts";
 import ImportActionSheet from "./sheets/ImportActionSheet";
 import { grabEverything, setImportCallback } from "../stuff/syncStuff";
-import { decrypt, encrypt } from "../stuff/crypt";
 import constants from "../constants";
 import { makeSound } from "../stuff/sound";
 
@@ -271,7 +270,7 @@ export default function () {
                 );
               }}
             />
-            <LineDivider addPadding={true} />
+            {/* <LineDivider addPadding={true} />
             <FormRow
               label="Export Local Data"
               subLabel="Exports data to a .txt file"
@@ -377,7 +376,7 @@ export default function () {
                   },
                 });
               }}
-            />
+            /> */}
           </>
         ) : !isAuthed ? (
           <SimpleText
