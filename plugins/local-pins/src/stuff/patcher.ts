@@ -1,9 +1,8 @@
 import { React, i18n } from "@vendetta/metro/common";
 import { findByName } from "@vendetta/metro";
 import { after, before } from "@vendetta/patcher";
-import { SuperAwesomeIcon } from "../../../../stuff/types";
+import { LazyActionSheet, SuperAwesomeIcon } from "../../../../stuff/types";
 import { getAssetIDByName } from "@vendetta/ui/assets";
-import { LazyActionSheet } from "../../../download-everything/src";
 import { findInReactTree } from "@vendetta/utils";
 import PinMessageLocallyAction from "../components/MessageActionSheetButton";
 import ChannelPinsModal from "../components/modals/ChannelPinsModal";

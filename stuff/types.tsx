@@ -25,10 +25,13 @@ const { TableRow } = findByProps("TableRow");
 export const ActionSheet =
   findByProps("ActionSheet")?.ActionSheet ??
   find((x) => x.render?.name === "ActionSheet"); // thank you to @pylixonly for fixing this
-export const { openLazy, hideActionSheet } = findByProps(
+
+export const LazyActionSheet = findByProps(
   "openLazy",
   "hideActionSheet"
 );
+export const { openLazy, hideActionSheet } = LazyActionSheet;
+
 export const {
   ActionSheetTitleHeader,
   ActionSheetCloseButton,
