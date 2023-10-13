@@ -52,7 +52,7 @@ export const ManageDataPage = () => {
           : HiddenListEntryType.Guild,
       };
     })
-    .filter((x) => x?.name.toLowerCase().includes(search));
+    .filter((x) => x && (x.name ?? "Unnamed").toLowerCase().includes(search));
 
   return (
     <RN.FlatList
