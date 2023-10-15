@@ -9,7 +9,10 @@ import {
   url,
 } from "@vendetta/metro/common";
 import { rawColors, semanticColors } from "@vendetta/ui";
-import { APICollectionItem, getAppDirectoryApplication } from "../../stuff/api";
+import {
+  APICollectionApplication,
+  getAppDirectoryApplication,
+} from "../../stuff/api";
 import { SimpleText } from "../../../../../stuff/types";
 import { inServers, parseDesc } from "../../stuff/util";
 import { findByProps } from "@vendetta/metro";
@@ -17,6 +20,7 @@ import { getAssetIDByName } from "@vendetta/ui/assets";
 import useAsync from "../hooks/useAsync";
 import { showToast } from "@vendetta/ui/toasts";
 import { openOauth2Modal } from "../../stuff/oauth2";
+import { parse } from "../../stuff/markdown";
 
 const { ScrollView, View } = General;
 
@@ -28,7 +32,7 @@ export default function AppInfoPage({
   app,
   guildId,
 }: {
-  app: APICollectionItem;
+  app: APICollectionApplication;
   guildId?: string;
 }) {
   const styles = stylesheet.createThemedStyleSheet({
@@ -115,19 +119,16 @@ export default function AppInfoPage({
   const unsub = navigation.addListener("focus", () => {
     unsub();
     navigation.setOptions({
-      title: app.application.name,
+      title: app.name,
     });
   });
 
   const carouselProgress = React.useRef(new RN.Animated.Value(0)).current;
   const carouselWidth = RN.Dimensions.get("window").width - 32;
   const carouselIndexContent =
-    app.application.directory_entry.carousel_items?.map((_, i) => i) ?? [];
+    app.directory_entry.carousel_items?.map((_, i) => i) ?? [];
 
-  const detailedInfo = useAsync(
-    () => getAppDirectoryApplication(app.application.id),
-    []
-  );
+  const detailedInfo = useAsync(() => getAppDirectoryApplication(app.id), []);
   if (!detailedInfo)
     return <RN.ActivityIndicator size="large" style={{ flex: 1 }} />;
 
@@ -146,7 +147,7 @@ export default function AppInfoPage({
             pagingEnabled
             showsHorizontalScrollIndicator={false}
             decelerationRate="normal"
-            data={app.application.directory_entry.carousel_items.filter(
+            data={app.directory_entry.carousel_items.filter(
               (x) => x.type === 1
             )}
             style={{ width: "100%", height: "100%", position: "relative" }}
@@ -190,14 +191,17 @@ export default function AppInfoPage({
                 style={[
                   styles.carouselDot,
                   {
-                    backgroundColor: carouselProgress.interpolate({
-                      inputRange: carouselIndexContent,
-                      outputRange: carouselIndexContent.map((j) =>
-                        i === j
-                          ? styles.carouselDotActive.backgroundColor
-                          : styles.carouselDotInactive.backgroundColor
-                      ),
-                    }),
+                    backgroundColor:
+                      carouselIndexContent.length === 1
+                        ? styles.carouselDotActive.backgroundColor
+                        : carouselProgress.interpolate({
+                            inputRange: carouselIndexContent,
+                            outputRange: carouselIndexContent.map((j) =>
+                              i === j
+                                ? styles.carouselDotActive.backgroundColor
+                                : styles.carouselDotInactive.backgroundColor
+                            ),
+                          }),
                   },
                 ]}
               />
@@ -210,12 +214,12 @@ export default function AppInfoPage({
       <RN.Image
         style={styles.appIcon}
         source={{
-          uri: `https://cdn.discordapp.com/app-icons/${app.application.id}/${app.application.icon}.webp?size=80`,
+          uri: `https://cdn.discordapp.com/app-icons/${app.id}/${app.icon}.webp?size=80`,
         }}
       />
       <View style={styles.group}>
         <SimpleText variant="text-lg/semibold" color="TEXT_NORMAL">
-          {app.application.name}
+          {app.name}
         </SimpleText>
         <SimpleText
           variant="text-md/normal"
@@ -223,7 +227,7 @@ export default function AppInfoPage({
           style={{ paddingBottom: 8 }}
           lineClamp={1}
         >
-          {inServers(app.application.directory_entry.guild_count)}
+          {inServers(app.directory_entry.guild_count)}
         </SimpleText>
         <SimpleText
           variant="text-md/normal"
@@ -231,7 +235,7 @@ export default function AppInfoPage({
           style={{ paddingBottom: 8 }}
           lineClamp={1}
         >
-          {app.application.categories.map((x) => x.name).join(", ")}
+          {app.categories.map((x) => x.name).join(", ")}
         </SimpleText>
         <View style={{ marginVertical: 12 }}>
           <TableRowDivider />
@@ -248,7 +252,7 @@ export default function AppInfoPage({
               <RN.Image
                 style={styles.baseAppActionIcon}
                 source={getAssetIDByName("copy")}
-                resizeMode={"contain"}
+                resizeMode="contain"
               />
             )}
             onPress={() => {
@@ -272,28 +276,30 @@ export default function AppInfoPage({
               <RN.Image
                 style={styles.baseAppActionIcon}
                 source={getAssetIDByName("ic_download_24px")}
-                resizeMode={"contain"}
+                resizeMode="contain"
               />
             )}
             onPress={() =>
-              openOauth2Modal(
-                app.application.id,
-                Object.assign(
-                  app.application.install_params ?? {},
-                  guildId && {
-                    guild_id: guildId,
-                    disable_guild_select: true,
-                  }
-                )
-              )
+              app.custom_install_url
+                ? url.openURL(app.custom_install_url)
+                : openOauth2Modal(
+                    app.id,
+                    Object.assign(
+                      app.install_params ?? {},
+                      guildId && {
+                        guild_id: guildId,
+                        disable_guild_select: true,
+                      }
+                    )
+                  )
             }
           />
         </View>
       </View>
       <View style={styles.group}>
         {parseDesc(
-          app.application.directory_entry.detailed_description,
-          app.application.directory_entry.short_description
+          app.directory_entry.detailed_description,
+          app.directory_entry.short_description
         ).map(({ title, content }, i, a) => (
           <>
             <TableRowGroupTitle title={title} />
@@ -301,14 +307,10 @@ export default function AppInfoPage({
               variant="text-md/normal"
               color="TEXT_NORMAL"
               style={{
-                alignSelf: "stretch",
-                textAlignVertical: "top",
-                width: "100%",
-                flexGrow: 1,
                 marginBottom: i !== a.length - 1 ? 24 : 0,
               }}
             >
-              {content.join("\n")}
+              {parse(content.join("\n"))}
             </SimpleText>
           </>
         ))}
@@ -355,31 +357,31 @@ export default function AppInfoPage({
           />
         </View>
         <TableRowGroup>
-          {...app.application.directory_entry.external_urls?.map((x) => (
+          {...app.directory_entry.external_urls?.map((x) => (
             <TableRow
               label={x.name}
               icon={<TableRowIcon source={getAssetIDByName("ic_link")} />}
               onPress={() => url.openURL(x.url)}
             />
           )) ?? []}
-          {app.application.terms_of_service_url && (
+          {app.terms_of_service_url && (
             <TableRow
               label={
                 i18n.Messages.APP_DIRECTORY_PROFILE_TERMS_LINK ||
                 "Terms of Service"
               }
               icon={<TableRowIcon source={getAssetIDByName("ic_link")} />}
-              onPress={() => url.openURL(app.application.terms_of_service_url)}
+              onPress={() => url.openURL(app.terms_of_service_url)}
             />
           )}
-          {app.application.privacy_policy_url && (
+          {app.privacy_policy_url && (
             <TableRow
               label={
                 i18n.Messages.APP_DIRECTORY_PROFILE_PRIVACY_LINK ||
                 "Privacy Policy"
               }
               icon={<TableRowIcon source={getAssetIDByName("ic_lock")} />}
-              onPress={() => url.openURL(app.application.privacy_policy_url)}
+              onPress={() => url.openURL(app.privacy_policy_url)}
             />
           )}
         </TableRowGroup>
@@ -389,6 +391,9 @@ export default function AppInfoPage({
   );
 }
 
-export function getAppInfoPageRender(app: APICollectionItem, guildId?: string) {
+export function getAppInfoPageRender(
+  app: APICollectionApplication,
+  guildId?: string
+) {
   return () => <AppInfoPage app={app} guildId={guildId} />;
 }

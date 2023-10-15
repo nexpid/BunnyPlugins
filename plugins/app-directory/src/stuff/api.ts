@@ -44,6 +44,7 @@ export interface APIApplication {
   guild_id: string;
   bot_public: boolean;
   bot_require_code_grant: boolean;
+  custom_install_url?: string;
   terms_of_service_url: string;
   privacy_policy_url: string;
   install_params: {
@@ -146,7 +147,7 @@ export async function getAppDirectoryApplication(
 ): Promise<APIAppDirectoryApplication> {
   const locale = i18n.getLocale();
 
-  const cacheKey = `app_directory_application|${locale}`;
+  const cacheKey = `app_directory_application|${appId},${locale}`;
   const res =
     cache.get(cacheKey) ??
     (await get(
@@ -156,3 +157,44 @@ export async function getAppDirectoryApplication(
 
   return res.body;
 }
+
+export interface APIAppDirectorySearchResult {
+  data: APICollectionApplication;
+  type: unknown;
+}
+
+export interface APIAppDirectorySearch {
+  counts_by_category: Record<number, number>;
+  load_id: string;
+  num_pages: number;
+  result_count: number;
+  results: APIAppDirectorySearchResult[];
+  type: unknown;
+}
+
+export async function searchAppDirectory(
+  query: string,
+  page: number,
+  category: number,
+  guildId?: string
+): Promise<APIAppDirectorySearch> {
+  const locale = i18n.getLocale();
+
+  const cacheKey = `app_directory_search|${query},${page},${category},${guildId},${locale}`;
+
+  const params = new URLSearchParams();
+  params.append("query", query);
+  params.append("page", page.toString());
+  params.append("category_id", category.toString());
+  if (guildId) params.append("guild_id", guildId);
+  params.append("locale", locale);
+
+  const res =
+    cache.get(cacheKey) ??
+    (await get(`/application-directory-static/search?${params.toString()}`));
+  cache.set(cacheKey, res);
+
+  return res.body;
+}
+
+searchAppDirectory.bind("");
