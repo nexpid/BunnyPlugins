@@ -1,6 +1,6 @@
 import { safeFetch } from "@vendetta/utils";
 import { DataFile } from "../types";
-import { dataURL, enabled } from "..";
+import { dataURL, enabled, staticGifURL } from "..";
 import { logger } from "@vendetta";
 import { findByProps, findByStoreName } from "@vendetta/metro";
 import { after } from "@vendetta/patcher";
@@ -20,6 +20,8 @@ const fetchData = async () => {
   }
 };
 
+const urlExt = (url: string) => new URL(url).pathname.split(".").slice(-1)[0];
+
 export default async () => {
   const patches = new Array<() => void>();
 
@@ -30,12 +32,42 @@ export default async () => {
   patches.push(() => clearInterval(dataInterval));
 
   patches.push(
-    after("getUserAvatarURL", avatarStuff, ([{ id }]) => data.avatars[id])
+    after("getUser", UserStore, ([id], ret) => {
+      const ext = data.avatars[id] && urlExt(data.avatars[id]);
+      if (ext === "gif" && ret) {
+        const avatar = ret.avatar ?? "0";
+        ret.avatar = !avatar.startsWith("a_") ? `a_${avatar}` : avatar;
+      }
+    })
+  );
+
+  patches.push(
+    after("getUserAvatarURL", avatarStuff, ([{ id }], ret) => {
+      const custom = data.avatars[id];
+      if (!custom) return;
+
+      const ext = urlExt(custom);
+      if (ext === "gif") {
+        if (urlExt(ret) === "gif") return custom;
+        else return staticGifURL(custom);
+      }
+
+      return custom;
+    })
   );
   patches.push(
-    after("getUserAvatarSource", avatarStuff, ([{ id }], ret) =>
-      data.avatars[id] ? { uri: data.avatars[id] } : ret
-    )
+    after("getUserAvatarSource", avatarStuff, ([{ id }], ret) => {
+      const custom = data.avatars[id];
+      if (!custom) return;
+
+      const ext = urlExt(custom);
+      if (ext === "gif") {
+        if (!ret?.uri || urlExt(ret.uri) === "gif") return { uri: custom };
+        else return { uri: staticGifURL(custom) };
+      }
+
+      return custom;
+    })
   );
 
   const emptySymbol = Symbol("empty");

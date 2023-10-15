@@ -4,6 +4,10 @@ import { stopPlugin } from "@vendetta/plugins";
 import { id } from "@vendetta/plugin";
 
 export const dataURL = "https://userpfp.github.io/UserPFP/source/data.json";
+export const staticGifURL = (url: string) =>
+  `https://static-gif.nexpid.workers.dev/convert.gif?url=${encodeURIComponent(
+    url
+  )}`;
 
 export let enabled = false;
 
