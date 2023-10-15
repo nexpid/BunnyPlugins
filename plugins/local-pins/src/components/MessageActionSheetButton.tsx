@@ -1,7 +1,9 @@
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { showToast } from "@vendetta/ui/toasts";
-import { CoolActionSheetRow, hideActionSheet } from "../../../../stuff/types";
+import { hideActionSheet } from "../../../../stuff/types";
 import { addPin, hasPin, removePin } from "..";
+
+import { RedesignRow } from "@nexpid/vdp-shared";
 
 export default function (message: {
   channel_id: string;
@@ -12,7 +14,7 @@ export default function (message: {
   const isPinned = hasPin(message.channel_id, message.id);
 
   return (
-    <CoolActionSheetRow
+    <RedesignRow
       label={isPinned ? "Unpin Message Locally" : "Pin Message Locally"}
       icon={getAssetIDByName("ic_message_pin")}
       onPress={() => {

@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "@material/material-color-utilities": "^0.2.7",
+    "@nexpid/vdp-shared": "^1.0.1",
     "@swc/helpers": "^0.5.1",
     "big.js": "^6.2.1",
     "react-native-crypto-js": "^1.0.0",
