@@ -16,12 +16,7 @@ const mdNote = `<!--
 -->`;
 
 const extensions = [".js", ".jsx", ".mjs", ".ts", ".tsx", ".cts", ".mts"];
-const ignorePlugins = [
-  "reaction-notifications",
-  "download-everything",
-  "fxtwitter",
-  "tenor-gif-fix",
-];
+const ignorePlugins = ["tenor-gif-fix"];
 
 const onlyPlugins = process.argv.slice(2).filter((x) => !x.startsWith("--"));
 const onominify = process.argv.includes("--nominify");
