@@ -165,6 +165,4 @@ for (const mrule of [...defaultRules, ...extraRules]) {
   byHost[reHostStr].push(reRule);
 }
 
-console.log({ universal, byHost, hostMap });
-
 export default { universal, byHost, hostMap };
