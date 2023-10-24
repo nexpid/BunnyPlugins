@@ -17,9 +17,6 @@ dependencies:
   big.js:
     specifier: ^6.2.1
     version: 6.2.1
-  react-native-crypto-js:
-    specifier: ^1.0.0
-    version: 1.0.0
   twemoji-parser:
     specifier: ^14.0.0
     version: 14.0.0
@@ -37,9 +34,6 @@ devDependencies:
   esbuild:
     specifier: ^0.19.2
     version: 0.19.2
-  husky:
-    specifier: ^8.0.3
-    version: 8.0.3
   react-native-webview:
     specifier: ^13.6.2
     version: 13.6.2
@@ -706,12 +700,6 @@ packages:
       function-bind: 1.1.1
     dev: true
 
-  /husky@8.0.3:
-    resolution: {integrity: sha512-+dQSyqPh4x1hlO1swXBiNb2HzTDN1I2IGLQx1GrBuiqFJfoMrnZWwVmatvSiO+Iz8fBUnf+lekwNo4c2LlXItg==}
-    engines: {node: '>=14'}
-    hasBin: true
-    dev: true
-
   /inflight@1.0.6:
     resolution: {integrity: sha512-k92I/b08q4wvFscXCLvqfsHCrjrF7yiXsQuIVvVE7N82W3+aqpzuUdBbfhWcy/FZR3/4IgflMgKLOsvPDrGCJA==}
     dependencies:
@@ -803,10 +791,6 @@ packages:
     resolution: {integrity: sha512-JU3teHTNjmE2VCGFzuY8EXzCDVwEqB2a8fsIvwaStHhAWJEeVd1o1QD80CU6+ZdEXXSLbSsuLwJjkCBWqRQUVA==}
     engines: {node: '>=8.6'}
     dev: true
-
-  /react-native-crypto-js@1.0.0:
-    resolution: {integrity: sha512-FNbLuG/HAdapQoybeZSoes1PWdOj0w242gb+e1R0hicf3Gyj/Mf8M9NaED2AnXVOX01b2FXomwUiw1xP1K+8sA==}
-    dev: false
 
   /react-native-webview@13.6.2:
     resolution: {integrity: sha512-QzhQ5JCU+Nf2W285DtvCZOVQy/MkJXMwNDYPZvOWQbAOgxJMSSO+BtqXTMA1UPugDsko6PxJ0TxSlUwIwJijDg==}
