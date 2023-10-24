@@ -130,7 +130,7 @@ export default new Module({
 
       componentify(
         this,
-        this.storage.options.alert === "M3",
+        this.storage.options.toast === "M3",
         Toast,
         "default",
         "after",

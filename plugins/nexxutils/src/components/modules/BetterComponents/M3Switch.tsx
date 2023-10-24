@@ -120,11 +120,7 @@ export default function ({
   };
   const updatePressVal = () => {
     RN.Animated.timing(pressVal, {
-      toValue: isPressing
-        ? pressScales.pressed
-        : value
-        ? 1
-        : pressScales.inactive,
+      toValue: value ? 1 : pressScales.inactive,
       duration: 150,
       easing: RN.Easing.bezier(0.05, 0.7, 0.1, 1.0),
       useNativeDriver: true,
@@ -220,7 +216,7 @@ export default function ({
               }),
               transform: [
                 {
-                  scale: pressVal,
+                  scale: isPressing ? pressScales.pressed : pressVal,
                 },
               ],
             },
