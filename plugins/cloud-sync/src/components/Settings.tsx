@@ -29,12 +29,14 @@ import ImportActionSheet from "./sheets/ImportActionSheet";
 import { grabEverything, setImportCallback } from "../stuff/syncStuff";
 import constants from "../constants";
 import { makeSound } from "../stuff/sound";
+import { CryptoWebViewHandler, decrypt, encrypt } from "./CryptoWebView";
+
+const DocumentPicker = findByProps("pickSingle", "isCancel");
 
 const { ScrollView, View } = General;
 const { FormRow, FormInput, FormSwitchRow } = Forms;
 
 const UserStore = findByStoreName("UserStore");
-const DocumentPicker = findByProps("pickSingle", "isCancel");
 
 const deltaruneCreepyJingle = wrapSync(
   makeSound(`${constants.raw}assets/snd_creepyjingle.ogg`)
@@ -62,6 +64,7 @@ export default function () {
 
   return (
     <ScrollView>
+      <CryptoWebViewHandler />
       <BetterTableRowGroup
         title="Current Data"
         icon={getAssetIDByName("ic_contact_sync")}
@@ -270,7 +273,7 @@ export default function () {
                 );
               }}
             />
-            {/* <LineDivider addPadding={true} />
+            <LineDivider addPadding={true} />
             <FormRow
               label="Export Local Data"
               subLabel="Exports data to a .txt file"
@@ -288,6 +291,7 @@ export default function () {
                   title: "Enter encryption key",
                   placeholder: "secret password",
                   confirmText: "Enter",
+                  cancelText: "Cancel",
                   onConfirm: async (inp) => {
                     if (!inp) throw new Error("An encryption key must be set");
                     if (isBusy.length) return;
@@ -295,7 +299,7 @@ export default function () {
 
                     let text: string;
                     try {
-                      text = encrypt(JSON.stringify(cache.save), inp);
+                      text = await encrypt(JSON.stringify(cache.save), inp);
                     } catch {
                       unBusy("local_export");
                       return showToast(
@@ -351,6 +355,7 @@ export default function () {
                 showInputAlert({
                   title: "Enter decryption key",
                   placeholder: "secret password",
+                  cancelText: "Cancel",
                   confirmText: "Enter",
                   onConfirm: async (inp) => {
                     if (!inp) throw new Error("A decryption key must be set");
@@ -358,11 +363,12 @@ export default function () {
                     setBusy("import_local");
 
                     try {
-                      const data = JSON.parse(decrypt(text, inp));
+                      const data = JSON.parse(await decrypt(text, inp));
                       openSheet(ImportActionSheet, {
                         save: data,
                         navigation,
                       });
+                      unBusy("import_local");
                       setImportCallback((x) =>
                         x ? setBusy("import_local") : unBusy("import_local")
                       );
@@ -376,7 +382,7 @@ export default function () {
                   },
                 });
               }}
-            /> */}
+            />
           </>
         ) : !isAuthed ? (
           <SimpleText
