@@ -17,8 +17,8 @@ export default function ({
   color?: string;
   loadUsername?: boolean;
 }>) {
-  const [loadedUsername, setLoadedUsername] = React.useState<false | string>(
-    false
+  const [loadedUsername, setLoadedUsername] = React.useState<null | string>(
+    null
   );
 
   React.useEffect(
