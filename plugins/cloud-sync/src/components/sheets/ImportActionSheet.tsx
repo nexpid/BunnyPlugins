@@ -1,13 +1,14 @@
-import { Button, Forms } from "@vendetta/ui/components";
+import { Button, Forms, General } from "@vendetta/ui/components";
 import {
   ActionSheet,
   ActionSheetCloseButton,
   ActionSheetContentContainer,
   ActionSheetTitleHeader,
+  SimpleText,
   hideActionSheet,
   openSheet,
 } from "../../../../../stuff/types";
-import { React, ReactNative as RN } from "@vendetta/metro/common";
+import { React, ReactNative as RN, stylesheet } from "@vendetta/metro/common";
 import { cache, canImport, isPluginProxied } from "../..";
 import { showConfirmationAlert } from "@vendetta/ui/alerts";
 import { SyncImportOptions, importData } from "../../stuff/syncStuff";
@@ -16,7 +17,10 @@ import { themes } from "@vendetta/themes";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { openImportLogsPage } from "../pages/ImportLogsPage";
 import { DBSave } from "../../types/api/latest";
+import { semanticColors } from "@vendetta/ui";
+import { findByProps } from "@vendetta/metro";
 
+const { View } = General;
 const { FormCheckboxRow } = Forms;
 
 export default function ImportActionSheet({
@@ -37,6 +41,10 @@ export default function ImportActionSheet({
     ).length,
     themes: save.sync.themes.filter((x) => !themes[x.id]).length,
   };
+  const total = [has.unproxiedPlugins, has.plugins, has.themes].reduce(
+    (x, a) => x + a,
+    0
+  );
   const [options, setOptions] = React.useState<SyncImportOptions>(
     defOptions ?? {
       unproxiedPlugins: false,
@@ -44,6 +52,19 @@ export default function ImportActionSheet({
       themes: !!has.themes,
     }
   );
+
+  const styles = stylesheet.createThemedStyleSheet({
+    icon: {
+      width: 18,
+      height: 18,
+      tintColor: semanticColors.TEXT_BRAND,
+      marginRight: 4,
+    },
+    btnIcon: {
+      tintColor: semanticColors.TEXT_NORMAL,
+      marginRight: 8,
+    },
+  });
 
   return (
     <ActionSheet>
@@ -54,6 +75,31 @@ export default function ImportActionSheet({
             <ActionSheetCloseButton onPress={() => hideActionSheet()} />
           }
         />
+        {!total && (
+          <>
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "center",
+                marginTop: 8,
+              }}
+            >
+              <RN.Image
+                source={getAssetIDByName("ic_info_24px")}
+                style={styles.icon}
+                resizeMode="cover"
+              />
+              <SimpleText
+                variant="text-md/semibold"
+                color="TEXT_BRAND"
+                align="center"
+              >
+                All addons in the cloud are already imported
+              </SimpleText>
+            </View>
+          </>
+        )}
         <FormCheckboxRow
           label={`Unproxied Plugins (${has.unproxiedPlugins})`}
           disabled={!has.unproxiedPlugins}
@@ -114,7 +160,8 @@ export default function ImportActionSheet({
           size="medium"
           renderIcon={() => (
             <RN.Image
-              style={{ marginRight: 8 }}
+              style={styles.btnIcon}
+              resizeMode="cover"
               source={getAssetIDByName("ic_download_24px")}
             />
           )}
