@@ -1,7 +1,7 @@
-import spotifyAudioWebView from "../../assets/spotifyAudioWebView.html";
-import pause from "../../assets/pause.svg";
-import play from "../../assets/play.svg";
-import next from "../../assets/next.svg";
+import spotifyAudioWebView from "../../assets/card/spotifyAudioWebView.html";
+import pause from "../../assets/card/pause.svg";
+import play from "../../assets/card/play.svg";
+import next from "../../assets/card/next.svg";
 import { React, ReactNative as RN, stylesheet } from "@vendetta/metro/common";
 import { API } from "../types/api";
 import { findByName, findByProps, findByStoreName } from "@vendetta/metro";

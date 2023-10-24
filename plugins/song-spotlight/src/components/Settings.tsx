@@ -105,10 +105,9 @@ export default function () {
                       "https://spotify.link/ABC",
                     ].sort(() => (Math.random() > 0.5 ? 1 : -1))[0],
                     initialValue: x && rebuildLink(x.service, x.type, x.id),
+                    cancelText: "Cancel",
                     confirmText: "Save",
                     onConfirm: async (val) => {
-                      if (!val) return;
-
                       const url = val.match(HTTP_REGEX_MULTI)?.[0];
                       if (!url) throw new Error("Invalid link!");
 
