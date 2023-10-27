@@ -1,6 +1,6 @@
 {
   "name": "DOOM",
-  "description": "Play DOOM offline using js-dos",
+  "description": "Play DOOM using js-dos",
   "authors": [
     {
       "name": "nexpid",
