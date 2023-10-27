@@ -28,8 +28,8 @@ A collection of all my awesome plugins for Vendetta
 # 📊 Stats
 
 I've coded a total of **20** plugins.  
-Out of the plugins I've coded, **16** are finished (**80%**), and **15** are proxied (**75%**)  
-**1** plugin I've coded is currently waiting to be proxied.  
+Out of the plugins I've coded, **16** are finished (**80%**), and **16** are proxied (**80%**)  
+**0** plugins I've coded are currently waiting to be proxied.  
 I'm working on **4** plugins, and **0** plugins are discontinued.
 
 <div align="center">
@@ -49,7 +49,7 @@ I'm working on **4** plugins, and **0** plugins are discontinued.
 - CloudSync — Syncs your plugins and themes to the cloud
 	- [<img alt="copy_proxied_link" src="https://img.shields.io/badge/copy_proxied_link-1e1e2e?style=for-the-badge" />](https://vd-plugins.github.io/proxy/vendetta.nexpid.xyz/cloud-sync) [<img alt="view_code" src="https://img.shields.io/badge/view_code-1e1e2e?style=for-the-badge" />](https://github.com/nexpid/VendettaPlugins/tree/main/plugins/cloud-sync) [<img alt="view_backend_code" src="https://img.shields.io/badge/view_backend_code-1e1e2e?style=for-the-badge" />](https://github.com/nexpid/VendettaCloudSync)
 - DOOM — Play DOOM using js-dos
-	- [<img alt="copy_link" src="https://img.shields.io/badge/copy_link-1e1e2e?style=for-the-badge" />](https://vendetta.nexpid.xyz/doom) [<img alt="view_code" src="https://img.shields.io/badge/view_code-1e1e2e?style=for-the-badge" />](https://github.com/nexpid/VendettaPlugins/tree/main/plugins/doom)
+	- [<img alt="copy_proxied_link" src="https://img.shields.io/badge/copy_proxied_link-1e1e2e?style=for-the-badge" />](https://vd-plugins.github.io/proxy/vendetta.nexpid.xyz/doom) [<img alt="view_code" src="https://img.shields.io/badge/view_code-1e1e2e?style=for-the-badge" />](https://github.com/nexpid/VendettaPlugins/tree/main/plugins/doom)
 - HideServers — Allows you to locally hide servers from your server list
 	- [<img alt="copy_proxied_link" src="https://img.shields.io/badge/copy_proxied_link-1e1e2e?style=for-the-badge" />](https://vd-plugins.github.io/proxy/vendetta.nexpid.xyz/hide-servers) [<img alt="view_code" src="https://img.shields.io/badge/view_code-1e1e2e?style=for-the-badge" />](https://github.com/nexpid/VendettaPlugins/tree/main/plugins/hide-servers)
 - LocalPins — Pin messages locally
