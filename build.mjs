@@ -83,18 +83,18 @@ const plugins = [
       const [mode, arg] = modes[extname(id)] ?? [];
       if (!mode) return null;
 
+      const bin = () => readFile(id);
       if (mode === "raw")
-        return { code: `export default ${JSON.stringify(code.trim())}` };
-      else if (mode === "uri" && arg) {
-        const bin = await readFile(id, "binary");
+        return {
+          code: `export default ${JSON.stringify(code.trim())}`,
+        };
+      else if (mode === "uri" && arg)
         return {
           code: `export default ${JSON.stringify(
-            `data:${arg};base64,${Buffer.from(bin, "binary").toString(
-              "base64"
-            )}`
+            `data:${arg};base64,${(await bin()).toString("base64")}`
           )}`,
         };
-      } else return null;
+      else return null;
     },
   },
   esbuild({ minify: !onominify }),
