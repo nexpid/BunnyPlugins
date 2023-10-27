@@ -19,4 +19,4 @@
 	<h1>SongSpotlight</h1>
 </div>
 
-Makes it so you can pin songs to your profile (Enmity port)
+Makes it so you can pin songs to your profile
