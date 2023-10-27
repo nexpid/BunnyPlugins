@@ -48,7 +48,7 @@ I'm working on **4** plugins, and **0** plugins are discontinued.
 	- [<img alt="copy_proxied_link" src="https://img.shields.io/badge/copy_proxied_link-1e1e2e?style=for-the-badge" />](https://vd-plugins.github.io/proxy/vendetta.nexpid.xyz/clean-urls) [<img alt="view_code" src="https://img.shields.io/badge/view_code-1e1e2e?style=for-the-badge" />](https://github.com/nexpid/VendettaPlugins/tree/main/plugins/clean-urls)
 - CloudSync — Syncs your plugins and themes to the cloud
 	- [<img alt="copy_proxied_link" src="https://img.shields.io/badge/copy_proxied_link-1e1e2e?style=for-the-badge" />](https://vd-plugins.github.io/proxy/vendetta.nexpid.xyz/cloud-sync) [<img alt="view_code" src="https://img.shields.io/badge/view_code-1e1e2e?style=for-the-badge" />](https://github.com/nexpid/VendettaPlugins/tree/main/plugins/cloud-sync) [<img alt="view_backend_code" src="https://img.shields.io/badge/view_backend_code-1e1e2e?style=for-the-badge" />](https://github.com/nexpid/VendettaCloudSync)
-- DOOM — play doom in a webview :D
+- DOOM — Play DOOM offline using js-dos
 	- [<img alt="copy_link" src="https://img.shields.io/badge/copy_link-1e1e2e?style=for-the-badge" />](https://vendetta.nexpid.xyz/doom) [<img alt="view_code" src="https://img.shields.io/badge/view_code-1e1e2e?style=for-the-badge" />](https://github.com/nexpid/VendettaPlugins/tree/main/plugins/doom)
 - HideServers — Allows you to locally hide servers from your server list
 	- [<img alt="copy_link" src="https://img.shields.io/badge/copy_link-1e1e2e?style=for-the-badge" />](https://vendetta.nexpid.xyz/hide-servers) [<img alt="view_code" src="https://img.shields.io/badge/view_code-1e1e2e?style=for-the-badge" />](https://github.com/nexpid/VendettaPlugins/tree/main/plugins/hide-servers)
