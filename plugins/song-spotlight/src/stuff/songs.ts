@@ -104,8 +104,9 @@ export async function getSongData(
   id: string
 ): Promise<SpotifyEmbedEntity | false> {
   if (service === "spotify") {
-    const dt = await getInfo(service, type, id);
-    return dt?.props?.pageProps?.state?.data?.entity ?? false;
+    const dt = (await getInfo(service, type, id))?.props?.pageProps?.state?.data
+      ?.entity;
+    return dt?.name && dt?.coverArt ? dt : false;
   } else return false;
 }
 

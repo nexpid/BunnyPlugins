@@ -186,9 +186,14 @@ const SpotifySongEmbed = ({
       borderRadius: 5,
       flexDirection: "column",
       padding: 8,
+      flexGrow: 0,
+      flexShrink: 0,
     },
     cardTracklistEntryPlaying: {
       backgroundColor: background && lerp(background, "#000000", 0.35),
+    },
+    cardTracklistEntryTitle: {
+      width: "95%",
     },
 
     cardTracklistEntryOther: {
@@ -270,8 +275,9 @@ const SpotifySongEmbed = ({
         onLongPress={more}
       >
         <SimpleText
+          style={styles.cardTracklistEntryTitle}
           variant={selected ? "text-sm/bold" : "text-sm/semibold"}
-          color="TEXT_NORMAL"
+          color="WHITE"
           lineClamp={1}
         >
           {item.title}
@@ -288,7 +294,7 @@ const SpotifySongEmbed = ({
           )}
           <SimpleText
             variant={selected ? "text-xs/bold" : "text-xs/semibold"}
-            color="TEXT_NORMAL"
+            color="WHITE"
             style={styles.secondaryText}
             lineClamp={1}
           >
@@ -316,11 +322,7 @@ const SpotifySongEmbed = ({
           <View style={styles.cardFirstContent}>
             <RN.Image style={styles.cardImage} source={{ uri: cover.url }} />
             <View style={styles.cardContent}>
-              <SimpleText
-                variant="text-sm/bold"
-                color="TEXT_NORMAL"
-                lineClamp={1}
-              >
+              <SimpleText variant="text-sm/bold" color="WHITE" lineClamp={1}>
                 {songData.title}
               </SimpleText>
               {songData.type === "track" ? (
@@ -336,7 +338,7 @@ const SpotifySongEmbed = ({
                   )}
                   <SimpleText
                     variant="text-xs/semibold"
-                    color="TEXT_NORMAL"
+                    color="WHITE"
                     style={styles.secondaryText}
                     lineClamp={1}
                   >
@@ -346,7 +348,7 @@ const SpotifySongEmbed = ({
               ) : (
                 <SimpleText
                   variant="text-xs/semibold"
-                  color="TEXT_NORMAL"
+                  color="WHITE"
                   style={styles.secondaryText}
                   lineClamp={1}
                 >
