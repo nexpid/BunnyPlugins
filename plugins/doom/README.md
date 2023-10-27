@@ -16,4 +16,4 @@
 	<h1>DOOM</h1>
 </div>
 
-Play DOOM offline using js-dos
+Play DOOM using js-dos
