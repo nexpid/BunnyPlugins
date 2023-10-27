@@ -1,2 +1,2 @@
 status = "finished"
-proxied = "old"
+proxied = true

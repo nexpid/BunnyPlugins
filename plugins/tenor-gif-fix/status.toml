@@ -2,4 +2,4 @@ status = "discontinued"
 discontinuedFor = "Replaced by NexxUtils"
 
 usable = true
-proxied = "old"
+proxied = true
