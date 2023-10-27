@@ -6,7 +6,6 @@ import FiltersActionSheet from "../sheets/FiltersActionSheet";
 import { findByName, findByProps, findByStoreName } from "@vendetta/metro";
 import { showConfirmationAlert } from "@vendetta/ui/alerts";
 import { General } from "@vendetta/ui/components";
-import Big from "big.js";
 
 const { View } = General;
 
@@ -62,8 +61,10 @@ export default ({ channelId }: { channelId: string }) => {
 
         let message = MessageStore.getMessage(channelId, m.id);
         if (!message) {
-          const numb = new Big(m.id);
-          const numbers = [numb.plus(1).toFixed(), numb.minus(1).toFixed()];
+          const numbers = [
+            (BigInt(m.id) + 1n).toString(),
+            (BigInt(m.id) - 1n).toString(),
+          ];
 
           await messages.fetchMessages({
             channelId,
