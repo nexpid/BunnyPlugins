@@ -16,7 +16,6 @@ const mdNote = `<!--
 -->`;
 
 const extensions = [".js", ".jsx", ".mjs", ".ts", ".tsx", ".cts", ".mts"];
-const ignorePlugins = ["tenor-gif-fix"];
 
 const onlyPlugins = process.argv.slice(2).filter((x) => !x.startsWith("--"));
 const onominify = process.argv.includes("--nominify");
@@ -101,11 +100,7 @@ const plugins = [
 ];
 
 for (let plug of await readdir("./plugins")) {
-  if (
-    ignorePlugins.includes(plug) ||
-    (onlyPlugins.length && !onlyPlugins.includes(plug))
-  )
-    continue;
+  if (onlyPlugins.length && !onlyPlugins.includes(plug)) continue;
   const manifest = JSON.parse(
     await readFile(`./plugins/${plug}/manifest.json`)
   );
