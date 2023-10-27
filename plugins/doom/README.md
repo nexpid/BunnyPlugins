@@ -16,4 +16,4 @@
 	<h1>DOOM</h1>
 </div>
 
-play doom in a webview :D
+Play DOOM offline using js-dos
