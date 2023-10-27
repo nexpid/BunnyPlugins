@@ -1,4 +1,8 @@
-.emulator-root {
+* {
+  background-color: transparent !important;
+  overflow: hidden !important;
+}
+#jsbox {
   width: 100vw !important;
   height: 100vh !important;
 }

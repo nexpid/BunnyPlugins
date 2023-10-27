@@ -1,6 +1,6 @@
 {
   "name": "DOOM",
-  "description": "play doom in a webview :D",
+  "description": "Play DOOM offline using js-dos",
   "authors": [
     {
       "name": "nexpid",
