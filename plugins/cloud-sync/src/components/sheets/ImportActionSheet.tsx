@@ -115,6 +115,7 @@ export default function ImportActionSheet({
                   confirmColor: "brand" as ButtonColors,
                   onConfirm: () =>
                     openSheet(ImportActionSheet, {
+                      save,
                       navigation,
                       defOptions: {
                         ...options,
