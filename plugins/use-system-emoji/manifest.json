@@ -1,6 +1,6 @@
 {
   "name": "UseSystemEmoji",
-  "description": "Uses system emoji instead of twemoji for messages",
+  "description": "Replaces Twemoji with system emoji in messages",
   "authors": [
     {
       "name": "nexpid",

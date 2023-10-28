@@ -1,6 +1,6 @@
 {
   "name": "TwemojiEverywhere",
-  "description": "Turns system emoji into Twemoji 👋😀🎉",
+  "description": "Turns all (possible) system emoji into Twemoji 👋😀🎉",
   "authors": [
     {
       "name": "nexpid",
