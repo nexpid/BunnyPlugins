@@ -24,6 +24,7 @@ import {
   openSheet,
   SimpleText,
   SvgXml,
+  TextStyleSheet,
   WebView,
 } from "../../../../stuff/types";
 import SongInfoSheet from "./sheets/SongInfoSheet";
@@ -189,6 +190,9 @@ const SpotifySongEmbed = ({
       flexGrow: 0,
       flexShrink: 0,
     },
+    cardTracklistEntryUnplayable: {
+      backgroundColor: background && lerp(background, "#000000", 0.2),
+    },
     cardTracklistEntryPlaying: {
       backgroundColor: background && lerp(background, "#000000", 0.35),
     },
@@ -215,6 +219,9 @@ const SpotifySongEmbed = ({
     secondaryText: {
       opacity: 0.7,
     },
+    unplayableItem: {
+      opacity: 0.5,
+    },
     androidRipple: {
       color: semanticColors.ANDROID_RIPPLE,
       cornerRadius: 2147483647,
@@ -228,7 +235,13 @@ const SpotifySongEmbed = ({
   const trigger = () => {
     setSongData(undefined);
     getSongData(song.service, song.type, song.id)
-      .then((x) => setSongData(x ?? false))
+      .then((x) => {
+        const res = x ?? false;
+        if (res && res.type !== "track")
+          res.trackList = res.trackList.slice(0, 50);
+
+        setSongData(res);
+      })
       .catch(
         (e) => (
           showToast(`${e}`, getAssetIDByName("Small")), setSongData(false)
@@ -256,11 +269,13 @@ const SpotifySongEmbed = ({
   const TracklistEntry = ({
     item,
     selected,
+    playable,
     jump,
     more,
   }: {
     item: SpotifyEmbedEntityTracklistEntry;
     selected: boolean;
+    playable: boolean;
     jump: () => void;
     more: () => void;
   }) => {
@@ -269,13 +284,17 @@ const SpotifySongEmbed = ({
         android_ripple={styles.androidRippleTwo}
         style={[
           styles.cardTracklistEntry,
+          !playable && styles.cardTracklistEntryUnplayable,
           selected && styles.cardTracklistEntryPlaying,
         ]}
         onPress={jump}
         onLongPress={more}
       >
         <SimpleText
-          style={styles.cardTracklistEntryTitle}
+          style={[
+            styles.cardTracklistEntryTitle,
+            !playable && styles.unplayableItem,
+          ]}
           variant={selected ? "text-sm/bold" : "text-sm/semibold"}
           color="WHITE"
           lineClamp={1}
@@ -287,7 +306,10 @@ const SpotifySongEmbed = ({
             <SimpleText
               variant="text-xs/semibold"
               color="BLACK"
-              style={styles.cardContentTag}
+              style={[
+                styles.cardContentTag,
+                !playable && styles.unplayableItem,
+              ]}
             >
               E
             </SimpleText>
@@ -295,7 +317,7 @@ const SpotifySongEmbed = ({
           <SimpleText
             variant={selected ? "text-xs/bold" : "text-xs/semibold"}
             color="WHITE"
-            style={styles.secondaryText}
+            style={[styles.secondaryText, !playable && styles.unplayableItem]}
             lineClamp={1}
           >
             {item.subtitle}
@@ -309,6 +331,17 @@ const SpotifySongEmbed = ({
       </AnimatedPressable>
     );
   };
+
+  const trackPlayable =
+    songData && songData.type === "track"
+      ? songData.isPlayable && !!songData.audioPreview?.url
+      : true;
+
+  const entryHeight =
+    8 * 2 +
+    TextStyleSheet["text-sm/normal"].lineHeight +
+    TextStyleSheet["text-xs/normal"].lineHeight +
+    1.4;
 
   return songData ? (
     <>
@@ -370,6 +403,7 @@ const SpotifySongEmbed = ({
               <RN.Pressable
                 android_ripple={styles.androidRipple}
                 onPress={() => setPlaying(!playing)}
+                style={!trackPlayable && styles.unplayableItem}
               >
                 <SvgXml width={30} height={30} xml={playing ? pause : play} />
               </RN.Pressable>
@@ -380,8 +414,21 @@ const SpotifySongEmbed = ({
                     setPlaying(false);
                     const nextPos = position + 1;
                     if (nextPos < songData.trackList.length) {
-                      setPosition(nextPos);
-                      setPlaying(true);
+                      const item = songData.trackList[nextPos];
+                      if (item.isPlayable && !!item.audioPreview?.url) {
+                        setPosition(nextPos);
+                        setPlaying(true);
+                      } else {
+                        const nextIndex = songData.trackList.findIndex(
+                          (x, i) =>
+                            i > nextPos && x.isPlayable && !!x.audioPreview?.url
+                        );
+                        if (nextIndex !== -1) {
+                          setPosition(nextIndex);
+                          setPlaying(true);
+                        }
+                        showToast("The next song cannot be played");
+                      }
                     } else setPosition(0);
                   }}
                 >
@@ -395,31 +442,52 @@ const SpotifySongEmbed = ({
           <RN.FlatList
             nestedScrollEnabled
             ref={tracklistRef}
+            getItemLayout={(_, index) => ({
+              length: entryHeight,
+              offset: 8 * (index + 1) + entryHeight * index,
+              index,
+            })}
             style={styles.cardTracklist}
             data={songData.trackList}
             ListHeaderComponent={() => <View style={{ height: 8 }} />}
             ListFooterComponent={() => <View style={{ height: 8 }} />}
             ItemSeparatorComponent={() => <View style={{ height: 8 }} />}
-            renderItem={({ item, index }) => (
-              <TracklistEntry
-                item={item}
-                selected={index === position}
-                jump={() => {
-                  setPosition(index);
-                  setPlaying(true);
-                }}
-                more={() =>
-                  openSheet(SongInfoSheet, {
-                    song: {
-                      service: "spotify",
-                      type: "track",
-                      id: item.uid,
-                    },
-                    showAdd,
-                  })
-                }
-              />
-            )}
+            renderItem={({ item, index }) => {
+              const playable = item.isPlayable && !!item.audioPreview?.url;
+              return (
+                <TracklistEntry
+                  item={item}
+                  selected={index === position}
+                  playable={playable}
+                  jump={() => {
+                    if (playable) {
+                      setPosition(index);
+                      setPlaying(true);
+                    } else {
+                      const nextIndex = songData.trackList.findIndex(
+                        (x, i) =>
+                          i > index && x.isPlayable && !!x.audioPreview?.url
+                      );
+                      if (nextIndex !== -1) {
+                        setPosition(nextIndex);
+                        setPlaying(true);
+                      }
+                      return showToast("This song cannot be played");
+                    }
+                  }}
+                  more={() =>
+                    openSheet(SongInfoSheet, {
+                      song: {
+                        service: "spotify",
+                        type: "track",
+                        id: item.uid,
+                      },
+                      showAdd,
+                    })
+                  }
+                />
+              );
+            }}
           />
         )}
       </View>
@@ -430,8 +498,8 @@ const SpotifySongEmbed = ({
               /AUDIOS_VARIABLE/g,
               JSON.stringify(
                 songData.type === "track"
-                  ? [songData.audioPreview.url]
-                  : songData.trackList.map((x) => x.audioPreview.url)
+                  ? [songData.audioPreview?.url ?? null]
+                  : songData.trackList.map((x) => x.audioPreview?.url ?? null)
               )
             ),
           }}

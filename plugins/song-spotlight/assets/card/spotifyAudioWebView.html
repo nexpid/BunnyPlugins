@@ -3,13 +3,14 @@
 <script>
   const RNWV = window.ReactNativeWebView;
 
-  /** @type {HTMLAudioElement[]} */
-  const audios = AUDIOS_VARIABLE.map((x) => new Audio(x));
+  /** @type {(HTMLAudioElement | null)[]} */
+  const audios = AUDIOS_VARIABLE.map((x) => (x ? new Audio(x) : null));
   let position = 0;
 
   /** @argument enabled {boolean} */
   const playback = (enabled) => {
     audios.forEach((x, i) => {
+      if (!x) return;
       if (i === position && enabled) x.play();
       else {
         if (i !== position) x.currentTime = 0;
@@ -19,7 +20,7 @@
   };
 
   audios.forEach((x) =>
-    x.addEventListener("ended", () => RNWV.postMesssage("ended"))
+    x?.addEventListener("ended", () => RNWV.postMesssage("ended"))
   );
 
   window.addEventListener("message", (ev) => {

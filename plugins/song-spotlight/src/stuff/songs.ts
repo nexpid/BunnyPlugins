@@ -31,7 +31,7 @@ export interface SpotifyEmbedEntityTracklistEntry {
   isExplicit: boolean;
   duration: number;
   isPlayable: boolean;
-  audioPreview: {
+  audioPreview?: {
     format: string;
     url: string;
   };
