@@ -1,6 +1,6 @@
 {
   "name": "LocalPins",
-  "description": "Pin messages locally",
+  "description": "Adds a button to locally pin a message",
   "authors": [
     {
       "name": "nexpid",

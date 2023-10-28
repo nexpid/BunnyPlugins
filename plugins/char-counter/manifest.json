@@ -1,6 +1,6 @@
 {
   "name": "CharCounter",
-  "description": "Adds a counter above the chat input",
+  "description": "Adds a character counter above the chat input",
   "authors": [
     {
       "name": "nexpid",

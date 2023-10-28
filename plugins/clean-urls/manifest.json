@@ -1,6 +1,6 @@
 {
   "name": "CleanURLs",
-  "description": "Removes tracking data from links (Vencord port)",
+  "description": "Removes tracking data garbage from links (Vencord port)",
   "authors": [
     {
       "name": "nexpid",

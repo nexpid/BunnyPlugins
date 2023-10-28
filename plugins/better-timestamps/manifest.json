@@ -1,6 +1,6 @@
 {
   "name": "BetterTimestamps",
-  "description": "Send timestamps using text shortcuts (port from Vencord)",
+  "description": "Replaces boring date/time text with Discord's timestamps",
   "authors": [
     {
       "name": "nexpid",

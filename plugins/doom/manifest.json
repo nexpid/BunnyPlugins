@@ -1,6 +1,6 @@
 {
   "name": "DOOM",
-  "description": "Play DOOM using js-dos",
+  "description": "Play DOOM inside of Discord by going to the Settings (powered by js-dos)",
   "authors": [
     {
       "name": "nexpid",
