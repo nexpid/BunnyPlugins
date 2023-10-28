@@ -4,6 +4,7 @@ import { findByName, findByProps } from "@vendetta/metro";
 import { ReactNative as RN, url } from "@vendetta/metro/common";
 import {
   SimpleText,
+  TextStyleSheet,
   doHaptic,
   openModal,
   openSheet,
@@ -14,7 +15,6 @@ import IconpackInfoSheet from "./sheets/IconpackInfoSheet";
 import { showConfirmationAlert } from "@vendetta/ui/alerts";
 
 const { View } = General;
-const { TextStyleSheet } = findByProps("TextStyleSheet");
 
 const WebView = findByName("WebView") ?? findByProps("WebView").default.render;
 
