@@ -1,6 +1,6 @@
 {
-  "name": "MessageMarkdownPreview",
-  "description": "Preview markdown when typing a message",
+  "name": "MessagePreview",
+  "description": "Adds a button to preview your message before sending it",
   "authors": [
     {
       "name": "nexpid",
