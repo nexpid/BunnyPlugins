@@ -81,12 +81,10 @@ export default function () {
           <DataStat
             count={cache.save?.sync?.plugins?.length ?? "-"}
             subtitle="plugins"
-            contents={2}
           />
           <DataStat
             count={cache.save?.sync?.themes?.length ?? "-"}
             subtitle="themes"
-            contents={2}
           />
         </View>
       </BetterTableRowGroup>
