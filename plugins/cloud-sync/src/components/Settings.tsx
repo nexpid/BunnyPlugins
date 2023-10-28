@@ -39,10 +39,10 @@ const { FormRow, FormInput, FormSwitchRow } = Forms;
 const UserStore = findByStoreName("UserStore");
 
 const deltaruneCreepyJingle = wrapSync(
-  makeSound(`${constants.raw}assets/snd_creepyjingle.ogg`)
+  makeSound(`${constants.raw}assets/snd_creepyjingle.ogg`, 1.6)
 );
 const undertaleMysteryGo = wrapSync(
-  makeSound(`${constants.raw}assets/snd_mysterygo.ogg`)
+  makeSound(`${constants.raw}assets/snd_mysterygo.ogg`, 2.2)
 );
 
 export default function () {
