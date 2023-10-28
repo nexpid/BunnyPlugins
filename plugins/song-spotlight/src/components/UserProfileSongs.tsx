@@ -232,9 +232,15 @@ const SpotifySongEmbed = ({
     },
   });
 
+  const triggerController = React.useRef(null);
+
   const trigger = () => {
+    triggerController.current?.abort();
+    const controller = new AbortController();
+    triggerController.current = controller;
+
     setSongData(undefined);
-    getSongData(song.service, song.type, song.id)
+    getSongData(song.service, song.type, song.id, controller.signal)
       .then((x) => {
         const res = x ?? false;
         if (res && res.type !== "track")
@@ -243,12 +249,15 @@ const SpotifySongEmbed = ({
         setSongData(res);
       })
       .catch(
-        (e) => (
-          showToast(`${e}`, getAssetIDByName("Small")), setSongData(false)
-        )
+        (e) =>
+          e?.name !== "AbortError" &&
+          (showToast(`${e}`, getAssetIDByName("Small")), setSongData(false))
       );
   };
-  React.useEffect(trigger, []);
+  React.useEffect(() => {
+    trigger();
+    return () => triggerController.current?.abort();
+  }, []);
 
   const cover =
     songData &&

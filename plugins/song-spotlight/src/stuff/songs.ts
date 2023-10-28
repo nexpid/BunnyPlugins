@@ -5,14 +5,15 @@ const infoCache = new Map<string, any>();
 const getInfo = async (
   service: API.Song["service"],
   type: API.Song["type"],
-  id: string
+  id: string,
+  signal?: AbortSignal
 ): Promise<any | false> => {
   const key = `${service}${type}${id}`;
   if (infoCache.has(key)) return infoCache.get(key);
 
   if (service === "spotify") {
     const res = await (
-      await fetch(`https://open.spotify.com/embed/${type}/${id}`)
+      await fetch(`https://open.spotify.com/embed/${type}/${id}`, { signal })
     ).text();
 
     const dt = JSON.parse(
@@ -101,11 +102,12 @@ export type SpotifyEmbedEntity =
 export async function getSongData(
   service: API.Song["service"],
   type: API.Song["type"],
-  id: string
+  id: string,
+  signal?: AbortSignal
 ): Promise<SpotifyEmbedEntity | false> {
   if (service === "spotify") {
-    const dt = (await getInfo(service, type, id))?.props?.pageProps?.state?.data
-      ?.entity;
+    const dt = (await getInfo(service, type, id, signal))?.props?.pageProps
+      ?.state?.data?.entity;
     return dt?.name && dt?.coverArt ? dt : false;
   } else return false;
 }
@@ -113,10 +115,11 @@ export async function getSongData(
 export async function getSongName(
   service: API.Song["service"],
   type: API.Song["type"],
-  id: string
+  id: string,
+  signal?: AbortSignal
 ): Promise<string | false> {
   if (service === "spotify") {
-    const dt = await getInfo(service, type, id);
+    const dt = await getInfo(service, type, id, signal);
     return dt?.props?.pageProps?.state?.data?.entity?.name ?? false;
   } else return false;
 }
@@ -124,9 +127,12 @@ export async function getSongName(
 export async function validateSong(
   service: API.Song["service"],
   type: API.Song["type"],
-  id: string
+  id: string,
+  signal?: AbortSignal
 ): Promise<boolean> {
   if (service === "spotify") {
-    return (await getInfo(service, type, id)).page?.props?.status !== 404;
+    return (
+      (await getInfo(service, type, id, signal)).page?.props?.status !== 404
+    );
   } else return false;
 }
