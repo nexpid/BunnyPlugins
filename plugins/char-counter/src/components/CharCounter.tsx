@@ -1,17 +1,14 @@
 import { React, stylesheet } from "@vendetta/metro/common";
 import { General } from "@vendetta/ui/components";
 import getMessageLength, { display, hasSLM } from "../stuff/getMessageLength";
-import { findByProps } from "@vendetta/metro";
 import { semanticColors } from "@vendetta/ui";
 import { FadeView } from "../../../../stuff/animations";
 import { after } from "@vendetta/patcher";
-import { SimpleText } from "../../../../stuff/types";
+import { SimpleText, TextStyleSheet } from "../../../../stuff/types";
 import { vstorage } from "..";
 import { lastText } from "../stuff/patcher";
 
 const { View, Pressable } = General;
-
-const { TextStyleSheet } = findByProps("TextStyleSheet");
 
 const xsFontSize = TextStyleSheet["text-xs/semibold"].fontSize;
 const styles = stylesheet.createThemedStyleSheet({
