@@ -1,11 +1,10 @@
-import { findByProps } from "@vendetta/metro";
 import { stylesheet } from "@vendetta/metro/common";
 import { semanticColors } from "@vendetta/ui";
 import { General } from "@vendetta/ui/components";
+import { TextStyleSheet } from "../../../../stuff/types";
 
 const { View, Text } = General;
 
-const { TextStyleSheet } = findByProps("TextStyleSheet");
 const styles = stylesheet.createThemedStyleSheet({
   count: {
     ...TextStyleSheet["text-lg/bold"],
@@ -22,11 +21,9 @@ const styles = stylesheet.createThemedStyleSheet({
 export default function ({
   subtitle,
   count,
-  contents,
 }: {
   subtitle: string;
   count: string | number;
-  contents: number;
 }) {
   return (
     <View
