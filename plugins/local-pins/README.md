@@ -16,4 +16,4 @@
 	<h1>LocalPins</h1>
 </div>
 
-Pin messages locally
+Adds a button to locally pin a message

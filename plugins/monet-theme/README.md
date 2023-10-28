@@ -16,4 +16,4 @@
 	<h1>MonetTheme</h1>
 </div>
 
-Monet (M3) theme generator
+A material you theme generator

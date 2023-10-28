@@ -16,4 +16,4 @@
 	<h1>UseSystemEmoji</h1>
 </div>
 
-Uses system emoji instead of twemoji for messages
+Replaces Twemoji with system emoji in messages

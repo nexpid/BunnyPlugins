@@ -16,4 +16,4 @@
 	<h1>BetterTimestamps</h1>
 </div>
 
-Send timestamps using text shortcuts (port from Vencord)
+Replaces boring date/time text with Discord's timestamps

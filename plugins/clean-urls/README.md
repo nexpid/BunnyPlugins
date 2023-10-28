@@ -16,4 +16,4 @@
 	<h1>CleanURLs</h1>
 </div>
 
-Removes tracking data from links (Vencord port)
+Removes tracking data garbage from links (Vencord port)

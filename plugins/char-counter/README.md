@@ -16,4 +16,4 @@
 	<h1>CharCounter</h1>
 </div>
 
-Adds a counter above the chat input
+Adds a character counter above the chat input

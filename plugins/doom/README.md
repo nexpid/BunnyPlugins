@@ -16,4 +16,4 @@
 	<h1>DOOM</h1>
 </div>
 
-Play DOOM using js-dos
+Play DOOM inside of Discord by going to the Settings (powered by js-dos)

@@ -16,4 +16,4 @@
 	<h1>Freemix</h1>
 </div>
 
-Allows you to remix images for free lol
+Bypasses the Nitro requirement for remixing images (⚠⚠ remixing is free as of version 202.0 ⚠⚠)
