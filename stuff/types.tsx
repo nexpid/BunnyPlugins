@@ -17,7 +17,9 @@ const ThemeStore = findByStoreName("ThemeStore");
 const colors = findByProps("colors", "meta");
 const { triggerHaptic } = findByProps("triggerHaptic");
 
-const { TextStyleSheet } = findByProps("TextStyleSheet");
+export const TextStyleSheet = findByProps("TextStyleSheet")
+  .TextStyleSheet as _TextStyleSheet;
+
 const { View, Text, Pressable } = General;
 const { FormRow } = Forms;
 const { TableRow } = findByProps("TableRow");
@@ -151,6 +153,41 @@ export function doHaptic(dur: number): Promise<void> {
 // ...
 
 // the AdvancedSearch code below was given to me by Rosie :3
+
+type TextStyleSheetCase =
+  | "normal"
+  | "medium"
+  | "semibold"
+  | "bold"
+  | "extrabold";
+type TextStyleSheetVariant =
+  | `heading-sm/${TextStyleSheetCase}`
+  | `heading-md/${TextStyleSheetCase}`
+  | `heading-lg/${TextStyleSheetCase}`
+  | `heading-xl/${TextStyleSheetCase}`
+  | `heading-xxl/${TextStyleSheetCase}`
+  | "eyebrow"
+  | `text-xxs/${TextStyleSheetCase}`
+  | `text-xs/${TextStyleSheetCase}`
+  | `text-sm/${TextStyleSheetCase}`
+  | `text-md/${TextStyleSheetCase}`
+  | `text-lg/${TextStyleSheetCase}`
+  | "display-sm"
+  | "display-md"
+  | "display-lg";
+// ignoring redesign/ and deprecated styles
+
+type _TextStyleSheet = Record<
+  TextStyleSheetVariant,
+  {
+    fontSize: number;
+    lineHeight: number;
+    textTransform: "none" | "capitalize" | "uppercase" | "lowercase";
+    fontFamily: string;
+    includeFontPadding: boolean;
+    letterSpacing?: number;
+  }
+>;
 interface SearchContext {
   type: string;
   [key: PropertyKey]: any;
@@ -395,7 +432,7 @@ export function SimpleText({
   children,
   liveUpdate,
 }: React.PropsWithChildren<{
-  variant?: string;
+  variant?: TextStyleSheetVariant;
   lineClamp?: number;
   color?: string;
   align?: "left" | "right" | "center";
