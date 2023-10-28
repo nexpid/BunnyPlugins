@@ -9,12 +9,12 @@ import { semanticColors } from "@vendetta/ui";
 import { AppRichAsset, getApplicationAssets } from "../../stuff/api";
 import { General, Search } from "@vendetta/ui/components";
 import { richAssetListAppId, richAssetListCallback } from "../../stuff/prompts";
+import { TextStyleSheet } from "../../../../../stuff/types";
 
 const TabletManagerIdk = findByProps("isTablet");
 
 const { View, Text, Image } = General;
 
-const { TextStyleSheet } = findByProps("TextStyleSheet");
 const styles = stylesheet.createThemedStyleSheet({
   card: {
     backgroundColor: semanticColors.BACKGROUND_SECONDARY,
