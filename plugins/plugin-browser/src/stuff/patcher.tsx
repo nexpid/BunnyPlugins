@@ -20,8 +20,9 @@ export default (): (() => void) => {
       {
         key: plugin.manifest.name,
         icon: getAssetIDByName("ic_search_items_24px"),
-        title: () => {
+        get title() {
           const changes = getChanges().filter((x) => x[1] === "new").length;
+
           return `Plugin Browser${changes ? ` (+${changes})` : ""}`;
         },
         page: {
