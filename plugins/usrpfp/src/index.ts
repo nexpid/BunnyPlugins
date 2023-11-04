@@ -10,10 +10,14 @@ export const staticGifURL = (url: string) =>
   )}`;
 
 export let enabled = false;
+export let hash: string;
 
 let unpatch: () => void;
 export default {
   onLoad: async () => {
+    hash = Array.from(crypto.getRandomValues(new Uint8Array(20)))
+      .map((b) => b.toString(16).padStart(2, "0"))
+      .join("");
     enabled = true;
     try {
       unpatch = await patcher();

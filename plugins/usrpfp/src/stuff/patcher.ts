@@ -1,6 +1,6 @@
 import { safeFetch } from "@vendetta/utils";
 import { DataFile } from "../types";
-import { dataURL, enabled, staticGifURL } from "..";
+import { dataURL, enabled, hash, staticGifURL } from "..";
 import { logger } from "@vendetta";
 import { findByProps, findByStoreName } from "@vendetta/metro";
 import { after } from "@vendetta/patcher";
@@ -14,10 +14,31 @@ const UserStore = findByStoreName("UserStore");
 let data: DataFile;
 const fetchData = async () => {
   try {
-    data = await (await safeFetch(dataURL, { cache: "no-store" })).json();
+    data = await (
+      await safeFetch(`${dataURL}?_=${hash}`, { cache: "no-store" })
+    ).json();
   } catch (e) {
     logger.error(`Failed to fetch avatars!\n${e.stack}`);
   }
+};
+
+const getCustomAvatar = (id: string, isStatic?: boolean) => {
+  if (!data.avatars[id]) return;
+
+  const url = new URL(
+    isStatic ? staticGifURL(data.avatars[id]) : data.avatars[id]
+  );
+  url.searchParams.append("_", hash);
+  return url.toString();
+};
+
+const getCustomBadge = (id: string, username: string) => {
+  const val = data.badges[id] ?? data.badges[username];
+  if (!val) return;
+
+  const url = new URL(val);
+  url.searchParams.append("_", hash);
+  return url.toString();
 };
 
 const urlExt = (url: string) => new URL(url).pathname.split(".").slice(-1)[0];
@@ -42,13 +63,12 @@ export default async () => {
   );
 
   patches.push(
-    after("getUserAvatarURL", avatarStuff, ([{ id }], ret) => {
-      const custom = data.avatars[id];
+    after("getUserAvatarURL", avatarStuff, ([{ id }, animate]) => {
+      const custom = getCustomAvatar(id, !animate);
       if (!custom) return;
 
-      const ext = urlExt(custom);
-      if (ext === "gif") {
-        if (urlExt(ret) === "gif") return custom;
+      if (urlExt(custom) === "gif") {
+        if (animate) return custom;
         else return staticGifURL(custom);
       }
 
@@ -56,13 +76,12 @@ export default async () => {
     })
   );
   patches.push(
-    after("getUserAvatarSource", avatarStuff, ([{ id }], ret) => {
-      const custom = data.avatars[id];
+    after("getUserAvatarSource", avatarStuff, ([{ id }, animate]) => {
+      const custom = getCustomAvatar(id, !animate);
       if (!custom) return;
 
-      const ext = urlExt(custom);
-      if (ext === "gif") {
-        if (!ret?.uri || urlExt(ret.uri) === "gif") return { uri: custom };
+      if (urlExt(custom) === "gif") {
+        if (animate) return { uri: custom };
         else return { uri: staticGifURL(custom) };
       }
 
@@ -76,7 +95,7 @@ export default async () => {
   patches.push(
     after("getUserProfile", UserProfileStore, ([id], ret) => {
       const username = UserStore.getUser(id)?.username;
-      const badge = data.badges[id] ?? data.badges[username];
+      const badge = getCustomBadge(id, username);
 
       return ret
         ? {
