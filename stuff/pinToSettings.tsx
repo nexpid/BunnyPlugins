@@ -29,7 +29,7 @@ export function patchSettingsPin(
   you?: {
     key: string;
     icon?: number;
-    title: string | (() => string);
+    title: string;
     page: {
       render: React.ComponentType;
       noErrorBoundary?: boolean;
@@ -83,18 +83,6 @@ export function patchSettingsPin(
       .snakeCase(you.key)
       .toUpperCase()}`;
 
-    // patches.push(
-    //   after("default", settingsYouScreen, (_, ret) => {
-    //     const sec = ret.props.sections;
-    //     const ind = sec.findIndex((x) => x.title === "Vendetta");
-    //     if (sec[ind] && shouldAppear()) {
-    //       const clone = { ...sec[ind] };
-    //       clone.settings = [...clone.settings, screenKey];
-    //       sec[ind] = clone;
-    //     }
-    //   })
-    // );
-
     const Page = you.page.render;
     const component = React.memo(({ navigation }: any) => {
       const unsub = navigation.addListener("focus", () => {
@@ -118,8 +106,9 @@ export function patchSettingsPin(
     const rendererConfig = {
       [screenKey]: {
         type: "route",
-        title: typeof you.title === "function" ? you.title : () => you.title,
+        title: () => you.title,
         icon: you.icon,
+        parent: null,
         screen: {
           route: `VendettaPlugin${lodash
             .chain(you.key)
@@ -131,17 +120,17 @@ export function patchSettingsPin(
       },
     };
 
-    const manipulateSections = (ret: any, nw: boolean) => {
+    const manipulateSections = (ret: any, nw?: boolean) => {
       const cloned = [...ret];
-      const sections: any[] = nw ? cloned?.[0]?.sections : cloned;
-      if (!Array.isArray(sections)) return cloned;
+      const sections = nw ? cloned?.[0]?.sections : cloned;
+      if (!Array.isArray(sections)) return sections;
 
       const title = "Vendetta";
       const section = sections.find(
-        (x) => x?.title === title ?? x?.label === title
+        (x) => x?.title === title || x?.label === title
       );
-
-      if (section) section.settings.push(screenKey);
+      if (section && !section?.settings?.includes(screenKey))
+        section.settings.push(screenKey);
 
       return cloned;
     };
@@ -167,16 +156,13 @@ export function patchSettingsPin(
 
       patches.push(
         after("useOverviewSettings", layout, (_, ret) =>
-          manipulateSections(ret, false)
+          manipulateSections(ret)
         )
       );
       patches.push(
         after("getSettingTitleConfig", titleConfig, (_, ret) => ({
           ...ret,
-          ...{
-            [screenKey]:
-              typeof you.title === "function" ? you.title() : you.title,
-          },
+          [screenKey]: you.title,
         }))
       );
       patches.push(
@@ -187,8 +173,7 @@ export function patchSettingsPin(
                   type: "setting_search_result",
                   ancestorRendererData: rendererConfig[screenKey],
                   setting: screenKey,
-                  title:
-                    typeof you.title === "function" ? you.title() : you.title,
+                  title: () => you.title,
                   breadcrumbs: ["Vendetta"],
                   icon: rendererConfig[screenKey].icon,
                 },
@@ -203,7 +188,7 @@ export function patchSettingsPin(
 
       stuff.SETTING_RELATIONSHIPS = {
         ...oldRelationships,
-        ...{ [screenKey]: null },
+        [screenKey]: null,
       };
       stuff.SETTING_RENDERER_CONFIGS = {
         ...oldRendererConfigs,
