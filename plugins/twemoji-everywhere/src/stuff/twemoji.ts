@@ -12,16 +12,16 @@ export const emojipacks = {
     title: "Default (Twemoji)",
     format: (src) => `asset:/emoji-${src}.png`,
   } as EmojiPack,
+  twemoji: {
+    title: "Twemoji (CDN)",
+    format: (src) =>
+      `https://cdn.jsdelivr.net/gh/twitter/twemoji@v14.0.2/assets/72x72/${src}.png`,
+  } as EmojiPack,
   fluentuiStatic: {
     title: "FluentUI Emoji (Static)",
     format: (src) =>
       `https://nexpid.github.io/codepoint-emojis/fluentui-emoji-static/${src}.png`,
   } as EmojiPack,
-  // fluentuiAnimated: {
-  //   title: "FluentUI Emoji (Animated)",
-  //   format: (src) =>
-  //    `https://nexpid.github.io/codepoint-emojis/fluentui-emoji-animated/${src}.gif`,
-  // } as EmojiPack,
 };
 
 export function getSrc(src: string) {
