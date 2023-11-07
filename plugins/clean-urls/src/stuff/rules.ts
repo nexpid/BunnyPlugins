@@ -135,6 +135,15 @@ const extraRules = [
   "shareUid@coolapk.com",
   "shareFrom@coolapk.com",
   "si@spotify.link",
+  "feature@youtu.be",
+  "ref@*.nicovideo.jp",
+  "cp_in@*.nicovideo.jp",
+  "cmnhd_ref@*.nicovideo.jp",
+  "_topic@*.nicovideo.jp",
+  "via@*.nicovideo.jp",
+  "at@*.nicovideo.jp",
+  "state@*.nicovideo.jp",
+  "_trakparams@ebay.*",
 ];
 
 const reEscaper = /[\\^$.*+?()[\]{}|]/g;
