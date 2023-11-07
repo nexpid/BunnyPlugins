@@ -25,9 +25,10 @@ const fetchData = async () => {
 const getCustomAvatar = (id: string, isStatic?: boolean) => {
   if (!data.avatars[id]) return;
 
-  const url = new URL(
-    isStatic ? staticGifURL(data.avatars[id]) : data.avatars[id]
-  );
+  const avatar = data.avatars[id];
+  if (isStatic && urlExt(avatar) === "gif") return staticGifURL(avatar);
+
+  const url = new URL(avatar);
   url.searchParams.append("_", hash);
   return url.toString();
 };
@@ -63,29 +64,16 @@ export default async () => {
   );
 
   patches.push(
-    after("getUserAvatarURL", avatarStuff, ([{ id }, animate]) => {
-      const custom = getCustomAvatar(id, !animate);
-      if (!custom) return;
-
-      if (urlExt(custom) === "gif") {
-        if (animate) return custom;
-        else return staticGifURL(custom);
-      }
-
-      return custom;
-    })
+    after("getUserAvatarURL", avatarStuff, ([{ id }, animate]) =>
+      getCustomAvatar(id, !animate)
+    )
   );
   patches.push(
-    after("getUserAvatarSource", avatarStuff, ([{ id }, animate]) => {
+    after("getUserAvatarSource", avatarStuff, ([{ id }, animate], ret) => {
       const custom = getCustomAvatar(id, !animate);
       if (!custom) return;
 
-      if (urlExt(custom) === "gif") {
-        if (animate) return { uri: custom };
-        else return { uri: staticGifURL(custom) };
-      }
-
-      return custom;
+      return custom ? { uri: custom } : ret;
     })
   );
 
