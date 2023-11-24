@@ -8,10 +8,12 @@ import { showToast } from "@vendetta/ui/toasts";
 import { parse } from "./stuff/jsoncParser";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { id } from "@vendetta/plugin";
-import { findByProps } from "@vendetta/metro";
+import { findByProps, findByStoreName } from "@vendetta/metro";
 import { React } from "@vendetta/metro/common";
 import Updating from "./components/Updating";
 import { unpatch } from "./stuff/livePreview";
+
+const ThemeStore = findByStoreName("ThemeStore");
 
 export function migrateStorage() {
   vstorage.config ??= {
@@ -33,7 +35,7 @@ export const vstorage: {
     accent3: string;
   };
   config?: {
-    style: "dark" | "light" | "amoled";
+    style: "dark" | "light" | "auto";
     wallpaper: string | null;
   };
   autoReapply?: boolean;
@@ -42,6 +44,8 @@ export const vstorage: {
   /** @deprecated */
   wallpaper?: string;
   applyCache?: string;
+  themeApplyCache?: string;
+  localPatches?: boolean;
 } = storage;
 
 export const patchesURL =
@@ -50,23 +54,29 @@ export const devPatchesURL = "http://192.168.2.22:8730/patches.jsonc";
 export const commitsURL =
   "https://api.github.com/repos/nexpid/VendettaMonetTheme/commits?path=patches.jsonc";
 
-const getSysColors = () =>
+export const getSysColors = () =>
   window[window.__vendetta_loader?.features?.syscolors?.prop] as
     | VendettaSysColors
     | null
     | undefined;
 const hasTheme = () => window.__vendetta_theme?.id.includes("monet-theme");
 
-const makeApplyCache = (syscolors: VendettaSysColors | null | undefined) =>
-  !syscolors
-    ? JSON.stringify(null)
-    : JSON.stringify([
-        syscolors.neutral1[7],
-        syscolors.neutral2[7],
-        syscolors.accent1[7],
-        syscolors.accent2[7],
-        syscolors.accent3[7],
-      ]);
+export const makeApplyCache = (
+  syscolors: VendettaSysColors | null | undefined
+) =>
+  JSON.stringify(
+    syscolors
+      ? [
+          syscolors.neutral1[7],
+          syscolors.neutral2[7],
+          syscolors.accent1[7],
+          syscolors.accent2[7],
+          syscolors.accent3[7],
+        ]
+      : null
+  );
+export const makeThemeApplyCache = () =>
+  JSON.stringify(vstorage.config.style === "auto" ? ThemeStore.theme : null);
 
 const { BundleUpdaterManager } = window.nativeModuleProxy;
 const Alerts = findByProps("openLazy", "close");
@@ -78,18 +88,21 @@ export default {
   onLoad: async () => {
     const syscolors = getSysColors();
     const made = makeApplyCache(syscolors);
+    const themeMade = makeThemeApplyCache();
 
     patches.push(() => unpatch?.());
 
     if (
-      vstorage.autoReapply &&
-      hasTheme() &&
-      syscolors &&
-      vstorage.applyCache &&
-      made !== vstorage.applyCache
+      (vstorage.autoReapply &&
+        hasTheme() &&
+        syscolors &&
+        vstorage.applyCache &&
+        made !== vstorage.applyCache) ||
+      (vstorage.themeApplyCache && themeMade !== vstorage.themeApplyCache)
     ) {
       showCustomAlert(() => React.createElement(Updating, {}), {});
       vstorage.applyCache = made;
+      vstorage.themeApplyCache = themeMade;
       setColorsFromDynamic(syscolors);
 
       let patches;
@@ -97,7 +110,7 @@ export default {
         patches = parse(
           (
             await (
-              await fetch(patchesURL, {
+              await fetch(vstorage.localPatches ? devPatchesURL : patchesURL, {
                 cache: "no-store",
               })
             ).text()
@@ -125,7 +138,10 @@ export default {
         data: theme,
       } as Theme);
       BundleUpdaterManager.reload();
-    } else vstorage.applyCache = made;
+    } else {
+      vstorage.applyCache = made;
+      vstorage.themeApplyCache = themeMade;
+    }
   },
   onUnload: () => {
     patches.forEach((x) => x());

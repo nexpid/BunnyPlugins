@@ -3,6 +3,9 @@ import { PatchThing, Patches } from "../types";
 import { getLABShade, parseColor } from "./colors";
 import { migrateStorage, vstorage } from "..";
 import { ThemeDataWithPlus } from "../../../../stuff/typings";
+import { findByStoreName } from "@vendetta/metro";
+
+const ThemeStore = findByStoreName("ThemeStore");
 
 export function build(patches: Patches): ThemeDataWithPlus {
   migrateStorage();
@@ -24,11 +27,15 @@ export function build(patches: Patches): ThemeDataWithPlus {
     spec: 2,
   };
 
+  const style =
+    vstorage.config.style === "auto"
+      ? ThemeStore.theme !== "light"
+        ? "dark"
+        : "light"
+      : vstorage.config.style;
+
   const get = <T extends PatchThing<any>>(lk: T): T["both"] =>
-    Object.assign(
-      lk.both,
-      vstorage.config.style === "light" ? lk.light : lk.dark
-    );
+    Object.assign(lk.both, style === "light" ? lk.light : lk.dark);
   const entries = <T extends {}>(obj: T): [string, T[keyof T]][] =>
     Object.entries(obj);
 
@@ -71,9 +78,13 @@ export function build(patches: Patches): ThemeDataWithPlus {
         const shade = Number(c.split("_")[1]);
         if (!checkShouldPut(shade, x.split("_").slice(1))) continue;
 
+        const useShade = y.alternative
+          ? Math.floor((shade / 26) * 1000)
+          : shade;
+
         theme.rawColors[c] = getLABShade(
           clr,
-          y.base ? shade + (500 - y.base) : shade,
+          y.base ? useShade + (500 - y.base) : useShade,
           y.ratio
         );
       }

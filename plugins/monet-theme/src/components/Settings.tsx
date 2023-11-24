@@ -4,7 +4,6 @@ import {
   React,
   clipboard,
   stylesheet,
-  url,
 } from "@vendetta/metro/common";
 import { Forms, General } from "@vendetta/ui/components";
 import {
@@ -12,7 +11,7 @@ import {
   LineDivider,
   RichText,
   SimpleText,
-  SuperAwesomeIcon,
+  TextStyleSheet,
 } from "../../../../stuff/types";
 import { VendettaSysColors } from "../../../../stuff/typings";
 import { getAssetIDByName } from "@vendetta/ui/assets";
@@ -20,6 +19,9 @@ import Color from "./Color";
 import {
   commitsURL,
   devPatchesURL,
+  getSysColors,
+  makeApplyCache,
+  makeThemeApplyCache,
   migrateStorage,
   patchesURL,
   vstorage,
@@ -32,10 +34,8 @@ import Commit, { CommitObj } from "./Commit";
 import { openCommitsPage } from "./pages/CommitsPage";
 import { parse } from "../stuff/jsoncParser";
 import { id } from "@vendetta/plugin";
-import { findByProps } from "@vendetta/metro";
 import { semanticColors } from "@vendetta/ui";
 import { getDebugInfo } from "@vendetta/debug";
-import { openPluginReportSheet } from "../../../../stuff/githubReport";
 import { checkForURL, fetchRawTheme, parseTheme } from "../stuff/repainter";
 import { Patches } from "../types";
 import { transform } from "../stuff/colors";
@@ -48,7 +48,6 @@ const { BundleUpdaterManager } = window.nativeModuleProxy;
 const { ScrollView, View, Pressable } = General;
 const { FormRow, FormSwitchRow } = Forms;
 
-const { TextStyleSheet } = findByProps("TextStyleSheet");
 const mdSize = TextStyleSheet["text-md/semibold"].fontSize;
 
 function transformObject<T extends Record<string, string>>(obj: T): T {
@@ -78,10 +77,15 @@ export default () => {
   const [commits, setCommits] = React.useState<CommitObj[] | undefined>(
     undefined
   );
-  const [usePatches, setUsePatches] = React.useState<"git" | "local">("git");
   const [patches, setPatches] = React.useState<Patches | undefined>(undefined);
   stsCommits = commits;
   stsPatches = patches;
+
+  const patchesControllerRef = React.useRef<AbortController>();
+  const commitsControllerRef = React.useRef<AbortController>();
+
+  vstorage.applyCache = makeApplyCache(getSysColors());
+  vstorage.themeApplyCache = makeThemeApplyCache();
 
   useProxy(vstorage);
 
@@ -107,34 +111,49 @@ export default () => {
     },
     window: {
       height: "100%",
-      backgroundColor: semanticColors.BACKGROUND_MOBILE_PRIMARY,
+      backgroundColor: semanticColors.BG_BASE_SECONDARY,
+    },
+    labelIcon: {
+      width: mdSize,
+      height: mdSize,
+      marginRight: 4,
+      tintColor: semanticColors.TEXT_NORMAL,
     },
   });
 
   React.useEffect(() => {
-    if (!patches)
-      fetch(usePatches === "git" ? patchesURL : devPatchesURL, {
-        cache: "no-store",
-      })
-        .then((x) =>
-          x.text().then((text) => {
-            try {
-              setPatches(parse(text.replace(/\r/g, "")));
-            } catch {
-              return showToast(
-                "Failed to parse patches.json",
-                getAssetIDByName("Small")
-              );
-            }
-          })
-        )
-        .catch(() =>
-          showToast("Failed to fetch patches.json", getAssetIDByName("Small"))
-        );
+    if (patches) return;
+    patchesControllerRef.current?.abort();
+
+    const controller = new AbortController();
+    patchesControllerRef.current = controller;
+    fetch(vstorage.localPatches ? devPatchesURL : patchesURL, {
+      cache: "no-store",
+      signal: controller.signal,
+    })
+      .then((x) =>
+        x.text().then((text) => {
+          try {
+            setPatches(parse(text.replace(/\r/g, "")));
+          } catch {
+            return showToast(
+              "Failed to parse patches.json",
+              getAssetIDByName("Small")
+            );
+          }
+        })
+      )
+      .catch(() =>
+        showToast("Failed to fetch patches.json", getAssetIDByName("Small"))
+      );
   }, [patches]);
   React.useEffect(() => {
+    commitsControllerRef.current?.abort();
+
+    const controller = new AbortController();
+    commitsControllerRef.current = controller;
     if (!commits)
-      fetch(commitsURL, { cache: "no-store" })
+      fetch(commitsURL, { cache: "no-store", signal: controller.signal })
         .then((x) =>
           x
             .json()
@@ -286,11 +305,8 @@ export default () => {
             >
               <RN.Image
                 source={getAssetIDByName("img_nitro_remixing")}
-                style={{
-                  width: mdSize,
-                  height: mdSize,
-                  marginRight: 4,
-                }}
+                style={styles.labelIcon}
+                resizeMode="cover"
               />
               <SimpleText variant="text-md/semibold" color="TEXT_NORMAL">
                 Autofill
@@ -344,11 +360,8 @@ export default () => {
           >
             <RN.Image
               source={getAssetIDByName("ic_theme_24px")}
-              style={{
-                width: mdSize,
-                height: mdSize,
-                marginRight: 4,
-              }}
+              style={styles.labelIcon}
+              resizeMode="cover"
             />
             <SimpleText variant="text-md/semibold" color="TEXT_NORMAL">
               Use Repainter theme
@@ -397,9 +410,9 @@ export default () => {
           if (lastThemePressTime >= Date.now()) {
             lastThemePressTime = 0;
             showToast(
-              `Now using: ${usePatches === "git" ? "Local" : "GitHub"} patches`
+              `Now using ${vstorage.localPatches ? "GitHub" : "local"} patches`
             );
-            setUsePatches(usePatches === "git" ? "local" : "git");
+            vstorage.localPatches = !vstorage.localPatches;
             setPatches(undefined);
           } else lastThemePressTime = Date.now() + 500;
         }}
@@ -499,7 +512,7 @@ export default () => {
               label="Reload Theme Patches"
               subLabel={`Patch v${patches.version}, ${
                 JSON.stringify(patches).length / 100
-              }kB (using ${usePatches === "git" ? "GitHub" : "local"})`}
+              }kB (using ${vstorage.localPatches ? "local" : "GitHub"})`}
               leading={
                 <FormRow.Icon source={getAssetIDByName("ic_sync_24px")} />
               }

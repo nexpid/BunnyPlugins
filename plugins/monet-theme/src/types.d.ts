@@ -11,6 +11,7 @@ export interface PatchV3 {
     color: string;
     ratio?: number;
     base?: number;
+    alternative?: boolean;
   }>;
   semantic: PatchThing<string>;
   raw: PatchThing<string>;

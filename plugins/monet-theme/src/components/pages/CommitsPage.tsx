@@ -10,7 +10,7 @@ export const CommitsPage = () => {
   const styles = stylesheet.createThemedStyleSheet({
     window: {
       height: "100%",
-      backgroundColor: semanticColors.BACKGROUND_MOBILE_PRIMARY,
+      backgroundColor: semanticColors.BG_BASE_SECONDARY,
     },
   });
 

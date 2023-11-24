@@ -10,16 +10,16 @@ import {
 
 const { FormRadioRow } = Forms;
 
-export default function ChooseSheet({
+export default function ChooseSheet<T extends string[]>({
   label,
   value: _value,
   choices,
   update,
 }: {
   label: string;
-  value: string;
-  choices: string[];
-  update: (val: string) => void;
+  value: T[number];
+  choices: T;
+  update: (val: T[number]) => void;
 }) {
   const [value, setValue] = React.useState(_value);
   update(value);

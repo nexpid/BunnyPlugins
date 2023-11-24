@@ -1,12 +1,13 @@
 import { Forms, General } from "@vendetta/ui/components";
 import { stsPatches } from "../Settings";
-import { migrateStorage, vstorage } from "../..";
 import {
-  ReactNative as RN,
-  React,
-  lodash,
-  stylesheet,
-} from "@vendetta/metro/common";
+  getSysColors,
+  makeApplyCache,
+  makeThemeApplyCache,
+  migrateStorage,
+  vstorage,
+} from "../..";
+import { ReactNative as RN, React, stylesheet } from "@vendetta/metro/common";
 import {
   BetterTableRowGroup,
   SimpleText,
@@ -17,22 +18,37 @@ import { getAssetIDByName } from "@vendetta/ui/assets";
 import wallpapers from "../../stuff/wallpapers";
 import { semanticColors } from "@vendetta/ui";
 import { showToast } from "@vendetta/ui/toasts";
-import ChooseSettingSheet from "../../../../nexxutils/src/components/sheets/ChooseSettingSheet";
 import { useProxy } from "@vendetta/storage";
-import { storage } from "@vendetta/plugin";
+import ChooseSheet from "../sheets/ChooseSheet";
 
 const { View, ScrollView } = General;
 const { FormRow } = Forms;
 
+const readableThemeStyle = {
+  auto: "Automatic",
+  Automatic: "auto",
+  dark: "Dark",
+  Dark: "dark",
+  light: "Light",
+  Light: "light",
+};
+
 export const ConfigurePage = () => {
   migrateStorage();
-  useProxy(storage);
+
+  vstorage.applyCache = makeApplyCache(getSysColors());
+  vstorage.themeApplyCache = makeThemeApplyCache();
+
+  useProxy(vstorage);
 
   const styles = stylesheet.createThemedStyleSheet({
     thing: {
-      backgroundColor: semanticColors.BACKGROUND_TERTIARY,
+      backgroundColor: semanticColors.BG_MOD_FAINT,
       borderRadius: 8,
       aspectRatio: 1 / 2,
+    },
+    thingActive: {
+      backgroundColor: semanticColors.BG_MOD_STRONG,
     },
     emptyThing: {
       padding: 12,
@@ -46,7 +62,7 @@ export const ConfigurePage = () => {
     },
     window: {
       height: "100%",
-      backgroundColor: semanticColors.BACKGROUND_MOBILE_PRIMARY,
+      backgroundColor: semanticColors.BG_BASE_SECONDARY,
     },
   });
 
@@ -76,15 +92,19 @@ export const ConfigurePage = () => {
           }
           trailing={
             <SimpleText variant="text-md/medium" color="TEXT_MUTED">
-              {lodash.startCase(vstorage.config.style)}
+              {readableThemeStyle[vstorage.config.style]}
             </SimpleText>
           }
           onPress={() =>
-            openSheet(ChooseSettingSheet, {
+            openSheet(ChooseSheet, {
               label: "Theme Style",
-              value: lodash.startCase(vstorage.config.style),
-              choices: ["Dark", "Light"],
-              update: (v) => (vstorage.config.style = v.toLowerCase()),
+              value: readableThemeStyle[vstorage.config.style],
+              choices: [
+                readableThemeStyle.auto,
+                readableThemeStyle.dark,
+                readableThemeStyle.light,
+              ],
+              update: (v) => (vstorage.config.style = readableThemeStyle[v]),
             })
           }
         />
@@ -106,10 +126,11 @@ export const ConfigurePage = () => {
                 <RN.TouchableOpacity
                   onPress={() => {
                     showToast("Removed background", getAssetIDByName("Check"));
-                    delete vstorage.config.wallpaper;
+                    vstorage.config.wallpaper = undefined;
                   }}
                   style={[
                     styles.thing,
+                    !vstorage.config.wallpaper && styles.thingActive,
                     styles.emptyThing,
                     {
                       width: dims.width / 4,
@@ -148,6 +169,7 @@ export const ConfigurePage = () => {
                     }}
                     style={[
                       styles.thing,
+                      vstorage.config.wallpaper === x.url && styles.thingActive,
                       {
                         width: dims.width / 4,
                       },
