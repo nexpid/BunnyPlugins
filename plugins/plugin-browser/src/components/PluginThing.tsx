@@ -16,11 +16,9 @@ const { View } = General;
 
 export default function ({
   item,
-  index,
   changes,
 }: {
   item: PluginsFullJson[number];
-  index: number;
   changes: [string, "new" | "update"][];
 }) {
   const proxiedLink = properLink(
@@ -46,7 +44,6 @@ export default function ({
 
   return (
     <ScuffedPluginCard
-      index={index}
       headerLabel={
         <View style={{ flexDirection: "row" }}>
           {change && (

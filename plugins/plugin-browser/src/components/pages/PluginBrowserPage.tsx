@@ -5,26 +5,24 @@ import {
 } from "@vendetta/metro/common";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { PluginsFullJson } from "../../types";
-import { ErrorBoundary, General, Search } from "@vendetta/ui/components";
+import { General, Search } from "@vendetta/ui/components";
 import { pluginsURL } from "../..";
 import { showToast } from "@vendetta/ui/toasts";
-import { findByProps } from "@vendetta/metro";
-import { SuperAwesomeIcon } from "../../../../../stuff/types";
+import { SuperAwesomeIcon, openSheet } from "../../../../../stuff/types";
 import { safeFetch } from "@vendetta/utils";
 import { getChanges, updateChanges } from "../../stuff/pluginChecker";
 import PluginThing from "../PluginThing";
 import { emitterAvailable } from "../../stuff/util";
 import { showConfirmationAlert } from "@vendetta/ui/alerts";
-
-const { showSimpleActionSheet } = findByProps("showSimpleActionSheet");
+import ChooseSheet from "../sheets/ChooseSheet";
 
 const { View } = General;
 
 enum Filter {
-  Newest = "Newest",
-  Oldest = "Oldest",
-  Alphabetical = "Alphabetical",
-  ReverseAlphabetical = "Reverse Alphabetical",
+  DateNewest = "Creation date (new to old)",
+  DateOldest = "Creation date (old to new)",
+  NameAZ = "Name (A-Z)",
+  NameZA = "Name (Z-A)",
 }
 
 let refreshCallback: () => void;
@@ -46,19 +44,29 @@ export default () => {
     return null;
   }
 
-  const [changes] = React.useState(getChanges());
-  const [filter, setFilter] = React.useState(Filter.Newest);
-  const [parsed, setParsed] = React.useState<PluginsFullJson>();
+  const changes = React.useRef(getChanges()).current;
+  const [filter, setFilter] = React.useState(Filter.DateNewest);
+  const [parsed, setParsed] = React.useState<PluginsFullJson | null>(null);
   const [search, setSearch] = React.useState("");
 
-  React.useEffect(() => {
-    setSearch("");
-    setFilter(Filter.Newest);
-  }, []);
+  const sortedData = React.useMemo(() => {
+    if (!parsed) return;
 
-  React.useEffect(() => {
-    updateChanges();
-  }, []);
+    let dt = parsed.filter(
+      (i) =>
+        i.name?.toLowerCase().includes(search) ||
+        i.authors?.some((x) => x.name?.toLowerCase().includes(search)) ||
+        i.description?.toLowerCase().includes(search)
+    );
+
+    if ([Filter.NameAZ, Filter.NameZA].includes(filter))
+      dt = dt.sort((a, b) => (a.name < b.name ? -1 : a.name > b.name ? 1 : 0));
+    if ([Filter.NameZA, Filter.DateNewest].includes(filter)) dt.reverse();
+
+    return dt;
+  }, [filter, parsed]);
+
+  React.useEffect(updateChanges, []);
 
   React.useEffect(() => {
     if (!parsed)
@@ -78,15 +86,14 @@ export default () => {
         );
   }, [parsed]);
 
-  refreshCallback = () => parsed && setParsed(undefined);
+  refreshCallback = () => parsed && setParsed(null);
   filterCallback = () =>
     parsed &&
-    showSimpleActionSheet({
-      key: "CardOverflow",
-      options: Object.values(Filter).map((x) => ({
-        label: x,
-        onPress: () => setFilter(x),
-      })),
+    openSheet(ChooseSheet, {
+      label: "Filter",
+      value: filter,
+      choices: Object.values(Filter),
+      update: (val) => setFilter(val as Filter),
     });
 
   navigation.addListener("focus", () => {
@@ -112,20 +119,6 @@ export default () => {
   if (!parsed)
     return <RN.ActivityIndicator size={"large"} style={{ flex: 1 }} />;
 
-  let sortedData = parsed.filter(
-    (i) =>
-      i.name?.toLowerCase().includes(search) ||
-      i.authors?.some((x) => x.name?.toLowerCase().includes(search)) ||
-      i.description?.toLowerCase().includes(search)
-  );
-
-  if ([Filter.Alphabetical, Filter.ReverseAlphabetical].includes(filter))
-    sortedData = sortedData.sort((a, b) =>
-      a.name < b.name ? -1 : a.name > b.name ? 1 : 0
-    );
-  if ([Filter.ReverseAlphabetical, Filter.Newest].includes(filter))
-    sortedData.reverse();
-
   return (
     <RN.FlatList
       ListHeaderComponent={
@@ -137,12 +130,15 @@ export default () => {
       style={{ paddingHorizontal: 10, paddingTop: 10 }}
       contentContainerStyle={{ paddingBottom: 20 }}
       data={sortedData}
-      renderItem={({ item, index }) => (
-        <ErrorBoundary>
-          <PluginThing item={item} index={index} changes={changes} />
-        </ErrorBoundary>
+      keyExtractor={(item) => `plugin-${item.vendetta}`}
+      renderItem={({ item }) => (
+        <PluginThing
+          item={item}
+          changes={changes}
+          key={`plugin-${item.vendetta}`}
+        />
       )}
       removeClippedSubviews={true}
-    ></RN.FlatList>
+    />
   );
 };

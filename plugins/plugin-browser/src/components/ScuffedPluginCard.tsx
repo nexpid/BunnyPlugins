@@ -13,7 +13,6 @@ interface propAction {
 }
 
 interface props {
-  index: number;
   headerLabel: JSX.Element | string;
   headerIcon?: number;
   descriptionLabel: string;
