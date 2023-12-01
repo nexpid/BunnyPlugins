@@ -14,24 +14,26 @@ import {
   currentAuthorization,
   deleteSaveData,
   syncSaveData,
+  uploadFile,
 } from "../stuff/api";
 import { showToast } from "@vendetta/ui/toasts";
 import {
   NavigationNative,
   React,
   ReactNative as RN,
-  url,
 } from "@vendetta/metro/common";
 import PluginSettingsPage from "./pages/PluginSettingsPage";
 import { findByProps, findByStoreName } from "@vendetta/metro";
 import { showConfirmationAlert, showInputAlert } from "@vendetta/ui/alerts";
 import ImportActionSheet from "./sheets/ImportActionSheet";
 import { grabEverything, setImportCallback } from "../stuff/syncStuff";
-import constants from "../constants";
+import constants, { defaultClientId, defaultRoot } from "../constants";
 import { makeSound } from "../stuff/sound";
 import { CryptoWebViewHandler, decrypt, encrypt } from "./CryptoWebView";
+import { UploadedFile } from "../types/api/latest";
 
 const DocumentPicker = findByProps("pickSingle", "isCancel");
+const { downloadMediaAsset } = findByProps("downloadMediaAsset");
 
 const { ScrollView, View } = General;
 const { FormRow, FormInput, FormSwitchRow } = Forms;
@@ -142,7 +144,7 @@ export default function () {
           <>
             <LineDivider addPadding={true} />
             <FormRow
-              label="Custom Host"
+              label="API URL"
               subLabel="Custom URL for the CloudSync backend API"
               leading={
                 <FormRow.Icon source={getAssetIDByName("ic_message_edit")} />
@@ -150,10 +152,25 @@ export default function () {
             />
             <FormInput
               title=""
-              keyboardType="numeric"
-              placeholder="1"
+              placeholder={defaultRoot}
               value={constants.api}
-              onChange={(x: string) => (vstorage.host = x)}
+              onChange={(x: string) => (vstorage.host = x || defaultRoot)}
+              style={{ marginTop: -25, marginHorizontal: 12 }}
+            />
+            <FormRow
+              label="Client ID"
+              subLabel="Custom client ID for OAuth2"
+              leading={
+                <FormRow.Icon source={getAssetIDByName("ic_message_edit")} />
+              }
+            />
+            <FormInput
+              title=""
+              placeholder={defaultClientId}
+              value={constants.oauth2.clientId}
+              onChange={(x: string) =>
+                (vstorage.clientId = x || defaultClientId)
+              }
               style={{ marginTop: -25, marginHorizontal: 12 }}
             />
           </>
@@ -171,32 +188,51 @@ export default function () {
               leading={
                 <FormRow.Icon source={getAssetIDByName("ic_logout_24px")} />
               }
-              onPress={() => {
-                vstorage.auth ??= {};
-                delete vstorage.auth[UserStore.getCurrentUser().id];
-                delete cache.save;
+              onPress={() =>
+                showConfirmationAlert({
+                  title: "Log out",
+                  content: "Are you sure you want to log out?",
+                  confirmText: "Log out",
+                  confirmColor: "BRAND" as ButtonColors,
+                  onConfirm: () => {
+                    vstorage.auth ??= {};
+                    delete vstorage.auth[UserStore.getCurrentUser().id];
+                    delete cache.save;
 
-                showToast(
-                  "Successfully logged out",
-                  getAssetIDByName("ic_logout_24px")
-                );
-              }}
+                    showToast(
+                      "Successfully logged out",
+                      getAssetIDByName("ic_logout_24px")
+                    );
+                  },
+                  cancelText: "Cancel",
+                })
+              }
             />
             <FormRow
               label="Delete data"
               subLabel="Deletes your CloudSync data"
               leading={<FormRow.Icon source={getAssetIDByName("trash")} />}
-              onPress={async () => {
-                await deleteSaveData();
-                vstorage.auth ??= {};
-                delete vstorage.auth[UserStore.getCurrentUser().id];
-                delete cache.save;
+              onPress={() =>
+                showConfirmationAlert({
+                  title: "Delete data",
+                  content:
+                    "Are you sure you want to delete your save data? (this cannot be undone!)",
+                  confirmText: "Delete",
+                  confirmColor: "RED" as ButtonColors,
+                  onConfirm: async () => {
+                    await deleteSaveData();
+                    vstorage.auth ??= {};
+                    delete vstorage.auth[UserStore.getCurrentUser().id];
+                    delete cache.save;
 
-                showToast(
-                  "Successfully deleted data",
-                  getAssetIDByName("trash")
-                );
-              }}
+                    showToast(
+                      "Successfully deleted data",
+                      getAssetIDByName("trash")
+                    );
+                  },
+                  cancelText: "Cancel",
+                })
+              }
             />
           </>
         ) : (
@@ -227,10 +263,11 @@ export default function () {
                   />
                 )
               }
-              onPress={() => {
+              onPress={() =>
                 showConfirmationAlert({
                   title: "Save data",
-                  content: "Are you sure you want to overwrite your save data?",
+                  content:
+                    "Are you sure you want to overwrite your save data? (this cannot be undone!)",
                   confirmText: "Overwrite",
                   confirmColor: "BRAND" as ButtonColors,
                   onConfirm: async () => {
@@ -249,8 +286,8 @@ export default function () {
                     unBusy("save_api");
                   },
                   cancelText: "Cancel",
-                });
-              }}
+                })
+              }
             />
             <FormRow
               label="Import Data"
@@ -307,13 +344,29 @@ export default function () {
                     }
 
                     showToast(
-                      "Downloading file in your browser",
-                      getAssetIDByName("Check")
+                      "Preparing for download...",
+                      getAssetIDByName("ic_upload")
                     );
-                    url.openURL(
-                      `${constants.api}api/download?data=${encodeURIComponent(
-                        text
-                      )}`
+                    let data: UploadedFile;
+                    try {
+                      data = await uploadFile(text);
+                    } catch (e) {
+                      unBusy("local_export");
+                      return showToast(
+                        e?.message ?? `${e}`,
+                        getAssetIDByName("Small")
+                      );
+                    }
+
+                    showToast(
+                      "Backup Saved",
+                      getAssetIDByName("ic_file_small_document")
+                    );
+                    downloadMediaAsset(
+                      `${constants.api}api/files/${encodeURIComponent(
+                        data.key
+                      )}/${encodeURIComponent(data.file)}`,
+                      3
                     );
                     unBusy("local_export");
                   },
@@ -336,7 +389,7 @@ export default function () {
 
                 let text: string;
                 try {
-                  const { uri, type } = await DocumentPicker.pickSingle({
+                  const { type, uri } = await DocumentPicker.pickSingle({
                     type: DocumentPicker.types.plainText,
                     mode: "open",
                   });

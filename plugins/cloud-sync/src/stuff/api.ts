@@ -95,3 +95,25 @@ export async function deleteSaveData(): Promise<true | undefined> {
   if (res.status === 200) return await res.json();
   else throw new CloudSyncAPIError(await res.json());
 }
+
+export async function uploadFile(data: string): Promise<
+  | {
+      key: string;
+      file: string;
+    }
+  | undefined
+> {
+  if (!currentAuthorization()) return;
+
+  const res = await fetch(`${constants.api}api/file/upload`, {
+    method: "POST",
+    headers: {
+      authorization: await getAuthorization(),
+      "content-type": "text/plain",
+    },
+    body: data,
+  });
+
+  if (res.status === 200) return await res.json();
+  else throw new CloudSyncAPIError(await res.json());
+}

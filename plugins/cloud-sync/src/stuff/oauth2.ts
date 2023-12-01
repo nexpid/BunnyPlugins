@@ -27,6 +27,7 @@ export function openOauth2Modal() {
         permissions: 0n,
         cancelCompletesFlow: false,
         callback: async ({ location }) => {
+          if (!location) return;
           try {
             const url = new URL(location);
             const code = url.searchParams.get("code");

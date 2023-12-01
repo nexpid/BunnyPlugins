@@ -5,3 +5,8 @@ export namespace DBSave {
   export type SaveSync = DBv1.SaveSync;
   export type AllSaves = DBv1.Save;
 }
+
+export interface UploadedFile {
+  key: string;
+  file: string;
+}
