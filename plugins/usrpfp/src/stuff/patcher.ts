@@ -6,9 +6,7 @@ import { findByProps, findByStoreName } from "@vendetta/metro";
 import { after } from "@vendetta/patcher";
 
 const avatarStuff = findByProps("getUserAvatarURL", "getUserAvatarSource");
-const badgeStuff = findByProps("getBadgeAsset");
 
-const UserProfileStore = findByStoreName("UserProfileStore");
 const UserStore = findByStoreName("UserStore");
 
 let data: DataFile;
@@ -29,15 +27,6 @@ const getCustomAvatar = (id: string, isStatic?: boolean) => {
   if (isStatic && urlExt(avatar) === "gif") return staticGifURL(avatar);
 
   const url = new URL(avatar);
-  url.searchParams.append("_", hash);
-  return url.toString();
-};
-
-const getCustomBadge = (id: string, username: string) => {
-  const val = data.badges[id] ?? data.badges[username];
-  if (!val) return;
-
-  const url = new URL(val);
   url.searchParams.append("_", hash);
   return url.toString();
 };
@@ -75,39 +64,6 @@ export default async () => {
 
       return custom ? { uri: custom } : ret;
     })
-  );
-
-  const emptySymbol = Symbol("empty");
-  const badgeIconPrefix = "usrpfp-";
-
-  patches.push(
-    after("getUserProfile", UserProfileStore, ([id], ret) => {
-      const username = UserStore.getUser(id)?.username;
-      const badge = getCustomBadge(id, username);
-
-      return ret
-        ? {
-            ...ret,
-            badges: [
-              badge
-                ? {
-                    id: "usrpfp-custom",
-                    description: `${username}'s custom USRPFP badge`,
-                    icon: badgeIconPrefix + badge,
-                  }
-                : emptySymbol,
-              ...ret.badges,
-            ].filter((x) => x !== emptySymbol),
-          }
-        : ret;
-    })
-  );
-  patches.push(
-    after("getBadgeAsset", badgeStuff, ([icon]: [string], ret) =>
-      icon.startsWith(badgeIconPrefix)
-        ? icon.slice(badgeIconPrefix.length)
-        : ret
-    )
   );
 
   return () => patches.forEach((x) => x());
