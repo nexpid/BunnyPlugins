@@ -2,13 +2,18 @@ import { getAssetIDByName } from "@vendetta/ui/assets";
 import { Module, ModuleCategory } from "../stuff/Module";
 import { before } from "@vendetta/patcher";
 import { findByProps, findByStoreName } from "@vendetta/metro";
-import { ReactNative as RN, React, i18n } from "@vendetta/metro/common";
-import { resolveSemanticColor } from "../../../../stuff/types";
+import {
+  ReactNative as RN,
+  React,
+  i18n,
+  stylesheet,
+} from "@vendetta/metro/common";
+import { TextStyleSheet } from "../../../../stuff/types";
 import { semanticColors } from "@vendetta/ui";
+import { findInReactTree } from "@vendetta/utils";
 
 const SpotifyStore = findByStoreName("SpotifyStore");
 const SelectedChannelStore = findByStoreName("SelectedChannelStore");
-const Button = findByProps("ButtonText");
 
 const { sendMessage } = findByProps("sendMessage", "revealMessage");
 const { getText, setText } = findByProps(
@@ -43,6 +48,19 @@ const sendInvite = () => {
   else setText("");
 };
 
+const styles = stylesheet.createThemedStyleSheet({
+  disabledIcon: {
+    tintColor: semanticColors.INTERACTIVE_MUTED,
+  },
+  text: {
+    ...TextStyleSheet["text-md/semibold"],
+    color: semanticColors.TEXT_NORMAL,
+  },
+  disabledText: {
+    color: semanticColors.TEXT_MUTED,
+  },
+});
+
 export default new Module({
   id: "send-spotify-invite",
   label: "Send Spotify invite",
@@ -52,34 +70,40 @@ export default new Module({
   handlers: {
     onStart() {
       this.patches.add(
-        before("default", Button, (args) => {
-          const cloned = [...args];
-          const x = cloned[0];
-
-          if (x.text === i18n.Messages.CAMERA) {
+        //@ts-ignore not in RN typings
+        before("render", RN.Pressable.type, ([a]) => {
+          if (a.accessibilityLabel === i18n.Messages.CAMERA) {
             const disabled = !SpotifyStore.getActivity()?.party?.id;
+            a.disabled = disabled;
+            a.onPress = sendInvite;
 
-            x.text = "Send Spotify invite";
-            x.accessibilityLabel = "Send Spotify invite";
-            x.renderIcon = () =>
-              React.createElement(RN.Image, {
-                source: getAssetIDByName("ic_spotify_white_16px"),
-                style: {
-                  width: 20,
-                  height: 20,
-                  tintColor: resolveSemanticColor(
-                    disabled
-                      ? semanticColors.INTERACTIVE_MUTED
-                      : semanticColors.INTERACTIVE_NORMAL
-                  ),
-                  marginRight: 8,
-                },
-              });
-            x.onPress = sendInvite;
-            x.disabled = disabled;
+            const textComp = findInReactTree(
+              a.children,
+              (x) => x?.children === i18n.Messages.CAMERA
+            );
+            if (textComp) {
+              textComp.children = "Spotify invite";
+              textComp.style = [styles.text, disabled && styles.disabledText];
+            }
+
+            const iconComp = findInReactTree(a.children, (x) =>
+              x?.props?.style?.find((y: any) => y?.tintColor)
+            );
+            if (iconComp)
+              iconComp.type = () =>
+                React.createElement(RN.Image, {
+                  source: getAssetIDByName("ic_spotify_white_16px"),
+                  resizeMode: "cover",
+                  style: [
+                    {
+                      width: 20,
+                      height: 20,
+                    },
+                    RN.StyleSheet.flatten(iconComp.props.style),
+                    disabled && styles.disabledIcon,
+                  ],
+                });
           }
-
-          return cloned;
         })
       );
     },
