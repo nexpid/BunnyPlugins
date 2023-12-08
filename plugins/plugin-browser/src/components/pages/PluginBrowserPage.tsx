@@ -49,22 +49,26 @@ export default () => {
   const [parsed, setParsed] = React.useState<PluginsFullJson | null>(null);
   const [search, setSearch] = React.useState("");
 
+  const currentSetFilter = React.useRef(setFilter);
+  currentSetFilter.current = setFilter;
+
   const sortedData = React.useMemo(() => {
     if (!parsed) return;
 
-    let dt = parsed.filter(
-      (i) =>
-        i.name?.toLowerCase().includes(search) ||
-        i.authors?.some((x) => x.name?.toLowerCase().includes(search)) ||
-        i.description?.toLowerCase().includes(search)
-    );
-
+    let dt = parsed
+      .filter(
+        (i) =>
+          i.name?.toLowerCase().includes(search) ||
+          i.authors?.some((x) => x.name?.toLowerCase().includes(search)) ||
+          i.description?.toLowerCase().includes(search)
+      )
+      .slice();
     if ([Filter.NameAZ, Filter.NameZA].includes(filter))
       dt = dt.sort((a, b) => (a.name < b.name ? -1 : a.name > b.name ? 1 : 0));
     if ([Filter.NameZA, Filter.DateNewest].includes(filter)) dt.reverse();
 
     return dt;
-  }, [filter, parsed]);
+  }, [filter, parsed, search]);
 
   React.useEffect(updateChanges, []);
 
@@ -93,7 +97,7 @@ export default () => {
       label: "Filter",
       value: filter,
       choices: Object.values(Filter),
-      update: (val) => setFilter(val as Filter),
+      update: (val) => currentSetFilter.current(val as Filter),
     });
 
   navigation.addListener("focus", () => {
@@ -130,14 +134,7 @@ export default () => {
       style={{ paddingHorizontal: 10, paddingTop: 10 }}
       contentContainerStyle={{ paddingBottom: 20 }}
       data={sortedData}
-      keyExtractor={(item) => `plugin-${item.vendetta}`}
-      renderItem={({ item }) => (
-        <PluginThing
-          item={item}
-          changes={changes}
-          key={`plugin-${item.vendetta}`}
-        />
-      )}
+      renderItem={({ item }) => <PluginThing item={item} changes={changes} />}
       removeClippedSubviews={true}
     />
   );
