@@ -161,6 +161,7 @@ const SpotifySongEmbed = ({
       paddingHorizontal: 6,
       paddingVertical: 1,
       borderRadius: 4,
+      color: "#000000",
     },
     cardOther: {
       position: "absolute",
@@ -198,6 +199,7 @@ const SpotifySongEmbed = ({
     },
     cardTracklistEntryTitle: {
       width: "95%",
+      color: "#ffffff",
     },
 
     cardTracklistEntryOther: {
@@ -218,6 +220,7 @@ const SpotifySongEmbed = ({
     },
     secondaryText: {
       opacity: 0.7,
+      color: "#ffffff",
     },
     unplayableItem: {
       opacity: 0.5,
@@ -305,7 +308,6 @@ const SpotifySongEmbed = ({
             !playable && styles.unplayableItem,
           ]}
           variant={selected ? "text-sm/bold" : "text-sm/semibold"}
-          color="WHITE"
           lineClamp={1}
         >
           {item.title}
@@ -314,7 +316,6 @@ const SpotifySongEmbed = ({
           {item.isExplicit && (
             <SimpleText
               variant="text-xs/semibold"
-              color="BLACK"
               style={[
                 styles.cardContentTag,
                 !playable && styles.unplayableItem,
@@ -325,7 +326,6 @@ const SpotifySongEmbed = ({
           )}
           <SimpleText
             variant={selected ? "text-xs/bold" : "text-xs/semibold"}
-            color="WHITE"
             style={[styles.secondaryText, !playable && styles.unplayableItem]}
             lineClamp={1}
           >
@@ -364,7 +364,11 @@ const SpotifySongEmbed = ({
           <View style={styles.cardFirstContent}>
             <RN.Image style={styles.cardImage} source={{ uri: cover.url }} />
             <View style={styles.cardContent}>
-              <SimpleText variant="text-sm/bold" color="WHITE" lineClamp={1}>
+              <SimpleText
+                variant="text-sm/bold"
+                style={{ color: "#ffffff" }}
+                lineClamp={1}
+              >
                 {songData.title}
               </SimpleText>
               {songData.type === "track" ? (
@@ -372,7 +376,6 @@ const SpotifySongEmbed = ({
                   {songData.isExplicit && (
                     <SimpleText
                       variant="text-xs/semibold"
-                      color="BLACK"
                       style={styles.cardContentTag}
                     >
                       E
@@ -380,7 +383,6 @@ const SpotifySongEmbed = ({
                   )}
                   <SimpleText
                     variant="text-xs/semibold"
-                    color="WHITE"
                     style={styles.secondaryText}
                     lineClamp={1}
                   >
@@ -390,8 +392,7 @@ const SpotifySongEmbed = ({
               ) : (
                 <SimpleText
                   variant="text-xs/semibold"
-                  color="WHITE"
-                  style={styles.secondaryText}
+                  style={[styles.secondaryText, { color: "#ffffff" }]}
                   lineClamp={1}
                 >
                   {songData.subtitle}
