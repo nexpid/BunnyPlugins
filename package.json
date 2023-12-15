@@ -10,7 +10,8 @@
     "@material/material-color-utilities": "^0.2.7",
     "@nexpid/vdp-shared": "^1.0.1",
     "@swc/helpers": "^0.5.1",
-    "twemoji-parser": "^14.0.0"
+    "twemoji-parser": "^14.0.0",
+    "zod": "^3.22.4"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^25.0.4",
