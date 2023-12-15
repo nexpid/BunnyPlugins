@@ -26,7 +26,9 @@ export default () => {
         </SimpleText>
       </View>
       {moduleCategoryMap.map(({ category, title, icon }) => {
-        const mods = modules.filter((x) => x.category === category) as Module[];
+        const mods = modules.filter(
+          (x) => x.category === category
+        ) as Module<any>[];
         return (
           <BetterTableRowGroup
             title={title}

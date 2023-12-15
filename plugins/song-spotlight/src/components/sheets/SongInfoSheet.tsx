@@ -8,12 +8,7 @@ import {
   hideActionSheet,
 } from "../../../../../stuff/types";
 import { API } from "../../types/api";
-import {
-  ReactNative as RN,
-  clipboard,
-  stylesheet,
-  url,
-} from "@vendetta/metro/common";
+import { clipboard, stylesheet } from "@vendetta/metro/common";
 import { semanticColors } from "@vendetta/ui";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { openSpotify, rebuildLink } from "../../stuff/util";
@@ -23,7 +18,7 @@ import { check } from "../../stuff/http";
 
 const { FormRow } = Forms;
 
-const destructiveText = {
+const destructiveText: Parameters<typeof SimpleText>[0] = {
   color: "TEXT_DANGER",
   variant: "text-md/semibold",
 };

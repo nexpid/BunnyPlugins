@@ -4,7 +4,6 @@ import { getAssetIDByName } from "@vendetta/ui/assets";
 import { semanticColors } from "@vendetta/ui";
 import { NavigationNative, stylesheet } from "@vendetta/metro/common";
 import { showConfirmationAlert } from "@vendetta/ui/alerts";
-import { storage } from "@vendetta/plugin";
 import { openManageHiddenServersPage } from "./pages/ManageHiddenServers";
 import { hiddenList } from "..";
 
@@ -16,7 +15,7 @@ const styles = stylesheet.createThemedStyleSheet({
     tintColor: semanticColors.TEXT_DANGER,
   },
 });
-const destructiveText = {
+const destructiveText: Parameters<typeof SimpleText>[0] = {
   color: "TEXT_DANGER",
   variant: "text-md/semibold",
 };

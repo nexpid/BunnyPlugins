@@ -15,7 +15,7 @@ const styles = stylesheet.createThemedStyleSheet({
     tintColor: semanticColors.TEXT_DANGER,
   },
 });
-const destructiveText = {
+const destructiveText: Parameters<typeof SimpleText>[0] = {
   color: "TEXT_DANGER",
   variant: "text-md/semibold",
 };
