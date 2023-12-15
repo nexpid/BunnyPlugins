@@ -14,6 +14,7 @@ import {
 import { displayImage, parseTimestamp } from "./util";
 import { isObject } from "../../../../stuff/types";
 import { forceUpdateLiveRawActivityView } from "../components/pages/LiveRawActivityView";
+import { z } from "zod";
 
 export interface RawActivity {
   name: string;
@@ -66,6 +67,30 @@ export enum ActivityType {
   Competing = 5,
 }
 
+export const SettingsActivity = z.object({
+  app: z.object({
+    name: z.string().optional(),
+    id: z.string().optional(),
+  }),
+  state: z.string().optional(),
+  details: z.string().optional(),
+  timestamps: z.object({
+    start: z.string().or(z.number()).optional(),
+    end: z.string().or(z.number()).optional(),
+  }),
+  assets: z.object({
+    largeImg: z.string().optional(),
+    smallImg: z.string().optional(),
+  }),
+  buttons: z.array(
+    z.object({
+      text: z.string(),
+      url: z.string().optional(),
+    })
+  ),
+  type: z.nativeEnum(ActivityType),
+});
+
 // TODO support activity flags
 export enum ActivityFlags {
   Instance = 1 << 0,
@@ -77,101 +102,6 @@ export enum ActivityFlags {
   PartyPrivacyFriends = 1 << 6,
   PartyPrivacyVoiceChannel = 1 << 7,
   Embedded = 1 << 8,
-}
-
-export function checkSettingsActivity(activity: Partial<SettingsActivity>) {
-  if (!isObject(activity)) return false;
-
-  if (!isObject(activity.app)) return false;
-  if ("name" in activity.app && typeof activity.app.name !== "string")
-    return false;
-  if ("id" in activity.app && typeof activity.app.id !== "string") return false;
-
-  if ("state" in activity && typeof activity.state !== "string") return false;
-  if ("details" in activity && typeof activity.details !== "string")
-    return false;
-
-  if (!isObject(activity.timestamps)) return false;
-  if (
-    "start" in activity.timestamps &&
-    !(
-      typeof activity.timestamps.start === "number" ||
-      timestampVariables.find(
-        (x) => x.format === (activity.timestamps.start as string)
-      )
-    )
-  )
-    return false;
-  if (
-    "end" in activity.timestamps &&
-    !(
-      typeof activity.timestamps.end === "number" ||
-      timestampVariables.find(
-        (x) => x.format === (activity.timestamps.end as string)
-      )
-    )
-  )
-    return false;
-
-  if (!isObject(activity.assets)) return false;
-  if (
-    "largeImg" in activity.assets &&
-    (typeof activity.assets.largeImg !== "string" ||
-      !(
-        displayImage(activity.assets.largeImg) ||
-        imageVariables.find((x) => x.format === activity.assets.largeImg)
-      ))
-  )
-    return false;
-  if (
-    "smallImg" in activity.assets &&
-    (typeof activity.assets.smallImg !== "string" ||
-      !(
-        displayImage(activity.assets.smallImg) ||
-        imageVariables.find((x) => x.format === activity.assets.smallImg)
-      ))
-  )
-    return false;
-
-  if (!Array.isArray(activity.buttons)) return false;
-  for (const x of activity.buttons)
-    if (
-      !("text" in x) ||
-      typeof x.text !== "string" ||
-      ("url" in x && typeof x.url !== "string")
-    )
-      return false;
-
-  if ("type" in activity && !(activity.type in ActivityType)) return false;
-
-  return true;
-}
-export function cleanSettingsActivity(
-  activity: SettingsActivity
-): SettingsActivity {
-  return {
-    app: {
-      name: activity.app.name,
-      id: activity.app.id,
-    },
-    state: activity.state,
-    details: activity.details,
-    timestamps: {
-      start: activity.timestamps.start,
-      end: activity.timestamps.end,
-    },
-    assets: {
-      largeImg: activity.assets.largeImg,
-      smallImg: activity.assets.smallImg,
-    },
-    buttons: activity.buttons
-      .map((x) => ({
-        text: x.text,
-        url: x.url,
-      }))
-      .slice(0, 2),
-    type: activity.type,
-  };
 }
 
 export function makeEmptySettingsActivity(): SettingsActivity {

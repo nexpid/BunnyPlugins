@@ -17,14 +17,12 @@ import { openPluginReportSheet } from "../../../../stuff/githubReport";
 import { vstorage } from "..";
 import {
   SettingsActivity,
-  checkSettingsActivity,
-  cleanSettingsActivity,
   dispatchActivityIfPossible,
   isActivitySaved,
   makeEmptySettingsActivity,
 } from "../stuff/activity";
 import { useProxy } from "@vendetta/storage";
-import { ErrorBoundary, Forms, General } from "@vendetta/ui/components";
+import { Forms, General } from "@vendetta/ui/components";
 import { showToast } from "@vendetta/ui/toasts";
 import { activitySavedPrompt } from "../stuff/prompts";
 import PresetProfiles from "../stuff/presetProfiles";
@@ -36,7 +34,6 @@ import { semanticColors } from "@vendetta/ui";
 import { FadeView } from "../../../../stuff/animations";
 import { showConfirmationAlert } from "@vendetta/ui/alerts";
 import { stringVariables } from "../stuff/variables";
-import { storage } from "@vendetta/plugin";
 
 const { MMKVManager } = window.nativeModuleProxy;
 
@@ -277,9 +274,9 @@ export default () => {
                 role: "overwrite the activity data",
                 button: "Overwrite",
                 run: async () => {
-                  let data: SettingsActivity;
+                  let rawData: SettingsActivity;
                   try {
-                    data = JSON.parse(await clipboard.getString());
+                    rawData = JSON.parse(await clipboard.getString());
                   } catch {
                     return showToast(
                       "Failed to parse JSON",
@@ -287,13 +284,14 @@ export default () => {
                     );
                   }
 
-                  if (!checkSettingsActivity(data))
+                  const data = SettingsActivity.safeParse(rawData);
+                  if (!data.success)
                     return showToast(
                       "Invalid activity data",
                       getAssetIDByName("Small")
                     );
 
-                  vstorage.activity.editing = cleanSettingsActivity(data);
+                  vstorage.activity.editing = data.data as SettingsActivity;
                   delete vstorage.activity.profile;
                   forceUpdate();
                   showToast("Loaded", getAssetIDByName("Check"));

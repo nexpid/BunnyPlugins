@@ -41,38 +41,38 @@ export const stringVariables: {
 }[] = [
   {
     match: "{user.name}",
-    description: "your username",
+    description: "Your username",
     types: [VariableType.CurrentUser],
     replace: () => UserStore.getCurrentUser().username,
   },
   {
     match: "{user.displayname}",
-    description: "your display name",
+    description: "Your display name",
     types: [VariableType.CurrentUser],
     replace: () => UserStore.getCurrentUser().globalName,
   },
   {
     match: "{user.status}",
-    description: "your status",
+    description: "Your status",
     types: [VariableType.CurrentUserPresence],
     replace: () => getCustomActivity()?.label ?? "No Status",
   },
   {
     match: "{user.presence}",
-    description: "your presence (online/dnd/idle/invisible)",
+    description: "Your presence (online/dnd/idle/invisible)",
     types: [VariableType.CurrentUserPresence],
     replace: () => PresenceStore.getStatus(UserStore.getCurrentUser().id),
   },
 
   {
     match: "{spotify.track}",
-    description: "your playing Spotify track (Thot K)",
+    description: "Your playing Spotify track",
     types: [VariableType.CurrentUserPresence],
     replace: () => SpotifyStore.getActivity()?.details ?? "No Spotify Track",
   },
   {
     match: "{spotify.track.url}",
-    description: "your playing Spotify track's share link",
+    description: "Your playing Spotify track's share link",
     types: [VariableType.CurrentUserPresence],
     replace: () => {
       const track = SpotifyStore.getActivity()?.sync_id;
@@ -81,7 +81,7 @@ export const stringVariables: {
   },
   {
     match: "{spotify.artist}",
-    description: "your playing Spotify track's artist(s) (iluvern!)",
+    description: "Your playing Spotify track's artist(s)",
     types: [VariableType.CurrentUserPresence],
     replace: () =>
       (varCache.presence.spotify = SpotifyStore.getActivity())?.state ??
@@ -89,7 +89,7 @@ export const stringVariables: {
   },
   {
     match: "{spotify.album}",
-    description: "your playing Spotify track's album (iluvern!)",
+    description: "Your playing Spotify track's album",
     types: [VariableType.CurrentUserPresence],
     replace: () =>
       (varCache.presence.spotify = SpotifyStore.getActivity())?.assets
