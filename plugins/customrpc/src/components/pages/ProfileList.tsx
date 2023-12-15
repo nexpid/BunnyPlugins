@@ -13,7 +13,6 @@ import { activitySavedPrompt } from "../../stuff/prompts";
 import { SuperAwesomeIcon } from "../../../../../stuff/types";
 import { findByProps } from "@vendetta/metro";
 import {
-  checkSettingsActivity,
   makeEmptySettingsActivity,
   SettingsActivity,
 } from "../../stuff/activity";
@@ -79,7 +78,8 @@ export const ProfileList = () => {
       return showToast("Failed to parse JSON");
     }
 
-    if (!checkSettingsActivity(activity))
+    const data = SettingsActivity.safeParse(activity);
+    if (!data.success)
       return showToast("Invalid profile data", getAssetIDByName("Small"));
 
     let counter = 0,
@@ -89,7 +89,7 @@ export const ProfileList = () => {
       name = `Imported Profile (${counter})`;
     }
 
-    vstorage.profiles[name] = activity;
+    vstorage.profiles[name] = data.data as SettingsActivity;
     vstorage.activity.profile = name;
     forceUpdate();
     showToast("Imported profile", getAssetIDByName("Check"));

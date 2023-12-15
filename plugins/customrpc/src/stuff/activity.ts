@@ -4,15 +4,12 @@ import { debug, vstorage } from "..";
 import { unregisterChanges } from "./autochange";
 import {
   VariableType,
-  imageVariables,
   parseVariableImage,
   parseVariableString,
   parseVariableTimestamp,
   registerVariableEvents,
-  timestampVariables,
 } from "./variables";
-import { displayImage, parseTimestamp } from "./util";
-import { isObject } from "../../../../stuff/types";
+import { parseTimestamp } from "./util";
 import { forceUpdateLiveRawActivityView } from "../components/pages/LiveRawActivityView";
 import { z } from "zod";
 
