@@ -1,4 +1,4 @@
-name: Build and deploy
+name: CI, Build and deploy
 
 on:
   push:
@@ -12,28 +12,35 @@ on:
   workflow_dispatch:
 
 jobs:
+  ci:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v2
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+          cache: "pnpm"
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Test types
+        run: pnpm testTsc
   build:
+    needs: ci
+
     runs-on: ubuntu-latest
     permissions:
       contents: write
 
     steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: "18.x"
-
-      - run: |
-          npm install -g pnpm
-          pnpm i
-
       - name: Build plugins
-        run: "pnpm build:minify"
+        run: pnpm build:minify
 
       - name: Copy README
-        run: |
-          cp README.md dist/index.md
+        run: cp README.md dist/index.md
 
       - uses: actions/jekyll-build-pages@v1
         with:

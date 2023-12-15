@@ -4,7 +4,8 @@
     "build": "node build.mjs --nominify",
     "build:debug": "node build.mjs --debug",
     "build:minify": "node build.mjs",
-    "dev": "http-server dist --port 8731"
+    "dev": "http-server dist --port 8731",
+    "testTsc": "tsc --noEmit"
   },
   "dependencies": {
     "@material/material-color-utilities": "^0.2.7",
@@ -21,8 +22,11 @@
     "react-native-webview": "^13.6.2",
     "rollup": "^4.0.0",
     "rollup-plugin-esbuild": "^6.0.0",
+    "smol-toml": "^1.1.3",
+    "typescript": "^5.3.3",
     "vendetta-types": "latest"
   },
+  "packageManager": "pnpm@8.10.2",
   "pnpm": {
     "peerDependencyRules": {
       "ignoreMissing": [

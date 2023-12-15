@@ -1,17 +1,4 @@
-# main
 node_modules/
-package-lock.json
-snippet.txt
-
-# hidden plugins
-plugins/better-spotify-preview
-plugins/pickup-lines
-plugins/doom/src/build
-plugins/doom/assets/webview.debug.html
-
-# pull requests
-
-# actions
 dist
 archive
 */README.md
