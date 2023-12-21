@@ -27,11 +27,11 @@ export function build(patches: Patches): ThemeDataWithPlus {
   };
 
   const style =
-    vstorage.config.style === "auto"
+    (vstorage.config?.style ?? "auto") === "auto"
       ? ThemeStore.theme !== "light"
         ? "dark"
         : "light"
-      : vstorage.config.style;
+      : vstorage.config?.style ?? "dark";
 
   const get = <T extends PatchThing<any>>(lk: T): T["both"] =>
     Object.assign(lk.both, style === "light" ? lk.light : lk.dark);

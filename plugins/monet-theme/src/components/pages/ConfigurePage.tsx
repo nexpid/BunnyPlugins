@@ -66,7 +66,7 @@ export const ConfigurePage = () => {
       </ScrollView>
     );
 
-  const bestVariant = vstorage.config.style;
+  const bestVariant = vstorage.config?.style;
   const collections = wallpapers.filter(
     (x) => x.variant === bestVariant || x.variant === "any"
   );
@@ -85,19 +85,21 @@ export const ConfigurePage = () => {
           }
           trailing={
             <SimpleText variant="text-md/medium" color="TEXT_MUTED">
-              {readableThemeStyle[vstorage.config.style]}
+              {readableThemeStyle[vstorage.config?.style ?? "auto"]}
             </SimpleText>
           }
           onPress={() =>
             openSheet(ChooseSheet, {
               label: "Theme Style",
-              value: readableThemeStyle[vstorage.config.style],
+              value: readableThemeStyle[vstorage.config?.style ?? "auto"],
               choices: [
                 readableThemeStyle.auto,
                 readableThemeStyle.dark,
                 readableThemeStyle.light,
               ],
-              update: (v) => (vstorage.config.style = readableThemeStyle[v]),
+              update: (v) =>
+                vstorage.config &&
+                (vstorage.config.style = readableThemeStyle[v]),
             })
           }
         />

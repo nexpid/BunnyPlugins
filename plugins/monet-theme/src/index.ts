@@ -69,7 +69,7 @@ export const makeApplyCache = (
       : null
   );
 export const makeThemeApplyCache = () =>
-  JSON.stringify(vstorage.config.style === "auto" ? ThemeStore.theme : null);
+  JSON.stringify(vstorage.config?.style === "auto" ? ThemeStore.theme : null);
 
 const Alerts = findByProps("openLazy", "close");
 
