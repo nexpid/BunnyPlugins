@@ -103,7 +103,7 @@ export function build(patches: Patches): ThemeDataWithPlus {
     else theme.semanticColors[x] = [undefined, parseColor(y)];
   }
 
-  if (vstorage.config.wallpaper !== "none")
+  if (vstorage.config?.wallpaper && vstorage.config.wallpaper !== "none")
     theme.background = {
       url: vstorage.config.wallpaper,
       alpha: 1,
