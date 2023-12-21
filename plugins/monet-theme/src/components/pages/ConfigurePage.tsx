@@ -1,12 +1,6 @@
 import { Forms, General } from "@vendetta/ui/components";
 import { stsPatches } from "../Settings";
-import {
-  getSysColors,
-  makeApplyCache,
-  makeThemeApplyCache,
-  migrateStorage,
-  vstorage,
-} from "../..";
+import { vstorage } from "../..";
 import { ReactNative as RN, React, stylesheet } from "@vendetta/metro/common";
 import {
   BetterTableRowGroup,
@@ -34,11 +28,10 @@ const readableThemeStyle = {
 };
 
 export const ConfigurePage = () => {
-  migrateStorage();
-
-  vstorage.applyCache = makeApplyCache(getSysColors());
-  vstorage.themeApplyCache = makeThemeApplyCache();
-
+  vstorage.config ??= {
+    style: "auto",
+    wallpaper: "none",
+  };
   useProxy(vstorage);
 
   const styles = stylesheet.createThemedStyleSheet({
@@ -126,11 +119,11 @@ export const ConfigurePage = () => {
                 <RN.TouchableOpacity
                   onPress={() => {
                     showToast("Removed background", getAssetIDByName("Check"));
-                    vstorage.config.wallpaper = undefined;
+                    vstorage.config.wallpaper = "none";
                   }}
                   style={[
                     styles.thing,
-                    !vstorage.config.wallpaper && styles.thingActive,
+                    vstorage.config.wallpaper === "none" && styles.thingActive,
                     styles.emptyThing,
                     {
                       width: dims.width / 4,

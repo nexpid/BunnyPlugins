@@ -74,11 +74,15 @@ const { View, Pressable } = General;
 export default ({
   commit,
   list,
+  highlight,
   onPress,
+  onLongPress,
 }: {
   commit: CommitObj;
   list?: boolean;
+  highlight?: boolean;
   onPress?: () => void;
+  onLongPress?: () => void;
 }) => {
   const styles = stylesheet.createThemedStyleSheet({
     androidRipple: {
@@ -90,9 +94,12 @@ export default ({
       flexDirection: "column",
       borderRadius: 8,
     },
+    containerHighlight: {
+      backgroundColor: semanticColors.BG_MOD_STRONG,
+    },
   });
 
-  const UseComponent = onPress ? Pressable : View;
+  const UseComponent = onPress || onLongPress ? Pressable : View;
 
   return (
     <View
@@ -111,8 +118,9 @@ export default ({
           expanded: false,
         }}
         accessibilityLabel="Commit"
-        onPress={() => onPress()}
-        style={styles.container}
+        onPress={() => onPress?.()}
+        onLongPress={() => onLongPress?.()}
+        style={[styles.container, highlight && styles.containerHighlight]}
       >
         <View style={{ marginHorizontal: 12, marginVertical: 12 }}>
           <View style={{ flexDirection: "row", marginBottom: 4 }}>

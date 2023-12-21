@@ -8,6 +8,8 @@ import {
 import { Forms, General } from "@vendetta/ui/components";
 import {
   BetterTableRowGroup,
+  BundleUpdaterManager,
+  LazyActionSheet,
   LineDivider,
   RichText,
   SimpleText,
@@ -22,7 +24,6 @@ import {
   getSysColors,
   makeApplyCache,
   makeThemeApplyCache,
-  migrateStorage,
   patchesURL,
   vstorage,
 } from "..";
@@ -42,11 +43,11 @@ import { transform } from "../stuff/colors";
 import { toggle } from "../stuff/livePreview";
 import { openConfigurePage } from "./pages/ConfigurePage";
 import PreviewButton from "./PreviewButton";
-
-const { BundleUpdaterManager } = window.nativeModuleProxy;
+import { findByProps } from "@vendetta/metro";
 
 const { ScrollView, View, Pressable } = General;
 const { FormRow, FormSwitchRow } = Forms;
+const { showSimpleActionSheet } = findByProps("showSimpleActionSheet");
 
 const mdSize = TextStyleSheet["text-md/semibold"].fontSize;
 
@@ -71,7 +72,6 @@ export function setColorsFromDynamic(clr: VendettaSysColors) {
 export let stsCommits: CommitObj[];
 export let stsPatches: Patches;
 export default () => {
-  migrateStorage();
   const navigation = NavigationNative.useNavigation();
   const [_, forceUpdate] = React.useReducer((x) => ~x, 0);
   const [commits, setCommits] = React.useState<CommitObj[] | undefined>(
@@ -84,8 +84,19 @@ export default () => {
   const patchesControllerRef = React.useRef<AbortController>();
   const commitsControllerRef = React.useRef<AbortController>();
 
-  vstorage.applyCache = makeApplyCache(getSysColors());
-  vstorage.themeApplyCache = makeThemeApplyCache();
+  const applyCache = makeApplyCache(getSysColors());
+  if (JSON.stringify(vstorage.applyCache) !== JSON.stringify(applyCache))
+    vstorage.applyCache = applyCache;
+  const themeApplyCache = makeThemeApplyCache();
+  if (
+    JSON.stringify(vstorage.themeApplyCache) !== JSON.stringify(themeApplyCache)
+  )
+    vstorage.themeApplyCache = themeApplyCache;
+
+  vstorage.patches ??= {
+    from: vstorage.localPatches ? "local" : "git",
+  };
+  if ("localPatches" in vstorage) delete vstorage.localPatches;
 
   useProxy(vstorage);
 
@@ -127,7 +138,7 @@ export default () => {
 
     const controller = new AbortController();
     patchesControllerRef.current = controller;
-    fetch(vstorage.localPatches ? devPatchesURL : patchesURL, {
+    fetch(vstorage.patches.from === "local" ? devPatchesURL : patchesURL(), {
       cache: "no-store",
       signal: controller.signal,
     })
@@ -409,10 +420,16 @@ export default () => {
         onTitlePress={() => {
           if (lastThemePressTime >= Date.now()) {
             lastThemePressTime = 0;
+
+            const otter = vstorage.patches.from === "local" ? "git" : "local";
             showToast(
-              `Now using ${vstorage.localPatches ? "GitHub" : "local"} patches`
+              `Now using ${otter === "git" ? "GitHub" : "local"} patches`
             );
-            vstorage.localPatches = !vstorage.localPatches;
+            vstorage.patches ??= {
+              from: vstorage.patches.from === "local" ? "git" : "local",
+            };
+            vstorage.patches.from =
+              vstorage.patches.from === "local" ? "git" : "local";
             setPatches(undefined);
           } else lastThemePressTime = Date.now() + 500;
         }}
@@ -428,8 +445,29 @@ export default () => {
               />
             ) : Array.isArray(commits) ? (
               <Commit
-                commit={commits[0]}
+                commit={
+                  commits.find((x) => x.sha === vstorage.patches.commit) ??
+                  commits[0]
+                }
                 onPress={() => openCommitsPage(navigation)}
+                onLongPress={() =>
+                  showSimpleActionSheet({
+                    key: "CardOverflow",
+                    header: {
+                      title: "Patches",
+                      onClose: () => LazyActionSheet.hideActionSheet(),
+                    },
+                    options: [
+                      {
+                        label: "Use latest commit as patches",
+                        onPress: () => {
+                          showToast("Using latest commit");
+                          delete vstorage.patches.commit;
+                        },
+                      },
+                    ],
+                  })
+                }
               />
             ) : (
               <View
@@ -512,13 +550,13 @@ export default () => {
               label="Reload Theme Patches"
               subLabel={`Patch v${patches.version}, ${
                 JSON.stringify(patches).length / 100
-              }kB (using ${vstorage.localPatches ? "local" : "GitHub"})`}
+              }kB (using ${
+                vstorage.patches.from === "local" ? "local" : "GitHub"
+              })`}
               leading={
                 <FormRow.Icon source={getAssetIDByName("ic_sync_24px")} />
               }
-              onPress={() => {
-                setPatches(undefined);
-              }}
+              onPress={() => setPatches(undefined)}
             />
           </>
         )}

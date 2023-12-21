@@ -12,19 +12,9 @@ import { findByProps, findByStoreName } from "@vendetta/metro";
 import { React } from "@vendetta/metro/common";
 import Updating from "./components/Updating";
 import { unpatch } from "./stuff/livePreview";
+import { BundleUpdaterManager } from "../../../stuff/types";
 
 const ThemeStore = findByStoreName("ThemeStore");
-
-export function migrateStorage() {
-  vstorage.config ??= {
-    style: vstorage.lightmode ? "light" : "dark",
-    wallpaper: vstorage.wallpaper ?? "null",
-  };
-  vstorage.config.style ??= vstorage.lightmode ? "light" : "dark";
-  vstorage.config.wallpaper ??= vstorage.wallpaper ?? "null";
-  if (vstorage.lightmode) delete vstorage.lightmode;
-  if (vstorage.wallpaper) delete vstorage.wallpaper;
-}
 
 export const vstorage: {
   colors?: {
@@ -36,20 +26,23 @@ export const vstorage: {
   };
   config?: {
     style: "dark" | "light" | "auto";
-    wallpaper: string | null;
+    wallpaper: string | "none";
   };
   autoReapply?: boolean;
-  /** @deprecated */
-  lightmode?: boolean;
-  /** @deprecated */
-  wallpaper?: string;
   applyCache?: string;
   themeApplyCache?: string;
+  patches?: {
+    from: "local" | "git";
+    commit?: string;
+  };
+  /** @deprecated */
   localPatches?: boolean;
 } = storage;
 
-export const patchesURL =
-  "https://raw.githubusercontent.com/nexpid/VendettaMonetTheme/main/patches.jsonc";
+export const patchesURL = () =>
+  `https://raw.githubusercontent.com/nexpid/VendettaMonetTheme/${
+    vstorage.patches?.commit ?? "main"
+  }/patches.jsonc`;
 export const devPatchesURL = "http://192.168.2.22:8730/patches.jsonc";
 export const commitsURL =
   "https://api.github.com/repos/nexpid/VendettaMonetTheme/commits?path=patches.jsonc";
@@ -78,7 +71,6 @@ export const makeApplyCache = (
 export const makeThemeApplyCache = () =>
   JSON.stringify(vstorage.config.style === "auto" ? ThemeStore.theme : null);
 
-const { BundleUpdaterManager } = window.nativeModuleProxy;
 const Alerts = findByProps("openLazy", "close");
 
 export const patches = [];
@@ -110,9 +102,14 @@ export default {
         patches = parse(
           (
             await (
-              await fetch(vstorage.localPatches ? devPatchesURL : patchesURL, {
-                cache: "no-store",
-              })
+              await fetch(
+                vstorage.patches?.from === "local"
+                  ? devPatchesURL
+                  : patchesURL(),
+                {
+                  cache: "no-store",
+                }
+              )
             ).text()
           ).replace(/\r/g, "")
         );
