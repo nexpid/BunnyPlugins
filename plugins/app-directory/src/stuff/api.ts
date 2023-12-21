@@ -196,5 +196,3 @@ export async function searchAppDirectory(
 
   return res.body;
 }
-
-searchAppDirectory.bind("");
