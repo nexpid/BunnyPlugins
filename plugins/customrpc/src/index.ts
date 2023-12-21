@@ -7,8 +7,7 @@ import {
 } from "./stuff/activity";
 import settings from "./components/Settings";
 import { registerDefaultChanges, unregisterChanges } from "./stuff/autochange";
-
-const { MMKVManager } = window.nativeModuleProxy;
+import { MMKVManager } from "../../../stuff/types";
 
 export const vstorage: {
   settings?: {
@@ -49,3 +48,4 @@ export default {
   },
   settings,
 };
+

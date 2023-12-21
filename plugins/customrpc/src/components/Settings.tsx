@@ -10,6 +10,7 @@ import { plugin } from "@vendetta";
 import {
   BetterTableRowGroup,
   LineDivider,
+  MMKVManager,
   SuperAwesomeIcon,
 } from "../../../../stuff/types";
 import { getAssetIDByName } from "@vendetta/ui/assets";
@@ -34,8 +35,6 @@ import { semanticColors } from "@vendetta/ui";
 import { FadeView } from "../../../../stuff/animations";
 import { showConfirmationAlert } from "@vendetta/ui/alerts";
 import { stringVariables } from "../stuff/variables";
-
-const { MMKVManager } = window.nativeModuleProxy;
 
 const { ScrollView, View, Pressable } = General;
 const { FormSwitchRow, FormIcon, FormRow } = Forms;
@@ -477,3 +476,4 @@ export default () => {
     </>
   );
 };
+
