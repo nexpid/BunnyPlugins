@@ -48,7 +48,6 @@ export function getNewIssueUrl(exparams: Record<string, string>) {
     }`
   );
 
-  console.log(`${constants.github.url}issues/new?${params.toString()}`);
   return `${constants.github.url}issues/new?${params.toString()}`;
 }
 

@@ -79,34 +79,7 @@ interface Window {
       ) => void;
     };
   };
-  nativeModuleProxy: {
-    BundleUpdaterManager: {
-      reload: () => void;
-    };
-    MMKVManager: {
-      getItem: (key: string) => Promise<string | null>;
-      removeItem: (key: string) => void;
-      setItem: (key: string, value: string) => void;
-      refresh: (exclude: string[]) => Promise<Record<string, string>>;
-      clear: () => void;
-    };
-    DCDSoundManager: {
-      pause: (soundId: number) => void;
-      play: (soundId: number) => void;
-      stop: (soundId: number) => void;
-      prepare: (
-        url: string,
-        type: "notification",
-        soundId: number,
-        callback: (
-          error: any,
-          meta: { numberOfChannels: number; duration: number }
-        ) => any
-      ) => void;
-    };
-    DCDFileManager?: FileManager;
-    RTNFileManager?: FileManager;
-  };
+  nativeModuleProxy: any;
 
   __vendetta_loader:
     | {
@@ -121,3 +94,4 @@ interface Window {
   CSmigrationStage: number | undefined;
   TPfirstLoad: boolean | undefined;
 }
+
