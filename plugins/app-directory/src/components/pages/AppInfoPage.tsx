@@ -1,4 +1,4 @@
-import { Button, General } from "@vendetta/ui/components";
+import { General } from "@vendetta/ui/components";
 import {
   clipboard,
   i18n,
@@ -13,7 +13,7 @@ import {
   APICollectionApplication,
   getAppDirectoryApplication,
 } from "../../stuff/api";
-import { SimpleText } from "../../../../../stuff/types";
+import { Redesign, SimpleText } from "../../../../../stuff/types";
 import { inServers, parseDesc } from "../../stuff/util";
 import { findByProps } from "@vendetta/metro";
 import { getAssetIDByName } from "@vendetta/ui/assets";
@@ -229,32 +229,28 @@ export default function AppInfoPage({
         >
           {inServers(app.directory_entry.guild_count)}
         </SimpleText>
-        <SimpleText
-          variant="text-md/normal"
-          color="TEXT_MUTED"
-          style={{ paddingBottom: 8 }}
-          lineClamp={1}
-        >
-          {app.categories.map((x) => x.name).join(", ")}
-        </SimpleText>
-        <View style={{ marginVertical: 12 }}>
+        {app.categories.length > 0 && (
+          <SimpleText
+            variant="text-md/normal"
+            color="TEXT_MUTED"
+            style={{ paddingBottom: 8 }}
+            lineClamp={1}
+          >
+            {app.categories.map((x) => x.name).join(", ")}
+          </SimpleText>
+        )}
+        <View style={{ marginBottom: 12 }}>
           <TableRowDivider />
         </View>
         <View style={styles.baseAppActions}>
-          <Button
-            style={{ flex: 1 / 2, borderRadius: 2147483647 }}
+          <Redesign.Button
+            style={{ flex: 1 / 2 }}
             text={
               i18n.Messages.APP_DIRECTORY_PROFILE_SHARE_BUTTON || "Copy Link"
             }
-            color="grey"
-            size="medium"
-            renderIcon={() => (
-              <RN.Image
-                style={styles.baseAppActionIcon}
-                source={getAssetIDByName("copy")}
-                resizeMode="contain"
-              />
-            )}
+            variant="secondary"
+            size="md"
+            icon={getAssetIDByName("copy")}
             onPress={() => {
               clipboard.setString(
                 `https://discord.com/application-directory/${app.id}`
@@ -265,20 +261,14 @@ export default function AppInfoPage({
               );
             }}
           />
-          <Button
-            style={{ flex: 1 / 2, borderRadius: 2147483647 }}
+          <Redesign.Button
+            style={{ flex: 1 / 2 }}
             text={
               i18n.Messages.APP_DIRECTORY_PROFILE_ADD_BUTTON || "Add to Server"
             }
-            color="brand"
-            size="medium"
-            renderIcon={() => (
-              <RN.Image
-                style={styles.baseAppActionIcon}
-                source={getAssetIDByName("ic_download_24px")}
-                resizeMode="contain"
-              />
-            )}
+            variant="primary"
+            size="md"
+            icon={getAssetIDByName("ic_download_24px")}
             onPress={() =>
               app.custom_install_url
                 ? url.openURL(app.custom_install_url)
@@ -397,3 +387,4 @@ export function getAppInfoPageRender(
 ) {
   return () => <AppInfoPage app={app} guildId={guildId} />;
 }
+

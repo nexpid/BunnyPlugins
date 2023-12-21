@@ -39,20 +39,21 @@ export default function AppDirectoryPage({
   const searchContext = { type: "APP_DIRECTORY_SEARCH" };
   const [search, controls] = useAdvancedSearch(searchContext);
 
-  const mainScrollerHeight = React.useRef<number>(null);
   const [selCategory, setSelCategory] = React.useState(undefined);
 
   const categories = useAsync(() => getAppDirectoryCategories(), [locale]);
   const collections = useAsync(
     () => getAppDirectoryCollections(),
     [locale]
-  )?.sort((a, b) => a.position - b.position);
+  )?.sort?.((a, b) => a.position - b.position);
+
+  const [searchPage, setSearchPage] = React.useState(0);
   const searchResults = useAsync(
     () =>
       search || selCategory !== undefined
-        ? searchAppDirectory(search, 1, selCategory ?? 0, guildId)
+        ? searchAppDirectory(search, searchPage + 1, selCategory ?? 0, guildId)
         : null,
-    [search, selCategory, locale]
+    [search, searchPage, selCategory, locale]
   );
 
   React.useEffect(() => {
@@ -60,11 +61,15 @@ export default function AppDirectoryPage({
     else if (search && !selCategory) setSelCategory(0);
   }, [search]);
 
+  React.useEffect(() => {
+    if (!searchResults) setSearchPage(0);
+  }, [searchResults]);
+
   const jwidth = RN.Dimensions.get("screen").width - 32;
 
   const styles = stylesheet.createThemedStyleSheet({
     category: {
-      backgroundColor: semanticColors.BG_MOD_SUBTLE,
+      backgroundColor: semanticColors.BG_SURFACE_OVERLAY,
       flexDirection: "row",
       justifyContent: "center",
       gap: 8,
@@ -72,12 +77,36 @@ export default function AppDirectoryPage({
       borderRadius: 8,
     },
     selCategory: {
-      backgroundColor: semanticColors.BG_MOD_STRONG,
+      backgroundColor: semanticColors.BG_SURFACE_RAISED,
     },
     categoryIcon: {
       width: 24,
       height: 24,
       tintColor: semanticColors.INTERACTIVE_NORMAL,
+    },
+    bottomNav: {
+      flexDirection: "row",
+      marginTop: 16,
+      gap: 8,
+      justifyContent: "center",
+    },
+    bottomNavItem: {
+      backgroundColor: semanticColors.BG_MOD_SUBTLE,
+      borderRadius: 6969,
+      paddingVertical: 6,
+      paddingHorizontal: 11,
+    },
+    bottomNavItemOff: {
+      backgroundColor: semanticColors.BG_MOD_FAINT,
+      borderRadius: 6969,
+      paddingVertical: 6,
+      paddingHorizontal: 11,
+    },
+    bottomNavItemSelected: {
+      backgroundColor: semanticColors.BUTTON_OUTLINE_BRAND_BACKGROUND_HOVER,
+      borderRadius: 6969,
+      paddingVertical: 6,
+      paddingHorizontal: 11,
     },
 
     androidRipple: {
@@ -146,14 +175,29 @@ export default function AppDirectoryPage({
             ),
           });
 
+  const pushPageI = searchResults
+    ? Math.max(Math.min(searchPage - 3, searchResults.num_pages - 7), 0)
+    : 0;
+  const pushPages = searchResults
+    ? new Array(searchResults.num_pages)
+        .fill(0)
+        .map((_, i) => ({ num: i + 1, selected: i === searchPage }))
+        .slice(pushPageI, pushPageI + 7)
+    : [];
+
+  const pageFirst = pushPages[0]?.num === 1;
+  const pageLast =
+    pushPages[pushPages.length - 1]?.num === searchResults?.num_pages;
+  const renderPushPages = pushPages.slice(
+    pageFirst ? 0 : 2,
+    pageLast ? pushPages.length : pushPages.length - 2
+  );
+
+  const isFirst = searchPage === 0;
+  const isLast = searchResults && searchPage === searchResults.num_pages - 1;
+
   return (
     <ScrollView
-      onScroll={({ nativeEvent: e }) => {
-        const pos = e.contentOffset.y + e.layoutMeasurement.height;
-        const height = e.contentSize.height - 10;
-        if (pos >= height) {
-        }
-      }}
       style={{
         flex: 1,
         paddingHorizontal: 16,
@@ -165,7 +209,16 @@ export default function AppDirectoryPage({
       {categories ? (
         <RN.FlatList
           horizontal
-          data={[{ id: 0, name: "All" }, ...categories]}
+          data={[{ id: 0, name: "All" }, ...categories].sort((a, b) =>
+            selCategory
+              ? a.id === selCategory
+                ? -1
+                : b.id === selCategory
+                ? 1
+                : 0
+              : 0
+          )}
+          keyExtractor={(d) => d.id.toString()}
           renderItem={({ item }) => (
             <RN.Pressable
               style={[
@@ -173,11 +226,14 @@ export default function AppDirectoryPage({
                 selCategory === item.id && styles.selCategory,
               ]}
               android_ripple={styles.androidRipple}
-              onPress={() =>
-                selCategory === item.id && !search
-                  ? setSelCategory(undefined)
-                  : setSelCategory(item.id)
-              }
+              onPress={() => {
+                if (selCategory === item.id && !search)
+                  setSelCategory(undefined);
+                else setSelCategory(item.id);
+                RN.LayoutAnimation.configureNext(
+                  RN.LayoutAnimation.Presets.easeInEaseOut
+                );
+              }}
             >
               <RN.Image
                 style={styles.categoryIcon}
@@ -195,14 +251,6 @@ export default function AppDirectoryPage({
               <SimpleText variant="text-md/semibold" color="TEXT_NORMAL">
                 {item.name}
               </SimpleText>
-              {searchResults && (
-                <SimpleText variant="text-md/normal" color="HEADER_SECONDARY">
-                  {item.id === 0
-                    ? searchResults.result_count.toString()
-                    : searchResults.counts_by_category[item.id]?.toString() ??
-                      "0"}
-                </SimpleText>
-              )}
             </RN.Pressable>
           )}
           ItemSeparatorComponent={() => <View style={{ width: 8 }} />}
@@ -216,210 +264,317 @@ export default function AppDirectoryPage({
       )}
       {collections && searchResults !== undefined ? (
         searchResults ? (
-          <RN.FlatList
-            data={searchResults.results}
-            ItemSeparatorComponent={() => <View style={{ height: 8 }} />}
-            renderItem={({ item: { data: app } }) => (
-              <RN.Pressable
-                style={collectionStyles.card}
-                android_ripple={styles.androidRipple}
-                onPress={onAppPress(app)}
-              >
-                <View style={collectionStyles.cardContent}>
-                  <View style={collectionStyles.smallProfile}>
-                    <RN.Image
-                      style={collectionStyles.smallAvatar}
-                      source={{
-                        uri: `https://cdn.discordapp.com/app-icons/${app.id}/${app.icon}.webp?size=60`,
-                      }}
-                    />
-                    <View style={collectionStyles.smallProfileThing}>
-                      <SimpleText
-                        variant="text-md/semibold"
-                        color="TEXT_NORMAL"
-                      >
-                        {app.name}
-                      </SimpleText>
-                      {app.categories[0] && (
-                        <SimpleText variant="text-md/medium" color="TEXT_MUTED">
-                          {app.categories[0].name}
+          <>
+            <RN.FlatList
+              data={searchResults.results}
+              ItemSeparatorComponent={() => <View style={{ height: 8 }} />}
+              renderItem={({ item: { data: app } }) => (
+                <RN.Pressable
+                  style={collectionStyles.card}
+                  android_ripple={styles.androidRipple}
+                  onPress={onAppPress(app)}
+                >
+                  <View style={collectionStyles.cardContent}>
+                    <View style={collectionStyles.smallProfile}>
+                      <RN.Image
+                        style={collectionStyles.smallAvatar}
+                        source={{
+                          uri: `https://cdn.discordapp.com/app-icons/${app.id}/${app.icon}.webp?size=60`,
+                        }}
+                      />
+                      <View style={collectionStyles.smallProfileThing}>
+                        <SimpleText
+                          variant="text-md/semibold"
+                          color="TEXT_NORMAL"
+                        >
+                          {app.name}
                         </SimpleText>
-                      )}
+                        {app.categories[0] && (
+                          <SimpleText
+                            variant="text-md/medium"
+                            color="TEXT_MUTED"
+                          >
+                            {app.categories[0].name}
+                          </SimpleText>
+                        )}
+                      </View>
                     </View>
+                    <SimpleText
+                      variant="text-md/medium"
+                      color="TEXT_MUTED"
+                      style={{ paddingBottom: 8 }}
+                    >
+                      {inServers(app.directory_entry.guild_count)}
+                    </SimpleText>
+                    <SimpleText
+                      variant="text-md/semibold"
+                      color="TEXT_NORMAL"
+                      lineClamp={2}
+                    >
+                      {app.directory_entry.short_description}
+                    </SimpleText>
                   </View>
-                  <SimpleText
-                    variant="text-md/medium"
-                    color="TEXT_MUTED"
-                    style={{ paddingBottom: 8 }}
-                  >
-                    {inServers(app.directory_entry.guild_count)}
-                  </SimpleText>
-                  <SimpleText
-                    variant="text-md/semibold"
-                    color="TEXT_NORMAL"
-                    lineClamp={2}
-                  >
-                    {app.directory_entry.short_description}
-                  </SimpleText>
-                </View>
-              </RN.Pressable>
-            )}
-          />
-        ) : (
-          collections.map((x, i) => (
-            <>
-              <SimpleText
-                variant="text-lg/bold"
-                color="TEXT_NORMAL"
-                style={{ paddingBottom: 24, paddingTop: i !== 0 ? 30 : 0 }}
-              >
-                {x.title}
-              </SimpleText>
-              <RN.FlatList
-                horizontal
-                data={x.application_directory_collection_items.sort(
-                  (a, b) => a.position - b.position
-                )}
-                ItemSeparatorComponent={() => <View style={{ width: 8 }} />}
-                renderItem={({ item: app }) =>
-                  x.type === APICollectionType.Big ? (
-                    <RN.Pressable
-                      style={[collectionStyles.card]}
-                      android_ripple={styles.androidRipple}
-                      onPress={onAppPress(app)}
-                    >
-                      {app.image_hash && (
-                        <RN.Image
-                          style={collectionStyles.cardImage}
-                          source={{
-                            uri: `https://cdn.discordapp.com/app-assets/application-directory/collection-items/${app.id}/${app.image_hash}.webp?size=512`,
-                          }}
-                          resizeMode="cover"
-                        />
-                      )}
-                      <View style={collectionStyles.cardContent}>
-                        <SimpleText
-                          variant="text-lg/semibold"
-                          color="TEXT_NORMAL"
-                          style={{ paddingBottom: 4 }}
-                        >
-                          {app.application.name}
-                        </SimpleText>
-                        <SimpleText
-                          variant="text-md/semibold"
-                          color="TEXT_NORMAL"
-                          lineClamp={2}
-                        >
-                          {app.application.directory_entry.short_description}
-                        </SimpleText>
-                      </View>
-                    </RN.Pressable>
-                  ) : x.type === APICollectionType.Medium ? (
-                    <RN.Pressable
-                      style={[collectionStyles.card, { width: jwidth / 1.5 }]}
-                      android_ripple={styles.androidRipple}
-                      onPress={onAppPress(app)}
-                    >
-                      {app.image_hash && (
-                        <RN.Image
-                          style={collectionStyles.cardImage}
-                          source={{
-                            uri: `https://cdn.discordapp.com/app-assets/application-directory/collection-items/${app.id}/${app.image_hash}.webp?size=256`,
-                          }}
-                          resizeMode="cover"
-                        />
-                      )}
-                      <View style={collectionStyles.cardContent}>
-                        <SimpleText
-                          variant="text-md/semibold"
-                          color="TEXT_NORMAL"
-                        >
-                          {app.application.name}
-                        </SimpleText>
-                        <SimpleText
-                          variant="text-md/medium"
-                          color="TEXT_MUTED"
-                          style={{ paddingBottom: 8 }}
-                        >
-                          {app.application.categories[0] && (
-                            <>
-                              {app.application.categories[0].name}
-                              <SimpleText
-                                variant="text-md/bold"
-                                color="TEXT_MUTED"
-                                style={{ opacity: 0.5 }}
-                              >
-                                {"  "}·{"  "}
-                              </SimpleText>
-                            </>
-                          )}
-                          {inServers(
-                            app.application.directory_entry.guild_count
-                          )}
-                        </SimpleText>
-                        <SimpleText
-                          variant="text-md/semibold"
-                          color="TEXT_NORMAL"
-                          lineClamp={2}
-                        >
-                          {app.application.directory_entry.short_description}
-                        </SimpleText>
-                      </View>
-                    </RN.Pressable>
-                  ) : (
-                    <RN.Pressable
-                      style={[collectionStyles.card, { width: jwidth / 1.55 }]}
-                      android_ripple={styles.androidRipple}
-                      onPress={onAppPress(app)}
-                    >
-                      <View style={collectionStyles.cardContent}>
-                        <View style={collectionStyles.smallProfile}>
-                          <RN.Image
-                            style={collectionStyles.smallAvatar}
-                            source={{
-                              uri: `https://cdn.discordapp.com/app-icons/${app.application.id}/${app.application.icon}.webp?size=60`,
-                            }}
-                          />
-                          <View style={collectionStyles.smallProfileThing}>
-                            <SimpleText
-                              variant="text-md/semibold"
-                              color="TEXT_NORMAL"
-                            >
-                              {app.application.name}
-                            </SimpleText>
-                            {app.application.categories[0] && (
-                              <SimpleText
-                                variant="text-md/medium"
-                                color="TEXT_MUTED"
-                              >
-                                {app.application.categories[0].name}
-                              </SimpleText>
-                            )}
-                          </View>
-                        </View>
-                        <SimpleText
-                          variant="text-md/medium"
-                          color="TEXT_MUTED"
-                          style={{ paddingBottom: 8 }}
-                        >
-                          {inServers(
-                            app.application.directory_entry.guild_count
-                          )}
-                        </SimpleText>
-                        <SimpleText
-                          variant="text-md/semibold"
-                          color="TEXT_NORMAL"
-                          lineClamp={2}
-                        >
-                          {app.application.directory_entry.short_description}
-                        </SimpleText>
-                      </View>
-                    </RN.Pressable>
+                </RN.Pressable>
+              )}
+            />
+            <View style={styles.bottomNav}>
+              <RN.Pressable
+                style={isFirst ? styles.bottomNavItemOff : styles.bottomNavItem}
+                onPress={() =>
+                  setSearchPage(
+                    Math.max(
+                      Math.min(searchPage - 1, searchResults.num_pages - 1),
+                      0
+                    )
                   )
                 }
-              />
-            </>
-          ))
+                disabled={isFirst}
+                key={"page-back"}
+              >
+                <SimpleText
+                  variant="text-sm/bold"
+                  color={isFirst ? "TEXT_MUTED" : "TEXT_NORMAL"}
+                >
+                  &lt;
+                </SimpleText>
+              </RN.Pressable>
+              {!pageFirst && (
+                <>
+                  <RN.Pressable
+                    style={styles.bottomNavItem}
+                    onPress={() => setSearchPage(0)}
+                    key={"page-1"}
+                  >
+                    <SimpleText variant="text-sm/semibold" color="TEXT_NORMAL">
+                      1
+                    </SimpleText>
+                  </RN.Pressable>
+                  <SimpleText
+                    variant="text-md/semibold"
+                    color="TEXT_MUTED"
+                    key={"page-sep-left"}
+                  >
+                    ...
+                  </SimpleText>
+                </>
+              )}
+              {renderPushPages.map((x) => (
+                <RN.Pressable
+                  style={
+                    x.selected
+                      ? styles.bottomNavItemSelected
+                      : styles.bottomNavItem
+                  }
+                  onPress={() => setSearchPage(x.num - 1)}
+                  key={`page-${x.num}`}
+                >
+                  <SimpleText variant="text-sm/semibold" color="TEXT_NORMAL">
+                    {x.num}
+                  </SimpleText>
+                </RN.Pressable>
+              ))}
+              {!pageLast && (
+                <>
+                  <SimpleText
+                    variant="text-md/semibold"
+                    color="TEXT_MUTED"
+                    key={"page-sep-right"}
+                  >
+                    ...
+                  </SimpleText>
+                  <RN.Pressable
+                    style={styles.bottomNavItem}
+                    onPress={() => setSearchPage(searchResults.num_pages - 1)}
+                    key={`page-${searchResults.num_pages}`}
+                  >
+                    <SimpleText variant="text-sm/semibold" color="TEXT_NORMAL">
+                      {searchResults.num_pages}
+                    </SimpleText>
+                  </RN.Pressable>
+                </>
+              )}
+              <RN.Pressable
+                style={isLast ? styles.bottomNavItemOff : styles.bottomNavItem}
+                onPress={() =>
+                  setSearchPage(
+                    Math.max(
+                      Math.min(searchPage + 1, searchResults.num_pages - 1),
+                      0
+                    )
+                  )
+                }
+                disabled={isLast}
+                key={"page-next"}
+              >
+                <SimpleText
+                  variant="text-sm/bold"
+                  color={isLast ? "TEXT_MUTED" : "TEXT_NORMAL"}
+                >
+                  &gt;
+                </SimpleText>
+              </RN.Pressable>
+            </View>
+          </>
+        ) : (
+          <>
+            {collections.map((x, i) => (
+              <>
+                <SimpleText
+                  variant="text-lg/bold"
+                  color="TEXT_NORMAL"
+                  style={{ paddingBottom: 24, paddingTop: i !== 0 ? 30 : 0 }}
+                >
+                  {x.title}
+                </SimpleText>
+                <RN.FlatList
+                  horizontal
+                  data={x.application_directory_collection_items.sort(
+                    (a, b) => a.position - b.position
+                  )}
+                  ItemSeparatorComponent={() => <View style={{ width: 8 }} />}
+                  renderItem={({ item: app }) =>
+                    x.type === APICollectionType.Big ? (
+                      <RN.Pressable
+                        style={[collectionStyles.card]}
+                        android_ripple={styles.androidRipple}
+                        onPress={onAppPress(app)}
+                      >
+                        {app.image_hash && (
+                          <RN.Image
+                            style={collectionStyles.cardImage}
+                            source={{
+                              uri: `https://cdn.discordapp.com/app-assets/application-directory/collection-items/${app.id}/${app.image_hash}.webp?size=512`,
+                            }}
+                            resizeMode="cover"
+                          />
+                        )}
+                        <View style={collectionStyles.cardContent}>
+                          <SimpleText
+                            variant="text-lg/semibold"
+                            color="TEXT_NORMAL"
+                            style={{ paddingBottom: 4 }}
+                          >
+                            {app.application.name}
+                          </SimpleText>
+                          <SimpleText
+                            variant="text-md/semibold"
+                            color="TEXT_NORMAL"
+                            lineClamp={2}
+                          >
+                            {app.application.directory_entry.short_description}
+                          </SimpleText>
+                        </View>
+                      </RN.Pressable>
+                    ) : x.type === APICollectionType.Medium ? (
+                      <RN.Pressable
+                        style={[collectionStyles.card, { width: jwidth / 1.5 }]}
+                        android_ripple={styles.androidRipple}
+                        onPress={onAppPress(app)}
+                      >
+                        {app.image_hash && (
+                          <RN.Image
+                            style={collectionStyles.cardImage}
+                            source={{
+                              uri: `https://cdn.discordapp.com/app-assets/application-directory/collection-items/${app.id}/${app.image_hash}.webp?size=256`,
+                            }}
+                            resizeMode="cover"
+                          />
+                        )}
+                        <View style={collectionStyles.cardContent}>
+                          <SimpleText
+                            variant="text-md/semibold"
+                            color="TEXT_NORMAL"
+                          >
+                            {app.application.name}
+                          </SimpleText>
+                          <SimpleText
+                            variant="text-md/medium"
+                            color="TEXT_MUTED"
+                            style={{ paddingBottom: 8 }}
+                          >
+                            {app.application.categories[0] && (
+                              <>
+                                {app.application.categories[0].name}
+                                <SimpleText
+                                  variant="text-md/bold"
+                                  color="TEXT_MUTED"
+                                  style={{ opacity: 0.5 }}
+                                >
+                                  {"  "}·{"  "}
+                                </SimpleText>
+                              </>
+                            )}
+                            {inServers(
+                              app.application.directory_entry.guild_count
+                            )}
+                          </SimpleText>
+                          <SimpleText
+                            variant="text-md/semibold"
+                            color="TEXT_NORMAL"
+                            lineClamp={2}
+                          >
+                            {app.application.directory_entry.short_description}
+                          </SimpleText>
+                        </View>
+                      </RN.Pressable>
+                    ) : (
+                      <RN.Pressable
+                        style={[
+                          collectionStyles.card,
+                          { width: jwidth / 1.55 },
+                        ]}
+                        android_ripple={styles.androidRipple}
+                        onPress={onAppPress(app)}
+                      >
+                        <View style={collectionStyles.cardContent}>
+                          <View style={collectionStyles.smallProfile}>
+                            <RN.Image
+                              style={collectionStyles.smallAvatar}
+                              source={{
+                                uri: `https://cdn.discordapp.com/app-icons/${app.application.id}/${app.application.icon}.webp?size=60`,
+                              }}
+                            />
+                            <View style={collectionStyles.smallProfileThing}>
+                              <SimpleText
+                                variant="text-md/semibold"
+                                color="TEXT_NORMAL"
+                              >
+                                {app.application.name}
+                              </SimpleText>
+                              {app.application.categories[0] && (
+                                <SimpleText
+                                  variant="text-md/medium"
+                                  color="TEXT_MUTED"
+                                >
+                                  {app.application.categories[0].name}
+                                </SimpleText>
+                              )}
+                            </View>
+                          </View>
+                          <SimpleText
+                            variant="text-md/medium"
+                            color="TEXT_MUTED"
+                            style={{ paddingBottom: 8 }}
+                          >
+                            {inServers(
+                              app.application.directory_entry.guild_count
+                            )}
+                          </SimpleText>
+                          <SimpleText
+                            variant="text-md/semibold"
+                            color="TEXT_NORMAL"
+                            lineClamp={2}
+                          >
+                            {app.application.directory_entry.short_description}
+                          </SimpleText>
+                        </View>
+                      </RN.Pressable>
+                    )
+                  }
+                />
+              </>
+            ))}
+          </>
         )
       ) : (
         <RN.ActivityIndicator size="small" style={{ flex: 1, marginTop: 50 }} />
@@ -428,3 +583,4 @@ export default function AppDirectoryPage({
     </ScrollView>
   );
 }
+
