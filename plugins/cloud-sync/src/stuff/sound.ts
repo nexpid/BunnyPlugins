@@ -1,4 +1,4 @@
-const DCDSoundManager = window.nativeModuleProxy.DCDSoundManager;
+import { SoundManager } from "../../../../stuff/types";
 
 interface Sound {
   play: () => void;
@@ -11,7 +11,7 @@ export async function makeSound(
   const id = Math.floor(Math.random() * 1_000_000);
   const duration = (await Promise.resolve(
     new Promise((res) =>
-      DCDSoundManager.prepare(url, "notification", id, (_, meta) =>
+      SoundManager.prepare(url, "notification", id, (_, meta) =>
         res(meta?.duration ?? defaultDuration)
       )
     )
@@ -23,13 +23,14 @@ export async function makeSound(
       if (playingTimeout) {
         clearTimeout(playingTimeout);
         playingTimeout = null;
-        DCDSoundManager.stop(id);
+        SoundManager.stop(id);
       }
-      DCDSoundManager.play(id);
+      SoundManager.play(id);
       playingTimeout = setTimeout(() => {
         playingTimeout = null;
-        DCDSoundManager.stop(id);
+        SoundManager.stop(id);
       }, duration);
     },
   };
 }
+

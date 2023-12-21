@@ -2,7 +2,7 @@ import { createFileBackend, createMMKVBackend } from "@vendetta/storage";
 import { DBSave } from "../types/api/latest";
 import { plugins } from "@vendetta/plugins";
 import { themes } from "@vendetta/themes";
-import { cache, canImport, isPluginProxied, vstorage } from "..";
+import { canImport, isPluginProxied, vstorage } from "..";
 import { installPlugin } from "@vendetta/plugins";
 import { installTheme } from "@vendetta/themes";
 import { showToast } from "@vendetta/ui/toasts";
@@ -13,8 +13,7 @@ import {
   clearLogs,
   addLog,
 } from "../components/pages/ImportLogsPage";
-
-const { MMKVManager } = window.nativeModuleProxy;
+import { BundleUpdaterManager, MMKVManager } from "../../../../stuff/types";
 
 export async function grabEverything(): Promise<DBSave.SaveSync> {
   const sync = {
@@ -172,7 +171,7 @@ export async function importData(
           confirmText: "Reload",
           confirmColor: "red" as ButtonColors,
           onConfirm: () => {
-            window.nativeModuleProxy.BundleUpdaterManager.reload();
+            BundleUpdaterManager.reload();
             res();
           },
           cancelText: "Skip",
@@ -197,3 +196,4 @@ export async function importData(
   );
   importCallback?.(false);
 }
+
