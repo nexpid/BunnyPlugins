@@ -7,15 +7,24 @@ import {
   Entries,
   hideActionSheet,
 } from "../../../../../stuff/types";
-import { emojipacks } from "../../stuff/twemoji";
+import { convert, emojipacks } from "../../stuff/twemoji";
 import { vstorage } from "../..";
 import { useProxy } from "@vendetta/storage";
+import { React } from "@vendetta/metro/common";
+import CustomTwemoji from "../CustomTwemoji";
 
-const { FormRadioRow } = Forms;
+const { FormRow } = Forms;
 
-export default ({}) => {
+const emojis = Array.from("😀😁😂🤣😃😄😅😆😋😊😉😎😍😘🥰😗");
+
+export default ({ called }: { called: number }) => {
   vstorage.emojipack ??= "default";
   useProxy(vstorage);
+
+  const emoji = React.useMemo(
+    () => convert(emojis[Math.floor(Math.random() * emojis.length)]),
+    [called]
+  );
 
   return (
     <ActionSheet>
@@ -28,10 +37,17 @@ export default ({}) => {
         />
         {Object.entries(emojipacks).map(
           ([id, info]: Entries<typeof emojipacks>) => (
-            <FormRadioRow
+            <FormRow
               label={info.title}
+              trailing={
+                <CustomTwemoji
+                  emoji={emoji}
+                  src={info.format(emoji)}
+                  size={20}
+                />
+              }
+              leading={<FormRow.Radio selected={vstorage.emojipack === id} />}
               onPress={() => (vstorage.emojipack = id)}
-              selected={vstorage.emojipack === id}
             />
           )
         )}

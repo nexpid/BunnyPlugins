@@ -28,7 +28,7 @@ export default function () {
       const style = RN.StyleSheet.flatten(x.style) ?? {};
       const twemoji = (src: string) =>
         React.createElement(CustomTwemoji, {
-          src,
+          emoji: src,
           size: style.fontSize,
         });
 

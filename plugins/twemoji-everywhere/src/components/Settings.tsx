@@ -26,7 +26,9 @@ export default () => {
             <FormRow.Icon source={getAssetIDByName("ic_message_edit")} />
           }
           trailing={<FormRow.Arrow />}
-          onPress={() => openSheet(EmojiPackActionSheet, {})}
+          onPress={() =>
+            openSheet(EmojiPackActionSheet, { called: Date.now() })
+          }
         />
       </BetterTableRowGroup>
     </ScrollView>

@@ -1,12 +1,20 @@
 import { ReactNative as RN } from "@vendetta/metro/common";
 import { getSrc } from "../stuff/twemoji";
 
-export default function ({ src, size = 16 }: { src: string; size?: number }) {
+export default function ({
+  emoji,
+  src = getSrc(emoji),
+  size = 16,
+}: {
+  emoji: string;
+  src?: string;
+  size?: number;
+}) {
   return (
     <RN.Image
-      key={`emoji-${src}`}
+      key={`emoji-${emoji}`}
       source={{
-        uri: getSrc(src),
+        uri: src,
       }}
       resizeMode="contain"
       fadeDuration={0}
