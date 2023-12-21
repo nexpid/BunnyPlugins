@@ -1,7 +1,5 @@
 import { ReactNative as RN } from "@vendetta/metro/common";
-
-const FileManager = (window.nativeModuleProxy.DCDFileManager ??
-  window.nativeModuleProxy.RTNFileManager)!;
+import { FileManager } from "../../../../stuff/types";
 
 export const downloadSource =
   "https://raw.githubusercontent.com/nexpid/VendettaPlugins/main/plugins/doom/assets/download/";
