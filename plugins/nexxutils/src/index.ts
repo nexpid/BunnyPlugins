@@ -13,7 +13,7 @@ export const vstorage: {
   >;
 } = storage;
 
-export const version = "0.1.9";
+export const version = "0.2.0";
 
 let undevtool: () => void;
 
