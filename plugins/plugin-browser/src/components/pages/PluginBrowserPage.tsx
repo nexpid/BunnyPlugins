@@ -5,10 +5,15 @@ import {
 } from "@vendetta/metro/common";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { PluginsFullJson } from "../../types";
-import { General, Search } from "@vendetta/ui/components";
+import { General } from "@vendetta/ui/components";
 import { pluginsURL } from "../..";
 import { showToast } from "@vendetta/ui/toasts";
-import { SuperAwesomeIcon, openSheet } from "../../../../../stuff/types";
+import {
+  AdvancedSearch,
+  SuperAwesomeIcon,
+  openSheet,
+  useAdvancedSearch,
+} from "../../../../../stuff/types";
 import { safeFetch } from "@vendetta/utils";
 import { getChanges, updateChanges } from "../../stuff/pluginChecker";
 import PluginThing from "../PluginThing";
@@ -44,10 +49,12 @@ export default () => {
     return null;
   }
 
+  const searchContext = { type: "PLUGIN_BROWSER_SEARCH" };
+  const [search, controls] = useAdvancedSearch(searchContext);
+
   const changes = React.useRef(getChanges()).current;
   const [filter, setFilter] = React.useState(Filter.DateNewest);
   const [parsed, setParsed] = React.useState<PluginsFullJson | null>(null);
-  const [search, setSearch] = React.useState("");
 
   const currentSetFilter = React.useRef(setFilter);
   currentSetFilter.current = setFilter;
@@ -126,12 +133,11 @@ export default () => {
   return (
     <RN.FlatList
       ListHeaderComponent={
-        <Search
-          style={{ marginBottom: 10 }}
-          onChangeText={(x) => setSearch(x.toLowerCase())}
-        />
+        <View style={{ marginBottom: 10 }}>
+          <AdvancedSearch searchContext={searchContext} controls={controls} />
+        </View>
       }
-      style={{ paddingHorizontal: 10, paddingTop: 10 }}
+      style={{ paddingHorizontal: 10 }}
       contentContainerStyle={{ paddingBottom: 20 }}
       data={sortedData}
       renderItem={({ item }) => <PluginThing item={item} changes={changes} />}
