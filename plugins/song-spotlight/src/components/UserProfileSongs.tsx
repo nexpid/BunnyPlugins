@@ -516,9 +516,7 @@ const SpotifySongEmbed = ({
           style={styles.webview}
           mediaPlaybackRequiresUserAction={false}
           onMessage={({ nativeEvent: { data } }) => {
-            console.log(data);
             if (data === "ended") {
-              console.log("finished playing :3");
               setPlaying(false);
 
               if (songData.type !== "track") {
