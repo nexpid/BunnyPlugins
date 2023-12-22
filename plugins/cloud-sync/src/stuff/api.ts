@@ -3,6 +3,8 @@ import { AuthRecord, vstorage } from "..";
 import constants from "../constants";
 import { findByStoreName } from "@vendetta/metro";
 
+jello();
+
 const UserStore = findByStoreName("UserStore");
 
 interface CloudSyncAPIErrorResponse {
@@ -96,24 +98,20 @@ export async function deleteSaveData(): Promise<true | undefined> {
   else throw new CloudSyncAPIError(await res.json());
 }
 
-export async function uploadFile(data: string): Promise<
+export async function uploadFile(body: string): Promise<
   | {
       key: string;
-      file: string;
     }
   | undefined
 > {
   if (!currentAuthorization()) return;
 
-  const res = await fetch(`${constants.api}api/file/upload`, {
+  const res = await fetch("https://hst.sh/documents", {
     method: "POST",
-    headers: {
-      authorization: await getAuthorization(),
-      "content-type": "text/plain",
-    },
-    body: data,
+    body,
   });
 
   if (res.status === 200) return await res.json();
   else throw new CloudSyncAPIError(await res.json());
 }
+

@@ -3,6 +3,7 @@ import { cache, vstorage, emitterAvailable } from "..";
 import { Forms, General } from "@vendetta/ui/components";
 import {
   BetterTableRowGroup,
+  FileManager,
   LineDivider,
   SimpleText,
   openSheet,
@@ -30,7 +31,6 @@ import { grabEverything, setImportCallback } from "../stuff/syncStuff";
 import constants, { defaultClientId, defaultRoot } from "../constants";
 import { makeSound } from "../stuff/sound";
 import { CryptoWebViewHandler, decrypt, encrypt } from "./CryptoWebView";
-import { UploadedFile } from "../types/api/latest";
 
 const DocumentPicker = findByProps("pickSingle", "isCancel");
 const { downloadMediaAsset } = findByProps("downloadMediaAsset");
@@ -347,7 +347,7 @@ export default function () {
                       "Preparing for download...",
                       getAssetIDByName("ic_upload")
                     );
-                    let data: UploadedFile;
+                    let data: Awaited<ReturnType<typeof uploadFile>>;
                     try {
                       data = await uploadFile(text);
                     } catch (e) {
@@ -362,12 +362,7 @@ export default function () {
                       "Backup Saved",
                       getAssetIDByName("ic_file_small_document")
                     );
-                    downloadMediaAsset(
-                      `${constants.api}api/files/${encodeURIComponent(
-                        data.key
-                      )}/${encodeURIComponent(data.file)}`,
-                      3
-                    );
+                    downloadMediaAsset(`https://hst.sh/raw/${data.key}.txt`, 3);
                     unBusy("local_export");
                   },
                 });
@@ -389,12 +384,18 @@ export default function () {
 
                 let text: string;
                 try {
-                  const { type, uri } = await DocumentPicker.pickSingle({
-                    type: DocumentPicker.types.plainText,
-                    mode: "open",
-                  });
-                  if (type === "text/plain")
-                    text = await (await fetch(uri)).text();
+                  const { fileCopyUri, type } = await DocumentPicker.pickSingle(
+                    {
+                      type: DocumentPicker.types.plainText,
+                      mode: "open",
+                      copyTo: "cachesDirectory",
+                    }
+                  );
+                  if (type === "text/plain" || !fileCopyUri)
+                    text = await FileManager.readFile(
+                      fileCopyUri.slice(5),
+                      "utf8"
+                    );
                 } catch (e) {
                   if (!DocumentPicker.isCancel(e))
                     showToast(`Got an error! ${e}`, getAssetIDByName("Small"));
@@ -451,3 +452,4 @@ export default function () {
     </ScrollView>
   );
 }
+
