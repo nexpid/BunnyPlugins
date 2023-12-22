@@ -13,35 +13,14 @@ import { React } from "@vendetta/metro/common";
 import Updating from "./components/Updating";
 import { unpatch } from "./stuff/livePreview";
 import { BundleUpdaterManager } from "../../../stuff/types";
+import { makeStorage } from "../../../stuff/storage";
+import { transform } from "./stuff/colors";
 
 const ThemeStore = findByStoreName("ThemeStore");
 
-export const vstorage: {
-  colors?: {
-    neutral1: string;
-    neutral2: string;
-    accent1: string;
-    accent2: string;
-    accent3: string;
-  };
-  config?: {
-    style: "dark" | "light" | "auto";
-    wallpaper: string | "none";
-  };
-  autoReapply?: boolean;
-  applyCache?: string;
-  themeApplyCache?: string;
-  patches?: {
-    from: "local" | "git";
-    commit?: string;
-  };
-  /** @deprecated */
-  localPatches?: boolean;
-} = storage;
-
 export const patchesURL = () =>
   `https://raw.githubusercontent.com/nexpid/VendettaMonetTheme/${
-    vstorage.patches?.commit ?? "main"
+    vstorage.patches.commit ?? "main"
   }/patches.jsonc`;
 export const devPatchesURL = "http://192.168.2.22:8730/patches.jsonc";
 export const commitsURL =
@@ -69,7 +48,31 @@ export const makeApplyCache = (
       : null
   );
 export const makeThemeApplyCache = () =>
-  JSON.stringify(vstorage.config?.style === "auto" ? ThemeStore.theme : null);
+  JSON.stringify(vstorage.config.style === "auto" ? ThemeStore.theme : null);
+
+const initSyscolors = window[
+  window.__vendetta_loader?.features?.syscolors?.prop
+] as VendettaSysColors | null | undefined;
+export const vstorage = makeStorage({
+  colors: {
+    neutral1: transform(initSyscolors?.neutral1[7] ?? "#747679"),
+    neutral2: transform(initSyscolors?.neutral2[7] ?? "#70777C"),
+    accent1: transform(initSyscolors?.accent1[7] ?? "#007FAC"),
+    accent2: transform(initSyscolors?.accent2[7] ?? "#657985"),
+    accent3: transform(initSyscolors?.accent3[7] ?? "#787296"),
+  },
+  config: {
+    style: "auto" as "dark" | "light" | "auto",
+    wallpaper: "none" as "string" | "none",
+  },
+  autoReapply: false,
+  applyCache: makeApplyCache(initSyscolors),
+  themeApplyCache: null,
+  patches: {
+    from: "git",
+    commit: undefined as string | undefined,
+  },
+});
 
 const Alerts = findByProps("openLazy", "close");
 
@@ -103,7 +106,7 @@ export default {
           (
             await (
               await fetch(
-                vstorage.patches?.from === "local"
+                vstorage.patches.from === "local"
                   ? devPatchesURL
                   : patchesURL(),
                 {

@@ -93,11 +93,6 @@ export default () => {
   )
     vstorage.themeApplyCache = themeApplyCache;
 
-  vstorage.patches ??= {
-    from: vstorage.localPatches ? "local" : "git",
-  };
-  if ("localPatches" in vstorage) delete vstorage.localPatches;
-
   useProxy(vstorage);
 
   const styles = stylesheet.createThemedStyleSheet({
@@ -227,19 +222,6 @@ export default () => {
       message: "Dynamic colors are unavailable.",
       onPress: () => {},
     };
-
-  if (!vstorage.colors) {
-    if (syscolors) setColorsFromDynamic(syscolors);
-    else
-      vstorage.colors = transformObject({
-        neutral1: "#747679",
-        neutral2: "#70777C",
-        accent1: "#007FAC",
-        accent2: "#657985",
-        accent3: "#787296",
-      });
-    return <></>;
-  }
 
   let lastThemePressTime = 0;
   return (

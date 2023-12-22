@@ -28,10 +28,6 @@ const readableThemeStyle = {
 };
 
 export const ConfigurePage = () => {
-  vstorage.config ??= {
-    style: "auto",
-    wallpaper: "none",
-  };
   useProxy(vstorage);
 
   const styles = stylesheet.createThemedStyleSheet({
@@ -66,7 +62,7 @@ export const ConfigurePage = () => {
       </ScrollView>
     );
 
-  const bestVariant = vstorage.config?.style;
+  const bestVariant = vstorage.config.style;
   const collections = wallpapers.filter(
     (x) => x.variant === bestVariant || x.variant === "any"
   );
@@ -85,13 +81,13 @@ export const ConfigurePage = () => {
           }
           trailing={
             <SimpleText variant="text-md/medium" color="TEXT_MUTED">
-              {readableThemeStyle[vstorage.config?.style ?? "auto"]}
+              {readableThemeStyle[vstorage.config.style]}
             </SimpleText>
           }
           onPress={() =>
             openSheet(ChooseSheet, {
               label: "Theme Style",
-              value: readableThemeStyle[vstorage.config?.style ?? "auto"],
+              value: readableThemeStyle[vstorage.config.style],
               choices: [
                 readableThemeStyle.auto,
                 readableThemeStyle.dark,

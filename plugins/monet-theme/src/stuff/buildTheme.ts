@@ -27,15 +27,15 @@ export function build(patches: Patches): ThemeDataWithPlus {
   };
 
   const style =
-    (vstorage.config?.style ?? "auto") === "auto"
+    vstorage.config.style === "auto"
       ? ThemeStore.theme !== "light"
         ? "dark"
         : "light"
-      : vstorage.config?.style ?? "dark";
+      : vstorage.config.style;
 
   const get = <T extends PatchThing<any>>(lk: T): T["both"] =>
     Object.assign(lk.both, style === "light" ? lk.light : lk.dark);
-  const entries = <T extends {}>(obj: T): [string, T[keyof T]][] =>
+  const entries = <T extends object>(obj: T): [string, T[keyof T]][] =>
     Object.entries(obj);
 
   const checkShouldPut = (shade: number, checks: string[]): boolean => {
@@ -103,7 +103,7 @@ export function build(patches: Patches): ThemeDataWithPlus {
     else theme.semanticColors[x] = [undefined, parseColor(y)];
   }
 
-  if (vstorage.config?.wallpaper && vstorage.config.wallpaper !== "none")
+  if (vstorage.config.wallpaper !== "none")
     theme.background = {
       url: vstorage.config.wallpaper,
       alpha: 1,
