@@ -1,9 +1,10 @@
-import { Button, Forms, General } from "@vendetta/ui/components";
+import { Forms, General } from "@vendetta/ui/components";
 import {
   ActionSheet,
   ActionSheetCloseButton,
   ActionSheetContentContainer,
   ActionSheetTitleHeader,
+  Redesign,
   SimpleText,
   hideActionSheet,
   openSheet,
@@ -18,7 +19,6 @@ import { getAssetIDByName } from "@vendetta/ui/assets";
 import { openImportLogsPage } from "../pages/ImportLogsPage";
 import { DBSave } from "../../types/api/latest";
 import { semanticColors } from "@vendetta/ui";
-import { findByProps } from "@vendetta/metro";
 
 const { View } = General;
 const { FormCheckboxRow } = Forms;
@@ -155,17 +155,11 @@ export default function ImportActionSheet({
           }
           selected={options.themes}
         />
-        <Button
+        <Redesign.Button
           text="Import"
-          color="green"
-          size="medium"
-          renderIcon={() => (
-            <RN.Image
-              style={styles.btnIcon}
-              resizeMode="cover"
-              source={getAssetIDByName("ic_download_24px")}
-            />
-          )}
+          variant="positive"
+          size="md"
+          icon={getAssetIDByName("ic_download_24px")}
           onPress={() => {
             openImportLogsPage(navigation);
             importData(save, options);
@@ -183,3 +177,4 @@ export default function ImportActionSheet({
     </ActionSheet>
   );
 }
+
