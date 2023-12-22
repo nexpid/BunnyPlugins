@@ -3,8 +3,6 @@ import { AuthRecord, vstorage } from "..";
 import constants from "../constants";
 import { findByStoreName } from "@vendetta/metro";
 
-jello();
-
 const UserStore = findByStoreName("UserStore");
 
 interface CloudSyncAPIErrorResponse {
