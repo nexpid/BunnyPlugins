@@ -63,7 +63,7 @@ export const vstorage = makeStorage({
   },
   config: {
     style: "auto" as "dark" | "light" | "auto",
-    wallpaper: "none" as "string" | "none",
+    wallpaper: "none" as string | "none",
   },
   autoReapply: false,
   applyCache: makeApplyCache(initSyscolors),

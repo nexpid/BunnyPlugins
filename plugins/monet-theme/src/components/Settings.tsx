@@ -407,11 +407,7 @@ export default () => {
             showToast(
               `Now using ${otter === "git" ? "GitHub" : "local"} patches`
             );
-            vstorage.patches ??= {
-              from: vstorage.patches.from === "local" ? "git" : "local",
-            };
-            vstorage.patches.from =
-              vstorage.patches.from === "local" ? "git" : "local";
+            vstorage.patches.from = otter;
             setPatches(undefined);
           } else lastThemePressTime = Date.now() + 500;
         }}
