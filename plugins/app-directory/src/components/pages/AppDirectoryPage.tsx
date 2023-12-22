@@ -1,19 +1,19 @@
 import {
-  stylesheet,
-  React,
-  ReactNative as RN,
   i18n,
   NavigationNative,
+  React,
+  ReactNative as RN,
+  stylesheet,
 } from "@vendetta/metro/common";
 import { semanticColors } from "@vendetta/ui";
+import { getAssetIDByName } from "@vendetta/ui/assets";
 import { General } from "@vendetta/ui/components";
+
 import {
   AdvancedSearch,
   SimpleText,
   useAdvancedSearch,
 } from "../../../../../stuff/types";
-import { getAssetIDByName } from "@vendetta/ui/assets";
-import useAsync from "../hooks/useAsync";
 import {
   APICollectionApplication,
   APICollectionItem,
@@ -22,8 +22,9 @@ import {
   getAppDirectoryCollections,
   searchAppDirectory,
 } from "../../stuff/api";
-import { getAppInfoPageRender } from "./AppInfoPage";
 import { inServers } from "../../stuff/util";
+import useAsync from "../hooks/useAsync";
+import { getAppInfoPageRender } from "./AppInfoPage";
 
 const { ScrollView, View } = General;
 
@@ -44,7 +45,7 @@ export default function AppDirectoryPage({
   const categories = useAsync(() => getAppDirectoryCategories(), [locale]);
   const collections = useAsync(
     () => getAppDirectoryCollections(),
-    [locale]
+    [locale],
   )?.sort?.((a, b) => a.position - b.position);
 
   const [searchPage, setSearchPage] = React.useState(0);
@@ -53,7 +54,7 @@ export default function AppDirectoryPage({
       search || selCategory !== undefined
         ? searchAppDirectory(search, searchPage + 1, selCategory ?? 0, guildId)
         : null,
-    [search, searchPage, selCategory, locale]
+    [search, searchPage, selCategory, locale],
   );
 
   React.useEffect(() => {
@@ -171,7 +172,7 @@ export default function AppDirectoryPage({
             title: "application" in app ? app.application.name : app.name,
             render: getAppInfoPageRender(
               "application" in app ? app.application : app,
-              guildId
+              guildId,
             ),
           });
 
@@ -190,7 +191,7 @@ export default function AppDirectoryPage({
     pushPages[pushPages.length - 1]?.num === searchResults?.num_pages;
   const renderPushPages = pushPages.slice(
     pageFirst ? 0 : 2,
-    pageLast ? pushPages.length : pushPages.length - 2
+    pageLast ? pushPages.length : pushPages.length - 2,
   );
 
   const isFirst = searchPage === 0;
@@ -214,9 +215,9 @@ export default function AppDirectoryPage({
               ? a.id === selCategory
                 ? -1
                 : b.id === selCategory
-                ? 1
-                : 0
-              : 0
+                  ? 1
+                  : 0
+              : 0,
           )}
           keyExtractor={(d) => d.id.toString()}
           renderItem={({ item }) => (
@@ -231,7 +232,7 @@ export default function AppDirectoryPage({
                   setSelCategory(undefined);
                 else setSelCategory(item.id);
                 RN.LayoutAnimation.configureNext(
-                  RN.LayoutAnimation.Presets.easeInEaseOut
+                  RN.LayoutAnimation.Presets.easeInEaseOut,
                 );
               }}
             >
@@ -245,7 +246,7 @@ export default function AppDirectoryPage({
                     8: "img_nitro_remixing",
                     9: "ic_friend_wave_24px",
                     10: "ic_progress_wrench_24px",
-                  }[item.id] ?? ""
+                  }[item.id] ?? "",
                 )}
               />
               <SimpleText variant="text-md/semibold" color="TEXT_NORMAL">
@@ -324,8 +325,8 @@ export default function AppDirectoryPage({
                   setSearchPage(
                     Math.max(
                       Math.min(searchPage - 1, searchResults.num_pages - 1),
-                      0
-                    )
+                      0,
+                    ),
                   )
                 }
                 disabled={isFirst}
@@ -399,8 +400,8 @@ export default function AppDirectoryPage({
                   setSearchPage(
                     Math.max(
                       Math.min(searchPage + 1, searchResults.num_pages - 1),
-                      0
-                    )
+                      0,
+                    ),
                   )
                 }
                 disabled={isLast}
@@ -429,7 +430,7 @@ export default function AppDirectoryPage({
                 <RN.FlatList
                   horizontal
                   data={x.application_directory_collection_items.sort(
-                    (a, b) => a.position - b.position
+                    (a, b) => a.position - b.position,
                   )}
                   ItemSeparatorComponent={() => <View style={{ width: 8 }} />}
                   renderItem={({ item: app }) =>
@@ -505,7 +506,7 @@ export default function AppDirectoryPage({
                               </>
                             )}
                             {inServers(
-                              app.application.directory_entry.guild_count
+                              app.application.directory_entry.guild_count,
                             )}
                           </SimpleText>
                           <SimpleText
@@ -557,7 +558,7 @@ export default function AppDirectoryPage({
                             style={{ paddingBottom: 8 }}
                           >
                             {inServers(
-                              app.application.directory_entry.guild_count
+                              app.application.directory_entry.guild_count,
                             )}
                           </SimpleText>
                           <SimpleText
@@ -583,4 +584,3 @@ export default function AppDirectoryPage({
     </ScrollView>
   );
 }
-

@@ -1,9 +1,10 @@
 import { getDebugInfo } from "@vendetta/debug";
-import constants from "./constants";
 import { findByProps, findByStoreName } from "@vendetta/metro";
-import { ReactNative as RN, clipboard } from "@vendetta/metro/common";
+import { clipboard, ReactNative as RN } from "@vendetta/metro/common";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { showToast } from "@vendetta/ui/toasts";
+
+import constants from "./constants";
 
 const { showSimpleActionSheet } = findByProps("showSimpleActionSheet");
 const UserStore = findByStoreName("UserStore");
@@ -45,7 +46,7 @@ export function getNewIssueUrl(exparams: Record<string, string>) {
     "discord-username",
     `@${user.username}${
       user.discriminator !== "0" ? `#${user.discriminator}` : ""
-    }`
+    }`,
   );
 
   return `${constants.github.url}issues/new?${params.toString()}`;
@@ -68,7 +69,7 @@ export const openPluginReportSheet = (plugin: string) =>
               template: `bug_report.yml`,
               labels: "bug",
               sysinfo: getSysInfo(),
-            })
+            }),
           );
           showToast("Copied", getAssetIDByName("toast_copy_link"));
         },
@@ -82,7 +83,7 @@ export const openPluginReportSheet = (plugin: string) =>
               title: `suggest(${plugin}): `,
               labels: "suggestion",
               template: `suggestion.yml`,
-            })
+            }),
           );
           showToast("Copied", getAssetIDByName("toast_copy_link"));
         },

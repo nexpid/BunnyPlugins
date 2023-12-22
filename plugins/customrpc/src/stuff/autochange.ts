@@ -1,8 +1,9 @@
 import { FluxDispatcher } from "@vendetta/metro/common";
-import { dispatchActivityIfPossible } from "./activity";
-import { forceUpdateRPCPreview } from "../components/RPCPreview";
 
-let cronjobs: Record<
+import { forceUpdateRPCPreview } from "../components/RPCPreview";
+import { dispatchActivityIfPossible } from "./activity";
+
+const cronjobs: Record<
   string,
   {
     default: boolean;
@@ -14,7 +15,7 @@ export function registerChangeCronJob(
   key: string,
   cron: (date: Date) => number,
   run: () => void,
-  isDefault?: boolean
+  isDefault?: boolean,
 ) {
   if (cronjobs[key]) return;
   const change = {
@@ -46,7 +47,7 @@ export function registerChangeFluxEvent(
   key: string,
   event: string,
   run: (...fluxargs: any[]) => void,
-  isDefault?: boolean
+  isDefault?: boolean,
 ) {
   if (fluxEvents[key]) return;
 
@@ -77,7 +78,7 @@ export function registerDefaultChanges() {
     "auto_fix_timestamps",
     (x) => x.setHours(24, 0, 0, 0),
     forceUpdateActivity,
-    true
+    true,
   );
 }
 

@@ -1,5 +1,6 @@
 import { ReactNative as RN } from "@vendetta/metro/common";
 import { General } from "@vendetta/ui/components";
+
 import { SimpleText } from "../../../../stuff/types";
 
 const { View } = General;

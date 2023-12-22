@@ -1,6 +1,7 @@
-import { ReactNative as RN, React, stylesheet } from "@vendetta/metro/common";
+import { React, ReactNative as RN, stylesheet } from "@vendetta/metro/common";
 import { semanticColors } from "@vendetta/ui";
 import { Forms } from "@vendetta/ui/components";
+
 import { SuperAwesomeIcon } from "../../../../stuff/types";
 
 const { FormRow } = Forms;
@@ -55,7 +56,7 @@ export default (props: props) => {
                   style="card"
                   destructive={destructive ?? false}
                 />
-              )
+              ),
             )}
             {props.loading && (
               <RN.ActivityIndicator

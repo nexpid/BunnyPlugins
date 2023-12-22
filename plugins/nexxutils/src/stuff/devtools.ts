@@ -17,7 +17,7 @@ export default function () {
           ["dark", "darker", "light", "amoled"].map((x) => [
             x,
             resolveSemanticColor(x, raw),
-          ])
+          ]),
         );
       }
       return data;
@@ -29,11 +29,11 @@ export default function () {
           query.startsWith("^") && query.endsWith("$")
             ? x.toLowerCase() === query.toLowerCase().slice(1, -1)
             : query.startsWith("^")
-            ? x.toLowerCase().startsWith(query.toLowerCase().slice(1))
-            : query.endsWith("$")
-            ? x.toLowerCase().endsWith(query.toLowerCase().slice(0, -1))
-            : x.toLowerCase().includes(query.toLowerCase())
-        )
+              ? x.toLowerCase().startsWith(query.toLowerCase().slice(1))
+              : query.endsWith("$")
+                ? x.toLowerCase().endsWith(query.toLowerCase().slice(0, -1))
+                : x.toLowerCase().includes(query.toLowerCase()),
+        ),
       );
     },
     findSemantic(hex: string) {
@@ -44,7 +44,7 @@ export default function () {
             x,
             Object.fromEntries(Object.entries(y).filter(([_, z]) => z === hex)),
           ])
-          .filter(([_, z]) => Object.entries(z)[0])
+          .filter(([_, z]) => Object.entries(z)[0]),
       );
     },
 
@@ -57,13 +57,13 @@ export default function () {
         key: string,
         parent: any,
         callback?: (args: any[], ret: any) => any,
-        oneTime?: boolean
+        oneTime?: boolean,
       ) => {
         const patch = after(
           key,
           parent,
           callback ?? ((a, b) => console.log("[NX]:", a, b)),
-          oneTime ?? false
+          oneTime ?? false,
         );
         patches.push(patch);
       },

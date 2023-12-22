@@ -1,9 +1,9 @@
+import { RedesignRow } from "@nexpid/vdp-shared";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { showToast } from "@vendetta/ui/toasts";
+
 import { hideActionSheet } from "../../../../stuff/types";
 import { addPin, hasPin, removePin } from "..";
-
-import { RedesignRow } from "@nexpid/vdp-shared";
 
 export default function (message: {
   channel_id: string;
@@ -26,7 +26,7 @@ export default function (message: {
               message.author.globalName ??
               message.author.username
             }'s message locally`,
-            getAssetIDByName("ic_message_pin")
+            getAssetIDByName("ic_message_pin"),
           );
         } else {
           addPin(message.channel_id, message.id);
@@ -36,7 +36,7 @@ export default function (message: {
               message.author.globalName ??
               message.author.username
             }'s message locally`,
-            getAssetIDByName("ic_message_pin")
+            getAssetIDByName("ic_message_pin"),
           );
         }
         hideActionSheet();

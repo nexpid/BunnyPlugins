@@ -1,19 +1,20 @@
-import { createFileBackend, createMMKVBackend } from "@vendetta/storage";
-import { DBSave } from "../types/api/latest";
 import { plugins } from "@vendetta/plugins";
-import { themes } from "@vendetta/themes";
-import { canImport, isPluginProxied, vstorage } from "..";
 import { installPlugin } from "@vendetta/plugins";
+import { createFileBackend, createMMKVBackend } from "@vendetta/storage";
+import { themes } from "@vendetta/themes";
 import { installTheme } from "@vendetta/themes";
-import { showToast } from "@vendetta/ui/toasts";
-import { getAssetIDByName } from "@vendetta/ui/assets";
 import { showConfirmationAlert } from "@vendetta/ui/alerts";
-import {
-  isInPage,
-  clearLogs,
-  addLog,
-} from "../components/pages/ImportLogsPage";
+import { getAssetIDByName } from "@vendetta/ui/assets";
+import { showToast } from "@vendetta/ui/toasts";
+
 import { BundleUpdaterManager, MMKVManager } from "../../../../stuff/types";
+import { canImport, isPluginProxied, vstorage } from "..";
+import {
+  addLog,
+  clearLogs,
+  isInPage,
+} from "../components/pages/ImportLogsPage";
+import { DBSave } from "../types/api/latest";
 
 export async function grabEverything(): Promise<DBSave.SaveSync> {
   const sync = {
@@ -56,7 +57,7 @@ export type SyncImportOptions = Record<
 >;
 export async function importData(
   save: DBSave.Save,
-  options: SyncImportOptions
+  options: SyncImportOptions,
 ) {
   if (!save) return;
   importCallback?.(true);
@@ -67,18 +68,18 @@ export async function importData(
         !plugins[x.id] &&
         !isPluginProxied(x.id) &&
         canImport(x.id) &&
-        options.unproxiedPlugins
+        options.unproxiedPlugins,
     ),
     ...save.sync.plugins.filter(
       (x) =>
         !plugins[x.id] &&
         isPluginProxied(x.id) &&
         canImport(x.id) &&
-        options.plugins
+        options.plugins,
     ),
   ];
   const ithemes = save.sync.themes.filter(
-    (x) => !themes[x.id] && options.themes
+    (x) => !themes[x.id] && options.themes,
   );
 
   if (!iplugins[0] && !ithemes[0]) {
@@ -91,7 +92,7 @@ export async function importData(
     "importer",
     `Starting to import ${iplugins.length} plugin${
       iplugins.length !== 1 ? "s" : ""
-    } and ${ithemes.length} theme${ithemes.length !== 1 ? "s" : ""}`
+    } and ${ithemes.length} theme${ithemes.length !== 1 ? "s" : ""}`,
   );
 
   if (!isInPage)
@@ -104,14 +105,14 @@ export async function importData(
       ]
         .filter((x) => !!x)
         .join(" and ")}`,
-      getAssetIDByName("toast_image_saved")
+      getAssetIDByName("toast_image_saved"),
     );
 
   const status = { plugins: 0, themes: 0, failed: 0 };
   await Promise.all([
     ...iplugins.map(
       (x) =>
-        new Promise<void>(async (res) => {
+        new Promise<void>((res) => {
           MMKVManager.setItem(x.id, JSON.stringify(x.options));
           installPlugin(x.id, x.enabled)
             .then(() => {
@@ -123,11 +124,11 @@ export async function importData(
               addLog("plugins", `Failed to import plugin: ${x.id}\n${e}`);
             })
             .finally(res);
-        })
+        }),
     ),
     ...ithemes.map(
       (x) =>
-        new Promise<void>(async (res) =>
+        new Promise<void>((res) =>
           installTheme(x.id)
             .then(() => {
               status.themes++;
@@ -137,8 +138,8 @@ export async function importData(
               status.failed++;
               addLog("themes", `Failed to import theme: ${x.id}\n${e}`);
             })
-            .finally(res)
-        )
+            .finally(res),
+        ),
     ),
   ]);
 
@@ -150,7 +151,7 @@ export async function importData(
       ]
         .map(([count, label]) => `${count} ${label}${count !== 1 ? "s" : ""}`)
         .join(" and ")}! (${status.failed} failed)`,
-      getAssetIDByName("check")
+      getAssetIDByName("check"),
     );
 
   const selectTheme = themes[ithemes.find((x) => x.enabled)?.id];
@@ -159,7 +160,7 @@ export async function importData(
     await createFileBackend("vendetta_theme.json").set(
       Object.assign(selectTheme, {
         selected: true,
-      })
+      }),
     );
     addLog("themes", "Prompting user to reload");
     await (() =>
@@ -175,10 +176,9 @@ export async function importData(
             res();
           },
           cancelText: "Skip",
-          //@ts-ignore not in typings
           onCancel: res,
           isDismissable: true,
-        })
+        }),
       ))();
   }
 
@@ -192,8 +192,7 @@ export async function importData(
             status.failed !== 1 ? "s" : ""
           }/theme${status.failed !== 1 ? "s" : ""}`
         : "All imports were successful"
-    }`
+    }`,
   );
   importCallback?.(false);
 }
-

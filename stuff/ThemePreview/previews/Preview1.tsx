@@ -1,8 +1,9 @@
-import { General } from "@vendetta/ui/components";
 import { ReactNative as RN, stylesheet } from "@vendetta/metro/common";
 import { getAssetIDByName } from "@vendetta/ui/assets";
-import { ThemePreviewData, semanticFromTheme } from "../util";
+import { General } from "@vendetta/ui/components";
+
 import FakeText from "../FakeText";
+import { semanticFromTheme, ThemePreviewData } from "../util";
 
 const { View } = General;
 
@@ -73,7 +74,7 @@ export default function ({
             Random User
           </FakeText>
         </View>
-      </View>
+      </View>,
     );
   }
 
@@ -103,7 +104,7 @@ export default function ({
               borderRadius: 10,
               backgroundColor: semanticFromTheme(
                 t,
-                "BUTTON_OUTLINE_BRAND_BACKGROUND_HOVER"
+                "BUTTON_OUTLINE_BRAND_BACKGROUND_HOVER",
               ),
               marginBottom: 8,
               width: "100%",
@@ -129,7 +130,7 @@ export default function ({
               height: 1,
               backgroundColor: semanticFromTheme(
                 t,
-                "BACKGROUND_MOBILE_SECONDARY"
+                "BACKGROUND_MOBILE_SECONDARY",
               ),
             }}
           />
@@ -155,7 +156,7 @@ export default function ({
               {
                 tintColor: semanticFromTheme(
                   t,
-                  "BUTTON_OUTLINE_POSITIVE_BORDER"
+                  "BUTTON_OUTLINE_POSITIVE_BORDER",
                 ),
               },
             ]}
@@ -169,7 +170,7 @@ export default function ({
             {
               backgroundColor: semanticFromTheme(
                 t,
-                "BACKGROUND_MOBILE_SECONDARY"
+                "BACKGROUND_MOBILE_SECONDARY",
               ),
               marginBottom: 8,
               width: "100%",
@@ -182,7 +183,7 @@ export default function ({
               {
                 tintColor: semanticFromTheme(
                   t,
-                  "BUTTON_OUTLINE_POSITIVE_BORDER"
+                  "BUTTON_OUTLINE_POSITIVE_BORDER",
                 ),
               },
             ]}
@@ -206,7 +207,7 @@ export default function ({
             borderTopRightRadius: 8,
             backgroundColor: semanticFromTheme(
               t,
-              "BACKGROUND_MOBILE_SECONDARY"
+              "BACKGROUND_MOBILE_SECONDARY",
             ),
             height: "100%",
             paddingHorizontal: 12,

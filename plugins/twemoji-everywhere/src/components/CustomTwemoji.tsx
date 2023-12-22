@@ -1,4 +1,5 @@
 import { ReactNative as RN } from "@vendetta/metro/common";
+
 import { getSrc } from "../stuff/twemoji";
 
 export default function ({
@@ -22,7 +23,7 @@ export default function ({
         height: size,
         width: size,
       }}
-      //@ts-ignore custom property
+      //@ts-expect-error custom property
       vanilla={true}
     />
   );

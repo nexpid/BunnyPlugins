@@ -23,7 +23,7 @@ export function unparseTimestamp(timestamp: number): number {
 
 export function displayImage(
   image: string,
-  appId?: string
+  appId?: string,
 ): string | undefined {
   if (image.startsWith("spotify:"))
     return `https://i.scdn.co/image/${image.slice("spotify:".length)}`;

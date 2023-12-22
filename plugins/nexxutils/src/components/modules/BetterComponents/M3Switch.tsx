@@ -1,6 +1,7 @@
 import { React } from "@vendetta/metro/common";
 import { ReactNative as RN, stylesheet } from "@vendetta/metro/common";
 import { rawColors } from "@vendetta/ui";
+
 import { lerp, resolveCustomSemantic } from "../../../stuff/colors";
 
 const AnimatedPressable = RN.Animated.createAnimatedComponent(RN.Pressable);
@@ -43,30 +44,30 @@ export default function ({
       containerInactive: {
         backgroundColor: resolveCustomSemantic(
           rawColors.PRIMARY_600,
-          rawColors.PRIMARY_200
+          rawColors.PRIMARY_200,
         ),
         borderColor: resolveCustomSemantic(
           rawColors.WHITE_630,
-          rawColors.BLACK_330
+          rawColors.BLACK_330,
         ),
       },
       containerActive: {
         backgroundColor: resolveCustomSemantic(
           lerp(rawColors.BRAND_500, "#FFFFFF", 0.15),
-          lerp(rawColors.BRAND_500, "#000000", 0.2)
+          lerp(rawColors.BRAND_500, "#000000", 0.2),
         ),
       },
 
       ballInactive: {
         backgroundColor: resolveCustomSemantic(
           rawColors.WHITE_630,
-          rawColors.BRAND_330
+          rawColors.BRAND_330,
         ),
       },
       ballActive: {
         backgroundColor: resolveCustomSemantic(
           lerp(rawColors.BRAND_500, "#000000", 0.65),
-          rawColors.WHITE_500
+          rawColors.WHITE_500,
         ),
       },
     }),
@@ -74,30 +75,30 @@ export default function ({
       containerInactiveDisabled: {
         backgroundColor: `${resolveCustomSemantic(
           rawColors.WHITE_800,
-          rawColors.PRIMARY_200
+          rawColors.PRIMARY_200,
         )}1f`,
         borderColor: `${resolveCustomSemantic(
           rawColors.WHITE_800,
-          rawColors.PRIMARY_200
+          rawColors.PRIMARY_200,
         )}1f`,
       },
       containerActiveDisabled: {
         backgroundColor: `${resolveCustomSemantic(
           rawColors.PRIMARY_200,
-          rawColors.PRIMARY_730
+          rawColors.PRIMARY_730,
         )}1f`,
       },
 
       ballActiveDisabled: {
         backgroundColor: resolveCustomSemantic(
           rawColors.PRIMARY_800,
-          rawColors.PRIMARY_100
+          rawColors.PRIMARY_100,
         ),
       },
       ballInactiveDisabled: {
         backgroundColor: resolveCustomSemantic(
           rawColors.PRIMARY_200,
-          rawColors.PRIMARY_730
+          rawColors.PRIMARY_730,
         ),
       },
     }),
@@ -112,7 +113,7 @@ export default function ({
     pressed: 28 / 24,
   };
   const pressVal = React.useRef(
-    new RN.Animated.Value(value ? 1 : pressScales.inactive)
+    new RN.Animated.Value(value ? 1 : pressScales.inactive),
   ).current;
 
   const toggle = () => {

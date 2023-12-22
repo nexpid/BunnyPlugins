@@ -1,18 +1,19 @@
+import { React, ReactNative as RN, stylesheet } from "@vendetta/metro/common";
+import { useProxy } from "@vendetta/storage";
+import { semanticColors } from "@vendetta/ui";
+import { getAssetIDByName } from "@vendetta/ui/assets";
 import { Forms, General } from "@vendetta/ui/components";
-import { stsPatches } from "../Settings";
-import { vstorage } from "../..";
-import { ReactNative as RN, React, stylesheet } from "@vendetta/metro/common";
+import { showToast } from "@vendetta/ui/toasts";
+
 import {
   BetterTableRowGroup,
-  SimpleText,
   openSheet,
   resolveSemanticColor,
+  SimpleText,
 } from "../../../../../stuff/types";
-import { getAssetIDByName } from "@vendetta/ui/assets";
+import { vstorage } from "../..";
 import wallpapers from "../../stuff/wallpapers";
-import { semanticColors } from "@vendetta/ui";
-import { showToast } from "@vendetta/ui/toasts";
-import { useProxy } from "@vendetta/storage";
+import { stsPatches } from "../Settings";
 import ChooseSheet from "../sheets/ChooseSheet";
 
 const { View, ScrollView } = General;
@@ -64,7 +65,7 @@ export const ConfigurePage = () => {
 
   const bestVariant = vstorage.config.style;
   const collections = wallpapers.filter(
-    (x) => x.variant === bestVariant || x.variant === "any"
+    (x) => x.variant === bestVariant || x.variant === "any",
   );
 
   const dims = RN.Dimensions.get("window");
@@ -134,7 +135,7 @@ export const ConfigurePage = () => {
                       width: "100%",
                       aspectRatio: 1 / 1,
                       tintColor: resolveSemanticColor(
-                        semanticColors.TEXT_NORMAL
+                        semanticColors.TEXT_NORMAL,
                       ),
                     }}
                   />
@@ -154,7 +155,7 @@ export const ConfigurePage = () => {
                     onPress={() => {
                       showToast(
                         `Set background to ${x.title}`,
-                        getAssetIDByName("Check")
+                        getAssetIDByName("Check"),
                       );
                       vstorage.config.wallpaper = x.url;
                     }}

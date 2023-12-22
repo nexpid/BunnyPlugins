@@ -34,7 +34,7 @@ ${mdNote}
 <div align="center">
   <h1>Well, that's awkward.</h1>
   <h3>You probably misclicked or something, click <a href="/"><b>here</b></a> to go back.</h3>
-</div>\n`
+</div>\n`,
 );
 
 /** @type import("rollup").InputPluginOption */
@@ -90,7 +90,7 @@ const plugins = [
       else if (mode === "uri" && arg)
         return {
           code: `export default ${JSON.stringify(
-            `data:${arg};base64,${(await bin()).toString("base64")}`
+            `data:${arg};base64,${(await bin()).toString("base64")}`,
           )}`,
         };
       else return null;
@@ -102,7 +102,7 @@ const plugins = [
 for (let plug of await readdir("./plugins")) {
   if (onlyPlugins.length && !onlyPlugins.includes(plug)) continue;
   const manifest = JSON.parse(
-    await readFile(`./plugins/${plug}/manifest.json`)
+    await readFile(`./plugins/${plug}/manifest.json`),
   );
   const outPath = `./dist/${plug}/index.js`;
 
@@ -126,7 +126,7 @@ ${mdNote}
 </div>
 
 > **Note**
-> This is just a simple landing page for **${manifest.name}**. The proper way to load this plugin is to go in Vendetta's settings, going to Plugins and tapping the plus icon.\n`
+> This is just a simple landing page for **${manifest.name}**. The proper way to load this plugin is to go in Vendetta's settings, going to Plugins and tapping the plus icon.\n`,
   );
 
   try {
@@ -160,7 +160,7 @@ ${mdNote}
           Buffer.from("vendetta=>{return "),
           await readFile(`./dist/${plug}/index.js`),
           Buffer.from("}\n//# sourceURL="),
-        ])
+        ]),
       );
 
     const toHash = await readFile(outPath);

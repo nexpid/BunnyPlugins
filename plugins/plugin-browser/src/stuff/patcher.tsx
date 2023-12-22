@@ -1,14 +1,15 @@
-import SettingsSection from "../components/SettingsSection";
-import { patchSettingsPin } from "../../../../stuff/pinToSettings";
 import { plugin } from "@vendetta";
 import { getAssetIDByName } from "@vendetta/ui/assets";
+
+import { patchSettingsPin } from "../../../../stuff/pinToSettings";
 import PluginBrowserPage from "../components/pages/PluginBrowserPage";
+import SettingsSection from "../components/SettingsSection";
 import { getChanges, initThing } from "./pluginChecker";
 
 export let pluginsEmitter: Emitter;
 
 export default (): (() => void) => {
-  let patches = [];
+  const patches = [];
   patches.push(
     patchSettingsPin(
       () => true,
@@ -28,8 +29,8 @@ export default (): (() => void) => {
         page: {
           render: PluginBrowserPage,
         },
-      }
-    )
+      },
+    ),
   );
   patches.push(initThing());
 

@@ -1,20 +1,21 @@
+import { clipboard, stylesheet } from "@vendetta/metro/common";
+import { semanticColors } from "@vendetta/ui";
+import { getAssetIDByName } from "@vendetta/ui/assets";
 import { Forms } from "@vendetta/ui/components";
+import { showToast } from "@vendetta/ui/toasts";
+
 import {
   ActionSheet,
   ActionSheetCloseButton,
   ActionSheetContentContainer,
   ActionSheetTitleHeader,
-  SimpleText,
   hideActionSheet,
+  SimpleText,
 } from "../../../../../stuff/types";
-import { API } from "../../types/api";
-import { clipboard, stylesheet } from "@vendetta/metro/common";
-import { semanticColors } from "@vendetta/ui";
-import { getAssetIDByName } from "@vendetta/ui/assets";
-import { openSpotify, rebuildLink } from "../../stuff/util";
-import { showToast } from "@vendetta/ui/toasts";
 import { cache } from "../..";
 import { check } from "../../stuff/http";
+import { openSpotify, rebuildLink } from "../../stuff/util";
+import { API } from "../../types/api";
 
 const { FormRow } = Forms;
 
@@ -51,7 +52,7 @@ export default function ({
             leading={
               <FormRow.Icon
                 source={getAssetIDByName(
-                  "img_account_sync_spotify_light_and_dark"
+                  "img_account_sync_spotify_light_and_dark",
                 )}
               />
             }
@@ -68,7 +69,7 @@ export default function ({
             clipboard.setString(rebuildLink(song.service, song.type, song.id));
             showToast(
               "Copied to clipboard.",
-              getAssetIDByName("toast_copy_link")
+              getAssetIDByName("toast_copy_link"),
             );
             hideActionSheet();
           }}

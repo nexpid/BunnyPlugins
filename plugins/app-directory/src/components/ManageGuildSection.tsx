@@ -1,6 +1,7 @@
-import { Forms } from "@vendetta/ui/components";
-import { AutoRow } from "../../../../stuff/types";
 import { getAssetIDByName } from "@vendetta/ui/assets";
+import { Forms } from "@vendetta/ui/components";
+
+import { AutoRow } from "../../../../stuff/types";
 
 const { FormSection } = Forms;
 

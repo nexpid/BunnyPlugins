@@ -82,7 +82,7 @@ type VendettaSysColor = [
   string,
   string,
   string,
-  string
+  string,
 ];
 export type VendettaSysColors = Record<
   "neutral1" | "neutral2" | "accent1" | "accent2" | "accent3",

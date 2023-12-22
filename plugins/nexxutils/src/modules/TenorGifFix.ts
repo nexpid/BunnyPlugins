@@ -1,7 +1,8 @@
-import { getAssetIDByName } from "@vendetta/ui/assets";
-import { Module, ModuleCategory } from "../stuff/Module";
 import { findByProps } from "@vendetta/metro";
 import { before } from "@vendetta/patcher";
+import { getAssetIDByName } from "@vendetta/ui/assets";
+
+import { Module, ModuleCategory } from "../stuff/Module";
 
 const MediaManager = findByProps("downloadMediaAsset");
 const ActionSheet = findByProps("openLazy", "hideActionSheet");
@@ -35,7 +36,7 @@ export default new Module({
             args[0] = parsed;
             args[1] = 1;
           }
-        })
+        }),
       );
 
       this.patches.add(
@@ -56,7 +57,7 @@ export default new Module({
           }
 
           args.syncer.sources[0] = data;
-        })
+        }),
       );
     },
     onStop() {},

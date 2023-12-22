@@ -1,9 +1,10 @@
-import { getAssetIDByName } from "@vendetta/ui/assets";
-import { Module, ModuleCategory } from "../stuff/Module";
-import { before, instead } from "@vendetta/patcher";
-import { ReactNative as RN, i18n } from "@vendetta/metro/common";
-import { findInReactTree } from "@vendetta/utils";
 import { findByProps } from "@vendetta/metro";
+import { i18n, ReactNative as RN } from "@vendetta/metro/common";
+import { before, instead } from "@vendetta/patcher";
+import { getAssetIDByName } from "@vendetta/ui/assets";
+import { findInReactTree } from "@vendetta/utils";
+
+import { Module, ModuleCategory } from "../stuff/Module";
 
 const { convertSurrogateToName } = findByProps("convertSurrogateToName");
 
@@ -22,7 +23,7 @@ export default new Module({
       const silly = new (findByProps("MessagesHandlers").MessagesHandlers)();
 
       this.patches.add(
-        //@ts-ignore not in RN typings
+        //@ts-expect-error not in RN typings
         before("render", RN.Pressable.type, ([a]) => {
           const emoji = findInReactTree(a, (x) => x?.type?.name === "Emoji");
           if (!emoji) return;
@@ -30,7 +31,7 @@ export default new Module({
 
           if (
             a?.accessibilityLabel?.includes(
-              i18n.Messages.ADD_REACTION_NAMED.format({ emojiName: "" })
+              i18n.Messages.ADD_REACTION_NAMED.format({ emojiName: "" }),
             )
           ) {
             a.onLongPress = () => {
@@ -38,7 +39,7 @@ export default new Module({
                 "isModalOrActionsheetObstructing",
                 silly,
                 () => false,
-                true
+                true,
               );
               silly.handleTapEmoji({
                 nativeEvent: {
@@ -50,7 +51,7 @@ export default new Module({
               });
             };
           }
-        })
+        }),
       );
     },
     onStop() {},

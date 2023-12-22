@@ -1,30 +1,31 @@
-import { ReactNative as RN, React } from "@vendetta/metro/common";
-import { getPlusData } from "./plusLookup";
-import { after, instead } from "@vendetta/patcher";
-import { getIconTint } from "../handlers/icons";
 import { findByProps, findByStoreName } from "@vendetta/metro";
-import { findInReactTree, safeFetch } from "@vendetta/utils";
-import { getUnreadBadgeColor } from "../handlers/unreadBadge";
-import { getIconOverlay } from "../handlers/iconOverlays";
+import { React, ReactNative as RN } from "@vendetta/metro/common";
+import { after, instead } from "@vendetta/patcher";
+import { semanticColors } from "@vendetta/ui";
 import { getAssetByID, getAssetIDByName } from "@vendetta/ui/assets";
 import { General } from "@vendetta/ui/components";
-import { addToStyle, flattenStyle, queueReloadUI } from "./util";
+import { findInReactTree, safeFetch } from "@vendetta/utils";
+
+import { resolveSemanticColor } from "../../../../stuff/types";
 import { PlusStructure } from "../../../../stuff/typings";
-import resolveColor, { androidifyColor } from "./resolveColor";
 import {
-  InactiveReason,
-  PatchType,
   active,
   cacheID,
   enabled,
+  InactiveReason,
+  PatchType,
   vstorage,
 } from "..";
-import constants from "./constants";
-import { CoolAsset, IconPack, IconPackConfig, IconPackData } from "../types";
+import { getIconOverlay } from "../handlers/iconOverlays";
 import fixer from "../handlers/iconpacks/fixer";
 import fixIcons from "../handlers/iconpacks/fixIcons";
-import { resolveSemanticColor } from "../../../../stuff/types";
-import { semanticColors } from "@vendetta/ui";
+import { getIconTint } from "../handlers/icons";
+import { getUnreadBadgeColor } from "../handlers/unreadBadge";
+import { CoolAsset, IconPack, IconPackConfig, IconPackData } from "../types";
+import constants from "./constants";
+import { getPlusData } from "./plusLookup";
+import resolveColor, { androidifyColor } from "./resolveColor";
+import { addToStyle, flattenStyle, queueReloadUI } from "./util";
 
 const { View } = General;
 const MaskedBadge = findByProps("MaskedBadge");
@@ -78,7 +79,7 @@ export default async () => {
         load: vstorage.iconpack.url,
       }
     : iconpacks.list.find(
-        (x) => x.id === plus.iconpack || x.id === vstorage.iconpack?.force
+        (x) => x.id === plus.iconpack || x.id === vstorage.iconpack?.force,
       );
 
   let iconpackConfig: IconPackConfig = null;
@@ -101,7 +102,7 @@ export default async () => {
       iconpackPaths = (
         await (
           await safeFetch(
-            `${constants.iconpacks.tree(iconpack.id)}?_=${cacheID}`
+            `${constants.iconpacks.tree(iconpack.id)}?_=${cacheID}`,
           )
         ).text()
       )
@@ -138,9 +139,9 @@ export default async () => {
           const [x] = args;
           if (!x.source || typeof x.source !== "number" || x.ignore)
             return orig(...args);
-          let source = x.source;
+          const source = x.source;
 
-          // @ts-ignore these properties are missing from the Asset type
+          // @ts-expect-error these properties are missing from the Asset type
           const asset: CoolAsset = getAssetByID(source);
           const assetIconpackLocation =
             iconpack &&
@@ -159,7 +160,7 @@ export default async () => {
             overlay = getIconOverlay(
               plus,
               source,
-              x.style ? (Array.isArray(x.style) ? x.style : [x.style]) : []
+              x.style ? (Array.isArray(x.style) ? x.style : [x.style]) : [],
             );
             if (overlay) {
               if (overlay.replace) x.source = getAssetIDByName(overlay.replace);
@@ -200,7 +201,7 @@ export default async () => {
               </View>
             );
           else return ret;
-        })
+        }),
       );
     }
     if (plus.unreadBadgeColor) {
@@ -220,10 +221,10 @@ export default async () => {
                   addToStyle(bdg.props, {
                     backgroundColor: getUnreadBadgeColor(plus),
                   }),
-                true
-              )
+                true,
+              ),
             );
-        })
+        }),
       );
       patches.push(
         after(
@@ -233,8 +234,8 @@ export default async () => {
             ret?.props &&
             addToStyle(ret.props, {
               backgroundColor: getUnreadBadgeColor(plus),
-            })
-        )
+            }),
+        ),
       );
     }
     if (plus.mentionLineColor) {
@@ -246,7 +247,7 @@ export default async () => {
           const clr = resolveColor(plus.mentionLineColor);
           if (x?.message?.mentioned && clr)
             ret.gutterColor = androidifyColor(clr, 200);
-        })
+        }),
       );
     }
   } else active.active = false;

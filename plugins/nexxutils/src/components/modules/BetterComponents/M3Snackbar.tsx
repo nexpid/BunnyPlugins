@@ -1,7 +1,7 @@
 import { ReactNative as RN, stylesheet } from "@vendetta/metro/common";
+import { semanticColors } from "@vendetta/ui";
+
 import { SimpleText } from "../../../../../../stuff/types";
-import { resolveCustomSemantic } from "../../../stuff/colors";
-import { rawColors, semanticColors } from "@vendetta/ui";
 
 export default function (props: { content: any; source?: any; icon?: any }) {
   const styles = stylesheet.createThemedStyleSheet({

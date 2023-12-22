@@ -1,8 +1,9 @@
-import { getAssetIDByName } from "@vendetta/ui/assets";
-import { Module, ModuleCategory } from "../stuff/Module";
-import { after } from "@vendetta/patcher";
 import { findByName } from "@vendetta/metro";
-import { React, i18n } from "@vendetta/metro/common";
+import { i18n, React } from "@vendetta/metro/common";
+import { after } from "@vendetta/patcher";
+import { getAssetIDByName } from "@vendetta/ui/assets";
+
+import { Module, ModuleCategory } from "../stuff/Module";
 
 const UserProfileRow = findByName("UserProfileRow", false);
 
@@ -18,8 +19,8 @@ export default new Module({
         after("default", UserProfileRow, (args, ret) =>
           args[0].label === i18n.Messages.GUILD_INVITE_CTA
             ? React.createElement(React.Fragment)
-            : ret
-        )
+            : ret,
+        ),
       );
     },
     onStop() {},

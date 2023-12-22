@@ -4,7 +4,7 @@ import { showToast } from "@vendetta/ui/toasts";
 
 export default function <T>(
   fnc: (signal: AbortSignal) => Promise<T> | T,
-  deps: any[]
+  deps: any[],
 ): T | undefined {
   const [state, setState] = React.useState<T>(undefined);
 

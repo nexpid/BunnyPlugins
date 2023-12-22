@@ -1,12 +1,13 @@
-import SettingsSection from "../components/SettingsSection";
-import { patchSettingsPin } from "../../../../stuff/pinToSettings";
 import { plugin } from "@vendetta";
 import { getAssetIDByName } from "@vendetta/ui/assets";
-import Settings from "../components/Settings";
+
+import { patchSettingsPin } from "../../../../stuff/pinToSettings";
 import { vstorage } from "..";
+import Settings from "../components/Settings";
+import SettingsSection from "../components/SettingsSection";
 
 export default (): (() => void) => {
-  let patches = [];
+  const patches = [];
   patches.push(
     patchSettingsPin(
       () => vstorage.addToSettings,
@@ -19,8 +20,8 @@ export default (): (() => void) => {
           title: "CloudSync",
           render: Settings,
         },
-      }
-    )
+      },
+    ),
   );
 
   return () => patches.forEach((x) => x());

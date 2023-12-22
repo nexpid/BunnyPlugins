@@ -1,5 +1,6 @@
 import { findByStoreName } from "@vendetta/metro";
 import { plugins } from "@vendetta/plugins";
+
 import { vstorage } from "..";
 
 const UserStore = findByStoreName("UserStore");

@@ -1,13 +1,12 @@
 import {
-  ReactNative as RN,
   constants,
+  ReactNative as RN,
   stylesheet,
-  url,
 } from "@vendetta/metro/common";
-import { General } from "@vendetta/ui/components";
-import { SimpleText } from "../../../../stuff/types";
 import { semanticColors } from "@vendetta/ui";
-import { openCommitsPage } from "./pages/CommitsPage";
+import { General } from "@vendetta/ui/components";
+
+import { SimpleText } from "../../../../stuff/types";
 
 export interface CommitUser {
   login: string;

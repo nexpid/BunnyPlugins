@@ -1,9 +1,10 @@
-import {
-  SimpleText,
-  resolveSemanticColor,
-} from "../../../../../../../stuff/types";
 import { React, ReactNative as RN, stylesheet } from "@vendetta/metro/common";
 import { rawColors, semanticColors } from "@vendetta/ui";
+
+import {
+  resolveSemanticColor,
+  SimpleText,
+} from "../../../../../../../stuff/types";
 import { lerp, resolveCustomSemantic } from "../../../../stuff/colors";
 
 const AnimatedPressable = RN.Animated.createAnimatedComponent(RN.Pressable);
@@ -30,7 +31,7 @@ export default ({
   }[color];
   const bleh = resolveCustomSemantic(
     lerp(rawVal, "#FFFFFF", 0.25),
-    lerp(rawVal, "#000000", 0.15)
+    lerp(rawVal, "#000000", 0.15),
   );
   const styles = stylesheet.createThemedStyleSheet({
     container: {
@@ -51,7 +52,7 @@ export default ({
 
   const [isPressing, setIsPressing] = React.useState(false);
   const pressVal = React.useRef(
-    new RN.Animated.Value(isPressing ? 1 : 0)
+    new RN.Animated.Value(isPressing ? 1 : 0),
   ).current;
 
   React.useEffect(() => {

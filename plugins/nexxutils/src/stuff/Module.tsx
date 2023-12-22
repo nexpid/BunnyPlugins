@@ -1,12 +1,13 @@
 import { React, ReactNative as RN, stylesheet } from "@vendetta/metro/common";
-import { Button, Forms, General } from "@vendetta/ui/components";
-import { vstorage } from "..";
-import { getAssetIDByName } from "@vendetta/ui/assets";
-import { openSheet, SimpleText } from "../../../../stuff/types";
-import SmartMention from "../../../../stuff/components/SmartMention";
-import ChooseSettingSheet from "../components/sheets/ChooseSettingSheet";
 import { semanticColors } from "@vendetta/ui";
+import { getAssetIDByName } from "@vendetta/ui/assets";
+import { Button, Forms, General } from "@vendetta/ui/components";
 import { showToast } from "@vendetta/ui/toasts";
+
+import SmartMention from "../../../../stuff/components/SmartMention";
+import { openSheet, SimpleText } from "../../../../stuff/types";
+import { vstorage } from "..";
+import ChooseSettingSheet from "../components/sheets/ChooseSettingSheet";
 
 const { View } = General;
 const { FormRow, FormSwitchRow, FormDivider } = Forms;
@@ -118,7 +119,7 @@ export class Module<Settings extends Record<string, ModuleSetting>> {
       Object.entries(settings ?? {}).map(([x, y]) => {
         if ("default" in y) y.icon ??= getAssetIDByName("ic_message_edit");
         return [x, y];
-      })
+      }),
     ) as Settings;
     this.extra = extra;
     this.handlers = handlers;
@@ -143,8 +144,8 @@ export class Module<Settings extends Record<string, ModuleSetting>> {
     const options = Object.fromEntries(
       Object.entries(this.settings)
         .filter(([_, x]) => "default" in x)
-        //@ts-ignore fuck off typescript
-        .map(([x, y]) => [x, y.default])
+        //@ts-expect-error fuck off typescript
+        .map(([x, y]) => [x, y.default]),
     );
 
     vstorage.modules[this.id] ??= {
@@ -222,7 +223,7 @@ export class Module<Settings extends Record<string, ModuleSetting>> {
             onPress={() => {
               setHidden(!hidden);
               RN.LayoutAnimation.configureNext(
-                RN.LayoutAnimation.Presets.easeInEaseOut
+                RN.LayoutAnimation.Presets.easeInEaseOut,
               );
             }}
           />
@@ -256,10 +257,10 @@ export class Module<Settings extends Record<string, ModuleSetting>> {
                       label={setting.label}
                       subLabel={this.callable(
                         setting.subLabel,
-                        this.storage.options[id]
+                        this.storage.options[id],
                       )}
                       onValueChange={() => {
-                        //@ts-ignore type string cannot be used to index type
+                        //@ts-expect-error type string cannot be used to index type
                         this.storage.options[id] = !this.storage.options[id];
                         this.restart();
                         forceUpdate();
@@ -288,16 +289,16 @@ export class Module<Settings extends Record<string, ModuleSetting>> {
                         label={setting.label}
                         subLabel={this.callable(
                           setting.subLabel,
-                          this.storage.options[id]
+                          this.storage.options[id],
                         )}
                         onPress={() =>
                           openSheet(ChooseSettingSheet, {
                             label: setting.label,
-                            //@ts-ignore type string cannot be used to index type
+                            //@ts-expect-error type string cannot be used to index type
                             value: this.storage.options[id],
                             choices: setting.choices,
                             update: (val) => {
-                              //@ts-ignore type string cannot be used to index type
+                              //@ts-expect-error type string cannot be used to index type
                               this.storage.options[id] = val;
                               this.restart();
                               forceUpdate();
@@ -310,13 +311,13 @@ export class Module<Settings extends Record<string, ModuleSetting>> {
                             variant="text-md/medium"
                             color="TEXT_MUTED"
                           >
-                            {/*@ts-ignore type string cannot be used to index type*/}
+                            {/*@ts-expect-error type string cannot be used to index type*/}
                             {this.storage.options[id]}
                           </SimpleText>
                         }
                       />
                     )
-                  )
+                  ),
                 )}
               </RN.View>
             </>
@@ -344,7 +345,7 @@ export class Module<Settings extends Record<string, ModuleSetting>> {
       this.stop();
       showToast(
         `[NXU > ${this.label}]: Error on start`,
-        getAssetIDByName("Small")
+        getAssetIDByName("Small"),
       );
     }
   }
@@ -355,7 +356,7 @@ export class Module<Settings extends Record<string, ModuleSetting>> {
     } catch {
       showToast(
         `[NXU > ${this.label}]: Error on stop`,
-        getAssetIDByName("Small")
+        getAssetIDByName("Small"),
       );
     }
   }

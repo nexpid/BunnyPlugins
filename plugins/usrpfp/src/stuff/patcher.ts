@@ -1,9 +1,10 @@
-import { safeFetch } from "@vendetta/utils";
-import { DataFile } from "../types";
-import { dataURL, enabled, hash, staticGifURL } from "..";
 import { logger } from "@vendetta";
 import { findByProps, findByStoreName } from "@vendetta/metro";
 import { after } from "@vendetta/patcher";
+import { safeFetch } from "@vendetta/utils";
+
+import { dataURL, enabled, hash, staticGifURL } from "..";
+import { DataFile } from "../types";
 
 const avatarStuff = findByProps("getUserAvatarURL", "getUserAvatarSource");
 
@@ -49,13 +50,13 @@ export default async () => {
         const avatar = ret.avatar ?? "0";
         ret.avatar = !avatar.startsWith("a_") ? `a_${avatar}` : avatar;
       }
-    })
+    }),
   );
 
   patches.push(
     after("getUserAvatarURL", avatarStuff, ([{ id }, animate]) =>
-      getCustomAvatar(id, !animate)
-    )
+      getCustomAvatar(id, !animate),
+    ),
   );
   patches.push(
     after("getUserAvatarSource", avatarStuff, ([{ id }, animate], ret) => {
@@ -63,7 +64,7 @@ export default async () => {
       if (!custom) return;
 
       return custom ? { uri: custom } : ret;
-    })
+    }),
   );
 
   return () => patches.forEach((x) => x());

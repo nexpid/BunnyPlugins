@@ -1,31 +1,30 @@
-import webviewHtml from "../../assets/webview.html";
-import webviewCss from "../../assets/webview.css";
+import { findByProps } from "@vendetta/metro";
 import {
-  stylesheet,
+  NavigationNative,
   React,
   ReactNative as RN,
-  NavigationNative,
+  stylesheet,
 } from "@vendetta/metro/common";
-import { General } from "@vendetta/ui/components";
-import { SimpleText, SuperAwesomeIcon, WebView } from "../../../../stuff/types";
 import { semanticColors } from "@vendetta/ui";
+import { getAssetIDByName } from "@vendetta/ui/assets";
+import { General } from "@vendetta/ui/components";
+import { showToast } from "@vendetta/ui/toasts";
+
+import { SimpleText, SuperAwesomeIcon, WebView } from "../../../../stuff/types";
+import webviewCss from "../../assets/webview.css";
+import webviewHtml from "../../assets/webview.html";
 import {
-  ToDownloadContent,
   downloadSource,
   existsFile,
   readFile,
   saveFile,
   toDownload,
+  ToDownloadContent,
   toDownloadMimes,
 } from "../stuff/files";
-import { showToast } from "@vendetta/ui/toasts";
-import { getAssetIDByName } from "@vendetta/ui/assets";
-import { findByProps } from "@vendetta/metro";
 
 const { View } = General;
 const Orientation = findByProps("OrientationType", "useOrientation");
-
-const AnimatedPressable = RN.Animated.createAnimatedComponent(RN.Pressable);
 
 export default function App() {
   const { width: _width, height: _height } = RN.Dimensions.get("window");
@@ -33,7 +32,7 @@ export default function App() {
   const navigation = NavigationNative.useNavigation();
 
   const isLandscape = Orientation.useOrientation() === 1;
-  const { width, height } = React.useRef({
+  const { width } = React.useRef({
     width: isLandscape ? _height : _width,
     height: isLandscape ? _width : _height,
   }).current;
@@ -53,12 +52,12 @@ export default function App() {
       const all = Promise.all(toDownload.map((x) => existsFile(x)));
       all.then((results) => {
         setDownloadedFiles(
-          results.map((_, i) => toDownload[i]).filter((_, i) => results[i])
+          results.map((_, i) => toDownload[i]).filter((_, i) => results[i]),
         );
       });
     } else {
       const shouldDownloadindex = toDownload.findIndex(
-        (x) => !downloadedFiles.includes(x)
+        (x) => !downloadedFiles.includes(x),
       );
       if (shouldDownloadindex === -1) return;
       const shouldDownload = toDownload[shouldDownloadindex];
@@ -75,8 +74,8 @@ export default function App() {
               reader.addEventListener("error", () =>
                 showToast(
                   `Failed to read ${shouldDownload}!`,
-                  getAssetIDByName("Small")
-                )
+                  getAssetIDByName("Small"),
+                ),
               );
               reader.addEventListener("load", () => {
                 const splitter = ";base64,";
@@ -87,13 +86,13 @@ export default function App() {
 
                 saveFile(shouldDownload, result.toString())
                   .then(() =>
-                    setDownloadedFiles([...downloadedFiles, shouldDownload])
+                    setDownloadedFiles([...downloadedFiles, shouldDownload]),
                   )
                   .catch(() =>
                     showToast(
                       `Failed to save ${shouldDownload}!`,
-                      getAssetIDByName("Small")
-                    )
+                      getAssetIDByName("Small"),
+                    ),
                   );
               });
               reader.readAsDataURL(blob);
@@ -101,15 +100,15 @@ export default function App() {
             .catch(() =>
               showToast(
                 `Failed to parse ${shouldDownload}!`,
-                getAssetIDByName("Small")
-              )
-            )
+                getAssetIDByName("Small"),
+              ),
+            ),
         )
         .catch(() =>
           showToast(
             `Failed to download ${shouldDownload}!`,
-            getAssetIDByName("Small")
-          )
+            getAssetIDByName("Small"),
+          ),
         );
     }
   }, [downloadedFiles]);
@@ -129,7 +128,7 @@ export default function App() {
         setFetchedFiles(Object.fromEntries(entries));
       })
       .catch(() =>
-        showToast("Failed to fetch contents!", getAssetIDByName("Small"))
+        showToast("Failed to fetch contents!", getAssetIDByName("Small")),
       );
   }, [downloadedFiles]);
 
@@ -145,7 +144,7 @@ export default function App() {
           easing: RN.Easing.linear,
           useNativeDriver: true,
         }).start(),
-      1_500
+      1_500,
     );
   }, []);
 
@@ -229,23 +228,23 @@ export default function App() {
                 .replace(/REP_WEBVIEW_CSS/g, JSON.stringify(webviewCss))
                 .replace(
                   /URL_JSDOS_JS/g,
-                  JSON.stringify(fetchedFiles["js-dos.js"]).slice(1, -1)
+                  JSON.stringify(fetchedFiles["js-dos.js"]).slice(1, -1),
                 )
                 .replace(
                   /URL_JSDOS_CSS/g,
-                  JSON.stringify(fetchedFiles["js-dos.css"]).slice(1, -1)
+                  JSON.stringify(fetchedFiles["js-dos.css"]).slice(1, -1),
                 )
                 .replace(
                   /URL_JSDOS_DOOM_LINK/g,
-                  JSON.stringify(fetchedFiles["doom.jsdos"])
+                  JSON.stringify(fetchedFiles["doom.jsdos"]),
                 )
                 .replace(
                   /URL_JSDOS_WDOSBOX_JS/g,
-                  JSON.stringify(fetchedFiles["wdosbox.js"])
+                  JSON.stringify(fetchedFiles["wdosbox.js"]),
                 )
                 .replace(
                   /URL_JSDOS_WDOSBOX_WASM/g,
-                  JSON.stringify(fetchedFiles["wdosbox.wasm"])
+                  JSON.stringify(fetchedFiles["wdosbox.wasm"]),
                 ),
               baseUrl: "https://localhost",
             }}

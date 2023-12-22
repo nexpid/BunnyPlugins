@@ -1,6 +1,7 @@
 import { NavigationNative } from "@vendetta/metro/common";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { ErrorBoundary, Forms } from "@vendetta/ui/components";
+
 import Settings from "./Settings";
 
 const { FormRow } = Forms;

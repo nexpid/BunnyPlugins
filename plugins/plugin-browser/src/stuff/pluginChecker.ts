@@ -1,7 +1,8 @@
+import { plugins } from "@vendetta";
 import { safeFetch } from "@vendetta/utils";
+
 import { pluginsURL, vstorage } from "..";
 import { PluginsFullJson } from "../types";
-import { plugins } from "@vendetta";
 
 let lastPluginCache: Record<string, string> = {};
 export function getChanges(): [string, "new" | "update"][] {
@@ -11,8 +12,8 @@ export function getChanges(): [string, "new" | "update"][] {
       !vstorage.pluginCache?.includes(id)
         ? [id, "new"]
         : plugins.plugins[id] && plugins.plugins[id].manifest.hash !== hash
-        ? [id, "update"]
-        : undefined
+          ? [id, "update"]
+          : undefined,
     )
     .filter((x) => !!x) as [string, "new" | "update"][];
 }
@@ -29,7 +30,7 @@ export async function run() {
     res.map((x) => [
       `https://vd-plugins.github.io/proxy/${x.vendetta.original}`,
       x.hash,
-    ])
+    ]),
   );
 }
 

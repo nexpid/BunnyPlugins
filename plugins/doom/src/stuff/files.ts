@@ -1,4 +1,5 @@
 import { ReactNative as RN } from "@vendetta/metro/common";
+
 import { FileManager } from "../../../../stuff/types";
 
 export const downloadSource =
@@ -28,7 +29,7 @@ export async function existsFile(fileName: string) {
   return await FileManager.fileExists(
     `${FileManager.getConstants().DocumentsDirPath}/${
       toDownloadPrefix + fileName
-    }`
+    }`,
   );
 }
 export async function saveFile(fileName: string, data: string) {
@@ -40,7 +41,7 @@ export async function saveFile(fileName: string, data: string) {
       ios: FileManager.saveFileToGallery ? fileName : `Documents/${fileName}`,
     }),
     data,
-    "utf8"
+    "utf8",
   );
 }
 export async function readFile(fileName: string) {
@@ -48,6 +49,6 @@ export async function readFile(fileName: string) {
     `${FileManager.getConstants().DocumentsDirPath}/${
       toDownloadPrefix + fileName
     }`,
-    "utf8"
+    "utf8",
   );
 }

@@ -6,14 +6,14 @@ export function inServers(x: number) {
       x < 1_000
         ? x.toString()
         : x < 1_000_000
-        ? `${Math.round(x / 1_00) / 10}K`
-        : `${Math.round(x / 1_00_000) / 10}M`,
+          ? `${Math.round(x / 1_00) / 10}K`
+          : `${Math.round(x / 1_00_000) / 10}M`,
   });
 }
 
 export const parseDesc = (
   detailed: string | null,
-  short: string
+  short: string,
 ): { title: string; content: string[] }[] => {
   const parsed = [];
 

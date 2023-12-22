@@ -1,9 +1,10 @@
 import { findByName, findByProps, findByStoreName } from "@vendetta/metro";
-import { getOauth2Response } from "./api";
-import { fillCache, vstorage } from "..";
-import { showToast } from "@vendetta/ui/toasts";
 import { getAssetIDByName } from "@vendetta/ui/assets";
+import { showToast } from "@vendetta/ui/toasts";
+
+import { fillCache, vstorage } from "..";
 import constants from "../constants";
+import { getOauth2Response } from "./api";
 
 const { pushModal, popModal } = findByProps("pushModal", "popModal");
 const OAuth2AuthorizeModal = findByName("OAuth2AuthorizeModal");

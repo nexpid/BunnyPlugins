@@ -1,7 +1,8 @@
-import { DBSave } from "../types/api/latest";
+import { findByStoreName } from "@vendetta/metro";
+
 import { AuthRecord, vstorage } from "..";
 import constants from "../constants";
-import { findByStoreName } from "@vendetta/metro";
+import { DBSave } from "../types/api/latest";
 
 const UserStore = findByStoreName("UserStore");
 
@@ -13,7 +14,7 @@ interface CloudSyncAPIErrorResponse {
 export class CloudSyncAPIError extends Error {
   constructor(resp: CloudSyncAPIErrorResponse) {
     super(
-      `${resp.status}: ${resp.message}${resp.error ? ` (${resp.error})` : ""}`
+      `${resp.status}: ${resp.message}${resp.error ? ` (${resp.error})` : ""}`,
     );
     this.name = this.constructor.name;
   }
@@ -32,8 +33,8 @@ export async function getAuthorization(): Promise<string> {
       `${
         constants.api
       }api/refresh-access-token?refresh_token=${encodeURIComponent(
-        auth.refreshToken
-      )}`
+        auth.refreshToken,
+      )}`,
     );
     if (x.status !== 200) throw new CloudSyncAPIError(await x.json());
     auth = await x.json();
@@ -47,7 +48,7 @@ export async function getAuthorization(): Promise<string> {
 
 export async function getOauth2Response(code: string): Promise<AuthRecord> {
   const res = await fetch(
-    `${constants.api}api/get-access-token?code=${encodeURIComponent(code)}`
+    `${constants.api}api/get-access-token?code=${encodeURIComponent(code)}`,
   );
 
   if (res.status === 200) return await res.json();
@@ -66,7 +67,7 @@ export async function getSaveData(): Promise<DBSave.Save | undefined> {
   else throw new CloudSyncAPIError(await res.json());
 }
 export async function syncSaveData(
-  data: DBSave.SaveSync
+  data: DBSave.SaveSync,
 ): Promise<DBSave.Save | undefined> {
   if (!currentAuthorization()) return;
 
@@ -112,4 +113,3 @@ export async function uploadFile(body: string): Promise<
   if (res.status === 200) return await res.json();
   else throw new CloudSyncAPIError(await res.json());
 }
-

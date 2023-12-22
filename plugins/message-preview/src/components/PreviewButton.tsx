@@ -1,11 +1,12 @@
 import { React, ReactNative as RN, stylesheet } from "@vendetta/metro/common";
+import { after } from "@vendetta/patcher";
+import { semanticColors } from "@vendetta/ui";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { General } from "@vendetta/ui/components";
-import { semanticColors } from "@vendetta/ui";
+
 import { FadeView } from "../../../../stuff/animations";
-import { after } from "@vendetta/patcher";
-import { patches } from "../stuff/patcher";
 import openPreview from "../stuff/openPreview";
+import { patches } from "../stuff/patcher";
 
 const { Pressable, View } = General;
 
@@ -40,7 +41,7 @@ export default ({ inputProps }): JSX.Element => {
   const [text, setText] = React.useState("");
 
   patches.push(
-    after("onChangeText", inputProps, ([txt]: [string]) => setText(txt), true)
+    after("onChangeText", inputProps, ([txt]: [string]) => setText(txt), true),
   );
 
   const shouldAppear = text.length > 0;

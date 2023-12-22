@@ -1,15 +1,16 @@
+import { HTTP_REGEX_MULTI } from "@vendetta/constants";
+import { findByProps } from "@vendetta/metro";
 import { React } from "@vendetta/metro/common";
+import { useProxy } from "@vendetta/storage";
 import { Button, Forms, General } from "@vendetta/ui/components";
+
 import {
   Modal,
-  SimpleText,
   openSheet,
   popModal,
+  SimpleText,
 } from "../../../../../stuff/types";
-import { findByProps } from "@vendetta/metro";
 import { resetCacheID, runPatch, runUnpatch, vstorage } from "../..";
-import { useProxy } from "@vendetta/storage";
-import { HTTP_REGEX_MULTI } from "@vendetta/constants";
 import { reloadUI } from "../../stuff/util";
 import IconpackListSheet from "../sheets/IconpackListSheet";
 
@@ -19,7 +20,7 @@ const { FormRow, FormInput } = Forms;
 
 export default function () {
   const [tab, setTab] = React.useState<"iconpack" | "custom-iconpack">(
-    "iconpack"
+    "iconpack",
   );
 
   vstorage.iconpack ??= {

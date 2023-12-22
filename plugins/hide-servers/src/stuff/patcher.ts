@@ -1,25 +1,20 @@
 import { find, findByName } from "@vendetta/metro";
-import {
-  React,
-  ReactNative as RN,
-  i18n,
-  NavigationNative,
-} from "@vendetta/metro/common";
+import { i18n, React, ReactNative as RN } from "@vendetta/metro/common";
 import { after, before } from "@vendetta/patcher";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { showToast } from "@vendetta/ui/toasts";
+
+import { openModal } from "../../../../stuff/types";
 import { addHidden, isHidden } from "..";
 import GuildsWrapper from "../components/GuildsWrapper";
-import { HiddenListEntryType } from "../types";
-import { openModal } from "../../../../stuff/types";
 import ManageHiddenServersModal from "../components/modals/ManageHiddenServersModal";
-import { openManageHiddenServersPage } from "../components/pages/ManageHiddenServers";
+import { HiddenListEntryType } from "../types";
 
 const { default: GuildPopoutMenu } = find(
-  (x) => x?.default?.render?.name === "GuildPopoutMenu"
+  (x) => x?.default?.render?.name === "GuildPopoutMenu",
 );
 const { default: FolderPopoutMenu } = find(
-  (x) => x?.default?.render?.name === "FolderPopoutMenu"
+  (x) => x?.default?.render?.name === "FolderPopoutMenu",
 );
 const GuildsConnected = findByName("GuildsConnected", false);
 
@@ -39,7 +34,7 @@ export default function () {
           },
         });
       return clone;
-    })
+    }),
   );
   patches.push(
     after("render", FolderPopoutMenu, ([{ title, folderId }], ret) => {
@@ -54,13 +49,13 @@ export default function () {
           },
         });
       return clone;
-    })
+    }),
   );
 
   patches.push(
     after("default", GuildsConnected, (_, ret) =>
-      React.createElement(GuildsWrapper, { ret })
-    )
+      React.createElement(GuildsWrapper, { ret }),
+    ),
   );
 
   patches.push(
@@ -70,18 +65,18 @@ export default function () {
         clone[0].onLongPress = () =>
           openModal("MANAGE_HIDDEN_SERVERS", ManageHiddenServersModal);
       return clone;
-    })
+    }),
   );
 
   patches.push(
-    //@ts-ignore not in RN typings
+    //@ts-expect-error not in RN typings
     before("render", RN.Pressable.type, (args) => {
       const clone = [...args];
       if (clone[0].accessibilityLabel === "Create or join a server")
         clone[0].onLongPress = () =>
           openModal("MANAGE_HIDDEN_SERVERS", ManageHiddenServersModal);
       return clone;
-    })
+    }),
   );
 
   return () => patches.forEach((x) => x());

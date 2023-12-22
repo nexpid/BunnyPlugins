@@ -1,36 +1,37 @@
+import { findByProps, findByStoreName } from "@vendetta/metro";
+import {
+  NavigationNative,
+  React,
+  ReactNative as RN,
+} from "@vendetta/metro/common";
 import { useProxy, wrapSync } from "@vendetta/storage";
-import { cache, vstorage, emitterAvailable } from "..";
+import { showConfirmationAlert, showInputAlert } from "@vendetta/ui/alerts";
+import { getAssetIDByName } from "@vendetta/ui/assets";
 import { Forms, General } from "@vendetta/ui/components";
+import { showToast } from "@vendetta/ui/toasts";
+
 import {
   BetterTableRowGroup,
   FileManager,
   LineDivider,
-  SimpleText,
   openSheet,
+  SimpleText,
 } from "../../../../stuff/types";
-import { getAssetIDByName } from "@vendetta/ui/assets";
-import DataStat from "./DataStat";
-import { openOauth2Modal } from "../stuff/oauth2";
+import { cache, emitterAvailable, vstorage } from "..";
+import constants, { defaultClientId, defaultRoot } from "../constants";
 import {
   currentAuthorization,
   deleteSaveData,
   syncSaveData,
   uploadFile,
 } from "../stuff/api";
-import { showToast } from "@vendetta/ui/toasts";
-import {
-  NavigationNative,
-  React,
-  ReactNative as RN,
-} from "@vendetta/metro/common";
-import PluginSettingsPage from "./pages/PluginSettingsPage";
-import { findByProps, findByStoreName } from "@vendetta/metro";
-import { showConfirmationAlert, showInputAlert } from "@vendetta/ui/alerts";
-import ImportActionSheet from "./sheets/ImportActionSheet";
-import { grabEverything, setImportCallback } from "../stuff/syncStuff";
-import constants, { defaultClientId, defaultRoot } from "../constants";
+import { openOauth2Modal } from "../stuff/oauth2";
 import { makeSound } from "../stuff/sound";
+import { grabEverything, setImportCallback } from "../stuff/syncStuff";
 import { CryptoWebViewHandler, decrypt, encrypt } from "./CryptoWebView";
+import DataStat from "./DataStat";
+import PluginSettingsPage from "./pages/PluginSettingsPage";
+import ImportActionSheet from "./sheets/ImportActionSheet";
 
 const DocumentPicker = findByProps("pickSingle", "isCancel");
 const { downloadMediaAsset } = findByProps("downloadMediaAsset");
@@ -41,10 +42,10 @@ const { FormRow, FormInput, FormSwitchRow } = Forms;
 const UserStore = findByStoreName("UserStore");
 
 const deltaruneCreepyJingle = wrapSync(
-  makeSound(`${constants.raw}assets/snd_creepyjingle.ogg`, 1.6)
+  makeSound(`${constants.raw}assets/snd_creepyjingle.ogg`, 1.6),
 );
 const undertaleMysteryGo = wrapSync(
-  makeSound(`${constants.raw}assets/snd_mysterygo.ogg`, 2.2)
+  makeSound(`${constants.raw}assets/snd_mysterygo.ogg`, 2.2),
 );
 
 export default function () {
@@ -201,7 +202,7 @@ export default function () {
 
                     showToast(
                       "Successfully logged out",
-                      getAssetIDByName("ic_logout_24px")
+                      getAssetIDByName("ic_logout_24px"),
                     );
                   },
                   cancelText: "Cancel",
@@ -227,7 +228,7 @@ export default function () {
 
                     showToast(
                       "Successfully deleted data",
-                      getAssetIDByName("trash")
+                      getAssetIDByName("trash"),
                     );
                   },
                   cancelText: "Cancel",
@@ -277,7 +278,7 @@ export default function () {
 
                       showToast(
                         "Successfully synced data",
-                        getAssetIDByName("Check")
+                        getAssetIDByName("Check"),
                       );
                     } catch (e) {
                       showToast(String(e), getAssetIDByName("Small"));
@@ -304,7 +305,7 @@ export default function () {
                   navigation,
                 });
                 setImportCallback((x) =>
-                  x ? setBusy("import_api") : unBusy("import_api")
+                  x ? setBusy("import_api") : unBusy("import_api"),
                 );
               }}
             />
@@ -339,13 +340,13 @@ export default function () {
                       unBusy("local_export");
                       return showToast(
                         "Failed to encrypt!",
-                        getAssetIDByName("Small")
+                        getAssetIDByName("Small"),
                       );
                     }
 
                     showToast(
                       "Preparing for download...",
-                      getAssetIDByName("ic_upload")
+                      getAssetIDByName("ic_upload"),
                     );
                     let data: Awaited<ReturnType<typeof uploadFile>>;
                     try {
@@ -354,13 +355,13 @@ export default function () {
                       unBusy("local_export");
                       return showToast(
                         e?.message ?? `${e}`,
-                        getAssetIDByName("Small")
+                        getAssetIDByName("Small"),
                       );
                     }
 
                     showToast(
                       "Backup Saved",
-                      getAssetIDByName("ic_file_small_document")
+                      getAssetIDByName("ic_file_small_document"),
                     );
                     downloadMediaAsset(`https://hst.sh/raw/${data.key}.txt`, 3);
                     unBusy("local_export");
@@ -389,12 +390,12 @@ export default function () {
                       type: DocumentPicker.types.plainText,
                       mode: "open",
                       copyTo: "cachesDirectory",
-                    }
+                    },
                   );
                   if (type === "text/plain" || !fileCopyUri)
                     text = await FileManager.readFile(
                       fileCopyUri.slice(5),
-                      "utf8"
+                      "utf8",
                     );
                 } catch (e) {
                   if (!DocumentPicker.isCancel(e))
@@ -422,13 +423,13 @@ export default function () {
                       });
                       unBusy("import_local");
                       setImportCallback((x) =>
-                        x ? setBusy("import_local") : unBusy("import_local")
+                        x ? setBusy("import_local") : unBusy("import_local"),
                       );
                     } catch {
                       unBusy("import_local");
                       return showToast(
                         "Failed to decrypt!",
-                        getAssetIDByName("Small")
+                        getAssetIDByName("Small"),
                       );
                     }
                   },
@@ -452,4 +453,3 @@ export default function () {
     </ScrollView>
   );
 }
-

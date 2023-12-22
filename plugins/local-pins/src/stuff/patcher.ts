@@ -1,12 +1,13 @@
-import { React, i18n } from "@vendetta/metro/common";
 import { findByName } from "@vendetta/metro";
+import { i18n, React } from "@vendetta/metro/common";
 import { after, before } from "@vendetta/patcher";
-import { LazyActionSheet, SuperAwesomeIcon } from "../../../../stuff/types";
 import { getAssetIDByName } from "@vendetta/ui/assets";
+import { General } from "@vendetta/ui/components";
 import { findInReactTree } from "@vendetta/utils";
+
+import { LazyActionSheet, SuperAwesomeIcon } from "../../../../stuff/types";
 import PinMessageLocallyAction from "../components/MessageActionSheetButton";
 import ChannelPinsModal from "../components/modals/ChannelPinsModal";
-import { General } from "@vendetta/ui/components";
 
 const { View } = General;
 const ChannelSettingsModal = findByName("ChannelSettingsModal", false);
@@ -41,7 +42,7 @@ export default function () {
               : messages,
         },
       };
-    })
+    }),
   );
 
   patches.push(
@@ -55,29 +56,29 @@ export default function () {
             () => () => {
               unp();
             },
-            []
+            [],
           );
 
           const buttons = findInReactTree(
             comp,
-            (x) => x?.[0]?.type?.name === "ButtonRow"
+            (x) => x?.[0]?.type?.name === "ButtonRow",
           );
           if (!buttons) return comp;
 
-          let at = Math.max(
+          const at = Math.max(
             buttons.findIndex(
-              (x) => x.props.message === i18n.Messages.MARK_UNREAD
+              (x) => x.props.message === i18n.Messages.MARK_UNREAD,
             ),
-            0
+            0,
           );
           buttons.splice(
             at,
             0,
-            React.createElement(PinMessageLocallyAction, message)
+            React.createElement(PinMessageLocallyAction, message),
           );
         });
       });
-    })
+    }),
   );
 
   patches.push(
@@ -100,17 +101,17 @@ export default function () {
             style: "header",
             destructive: true,
             onPress: () => chPinsHRCb.clear?.(),
-          })
+          }),
         );
 
       patches.push(
         after("render", screens.PINNED_MESSAGES, (_, ret) =>
           React.createElement(ChannelPinsModal, {
             channelId: ret.props.channelId,
-          })
-        )
+          }),
+        ),
       );
-    })
+    }),
   );
 
   return () => patches.forEach((x) => x());

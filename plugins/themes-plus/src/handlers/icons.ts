@@ -1,12 +1,13 @@
 import { getAssetByID } from "@vendetta/ui/assets";
-import { addToStyle } from "../stuff/util";
+
 import { PlusStructure } from "../../../../stuff/typings";
 import resolveColor from "../stuff/resolveColor";
+import { addToStyle } from "../stuff/util";
 
 export function getIconTint(
   plus: PlusStructure,
   icon: number,
-  customName?: string
+  customName?: string,
 ): string | undefined {
   const name = customName ?? getAssetByID(icon)?.name;
   if (!name) return;
@@ -18,7 +19,7 @@ export function getIconTint(
 export function asIcon<T extends JSX.Element>(
   plus: PlusStructure,
   customName: string,
-  img: T
+  img: T,
 ): T {
   if (typeof img.props.source === "number") {
     const clr = getIconTint(plus, img.props.source, customName);

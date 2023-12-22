@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html></html>
 <script>
   const RNWV = window.ReactNativeWebView;
@@ -20,7 +20,7 @@
   };
 
   audios.forEach((x) =>
-    x?.addEventListener("ended", () => RNWV.postMesssage("ended"))
+    x?.addEventListener("ended", () => RNWV.postMesssage("ended")),
   );
 
   window.addEventListener("message", (ev) => {

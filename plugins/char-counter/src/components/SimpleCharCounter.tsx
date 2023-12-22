@@ -1,10 +1,11 @@
 import { React, stylesheet } from "@vendetta/metro/common";
-import { SimpleText } from "../../../../stuff/types";
-import getMessageLength, { display, hasSLM } from "../stuff/getMessageLength";
-import { vstorage } from "..";
 import { useProxy } from "@vendetta/storage";
-import { lastText } from "../stuff/patcher";
+
 import { FadeView } from "../../../../stuff/animations";
+import { SimpleText } from "../../../../stuff/types";
+import { vstorage } from "..";
+import getMessageLength, { display, hasSLM } from "../stuff/getMessageLength";
+import { lastText } from "../stuff/patcher";
 
 const styles = stylesheet.createThemedStyleSheet({
   container: {

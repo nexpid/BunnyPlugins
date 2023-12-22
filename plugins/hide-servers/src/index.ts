@@ -1,9 +1,10 @@
 import { storage } from "@vendetta/plugin";
-import patcher from "./stuff/patcher";
-import { createStorage, wrapSync } from "@vendetta/storage";
 import { plugins } from "@vendetta/plugins";
+import { createStorage, wrapSync } from "@vendetta/storage";
 import { themes } from "@vendetta/themes";
+
 import settings from "./components/Settings";
+import patcher from "./stuff/patcher";
 import { HiddenListEntry, HiddenListEntryType } from "./types";
 
 export const hiddenList: { list: HiddenListEntry[] } = wrapSync(
@@ -12,7 +13,7 @@ export const hiddenList: { list: HiddenListEntry[] } = wrapSync(
     set: (x) => {
       storage.hidden = x;
     },
-  })
+  }),
 );
 
 export function isHidden(type: HiddenListEntryType, id: string | number) {

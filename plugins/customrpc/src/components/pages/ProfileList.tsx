@@ -1,3 +1,4 @@
+import { findByProps } from "@vendetta/metro";
 import {
   clipboard,
   NavigationNative,
@@ -5,17 +6,17 @@ import {
   ReactNative as RN,
 } from "@vendetta/metro/common";
 import { showConfirmationAlert, showInputAlert } from "@vendetta/ui/alerts";
-import { vstorage } from "../..";
-import { showToast } from "@vendetta/ui/toasts";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { Forms, General, Search } from "@vendetta/ui/components";
-import { activitySavedPrompt } from "../../stuff/prompts";
+import { showToast } from "@vendetta/ui/toasts";
+
 import { SuperAwesomeIcon } from "../../../../../stuff/types";
-import { findByProps } from "@vendetta/metro";
+import { vstorage } from "../..";
 import {
   makeEmptySettingsActivity,
   SettingsActivity,
 } from "../../stuff/activity";
+import { activitySavedPrompt } from "../../stuff/prompts";
 import { forceUpdateSettings } from "../Settings";
 
 const { View } = General;
@@ -24,7 +25,7 @@ const { FormRadioRow, FormRow } = Forms;
 const { showSimpleActionSheet } = findByProps("showSimpleActionSheet");
 const LazyActionSheet = findByProps("openLazy", "hideActionSheet");
 
-let headerRightCallbacks: {
+const headerRightCallbacks: {
   import?: () => void;
   add?: () => void;
 } = {
@@ -51,18 +52,18 @@ export const ProfileList = () => {
         if (txt.match(/^\s*$/))
           return showToast(
             "Profile name cannot be empty",
-            getAssetIDByName("Small")
+            getAssetIDByName("Small"),
           );
         txt = txt.trim();
 
         if (vstorage.profiles[txt])
           return showToast(
             "A profile with that name already exists",
-            getAssetIDByName("Small")
+            getAssetIDByName("Small"),
           );
 
         vstorage.profiles[txt] = JSON.parse(
-          JSON.stringify(vstorage.activity.editing)
+          JSON.stringify(vstorage.activity.editing),
         );
         vstorage.activity.profile = txt;
         forceUpdate();
@@ -108,7 +109,7 @@ export const ProfileList = () => {
       style={{ paddingHorizontal: 10, paddingTop: 10 }}
       contentContainerStyle={{ paddingBottom: 20 }}
       data={Object.keys(vstorage.profiles).filter((x) =>
-        x.toLowerCase().includes(search)
+        x.toLowerCase().includes(search),
       )}
       renderItem={({ item }) => (
         <FormRadioRow
@@ -126,7 +127,7 @@ export const ProfileList = () => {
                   icon: getAssetIDByName("copy"),
                   onPress: () => {
                     clipboard.setString(
-                      JSON.stringify(vstorage.profiles[item], undefined, 3)
+                      JSON.stringify(vstorage.profiles[item], undefined, 3),
                     );
                     showToast("Copied", getAssetIDByName("toast_copy_link"));
                   },
@@ -145,14 +146,14 @@ export const ProfileList = () => {
                         if (txt.match(/^\s*$/))
                           return showToast(
                             "Profile name cannot be empty",
-                            getAssetIDByName("Small")
+                            getAssetIDByName("Small"),
                           );
                         txt = txt.trim();
 
                         if (vstorage.profiles[txt])
                           return showToast(
                             "A profile with that name already exists",
-                            getAssetIDByName("Small")
+                            getAssetIDByName("Small"),
                           );
 
                         vstorage.profiles[txt] = vstorage.profiles[item];
@@ -200,14 +201,14 @@ export const ProfileList = () => {
             if (vstorage.activity.profile === item)
               return showToast(
                 `${item} is already loaded`,
-                getAssetIDByName("Small")
+                getAssetIDByName("Small"),
               );
             activitySavedPrompt({
               role: "discard your changes",
               button: "Discard",
               run: () => {
                 vstorage.activity.editing = JSON.parse(
-                  JSON.stringify(vstorage.profiles[item])
+                  JSON.stringify(vstorage.profiles[item]),
                 );
                 vstorage.activity.profile = item;
 
@@ -219,7 +220,7 @@ export const ProfileList = () => {
               secondaryButton: "Save profile",
               secondaryRun: () => {
                 vstorage.profiles[vstorage.activity.profile] = JSON.parse(
-                  JSON.stringify(vstorage.activity.editing)
+                  JSON.stringify(vstorage.activity.editing),
                 );
               },
             });

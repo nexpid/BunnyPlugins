@@ -3,6 +3,6 @@ export function parse(json: string): any {
     json
       .replace(/\r/g, "")
       .replace(/\/\/.*$/gm, "")
-      .replace(/\/\*(?:.|\n)*?(?=\*\/)\*\//g, "")
+      .replace(/\/\*(?:.|\n)*?(?=\*\/)\*\//g, ""),
   );
 }

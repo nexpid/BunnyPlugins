@@ -1,8 +1,9 @@
 import { React } from "@vendetta/metro/common";
+import { rawColors } from "@vendetta/ui";
 import { getAssetIDByName } from "@vendetta/ui/assets";
+
 import { SuperAwesomeIcon } from "../../../../stuff/types";
 import { enabled, toggle } from "../stuff/livePreview";
-import { rawColors } from "@vendetta/ui";
 
 export default ({ onPressExtra }: { onPressExtra: () => void }) => {
   const [_, forceUpdate] = React.useReducer((x) => ~x, 0);

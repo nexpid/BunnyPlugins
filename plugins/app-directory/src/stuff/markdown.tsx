@@ -1,5 +1,4 @@
 import { findByProps } from "@vendetta/metro";
-import SmartImage from "../components/markdown/SmartImage";
 
 const parser = findByProps("parse", "parseToAST", "reactParserFor");
 

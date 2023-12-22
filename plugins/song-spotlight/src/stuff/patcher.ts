@@ -1,6 +1,7 @@
-import { React, ReactNative, url } from "@vendetta/metro/common";
 import { findByName } from "@vendetta/metro";
+import { React } from "@vendetta/metro/common";
 import { after } from "@vendetta/patcher";
+
 import UserProfileSongs from "../components/UserProfileSongs";
 
 const UserProfileBio = findByName("UserProfileBio", false);
@@ -19,7 +20,7 @@ export default function () {
           }),
         ret,
       ]);
-    })
+    }),
   );
 
   patches.push(
@@ -31,7 +32,7 @@ export default function () {
         }),
         ret,
       ]);
-    })
+    }),
   );
 
   return () => patches.forEach((x) => x());

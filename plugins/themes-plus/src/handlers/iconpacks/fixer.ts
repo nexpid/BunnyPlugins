@@ -1,6 +1,7 @@
 import { findByName } from "@vendetta/metro";
-import { IconPackConfig } from "../../types";
 import { before } from "@vendetta/patcher";
+
+import { IconPackConfig } from "../../types";
 
 const Status = findByName("Status", false);
 
@@ -18,7 +19,7 @@ export default function (config: IconPackConfig) {
         c[0].size ??= Status.StatusSizes.XLARGE;
 
         return c;
-      })
+      }),
     );
 
   return () => patches.forEach((x) => x());

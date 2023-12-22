@@ -1,7 +1,7 @@
 import {
-  ReactNative as RN,
-  React,
   constants,
+  React,
+  ReactNative as RN,
   stylesheet,
 } from "@vendetta/metro/common";
 import { semanticColors } from "@vendetta/ui";

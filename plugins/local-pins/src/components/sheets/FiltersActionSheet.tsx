@@ -1,5 +1,6 @@
 import { React } from "@vendetta/metro/common";
-import { vstorage } from "../..";
+import { Forms } from "@vendetta/ui/components";
+
 import {
   ActionSheet,
   ActionSheetCloseButton,
@@ -7,7 +8,7 @@ import {
   ActionSheetTitleHeader,
   hideActionSheet,
 } from "../../../../../stuff/types";
-import { Forms } from "@vendetta/ui/components";
+import { vstorage } from "../..";
 
 const { FormCheckboxRow } = Forms;
 
@@ -36,7 +37,7 @@ export default function ({
             setFilters(
               filters.includes("server")
                 ? filters.filter((x) => x !== "server")
-                : filters.concat("server")
+                : filters.concat("server"),
             )
           }
           selected={filters.includes("server")}
@@ -47,7 +48,7 @@ export default function ({
             setFilters(
               filters.includes("local")
                 ? filters.filter((x) => x !== "local")
-                : filters.concat("local")
+                : filters.concat("local"),
             )
           }
           selected={filters.includes("local")}

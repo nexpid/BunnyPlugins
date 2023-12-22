@@ -1,25 +1,10 @@
-import spotifyAudioWebView from "../../assets/card/spotifyAudioWebView.html";
-import pause from "../../assets/card/pause.svg";
-import play from "../../assets/card/play.svg";
-import next from "../../assets/card/next.svg";
-import { React, ReactNative as RN, stylesheet } from "@vendetta/metro/common";
-import { API } from "../types/api";
 import { findByName, findByProps, findByStoreName } from "@vendetta/metro";
-import { currentAuthorization, getProfileData } from "../stuff/api";
-import { showToast } from "@vendetta/ui/toasts";
+import { React, ReactNative as RN, stylesheet } from "@vendetta/metro/common";
+import { semanticColors } from "@vendetta/ui";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { General } from "@vendetta/ui/components";
-import { semanticColors } from "@vendetta/ui";
-import { cache } from "..";
-import {
-  getSongData,
-  SpotifyEmbedEntity,
-  SpotifyEmbedEntityTracklistEntry,
-} from "../stuff/songs";
-import {
-  lerp,
-  resolveCustomSemantic,
-} from "../../../nexxutils/src/stuff/colors";
+import { showToast } from "@vendetta/ui/toasts";
+
 import {
   openSheet,
   SimpleText,
@@ -27,8 +12,24 @@ import {
   TextStyleSheet,
   WebView,
 } from "../../../../stuff/types";
-import SongInfoSheet from "./sheets/SongInfoSheet";
+import {
+  lerp,
+  resolveCustomSemantic,
+} from "../../../nexxutils/src/stuff/colors";
+import next from "../../assets/card/next.svg";
+import pause from "../../assets/card/pause.svg";
+import play from "../../assets/card/play.svg";
+import spotifyAudioWebView from "../../assets/card/spotifyAudioWebView.html";
+import { cache } from "..";
+import { currentAuthorization, getProfileData } from "../stuff/api";
 import { check } from "../stuff/http";
+import {
+  getSongData,
+  SpotifyEmbedEntity,
+  SpotifyEmbedEntityTracklistEntry,
+} from "../stuff/songs";
+import { API } from "../types/api";
+import SongInfoSheet from "./sheets/SongInfoSheet";
 
 const { View } = General;
 const AnimatedPressable = RN.Animated.createAnimatedComponent(RN.Pressable);
@@ -55,7 +56,7 @@ const SpotifySongEmbed = ({
   const [position, setPosition] = React.useState(0);
 
   const [songData, setSongData] = React.useState<SpotifyEmbedEntity | false>(
-    undefined
+    undefined,
   );
   const ratio =
     (songData && songData.type === "track") || song.type === "track"
@@ -71,7 +72,7 @@ const SpotifySongEmbed = ({
       `window.postMessage(${JSON.stringify({
         action: playing ? "play" : "pause",
         pos: position,
-      })})`
+      })})`,
     );
   }, [playing, position]);
 
@@ -80,7 +81,7 @@ const SpotifySongEmbed = ({
     () => () => {
       playingRn.delete(skey);
     },
-    []
+    [],
   );
 
   const background =
@@ -88,7 +89,7 @@ const SpotifySongEmbed = ({
     (songData.coverArt.extractedColors.colorLight
       ? resolveCustomSemantic(
           songData.coverArt.extractedColors.colorDark.hex,
-          songData.coverArt.extractedColors.colorLight.hex
+          songData.coverArt.extractedColors.colorLight.hex,
         )
       : songData.coverArt.extractedColors.colorDark.hex);
 
@@ -254,7 +255,7 @@ const SpotifySongEmbed = ({
       .catch(
         (e) =>
           e?.name !== "AbortError" &&
-          (showToast(`${e}`, getAssetIDByName("Small")), setSongData(false))
+          (showToast(`${e}`, getAssetIDByName("Small")), setSongData(false)),
       );
   };
   React.useEffect(() => {
@@ -265,7 +266,7 @@ const SpotifySongEmbed = ({
   const cover =
     songData &&
     songData.coverArt.sources.sort(
-      (a, b) => a.width * a.height - b.width * b.height
+      (a, b) => a.width * a.height - b.width * b.height,
     )[0];
 
   const tracklistRef = React.useRef<import("react-native").FlatList>();
@@ -431,7 +432,9 @@ const SpotifySongEmbed = ({
                       } else {
                         const nextIndex = songData.trackList.findIndex(
                           (x, i) =>
-                            i > nextPos && x.isPlayable && !!x.audioPreview?.url
+                            i > nextPos &&
+                            x.isPlayable &&
+                            !!x.audioPreview?.url,
                         );
                         if (nextIndex !== -1) {
                           setPosition(nextIndex);
@@ -476,7 +479,7 @@ const SpotifySongEmbed = ({
                     } else {
                       const nextIndex = songData.trackList.findIndex(
                         (x, i) =>
-                          i > index && x.isPlayable && !!x.audioPreview?.url
+                          i > index && x.isPlayable && !!x.audioPreview?.url,
                       );
                       if (nextIndex !== -1) {
                         setPosition(nextIndex);
@@ -509,8 +512,8 @@ const SpotifySongEmbed = ({
               JSON.stringify(
                 songData.type === "track"
                   ? [songData.audioPreview?.url ?? null]
-                  : songData.trackList.map((x) => x.audioPreview?.url ?? null)
-              )
+                  : songData.trackList.map((x) => x.audioPreview?.url ?? null),
+              ),
             ),
           }}
           style={styles.webview}
@@ -561,7 +564,7 @@ export default function ({ userId, you }: { userId: string; you: boolean }) {
       getProfileData(userId)
         .then((x) => setSongs(x?.songs ?? []))
         .catch(
-          (e) => (showToast(`${e}`, getAssetIDByName("Small")), setSongs([]))
+          (e) => (showToast(`${e}`, getAssetIDByName("Small")), setSongs([])),
         );
   }, []);
 
@@ -586,7 +589,7 @@ export default function ({ userId, you }: { userId: string; you: boolean }) {
               }
             />
           )
-        : null
+        : null,
     )
   ) : (
     <RN.ActivityIndicator size="small" style={{ flex: 1 }} />

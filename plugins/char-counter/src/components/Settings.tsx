@@ -1,8 +1,9 @@
 import { useProxy } from "@vendetta/storage";
-import { vstorage } from "..";
-import { Forms, General } from "@vendetta/ui/components";
-import { BetterTableRowGroup } from "../../../../stuff/types";
 import { getAssetIDByName } from "@vendetta/ui/assets";
+import { Forms, General } from "@vendetta/ui/components";
+
+import { BetterTableRowGroup } from "../../../../stuff/types";
+import { vstorage } from "..";
 
 const { ScrollView } = General;
 const { FormSwitchRow, FormRadioRow, FormRow, FormInput } = Forms;
@@ -88,7 +89,7 @@ export default () => {
           onChange={(x: string) =>
             (vstorage.minChars = Math.max(
               Number.isNaN(Number(x)) ? 1 : Number(x),
-              1
+              1,
             ))
           }
           style={{ marginTop: -25, marginHorizontal: 12 }}

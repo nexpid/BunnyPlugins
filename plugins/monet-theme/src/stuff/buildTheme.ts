@@ -1,9 +1,10 @@
-import { rawColors } from "@vendetta/ui";
-import { PatchThing, Patches } from "../types";
-import { getLABShade, parseColor } from "./colors";
-import { vstorage } from "..";
-import { ThemeDataWithPlus } from "../../../../stuff/typings";
 import { findByStoreName } from "@vendetta/metro";
+import { rawColors } from "@vendetta/ui";
+
+import { ThemeDataWithPlus } from "../../../../stuff/typings";
+import { vstorage } from "..";
+import { Patches, PatchThing } from "../types";
+import { getLABShade, parseColor } from "./colors";
 
 const ThemeStore = findByStoreName("ThemeStore");
 
@@ -53,11 +54,11 @@ export function build(patches: Patches): ThemeDataWithPlus {
 
   if (patches.version === 2)
     for (const [x, y] of entries(get(patches.replacers))) {
-      let clr = parseColor(y[0]);
+      const clr = parseColor(y[0]);
       if (!clr) continue;
 
       for (const c of Object.keys(rawColors).filter((l) =>
-        l.startsWith(`${x.split("_")[0]}_`)
+        l.startsWith(`${x.split("_")[0]}_`),
       )) {
         const shade = Number(c.split("_")[1]);
         if (!checkShouldPut(shade, x.split("_").slice(1))) continue;
@@ -72,7 +73,7 @@ export function build(patches: Patches): ThemeDataWithPlus {
       if (!clr) continue;
 
       for (const c of Object.keys(rawColors).filter((l) =>
-        l.startsWith(`${x.split("_")[0]}_`)
+        l.startsWith(`${x.split("_")[0]}_`),
       )) {
         const shade = Number(c.split("_")[1]);
         if (!checkShouldPut(shade, x.split("_").slice(1))) continue;
@@ -84,7 +85,7 @@ export function build(patches: Patches): ThemeDataWithPlus {
         theme.rawColors[c] = getLABShade(
           clr,
           y.base ? useShade + (500 - y.base) : useShade,
-          y.ratio
+          y.ratio,
         );
       }
     }

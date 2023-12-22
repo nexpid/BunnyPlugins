@@ -1,14 +1,15 @@
-import { React, constants, stylesheet } from "@vendetta/metro/common";
 import { findByProps } from "@vendetta/metro";
-import { vstorage } from "../..";
-import { SimpleText } from "../../../../../stuff/types";
+import { constants, React, stylesheet } from "@vendetta/metro/common";
 import { semanticColors } from "@vendetta/ui";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { showToast } from "@vendetta/ui/toasts";
 
+import { SimpleText } from "../../../../../stuff/types";
+import { vstorage } from "../..";
+
 export const { parseTimestamp } = findByProps(
   "parseTimestamp",
-  "unparseTimestamp"
+  "unparseTimestamp",
 );
 
 const styles = stylesheet.createThemedStyleSheet({
@@ -26,7 +27,7 @@ export function TimeExample() {
 
   React.useLayoutEffect(
     () => setRelativeTime(Date.now()),
-    [vstorage.time.acceptRelative]
+    [vstorage.time.acceptRelative],
   );
 
   return (
@@ -46,7 +47,7 @@ export function TimeExample() {
         ].filter((x) => !!x) as [
           number,
           number | undefined,
-          number | undefined
+          number | undefined,
         ][];
         const slay = [];
 
@@ -69,7 +70,7 @@ export function TimeExample() {
 
           const time = parseTimestamp(
             Math.floor(date.getTime() / 1000).toString(),
-            date.getSeconds() === 0 ? "t" : "T"
+            date.getSeconds() === 0 ? "t" : "T",
           );
 
           slay.push(
@@ -83,7 +84,7 @@ export function TimeExample() {
               </SimpleText>
             ) : (
               form
-            )
+            ),
           );
           slay.push(" — ");
           slay.push(
@@ -96,7 +97,7 @@ export function TimeExample() {
               }
             >
               {time.formatted}
-            </SimpleText>
+            </SimpleText>,
           );
           if (i !== examples.length - 1) slay.push("\n");
         }
@@ -114,7 +115,7 @@ export function TimeExample() {
 
             const time = parseTimestamp(
               Math.floor(date / 1000).toString(),
-              "R"
+              "R",
             );
 
             slay.push(
@@ -128,7 +129,7 @@ export function TimeExample() {
                 </SimpleText>
               ) : (
                 visual
-              )
+              ),
             );
             slay.push(" — ");
             slay.push(
@@ -141,7 +142,7 @@ export function TimeExample() {
                 }
               >
                 {time.formatted}
-              </SimpleText>
+              </SimpleText>,
             );
             if (i !== relativeExamples.length - 1) slay.push("\n");
           }

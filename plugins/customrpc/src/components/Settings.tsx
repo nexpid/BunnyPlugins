@@ -1,40 +1,41 @@
+import { plugin } from "@vendetta";
 import {
+  clipboard,
   NavigationNative,
   React,
   ReactNative as RN,
-  clipboard,
   stylesheet,
 } from "@vendetta/metro/common";
+import { useProxy } from "@vendetta/storage";
+import { semanticColors } from "@vendetta/ui";
+import { showConfirmationAlert } from "@vendetta/ui/alerts";
+import { getAssetIDByName } from "@vendetta/ui/assets";
+import { Forms, General } from "@vendetta/ui/components";
+import { showToast } from "@vendetta/ui/toasts";
+
+import { FadeView } from "../../../../stuff/animations";
 import { useChangelog } from "../../../../stuff/changelog";
-import { plugin } from "@vendetta";
+import { openPluginReportSheet } from "../../../../stuff/githubReport";
 import {
   BetterTableRowGroup,
   LineDivider,
   MMKVManager,
   SuperAwesomeIcon,
 } from "../../../../stuff/types";
-import { getAssetIDByName } from "@vendetta/ui/assets";
-import { openPluginReportSheet } from "../../../../stuff/githubReport";
 import { vstorage } from "..";
 import {
-  SettingsActivity,
   dispatchActivityIfPossible,
   isActivitySaved,
   makeEmptySettingsActivity,
+  SettingsActivity,
 } from "../stuff/activity";
-import { useProxy } from "@vendetta/storage";
-import { Forms, General } from "@vendetta/ui/components";
-import { showToast } from "@vendetta/ui/toasts";
-import { activitySavedPrompt } from "../stuff/prompts";
+import { proxyAssetCache } from "../stuff/api";
 import PresetProfiles from "../stuff/presetProfiles";
+import { activitySavedPrompt } from "../stuff/prompts";
+import { stringVariables } from "../stuff/variables";
+import { openLiveRawActivityView } from "./pages/LiveRawActivityView";
 import { showProfileList } from "./pages/ProfileList";
 import RPCPreview from "./RPCPreview";
-import { openLiveRawActivityView } from "./pages/LiveRawActivityView";
-import { proxyAssetCache } from "../stuff/api";
-import { semanticColors } from "@vendetta/ui";
-import { FadeView } from "../../../../stuff/animations";
-import { showConfirmationAlert } from "@vendetta/ui/alerts";
-import { stringVariables } from "../stuff/variables";
 
 const { ScrollView, View, Pressable } = General;
 const { FormSwitchRow, FormIcon, FormRow } = Forms;
@@ -188,7 +189,7 @@ export default () => {
                     }`
                   : `Debug tab ${
                       vstorage.settings.debug.visible ? "visible" : "hidden"
-                    }`
+                    }`,
               );
             } else {
               if (dbgCounterTimeout) clearTimeout(dbgCounterTimeout);
@@ -204,13 +205,13 @@ export default () => {
                 return showToast(
                   vstorage.settings.debug.boykisserDead
                     ? `tap ${more} more time${more !== 1 ? "s" : ""}`
-                    : `${more} more taps`
+                    : `${more} more taps`,
                 );
               } else {
                 showToast(
                   vstorage.settings.debug.boykisserDead
                     ? "the sin of murdering boykisser continues to haunt you"
-                    : "Behold! You can now debug!"
+                    : "Behold! You can now debug!",
                 );
                 vstorage.settings.debug.visible = true;
                 vstorage.settings.debug.enabled = true;
@@ -258,7 +259,7 @@ export default () => {
             leading={<FormRow.Icon source={getAssetIDByName("copy")} />}
             onPress={() => {
               clipboard.setString(
-                JSON.stringify(vstorage.activity.editing, undefined, 3)
+                JSON.stringify(vstorage.activity.editing, undefined, 3),
               );
               showToast("Copied", getAssetIDByName("toast_copy_link"));
             }}
@@ -279,7 +280,7 @@ export default () => {
                   } catch {
                     return showToast(
                       "Failed to parse JSON",
-                      getAssetIDByName("Small")
+                      getAssetIDByName("Small"),
                     );
                   }
 
@@ -287,7 +288,7 @@ export default () => {
                   if (!data.success)
                     return showToast(
                       "Invalid activity data",
-                      getAssetIDByName("Small")
+                      getAssetIDByName("Small"),
                     );
 
                   vstorage.activity.editing = data.data as SettingsActivity;
@@ -307,7 +308,7 @@ export default () => {
               }
               onPress={() => {
                 vstorage.profiles[vstorage.activity.profile] = JSON.parse(
-                  JSON.stringify(vstorage.activity.editing)
+                  JSON.stringify(vstorage.activity.editing),
                 );
                 showToast("Saved", getAssetIDByName("Check"));
                 forceUpdate();
@@ -327,8 +328,8 @@ export default () => {
                   run: () => {
                     vstorage.activity.editing = JSON.parse(
                       JSON.stringify(
-                        vstorage.profiles[vstorage.activity.profile]
-                      )
+                        vstorage.profiles[vstorage.activity.profile],
+                      ),
                     );
                     showToast("Reverted", getAssetIDByName("Check"));
                     forceUpdate();
@@ -356,7 +357,7 @@ export default () => {
                   secondaryButton: "Save profile",
                   secondaryRun: () => {
                     vstorage.profiles[vstorage.activity.profile] = JSON.parse(
-                      JSON.stringify(vstorage.activity.editing)
+                      JSON.stringify(vstorage.activity.editing),
                     );
                   },
                 })
@@ -401,7 +402,7 @@ export default () => {
                 showToast(
                   `flushed cache ${
                     faces[Math.floor(Math.random() * faces.length)]
-                  }`
+                  }`,
                 );
                 if (changes > 0) dispatchActivityIfPossible();
               }}
@@ -419,10 +420,10 @@ export default () => {
                     accessibilityHint="tap to boykiss"
                     onPress={() => {
                       const messages = "nya,mwah,uwu,nya~,guh,blehhh >:P".split(
-                        ","
+                        ",",
                       );
                       showToast(
-                        messages[Math.floor(Math.random() * messages.length)]
+                        messages[Math.floor(Math.random() * messages.length)],
                       );
                     }}
                     delayLongPress={500}
@@ -476,4 +477,3 @@ export default () => {
     </>
   );
 };
-

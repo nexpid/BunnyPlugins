@@ -14,7 +14,7 @@ export const lerp = (og: string, target: string, perc: number) => {
   const targetR = hex2rgb(target);
 
   const result = ogR.map((ogC, i) =>
-    Math.round(ogC + (targetR[i] - ogC) * perc)
+    Math.round(ogC + (targetR[i] - ogC) * perc),
   );
 
   return rgb2hex(result);

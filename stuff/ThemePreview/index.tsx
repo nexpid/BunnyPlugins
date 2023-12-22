@@ -1,6 +1,7 @@
 import { React, ReactNative as RN, stylesheet } from "@vendetta/metro/common";
 import { semanticColors } from "@vendetta/ui";
-import { ErrorBoundary, General } from "@vendetta/ui/components";
+import { ErrorBoundary } from "@vendetta/ui/components";
+
 import Preview1 from "./previews/Preview1";
 import { ThemePreviewData } from "./util";
 

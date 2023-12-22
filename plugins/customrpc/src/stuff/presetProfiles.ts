@@ -1,4 +1,4 @@
-import { ActivityType, SettingsActivity } from "./activity";
+import { SettingsActivity } from "./activity";
 
 //! for some reason the compiler breaks here and doesn't recognize ActivityType
 const PresetProfiles: Record<string, SettingsActivity> = {

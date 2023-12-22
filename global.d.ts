@@ -32,7 +32,7 @@ interface FileManager {
   saveFileToGallery?(
     uri: string,
     fileName: string,
-    fileType: "PNG" | "JPEG"
+    fileType: "PNG" | "JPEG",
   ): Promise<string>;
   /**
    * Beware! This function has differing functionality on iOS and Android.
@@ -46,7 +46,7 @@ interface FileManager {
     storageDir: "cache" | "documents",
     path: string,
     data: string,
-    encoding: "base64" | "utf8"
+    encoding: "base64" | "utf8",
   ): Promise<string>;
   getConstants: () => {
     /**
@@ -75,7 +75,7 @@ interface Window {
         key: string,
         parent: any,
         callback?: (args: any[], ret: any) => any,
-        oneTime?: boolean
+        oneTime?: boolean,
       ) => void;
     };
   };
@@ -94,4 +94,3 @@ interface Window {
   CSmigrationStage: number | undefined;
   TPfirstLoad: boolean | undefined;
 }
-

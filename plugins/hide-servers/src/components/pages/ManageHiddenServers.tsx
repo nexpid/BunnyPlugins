@@ -1,11 +1,12 @@
-import { React, ReactNative as RN } from "@vendetta/metro/common";
-import { Forms, General, Search } from "@vendetta/ui/components";
-import { hiddenList, isHidden, removeHidden } from "../..";
-import { useProxy } from "@vendetta/storage";
 import { findByProps, findByStoreName } from "@vendetta/metro";
+import { React, ReactNative as RN } from "@vendetta/metro/common";
+import { useProxy } from "@vendetta/storage";
 import { getAssetIDByName } from "@vendetta/ui/assets";
+import { Forms, General, Search } from "@vendetta/ui/components";
 import { showToast } from "@vendetta/ui/toasts";
+
 import { hideActionSheet } from "../../../../../stuff/types";
+import { hiddenList, isHidden, removeHidden } from "../..";
 import { HiddenListEntryType } from "../../types";
 
 const { View } = General;
@@ -33,7 +34,7 @@ export const ManageDataPage = () => {
     .filter((x) =>
       x.folderId
         ? isHidden(HiddenListEntryType.Folder, x.folderId)
-        : x.guildIds.every((y) => isHidden(HiddenListEntryType.Guild, y))
+        : x.guildIds.every((y) => isHidden(HiddenListEntryType.Guild, y)),
     )
     .map((x) => {
       const item = !x.folderId ? guilds[x.guildIds[0]] : x;
@@ -104,7 +105,7 @@ export const ManageDataPage = () => {
                   onPress: () => {
                     showToast(
                       `Removed ${item.name} from hidden list`,
-                      getAssetIDByName("ic_hide_password")
+                      getAssetIDByName("ic_hide_password"),
                     );
                     removeHidden(item.type, item.id);
                   },

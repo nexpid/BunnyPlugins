@@ -1,5 +1,3 @@
-import { ReactNative } from "@vendetta/metro/common";
-
 type ButtonVariant =
   | "primary"
   | "primary-on-blurple"

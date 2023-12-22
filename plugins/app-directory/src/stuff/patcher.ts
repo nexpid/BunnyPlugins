@@ -1,7 +1,8 @@
-import { React } from "@vendetta/metro/common";
 import { findByName } from "@vendetta/metro";
+import { React } from "@vendetta/metro/common";
 import { after } from "@vendetta/patcher";
 import { findInReactTree } from "@vendetta/utils";
+
 import ManageGuildSection from "../components/ManageGuildSection";
 import AppDirectoryPage from "../components/pages/AppDirectoryPage";
 import AppInfoPage from "../components/pages/AppInfoPage";
@@ -9,7 +10,7 @@ import AppInfoPage from "../components/pages/AppInfoPage";
 const GuildSettingsModal = findByName("GuildSettingsModal", false);
 const GuildSettingsModalLanding = findByName(
   "GuildSettingsModalLanding",
-  false
+  false,
 );
 
 export default () => {
@@ -28,7 +29,7 @@ export default () => {
           render: AppInfoPage,
         },
       };
-    })
+    }),
   );
 
   let bowomp: () => void;
@@ -39,7 +40,7 @@ export default () => {
       bowomp = after("type", main, (_, content) => {
         const sett = findInReactTree(
           content,
-          (x) => x.type?.name === "SettingsSection"
+          (x) => x.type?.name === "SettingsSection",
         );
         if (!sett) return;
 
@@ -59,11 +60,11 @@ export default () => {
                 }),
               ]);
             },
-            true
-          )
+            true,
+          ),
         );
       });
-    })
+    }),
   );
 
   return () => patches.forEach((x) => x());

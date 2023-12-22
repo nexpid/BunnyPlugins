@@ -129,7 +129,7 @@ export async function getAppDirectoryCollections(): Promise<APICollection[]> {
   const res =
     cache.get(cacheKey) ??
     (await get(
-      `/application-directory-static/collections?include_inactive=false&locale=${locale}`
+      `/application-directory-static/collections?include_inactive=false&locale=${locale}`,
     ));
   cache.set(cacheKey, res);
 
@@ -143,7 +143,7 @@ export type APIAppDirectoryApplication = APICollectionApplication & {
 };
 
 export async function getAppDirectoryApplication(
-  appId: string
+  appId: string,
 ): Promise<APIAppDirectoryApplication> {
   const locale = i18n.getLocale();
 
@@ -151,7 +151,7 @@ export async function getAppDirectoryApplication(
   const res =
     cache.get(cacheKey) ??
     (await get(
-      `/application-directory-static/applications/${appId}?locale=${locale}`
+      `/application-directory-static/applications/${appId}?locale=${locale}`,
     ));
   cache.set(cacheKey, res);
 
@@ -176,7 +176,7 @@ export async function searchAppDirectory(
   query: string,
   page: number,
   category: number,
-  guildId?: string
+  guildId?: string,
 ): Promise<APIAppDirectorySearch> {
   const locale = i18n.getLocale();
 

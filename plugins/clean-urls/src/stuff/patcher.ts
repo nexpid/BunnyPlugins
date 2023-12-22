@@ -1,7 +1,8 @@
 import { HTTP_REGEX_MULTI } from "@vendetta/constants";
-import rules from "./rules";
 import { findByProps } from "@vendetta/metro";
 import { before } from "@vendetta/patcher";
+
+import rules from "./rules";
 
 const Messages = findByProps("sendMessage", "editMessage");
 
@@ -15,13 +16,13 @@ const clean = (text: string) =>
     }
 
     const host =
-      Object.entries(rules.byHost).find((x) =>
-        rules.hostMap[x[0]]?.test(url.hostname)
+      Object.entries(rules.byHost).find(
+        (x) => rules.hostMap[x[0]]?.test(url.hostname),
       )?.[1] ?? [];
 
     for (const r of [...rules.universal, ...host]) {
       url.searchParams.forEach(
-        (_, key) => r.test(key) && url.searchParams.delete(key)
+        (_, key) => r.test(key) && url.searchParams.delete(key),
       );
     }
 

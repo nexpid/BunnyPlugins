@@ -1,4 +1,4 @@
-import { General } from "@vendetta/ui/components";
+import { findByProps } from "@vendetta/metro";
 import {
   clipboard,
   i18n,
@@ -9,18 +9,19 @@ import {
   url,
 } from "@vendetta/metro/common";
 import { rawColors, semanticColors } from "@vendetta/ui";
+import { getAssetIDByName } from "@vendetta/ui/assets";
+import { General } from "@vendetta/ui/components";
+import { showToast } from "@vendetta/ui/toasts";
+
+import { Redesign, SimpleText } from "../../../../../stuff/types";
 import {
   APICollectionApplication,
   getAppDirectoryApplication,
 } from "../../stuff/api";
-import { Redesign, SimpleText } from "../../../../../stuff/types";
-import { inServers, parseDesc } from "../../stuff/util";
-import { findByProps } from "@vendetta/metro";
-import { getAssetIDByName } from "@vendetta/ui/assets";
-import useAsync from "../hooks/useAsync";
-import { showToast } from "@vendetta/ui/toasts";
-import { openOauth2Modal } from "../../stuff/oauth2";
 import { parse } from "../../stuff/markdown";
+import { openOauth2Modal } from "../../stuff/oauth2";
+import { inServers, parseDesc } from "../../stuff/util";
+import useAsync from "../hooks/useAsync";
 
 const { ScrollView, View } = General;
 
@@ -148,7 +149,7 @@ export default function AppInfoPage({
             showsHorizontalScrollIndicator={false}
             decelerationRate="normal"
             data={app.directory_entry.carousel_items.filter(
-              (x) => x.type === 1
+              (x) => x.type === 1,
             )}
             style={{ width: "100%", height: "100%", position: "relative" }}
             scrollEventThrottle={16}
@@ -158,9 +159,9 @@ export default function AppInfoPage({
                   Math.min(
                     nativeEvent.contentOffset.x /
                       nativeEvent.layoutMeasurement.width,
-                    carouselIndexContent.length
+                    carouselIndexContent.length,
                   ),
-                  0
+                  0,
                 ),
                 duration: 100,
                 easing: RN.Easing.linear,
@@ -176,9 +177,9 @@ export default function AppInfoPage({
                 }}
                 source={{
                   uri: `${img.proxy_url}?width=${Math.floor(
-                    carouselWidth
+                    carouselWidth,
                   )}&height=${Math.floor(
-                    carouselWidth / styles.carousel.aspectRatio
+                    carouselWidth / styles.carousel.aspectRatio,
                   )}`,
                 }}
                 resizeMode="contain"
@@ -199,7 +200,7 @@ export default function AppInfoPage({
                             outputRange: carouselIndexContent.map((j) =>
                               i === j
                                 ? styles.carouselDotActive.backgroundColor
-                                : styles.carouselDotInactive.backgroundColor
+                                : styles.carouselDotInactive.backgroundColor,
                             ),
                           }),
                   },
@@ -253,11 +254,11 @@ export default function AppInfoPage({
             icon={getAssetIDByName("copy")}
             onPress={() => {
               clipboard.setString(
-                `https://discord.com/application-directory/${app.id}`
+                `https://discord.com/application-directory/${app.id}`,
               );
               showToast(
                 i18n.Messages.COPIED_LINK || "Copied to clipboard.",
-                getAssetIDByName("toast_copy_link")
+                getAssetIDByName("toast_copy_link"),
               );
             }}
           />
@@ -279,8 +280,8 @@ export default function AppInfoPage({
                       guildId && {
                         guild_id: guildId,
                         disable_guild_select: true,
-                      }
-                    )
+                      },
+                    ),
                   )
             }
           />
@@ -289,7 +290,7 @@ export default function AppInfoPage({
       <View style={styles.group}>
         {parseDesc(
           app.directory_entry.detailed_description,
-          app.directory_entry.short_description
+          app.directory_entry.short_description,
         ).map(({ title, content }, i, a) => (
           <>
             <TableRowGroupTitle title={title} />
@@ -336,7 +337,7 @@ export default function AppInfoPage({
                   {x.description}
                 </SimpleText>
               </View>
-            )
+            ),
           )}
         </View>
       )}
@@ -383,8 +384,7 @@ export default function AppInfoPage({
 
 export function getAppInfoPageRender(
   app: APICollectionApplication,
-  guildId?: string
+  guildId?: string,
 ) {
   return () => <AppInfoPage app={app} guildId={guildId} />;
 }
-

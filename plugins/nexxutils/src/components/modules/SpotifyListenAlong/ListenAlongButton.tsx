@@ -1,11 +1,12 @@
-import listenAlong from "../../../../assets/SpotifyListenAlong/listenAlong.svg";
-import listenAlong2 from "../../../../assets/SpotifyListenAlong/listenAlong2.svg";
 import { findByProps, findByStoreName } from "@vendetta/metro";
 import { React } from "@vendetta/metro/common";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { Button, General } from "@vendetta/ui/components";
 import { showToast } from "@vendetta/ui/toasts";
+
 import { SvgXml } from "../../../../../../stuff/types";
+import listenAlong from "../../../../assets/SpotifyListenAlong/listenAlong.svg";
+import listenAlong2 from "../../../../assets/SpotifyListenAlong/listenAlong2.svg";
 
 const { View } = General;
 

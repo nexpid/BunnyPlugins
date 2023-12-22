@@ -165,7 +165,7 @@ for (const mrule of [...defaultRules, ...extraRules]) {
   const reHost = new RegExp(
     `^(?:www\\.)?${reEscape(host)
       .replace(/\*\./g, "(?:.+?\\.)?")
-      .replace(/\*/g, ".+?")}$`
+      .replace(/\*/g, ".+?")}$`,
   );
   const reHostStr = reHost.toString();
 

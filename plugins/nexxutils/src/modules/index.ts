@@ -1,6 +1,6 @@
 import type { Module } from "../stuff/Module";
-import Freemix from "./Freemix";
 import BetterComponents from "./BetterComponents";
+import Freemix from "./Freemix";
 import NoInviteToServers from "./NoInviteToServers";
 import RestoreEmojiInfoReaction from "./RestoreEmojiInfoReaction";
 import SendSpotifyInvite from "./SendSpotifyInvite";

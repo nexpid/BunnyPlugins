@@ -1,11 +1,12 @@
-import { Forms, General } from "@vendetta/ui/components";
-import { BetterTableRowGroup, SimpleText } from "../../../../stuff/types";
-import { getAssetIDByName } from "@vendetta/ui/assets";
-import { semanticColors } from "@vendetta/ui";
 import { NavigationNative, stylesheet } from "@vendetta/metro/common";
+import { semanticColors } from "@vendetta/ui";
 import { showConfirmationAlert } from "@vendetta/ui/alerts";
-import { openManageHiddenServersPage } from "./pages/ManageHiddenServers";
+import { getAssetIDByName } from "@vendetta/ui/assets";
+import { Forms, General } from "@vendetta/ui/components";
+
+import { BetterTableRowGroup, SimpleText } from "../../../../stuff/types";
 import { hiddenList } from "..";
+import { openManageHiddenServersPage } from "./pages/ManageHiddenServers";
 
 const { ScrollView } = General;
 const { FormRow } = Forms;

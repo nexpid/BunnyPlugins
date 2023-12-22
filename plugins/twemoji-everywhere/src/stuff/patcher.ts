@@ -1,7 +1,8 @@
-import { ReactNative as RN, React } from "@vendetta/metro/common";
+import { React, ReactNative as RN } from "@vendetta/metro/common";
 import { before } from "@vendetta/patcher";
-import { getSrc, parse } from "./twemoji";
+
 import CustomTwemoji from "../components/CustomTwemoji";
+import { getSrc, parse } from "./twemoji";
 
 export default function () {
   const patches = new Array<() => void>();
@@ -18,7 +19,7 @@ export default function () {
         source.uri = getSrc(source.uri.split("-")[1].split(".")[0]);
 
       return cloned;
-    })
+    }),
   );
 
   patches.push(
@@ -42,7 +43,7 @@ export default function () {
             : [x.children];
 
       x.children = children;
-    })
+    }),
   );
 
   return () => patches.forEach((x) => x());

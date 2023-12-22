@@ -1,4 +1,5 @@
 import { showConfirmationAlert } from "@vendetta/ui/alerts";
+
 import { SimpleText } from "./types";
 
 type Changelog = {
@@ -18,7 +19,7 @@ export function useChangelog(
       name: string;
     };
   },
-  changelog: Changelog[]
+  changelog: Changelog[],
 ) {
   plugin.storage.changelog ??= changelog.length;
 
@@ -34,13 +35,13 @@ export function useChangelog(
             x.startsWith("+ ")
               ? "TEXT_POSITIVE"
               : x.startsWith("- ")
-              ? "TEXT_DANGER"
-              : undefined
+                ? "TEXT_DANGER"
+                : undefined
           }
           variant="text-md/semibold"
         >
           {x}
-        </SimpleText>
+        </SimpleText>,
       );
       if (i !== (thing.changes.length - 1).toString()) text.push("\n");
     }

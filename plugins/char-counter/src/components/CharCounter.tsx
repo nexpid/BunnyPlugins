@@ -1,11 +1,12 @@
 import { React, stylesheet } from "@vendetta/metro/common";
-import { General } from "@vendetta/ui/components";
-import getMessageLength, { display, hasSLM } from "../stuff/getMessageLength";
-import { semanticColors } from "@vendetta/ui";
-import { FadeView } from "../../../../stuff/animations";
 import { after } from "@vendetta/patcher";
+import { semanticColors } from "@vendetta/ui";
+import { General } from "@vendetta/ui/components";
+
+import { FadeView } from "../../../../stuff/animations";
 import { SimpleText, TextStyleSheet } from "../../../../stuff/types";
 import { vstorage } from "..";
+import getMessageLength, { display, hasSLM } from "../stuff/getMessageLength";
 import { lastText } from "../stuff/patcher";
 
 const { View, Pressable } = General;

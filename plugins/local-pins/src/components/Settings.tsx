@@ -1,11 +1,12 @@
-import { Forms, General } from "@vendetta/ui/components";
-import { BetterTableRowGroup, SimpleText } from "../../../../stuff/types";
-import { getAssetIDByName } from "@vendetta/ui/assets";
-import { vstorage } from "..";
 import { stylesheet } from "@vendetta/metro/common";
+import { useProxy } from "@vendetta/storage";
 import { semanticColors } from "@vendetta/ui";
 import { showConfirmationAlert } from "@vendetta/ui/alerts";
-import { useProxy } from "@vendetta/storage";
+import { getAssetIDByName } from "@vendetta/ui/assets";
+import { Forms, General } from "@vendetta/ui/components";
+
+import { BetterTableRowGroup, SimpleText } from "../../../../stuff/types";
+import { vstorage } from "..";
 
 const { ScrollView } = General;
 const { FormRow } = Forms;
@@ -35,7 +36,7 @@ export default () => {
             vstorage.pinned
               ? `${
                   Math.floor(
-                    (JSON.stringify(vstorage.pinned).length / 1000) * 100
+                    (JSON.stringify(vstorage.pinned).length / 1000) * 100,
                   ) / 100
                 } kilobytes`
               : "N/A"

@@ -1,11 +1,12 @@
-import { ReactNative as RN, React } from "@vendetta/metro/common";
-import { clearPins, getPins, vstorage } from "../..";
-import { chPinsMessagesOverwrites, setChPinsHRCb } from "../../stuff/patcher";
-import { SimpleText, openSheet } from "../../../../../stuff/types";
-import FiltersActionSheet from "../sheets/FiltersActionSheet";
 import { findByName, findByProps, findByStoreName } from "@vendetta/metro";
+import { React, ReactNative as RN } from "@vendetta/metro/common";
 import { showConfirmationAlert } from "@vendetta/ui/alerts";
 import { General } from "@vendetta/ui/components";
+
+import { openSheet, SimpleText } from "../../../../../stuff/types";
+import { clearPins, getPins, vstorage } from "../..";
+import { chPinsMessagesOverwrites, setChPinsHRCb } from "../../stuff/patcher";
+import FiltersActionSheet from "../sheets/FiltersActionSheet";
 
 const { View } = General;
 
@@ -15,7 +16,7 @@ const messages = findByProps("fetchMessages", "sendMessage");
 
 export default ({ channelId }: { channelId: string }) => {
   const [filters, setFilters] = React.useState<typeof vstorage.preferFilters>(
-    vstorage.preferFilters ?? ["server", "local"]
+    vstorage.preferFilters ?? ["server", "local"],
   );
   const [localPinned, setLocalPinned] = React.useState<number | any[]>(0);
 

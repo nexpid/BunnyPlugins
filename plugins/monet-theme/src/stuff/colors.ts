@@ -1,10 +1,11 @@
-import { rawColors } from "@vendetta/ui";
-import { vstorage } from "..";
 import {
-  Hct,
   argbFromHex,
+  Hct,
   hexFromArgb,
 } from "@material/material-color-utilities";
+import { rawColors } from "@vendetta/ui";
+
+import { vstorage } from "..";
 
 export function parseColor(clr: string): string | undefined {
   const shade = Number(clr.split("_")[1]);
@@ -26,7 +27,7 @@ export function parseColor(clr: string): string | undefined {
 export function getLABShade(
   color: string,
   shade: number,
-  mult?: number
+  mult?: number,
 ): string {
   mult ??= 1;
 

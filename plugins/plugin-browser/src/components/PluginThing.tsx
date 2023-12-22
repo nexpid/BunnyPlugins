@@ -1,16 +1,17 @@
-import { General } from "@vendetta/ui/components";
-import { PluginsFullJson } from "../types";
-import ScuffedPluginCard from "./ScuffedPluginCard";
-import CustomBadgeTag from "../../../../stuff/components/CustomBadgeTag";
-import { SimpleText } from "../../../../stuff/types";
-import { getAssetIDByName } from "@vendetta/ui/assets";
+import { clipboard, React, url } from "@vendetta/metro/common";
 import { plugins } from "@vendetta/plugins";
-import { React, clipboard, url } from "@vendetta/metro/common";
-import { showToast } from "@vendetta/ui/toasts";
 import { installPlugin, removePlugin } from "@vendetta/plugins";
+import { getAssetIDByName } from "@vendetta/ui/assets";
+import { General } from "@vendetta/ui/components";
+import { showToast } from "@vendetta/ui/toasts";
+
+import CustomBadgeTag from "../../../../stuff/components/CustomBadgeTag";
 import SmartMention from "../../../../stuff/components/SmartMention";
+import { SimpleText } from "../../../../stuff/types";
 import { matchGithubLink, properLink, refetchPlugin } from "../stuff/util";
+import { PluginsFullJson } from "../types";
 import usePlugin from "./hooks/usePlugin";
+import ScuffedPluginCard from "./ScuffedPluginCard";
 
 const { View } = General;
 
@@ -22,7 +23,7 @@ export default function ({
   changes: [string, "new" | "update"][];
 }) {
   const proxiedLink = properLink(
-    `https://vd-plugins.github.io/proxy/${item.vendetta.original}`
+    `https://vd-plugins.github.io/proxy/${item.vendetta.original}`,
   );
 
   const [pluginProgress, setPluginProgress] = React.useState(false);
@@ -69,88 +70,88 @@ export default function ({
         pluginProgress
           ? []
           : proxiedLink.includes("plugin-browser")
-          ? append
-          : hasPlugin
-          ? [
-              plugins[proxiedLink]?.manifest.hash !== item.hash && {
-                icon: getAssetIDByName("ic_sync_24px"),
-                onPress: () => {
-                  setPluginProgress(true);
-                  refetchPlugin(proxiedLink)
-                    .then(() =>
+            ? append
+            : hasPlugin
+              ? [
+                  plugins[proxiedLink]?.manifest.hash !== item.hash && {
+                    icon: getAssetIDByName("ic_sync_24px"),
+                    onPress: () => {
+                      setPluginProgress(true);
+                      refetchPlugin(proxiedLink)
+                        .then(() =>
+                          showToast(
+                            `Successfully updated ${item.name}`,
+                            getAssetIDByName("ic_sync_24px"),
+                          ),
+                        )
+                        .catch(() =>
+                          showToast(
+                            `Failed to update ${item.name}!`,
+                            getAssetIDByName("Small"),
+                          ),
+                        )
+                        .finally(() => setPluginProgress(false));
+                    },
+                  },
+                  {
+                    icon: getAssetIDByName("ic_message_delete"),
+                    destructive: true,
+                    onPress: async () => {
+                      setPluginProgress(true);
+                      try {
+                        removePlugin(proxiedLink);
+                        showToast(
+                          `Successfully deleted ${item.name}`,
+                          getAssetIDByName("ic_message_delete"),
+                        );
+                      } catch {
+                        showToast(
+                          `Failed to delete ${item.name}!`,
+                          getAssetIDByName("Small"),
+                        );
+                      }
+                      setPluginProgress(false);
+                    },
+                    onLongPress: () => {
+                      clipboard.setString(item.vendetta.original);
                       showToast(
-                        `Successfully updated ${item.name}`,
-                        getAssetIDByName("ic_sync_24px")
-                      )
-                    )
-                    .catch(() =>
-                      showToast(
-                        `Failed to update ${item.name}!`,
-                        getAssetIDByName("Small")
-                      )
-                    )
-                    .finally(() => setPluginProgress(false));
-                },
-              },
-              {
-                icon: getAssetIDByName("ic_message_delete"),
-                destructive: true,
-                onPress: async () => {
-                  setPluginProgress(true);
-                  try {
-                    removePlugin(proxiedLink);
-                    showToast(
-                      `Successfully deleted ${item.name}`,
-                      getAssetIDByName("ic_message_delete")
-                    );
-                  } catch {
-                    showToast(
-                      `Failed to delete ${item.name}!`,
-                      getAssetIDByName("Small")
-                    );
-                  }
-                  setPluginProgress(false);
-                },
-                onLongPress: () => {
-                  clipboard.setString(item.vendetta.original);
-                  showToast(
-                    "Copied unproxied link",
-                    getAssetIDByName("toast_copy_link")
-                  );
-                },
-              },
-              ...append,
-            ].filter((x) => !!x)
-          : [
-              {
-                icon: getAssetIDByName("ic_download_24px"),
-                onPress: async () => {
-                  setPluginProgress(true);
-                  installPlugin(proxiedLink, true)
-                    .then(() => {
-                      showToast(
-                        `Successfully installed ${item.name}`,
-                        getAssetIDByName("toast_image_saved")
+                        "Copied unproxied link",
+                        getAssetIDByName("toast_copy_link"),
                       );
-                    })
-                    .catch((e: any) =>
+                    },
+                  },
+                  ...append,
+                ].filter((x) => !!x)
+              : [
+                  {
+                    icon: getAssetIDByName("ic_download_24px"),
+                    onPress: async () => {
+                      setPluginProgress(true);
+                      installPlugin(proxiedLink, true)
+                        .then(() => {
+                          showToast(
+                            `Successfully installed ${item.name}`,
+                            getAssetIDByName("toast_image_saved"),
+                          );
+                        })
+                        .catch((e: any) =>
+                          showToast(
+                            e?.message ?? `Failed to install ${item.name}!`,
+                            getAssetIDByName("Small"),
+                          ),
+                        )
+                        .finally(() => setPluginProgress(false));
+                    },
+                    onLongPress: () => {
+                      clipboard.setString(item.vendetta.original);
                       showToast(
-                        e?.message ?? `Failed to install ${item.name}!`,
-                        getAssetIDByName("Small")
-                      )
-                    )
-                    .finally(() => setPluginProgress(false));
-                },
-                onLongPress: () => {
-                  clipboard.setString(item.vendetta.original);
-                  showToast(
-                    "Copied unproxied link",
-                    getAssetIDByName("toast_copy_link")
-                  );
-                },
-              },
-              ...append,
-            ]
+                        "Copied unproxied link",
+                        getAssetIDByName("toast_copy_link"),
+                      );
+                    },
+                  },
+                  ...append,
+                ]
       }
       loading={pluginProgress}
     />

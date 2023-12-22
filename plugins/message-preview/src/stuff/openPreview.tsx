@@ -1,14 +1,15 @@
-import { showConfirmationAlert } from "@vendetta/ui/alerts";
-import { vstorage } from "..";
-import { General } from "@vendetta/ui/components";
 import { findByName, findByProps, findByStoreName } from "@vendetta/metro";
 import { ReactNative } from "@vendetta/metro/common";
+import { showConfirmationAlert } from "@vendetta/ui/alerts";
+import { General } from "@vendetta/ui/components";
+
+import { vstorage } from "..";
 
 const { ScrollView } = General;
 
 const { default: ChatItemWrapper } = findByProps(
   "DCDAutoModerationSystemMessageView",
-  "default"
+  "default",
 );
 const MessageRecord = findByName("MessageRecord");
 const RowManager = findByName("RowManager");
@@ -28,7 +29,7 @@ export default function () {
     showConfirmationAlert({
       title: "Message Preview",
       onConfirm: () => void 0,
-      // @ts-ignore -- a valid property that's unadded in typings
+      // @ts-expect-error -- a valid property that's unadded in typings
       children: (
         <ScrollView
           style={{
@@ -63,8 +64,8 @@ export default function () {
         }),
         {
           author,
-        }
-      )
+        },
+      ),
     );
   }
 }

@@ -6,7 +6,7 @@ const getInfo = async (
   service: API.Song["service"],
   type: API.Song["type"],
   id: string,
-  signal?: AbortSignal
+  signal?: AbortSignal,
 ): Promise<any | false> => {
   const key = `${service}${type}${id}`;
   if (infoCache.has(key)) return infoCache.get(key);
@@ -17,7 +17,7 @@ const getInfo = async (
     ).text();
 
     const dt = JSON.parse(
-      `{"props"${res.split('{"props"')[1].split("</script>")[0]}`
+      `{"props"${res.split('{"props"')[1].split("</script>")[0]}`,
     );
     infoCache.set(key, dt);
     return dt;
@@ -103,7 +103,7 @@ export async function getSongData(
   service: API.Song["service"],
   type: API.Song["type"],
   id: string,
-  signal?: AbortSignal
+  signal?: AbortSignal,
 ): Promise<SpotifyEmbedEntity | false> {
   if (service === "spotify") {
     const dt = (await getInfo(service, type, id, signal))?.props?.pageProps
@@ -116,7 +116,7 @@ export async function getSongName(
   service: API.Song["service"],
   type: API.Song["type"],
   id: string,
-  signal?: AbortSignal
+  signal?: AbortSignal,
 ): Promise<string | false> {
   if (service === "spotify") {
     const dt = await getInfo(service, type, id, signal);
@@ -128,7 +128,7 @@ export async function validateSong(
   service: API.Song["service"],
   type: API.Song["type"],
   id: string,
-  signal?: AbortSignal
+  signal?: AbortSignal,
 ): Promise<boolean> {
   if (service === "spotify") {
     return (

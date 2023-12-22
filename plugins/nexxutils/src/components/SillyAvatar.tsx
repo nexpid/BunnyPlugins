@@ -1,7 +1,8 @@
-import { ReactNative as RN, React } from "@vendetta/metro/common";
-import { General } from "@vendetta/ui/components";
-import { getUserAvatar } from "../../../../stuff/types";
 import { findByStoreName } from "@vendetta/metro";
+import { React, ReactNative as RN } from "@vendetta/metro/common";
+import { General } from "@vendetta/ui/components";
+
+import { getUserAvatar } from "../../../../stuff/types";
 
 const { Pressable } = General;
 

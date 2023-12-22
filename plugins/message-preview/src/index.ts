@@ -1,6 +1,7 @@
 import { storage } from "@vendetta/plugin";
-import patcher from "./stuff/patcher";
+
 import Settings from "./components/Settings";
+import patcher from "./stuff/patcher";
 
 export const vstorage: {
   buttonType?: "pill" | "send";

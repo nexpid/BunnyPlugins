@@ -1,25 +1,26 @@
+import { HTTP_REGEX_MULTI } from "@vendetta/constants";
+import { findByStoreName } from "@vendetta/metro";
+import { ReactNative as RN, stylesheet } from "@vendetta/metro/common";
 import { useProxy } from "@vendetta/storage";
-import { cache, vstorage } from "..";
+import { semanticColors } from "@vendetta/ui";
+import { showInputAlert } from "@vendetta/ui/alerts";
+import { getAssetIDByName } from "@vendetta/ui/assets";
 import { Forms, General } from "@vendetta/ui/components";
+import { showToast } from "@vendetta/ui/toasts";
+
 import {
   BetterTableRowGroup,
-  SimpleText,
   openSheet,
+  SimpleText,
 } from "../../../../stuff/types";
-import { getAssetIDByName } from "@vendetta/ui/assets";
+import { cache, vstorage } from "..";
 import { currentAuthorization, deleteSaveData } from "../stuff/api";
-import { findByStoreName } from "@vendetta/metro";
-import { showToast } from "@vendetta/ui/toasts";
-import { openOauth2Modal } from "../stuff/oauth2";
-import { ReactNative as RN, stylesheet, url } from "@vendetta/metro/common";
-import { semanticColors } from "@vendetta/ui";
-import PendingSongName from "./PendingSongName";
 import { check } from "../stuff/http";
-import { API } from "../types/api";
-import { showInputAlert } from "@vendetta/ui/alerts";
+import { openOauth2Modal } from "../stuff/oauth2";
 import { validateSong } from "../stuff/songs";
-import { HTTP_REGEX_MULTI } from "@vendetta/constants";
 import { rebuildLink } from "../stuff/util";
+import { API } from "../types/api";
+import PendingSongName from "./PendingSongName";
 import SongInfoSheet from "./sheets/SongInfoSheet";
 
 const { ScrollView, View } = General;
@@ -83,7 +84,7 @@ export default function () {
                     <RN.Image
                       style={styles.serviceFrame}
                       source={getAssetIDByName(
-                        "img_account_sync_spotify_light_and_dark"
+                        "img_account_sync_spotify_light_and_dark",
                       )}
                     />
                   )
@@ -186,7 +187,7 @@ export default function () {
 
                 showToast(
                   "Successfully logged out",
-                  getAssetIDByName("ic_logout_24px")
+                  getAssetIDByName("ic_logout_24px"),
                 );
               }}
             />
@@ -202,7 +203,7 @@ export default function () {
 
                 showToast(
                   "Successfully deleted data",
-                  getAssetIDByName("trash")
+                  getAssetIDByName("trash"),
                 );
               }}
             />

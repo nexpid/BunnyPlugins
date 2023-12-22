@@ -1,27 +1,28 @@
 import { findByName, findByStoreName } from "@vendetta/metro";
+import { NavigationNative, React, stylesheet } from "@vendetta/metro/common";
+import { semanticColors } from "@vendetta/ui";
+import { Button, General } from "@vendetta/ui/components";
+
+import { openSheet, SimpleText } from "../../../../stuff/types";
 import {
   ActivityType,
   SettingsActivity,
   settingsActivityToRaw,
 } from "../stuff/activity";
-import { NavigationNative, React, stylesheet } from "@vendetta/metro/common";
-import { Button, General } from "@vendetta/ui/components";
-import { semanticColors } from "@vendetta/ui";
-import { SimpleText, openSheet } from "../../../../stuff/types";
-import {
-  activityTypePreview,
-  forceUpdateSettings,
-  placeholders,
-} from "./Settings";
 import {
   ActivityTypeActionSheet,
   ApplicationActionSheet,
   ButtonActionSheet,
   ImageActionSheet,
-  TimestampActionSheet,
   simpleInput,
+  TimestampActionSheet,
 } from "../stuff/prompts";
 import { displayImage, parseTimestamp, stringifyTimeDiff } from "../stuff/util";
+import {
+  activityTypePreview,
+  forceUpdateSettings,
+  placeholders,
+} from "./Settings";
 
 const UserStore = findByStoreName("UserStore");
 
@@ -131,7 +132,7 @@ export default ({ edit, act }: { edit: boolean; act: SettingsActivity }) => {
                         uri:
                           displayImage(
                             act.assets.smallImg ?? ".",
-                            act.app.id
+                            act.app.id,
                           ) ?? placeholders.image,
                       }}
                       style={{ borderRadius: 14, width: 28, height: 28 }}
@@ -216,16 +217,17 @@ export default ({ edit, act }: { edit: boolean; act: SettingsActivity }) => {
                     typeof act.timestamps.end === "string"
                       ? `{${act.timestamps.end}}`
                       : typeof act.timestamps.end === "number"
-                      ? `${stringifyTimeDiff(
-                          parseTimestamp(act.timestamps.end) - Date.now()
-                        )} left`
-                      : typeof act.timestamps.start === "string"
-                      ? `{${act.timestamps.start}}`
-                      : typeof act.timestamps.start === "number"
-                      ? `${stringifyTimeDiff(
-                          Date.now() - parseTimestamp(act.timestamps.start)
-                        )} elapsed`
-                      : placeholders.timestamp
+                        ? `${stringifyTimeDiff(
+                            parseTimestamp(act.timestamps.end) - Date.now(),
+                          )} left`
+                        : typeof act.timestamps.start === "string"
+                          ? `{${act.timestamps.start}}`
+                          : typeof act.timestamps.start === "number"
+                            ? `${stringifyTimeDiff(
+                                Date.now() -
+                                  parseTimestamp(act.timestamps.start),
+                              )} elapsed`
+                            : placeholders.timestamp
                   }
                 />
               </View>

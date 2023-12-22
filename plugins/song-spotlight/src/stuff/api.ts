@@ -1,6 +1,7 @@
+import { findByStoreName } from "@vendetta/metro";
+
 import { AuthRecord, vstorage } from "..";
 import constants from "../constants";
-import { findByStoreName } from "@vendetta/metro";
 import { API } from "../types/api";
 
 const UserStore = findByStoreName("UserStore");
@@ -13,7 +14,7 @@ interface SongSpotlightAPIErrorResponse {
 export class SongSpotlightAPIError extends Error {
   constructor(resp: SongSpotlightAPIErrorResponse) {
     super(
-      `${resp.status}: ${resp.message}${resp.error ? ` (${resp.error})` : ""}`
+      `${resp.status}: ${resp.message}${resp.error ? ` (${resp.error})` : ""}`,
     );
     this.name = this.constructor.name;
   }
@@ -32,8 +33,8 @@ export async function getAuthorization(): Promise<string> {
       `${
         constants.api
       }api/refresh-access-token?refresh_token=${encodeURIComponent(
-        auth.refreshToken
-      )}`
+        auth.refreshToken,
+      )}`,
     );
     if (x.status !== 200) throw new SongSpotlightAPIError(await x.json());
     auth = await x.json();
@@ -47,7 +48,7 @@ export async function getAuthorization(): Promise<string> {
 
 export async function getOauth2Response(code: string): Promise<AuthRecord> {
   const res = await fetch(
-    `${constants.api}api/get-access-token?code=${encodeURIComponent(code)}`
+    `${constants.api}api/get-access-token?code=${encodeURIComponent(code)}`,
   );
 
   if (res.status === 200) return await res.json();
@@ -59,7 +60,7 @@ export async function getProfileData(id: string): Promise<API.Save> {
   params.append("id", id);
 
   const res = await fetch(
-    `${constants.api}api/get-profile-data?${params.toString()}`
+    `${constants.api}api/get-profile-data?${params.toString()}`,
   );
 
   if (res.status === 200) return await res.json();
@@ -79,7 +80,7 @@ export async function getSaveData(): Promise<API.Save> {
   else throw new SongSpotlightAPIError(await res.json());
 }
 export async function syncSaveData(
-  songs: API.Save["songs"]
+  songs: API.Save["songs"],
 ): Promise<API.Save | undefined> {
   if (!currentAuthorization()) return;
 

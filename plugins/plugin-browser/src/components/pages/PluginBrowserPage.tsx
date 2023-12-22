@@ -1,24 +1,25 @@
 import {
   NavigationNative,
-  ReactNative as RN,
   React,
+  ReactNative as RN,
 } from "@vendetta/metro/common";
+import { showConfirmationAlert } from "@vendetta/ui/alerts";
 import { getAssetIDByName } from "@vendetta/ui/assets";
-import { PluginsFullJson } from "../../types";
 import { General } from "@vendetta/ui/components";
-import { pluginsURL } from "../..";
 import { showToast } from "@vendetta/ui/toasts";
+import { safeFetch } from "@vendetta/utils";
+
 import {
   AdvancedSearch,
-  SuperAwesomeIcon,
   openSheet,
+  SuperAwesomeIcon,
   useAdvancedSearch,
 } from "../../../../../stuff/types";
-import { safeFetch } from "@vendetta/utils";
+import { pluginsURL } from "../..";
 import { getChanges, updateChanges } from "../../stuff/pluginChecker";
-import PluginThing from "../PluginThing";
 import { emitterAvailable } from "../../stuff/util";
-import { showConfirmationAlert } from "@vendetta/ui/alerts";
+import { PluginsFullJson } from "../../types";
+import PluginThing from "../PluginThing";
 import ChooseSheet from "../sheets/ChooseSheet";
 
 const { View } = General;
@@ -67,7 +68,7 @@ export default () => {
         (i) =>
           i.name?.toLowerCase().includes(search) ||
           i.authors?.some((x) => x.name?.toLowerCase().includes(search)) ||
-          i.description?.toLowerCase().includes(search)
+          i.description?.toLowerCase().includes(search),
       )
       .slice();
     if ([Filter.NameAZ, Filter.NameZA].includes(filter))
@@ -89,11 +90,11 @@ export default () => {
             .json()
             .then((x) => setParsed(x))
             .catch(() =>
-              showToast("Failed to parse plugins", getAssetIDByName("Small"))
-            )
+              showToast("Failed to parse plugins", getAssetIDByName("Small")),
+            ),
         )
         .catch(() =>
-          showToast("Failed to fetch plugins", getAssetIDByName("Small"))
+          showToast("Failed to fetch plugins", getAssetIDByName("Small")),
         );
   }, [parsed]);
 

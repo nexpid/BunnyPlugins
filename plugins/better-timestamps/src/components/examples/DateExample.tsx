@@ -1,14 +1,15 @@
-import { React, constants, stylesheet } from "@vendetta/metro/common";
 import { findByProps } from "@vendetta/metro";
-import { vstorage } from "../..";
-import { SimpleText } from "../../../../../stuff/types";
+import { constants, React, stylesheet } from "@vendetta/metro/common";
 import { semanticColors } from "@vendetta/ui";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { showToast } from "@vendetta/ui/toasts";
 
+import { SimpleText } from "../../../../../stuff/types";
+import { vstorage } from "../..";
+
 export const { parseTimestamp } = findByProps(
   "parseTimestamp",
-  "unparseTimestamp"
+  "unparseTimestamp",
 );
 
 const styles = stylesheet.createThemedStyleSheet({
@@ -26,7 +27,7 @@ export function DateExample() {
 
   React.useLayoutEffect(
     () => setRelativeTime(Date.now()),
-    [vstorage.day.acceptRelative]
+    [vstorage.day.acceptRelative],
   );
 
   return (
@@ -51,18 +52,19 @@ export function DateExample() {
         const slay = [];
 
         let i = -1;
-        for (let [day, month, year] of examples) {
+        for (const [day, month, year] of examples) {
           i++;
           const curY = new Date().getFullYear();
           const date = new Date();
 
-          if (year < 100) year += 2000;
+          let acYear = year;
+          if (year < 100) acYear += 2000;
 
-          date.setFullYear(year ?? curY, month, day);
+          date.setFullYear(acYear ?? curY, month, day);
 
           const time = parseTimestamp(
             Math.floor(date.getTime() / 1000).toString(),
-            "d"
+            "d",
           );
 
           const form = [
@@ -81,7 +83,7 @@ export function DateExample() {
               </SimpleText>
             ) : (
               form
-            )
+            ),
           );
           slay.push(" — ");
           slay.push(
@@ -94,7 +96,7 @@ export function DateExample() {
               }
             >
               {time.formatted}
-            </SimpleText>
+            </SimpleText>,
           );
           if (i !== examples.length - 1) slay.push("\n");
         }
@@ -116,7 +118,7 @@ export function DateExample() {
 
             const time = parseTimestamp(
               Math.floor(date / 1000).toString(),
-              "R"
+              "R",
             );
 
             slay.push(
@@ -130,7 +132,7 @@ export function DateExample() {
                 </SimpleText>
               ) : (
                 visual
-              )
+              ),
             );
             slay.push(" — ");
             slay.push(
@@ -143,7 +145,7 @@ export function DateExample() {
                 }
               >
                 {time.formatted}
-              </SimpleText>
+              </SimpleText>,
             );
             if (i !== relativeExamples.length - 1) slay.push("\n");
           }

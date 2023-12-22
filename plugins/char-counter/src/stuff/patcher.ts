@@ -1,11 +1,12 @@
 import { findByProps } from "@vendetta/metro";
-import { after, before } from "@vendetta/patcher";
-import { findInReactTree } from "@vendetta/utils";
-import CharCounter from "../components/CharCounter";
 import { React, ReactNative as RN } from "@vendetta/metro/common";
-import SimpleCharCounter from "../components/SimpleCharCounter";
+import { after, before } from "@vendetta/patcher";
 import { createStorage, wrapSync } from "@vendetta/storage";
+import { findInReactTree } from "@vendetta/utils";
+
 import { vstorage } from "..";
+import CharCounter from "../components/CharCounter";
+import SimpleCharCounter from "../components/SimpleCharCounter";
 
 const { ChatInput } = findByProps("ChatInput");
 const { MessagesWrapper } = findByProps("MessagesWrapper");
@@ -21,7 +22,7 @@ export const lastText: typeof _lastText = wrapSync(
     set: (x: any) => {
       _lastText = x;
     },
-  })
+  }),
 );
 
 export default () => {
@@ -29,7 +30,7 @@ export default () => {
     after("render", ChatInput.prototype, (_, ret) => {
       const input = findInReactTree(
         ret.props.children,
-        (x) => x?.type?.name === "ChatInput"
+        (x) => x?.type?.name === "ChatInput",
       );
       const props = input?.props;
       if (!props?.onChangeText) return;
@@ -37,31 +38,31 @@ export default () => {
       const children = findInReactTree(
         ret.props.children,
         (x) =>
-          x?.type?.displayName === "View" && Array.isArray(x?.props?.children)
+          x?.type?.displayName === "View" && Array.isArray(x?.props?.children),
       )?.props?.children;
       if (!children) return;
 
       if (vstorage.position === "pill") {
         children.unshift(
-          React.createElement(CharCounter, { inputProps: props })
+          React.createElement(CharCounter, { inputProps: props }),
         );
       } else {
         patches.push(
           after(
             "onChangeText",
             props,
-            ([txt]: [string]) => (lastText.value = txt)
-          )
+            ([txt]: [string]) => (lastText.value = txt),
+          ),
         );
       }
-    })
+    }),
   );
 
   patches.push(
     after("render", MessagesWrapper.prototype, (_, ret) => {
       const jump = findInReactTree(
         ret,
-        (x) => x?.type?.name === "JumpToPresentButton"
+        (x) => x?.type?.name === "JumpToPresentButton",
       );
       if (!jump) return;
 
@@ -69,9 +70,9 @@ export default () => {
         after("type", jump, (_, rat) => {
           if (rat?.props?.style && vstorage.position === "pill")
             rat.props.style[1].bottom += 32 + 8;
-        })
+        }),
       );
-    })
+    }),
   );
 
   patches.push(
@@ -89,7 +90,7 @@ export default () => {
       }
 
       return cloned;
-    })
+    }),
   );
 
   return () => {

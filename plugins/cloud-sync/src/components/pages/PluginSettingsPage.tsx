@@ -1,15 +1,16 @@
 import {
   NavigationNative,
-  ReactNative as RN,
   React,
+  ReactNative as RN,
 } from "@vendetta/metro/common";
-import { SuperAwesomeIcon } from "../../../../../stuff/types";
-import { getAssetIDByName } from "@vendetta/ui/assets";
-import { showConfirmationAlert } from "@vendetta/ui/alerts";
-import { useProxy } from "@vendetta/storage";
-import { vstorage } from "../..";
-import { Forms, Search, Summary } from "@vendetta/ui/components";
 import { plugins } from "@vendetta/plugins";
+import { useProxy } from "@vendetta/storage";
+import { showConfirmationAlert } from "@vendetta/ui/alerts";
+import { getAssetIDByName } from "@vendetta/ui/assets";
+import { Forms, Search, Summary } from "@vendetta/ui/components";
+
+import { SuperAwesomeIcon } from "../../../../../stuff/types";
+import { vstorage } from "../..";
 
 const { FormSwitchRow } = Forms;
 
@@ -57,8 +58,8 @@ export default () => {
       }
       style={{ paddingHorizontal: 10, paddingTop: 10 }}
       contentContainerStyle={{ paddingBottom: 20 }}
-      data={Object.entries(plugins).filter((x) =>
-        x[1].manifest.name?.toLowerCase().includes(search)
+      data={Object.entries(plugins).filter(
+        (x) => x[1].manifest.name?.toLowerCase().includes(search),
       )}
       renderItem={({ item: [id, item] }) => {
         vstorage.pluginSettings ??= {};

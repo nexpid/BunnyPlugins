@@ -1,8 +1,9 @@
+import { ReactNative as RN } from "@vendetta/metro/common";
 import { storage } from "@vendetta/plugin";
+
+import settings from "./components/Settings";
 import patcher from "./stuff/patcher";
 import { emojipacks } from "./stuff/twemoji";
-import settings from "./components/Settings";
-import { ReactNative as RN } from "@vendetta/metro/common";
 
 export const vstorage: {
   emojipack?: keyof typeof emojipacks;

@@ -82,7 +82,7 @@ for (const x of await readdir("./plugins")) {
   try {
     const manifest = JSON.parse(await readFile(`${path}manifest.json`, "utf8"));
     const { status, proxied, usable, discontinuedFor, external } = parse(
-      await readFile(`${path}status.toml`, "utf8")
+      await readFile(`${path}status.toml`, "utf8"),
     );
 
     const plugin = {
@@ -101,11 +101,11 @@ for (const x of await readdir("./plugins")) {
               }${x}`,
             }
           : status === "finished" || usable
-          ? {
-              title: "copy_link",
-              link: `${links.unproxied}${x}`,
-            }
-          : undefined,
+            ? {
+                title: "copy_link",
+                link: `${links.unproxied}${x}`,
+              }
+            : undefined,
         external: [
           external?.backend && {
             title: "view_backend_code",
@@ -128,7 +128,7 @@ for (const x of await readdir("./plugins")) {
           plugin.links.copy.title,
           undefined,
           undefined,
-          1
+          1,
         ),
       external:
         plugin.links.external[0] &&
@@ -143,7 +143,7 @@ for (const x of await readdir("./plugins")) {
 \t${makeBadge(
       "plugin_status",
       plugin.status,
-      statusColors[plugin.status].slice(1)
+      statusColors[plugin.status].slice(1),
     )}${badges.copy || badges.external ? `\n\t<br/>` : ""}${
       badges.copy ? "\n\t" : ""
     }${badges.copy ?? ""}${badges.external ? "\n\t" : ""}${
@@ -190,7 +190,7 @@ const chart = {
     datasets: [
       {
         data: [stats.finished, stats.unfinished, stats.discontinued].filter(
-          (x) => x > 0
+          (x) => x > 0,
         ),
         backgroundColor: [
           stats.finished > 0 && statusColors.finished,
@@ -305,9 +305,9 @@ const plist = categories
             }\n\t- ${[y.links.copy, y.links.code, ...y.links.external]
               .filter((z) => !!z)
               .map((z) => makeMDHrefBadge(z.link, z.title))
-              .join(" ")}`
+              .join(" ")}`,
         )
-        .join("\n")}`
+        .join("\n")}`,
   );
 
 const mreadme = `${mdNote}
@@ -316,22 +316,22 @@ const mreadme = `${mdNote}
 \t${makeHref(
   "https://github.com/nexpid/VendettaPlugins/stargazers",
   `<img alt="GitHub stars" src="https://img.shields.io/github/stars/nexpid/VendettaPlugins?style=for-the-badge&color=${shieldColors.ghstars}&labelColor=${shieldLabelColor}&logo=${shieldLogos.ghstars}">`,
-  1
+  1,
 )}
 \t${makeHref(
   "https://github.com/nexpid/VendettaPlugins/issues",
   `<img alt="GitHub issues" src="https://img.shields.io/github/issues/nexpid/VendettaPlugins?style=for-the-badge&color=${shieldColors.ghissues}&labelColor=${shieldLabelColor}&logo=${shieldLogos.ghissues}">`,
-  1
+  1,
 )}
 \t${makeHref(
   "https://github.com/nexpid/VendettaPlugins/pulls",
   `<img alt="GitHub pull requests" src="https://img.shields.io/github/issues-pr/nexpid/VendettaPlugins?style=for-the-badge&color=${shieldColors.ghpullreqs}&labelColor=${shieldLabelColor}&logo=${shieldLogos.ghpullreqs}">`,
-  1
+  1,
 )}
 \t${makeHref(
   "https://discord.gg/n9QQ4XhhJP",
   `<img alt="Discord members" src="https://img.shields.io/discord/1015931589865246730?style=for-the-badge&color=${shieldColors.discord}&labelColor=${shieldLabelColor}&logo=${shieldLogos.discord}">`,
-  1
+  1,
 )}
 </div>
 <br/>
@@ -347,16 +347,16 @@ I've coded a total of **${stats.all}** plugin${plur(stats.all)}.
 Out of the plugins I've coded, **${stats.finished}** ${plur(
   stats.finished,
   "are finished",
-  "is finished"
+  "is finished",
 )} (**${Math.floor((stats.finished / stats.all) * 100)}%**), and **${
   stats.proxied
 }** ${plur(stats.proxied, "are proxied", "is proxied")} (**${Math.floor(
-  (stats.proxied / stats.all) * 100
+  (stats.proxied / stats.all) * 100,
 )}%**)  
 **${stats.unproxied}** plugin${plur(stats.unproxied)} I've coded ${plur(
   stats.unproxied,
   "are",
-  "is"
+  "is",
 )} currently waiting to be proxied.  
 I'm working on **${stats.unfinished}** plugin${plur(stats.unfinished)}, and **${
   stats.discontinued
@@ -364,7 +364,7 @@ I'm working on **${stats.unfinished}** plugin${plur(stats.unfinished)}, and **${
 
 <div align="center">
 \t<img alt="Stats Pie Chart" src="https://quickchart.io/chart?c=${encodeURIComponent(
-  stringifiedChart
+  stringifiedChart,
 )}" width=600 />
 </div>
 
@@ -378,7 +378,7 @@ ${plist.join("\n\n")}${
 > **${invalidPlugins.length}** plugin${plur(
         invalidPlugins.length,
         "s aren't",
-        " isn't"
+        " isn't",
       )} being shown due to being formatted incorrectly:  
 ${invalidPlugins.map((x) => `> - ${x[0]}  `).join("\n")}`
     : ""

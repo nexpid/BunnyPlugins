@@ -1,7 +1,8 @@
 import { React } from "@vendetta/metro/common";
-import { EditableSong } from "../types";
-import { getSongName } from "../stuff/songs";
+
 import { SimpleText } from "../../../../stuff/types";
+import { getSongName } from "../stuff/songs";
+import { EditableSong } from "../types";
 
 export default function ({
   service,
@@ -21,7 +22,7 @@ export default function ({
     if (!id) return;
 
     getSongName(service, type, id).then((s) =>
-      setSongName(s !== false ? s : "N/A")
+      setSongName(s !== false ? s : "N/A"),
     );
   }, [id]);
 

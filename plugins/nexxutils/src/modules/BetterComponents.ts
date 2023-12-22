@@ -1,19 +1,20 @@
-import { React } from "@vendetta/metro/common";
-import { getAssetIDByName } from "@vendetta/ui/assets";
-import { Module, ModuleCategory } from "../stuff/Module";
-import { after, before, instead } from "@vendetta/patcher";
-import { ReactNative as RN } from "@vendetta/metro/common";
-import CustomSwitch from "../components/modules/BetterComponents/M3Switch";
 import { find, findByDisplayName, findByName } from "@vendetta/metro";
-import CustomToast from "../components/modules/BetterComponents/M3Snackbar";
-import { showToast } from "@vendetta/ui/toasts";
+import { React } from "@vendetta/metro/common";
+import { ReactNative as RN } from "@vendetta/metro/common";
+import { after, before, instead } from "@vendetta/patcher";
 import { assets } from "@vendetta/ui";
-import CustomDialog from "../components/modules/BetterComponents/M3Dialog";
 import { showConfirmationAlert } from "@vendetta/ui/alerts";
+import { getAssetIDByName } from "@vendetta/ui/assets";
+import { showToast } from "@vendetta/ui/toasts";
+
+import CustomDialog from "../components/modules/BetterComponents/M3Dialog";
+import CustomToast from "../components/modules/BetterComponents/M3Snackbar";
+import CustomSwitch from "../components/modules/BetterComponents/M3Switch";
+import { Module, ModuleCategory } from "../stuff/Module";
 import { article } from "../stuff/util";
 
 const { FormSwitch } = find(
-  (x) => typeof x?.FormSwitch === "function" && !("FormRow" in x)
+  (x) => typeof x?.FormSwitch === "function" && !("FormRow" in x),
 );
 const Toast = findByName("Toast", false);
 const Alert = findByDisplayName("FluxContainer(Alert)");
@@ -24,20 +25,18 @@ function componentify<T extends "before" | "after" | "instead">(
   origin: any,
   property: string,
   replacer: T,
-  callback: T extends "before"
+  callback: typeof replacer extends "before"
     ? Parameters<typeof before>[2]
-    : T extends "after"
-    ? Parameters<typeof after>[2]
-    : Parameters<typeof instead>[2]
+    : typeof replacer extends "after"
+      ? Parameters<typeof after>[2]
+      : typeof replacer extends "instead"
+        ? Parameters<typeof instead>[2]
+        : never,
 ) {
   const fnc =
     replacer === "before" ? before : replacer === "after" ? after : instead;
 
-  if (should)
-    self.patches.add(
-      //@ts-ignore
-      fnc(property, origin, callback)
-    );
+  if (should) self.patches.add(fnc(property, origin, callback as any));
 }
 
 export default new Module({
@@ -117,7 +116,7 @@ export default new Module({
         RN.Switch,
         "render",
         "after",
-        ([x]) => React.createElement(CustomSwitch, x)
+        ([x]) => React.createElement(CustomSwitch, x),
       );
       componentify(
         this,
@@ -125,7 +124,7 @@ export default new Module({
         RN.Switch,
         "render",
         "after",
-        ([x]) => React.createElement(FormSwitch, x)
+        ([x]) => React.createElement(FormSwitch, x),
       );
 
       componentify(
@@ -134,7 +133,7 @@ export default new Module({
         Toast,
         "default",
         "after",
-        ([x]) => React.createElement(CustomToast, x)
+        ([x]) => React.createElement(CustomToast, x),
       );
       componentify(
         this,
@@ -142,7 +141,7 @@ export default new Module({
         Alert.prototype,
         "render",
         "after",
-        (_, ret) => React.createElement(CustomDialog, ret.props)
+        (_, ret) => React.createElement(CustomDialog, ret.props),
       );
     },
     onStop() {},

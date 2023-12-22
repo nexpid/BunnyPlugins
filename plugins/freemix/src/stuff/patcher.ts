@@ -29,8 +29,8 @@ export default function () {
             return y;
           });
           return x;
-        })
-    )
+        }),
+    ),
   );
 
   return () => patches.forEach((x) => x?.());

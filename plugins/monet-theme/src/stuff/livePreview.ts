@@ -1,11 +1,12 @@
 import { findByProps } from "@vendetta/metro";
-import { ThemeDataWithPlus } from "../../../../stuff/typings";
-import { instead } from "@vendetta/patcher";
 import { chroma } from "@vendetta/metro/common";
-import { build } from "./buildTheme";
-import { stsPatches } from "../components/Settings";
-import { showToast } from "@vendetta/ui/toasts";
+import { instead } from "@vendetta/patcher";
 import { getAssetIDByName } from "@vendetta/ui/assets";
+import { showToast } from "@vendetta/ui/toasts";
+
+import { ThemeDataWithPlus } from "../../../../stuff/typings";
+import { stsPatches } from "../components/Settings";
+import { build } from "./buildTheme";
 
 // TODO keep up to date with https://github.com/vendetta-mod/Vendetta/blob/rewrite/src/lib/themes.ts
 
@@ -26,7 +27,7 @@ const semanticAlternativeMap: Record<string, string> = {
 
 const extractInfo = (themeMode: string, colorObj: any): [string, any] => {
   const propName =
-    // @ts-ignore - assigning to extractInfo._sym
+    // @ts-expect-error - assigning to extractInfo._sym
     colorObj[(extractInfo._sym ??= Object.getOwnPropertySymbols(colorObj)[0])];
   const colorDef = color.SemanticColor[propName];
 
@@ -80,7 +81,7 @@ const overwrite = (theme: ThemeDataWithPlus) => {
 
       // Fallback to default
       return orig(...args);
-    })
+    }),
   );
 
   return () => patches.forEach((x) => x());
@@ -96,7 +97,7 @@ export function toggle(val: boolean) {
   enabled = val;
   showToast(
     `Live theme preview ${enabled ? "enabled" : "disabled"}`,
-    getAssetIDByName("ic_info")
+    getAssetIDByName("ic_info"),
   );
 
   if (val) unpatch = overwrite(build(stsPatches));

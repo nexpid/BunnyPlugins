@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html></html>
 <script>
   const RNWV = window.ReactNativeWebView;
@@ -15,7 +15,7 @@
       stringToBuffer(raw),
       { name: "PBKDF2" },
       false,
-      ["deriveKey"]
+      ["deriveKey"],
     );
     const key = await crypto.subtle.deriveKey(
       {
@@ -27,7 +27,7 @@
       pkey,
       { name: "AES-GCM", length: 256 },
       false,
-      ["encrypt", "decrypt"]
+      ["encrypt", "decrypt"],
     );
     keyCache[raw] = key;
     return key;
@@ -46,7 +46,7 @@
             iv,
           },
           await getKey(key),
-          stringToBuffer(data)
+          stringToBuffer(data),
         );
         return RNWV.postMessage(
           JSON.stringify({
@@ -54,9 +54,9 @@
             data: btoa(
               String.fromCharCode
                 .apply(null, iv)
-                .concat(String.fromCharCode.apply(null, new Uint8Array(ret)))
+                .concat(String.fromCharCode.apply(null, new Uint8Array(ret))),
             ),
-          })
+          }),
         );
       } else if (action === "decrypt") {
         const raw = atob(data);
@@ -64,13 +64,13 @@
           raw
             .slice(0, 12)
             .split("")
-            .map((x) => x.charCodeAt(0))
+            .map((x) => x.charCodeAt(0)),
         );
         const dt = new Uint8Array(
           raw
             .slice(12)
             .split("")
-            .map((x) => x.charCodeAt(0))
+            .map((x) => x.charCodeAt(0)),
         );
 
         const ret = await window.crypto.subtle.decrypt(
@@ -79,15 +79,15 @@
             iv,
           },
           await getKey(key),
-          dt
+          dt,
         );
         return RNWV.postMessage(
-          JSON.stringify({ tracker, data: bufferToString(ret) })
+          JSON.stringify({ tracker, data: bufferToString(ret) }),
         );
       }
     } catch (e) {
       return RNWV.postMessage(
-        JSON.stringify({ tracker, error: e.message ?? `${e}` })
+        JSON.stringify({ tracker, error: e.message ?? `${e}` }),
       );
     }
   });

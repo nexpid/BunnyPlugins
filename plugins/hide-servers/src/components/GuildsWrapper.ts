@@ -1,6 +1,7 @@
-import { findInReactTree } from "@vendetta/utils";
-import { hiddenList, isHidden } from "..";
 import { useProxy } from "@vendetta/storage";
+import { findInReactTree } from "@vendetta/utils";
+
+import { hiddenList, isHidden } from "..";
 import { HiddenListEntryType } from "../types";
 
 export default ({ ret }: { ret: any }) => {
@@ -19,7 +20,7 @@ export default ({ ret }: { ret: any }) => {
       for (const g of x.guildIds) hidden.guilds.push(g);
     } else
       for (const g of x.guildIds.filter((y) =>
-        isHidden(HiddenListEntryType.Guild, y)
+        isHidden(HiddenListEntryType.Guild, y),
       ))
         hidden.guilds.push(g);
   }
@@ -31,12 +32,12 @@ export default ({ ret }: { ret: any }) => {
 
   guilds.guildFolders = guilds.guildFolders
     .filter((x) =>
-      x.folderId ? !isHidden(HiddenListEntryType.Folder, x.folderId) : true
+      x.folderId ? !isHidden(HiddenListEntryType.Folder, x.folderId) : true,
     )
     .map((x) => ({
       ...x,
       guildIds: x.guildIds.filter(
-        (y) => !isHidden(HiddenListEntryType.Guild, y)
+        (y) => !isHidden(HiddenListEntryType.Guild, y),
       ),
     }));
 

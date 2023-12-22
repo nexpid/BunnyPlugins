@@ -1,6 +1,7 @@
-import patcher from "./stuff/patcher";
-import settings from "./components/Settings";
 import { storage } from "@vendetta/plugin";
+
+import settings from "./components/Settings";
+import patcher from "./stuff/patcher";
 import { IconPack, IconPackData } from "./types";
 
 export enum PatchType {
@@ -19,7 +20,7 @@ export enum InactiveReason {
   IconpackTreeNuhUh = "Couldn't fetch iconpack tree",
 }
 
-export let active: {
+export const active: {
   active: boolean;
   iconpack: IconPack | null;
   iconpackList: IconPackData["list"];

@@ -1,9 +1,10 @@
 import { General } from "@vendetta/ui/components";
+
 import { BetterTableRowGroup, SimpleText } from "../../../../stuff/types";
-import { Module, moduleCategoryMap } from "../stuff/Module";
-import modules from "../modules";
-import SillyAvatar from "./SillyAvatar";
 import { version } from "..";
+import modules from "../modules";
+import { Module, moduleCategoryMap } from "../stuff/Module";
+import SillyAvatar from "./SillyAvatar";
 
 const { View, ScrollView } = General;
 
@@ -27,7 +28,7 @@ export default () => {
       </View>
       {moduleCategoryMap.map(({ category, title, icon }) => {
         const mods = modules.filter(
-          (x) => x.category === category
+          (x) => x.category === category,
         ) as Module<any>[];
         return (
           <BetterTableRowGroup

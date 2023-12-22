@@ -1,18 +1,19 @@
-import { General } from "@vendetta/ui/components";
-import { PatchType, active } from "..";
 import { findByName, findByProps } from "@vendetta/metro";
 import { ReactNative as RN, url } from "@vendetta/metro/common";
+import { showConfirmationAlert } from "@vendetta/ui/alerts";
+import { getAssetIDByName } from "@vendetta/ui/assets";
+import { General } from "@vendetta/ui/components";
+
 import {
-  SimpleText,
-  TextStyleSheet,
   doHaptic,
   openModal,
   openSheet,
+  SimpleText,
+  TextStyleSheet,
 } from "../../../../stuff/types";
-import { getAssetIDByName } from "@vendetta/ui/assets";
+import { active, PatchType } from "..";
 import DevModal from "./modals/DevModal";
 import IconpackInfoSheet from "./sheets/IconpackInfoSheet";
-import { showConfirmationAlert } from "@vendetta/ui/alerts";
 
 const { View } = General;
 
@@ -75,7 +76,7 @@ export default function () {
                       <SimpleText
                         variant="text-lg/bold"
                         color="TEXT_LINK"
-                        onPress={() => openSheet(IconpackInfoSheet, {})}
+                        onPress={() => openSheet(IconpackInfoSheet, undefined)}
                       >
                         Custom icon pack
                       </SimpleText>,
@@ -88,7 +89,7 @@ export default function () {
                   source={getAssetIDByName(
                     active.patches.includes(type)
                       ? "ic_radio_square_checked_24px"
-                      : "ic_radio_square_24px"
+                      : "ic_radio_square_24px",
                   )}
                   style={{
                     marginRight: 8,
@@ -166,7 +167,7 @@ export default function () {
         onPress={() =>
           showConfirmationAlert({
             title: "GitHub FAQ",
-            //@ts-ignore unadded in typings
+            //@ts-expect-error unadded in typings
             children: (
               <View style={{ height: 400 }}>
                 <WebView

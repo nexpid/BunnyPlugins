@@ -1,12 +1,13 @@
 import { logger } from "@vendetta";
-import patcher from "./stuff/patcher";
-import { stopPlugin } from "@vendetta/plugins";
 import { id } from "@vendetta/plugin";
+import { stopPlugin } from "@vendetta/plugins";
+
+import patcher from "./stuff/patcher";
 
 export const dataURL = "https://userpfp.github.io/UserPFP/source/data.json";
 export const staticGifURL = (url: string) =>
   `https://static-gif.nexpid.workers.dev/convert.gif?url=${encodeURIComponent(
-    url
+    url,
   )}&_=${hash}`;
 
 export let enabled = false;

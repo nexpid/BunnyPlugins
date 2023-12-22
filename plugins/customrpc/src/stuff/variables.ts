@@ -1,9 +1,10 @@
 import { findByStoreName } from "@vendetta/metro";
+
+import { getUserAvatar } from "../../../../stuff/types";
 import { RawActivity } from "./activity";
 import { getExternalAsset, proxyAssetCache } from "./api";
-import { statusLinks, unparseTimestamp } from "./util";
 import { forceUpdateActivity, registerChangeFluxEvent } from "./autochange";
-import { getUserAvatar } from "../../../../stuff/types";
+import { statusLinks, unparseTimestamp } from "./util";
 
 const UserStore = findByStoreName("UserStore");
 const SpotifyStore = findByStoreName("SpotifyStore");
@@ -30,7 +31,7 @@ export const varCache: {
 
 export const getCustomActivity = (from?: any) =>
   (from ?? PresenceStore.getActivities(UserStore.getCurrentUser().id)).find(
-    (x: RawActivity) => x.type === 4
+    (x: RawActivity) => x.type === 4,
   );
 
 export const stringVariables: {
@@ -149,7 +150,7 @@ export interface ParsedVariableTimestamp {
   type?: VariableType;
 }
 export function parseVariableTimestamp(
-  timestamp: string | number
+  timestamp: string | number,
 ): ParsedVariableTimestamp {
   if (typeof timestamp === "string") {
     const varib = timestampVariables.find((x) => x.format === timestamp);
@@ -224,7 +225,7 @@ export function registerVariableEvents(types: VariableType[]) {
       registerChangeFluxEvent(
         "parsed.currentuser",
         "CURRENT_USER_UPDATE",
-        forceUpdateActivity
+        forceUpdateActivity,
       );
     else if (x === VariableType.CurrentUserPresence)
       registerChangeFluxEvent(
@@ -244,6 +245,6 @@ export function registerVariableEvents(types: VariableType[]) {
             custom: getCustomActivity(x.activities),
             spotify: SpotifyStore.getActivity(),
           };
-        }
+        },
       );
 }

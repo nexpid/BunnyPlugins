@@ -1,3 +1,4 @@
 dist
 archive
 plugins/doom/assets/download
+pnpm-lock.yaml

@@ -1,6 +1,7 @@
 import { React } from "@vendetta/metro/common";
-import cryptoWebview from "../../assets/cryptoWebview.html";
+
 import { WebView } from "../../../../stuff/types";
+import cryptoWebview from "../../assets/cryptoWebview.html";
 
 type WVRes =
   | { tracker: string; data: string }
@@ -16,7 +17,7 @@ const sendMessage = (data: any) =>
 
 export async function encrypt(
   data: string,
-  key: string
+  key: string,
 ): Promise<string | null> {
   if (!handler) return null;
 
@@ -28,7 +29,7 @@ export async function encrypt(
 }
 export async function decrypt(
   data: string,
-  key: string
+  key: string,
 ): Promise<string | null> {
   if (!handler) return null;
 

@@ -1,13 +1,14 @@
 import { storage } from "@vendetta/plugin";
+
+import { MMKVManager } from "../../../stuff/types";
+import settings from "./components/Settings";
 import {
-  RawActivity,
-  SettingsActivity,
   dispatchActivity,
   dispatchActivityIfPossible,
+  RawActivity,
+  SettingsActivity,
 } from "./stuff/activity";
-import settings from "./components/Settings";
 import { registerDefaultChanges, unregisterChanges } from "./stuff/autochange";
-import { MMKVManager } from "../../../stuff/types";
 
 export const vstorage: {
   settings?: {
@@ -48,4 +49,3 @@ export default {
   },
   settings,
 };
-

@@ -1,6 +1,7 @@
-import { getAssetIDByName } from "@vendetta/ui/assets";
-import { after, before } from "@vendetta/patcher";
 import { findByProps, findByStoreName } from "@vendetta/metro";
+import { after, before } from "@vendetta/patcher";
+import { getAssetIDByName } from "@vendetta/ui/assets";
+
 import { Module, ModuleCategory } from "../stuff/Module";
 
 const UserStore = findByStoreName("UserStore");
@@ -39,8 +40,8 @@ export default new Module({
                 return y;
               });
               return x;
-            })
-        )
+            }),
+        ),
       );
     },
     onStop() {},

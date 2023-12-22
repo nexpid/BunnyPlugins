@@ -1,30 +1,31 @@
 import { constants } from "@vendetta";
 import { findByProps } from "@vendetta/metro";
+import { React, stylesheet } from "@vendetta/metro/common";
+import { semanticColors } from "@vendetta/ui";
 import { showConfirmationAlert, showInputAlert } from "@vendetta/ui/alerts";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { Forms, General } from "@vendetta/ui/components";
 import { showToast } from "@vendetta/ui/toasts";
-import { getExternalAsset } from "./api";
-import { showRichAssetList } from "../components/pages/RichAssetList";
-import { showApplicationList } from "../components/pages/ApplicationList";
-import { ActivityType, isActivitySaved } from "./activity";
-import { activityTypePreview } from "../components/Settings";
-import { React, stylesheet } from "@vendetta/metro/common";
+
 import {
   ActionSheet,
   ActionSheetCloseButton,
   ActionSheetContentContainer,
   ActionSheetTitleHeader,
-  RichText,
-  SimpleText,
   hideActionSheet,
   openLazy,
   openSheet,
+  RichText,
+  SimpleText,
 } from "../../../../stuff/types";
 import { vstorage } from "..";
+import { showApplicationList } from "../components/pages/ApplicationList";
+import { showRichAssetList } from "../components/pages/RichAssetList";
+import { activityTypePreview } from "../components/Settings";
+import { ActivityType, isActivitySaved } from "./activity";
+import { getExternalAsset } from "./api";
 import { unparseTimestamp } from "./util";
 import { imageVariables, timestampVariables } from "./variables";
-import { semanticColors } from "@vendetta/ui";
 
 const { View } = General;
 const { FormRow, FormRadioRow } = Forms;
@@ -280,7 +281,7 @@ export function ApplicationActionSheet({
   appName: string | undefined;
   navigation: any;
   update: (
-    props: { id: string | undefined; name: string | undefined } | undefined
+    props: { id: string | undefined; name: string | undefined } | undefined,
   ) => void;
 }) {
   return (

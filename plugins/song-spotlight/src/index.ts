@@ -1,9 +1,10 @@
 import { storage } from "@vendetta/plugin";
-import { currentAuthorization, getSaveData } from "./stuff/api";
-import { API } from "./types/api";
 import { createStorage, wrapSync } from "@vendetta/storage";
-import patcher from "./stuff/patcher";
+
 import settings from "./components/Settings";
+import { currentAuthorization, getSaveData } from "./stuff/api";
+import patcher from "./stuff/patcher";
+import { API } from "./types/api";
 
 export interface AuthRecord {
   accessToken: string;
@@ -24,13 +25,15 @@ export const cache: {
     set: (x) => {
       _cache = x;
     },
-  })
+  }),
 );
 
 export async function fillCache() {
   try {
     cache.data = await getSaveData();
-  } catch {}
+  } catch {
+    return;
+  }
 }
 
 let unpatch: () => void;

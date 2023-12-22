@@ -1,9 +1,9 @@
 import { findByName, findByProps } from "@vendetta/metro";
 import {
-  ReactNative as RN,
-  React,
   i18n,
   lodash,
+  React,
+  ReactNative as RN,
   stylesheet,
 } from "@vendetta/metro/common";
 import { after, before } from "@vendetta/patcher";
@@ -36,7 +36,7 @@ export function patchSettingsPin(
       title?: string;
       headerRight?: () => void;
     };
-  }
+  },
 ): () => void {
   const patches = [];
 
@@ -48,7 +48,7 @@ export function patchSettingsPin(
 
       const Overview = findInReactTree(
         ret.props.children,
-        (i) => i.type && i.type.name === "UserSettingsOverview"
+        (i) => i.type && i.type.name === "UserSettingsOverview",
       );
 
       patches.push(
@@ -62,19 +62,19 @@ export function patchSettingsPin(
             ];
             children = findInReactTree(
               children,
-              (t) => t.children[1].type === FormSection
+              (t) => t.children[1].type === FormSection,
             ).children;
             const index = children.findIndex((c: any) =>
-              titles.includes(c?.props.label)
+              titles.includes(c?.props.label),
             );
 
             if (shouldAppear())
               children.splice(index === -1 ? 4 : index, 0, render({}));
-          }
-        )
+          },
+        ),
       );
     },
-    true
+    true,
   );
   patches.push(unpatch);
 
@@ -127,7 +127,7 @@ export function patchSettingsPin(
 
       const title = "Vendetta";
       const section = sections.find(
-        (x) => x?.title === title || x?.label === title
+        (x) => x?.title === title || x?.label === title,
       );
       if (section && !section?.settings?.includes(screenKey))
         section.settings.push(screenKey);
@@ -140,7 +140,7 @@ export function patchSettingsPin(
       const titleConfig = findByProps("getSettingTitleConfig");
       const stuff = findByProps(
         "SETTING_RELATIONSHIPS",
-        "SETTING_RENDERER_CONFIGS"
+        "SETTING_RENDERER_CONFIGS",
       );
 
       const OLD_getterFunction = "getSettingSearchListItems";
@@ -156,14 +156,14 @@ export function patchSettingsPin(
 
       patches.push(
         after("useOverviewSettings", layout, (_, ret) =>
-          manipulateSections(ret)
-        )
+          manipulateSections(ret),
+        ),
       );
       patches.push(
         after("getSettingTitleConfig", titleConfig, (_, ret) => ({
           ...ret,
           [screenKey]: you.title,
-        }))
+        })),
       );
       patches.push(
         after(getterFunctionName, getters, ([settings], ret) => [
@@ -180,7 +180,7 @@ export function patchSettingsPin(
               ]
             : []),
           ...ret,
-        ])
+        ]),
       );
 
       const oldRelationships = stuff.SETTING_RELATIONSHIPS;
@@ -213,15 +213,15 @@ export function patchSettingsPin(
 
       patches.push(
         before("type", settingsListComponents.SearchableSettingsList, (ret) =>
-          manipulateSections(ret, true)
-        )
+          manipulateSections(ret, true),
+        ),
       );
 
       patches.push(
         after("getSettingListSearchResultItems", gettersModule, (_, ret) => {
           for (const s of ret)
             if (s.setting === screenKey) s.breadcrumbs = ["Vendetta"];
-        })
+        }),
       );
 
       const oldRendererConfig = settingConstantsModule.SETTING_RENDERER_CONFIG;

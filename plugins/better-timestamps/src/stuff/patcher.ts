@@ -1,6 +1,7 @@
-import { before } from "@vendetta/patcher";
-import { vstorage } from "..";
 import { findByProps } from "@vendetta/metro";
+import { before } from "@vendetta/patcher";
+
+import { vstorage } from "..";
 import { parseRelative } from "./relative";
 
 const MessageSender = findByProps("sendMessage", "editMessage");
@@ -30,13 +31,10 @@ const patchMessage = ([_, message]: any[]) => {
 
     for (const reg of regexes) {
       content = content.replace(reg, (str, time: string, abrv?: string) => {
-        let [hours, minutes, seconds] = time
-          .split(":")
-          .map((x) => Number(x)) as [
-          number,
-          number | undefined,
-          number | undefined
-        ];
+        const timed = time.split(":").map((x) => Number(x));
+        let hours = timed[0] as number;
+        const minutes = timed[1] as number | undefined,
+          seconds = timed[2] as number | undefined;
 
         if (hours < 0 || hours > 24) return str;
         if (typeof minutes === "number" && (minutes < 0 || minutes > 60))
@@ -54,7 +52,7 @@ const patchMessage = ([_, message]: any[]) => {
         date.setHours(hours, minutes ?? 0, seconds ?? 0, 0);
 
         return `${isWhitespace(str[0]) ? str[0] : ""}<t:${Math.floor(
-          date.getTime() / 1000
+          date.getTime() / 1000,
         )}:${date.getSeconds() === 0 ? "t" : "T"}>${
           isWhitespace(str[str.length - 1]) ? str[str.length - 1] : ""
         }`;
@@ -100,9 +98,9 @@ const patchMessage = ([_, message]: any[]) => {
           date.setFullYear(year, month - 1, day);
 
           return `${isWhitespace(str[0]) ? str[0] : ""}<t:${Math.floor(
-            date.getTime() / 1000
+            date.getTime() / 1000,
           )}:d>${isWhitespace(str[str.length - 1]) ? str[str.length - 1] : ""}`;
-        }
+        },
       );
     }
   }
@@ -119,9 +117,9 @@ const patchMessage = ([_, message]: any[]) => {
     content,
     (str, tim) => {
       return `${isWhitespace(str[0]) ? str[0] : ""}<t:${Math.floor(
-        (Date.now() + tim) / 1000
+        (Date.now() + tim) / 1000,
       )}:R>${isWhitespace(str[str.length - 1]) ? str[0] : ""}`;
-    }
+    },
   );
 
   message.content = content;

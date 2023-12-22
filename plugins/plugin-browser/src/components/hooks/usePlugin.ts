@@ -1,5 +1,6 @@
 import { React } from "@vendetta/metro/common";
 import { plugins } from "@vendetta/plugins";
+
 import { emitterSymbol } from "../../stuff/util";
 
 export default function (id: string) {

@@ -3,14 +3,15 @@ import {
   React,
   ReactNative as RN,
 } from "@vendetta/metro/common";
-import { SimpleAPIApplication, getApplications } from "../../stuff/api";
-import { General, Search } from "@vendetta/ui/components";
-import { SimpleText, SuperAwesomeIcon } from "../../../../../stuff/types";
-import { placeholders } from "../Settings";
-import { applicationListCallback } from "../../stuff/prompts";
-import { getAssetIDByName } from "@vendetta/ui/assets";
 import { showInputAlert } from "@vendetta/ui/alerts";
+import { getAssetIDByName } from "@vendetta/ui/assets";
+import { General, Search } from "@vendetta/ui/components";
 import { showToast } from "@vendetta/ui/toasts";
+
+import { SimpleText, SuperAwesomeIcon } from "../../../../../stuff/types";
+import { getApplications, SimpleAPIApplication } from "../../stuff/api";
+import { applicationListCallback } from "../../stuff/prompts";
+import { placeholders } from "../Settings";
 
 const { View, Image } = General;
 
@@ -58,7 +59,7 @@ export const ApplicationList = () => {
       style={{ paddingHorizontal: 10, paddingTop: 10 }}
       contentContainerStyle={{ paddingBottom: 20 }}
       data={data.filter((x) =>
-        x.name.toLowerCase().includes(search.toLowerCase())
+        x.name.toLowerCase().includes(search.toLowerCase()),
       )}
       renderItem={(x) => {
         const { item } = x;

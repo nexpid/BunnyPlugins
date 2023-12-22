@@ -1,7 +1,8 @@
 import { findByStoreName } from "@vendetta/metro";
-import { PlusColorResolvable } from "../../../../stuff/typings";
-import { resolveSemanticColor } from "../../../../stuff/types";
 import { rawColors, semanticColors } from "@vendetta/ui";
+
+import { resolveSemanticColor } from "../../../../stuff/types";
+import { PlusColorResolvable } from "../../../../stuff/typings";
 
 const UnsyncedUserSettingsStore = findByStoreName("UnsyncedUserSettingsStore");
 

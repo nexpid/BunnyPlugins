@@ -5,14 +5,15 @@ import {
   findByProps,
   findByStoreName,
 } from "@vendetta/metro";
-import { ReactNative as RN, React, stylesheet } from "@vendetta/metro/common";
+import { React, ReactNative as RN, stylesheet } from "@vendetta/metro/common";
 import { semanticColors } from "@vendetta/ui";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { Forms, General } from "@vendetta/ui/components";
 import { showToast } from "@vendetta/ui/toasts";
 import { without } from "@vendetta/utils";
-import type { Redesign as _Redesign } from "./redesign";
 import type _WebView from "react-native-webview";
+
+import type { Redesign as _Redesign } from "./redesign";
 
 const ThemeStore = findByStoreName("ThemeStore");
 const colors = findByProps("colors", "meta");
@@ -39,7 +40,7 @@ export const {
 } = findByProps(
   "ActionSheetTitleHeader",
   "ActionSheetCloseButton",
-  "ActionSheetContentContainer"
+  "ActionSheetContentContainer",
 );
 export const ActionSheetRow = findByProps("ActionSheetRow")?.ActionSheetRow;
 
@@ -58,7 +59,7 @@ export const { SvgXml } = findByProps("SvgXml");
 
 export const { useInMainTabsExperiment, isInMainTabsExperiment } = findByProps(
   "useInMainTabsExperiment",
-  "isInMainTabsExperiment"
+  "isInMainTabsExperiment",
 );
 
 export const WebView = find((x) => x?.WebView && !x.default)
@@ -80,7 +81,7 @@ export function getUserAvatar(
     avatar?: string;
     id: string;
   },
-  animated?: boolean
+  animated?: boolean,
 ): string {
   const isPomelo = user.discriminator === "0";
 
@@ -99,23 +100,23 @@ export function getUserAvatar(
 
 export function openSheet<T extends React.FunctionComponent>(
   sheet: T,
-  props: Parameters<T>[0]
+  props: Parameters<T>[0],
 ) {
   try {
     openLazy(
       new Promise((x) =>
         x({
           default: sheet,
-        })
+        }),
       ),
       "ActionSheet",
-      props
+      props,
     );
   } catch (e) {
     logger.error(e.stack);
     showToast(
       "Got error when opening ActionSheet! Please check debug logs",
-      getAssetIDByName("Smal")
+      getAssetIDByName("Smal"),
     );
   }
 }
@@ -130,7 +131,7 @@ export function openModal(key: string, modal: typeof Modal) {
       ]
         .filter((x) => x !== empty)
         .join(", ")} is missing! Please try reinstalling Vendetta`,
-      getAssetIDByName("Small")
+      getAssetIDByName("Small"),
     );
 
   pushModal({
@@ -149,7 +150,7 @@ export function doHaptic(dur: number): Promise<void> {
   triggerHaptic();
   const interval = setInterval(triggerHaptic, 1);
   return new Promise((res) =>
-    setTimeout(() => res(clearInterval(interval)), dur)
+    setTimeout(() => res(clearInterval(interval)), dur),
   );
 }
 
@@ -205,7 +206,7 @@ export const useAdvancedSearch = (searchContext: SearchContext) => {
   const controls: Record<string, any> = BaseSearch.useSearchControls(
     searchContext,
     false,
-    () => void 0
+    () => void 0,
   );
 
   React.useEffect(
@@ -213,7 +214,7 @@ export const useAdvancedSearch = (searchContext: SearchContext) => {
       SettingSearch.setSettingSearchQuery("");
       SettingSearch.setIsSettingSearchActive(false);
     },
-    []
+    [],
   );
 
   return [query, controls] as const;
@@ -288,7 +289,7 @@ export const FileManager = (window.nativeModuleProxy.DCDFileManager ??
   saveFileToGallery?(
     uri: string,
     fileName: string,
-    fileType: "PNG" | "JPEG"
+    fileType: "PNG" | "JPEG",
   ): Promise<string>;
   /**
    * Beware! This function has differing functionality on iOS and Android.
@@ -302,7 +303,7 @@ export const FileManager = (window.nativeModuleProxy.DCDFileManager ??
     storageDir: "cache" | "documents",
     path: string,
     data: string,
-    encoding: "base64" | "utf8"
+    encoding: "base64" | "utf8",
   ): Promise<string>;
   removeFile(storageDir: "cache" | "documents", path: string): Promise<unknown>;
   getConstants: () => {
@@ -339,8 +340,8 @@ export const SoundManager = window.nativeModuleProxy.DCDSoundManager as {
     soundId: number,
     callback: (
       error: any,
-      meta: { numberOfChannels: number; duration: number }
-    ) => any
+      meta: { numberOfChannels: number; duration: number },
+    ) => any,
   ) => void;
 };
 
@@ -349,7 +350,7 @@ export function Modal(
     mkey: string;
     headerRight?: React.FunctionComponent;
     title?: string;
-  }>
+  }>,
 ) {
   if (!Navigator || !modalCloseButton) return null;
   return (
@@ -524,8 +525,8 @@ export function SimpleText({
     if (!liveUpdate) return;
     const nextSecond = new Date().setMilliseconds(1000);
 
-    let interval: any, timeout: any;
-    timeout = setTimeout(() => {
+    let interval: any;
+    const timeout = setTimeout(() => {
       forceUpdate();
       interval = setInterval(forceUpdate, 1000);
     }, nextSecond - Date.now());

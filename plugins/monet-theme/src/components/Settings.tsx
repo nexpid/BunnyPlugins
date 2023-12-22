@@ -1,11 +1,20 @@
+import { getDebugInfo } from "@vendetta/debug";
+import { findByProps } from "@vendetta/metro";
 import {
-  NavigationNative,
-  ReactNative as RN,
-  React,
   clipboard,
+  NavigationNative,
+  React,
+  ReactNative as RN,
   stylesheet,
 } from "@vendetta/metro/common";
+import { id } from "@vendetta/plugin";
+import { createFileBackend, useProxy } from "@vendetta/storage";
+import { semanticColors } from "@vendetta/ui";
+import { showConfirmationAlert, showInputAlert } from "@vendetta/ui/alerts";
+import { getAssetIDByName } from "@vendetta/ui/assets";
 import { Forms, General } from "@vendetta/ui/components";
+import { showToast } from "@vendetta/ui/toasts";
+
 import {
   BetterTableRowGroup,
   BundleUpdaterManager,
@@ -16,8 +25,6 @@ import {
   TextStyleSheet,
 } from "../../../../stuff/types";
 import { VendettaSysColors } from "../../../../stuff/typings";
-import { getAssetIDByName } from "@vendetta/ui/assets";
-import Color from "./Color";
 import {
   commitsURL,
   devPatchesURL,
@@ -27,23 +34,17 @@ import {
   patchesURL,
   vstorage,
 } from "..";
-import { createFileBackend, useProxy } from "@vendetta/storage";
-import { showToast } from "@vendetta/ui/toasts";
-import { showConfirmationAlert, showInputAlert } from "@vendetta/ui/alerts";
 import { build } from "../stuff/buildTheme";
-import Commit, { CommitObj } from "./Commit";
-import { openCommitsPage } from "./pages/CommitsPage";
+import { transform } from "../stuff/colors";
 import { parse } from "../stuff/jsoncParser";
-import { id } from "@vendetta/plugin";
-import { semanticColors } from "@vendetta/ui";
-import { getDebugInfo } from "@vendetta/debug";
+import { toggle } from "../stuff/livePreview";
 import { checkForURL, fetchRawTheme, parseTheme } from "../stuff/repainter";
 import { Patches } from "../types";
-import { transform } from "../stuff/colors";
-import { toggle } from "../stuff/livePreview";
+import Color from "./Color";
+import Commit, { CommitObj } from "./Commit";
+import { openCommitsPage } from "./pages/CommitsPage";
 import { openConfigurePage } from "./pages/ConfigurePage";
 import PreviewButton from "./PreviewButton";
-import { findByProps } from "@vendetta/metro";
 
 const { ScrollView, View, Pressable } = General;
 const { FormRow, FormSwitchRow } = Forms;
@@ -53,7 +54,7 @@ const mdSize = TextStyleSheet["text-md/semibold"].fontSize;
 
 function transformObject<T extends Record<string, string>>(obj: T): T {
   for (const [k, v] of Object.entries(obj)) {
-    //@ts-ignore shut the fuck up typescript
+    //@ts-expect-error shut the fuck up typescript
     obj[k] = transform(v);
   }
   return obj;
@@ -75,7 +76,7 @@ export default () => {
   const navigation = NavigationNative.useNavigation();
   const [_, forceUpdate] = React.useReducer((x) => ~x, 0);
   const [commits, setCommits] = React.useState<CommitObj[] | undefined>(
-    undefined
+    undefined,
   );
   const [patches, setPatches] = React.useState<Patches | undefined>(undefined);
   stsCommits = commits;
@@ -144,13 +145,13 @@ export default () => {
           } catch {
             return showToast(
               "Failed to parse patches.json",
-              getAssetIDByName("Small")
+              getAssetIDByName("Small"),
             );
           }
-        })
+        }),
       )
       .catch(() =>
-        showToast("Failed to fetch patches.json", getAssetIDByName("Small"))
+        showToast("Failed to fetch patches.json", getAssetIDByName("Small")),
       );
   }, [patches]);
   React.useEffect(() => {
@@ -165,11 +166,11 @@ export default () => {
             .json()
             .then((x) => setCommits(x))
             .catch(() =>
-              showToast("Failed to parse commits", getAssetIDByName("Small"))
-            )
+              showToast("Failed to parse commits", getAssetIDByName("Small")),
+            ),
         )
         .catch(() =>
-          showToast("Failed to fetch commits", getAssetIDByName("Small"))
+          showToast("Failed to fetch commits", getAssetIDByName("Small")),
         );
   }, [commits]);
 
@@ -237,7 +238,7 @@ export default () => {
         >
           <RN.Image
             source={getAssetIDByName(
-              showMessage.error ? "ic_warning_24px" : "ic_info_24px"
+              showMessage.error ? "ic_warning_24px" : "ic_info_24px",
             )}
             style={{
               width: mdSize,
@@ -405,7 +406,7 @@ export default () => {
 
             const otter = vstorage.patches.from === "local" ? "git" : "local";
             showToast(
-              `Now using ${otter === "git" ? "GitHub" : "local"} patches`
+              `Now using ${otter === "git" ? "GitHub" : "local"} patches`,
             );
             vstorage.patches.from = otter;
             setPatches(undefined);

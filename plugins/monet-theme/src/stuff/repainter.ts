@@ -48,7 +48,7 @@ export async function fetchRawTheme(link: string): Promise<RepainterRawTheme> {
       `https://repainter.app/_next/data/Z0BCpVYZyrdkss0k0zqLC/themes/${
         link.match(/themes\/([a-z0-9]+)/i)?.[1] ?? ""
       }.json`,
-      { cache: "no-store" }
+      { cache: "no-store" },
     )
   ).json();
 }

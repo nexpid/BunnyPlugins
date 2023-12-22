@@ -1,20 +1,20 @@
-import { storage } from "@vendetta/plugin";
-import settings, { setColorsFromDynamic } from "./components/Settings";
-import { showConfirmationAlert, showCustomAlert } from "@vendetta/ui/alerts";
-import { createFileBackend } from "@vendetta/storage";
-import { VendettaSysColors } from "../../../stuff/typings";
-import { build } from "./stuff/buildTheme";
-import { showToast } from "@vendetta/ui/toasts";
-import { parse } from "./stuff/jsoncParser";
-import { getAssetIDByName } from "@vendetta/ui/assets";
-import { id } from "@vendetta/plugin";
 import { findByProps, findByStoreName } from "@vendetta/metro";
 import { React } from "@vendetta/metro/common";
-import Updating from "./components/Updating";
-import { unpatch } from "./stuff/livePreview";
-import { BundleUpdaterManager } from "../../../stuff/types";
+import { id } from "@vendetta/plugin";
+import { createFileBackend } from "@vendetta/storage";
+import { showConfirmationAlert, showCustomAlert } from "@vendetta/ui/alerts";
+import { getAssetIDByName } from "@vendetta/ui/assets";
+import { showToast } from "@vendetta/ui/toasts";
+
 import { makeStorage } from "../../../stuff/storage";
+import { BundleUpdaterManager } from "../../../stuff/types";
+import { VendettaSysColors } from "../../../stuff/typings";
+import settings, { setColorsFromDynamic } from "./components/Settings";
+import Updating from "./components/Updating";
+import { build } from "./stuff/buildTheme";
 import { transform } from "./stuff/colors";
+import { parse } from "./stuff/jsoncParser";
+import { unpatch } from "./stuff/livePreview";
 
 const ThemeStore = findByStoreName("ThemeStore");
 
@@ -34,7 +34,7 @@ export const getSysColors = () =>
 const hasTheme = () => window.__vendetta_theme?.id.includes("monet-theme");
 
 export const makeApplyCache = (
-  syscolors: VendettaSysColors | null | undefined
+  syscolors: VendettaSysColors | null | undefined,
 ) =>
   JSON.stringify(
     syscolors
@@ -45,7 +45,7 @@ export const makeApplyCache = (
           syscolors.accent2[7],
           syscolors.accent3[7],
         ]
-      : null
+      : null,
   );
 export const makeThemeApplyCache = () =>
   JSON.stringify(vstorage.config.style === "auto" ? ThemeStore.theme : null);
@@ -111,16 +111,16 @@ export default {
                   : patchesURL(),
                 {
                   cache: "no-store",
-                }
+                },
               )
             ).text()
-          ).replace(/\r/g, "")
+          ).replace(/\r/g, ""),
         );
       } catch {
         Alerts.close();
         return showToast(
           "Failed to parse patches.json",
-          getAssetIDByName("Small")
+          getAssetIDByName("Small"),
         );
       }
 

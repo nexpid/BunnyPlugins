@@ -2,7 +2,7 @@ export function parseRelative(
   things: { time: boolean; date: boolean },
   backticks: { time: boolean; date: boolean },
   content: string,
-  replacer: (str: string, time: number) => string
+  replacer: (str: string, time: number) => string,
 ) {
   const timeThingies = [
     ["seconds?", 1000],
@@ -71,7 +71,7 @@ export function parseRelative(
       if (Number.isNaN(dr)) return str;
 
       const calc = combinedThingies.find((x) =>
-        x[0].toLowerCase().includes(thing)
+        x[0].toLowerCase().includes(thing),
       )?.[1];
       if (!calc) return str;
 
@@ -89,12 +89,12 @@ export function parseRelative(
     (x[1] as number) * 1000 * 60 * 60 * 24,
   ]);
   const combinedSpecial = [...(things.date ? specialDate : [])].filter(
-    (x) => !!x
+    (x) => !!x,
   ) as [string, number][];
 
   for (const [reg, diff] of combinedSpecial)
     content = content.replace(new RegExp(reg, "gi"), (str) =>
-      replacer(str, diff)
+      replacer(str, diff),
     );
 
   return content;

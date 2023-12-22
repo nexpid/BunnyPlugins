@@ -1,4 +1,7 @@
+import { React } from "@vendetta/metro/common";
+import { useProxy } from "@vendetta/storage";
 import { Forms } from "@vendetta/ui/components";
+
 import {
   ActionSheet,
   ActionSheetCloseButton,
@@ -7,10 +10,8 @@ import {
   Entries,
   hideActionSheet,
 } from "../../../../../stuff/types";
-import { convert, emojipacks } from "../../stuff/twemoji";
 import { vstorage } from "../..";
-import { useProxy } from "@vendetta/storage";
-import { React } from "@vendetta/metro/common";
+import { convert, emojipacks } from "../../stuff/twemoji";
 import CustomTwemoji from "../CustomTwemoji";
 
 const { FormRow } = Forms;
@@ -23,7 +24,7 @@ export default ({ called }: { called: number }) => {
 
   const emoji = React.useMemo(
     () => convert(emojis[Math.floor(Math.random() * emojis.length)]),
-    [called]
+    [called],
   );
 
   return (
@@ -49,7 +50,7 @@ export default ({ called }: { called: number }) => {
               leading={<FormRow.Radio selected={vstorage.emojipack === id} />}
               onPress={() => (vstorage.emojipack = id)}
             />
-          )
+          ),
         )}
       </ActionSheetContentContainer>
     </ActionSheet>

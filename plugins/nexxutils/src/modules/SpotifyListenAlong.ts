@@ -1,10 +1,11 @@
-import { React } from "@vendetta/metro/common";
 import { findByName, findByProps } from "@vendetta/metro";
-import { Module, ModuleCategory } from "../stuff/Module";
+import { React } from "@vendetta/metro/common";
 import { after, before } from "@vendetta/patcher";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { findInReactTree } from "@vendetta/utils";
+
 import ListenAlongButton from "../components/modules/SpotifyListenAlong/ListenAlongButton";
+import { Module, ModuleCategory } from "../stuff/Module";
 
 const { SpotifyPlayButton } = findByProps("SpotifyPlayButton");
 const UserProfileSection = findByName("UserProfileSection", false);
@@ -40,14 +41,14 @@ export default new Module({
             user: aprops.activity.user,
             redesigned: this.storage.options.redesigned,
           });
-        })
+        }),
       );
       this.patches.add(
         before("default", UserProfileSection, ([arg]) => {
           if (arg.title?.includes("Spotify")) {
             const actions = findInReactTree(
               arg.children,
-              (x) => x?.type?.name === "Actions"
+              (x) => x?.type?.name === "Actions",
             );
 
             if (actions)
@@ -56,11 +57,11 @@ export default new Module({
                   "type",
                   actions,
                   ([a]) => (a.activity.user = a.user),
-                  true
-                )
+                  true,
+                ),
               );
           }
-        })
+        }),
       );
     },
     onStop() {},

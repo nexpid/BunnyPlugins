@@ -1,8 +1,8 @@
-import { React, ReactNative as RN, stylesheet } from "@vendetta/metro/common";
-import { resolveCustomSemantic } from "../../../../stuff/colors";
-import { rawColors, semanticColors } from "@vendetta/ui";
-import { SimpleText } from "../../../../../../../stuff/types";
 import { findByProps } from "@vendetta/metro";
+import { React, ReactNative as RN, stylesheet } from "@vendetta/metro/common";
+import { semanticColors } from "@vendetta/ui";
+
+import { SimpleText } from "../../../../../../../stuff/types";
 import TextButton from "./TextButton";
 const Alerts = findByProps("openLazy", "close");
 
@@ -129,9 +129,7 @@ export default function ({
                 [x.loading]: true,
               });
               if ("action" in x && isSpecial) {
-                try {
-                  await x.action();
-                } catch {}
+                await x.action().catch(() => void 0);
                 setLoader({
                   ...loader,
                   [x.loading]: false,

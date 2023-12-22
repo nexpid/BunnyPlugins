@@ -1,6 +1,7 @@
-import rawEmojiRegex from "twemoji-parser/dist/lib/regex";
-import { vstorage } from "..";
 import { ReactNative as RN } from "@vendetta/metro/common";
+import rawEmojiRegex from "twemoji-parser/dist/lib/regex";
+
+import { vstorage } from "..";
 const emojiRegex = new RegExp(`(${rawEmojiRegex.source})`, rawEmojiRegex.flags);
 
 export interface EmojiPack {
@@ -60,7 +61,7 @@ export function convert(emoji: string): string {
 
 export function parse(
   text: string,
-  callback: (src: string) => React.ReactNode
+  callback: (src: string) => React.ReactNode,
 ): string[] {
   // since when can String.split do this???
   const children: any[] = text.split(emojiRegex);

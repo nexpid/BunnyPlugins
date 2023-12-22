@@ -1,15 +1,16 @@
 import { findByProps } from "@vendetta/metro";
 import {
   NavigationNative,
-  stylesheet,
   React,
   ReactNative as RN,
+  stylesheet,
 } from "@vendetta/metro/common";
 import { semanticColors } from "@vendetta/ui";
-import { AppRichAsset, getApplicationAssets } from "../../stuff/api";
 import { General, Search } from "@vendetta/ui/components";
-import { richAssetListAppId, richAssetListCallback } from "../../stuff/prompts";
+
 import { TextStyleSheet } from "../../../../../stuff/types";
+import { AppRichAsset, getApplicationAssets } from "../../stuff/api";
+import { richAssetListAppId, richAssetListCallback } from "../../stuff/prompts";
 
 const TabletManagerIdk = findByProps("isTablet");
 

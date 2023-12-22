@@ -1,14 +1,15 @@
+import { PROXY_PREFIX } from "@vendetta/constants";
 import { storage } from "@vendetta/plugin";
-import { DBSave } from "./types/api/latest";
+import { plugins } from "@vendetta/plugins";
+import { createStorage, wrapSync } from "@vendetta/storage";
+import { themes } from "@vendetta/themes";
+
 import Settings from "./components/Settings";
 import { currentAuthorization, getSaveData, syncSaveData } from "./stuff/api";
-import { grabEverything } from "./stuff/syncStuff";
-import { plugins } from "@vendetta/plugins";
 import { hsync } from "./stuff/http";
 import patcher from "./stuff/patcher";
-import { PROXY_PREFIX } from "@vendetta/constants";
-import { themes } from "@vendetta/themes";
-import { createStorage, wrapSync } from "@vendetta/storage";
+import { grabEverything } from "./stuff/syncStuff";
+import { DBSave } from "./types/api/latest";
 
 export interface AuthRecord {
   accessToken: string;
@@ -39,14 +40,11 @@ export const cache: {
     set: (x) => {
       _cache = x;
     },
-  })
+  }),
 );
 
-export async function fillCache() {
-  try {
-    cache.save = await getSaveData();
-  } catch {}
-}
+export const fillCache = async () =>
+  getSaveData().then((x) => (cache.save = x));
 
 export function isPluginProxied(id: string) {
   return id.startsWith(PROXY_PREFIX);
@@ -67,7 +65,7 @@ const emitterSymbol = Symbol.for("vendetta.storage.emitter");
 export const emitterAvailable =
   !!(plugins as any)[emitterSymbol] && !!(themes as any)[emitterSymbol];
 
-let patches = [];
+const patches = [];
 export default {
   onLoad: () => {
     if (currentAuthorization()) fillCache();

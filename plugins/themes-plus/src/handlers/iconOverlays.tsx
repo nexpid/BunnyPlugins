@@ -1,11 +1,12 @@
-import innerCheck from "../../assets/iconOverlays/innerCheck.png";
 import { findByProps } from "@vendetta/metro";
-import { stylesheet, ReactNative as RN } from "@vendetta/metro/common";
-import { getAssetByID } from "@vendetta/ui/assets";
+import { ReactNative as RN, stylesheet } from "@vendetta/metro/common";
 import { semanticColors } from "@vendetta/ui";
-import { asIcon } from "./icons";
+import { getAssetByID } from "@vendetta/ui/assets";
 import { General } from "@vendetta/ui/components";
+
 import { PlusStructure } from "../../../../stuff/typings";
+import innerCheck from "../../assets/iconOverlays/innerCheck.png";
+import { asIcon } from "./icons";
 
 const { View } = General;
 const { MaskedBadge } = findByProps("MaskedBadge");
@@ -22,7 +23,7 @@ const styles = stylesheet.createThemedStyleSheet({
 export function getIconOverlay(
   plus: PlusStructure,
   icon: number,
-  style?: any[]
+  style?: any[],
 ):
   | React.PropsWithChildren<{ style?: Record<string, any>; replace?: string }>
   | undefined {
@@ -63,7 +64,7 @@ export function getIconOverlay(
                   tintColor: "#FFF",
                 },
               ]}
-            />
+            />,
           )}
         </View>
       ),
@@ -88,7 +89,7 @@ export function getIconOverlay(
                   tintColor: "#FFF",
                 },
               ]}
-            />
+            />,
           )}
         </View>
       ),

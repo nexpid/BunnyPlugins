@@ -1,6 +1,7 @@
 import { stylesheet } from "@vendetta/metro/common";
 import { semanticColors } from "@vendetta/ui";
 import { General } from "@vendetta/ui/components";
+
 import { TextStyleSheet } from "../../../../stuff/types";
 
 const { View, Text } = General;

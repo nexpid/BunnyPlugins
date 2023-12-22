@@ -1,6 +1,7 @@
 import { storage } from "@vendetta/plugin";
-import patcher from "./stuff/patcher";
+
 import settings from "./components/Settings";
+import patcher from "./stuff/patcher";
 
 export const vstorage: {
   pinned?: Record<string, { id: string; pinned: number }[]>;
@@ -27,7 +28,7 @@ export function addPin(channel: string, id: string) {
 export function removePin(channel: string, id: string) {
   vstorage.pinned ??= {};
   vstorage.pinned[channel] = (vstorage.pinned[channel] ?? []).filter(
-    (x) => x.id !== id
+    (x) => x.id !== id,
   );
 }
 

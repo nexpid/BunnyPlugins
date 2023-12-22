@@ -1,16 +1,17 @@
-import { getAssetIDByName } from "@vendetta/ui/assets";
-import { Module, ModuleCategory } from "../stuff/Module";
-import { before } from "@vendetta/patcher";
 import { findByProps, findByStoreName } from "@vendetta/metro";
 import {
-  ReactNative as RN,
-  React,
   i18n,
+  React,
+  ReactNative as RN,
   stylesheet,
 } from "@vendetta/metro/common";
-import { TextStyleSheet } from "../../../../stuff/types";
+import { before } from "@vendetta/patcher";
 import { semanticColors } from "@vendetta/ui";
+import { getAssetIDByName } from "@vendetta/ui/assets";
 import { findInReactTree } from "@vendetta/utils";
+
+import { TextStyleSheet } from "../../../../stuff/types";
+import { Module, ModuleCategory } from "../stuff/Module";
 
 const SpotifyStore = findByStoreName("SpotifyStore");
 const SelectedChannelStore = findByStoreName("SelectedChannelStore");
@@ -19,7 +20,7 @@ const { sendMessage } = findByProps("sendMessage", "revealMessage");
 const { getText, setText } = findByProps(
   "openSystemKeyboard",
   "getText",
-  "setText"
+  "setText",
 );
 
 const sendInvite = () => {
@@ -41,7 +42,7 @@ const sendInvite = () => {
         activity,
         type: 3,
       },
-    }
+    },
   );
 
   if (setText.length >= 2) setText(channel, "");
@@ -70,7 +71,7 @@ export default new Module({
   handlers: {
     onStart() {
       this.patches.add(
-        //@ts-ignore not in RN typings
+        //@ts-expect-error not in RN typings
         before("render", RN.Pressable.type, ([a]) => {
           if (a.accessibilityLabel === i18n.Messages.CAMERA) {
             const disabled = !SpotifyStore.getActivity()?.party?.id;
@@ -79,15 +80,16 @@ export default new Module({
 
             const textComp = findInReactTree(
               a.children,
-              (x) => x?.children === i18n.Messages.CAMERA
+              (x) => x?.children === i18n.Messages.CAMERA,
             );
             if (textComp) {
               textComp.children = "Spotify invite";
               textComp.style = [styles.text, disabled && styles.disabledText];
             }
 
-            const iconComp = findInReactTree(a.children, (x) =>
-              x?.props?.style?.find((y: any) => y?.tintColor)
+            const iconComp = findInReactTree(
+              a.children,
+              (x) => x?.props?.style?.find((y: any) => y?.tintColor),
             );
             if (iconComp)
               iconComp.type = () =>
@@ -104,7 +106,7 @@ export default new Module({
                   ],
                 });
           }
-        })
+        }),
       );
     },
     onStop() {},

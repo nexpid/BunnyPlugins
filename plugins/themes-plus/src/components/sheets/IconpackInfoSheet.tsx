@@ -1,17 +1,18 @@
+import { clipboard } from "@vendetta/metro/common";
+import { getAssetIDByName } from "@vendetta/ui/assets";
 import { Forms } from "@vendetta/ui/components";
-import { active } from "../..";
+import { showToast } from "@vendetta/ui/toasts";
+
+import SmartMention from "../../../../../stuff/components/SmartMention";
 import {
   ActionSheet,
   ActionSheetCloseButton,
   ActionSheetContentContainer,
   ActionSheetTitleHeader,
-  SimpleText,
   hideActionSheet,
+  SimpleText,
 } from "../../../../../stuff/types";
-import SmartMention from "../../../../../stuff/components/SmartMention";
-import { clipboard } from "@vendetta/metro/common";
-import { showToast } from "@vendetta/ui/toasts";
-import { getAssetIDByName } from "@vendetta/ui/assets";
+import { active } from "../..";
 
 const { FormRow } = Forms;
 
@@ -21,7 +22,7 @@ const parseAuthor = (x: string) => {
   else return [splat[0]];
 };
 
-export default function ({}) {
+export default function () {
   const { iconpack } = active;
 
   const iconpackAuthors = [];
@@ -32,7 +33,7 @@ export default function ({}) {
         iconpackAuthors.push(
           <SmartMention userId={aut[1]} loadUsername={false} color="TEXT_LINK">
             {aut[0]}
-          </SmartMention>
+          </SmartMention>,
         );
       else iconpackAuthors.push(aut[0]);
 
@@ -74,7 +75,7 @@ export default function ({}) {
                     showToast("Copied", getAssetIDByName("toast_copy_link"));
                   }}
                 />
-              )
+              ),
             )}
           </>
         ) : (

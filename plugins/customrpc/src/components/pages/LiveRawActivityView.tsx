@@ -1,9 +1,10 @@
-import { React, constants, stylesheet } from "@vendetta/metro/common";
+import { constants, React, stylesheet } from "@vendetta/metro/common";
+import { semanticColors } from "@vendetta/ui";
 import { Forms, General } from "@vendetta/ui/components";
+
 import { SimpleText } from "../../../../../stuff/types";
 import { debug, vstorage } from "../..";
 import { dispatchActivityIfPossible } from "../../stuff/activity";
-import { semanticColors } from "@vendetta/ui";
 
 const { View, Text } = General;
 const { FormSection } = Forms;

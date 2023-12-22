@@ -1,5 +1,6 @@
-import patcher from "./stuff/patcher";
 import { storage } from "@vendetta/plugin";
+
+import patcher from "./stuff/patcher";
 
 export const pluginsURL =
   "https://vd-plugins.github.io/proxy/plugins-full.json";

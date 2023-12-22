@@ -2,7 +2,7 @@ import { React, ReactNative as RN, stylesheet } from "@vendetta/metro/common";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { showToast } from "@vendetta/ui/toasts";
 
-export default function ({ alt, url }: { alt?: string; url: string }) {
+export default function ({ url }: { alt?: string; url: string }) {
   const win = RN.Dimensions.get("screen");
   const [dims, setDims] = React.useState<[number, number]>();
 
@@ -14,9 +14,9 @@ export default function ({ alt, url }: { alt?: string; url: string }) {
         (err) => {
           showToast(`${err}`, getAssetIDByName("Small"));
           console.log(err);
-        }
+        },
       ),
-    []
+    [],
   );
 
   const width = win.width - 64;

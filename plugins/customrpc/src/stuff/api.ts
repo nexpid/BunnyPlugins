@@ -24,7 +24,7 @@ export interface AppRichAsset {
   name: string;
 }
 export async function getApplicationAssets(
-  applicationId: string
+  applicationId: string,
 ): Promise<AppRichAsset[]> {
   return await (
     await safeFetch(`${apiUrl}oauth2/applications/${applicationId}/assets`, {

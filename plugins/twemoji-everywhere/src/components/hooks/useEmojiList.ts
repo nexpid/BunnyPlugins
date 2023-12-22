@@ -24,14 +24,14 @@ export default function (): EmojiListType {
               for (const line of dt.replace(/\r/g, "").split("\n")) {
                 const newGroup = line.match(/^# group: (.+)/);
                 const qualification = line.match(
-                  /; ((?:fully)|(?:minimally)-qualified)/
+                  /; ((?:fully)|(?:minimally)-qualified)/,
                 );
 
                 if (newGroup?.[1]) {
                   curGroup = newGroup[1];
                   groups[curGroup] = [];
                 } else if (qualification?.[1] && curGroup) {
-                  let points = line.split(" ");
+                  const points = line.split(" ");
                   const unicode = points
                     .slice(0, points.indexOf(";"))
                     .filter((x) => !!x)
@@ -47,11 +47,11 @@ export default function (): EmojiListType {
             }
           })
           .catch(() =>
-            showToast("Failed to parse emoji list!", getAssetIDByName("Small"))
-          )
+            showToast("Failed to parse emoji list!", getAssetIDByName("Small")),
+          ),
       )
       .catch(() =>
-        showToast("Failed to fetch emoji list!", getAssetIDByName("Small"))
+        showToast("Failed to fetch emoji list!", getAssetIDByName("Small")),
       );
   });
 

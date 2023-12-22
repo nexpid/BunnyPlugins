@@ -1,17 +1,18 @@
 import { FluxDispatcher } from "@vendetta/metro/common";
-import { placeholders } from "../components/Settings";
+import { z } from "zod";
+
 import { debug, vstorage } from "..";
+import { forceUpdateLiveRawActivityView } from "../components/pages/LiveRawActivityView";
+import { placeholders } from "../components/Settings";
 import { unregisterChanges } from "./autochange";
+import { parseTimestamp } from "./util";
 import {
-  VariableType,
   parseVariableImage,
   parseVariableString,
   parseVariableTimestamp,
   registerVariableEvents,
+  VariableType,
 } from "./variables";
-import { parseTimestamp } from "./util";
-import { forceUpdateLiveRawActivityView } from "../components/pages/LiveRawActivityView";
-import { z } from "zod";
 
 export interface RawActivity {
   name: string;
@@ -83,7 +84,7 @@ export const SettingsActivity = z.object({
     z.object({
       text: z.string(),
       url: z.string().optional(),
-    })
+    }),
   ),
   type: z.nativeEnum(ActivityType),
 });
@@ -188,7 +189,7 @@ export function settingsActivityToRaw(activity: SettingsActivity): {
 }
 
 export async function dispatchActivity(
-  activity?: SettingsActivity
+  activity?: SettingsActivity,
 ): Promise<void> {
   let send = {};
 

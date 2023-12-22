@@ -1,4 +1,4 @@
-import { ReactNative as RN, React } from "@vendetta/metro/common";
+import { React, ReactNative as RN } from "@vendetta/metro/common";
 
 const { Animated } = RN;
 
@@ -25,10 +25,10 @@ export function FadeView({
   const firstInit = React.useRef(true),
     firstUpdate = React.useRef(true);
   const anim = React.useRef(
-    new Animated.Value(animateOnInit ? (fade === "in" ? 1 : 0) : 0)
+    new Animated.Value(animateOnInit ? (fade === "in" ? 1 : 0) : 0),
   ).current;
   const [isHidden, setIsHidden] = React.useState(
-    animateOnInit ? (fade === "in" ? false : true) : true
+    animateOnInit ? (fade === "in" ? false : true) : true,
   );
 
   React.useEffect(() => {

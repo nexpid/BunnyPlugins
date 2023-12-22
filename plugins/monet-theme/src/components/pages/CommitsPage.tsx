@@ -1,13 +1,14 @@
-import { General } from "@vendetta/ui/components";
-import Commit from "../Commit";
-import { ReactNative as RN, stylesheet, url } from "@vendetta/metro/common";
-import { stsCommits } from "../Settings";
-import { semanticColors } from "@vendetta/ui";
 import { findByProps } from "@vendetta/metro";
+import { ReactNative as RN, stylesheet, url } from "@vendetta/metro/common";
+import { useProxy } from "@vendetta/storage";
+import { semanticColors } from "@vendetta/ui";
+import { General } from "@vendetta/ui/components";
+import { showToast } from "@vendetta/ui/toasts";
+
 import { LazyActionSheet } from "../../../../../stuff/types";
 import { vstorage } from "../..";
-import { showToast } from "@vendetta/ui/toasts";
-import { useProxy } from "@vendetta/storage";
+import Commit from "../Commit";
+import { stsCommits } from "../Settings";
 
 const { showSimpleActionSheet } = findByProps("showSimpleActionSheet");
 const { ScrollView, View } = General;

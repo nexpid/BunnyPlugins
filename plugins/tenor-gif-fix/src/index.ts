@@ -1,5 +1,5 @@
-import { before } from "@vendetta/patcher";
 import { findByProps } from "@vendetta/metro";
+import { before } from "@vendetta/patcher";
 
 const MediaManager = findByProps("downloadMediaAsset"); // thank you rosie for this snippet
 const ActionSheet = findByProps("openLazy", "hideActionSheet");
@@ -30,7 +30,7 @@ export default {
           args[0] = parsed;
           args[1] = 1;
         }
-      })
+      }),
     );
 
     patches.push(
@@ -51,7 +51,7 @@ export default {
         }
 
         args.syncer.sources[0] = data;
-      })
+      }),
     );
   },
   onUnload: () => {

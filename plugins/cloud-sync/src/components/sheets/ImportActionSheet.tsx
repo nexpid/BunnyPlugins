@@ -1,24 +1,25 @@
+import { React, ReactNative as RN, stylesheet } from "@vendetta/metro/common";
+import { plugins } from "@vendetta/plugins";
+import { themes } from "@vendetta/themes";
+import { semanticColors } from "@vendetta/ui";
+import { showConfirmationAlert } from "@vendetta/ui/alerts";
+import { getAssetIDByName } from "@vendetta/ui/assets";
 import { Forms, General } from "@vendetta/ui/components";
+
 import {
   ActionSheet,
   ActionSheetCloseButton,
   ActionSheetContentContainer,
   ActionSheetTitleHeader,
-  Redesign,
-  SimpleText,
   hideActionSheet,
   openSheet,
+  Redesign,
+  SimpleText,
 } from "../../../../../stuff/types";
-import { React, ReactNative as RN, stylesheet } from "@vendetta/metro/common";
 import { cache, canImport, isPluginProxied } from "../..";
-import { showConfirmationAlert } from "@vendetta/ui/alerts";
-import { SyncImportOptions, importData } from "../../stuff/syncStuff";
-import { plugins } from "@vendetta/plugins";
-import { themes } from "@vendetta/themes";
-import { getAssetIDByName } from "@vendetta/ui/assets";
-import { openImportLogsPage } from "../pages/ImportLogsPage";
+import { importData, SyncImportOptions } from "../../stuff/syncStuff";
 import { DBSave } from "../../types/api/latest";
-import { semanticColors } from "@vendetta/ui";
+import { openImportLogsPage } from "../pages/ImportLogsPage";
 
 const { View } = General;
 const { FormCheckboxRow } = Forms;
@@ -34,23 +35,23 @@ export default function ImportActionSheet({
 }) {
   const has = {
     unproxiedPlugins: save.sync.plugins.filter(
-      (x) => !plugins[x.id] && !isPluginProxied(x.id) && canImport(x.id)
+      (x) => !plugins[x.id] && !isPluginProxied(x.id) && canImport(x.id),
     ).length,
     plugins: save.sync.plugins.filter(
-      (x) => !plugins[x.id] && isPluginProxied(x.id) && canImport(x.id)
+      (x) => !plugins[x.id] && isPluginProxied(x.id) && canImport(x.id),
     ).length,
     themes: save.sync.themes.filter((x) => !themes[x.id]).length,
   };
   const total = [has.unproxiedPlugins, has.plugins, has.themes].reduce(
     (x, a) => x + a,
-    0
+    0,
   );
   const [options, setOptions] = React.useState<SyncImportOptions>(
     defOptions ?? {
       unproxiedPlugins: false,
       plugins: !!has.plugins,
       themes: !!has.themes,
-    }
+    },
   );
 
   const styles = stylesheet.createThemedStyleSheet({
@@ -177,4 +178,3 @@ export default function ImportActionSheet({
     </ActionSheet>
   );
 }
-

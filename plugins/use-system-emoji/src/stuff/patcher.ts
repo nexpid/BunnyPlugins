@@ -13,7 +13,7 @@ export default () => {
         const content = [];
 
         for (const y of x.content) {
-          let guh =
+          const guh =
             y.type === "emoji"
               ? {
                   type: "text",
@@ -56,7 +56,7 @@ export default () => {
       };
 
       ret.content = branch(ret, false);
-    }
+    },
   );
 
   return () => unpatch();
