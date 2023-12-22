@@ -28,6 +28,12 @@ jobs:
 
       - name: Test types
         run: pnpm testTsc
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Styles
+        run: pnpm styles
   build:
     needs: ci
 
