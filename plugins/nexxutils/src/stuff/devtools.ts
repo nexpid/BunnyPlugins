@@ -1,10 +1,7 @@
-import { findByProps } from "@vendetta/metro";
 import { after } from "@vendetta/patcher";
 import { semanticColors } from "@vendetta/ui";
 
-const {
-  meta: { resolveSemanticColor },
-} = findByProps("colors", "meta");
+import { resolveSemanticColor } from "../../../../stuff/types";
 
 export default function () {
   const patches = new Array<() => void>();
@@ -14,9 +11,9 @@ export default function () {
       const data = {};
       for (const [key, raw] of Object.entries(semanticColors)) {
         data[key] = Object.fromEntries(
-          ["dark", "darker", "light", "amoled"].map((x) => [
+          ["dark", "darker", "midnight", "light"].map((x) => [
             x,
-            resolveSemanticColor(x, raw),
+            resolveSemanticColor(raw, x),
           ]),
         );
       }
