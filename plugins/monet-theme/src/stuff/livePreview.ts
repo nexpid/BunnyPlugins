@@ -36,24 +36,29 @@ const extractInfo = (themeMode: string, colorObj: any): [string, any] => {
 
 const overwrite = (theme: ThemeDataWithPlus) => {
   const patches = new Array<() => void>();
+  let enabled = true;
+  patches.push(() => (enabled = false));
 
   const oldRaw = color.default.unsafe_rawColors;
+
   color.default.unsafe_rawColors = new Proxy(oldRaw, {
     get: (_, colorProp: string) => {
+      if (!enabled) return Reflect.get(oldRaw, colorProp);
+
       return theme.rawColors?.[colorProp] ?? Reflect.get(oldRaw, colorProp);
     },
   });
-  patches.push(() => {
-    color.default.unsafe_rawColors = oldRaw;
-  });
 
-  patches.push(
-    instead("resolveSemanticColor", color.default.meta, (args, orig) => {
-      const [themeKey, propIndex] = args;
-      const [name, colorDef] = extractInfo(themeKey, propIndex);
+  instead(
+    "resolveSemanticColor",
+    color.default.meta ?? color.default.internal,
+    (args, orig) => {
+      if (!enabled) return orig(...args);
 
-      const themeIndex =
-        themeKey === "amoled" ? 2 : themeKey === "light" ? 1 : 0;
+      const [theme, propIndex] = args;
+      const [name, colorDef] = extractInfo(theme, propIndex);
+
+      const themeIndex = theme === "amoled" ? 2 : theme === "light" ? 1 : 0;
 
       //! As of 192.7, Tabs v2 uses BG_ semantic colors instead of BACKGROUND_ ones
       const alternativeName = semanticAlternativeMap[name] ?? name;
@@ -81,7 +86,7 @@ const overwrite = (theme: ThemeDataWithPlus) => {
 
       // Fallback to default
       return orig(...args);
-    }),
+    },
   );
 
   return () => patches.forEach((x) => x());
