@@ -16,8 +16,10 @@ import type _WebView from "react-native-webview";
 import type { Redesign as _Redesign } from "./redesign";
 
 const ThemeStore = findByStoreName("ThemeStore");
-const colors = findByProps("colors", "meta");
 const { triggerHaptic } = findByProps("triggerHaptic");
+
+const colorModule = findByProps("colors", "unsafe_rawColors");
+const colorResolver = colorModule?.internal ?? colorModule?.meta;
 
 export const TextStyleSheet = findByProps("TextStyleSheet")
   .TextStyleSheet as _TextStyleSheet;
@@ -71,8 +73,11 @@ export type Entries<T> = [keyof T, T[keyof T]];
 
 // ...
 
-export function resolveSemanticColor(color: any) {
-  return colors.meta.resolveSemanticColor(ThemeStore.theme, color);
+export function resolveSemanticColor(
+  color: any,
+  theme: string = ThemeStore.theme,
+) {
+  return colorResolver.resolveSemanticColor(theme, color);
 }
 
 export function getUserAvatar(
@@ -319,6 +324,7 @@ export const FileManager = (window.nativeModuleProxy.DCDFileManager ??
    */
   DocumentsDirPath: string;
 };
+
 export const BundleUpdaterManager = window.nativeModuleProxy
   .BundleUpdaterManager as {
   reload: () => void;
