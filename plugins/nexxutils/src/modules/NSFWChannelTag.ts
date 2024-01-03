@@ -47,7 +47,11 @@ export default new Module({
                 overlay: textIconOverlay,
               },
               {
-                match: ["VoiceWarningIcon", "ic_voice_channel_nsfw_16px"],
+                match: [
+                  "VoiceWarningIcon",
+                  "ic_voice_channel_nsfw_16px",
+                  "ic_voice_channel_nsfw_24px",
+                ],
                 base: voiceIconBase,
                 overlay: voiceIconOverlay,
               },
@@ -60,28 +64,24 @@ export default new Module({
               return React.createElement(
                 RN.View,
                 {},
+                React.createElement(RN.Image, {
+                  style: RN.StyleSheet.flatten(style),
+                  source: { uri: image.base },
+                }),
                 React.createElement(
-                  React.Fragment,
-                  {},
+                  RN.View,
+                  {
+                    style: { position: "absolute", right: 0, bottom: 0 },
+                  },
                   React.createElement(RN.Image, {
-                    style: RN.StyleSheet.flatten(style),
-                    source: { uri: image.base },
-                  }),
-                  React.createElement(
-                    RN.View,
-                    {
-                      style: { position: "absolute", right: 0, bottom: 0 },
+                    style: {
+                      ...RN.StyleSheet.flatten(style),
+                      tintColor: resolveSemanticColor(
+                        semanticColors.STATUS_DANGER,
+                      ),
                     },
-                    React.createElement(RN.Image, {
-                      style: {
-                        ...RN.StyleSheet.flatten(style),
-                        tintColor: resolveSemanticColor(
-                          semanticColors.STATUS_DANGER,
-                        ),
-                      },
-                      source: { uri: image.overlay },
-                    }),
-                  ),
+                    source: { uri: image.overlay },
+                  }),
                 ),
               );
           },
