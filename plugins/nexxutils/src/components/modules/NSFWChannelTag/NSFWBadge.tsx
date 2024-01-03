@@ -25,7 +25,7 @@ export default function NSFWBadge({ padding }: { padding: boolean }) {
     <View style={[styles.main, padding && { marginRight: 4 }]}>
       <SimpleText
         variant="text-xs/bold"
-        color="STATUS_DANGER_TEXT"
+        color="TEXT_NORMAL"
         align="center"
         style={{ marginTop: -2 }}
       >
