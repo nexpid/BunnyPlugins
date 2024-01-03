@@ -5,8 +5,10 @@ import { semanticColors } from "@vendetta/ui";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 
 import { resolveSemanticColor } from "../../../../stuff/types";
-import iconBase from "../../assets/NSFWChannelTag/iconBase.png";
-import iconOverlay from "../../assets/NSFWChannelTag/iconOverlay.png";
+import textIconBase from "../../assets/NSFWChannelTag/text/iconBase.png";
+import textIconOverlay from "../../assets/NSFWChannelTag/text/iconOverlay.png";
+import voiceIconBase from "../../assets/NSFWChannelTag/voice/iconBase.png";
+import voiceIconOverlay from "../../assets/NSFWChannelTag/voice/iconOverlay.png";
 import NSFWBadge from "../components/modules/NSFWChannelTag/NSFWBadge";
 import { Module, ModuleCategory } from "../stuff/Module";
 
@@ -38,12 +40,23 @@ export default new Module({
           "render",
           RN.Image,
           ([{ source, style }]: [{ source: number; style: any }]) => {
-            if (
-              [
-                getAssetIDByName("TextWarningIcon"),
-                getAssetIDByName("ic_text_channel_nsfw_16px"),
-              ].includes(source)
-            )
+            const images = [
+              {
+                match: ["TextWarningIcon", "ic_text_channel_nsfw_16px"],
+                base: textIconBase,
+                overlay: textIconOverlay,
+              },
+              {
+                match: ["VoiceWarningIcon", "ic_voice_channel_nsfw_16px"],
+                base: voiceIconBase,
+                overlay: voiceIconOverlay,
+              },
+            ];
+
+            const image = images.find((x) =>
+              x.match.some((y) => getAssetIDByName(y) === source),
+            );
+            if (image)
               return React.createElement(
                 RN.View,
                 {},
@@ -52,7 +65,7 @@ export default new Module({
                   {},
                   React.createElement(RN.Image, {
                     style: RN.StyleSheet.flatten(style),
-                    source: { uri: iconBase },
+                    source: { uri: image.base },
                   }),
                   React.createElement(
                     RN.View,
@@ -66,7 +79,7 @@ export default new Module({
                           semanticColors.STATUS_DANGER,
                         ),
                       },
-                      source: { uri: iconOverlay },
+                      source: { uri: image.overlay },
                     }),
                   ),
                 ),
