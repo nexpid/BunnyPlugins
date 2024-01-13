@@ -19,7 +19,7 @@ export default new Module({
   label: "NSFW Channel Tag",
   sublabel: "Adds a red NSFW tag next to an NSFW channel",
   category: ModuleCategory.Useful,
-  icon: getAssetIDByName("ic_gif_24px"),
+  icon: getAssetIDByName("ic_lock"),
   handlers: {
     onStart() {
       this.patches.add(
