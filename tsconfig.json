@@ -7,14 +7,12 @@
     "esModuleInterop": true,
     "jsx": "react-native",
     "allowJs": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "paths": {
+      "$/*": ["./stuff/*"]
+    }
   },
-  "include": [
-    "plugins",
-    "stuff",
-    "node_modules/vendetta-types",
-    "global.d.ts",
-    "archive/build"
-  ],
+  "include": ["plugins", "stuff", "node_modules/vendetta-types", "global.d.ts"],
   "exclude": ["archive", "dist"]
 }
