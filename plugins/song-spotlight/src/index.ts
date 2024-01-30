@@ -1,5 +1,6 @@
-import { storage } from "@vendetta/plugin";
 import { createStorage, wrapSync } from "@vendetta/storage";
+
+import { makeStorage } from "$/storage";
 
 import settings from "./components/Settings";
 import { currentAuthorization, getSaveData } from "./stuff/api";
@@ -11,10 +12,11 @@ export interface AuthRecord {
   refreshToken: string;
   expiresAt: number;
 }
-export const vstorage: {
-  host?: string;
-  auth?: Record<string, AuthRecord>;
-} = storage;
+
+export const vstorage = makeStorage({
+  host: undefined as string,
+  auth: {} as Record<string, AuthRecord>,
+});
 
 let _cache: any;
 export const cache: {

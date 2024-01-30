@@ -8,11 +8,10 @@ import { getAssetIDByName } from "@vendetta/ui/assets";
 import { Forms, General } from "@vendetta/ui/components";
 import { showToast } from "@vendetta/ui/toasts";
 
-import {
-  BetterTableRowGroup,
-  openSheet,
-  SimpleText,
-} from "../../../../stuff/types";
+import { BetterTableRowGroup } from "$/components/BetterTableRow";
+import SimpleText from "$/components/SimpleText";
+import { openSheet } from "$/types";
+
 import { cache, vstorage } from "..";
 import { currentAuthorization, deleteSaveData } from "../stuff/api";
 import { check } from "../stuff/http";
@@ -181,7 +180,6 @@ export default function () {
                 <FormRow.Icon source={getAssetIDByName("ic_logout_24px")} />
               }
               onPress={() => {
-                vstorage.auth ??= {};
                 delete vstorage.auth[UserStore.getCurrentUser().id];
                 delete cache.data;
 
@@ -197,7 +195,6 @@ export default function () {
               leading={<FormRow.Icon source={getAssetIDByName("trash")} />}
               onPress={async () => {
                 await deleteSaveData();
-                vstorage.auth ??= {};
                 delete vstorage.auth[UserStore.getCurrentUser().id];
                 delete cache.data;
 

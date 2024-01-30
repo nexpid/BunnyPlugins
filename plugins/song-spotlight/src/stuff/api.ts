@@ -39,7 +39,6 @@ export async function getAuthorization(): Promise<string> {
     if (x.status !== 200) throw new SongSpotlightAPIError(await x.json());
     auth = await x.json();
 
-    vstorage.auth ??= {};
     vstorage.auth[UserStore.getCurrentUser().id] = auth;
   }
 

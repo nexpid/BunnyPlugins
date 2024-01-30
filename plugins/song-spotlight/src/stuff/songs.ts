@@ -13,7 +13,12 @@ const getInfo = async (
 
   if (service === "spotify") {
     const res = await (
-      await fetch(`https://open.spotify.com/embed/${type}/${id}`, { signal })
+      await fetch(`https://open.spotify.com/embed/${type}/${id}`, {
+        signal,
+        headers: {
+          "cache-control": "public, max-age=30",
+        },
+      })
     ).text();
 
     const dt = JSON.parse(

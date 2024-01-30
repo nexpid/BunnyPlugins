@@ -1,3 +1,4 @@
+import { logger } from "@vendetta";
 import { findByName, findByProps, findByStoreName } from "@vendetta/metro";
 import { React, ReactNative as RN, stylesheet } from "@vendetta/metro/common";
 import { semanticColors } from "@vendetta/ui";
@@ -5,13 +6,10 @@ import { getAssetIDByName } from "@vendetta/ui/assets";
 import { General } from "@vendetta/ui/components";
 import { showToast } from "@vendetta/ui/toasts";
 
-import {
-  openSheet,
-  SimpleText,
-  SvgXml,
-  TextStyleSheet,
-  WebView,
-} from "../../../../stuff/types";
+import SimpleText from "$/components/SimpleText";
+import { Svg, WebView } from "$/deps";
+import { openSheet, TextStyleSheet } from "$/types";
+
 import {
   lerp,
   resolveCustomSemantic,
@@ -255,7 +253,10 @@ const SpotifySongEmbed = ({
       .catch(
         (e) =>
           e?.name !== "AbortError" &&
-          (showToast(`${e}`, getAssetIDByName("Small")), setSongData(false)),
+          (console.error(`[SongSpotlight] Failed to get song data!`),
+          logger.error(`Failed to get song data!\n${e.stack}`),
+          showToast("Failed to get song data!", getAssetIDByName("Small")),
+          setSongData(false)),
       );
   };
   React.useEffect(() => {
@@ -263,11 +264,7 @@ const SpotifySongEmbed = ({
     return () => triggerController.current?.abort();
   }, []);
 
-  const cover =
-    songData &&
-    songData.coverArt.sources.sort(
-      (a, b) => a.width * a.height - b.width * b.height,
-    )[0];
+  const covers = songData && songData.coverArt.sources;
 
   const tracklistRef = React.useRef<import("react-native").FlatList>();
 
@@ -363,7 +360,16 @@ const SpotifySongEmbed = ({
           ]}
         >
           <View style={styles.cardFirstContent}>
-            <RN.Image style={styles.cardImage} source={{ uri: cover.url }} />
+            <RN.Image
+              style={styles.cardImage}
+              source={covers
+                .sort((a, b) => a.width - b.width)
+                .map((x) => ({
+                  uri: x.url,
+                  width: x.width,
+                  height: x.height,
+                }))}
+            />
             <View style={styles.cardContent}>
               <SimpleText
                 variant="text-sm/bold"
@@ -416,7 +422,11 @@ const SpotifySongEmbed = ({
                 onPress={() => setPlaying(!playing)}
                 style={!trackPlayable && styles.unplayableItem}
               >
-                <SvgXml width={30} height={30} xml={playing ? pause : play} />
+                <Svg.SvgXml
+                  width={30}
+                  height={30}
+                  xml={playing ? pause : play}
+                />
               </RN.Pressable>
               {songData.type !== "track" && (
                 <RN.Pressable
@@ -445,7 +455,7 @@ const SpotifySongEmbed = ({
                     } else setPosition(0);
                   }}
                 >
-                  <SvgXml width={20} height={20} xml={next} />
+                  <Svg.SvgXml width={20} height={20} xml={next} />
                 </RN.Pressable>
               )}
             </View>
@@ -564,7 +574,12 @@ export default function ({ userId, you }: { userId: string; you: boolean }) {
       getProfileData(userId)
         .then((x) => setSongs(x?.songs ?? []))
         .catch(
-          (e) => (showToast(`${e}`, getAssetIDByName("Small")), setSongs([])),
+          (e) =>
+            e?.name !== "AbortError" &&
+            (console.error(`[SongSpotlight] Failed to get profile data!`),
+            logger.error(`Failed to get profile data!\n${e.stack}`),
+            showToast("Failed to get profile data!", getAssetIDByName("Small")),
+            setSongs([])),
         );
   }, []);
 

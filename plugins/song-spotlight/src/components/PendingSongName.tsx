@@ -1,6 +1,7 @@
 import { React } from "@vendetta/metro/common";
 
-import { SimpleText } from "../../../../stuff/types";
+import SimpleText from "$/components/SimpleText";
+
 import { getSongName } from "../stuff/songs";
 import { EditableSong } from "../types";
 
