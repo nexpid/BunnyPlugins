@@ -4,7 +4,8 @@ import { semanticColors } from "@vendetta/ui";
 import { getAssetByID } from "@vendetta/ui/assets";
 import { General } from "@vendetta/ui/components";
 
-import { PlusStructure } from "../../../../stuff/typings";
+import { PlusStructure } from "$/typings";
+
 import innerCheck from "../../assets/iconOverlays/innerCheck.png";
 import { asIcon } from "./icons";
 

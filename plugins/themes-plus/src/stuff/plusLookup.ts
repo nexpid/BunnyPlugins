@@ -1,4 +1,4 @@
-import { PlusStructure } from "../../../../stuff/typings";
+import { PlusStructure } from "$/typings";
 
 export function getPlusData(): PlusStructure | false | undefined {
   const theme = window[window.__vendetta_loader?.features?.themes?.prop]

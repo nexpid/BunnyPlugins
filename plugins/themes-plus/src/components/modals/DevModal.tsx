@@ -4,12 +4,10 @@ import { React } from "@vendetta/metro/common";
 import { useProxy } from "@vendetta/storage";
 import { Button, Forms, General } from "@vendetta/ui/components";
 
-import {
-  Modal,
-  openSheet,
-  popModal,
-  SimpleText,
-} from "../../../../../stuff/types";
+import Modal from "$/components/Modal";
+import SimpleText from "$/components/SimpleText";
+import { openSheet, popModal } from "$/types";
+
 import { resetCacheID, runPatch, runUnpatch, vstorage } from "../..";
 import { reloadUI } from "../../stuff/util";
 import IconpackListSheet from "../sheets/IconpackListSheet";
@@ -22,12 +20,6 @@ export default function () {
   const [tab, setTab] = React.useState<"iconpack" | "custom-iconpack">(
     "iconpack",
   );
-
-  vstorage.iconpack ??= {
-    url: null,
-    suffix: "",
-    force: null,
-  };
   useProxy(vstorage);
 
   return (

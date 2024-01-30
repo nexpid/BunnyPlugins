@@ -1,4 +1,4 @@
-import { storage } from "@vendetta/plugin";
+import { makeStorage } from "$/storage";
 
 import settings from "./components/Settings";
 import patcher from "./stuff/patcher";
@@ -34,13 +34,13 @@ export const active: {
   blehhh: [],
 };
 
-export const vstorage: {
-  iconpack?: {
-    url: string | null;
-    suffix: string;
-    force: string | null;
-  };
-} = storage;
+export const vstorage = makeStorage({
+  iconpack: {
+    url: null,
+    suffix: "",
+    force: null,
+  },
+});
 
 export let cacheID = Math.floor(Math.random() * Number.MAX_SAFE_INTEGER);
 export function resetCacheID() {

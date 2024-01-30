@@ -1,6 +1,7 @@
 import { getAssetByID } from "@vendetta/ui/assets";
 
-import { PlusStructure } from "../../../../stuff/typings";
+import { PlusStructure } from "$/typings";
+
 import resolveColor from "../stuff/resolveColor";
 import { addToStyle } from "../stuff/util";
 

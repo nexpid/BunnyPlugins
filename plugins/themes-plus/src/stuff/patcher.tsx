@@ -6,8 +6,9 @@ import { getAssetByID, getAssetIDByName } from "@vendetta/ui/assets";
 import { General } from "@vendetta/ui/components";
 import { findInReactTree, safeFetch } from "@vendetta/utils";
 
-import { resolveSemanticColor } from "../../../../stuff/types";
-import { PlusStructure } from "../../../../stuff/typings";
+import { resolveSemanticColor } from "$/types";
+import { PlusStructure } from "$/typings";
+
 import {
   active,
   cacheID,
@@ -35,7 +36,7 @@ const UserStore = findByStoreName("UserStore");
 export default async () => {
   const patches = new Array<() => void>();
 
-  const shouldForce = vstorage.iconpack?.force ?? vstorage.iconpack?.url;
+  const shouldForce = vstorage.iconpack.force ?? vstorage.iconpack.url;
 
   const cplus: PlusStructure | false = getPlusData();
   if (!shouldForce)
@@ -79,11 +80,11 @@ export default async () => {
         load: vstorage.iconpack.url,
       }
     : iconpacks.list.find(
-        (x) => x.id === plus.iconpack || x.id === vstorage.iconpack?.force,
+        (x) => x.id === plus.iconpack || x.id === vstorage.iconpack.force,
       );
 
   let iconpackConfig: IconPackConfig = null;
-  if (vstorage.iconpack?.url)
+  if (vstorage.iconpack.url)
     iconpackConfig = {
       biggerStatus: true,
     };

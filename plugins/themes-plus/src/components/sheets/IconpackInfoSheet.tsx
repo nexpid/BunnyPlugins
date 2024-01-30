@@ -3,15 +3,16 @@ import { getAssetIDByName } from "@vendetta/ui/assets";
 import { Forms } from "@vendetta/ui/components";
 import { showToast } from "@vendetta/ui/toasts";
 
-import SmartMention from "../../../../../stuff/components/SmartMention";
+import SimpleText from "$/components/SimpleText";
+import SmartMention from "$/components/SmartMention";
 import {
   ActionSheet,
   ActionSheetCloseButton,
   ActionSheetContentContainer,
   ActionSheetTitleHeader,
   hideActionSheet,
-  SimpleText,
-} from "../../../../../stuff/types";
+} from "$/types";
+
 import { active } from "../..";
 
 const { FormRow } = Forms;

@@ -1,4 +1,5 @@
-import { PlusStructure } from "../../../../stuff/typings";
+import { PlusStructure } from "$/typings";
+
 import resolveColor from "../stuff/resolveColor";
 
 export function getUnreadBadgeColor(plus: PlusStructure): string | undefined {

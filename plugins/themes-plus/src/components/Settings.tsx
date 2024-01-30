@@ -1,23 +1,17 @@
-import { findByName, findByProps } from "@vendetta/metro";
 import { ReactNative as RN, url } from "@vendetta/metro/common";
 import { showConfirmationAlert } from "@vendetta/ui/alerts";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { General } from "@vendetta/ui/components";
 
-import {
-  doHaptic,
-  openModal,
-  openSheet,
-  SimpleText,
-  TextStyleSheet,
-} from "../../../../stuff/types";
+import SimpleText from "$/components/SimpleText";
+import { WebView } from "$/deps";
+import { doHaptic, openModal, openSheet, TextStyleSheet } from "$/types";
+
 import { active, PatchType } from "..";
 import DevModal from "./modals/DevModal";
 import IconpackInfoSheet from "./sheets/IconpackInfoSheet";
 
 const { View } = General;
-
-const WebView = findByName("WebView") ?? findByProps("WebView").default.render;
 
 export default function () {
   let lastTap = 0;

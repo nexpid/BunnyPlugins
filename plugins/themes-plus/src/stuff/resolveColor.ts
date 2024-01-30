@@ -1,23 +1,23 @@
 import { findByStoreName } from "@vendetta/metro";
 import { rawColors, semanticColors } from "@vendetta/ui";
 
-import { resolveSemanticColor } from "../../../../stuff/types";
-import { PlusColorResolvable } from "../../../../stuff/typings";
+import { resolveSemanticColor } from "$/types";
+import { PlusColorResolvable } from "$/typings";
 
-const UnsyncedUserSettingsStore = findByStoreName("UnsyncedUserSettingsStore");
+const ThemeStore = findByStoreName("ThemeStore");
 
 export function matchTheme(colors: {
   dark?: string;
   light?: string;
-  amoled?: string;
-  darker?: string;
+  midnight?: string;
 }): string | undefined {
-  const theme = UnsyncedUserSettingsStore.useAMOLEDTheme;
+  const theme = ThemeStore.theme;
 
-  if (theme === 3) return colors.darker ?? colors.dark;
-  else if (theme === 2) return colors.amoled ?? colors.dark;
-  else if (theme === 1) return colors.light;
-  else if (theme === 0) return colors.dark;
+  if (["dark", "darker"].includes(theme)) return colors.dark ?? colors.midnight;
+  else if (theme === "light") return colors.light;
+  else if (["midnight", "amoled"].includes(theme))
+    return colors.midnight ?? colors.dark;
+  else return colors.dark;
 }
 
 export default function (color: PlusColorResolvable): string | undefined {
@@ -25,8 +25,7 @@ export default function (color: PlusColorResolvable): string | undefined {
     return matchTheme({
       dark: color[0],
       light: color[1],
-      amoled: color[2],
-      darker: color[3],
+      midnight: color[2],
     });
   else if (color.startsWith("SC_"))
     return semanticColors[color.slice(3)]
