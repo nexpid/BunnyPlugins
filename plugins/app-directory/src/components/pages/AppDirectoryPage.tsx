@@ -9,11 +9,12 @@ import { semanticColors } from "@vendetta/ui";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { General } from "@vendetta/ui/components";
 
-import {
-  AdvancedSearch,
-  SimpleText,
-  useAdvancedSearch,
-} from "../../../../../stuff/types";
+import RedesignSearch, {
+  useRedesignSearch,
+} from "$/components/compat/RedesignSearch";
+import SimpleText from "$/components/SimpleText";
+import usePromise from "$/hooks/usePromise";
+
 import {
   APICollectionApplication,
   APICollectionItem,
@@ -23,7 +24,6 @@ import {
   searchAppDirectory,
 } from "../../stuff/api";
 import { inServers } from "../../stuff/util";
-import useAsync from "../hooks/useAsync";
 import { getAppInfoPageRender } from "./AppInfoPage";
 
 const { ScrollView, View } = General;
@@ -37,25 +37,40 @@ export default function AppDirectoryPage({
 }) {
   const locale = i18n.getLocale();
 
-  const searchContext = { type: "APP_DIRECTORY_SEARCH" };
-  const [search, controls] = useAdvancedSearch(searchContext);
+  const [search, controller] = useRedesignSearch();
 
   const [selCategory, setSelCategory] = React.useState(undefined);
 
-  const categories = useAsync(() => getAppDirectoryCategories(), [locale]);
-  const collections = useAsync(
+  const categoriesPromise = usePromise(
+    () => getAppDirectoryCategories(),
+    [locale],
+  );
+  const collectionsPromise = usePromise(
     () => getAppDirectoryCollections(),
     [locale],
-  )?.sort?.((a, b) => a.position - b.position);
+  );
 
   const [searchPage, setSearchPage] = React.useState(0);
-  const searchResults = useAsync(
+  const searchResultsPromise = usePromise(
     () =>
       search || selCategory !== undefined
         ? searchAppDirectory(search, searchPage + 1, selCategory ?? 0, guildId)
         : null,
     [search, searchPage, selCategory, locale],
   );
+
+  const categories =
+    categoriesPromise.fulfilled &&
+    categoriesPromise.success &&
+    categoriesPromise.response;
+  const collections =
+    collectionsPromise.fulfilled &&
+    collectionsPromise.success &&
+    collectionsPromise.response.sort?.((a, b) => a.position - b.position);
+  const searchResults =
+    searchResultsPromise.fulfilled &&
+    searchResultsPromise.success &&
+    searchResultsPromise.response;
 
   React.useEffect(() => {
     if (!search) setSelCategory(undefined);
@@ -205,7 +220,7 @@ export default function AppDirectoryPage({
         paddingTop: 12,
       }}
     >
-      <AdvancedSearch searchContext={searchContext} controls={controls} />
+      <RedesignSearch controller={controller} />
       <View style={{ height: 12 }} />
       {categories ? (
         <RN.FlatList

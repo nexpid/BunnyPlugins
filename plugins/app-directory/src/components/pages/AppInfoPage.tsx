@@ -13,7 +13,10 @@ import { getAssetIDByName } from "@vendetta/ui/assets";
 import { General } from "@vendetta/ui/components";
 import { showToast } from "@vendetta/ui/toasts";
 
-import { Redesign, SimpleText } from "../../../../../stuff/types";
+import RedesignButton from "$/components/compat/RedesignButton";
+import SimpleText from "$/components/SimpleText";
+import usePromise from "$/hooks/usePromise";
+
 import {
   APICollectionApplication,
   getAppDirectoryApplication,
@@ -21,7 +24,6 @@ import {
 import { parse } from "../../stuff/markdown";
 import { openOauth2Modal } from "../../stuff/oauth2";
 import { inServers, parseDesc } from "../../stuff/util";
-import useAsync from "../hooks/useAsync";
 
 const { ScrollView, View } = General;
 
@@ -129,7 +131,15 @@ export default function AppInfoPage({
   const carouselIndexContent =
     app.directory_entry.carousel_items?.map((_, i) => i) ?? [];
 
-  const detailedInfo = useAsync(() => getAppDirectoryApplication(app.id), []);
+  const detailedInfoPromise = usePromise(
+    () => getAppDirectoryApplication(app.id),
+    [],
+  );
+
+  const detailedInfo =
+    detailedInfoPromise.fulfilled &&
+    detailedInfoPromise.success &&
+    detailedInfoPromise.response;
   if (!detailedInfo)
     return <RN.ActivityIndicator size="large" style={{ flex: 1 }} />;
 
@@ -244,7 +254,7 @@ export default function AppInfoPage({
           <TableRowDivider />
         </View>
         <View style={styles.baseAppActions}>
-          <Redesign.Button
+          <RedesignButton
             style={{ flex: 1 / 2 }}
             text={
               i18n.Messages.APP_DIRECTORY_PROFILE_SHARE_BUTTON || "Copy Link"
@@ -262,7 +272,7 @@ export default function AppInfoPage({
               );
             }}
           />
-          <Redesign.Button
+          <RedesignButton
             style={{ flex: 1 / 2 }}
             text={
               i18n.Messages.APP_DIRECTORY_PROFILE_ADD_BUTTON || "Add to Server"
