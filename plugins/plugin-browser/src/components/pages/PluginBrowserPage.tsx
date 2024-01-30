@@ -9,12 +9,12 @@ import { General } from "@vendetta/ui/components";
 import { showToast } from "@vendetta/ui/toasts";
 import { safeFetch } from "@vendetta/utils";
 
-import {
-  AdvancedSearch,
-  openSheet,
-  SuperAwesomeIcon,
-  useAdvancedSearch,
-} from "../../../../../stuff/types";
+import RedesignSearch, {
+  useRedesignSearch,
+} from "$/components/compat/RedesignSearch";
+import SuperAwesomeIcon from "$/components/SuperAwesomeIcon";
+import { openSheet } from "$/types";
+
 import { pluginsURL } from "../..";
 import { getChanges, updateChanges } from "../../stuff/pluginChecker";
 import { emitterAvailable } from "../../stuff/util";
@@ -50,8 +50,7 @@ export default () => {
     return null;
   }
 
-  const searchContext = { type: "PLUGIN_BROWSER_SEARCH" };
-  const [search, controls] = useAdvancedSearch(searchContext);
+  const [search, controller] = useRedesignSearch();
 
   const changes = React.useRef(getChanges()).current;
   const [filter, setFilter] = React.useState(Filter.DateNewest);
@@ -135,7 +134,7 @@ export default () => {
     <RN.FlatList
       ListHeaderComponent={
         <View style={{ marginBottom: 10 }}>
-          <AdvancedSearch searchContext={searchContext} controls={controls} />
+          <RedesignSearch controller={controller} />
         </View>
       }
       style={{ paddingHorizontal: 10 }}

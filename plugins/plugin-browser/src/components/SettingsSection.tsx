@@ -2,8 +2,9 @@ import { NavigationNative } from "@vendetta/metro/common";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { ErrorBoundary, Forms } from "@vendetta/ui/components";
 
-import CustomBadgeTag from "../../../../stuff/components/CustomBadgeTag";
-import { SimpleText } from "../../../../stuff/types";
+import CustomBadgeTag from "$/components/CustomBadgeTag";
+import SimpleText from "$/components/SimpleText";
+
 import PluginBrowserPage from "./pages/PluginBrowserPage";
 
 const { FormRow } = Forms;

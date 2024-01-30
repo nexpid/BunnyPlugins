@@ -5,9 +5,10 @@ import { getAssetIDByName } from "@vendetta/ui/assets";
 import { General } from "@vendetta/ui/components";
 import { showToast } from "@vendetta/ui/toasts";
 
-import CustomBadgeTag from "../../../../stuff/components/CustomBadgeTag";
-import SmartMention from "../../../../stuff/components/SmartMention";
-import { SimpleText } from "../../../../stuff/types";
+import CustomBadgeTag from "$/components/CustomBadgeTag";
+import SimpleText from "$/components/SimpleText";
+import SmartMention from "$/components/SmartMention";
+
 import { matchGithubLink, properLink, refetchPlugin } from "../stuff/util";
 import { PluginsFullJson } from "../types";
 import usePlugin from "./hooks/usePlugin";

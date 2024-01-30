@@ -6,10 +6,10 @@ import { PluginsFullJson } from "../types";
 
 let lastPluginCache: Record<string, string> = {};
 export function getChanges(): [string, "new" | "update"][] {
-  if (!Object.keys(lastPluginCache)[0] || !vstorage.pluginCache?.[0]) return [];
+  if (!Object.keys(lastPluginCache)[0] || !vstorage.pluginCache[0]) return [];
   return Object.entries(lastPluginCache)
     .map(([id, hash]) =>
-      !vstorage.pluginCache?.includes(id)
+      !vstorage.pluginCache.includes(id)
         ? [id, "new"]
         : plugins.plugins[id] && plugins.plugins[id].manifest.hash !== hash
           ? [id, "update"]

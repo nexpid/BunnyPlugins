@@ -1,7 +1,8 @@
 import { plugin } from "@vendetta";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 
-import { patchSettingsPin } from "../../../../stuff/pinToSettings";
+import { patchSettingsPin } from "$/pinToSettings";
+
 import PluginBrowserPage from "../components/pages/PluginBrowserPage";
 import SettingsSection from "../components/SettingsSection";
 import { getChanges, initThing } from "./pluginChecker";
