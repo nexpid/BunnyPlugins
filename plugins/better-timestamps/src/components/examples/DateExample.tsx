@@ -4,7 +4,8 @@ import { semanticColors } from "@vendetta/ui";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { showToast } from "@vendetta/ui/toasts";
 
-import { SimpleText } from "../../../../../stuff/types";
+import SimpleText from "$/components/SimpleText";
+
 import { vstorage } from "../..";
 
 export const { parseTimestamp } = findByProps(

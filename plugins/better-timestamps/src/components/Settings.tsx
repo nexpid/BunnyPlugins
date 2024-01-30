@@ -1,15 +1,13 @@
 import { findByProps } from "@vendetta/metro";
 import { React } from "@vendetta/metro/common";
-import { storage } from "@vendetta/plugin";
 import { useProxy } from "@vendetta/storage";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { Forms, General } from "@vendetta/ui/components";
 
-import {
-  BetterTableRowGroup,
-  RichText,
-  SimpleText,
-} from "../../../../stuff/types";
+import { BetterTableRowGroup } from "$/components/BetterTableRow";
+import { RichText } from "$/components/RichText";
+import SimpleText from "$/components/SimpleText";
+
 import { vstorage } from "..";
 import { DateExample } from "./examples/DateExample";
 import { TimeExample } from "./examples/TimeExample";
@@ -22,17 +20,6 @@ const { BadgableTabBar } = findByProps("BadgableTabBar");
 export default () => {
   const [tab, setTab] = React.useState<"time" | "day">("time");
 
-  vstorage.time ??= {
-    acceptRelative: false,
-    requireBackticks: storage.reqBackticks ?? true,
-  };
-  vstorage.day ??= {
-    acceptRelative: false,
-    requireBackticks: true,
-    american: false,
-  };
-  if (storage.alwaysLong !== undefined) delete storage.alwaysLong;
-  if (storage.reqBackticks !== undefined) delete storage.reqBackticks;
   useProxy(vstorage);
 
   return (

@@ -1,9 +1,11 @@
 import { storage } from "@vendetta/plugin";
 
+import { makeStorage } from "$/storage";
+
 import settings from "./components/Settings";
 import patcher from "./stuff/patcher";
 
-export const vstorage: {
+export const vstoraga: {
   time?: {
     acceptRelative: boolean;
     requireBackticks: boolean;
@@ -14,6 +16,18 @@ export const vstorage: {
     american: boolean;
   };
 } = storage;
+
+export const vstorage = makeStorage({
+  time: {
+    acceptRelative: false,
+    requireBackticks: true,
+  },
+  day: {
+    acceptRelative: false,
+    requireBackticks: true,
+    american: false,
+  },
+});
 
 let unpatch;
 export default {
