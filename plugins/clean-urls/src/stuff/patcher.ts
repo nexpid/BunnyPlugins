@@ -2,7 +2,7 @@ import { HTTP_REGEX_MULTI } from "@vendetta/constants";
 import { findByProps } from "@vendetta/metro";
 import { before } from "@vendetta/patcher";
 
-import rules from "./rules";
+import { getRules } from "./rules";
 
 const Messages = findByProps("sendMessage", "editMessage");
 
@@ -14,6 +14,8 @@ const clean = (text: string) =>
     } catch {
       return str;
     }
+
+    const rules = getRules();
 
     const host =
       Object.entries(rules.byHost).find(
@@ -38,6 +40,8 @@ export default function () {
 
   before("sendMessage", Messages, (args) => handleMessage(args[1]));
   before("editMessage", Messages, (args) => handleMessage(args[2]));
+
+  getRules();
 
   return () => patches.forEach((x) => x());
 }
