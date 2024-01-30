@@ -4,6 +4,7 @@ import { extname } from "path";
 import { createHash } from "crypto";
 
 import { rollup } from "rollup";
+import tsConfigPaths from "rollup-plugin-tsconfig-paths";
 import esbuild from "rollup-plugin-esbuild";
 import commonjs from "@rollup/plugin-commonjs";
 import nodeResolve from "@rollup/plugin-node-resolve";
@@ -39,6 +40,7 @@ ${mdNote}
 
 /** @type import("rollup").InputPluginOption */
 const plugins = [
+  tsConfigPaths(),
   nodeResolve(),
   commonjs(),
   {
@@ -76,6 +78,7 @@ const plugins = [
         ".html": ["raw"],
         ".css": ["raw"],
         ".svg": ["raw"],
+        ".json": ["json"],
         ".png": ["uri", "image/png"],
       };
 
@@ -87,6 +90,7 @@ const plugins = [
         return {
           code: `export default ${JSON.stringify(code.trim())}`,
         };
+      else if (mode === "json") return { code: `export default ${code}` };
       else if (mode === "uri" && arg)
         return {
           code: `export default ${JSON.stringify(
@@ -96,7 +100,12 @@ const plugins = [
       else return null;
     },
   },
-  esbuild({ minify: !onominify }),
+  esbuild({
+    minify: !onominify,
+    define: {
+      IS_DEV: String(onominify),
+    },
+  }),
 ];
 
 for (let plug of await readdir("./plugins")) {
