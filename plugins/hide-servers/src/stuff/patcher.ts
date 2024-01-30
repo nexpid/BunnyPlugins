@@ -4,7 +4,8 @@ import { after, before } from "@vendetta/patcher";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { showToast } from "@vendetta/ui/toasts";
 
-import { openModal } from "../../../../stuff/types";
+import { openModal } from "$/types";
+
 import { addHidden, isHidden } from "..";
 import GuildsWrapper from "../components/GuildsWrapper";
 import ManageHiddenServersModal from "../components/modals/ManageHiddenServersModal";

@@ -1,4 +1,5 @@
-import { Modal } from "../../../../../stuff/types";
+import Modal from "$/components/Modal";
+
 import { ManageDataPage } from "../pages/ManageHiddenServers";
 
 export default function () {
