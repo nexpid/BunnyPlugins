@@ -7,7 +7,7 @@ import {
   ActionSheetContentContainer,
   ActionSheetTitleHeader,
   hideActionSheet,
-} from "../../../../../stuff/types";
+} from "$/types";
 
 const { FormRadioRow } = Forms;
 

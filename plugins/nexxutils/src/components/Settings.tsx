@@ -1,6 +1,8 @@
-import { General } from "@vendetta/ui/components";
+import { ErrorBoundary, General } from "@vendetta/ui/components";
 
-import { BetterTableRowGroup, SimpleText } from "../../../../stuff/types";
+import { BetterTableRowGroup } from "$/components/BetterTableRow";
+import SimpleText from "$/components/SimpleText";
+
 import { version } from "..";
 import modules from "../modules";
 import { Module, moduleCategoryMap } from "../stuff/Module";
@@ -37,7 +39,11 @@ export default () => {
             padding={mods.length === 0}
           >
             {mods.length > 0 ? (
-              mods.map((x) => <x.component />)
+              mods.map((x) => (
+                <ErrorBoundary>
+                  <x.component />
+                </ErrorBoundary>
+              ))
             ) : (
               <SimpleText
                 variant="text-md/semibold"

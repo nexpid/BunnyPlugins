@@ -1,11 +1,18 @@
-import { after } from "@vendetta/patcher";
+import { after, before } from "@vendetta/patcher";
 import { semanticColors } from "@vendetta/ui";
 
-import { resolveSemanticColor } from "../../../../stuff/types";
+import { resolveSemanticColor } from "$/types";
 
 export default function () {
   const patches = new Array<() => void>();
 
+  const collected = new Map<
+    string,
+    {
+      get: () => object;
+      unpatch: () => void;
+    }
+  >();
   window.nx = {
     get semantic() {
       const data = {};
@@ -51,18 +58,42 @@ export default function () {
         patches.length = 0;
       },
       snipe: (
-        key: string,
+        prop: string,
         parent: any,
         callback?: (args: any[], ret: any) => any,
         oneTime?: boolean,
       ) => {
         const patch = after(
-          key,
+          prop,
           parent,
           callback ?? ((a, b) => console.log("[NX]:", a, b)),
           oneTime ?? false,
         );
         patches.push(patch);
+      },
+      props: {
+        collect: (key: string, prop: string, parent: any) => {
+          collected.get(key)?.unpatch();
+
+          const unpatch = before(prop, parent, ([props]) => {
+            for (const p of Object.keys(props))
+              !(p in data && props[p]) && (data[p] = props[p]);
+          });
+          patches.push(unpatch);
+
+          const data: object = {};
+          collected.set(key, {
+            unpatch,
+            get: () => data,
+          });
+        },
+        redeem: (key: string) => {
+          const coll = collected.get(key);
+          if (!coll) return;
+
+          coll.unpatch();
+          return coll.get();
+        },
       },
     },
   };

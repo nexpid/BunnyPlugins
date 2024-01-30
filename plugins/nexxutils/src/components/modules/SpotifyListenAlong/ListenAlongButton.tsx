@@ -4,7 +4,8 @@ import { getAssetIDByName } from "@vendetta/ui/assets";
 import { Button, General } from "@vendetta/ui/components";
 import { showToast } from "@vendetta/ui/toasts";
 
-import { SvgXml } from "../../../../../../stuff/types";
+import { Svg } from "$/deps";
+
 import listenAlong from "../../../../assets/SpotifyListenAlong/listenAlong.svg";
 import listenAlong2 from "../../../../assets/SpotifyListenAlong/listenAlong2.svg";
 
@@ -50,7 +51,7 @@ export default function ({
           text=""
           style={[button.style, { width: 32 }, disabled && { opacity: 0.5 }]}
           renderIcon={() => (
-            <SvgXml
+            <Svg.SvgXml
               width={20}
               height={20}
               xml={redesigned ? listenAlong2 : listenAlong}

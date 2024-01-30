@@ -10,7 +10,8 @@ import { semanticColors } from "@vendetta/ui";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { findInReactTree } from "@vendetta/utils";
 
-import { TextStyleSheet } from "../../../../stuff/types";
+import { TextStyleSheet } from "$/types";
+
 import { Module, ModuleCategory } from "../stuff/Module";
 
 const SpotifyStore = findByStoreName("SpotifyStore");

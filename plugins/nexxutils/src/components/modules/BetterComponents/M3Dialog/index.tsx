@@ -2,7 +2,8 @@ import { findByProps } from "@vendetta/metro";
 import { React, ReactNative as RN, stylesheet } from "@vendetta/metro/common";
 import { semanticColors } from "@vendetta/ui";
 
-import { SimpleText } from "../../../../../../../stuff/types";
+import SimpleText from "$/components/SimpleText";
+
 import TextButton from "./TextButton";
 const Alerts = findByProps("openLazy", "close");
 

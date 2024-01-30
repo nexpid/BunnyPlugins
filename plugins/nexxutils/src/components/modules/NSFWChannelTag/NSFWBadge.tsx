@@ -2,7 +2,7 @@ import { stylesheet } from "@vendetta/metro/common";
 import { semanticColors } from "@vendetta/ui";
 import { General } from "@vendetta/ui/components";
 
-import { SimpleText } from "../../../../../../stuff/types";
+import SimpleText from "$/components/SimpleText";
 
 const { View } = General;
 

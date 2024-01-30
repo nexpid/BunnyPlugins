@@ -7,6 +7,7 @@ import RestoreEmojiInfoReaction from "./RestoreEmojiInfoReaction";
 import SendSpotifyInvite from "./SendSpotifyInvite";
 import SpotifyListenAlong from "./SpotifyListenAlong";
 import TenorGifFix from "./TenorGifFix";
+import Wario from "./Wario";
 
 export default [
   Freemix,
@@ -17,4 +18,5 @@ export default [
   BetterComponents,
   RestoreEmojiInfoReaction,
   NSFWChannelTag,
+  Wario,
 ] as Module<any>[];

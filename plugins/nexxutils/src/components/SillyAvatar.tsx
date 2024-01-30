@@ -2,7 +2,7 @@ import { findByStoreName } from "@vendetta/metro";
 import { React, ReactNative as RN } from "@vendetta/metro/common";
 import { General } from "@vendetta/ui/components";
 
-import { getUserAvatar } from "../../../../stuff/types";
+import { getUserAvatar } from "$/types";
 
 const { Pressable } = General;
 
