@@ -1,12 +1,12 @@
-import { storage } from "@vendetta/plugin";
+import { makeStorage } from "$/storage";
 
 import Settings from "./components/Settings";
 import patcher from "./stuff/patcher";
 
-export const vstorage: {
-  buttonType?: "pill" | "send";
-  previewType?: "popup" | "clyde";
-} = storage;
+export const vstorage = makeStorage({
+  buttonType: "pill",
+  previewType: "popup",
+});
 
 let unpatch;
 export default {

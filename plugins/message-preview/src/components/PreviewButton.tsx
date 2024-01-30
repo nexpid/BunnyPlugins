@@ -4,7 +4,8 @@ import { semanticColors } from "@vendetta/ui";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { General } from "@vendetta/ui/components";
 
-import { FadeView } from "../../../../stuff/animations";
+import { FadeView } from "$/components/Animations";
+
 import openPreview from "../stuff/openPreview";
 import { patches } from "../stuff/patcher";
 

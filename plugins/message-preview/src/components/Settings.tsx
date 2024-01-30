@@ -2,15 +2,14 @@ import { useProxy } from "@vendetta/storage";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { Forms, General } from "@vendetta/ui/components";
 
-import { BetterTableRowGroup } from "../../../../stuff/types";
+import { BetterTableRowGroup } from "$/components/BetterTableRow";
+
 import { vstorage } from "..";
 
 const { ScrollView } = General;
 const { FormRow, FormRadioRow } = Forms;
 
 export default function () {
-  vstorage.buttonType ??= "pill";
-  vstorage.previewType ??= "popup";
   useProxy(vstorage);
 
   return (
