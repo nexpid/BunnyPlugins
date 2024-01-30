@@ -16,14 +16,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with:
-          path: main
 
       - name: Crowdin
         uses: crowdin/github-action@v1.16.1
         with:
-          base_path: main
-          config: main/crowdin.yml
+          config: crowdin.yml
           upload_translations: true
           download_translations: true
           push_translations: true
@@ -35,11 +32,17 @@ jobs:
           CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_ID }}
           CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_TOKEN }}
 
+  merge:
+    needs: sync-crowdin
+    runs-on: ubuntu-latest
+    steps:
+      - name: Pull main
+        uses: actions/checkout@v4
+
       - name: Pull i18n
         uses: actions/checkout@v4
         with:
           ref: i18n
-          path: i18n
 
       - name: Write files
         run: node /main/.github/scripts/crowdin.mjs
