@@ -2,7 +2,9 @@ import { useProxy } from "@vendetta/storage";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { Forms, General } from "@vendetta/ui/components";
 
-import { BetterTableRowGroup, openSheet } from "../../../../stuff/types";
+import { BetterTableRowGroup } from "$/components/BetterTableRow";
+import { openSheet } from "$/types";
+
 import { vstorage } from "..";
 import { emojipacks } from "../stuff/twemoji";
 import EmojiPackActionSheet from "./sheets/EmojiPackActionSheet";

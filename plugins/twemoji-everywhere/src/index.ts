@@ -1,17 +1,16 @@
 import { ReactNative as RN } from "@vendetta/metro/common";
-import { storage } from "@vendetta/plugin";
+
+import { makeStorage } from "$/storage";
 
 import settings from "./components/Settings";
 import patcher from "./stuff/patcher";
 import { emojipacks } from "./stuff/twemoji";
 
-export const vstorage: {
-  emojipack?: keyof typeof emojipacks;
-} = storage;
-
-vstorage.emojipack ??= RN.Platform.select({
-  default: "default",
-  ios: "twemoji",
+export const vstorage = makeStorage({
+  emojipack: RN.Platform.select({
+    default: "default",
+    ios: "twemoji",
+  }) as keyof typeof emojipacks,
 });
 
 let unpatch: () => void;

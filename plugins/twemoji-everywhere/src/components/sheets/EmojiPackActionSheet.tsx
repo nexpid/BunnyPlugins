@@ -9,7 +9,8 @@ import {
   ActionSheetTitleHeader,
   Entries,
   hideActionSheet,
-} from "../../../../../stuff/types";
+} from "$/types";
+
 import { vstorage } from "../..";
 import { convert, emojipacks } from "../../stuff/twemoji";
 import CustomTwemoji from "../CustomTwemoji";
