@@ -5,6 +5,7 @@ on:
     branches:
       - main
     paths:
+      - crowdin.yml
       - stuff/lang/values/base/*
       - .github/workflows/crowdin.yml
   schedule:
