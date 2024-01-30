@@ -5,7 +5,8 @@ import { semanticColors } from "@vendetta/ui";
 import { General } from "@vendetta/ui/components";
 import { showToast } from "@vendetta/ui/toasts";
 
-import { LazyActionSheet } from "../../../../../stuff/types";
+import { LazyActionSheet } from "$/types";
+
 import { vstorage } from "../..";
 import Commit from "../Commit";
 import { stsCommits } from "../Settings";

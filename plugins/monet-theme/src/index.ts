@@ -1,3 +1,4 @@
+import { logger } from "@vendetta";
 import { findByProps, findByStoreName } from "@vendetta/metro";
 import { React } from "@vendetta/metro/common";
 import { id } from "@vendetta/plugin";
@@ -6,13 +7,13 @@ import { showConfirmationAlert, showCustomAlert } from "@vendetta/ui/alerts";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { showToast } from "@vendetta/ui/toasts";
 
-import { makeStorage } from "../../../stuff/storage";
-import { BundleUpdaterManager } from "../../../stuff/types";
-import { VendettaSysColors } from "../../../stuff/typings";
+import { RNBundleUpdaterManager } from "$/deps";
+import { makeStorage } from "$/storage";
+import { VendettaSysColors } from "$/typings";
+
 import settings, { setColorsFromDynamic } from "./components/Settings";
 import Updating from "./components/Updating";
 import { build } from "./stuff/buildTheme";
-import { transform } from "./stuff/colors";
 import { parse } from "./stuff/jsoncParser";
 import { unpatch } from "./stuff/livePreview";
 
@@ -55,11 +56,11 @@ const initSyscolors = window[
 ] as VendettaSysColors | null | undefined;
 export const vstorage = makeStorage({
   colors: {
-    neutral1: transform(initSyscolors?.neutral1[7] ?? "#747679"),
-    neutral2: transform(initSyscolors?.neutral2[7] ?? "#70777C"),
-    accent1: transform(initSyscolors?.accent1[7] ?? "#007FAC"),
-    accent2: transform(initSyscolors?.accent2[7] ?? "#657985"),
-    accent3: transform(initSyscolors?.accent3[7] ?? "#787296"),
+    neutral1: initSyscolors?.neutral1[7] ?? "#747679",
+    neutral2: initSyscolors?.neutral2[7] ?? "#70777C",
+    accent1: initSyscolors?.accent1[7] ?? "#007FAC",
+    accent2: initSyscolors?.accent2[7] ?? "#657985",
+    accent3: initSyscolors?.accent3[7] ?? "#787296",
   },
   config: {
     style: "auto" as "dark" | "light" | "auto",
@@ -116,8 +117,11 @@ export default {
             ).text()
           ).replace(/\r/g, ""),
         );
-      } catch {
+      } catch (e) {
         Alerts.close();
+
+        console.error(`[MonetTheme] Failed to get patches.json`);
+        logger.error(`Failed to get patches.json!\n${e.stack}`);
         return showToast(
           "Failed to parse patches.json",
           getAssetIDByName("Small"),
@@ -129,7 +133,10 @@ export default {
         theme = build(patches);
       } catch (e) {
         Alerts.close();
-        return showToast(e.toString(), getAssetIDByName("Small"));
+
+        console.error(`[MonetTheme] Failed to build theme!`);
+        logger.error(`Failed to build theme!\n${e.stack}`);
+        return showToast("Failed to build theme!", getAssetIDByName("Small"));
       }
 
       await createFileBackend("vendetta_theme.json").set({
@@ -137,7 +144,7 @@ export default {
         selected: true,
         data: theme,
       } as Theme);
-      BundleUpdaterManager.reload();
+      RNBundleUpdaterManager.reload();
     } else {
       vstorage.applyCache = made;
       vstorage.themeApplyCache = themeMade;
@@ -152,7 +159,7 @@ export default {
           "Monet theme is currently selected, would you like to unload it?",
         onConfirm: async () => {
           await createFileBackend("vendetta_theme.json").set({} as Theme);
-          BundleUpdaterManager.reload();
+          RNBundleUpdaterManager.reload();
         },
         confirmText: "Unload",
         confirmColor: "brand" as ButtonColors,

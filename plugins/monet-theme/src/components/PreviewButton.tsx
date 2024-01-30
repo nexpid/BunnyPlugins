@@ -2,7 +2,8 @@ import { React } from "@vendetta/metro/common";
 import { rawColors } from "@vendetta/ui";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 
-import { SuperAwesomeIcon } from "../../../../stuff/types";
+import SuperAwesomeIcon from "$/components/SuperAwesomeIcon";
+
 import { enabled, toggle } from "../stuff/livePreview";
 
 export default ({ onPressExtra }: { onPressExtra: () => void }) => {

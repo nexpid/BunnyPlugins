@@ -1,20 +1,19 @@
-import { findByName } from "@vendetta/metro";
 import { clipboard, stylesheet } from "@vendetta/metro/common";
 import { semanticColors } from "@vendetta/ui";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { General } from "@vendetta/ui/components";
 import { showToast } from "@vendetta/ui/toasts";
 
-import { openSheet, SimpleText } from "../../../../stuff/types";
-import { transform } from "../stuff/colors";
+import SimpleText from "$/components/SimpleText";
+import { openSheet } from "$/types";
 
-const CustomColorPickerActionSheet = findByName("CustomColorPickerActionSheet");
+import ColorSheet from "./sheets/ColorSheet";
+
 const { View, Pressable } = General;
 
 export default ({
   title,
   color,
-  update,
 }: {
   title: string;
   color: string;
@@ -53,12 +52,17 @@ export default ({
           borderRadius: 2147483647,
           marginBottom: 8,
         }}
-        onPress={() =>
-          openSheet(CustomColorPickerActionSheet, {
-            color: parseInt(color.slice(1), 16),
-            onSelect: (clr: number) =>
-              update(transform(`#${clr.toString(16).padStart(6, "0")}`)),
-          })
+        onPress={
+          () =>
+            openSheet(ColorSheet, {
+              title,
+              color: color.slice(1),
+            })
+          // openSheet(CustomColorPickerActionSheet, {
+          //   color: parseInt(color.slice(1), 16),
+          //   onSelect: (clr: number) =>
+          //     update(`#${clr.toString(16).padStart(6, "0")}`),
+          // })
         }
         onLongPress={() => {
           clipboard.setString(color);

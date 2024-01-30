@@ -6,8 +6,7 @@ import {
 import { semanticColors } from "@vendetta/ui";
 import { General } from "@vendetta/ui/components";
 
-import { SimpleText } from "../../../../stuff/types";
-
+import SimpleText from "$/components/SimpleText";
 export interface CommitUser {
   login: string;
   id: number;

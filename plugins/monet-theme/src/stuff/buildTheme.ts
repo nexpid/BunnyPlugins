@@ -1,7 +1,8 @@
 import { findByStoreName } from "@vendetta/metro";
 import { rawColors } from "@vendetta/ui";
 
-import { ThemeDataWithPlus } from "../../../../stuff/typings";
+import { ThemeDataWithPlus } from "$/typings";
+
 import { vstorage } from "..";
 import { Patches, PatchThing } from "../types";
 import { getLABShade, parseColor } from "./colors";

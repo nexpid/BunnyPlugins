@@ -5,12 +5,10 @@ import { getAssetIDByName } from "@vendetta/ui/assets";
 import { Forms, General } from "@vendetta/ui/components";
 import { showToast } from "@vendetta/ui/toasts";
 
-import {
-  BetterTableRowGroup,
-  openSheet,
-  resolveSemanticColor,
-  SimpleText,
-} from "../../../../../stuff/types";
+import { BetterTableRowGroup } from "$/components/BetterTableRow";
+import SimpleText from "$/components/SimpleText";
+import { openSheet, resolveSemanticColor } from "$/types";
+
 import { vstorage } from "../..";
 import wallpapers from "../../stuff/wallpapers";
 import { stsPatches } from "../Settings";

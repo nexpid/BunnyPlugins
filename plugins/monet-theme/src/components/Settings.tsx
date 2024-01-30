@@ -15,16 +15,14 @@ import { getAssetIDByName } from "@vendetta/ui/assets";
 import { Forms, General } from "@vendetta/ui/components";
 import { showToast } from "@vendetta/ui/toasts";
 
-import {
-  BetterTableRowGroup,
-  BundleUpdaterManager,
-  LazyActionSheet,
-  LineDivider,
-  RichText,
-  SimpleText,
-  TextStyleSheet,
-} from "../../../../stuff/types";
-import { VendettaSysColors } from "../../../../stuff/typings";
+import { BetterTableRowGroup } from "$/components/BetterTableRow";
+import LineDivider from "$/components/LineDivider";
+import { RichText } from "$/components/RichText";
+import SimpleText from "$/components/SimpleText";
+import { RNBundleUpdaterManager } from "$/deps";
+import { LazyActionSheet, TextStyleSheet } from "$/types";
+import { ThemeDataWithPlus, VendettaSysColors } from "$/typings";
+
 import {
   commitsURL,
   devPatchesURL,
@@ -35,7 +33,6 @@ import {
   vstorage,
 } from "..";
 import { build } from "../stuff/buildTheme";
-import { transform } from "../stuff/colors";
 import { parse } from "../stuff/jsoncParser";
 import { toggle } from "../stuff/livePreview";
 import { checkForURL, fetchRawTheme, parseTheme } from "../stuff/repainter";
@@ -52,22 +49,14 @@ const { showSimpleActionSheet } = findByProps("showSimpleActionSheet");
 
 const mdSize = TextStyleSheet["text-md/semibold"].fontSize;
 
-function transformObject<T extends Record<string, string>>(obj: T): T {
-  for (const [k, v] of Object.entries(obj)) {
-    //@ts-expect-error shut the fuck up typescript
-    obj[k] = transform(v);
-  }
-  return obj;
-}
-
 export function setColorsFromDynamic(clr: VendettaSysColors) {
-  vstorage.colors = transformObject({
+  vstorage.colors = {
     neutral1: clr.neutral1[7],
     neutral2: clr.neutral2[7],
     accent1: clr.accent1[7],
     accent2: clr.accent2[7],
     accent3: clr.accent3[7],
-  });
+  };
 }
 
 export let stsCommits: CommitObj[];
@@ -406,7 +395,8 @@ export default () => {
 
             const otter = vstorage.patches.from === "local" ? "git" : "local";
             showToast(
-              `Now using ${otter === "git" ? "GitHub" : "local"} patches`,
+              `Switched to ${otter === "git" ? "GitHub" : "local"} patches`,
+              getAssetIDByName("toast_invite_sent"),
             );
             vstorage.patches.from = otter;
             setPatches(undefined);
@@ -480,9 +470,7 @@ export default () => {
               label="Load Theme"
               leading={<FormRow.Icon source={getAssetIDByName("debug")} />}
               onPress={async () => {
-                transformObject(vstorage.colors);
-
-                let theme;
+                let theme: ThemeDataWithPlus;
                 try {
                   theme = build(patches);
                 } catch (e) {
@@ -502,7 +490,7 @@ export default () => {
                   confirmText: "Reload Now",
                   confirmColor: "red" as ButtonColors,
                   cancelText: "Later",
-                  onConfirm: () => BundleUpdaterManager.reload(),
+                  onConfirm: () => RNBundleUpdaterManager.reload(),
                 });
               }}
             />

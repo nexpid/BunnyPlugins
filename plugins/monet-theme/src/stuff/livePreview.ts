@@ -4,7 +4,8 @@ import { instead } from "@vendetta/patcher";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { showToast } from "@vendetta/ui/toasts";
 
-import { ThemeDataWithPlus } from "../../../../stuff/typings";
+import { ThemeDataWithPlus } from "$/typings";
+
 import { stsPatches } from "../components/Settings";
 import { build } from "./buildTheme";
 
