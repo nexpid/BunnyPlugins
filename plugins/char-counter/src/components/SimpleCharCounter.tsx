@@ -1,8 +1,9 @@
 import { React, stylesheet } from "@vendetta/metro/common";
 import { useProxy } from "@vendetta/storage";
 
-import { FadeView } from "../../../../stuff/animations";
-import { SimpleText } from "../../../../stuff/types";
+import { FadeView } from "$/components/Animations";
+import SimpleText from "$/components/SimpleText";
+
 import { vstorage } from "..";
 import getMessageLength, { display, hasSLM } from "../stuff/getMessageLength";
 import { lastText } from "../stuff/patcher";
@@ -24,7 +25,7 @@ export default function () {
   const extraMessages = hasSLM() ? Math.floor(curLength / maxLength) : 0;
   const dspLength = curLength - extraMessages * maxLength;
 
-  const shouldAppear = curLength >= (vstorage.minChars ?? 1);
+  const shouldAppear = curLength >= vstorage.minChars;
 
   return (
     <FadeView

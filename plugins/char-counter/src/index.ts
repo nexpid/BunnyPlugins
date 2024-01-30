@@ -1,15 +1,15 @@
-import { storage } from "@vendetta/plugin";
+import { makeStorage } from "$/storage";
 
 import Settings from "./components/Settings";
 import patcher from "./stuff/patcher";
 
-export const vstorage: {
-  position?: "pill" | "inside";
-  display?: "full" | "length" | "remaining";
-  commas?: boolean;
-  minChars?: number;
-  supportSLM?: boolean;
-} = storage;
+export const vstorage = makeStorage({
+  position: "pill",
+  display: "full",
+  commas: true,
+  minChars: 1,
+  supportSLM: true,
+});
 
 let unpatch;
 export default {

@@ -3,8 +3,10 @@ import { after } from "@vendetta/patcher";
 import { semanticColors } from "@vendetta/ui";
 import { General } from "@vendetta/ui/components";
 
-import { FadeView } from "../../../../stuff/animations";
-import { SimpleText, TextStyleSheet } from "../../../../stuff/types";
+import { FadeView } from "$/components/Animations";
+import SimpleText from "$/components/SimpleText";
+import { TextStyleSheet } from "$/types";
+
 import { vstorage } from "..";
 import getMessageLength, { display, hasSLM } from "../stuff/getMessageLength";
 import { lastText } from "../stuff/patcher";
