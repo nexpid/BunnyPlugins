@@ -7,7 +7,8 @@ import {
   ActionSheetContentContainer,
   ActionSheetTitleHeader,
   hideActionSheet,
-} from "../../../../../stuff/types";
+} from "$/types";
+
 import { vstorage } from "../..";
 
 const { FormCheckboxRow } = Forms;

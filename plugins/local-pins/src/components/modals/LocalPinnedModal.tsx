@@ -1,0 +1,188 @@
+import { findByName, findByProps, findByStoreName } from "@vendetta/metro";
+import {
+  i18n,
+  ReactNative as RN,
+  stylesheet,
+  url,
+} from "@vendetta/metro/common";
+import { semanticColors } from "@vendetta/ui";
+import { getAssetIDByName } from "@vendetta/ui/assets";
+import { General } from "@vendetta/ui/components";
+
+import Modal from "$/components/Modal";
+import SimpleText from "$/components/SimpleText";
+import { hideActionSheet, popModal } from "$/types";
+
+import { hasAnyPin, removePin } from "../..";
+import useLocalPinned from "../../hooks/useLocalPinned";
+
+const { default: ChatItemWrapper } = findByProps(
+  "DCDAutoModerationSystemMessageView",
+  "default",
+);
+const MessageRecord = findByName("MessageRecord");
+const RowManager = findByName("RowManager");
+
+const ThemeStore = findByStoreName("ThemeStore");
+const { showSimpleActionSheet } = findByProps("showSimpleActionSheet");
+
+const { ScrollView, View } = General;
+
+const Message = ({
+  message,
+  channelId,
+  channel,
+  remove,
+}: {
+  message: any;
+  channelId: string;
+  channel?: any;
+  remove: () => void;
+}) => {
+  const styles = stylesheet.createThemedStyleSheet({
+    message: {
+      backgroundColor: semanticColors.CARD_PRIMARY_BG,
+      padding: 8,
+      borderRadius: 8,
+      flexDirection: "column",
+      gap: 4,
+    },
+    icon: {
+      width: 16,
+      height: 16,
+      tintColor: semanticColors.TEXT_NORMAL,
+    },
+    androidRipple: {
+      color: semanticColors.ANDROID_RIPPLE,
+      cornerRadius: 8,
+      foreground: true,
+    },
+  });
+
+  return (
+    <RN.Pressable
+      style={styles.message}
+      android_ripple={styles.androidRipple}
+      onPress={() => {
+        popModal();
+        url.openDeeplink(
+          `https://discord.com/channels/${
+            channel?.guild_id ?? "@me"
+          }/${channelId}/${message.id}`,
+        );
+      }}
+      onLongPress={() =>
+        showSimpleActionSheet({
+          key: "CardOverflow",
+          header: {
+            title: "Pinned Message",
+            onClose: hideActionSheet,
+          },
+          options: [
+            {
+              label: "Unpin",
+              icon: getAssetIDByName("ic_message_pin"),
+              onPress: () => {
+                removePin(channelId, message.id);
+                remove();
+              },
+            },
+          ],
+        })
+      }
+      pointerEvents="box-only"
+    >
+      <View style={{ flexDirection: "row", alignItems: "center", gap: 4 }}>
+        <RN.Image
+          style={styles.icon}
+          source={getAssetIDByName("ic_chat_bubble_16px")}
+          resizeMode="cover"
+        />
+        <SimpleText variant="text-md/medium" color="TEXT_NORMAL">
+          {channel?.name ?? "unknown"}
+        </SimpleText>
+      </View>
+      <ChatItemWrapper
+        rowGenerator={new RowManager()}
+        message={new MessageRecord(message)}
+      />
+    </RN.Pressable>
+  );
+};
+
+export default function LocalPinnedModal() {
+  const styles = stylesheet.createThemedStyleSheet({
+    main: {
+      flexDirection: "column",
+      gap: 16,
+      paddingHorizontal: 8,
+      paddingTop: 8,
+      paddingBottom: 36,
+    },
+    bowomp: {
+      flex: 1,
+      gap: 4,
+      alignItems: "center",
+      justifyContent: "center",
+      flexDirection: "column",
+    },
+  });
+
+  const { data, status, remove } = useLocalPinned(undefined);
+  if (!hasAnyPin())
+    return (
+      <Modal mkey="local-pinned" title="Local Pinned">
+        <View style={styles.bowomp}>
+          <RN.Image
+            source={
+              {
+                dark: getAssetIDByName("img_pins_empty_dark"),
+                light: getAssetIDByName("img_pins_empty_light"),
+              }[ThemeStore.theme] ?? getAssetIDByName("img_pins_empty_darker")
+            }
+            resizeMode="contain"
+            style={{ marginLeft: 35 }}
+          />
+          <SimpleText
+            variant="text-md/medium"
+            color="TEXT_MUTED"
+            align="center"
+          >
+            {i18n.Messages.NO_PINS_IN_CHANNEL ??
+              "This channel doesn't have any\npinned messages... yet."}
+          </SimpleText>
+        </View>
+      </Modal>
+    );
+
+  return (
+    <Modal mkey="local-pinned" title="Local Pinned">
+      {!data ? (
+        <View
+          style={{ alignItems: "center", justifyContent: "center", flex: 1 }}
+        >
+          <RN.ActivityIndicator size="large" style={{ marginBottom: 10 }} />
+          <SimpleText
+            variant="text-lg/semibold"
+            color="TEXT_NORMAL"
+            align="center"
+          >
+            {Math.floor(status * 100)}%
+          </SimpleText>
+        </View>
+      ) : (
+        <ScrollView style={{ flex: 1 }}>
+          <View style={styles.main}>
+            {data.map((x) => (
+              <Message
+                {...x}
+                remove={() => remove(x.message.id)}
+                key={x.message.id}
+              />
+            ))}
+          </View>
+        </ScrollView>
+      )}
+    </Modal>
+  );
+}

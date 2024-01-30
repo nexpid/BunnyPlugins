@@ -1,30 +1,43 @@
-import { findByName } from "@vendetta/metro";
+import { findByName, findByProps } from "@vendetta/metro";
 import { i18n, React } from "@vendetta/metro/common";
 import { after, before } from "@vendetta/patcher";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { General } from "@vendetta/ui/components";
 import { findInReactTree } from "@vendetta/utils";
 
-import { LazyActionSheet, SuperAwesomeIcon } from "../../../../stuff/types";
+import SuperAwesomeIcon from "$/components/SuperAwesomeIcon";
+import { LazyActionSheet, SearchContext } from "$/types";
+
+import ChannelPinsRow from "../components/ChannelPinsRow";
 import PinMessageLocallyAction from "../components/MessageActionSheetButton";
 import ChannelPinsModal from "../components/modals/ChannelPinsModal";
+import RedesignChannelPinsRow from "../components/RedesignChannelPinsRow";
+import PinsScreen from "../components/screens/PinsScreen";
 
 const { View } = General;
 const ChannelSettingsModal = findByName("ChannelSettingsModal", false);
 const ChannelPinsConnected = findByName("ChannelPinsConnected", false);
+const screens = findByProps("MessagesScreen", "MessageContentScreen");
+const useOnPressSearchItem = findByProps("useOnPressSearchItem")
+  ?.useOnPressSearchItem;
+const FlashList = findByProps("FlashList")?.FlashList;
 
-let chPinsHRCb: {
+const PrivateChannels = findByName("ConnectedPrivateChannels", false);
+
+export const pinsCallback: {
   filters?: () => void;
   clear?: () => void;
-} = {};
-export function setChPinsHRCb(x: typeof chPinsHRCb) {
-  chPinsHRCb = x;
-}
-
-export const chPinsMessagesOverwrites: Record<
-  string,
-  (messages: any[]) => any[]
-> = {};
+  overrides: Record<
+    string,
+    (data: {
+      messages: any[];
+      searchContext?: SearchContext;
+      press?: (channelId: string, messageId: string) => void;
+    }) => any[]
+  >;
+} = {
+  overrides: {},
+};
 
 export default function () {
   const patches = new Array<() => void>();
@@ -38,10 +51,82 @@ export default function () {
           ...pins.props,
           messages:
             loaded && messages
-              ? chPinsMessagesOverwrites[channelId]?.(messages) ?? messages
+              ? pinsCallback.overrides[channelId]?.({ messages }) ?? messages
               : messages,
         },
       };
+    }),
+  );
+
+  if (screens?.MessagesScreen && useOnPressSearchItem)
+    patches.push(
+      after(
+        "MessagesScreen",
+        screens,
+        (
+          [{ searchContext, tab }]: [
+            { searchContext: SearchContext; tab: string },
+          ],
+          ret,
+        ) => {
+          if (tab === "pins") {
+            const { channelId } = searchContext;
+            React.useEffect(
+              () => () => {
+                unpatch();
+              },
+              [],
+            );
+
+            const press = useOnPressSearchItem(searchContext);
+            const unpatch = before("type", ret, ([x]) => {
+              if (x?.data)
+                x.data =
+                  pinsCallback.overrides[channelId]?.({
+                    messages: x.data,
+                    searchContext,
+                    press,
+                  }) ?? x.data;
+            });
+
+            return React.createElement(PinsScreen, {
+              channelId: searchContext.channelId,
+              ret,
+            });
+          }
+        },
+      ),
+    );
+  patches.push(
+    after("default", ChannelSettingsModal, (_, navigator) => {
+      const screens = navigator.props.screens;
+
+      screens.PINNED_MESSAGES.headerRight = () =>
+        React.createElement(
+          View,
+          {
+            style: { flexDirection: "row-reverse" },
+          },
+          React.createElement(SuperAwesomeIcon, {
+            icon: getAssetIDByName("ic_filter"),
+            style: "header",
+            onPress: () => pinsCallback.filters?.(),
+          }),
+          React.createElement(SuperAwesomeIcon, {
+            icon: getAssetIDByName("ic_message_delete"),
+            style: "header",
+            destructive: true,
+            onPress: () => pinsCallback.clear?.(),
+          }),
+        );
+
+      patches.push(
+        after("render", screens.PINNED_MESSAGES, (_, ret) =>
+          React.createElement(ChannelPinsModal, {
+            channelId: ret.props.channelId,
+          }),
+        ),
+      );
     }),
   );
 
@@ -81,35 +166,38 @@ export default function () {
     }),
   );
 
-  patches.push(
-    after("default", ChannelSettingsModal, (_, navigator) => {
-      const screens = navigator.props.screens;
+  if (FlashList)
+    patches.push(
+      after("render", FlashList, ([d], ret) =>
+        d.accessibilityLabel === i18n.Messages.HAPPENING_NOW
+          ? React.createElement(RedesignChannelPinsRow, { ret })
+          : ret,
+      ),
+    );
 
-      screens.PINNED_MESSAGES.headerRight = () =>
-        React.createElement(
-          View,
-          {
-            style: { flexDirection: "row-reverse" },
-          },
-          React.createElement(SuperAwesomeIcon, {
-            icon: getAssetIDByName("ic_filter"),
-            style: "header",
-            onPress: () => chPinsHRCb.filters?.(),
-          }),
-          React.createElement(SuperAwesomeIcon, {
-            icon: getAssetIDByName("ic_message_delete"),
-            style: "header",
-            destructive: true,
-            onPress: () => chPinsHRCb.clear?.(),
-          }),
-        );
+  // patches.push(
+  //   after("default", FastList, ([d], ret) =>
+  //     d.accessibilityLabel === i18n.Messages.DIRECT_MESSAGES
+  //       ? React.createElement(MessagesPinsRow, { ret })
+  //       : ret,
+  //   ),
+  // );
+
+  let privatePatched = false;
+  patches.push(
+    after("default", PrivateChannels, (_, res) => {
+      if (privatePatched) return;
+      privatePatched = true;
 
       patches.push(
-        after("render", screens.PINNED_MESSAGES, (_, ret) =>
-          React.createElement(ChannelPinsModal, {
-            channelId: ret.props.channelId,
-          }),
-        ),
+        after("render", res.type.prototype, (_, list) => {
+          const children = findInReactTree(list, (x) =>
+            x.find((y: any) => y.type?.name === "FastList"),
+          );
+          if (!children) return;
+
+          children.splice(1, 0, React.createElement(ChannelPinsRow, {}));
+        }),
       );
     }),
   );

@@ -5,7 +5,9 @@ import { showConfirmationAlert } from "@vendetta/ui/alerts";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { Forms, General } from "@vendetta/ui/components";
 
-import { BetterTableRowGroup, SimpleText } from "../../../../stuff/types";
+import { BetterTableRowGroup } from "$/components/BetterTableRow";
+import SimpleText from "$/components/SimpleText";
+
 import { vstorage } from "..";
 
 const { ScrollView } = General;
