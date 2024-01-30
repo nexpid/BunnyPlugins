@@ -2,7 +2,8 @@ import { constants, React, stylesheet } from "@vendetta/metro/common";
 import { semanticColors } from "@vendetta/ui";
 import { Forms, General } from "@vendetta/ui/components";
 
-import { SimpleText } from "../../../../../stuff/types";
+import SimpleText from "$/components/SimpleText";
+
 import { debug, vstorage } from "../..";
 import { dispatchActivityIfPossible } from "../../stuff/activity";
 

@@ -1,6 +1,7 @@
 import { findByStoreName } from "@vendetta/metro";
 
-import { getUserAvatar } from "../../../../stuff/types";
+import { getUserAvatar } from "$/types";
+
 import { RawActivity } from "./activity";
 import { getExternalAsset, proxyAssetCache } from "./api";
 import { forceUpdateActivity, registerChangeFluxEvent } from "./autochange";

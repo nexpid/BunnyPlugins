@@ -1,4 +1,3 @@
-import { plugin } from "@vendetta";
 import {
   clipboard,
   NavigationNative,
@@ -13,15 +12,13 @@ import { getAssetIDByName } from "@vendetta/ui/assets";
 import { Forms, General } from "@vendetta/ui/components";
 import { showToast } from "@vendetta/ui/toasts";
 
-import { FadeView } from "../../../../stuff/animations";
-import { useChangelog } from "../../../../stuff/changelog";
-import { openPluginReportSheet } from "../../../../stuff/githubReport";
-import {
-  BetterTableRowGroup,
-  LineDivider,
-  MMKVManager,
-  SuperAwesomeIcon,
-} from "../../../../stuff/types";
+import { FadeView } from "$/components/Animations";
+import { BetterTableRowGroup } from "$/components/BetterTableRow";
+import LineDivider from "$/components/LineDivider";
+import SuperAwesomeIcon from "$/components/SuperAwesomeIcon";
+import { RNMMKVManager } from "$/deps";
+import { openPluginReportSheet } from "$/githubReport";
+
 import { vstorage } from "..";
 import {
   dispatchActivityIfPossible,
@@ -30,7 +27,6 @@ import {
   SettingsActivity,
 } from "../stuff/activity";
 import { proxyAssetCache } from "../stuff/api";
-import PresetProfiles from "../stuff/presetProfiles";
 import { activitySavedPrompt } from "../stuff/prompts";
 import { stringVariables } from "../stuff/variables";
 import { openLiveRawActivityView } from "./pages/LiveRawActivityView";
@@ -69,38 +65,8 @@ export default () => {
   const [_, forceUpdate] = React.useReducer((x) => ~x, 0);
   forceUpdateSettings = forceUpdate;
 
-  vstorage.settings ??= {
-    edit: false,
-    display: false,
-    debug: {
-      enabled: false,
-      visible: false,
-      boykisserDead: undefined,
-    },
-  };
-  vstorage.activity ??= {
-    editing: makeEmptySettingsActivity(),
-  };
-  vstorage.profiles ??= PresetProfiles;
   useProxy(vstorage);
 
-  React.useEffect(() => {
-    if (vstorage.settings.debug.boykisserDead === undefined) return;
-
-    useChangelog(plugin, [
-      {
-        changes: [
-          "+ added boykisser back",
-          "+ you can now kill boykisser (don't)",
-          "+ fixed typo",
-          "+ added a string variables 'Help' button",
-        ],
-      },
-      {
-        changes: ["+ initial update guhhh"],
-      },
-    ]);
-  }, [vstorage.settings.debug.boykisserDead === undefined]);
   React.useEffect(() => {
     if (vstorage.settings.debug.boykisserDead === undefined) return;
     if (vstorage.settings.display) dispatchActivityIfPossible();
@@ -111,7 +77,7 @@ export default () => {
   ]);
 
   if (vstorage.settings.debug.boykisserDead === undefined) {
-    MMKVManager.getItem("CRPC_boykisser").then((x) => {
+    RNMMKVManager.getItem("CRPC_boykisser").then((x) => {
       vstorage.settings.debug.boykisserDead = x === "true";
       forceUpdate();
     });
@@ -284,14 +250,14 @@ export default () => {
                     );
                   }
 
-                  const data = SettingsActivity.safeParse(rawData);
-                  if (!data.success)
+                  const data = SettingsActivity.validate(rawData);
+                  if (!data.error)
                     return showToast(
                       "Invalid activity data",
                       getAssetIDByName("Small"),
                     );
 
-                  vstorage.activity.editing = data.data as SettingsActivity;
+                  vstorage.activity.editing = data.value as SettingsActivity;
                   delete vstorage.activity.profile;
                   forceUpdate();
                   showToast("Loaded", getAssetIDByName("Check"));
@@ -450,7 +416,7 @@ export default () => {
 
                       if (!messages[bkCounter]) {
                         vstorage.settings.debug.boykisserDead = true;
-                        MMKVManager.setItem("CRPC_boykisser", "true");
+                        RNMMKVManager.setItem("CRPC_boykisser", "true");
                         forceUpdate();
                         showToast("you have MURDERED boykisser. fuck you");
                       } else showToast(messages[bkCounter]);

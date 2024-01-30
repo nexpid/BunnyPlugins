@@ -8,7 +8,9 @@ import { getAssetIDByName } from "@vendetta/ui/assets";
 import { General, Search } from "@vendetta/ui/components";
 import { showToast } from "@vendetta/ui/toasts";
 
-import { SimpleText, SuperAwesomeIcon } from "../../../../../stuff/types";
+import SimpleText from "$/components/SimpleText";
+import SuperAwesomeIcon from "$/components/SuperAwesomeIcon";
+
 import { getApplications, SimpleAPIApplication } from "../../stuff/api";
 import { applicationListCallback } from "../../stuff/prompts";
 import { placeholders } from "../Settings";

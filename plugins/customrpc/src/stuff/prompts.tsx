@@ -1,4 +1,4 @@
-import { constants } from "@vendetta";
+import { constants, logger } from "@vendetta";
 import { findByProps } from "@vendetta/metro";
 import { React, stylesheet } from "@vendetta/metro/common";
 import { semanticColors } from "@vendetta/ui";
@@ -7,6 +7,8 @@ import { getAssetIDByName } from "@vendetta/ui/assets";
 import { Forms, General } from "@vendetta/ui/components";
 import { showToast } from "@vendetta/ui/toasts";
 
+import { RichText } from "$/components/RichText";
+import SimpleText from "$/components/SimpleText";
 import {
   ActionSheet,
   ActionSheetCloseButton,
@@ -15,9 +17,8 @@ import {
   hideActionSheet,
   openLazy,
   openSheet,
-  RichText,
-  SimpleText,
-} from "../../../../stuff/types";
+} from "$/types";
+
 import { vstorage } from "..";
 import { showApplicationList } from "../components/pages/ApplicationList";
 import { showRichAssetList } from "../components/pages/RichAssetList";
@@ -130,7 +131,12 @@ export function ImageActionSheet({
                   update(`mp:${await getExternalAsset(url)}`);
                   showToast("Proxied image", getAssetIDByName("Check"));
                 } catch (p) {
-                  console.log(p);
+                  console.error(
+                    `[CustomRPC] ImageActionSheet->customImg proxy error!`,
+                  );
+                  logger.error(
+                    `ImageActionSheet->customImg proxy error!\n${p.stack}`,
+                  );
                   showToast("Failed to proxy image", getAssetIDByName("Small"));
                 }
               },

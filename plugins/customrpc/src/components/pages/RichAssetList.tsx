@@ -8,7 +8,8 @@ import {
 import { semanticColors } from "@vendetta/ui";
 import { General, Search } from "@vendetta/ui/components";
 
-import { TextStyleSheet } from "../../../../../stuff/types";
+import { TextStyleSheet } from "$/types";
+
 import { AppRichAsset, getApplicationAssets } from "../../stuff/api";
 import { richAssetListAppId, richAssetListCallback } from "../../stuff/prompts";
 

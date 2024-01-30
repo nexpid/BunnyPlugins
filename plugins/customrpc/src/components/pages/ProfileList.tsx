@@ -10,7 +10,8 @@ import { getAssetIDByName } from "@vendetta/ui/assets";
 import { Forms, General, Search } from "@vendetta/ui/components";
 import { showToast } from "@vendetta/ui/toasts";
 
-import { SuperAwesomeIcon } from "../../../../../stuff/types";
+import SuperAwesomeIcon from "$/components/SuperAwesomeIcon";
+
 import { vstorage } from "../..";
 import {
   makeEmptySettingsActivity,
@@ -79,8 +80,8 @@ export const ProfileList = () => {
       return showToast("Failed to parse JSON");
     }
 
-    const data = SettingsActivity.safeParse(activity);
-    if (!data.success)
+    const data = SettingsActivity.validate(activity);
+    if (data.error)
       return showToast("Invalid profile data", getAssetIDByName("Small"));
 
     let counter = 0,
@@ -90,7 +91,7 @@ export const ProfileList = () => {
       name = `Imported Profile (${counter})`;
     }
 
-    vstorage.profiles[name] = data.data as SettingsActivity;
+    vstorage.profiles[name] = data.value as SettingsActivity;
     vstorage.activity.profile = name;
     forceUpdate();
     showToast("Imported profile", getAssetIDByName("Check"));

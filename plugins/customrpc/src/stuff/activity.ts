@@ -1,5 +1,6 @@
 import { FluxDispatcher } from "@vendetta/metro/common";
-import { z } from "zod";
+
+import { Joi } from "$/deps";
 
 import { debug, vstorage } from "..";
 import { forceUpdateLiveRawActivityView } from "../components/pages/LiveRawActivityView";
@@ -65,28 +66,28 @@ export enum ActivityType {
   Competing = 5,
 }
 
-export const SettingsActivity = z.object({
-  app: z.object({
-    name: z.string().optional(),
-    id: z.string().optional(),
+export const SettingsActivity = Joi.object({
+  app: Joi.object({
+    name: Joi.string().optional(),
+    id: Joi.string().optional(),
   }),
-  state: z.string().optional(),
-  details: z.string().optional(),
-  timestamps: z.object({
-    start: z.string().or(z.number()).optional(),
-    end: z.string().or(z.number()).optional(),
+  state: Joi.string().optional(),
+  details: Joi.string().optional(),
+  timestamps: Joi.object({
+    start: Joi.alternatives(Joi.string(), Joi.number()).optional(),
+    end: Joi.alternatives(Joi.string(), Joi.number()).optional(),
   }),
-  assets: z.object({
-    largeImg: z.string().optional(),
-    smallImg: z.string().optional(),
+  assets: Joi.object({
+    largeImg: Joi.string().optional(),
+    smallImg: Joi.string().optional(),
   }),
-  buttons: z.array(
-    z.object({
-      text: z.string(),
-      url: z.string().optional(),
+  buttons: [
+    Joi.object({
+      text: Joi.string(),
+      url: Joi.string().optional(),
     }),
-  ),
-  type: z.nativeEnum(ActivityType),
+  ],
+  type: Joi.string().valid(...Object.values(ActivityType)),
 });
 
 // TODO support activity flags

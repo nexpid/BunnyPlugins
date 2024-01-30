@@ -3,7 +3,9 @@ import { NavigationNative, React, stylesheet } from "@vendetta/metro/common";
 import { semanticColors } from "@vendetta/ui";
 import { Button, General } from "@vendetta/ui/components";
 
-import { openSheet, SimpleText } from "../../../../stuff/types";
+import SimpleText from "$/components/SimpleText";
+import { openSheet } from "$/types";
+
 import {
   ActivityType,
   SettingsActivity,
