@@ -6,6 +6,8 @@ import { showConfirmationAlert } from "@vendetta/ui/alerts";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { Forms, General } from "@vendetta/ui/components";
 
+import RedesignButton from "$/components/compat/RedesignButton";
+import SimpleText from "$/components/SimpleText";
 import {
   ActionSheet,
   ActionSheetCloseButton,
@@ -13,9 +15,8 @@ import {
   ActionSheetTitleHeader,
   hideActionSheet,
   openSheet,
-  Redesign,
-  SimpleText,
-} from "../../../../../stuff/types";
+} from "$/types";
+
 import { cache, canImport, isPluginProxied } from "../..";
 import { importData, SyncImportOptions } from "../../stuff/syncStuff";
 import { DBSave } from "../../types/api/latest";
@@ -156,7 +157,7 @@ export default function ImportActionSheet({
           }
           selected={options.themes}
         />
-        <Redesign.Button
+        <RedesignButton
           text="Import"
           variant="positive"
           size="md"

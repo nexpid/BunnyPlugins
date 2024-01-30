@@ -4,6 +4,8 @@ import { plugins } from "@vendetta/plugins";
 import { createStorage, wrapSync } from "@vendetta/storage";
 import { themes } from "@vendetta/themes";
 
+import { makeStorage } from "$/storage";
+
 import Settings from "./components/Settings";
 import { currentAuthorization, getSaveData, syncSaveData } from "./stuff/api";
 import { hsync } from "./stuff/http";
@@ -16,20 +18,21 @@ export interface AuthRecord {
   refreshToken: string;
   expiresAt: number;
 }
-export const vstorage: {
-  autoSync?: boolean;
-  addToSettings?: boolean;
-  pluginSettings?: Record<
+
+export const vstorage = makeStorage({
+  autoSync: false,
+  addToSettings: false,
+  pluginSettings: {} as Record<
     string,
     {
       syncPlugin: boolean;
       syncStorage: boolean;
     }
-  >;
-  auth?: Record<string, AuthRecord>;
-  host?: string;
-  clientId?: string;
-} = storage;
+  >,
+  auth: {} as Record<string, AuthRecord>,
+  host: undefined as string,
+  clientId: undefined as string,
+});
 
 let _cache: any;
 export const cache: {

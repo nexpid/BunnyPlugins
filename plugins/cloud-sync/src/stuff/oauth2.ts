@@ -34,7 +34,6 @@ export function openOauth2Modal() {
             const code = url.searchParams.get("code");
 
             const token = await getOauth2Response(code);
-            vstorage.auth ??= {};
             vstorage.auth[UserStore.getCurrentUser().id] = token;
             fillCache();
 

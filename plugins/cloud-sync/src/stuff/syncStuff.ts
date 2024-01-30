@@ -7,7 +7,8 @@ import { showConfirmationAlert } from "@vendetta/ui/alerts";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { showToast } from "@vendetta/ui/toasts";
 
-import { BundleUpdaterManager, MMKVManager } from "../../../../stuff/types";
+import { RNBundleUpdaterManager, RNMMKVManager } from "$/deps";
+
 import { canImport, isPluginProxied, vstorage } from "..";
 import {
   addLog,
@@ -23,7 +24,7 @@ export async function grabEverything(): Promise<DBSave.SaveSync> {
   } as DBSave.SaveSync;
 
   for (const x of Object.values(plugins)) {
-    const config = vstorage.pluginSettings?.[x.id];
+    const config = vstorage.pluginSettings[x.id];
     if (config?.syncPlugin === false) continue;
 
     const options =
@@ -113,7 +114,7 @@ export async function importData(
     ...iplugins.map(
       (x) =>
         new Promise<void>((res) => {
-          MMKVManager.setItem(x.id, JSON.stringify(x.options));
+          RNMMKVManager.setItem(x.id, JSON.stringify(x.options));
           installPlugin(x.id, x.enabled)
             .then(() => {
               status.plugins++;
@@ -172,7 +173,7 @@ export async function importData(
           confirmText: "Reload",
           confirmColor: "red" as ButtonColors,
           onConfirm: () => {
-            BundleUpdaterManager.reload();
+            RNBundleUpdaterManager.reload();
             res();
           },
           cancelText: "Skip",

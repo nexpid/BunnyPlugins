@@ -1,5 +1,4 @@
-import { SoundManager } from "../../../../stuff/types";
-
+import { RNSoundManager } from "$/deps";
 interface Sound {
   play: () => void;
 }
@@ -11,7 +10,7 @@ export async function makeSound(
   const id = Math.floor(Math.random() * 1_000_000);
   const duration = (await Promise.resolve(
     new Promise((res) =>
-      SoundManager.prepare(url, "notification", id, (_, meta) =>
+      RNSoundManager.prepare(url, "notification", id, (_, meta) =>
         res(meta?.duration ?? defaultDuration),
       ),
     ),
@@ -23,12 +22,12 @@ export async function makeSound(
       if (playingTimeout) {
         clearTimeout(playingTimeout);
         playingTimeout = null;
-        SoundManager.stop(id);
+        RNSoundManager.stop(id);
       }
-      SoundManager.play(id);
+      RNSoundManager.play(id);
       playingTimeout = setTimeout(() => {
         playingTimeout = null;
-        SoundManager.stop(id);
+        RNSoundManager.stop(id);
       }, duration);
     },
   };

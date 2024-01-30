@@ -1,7 +1,8 @@
 import { plugin } from "@vendetta";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 
-import { patchSettingsPin } from "../../../../stuff/pinToSettings";
+import { patchSettingsPin } from "$/pinToSettings";
+
 import { vstorage } from "..";
 import Settings from "../components/Settings";
 import SettingsSection from "../components/SettingsSection";

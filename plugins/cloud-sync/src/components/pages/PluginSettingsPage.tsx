@@ -9,7 +9,8 @@ import { showConfirmationAlert } from "@vendetta/ui/alerts";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { Forms, Search, Summary } from "@vendetta/ui/components";
 
-import { SuperAwesomeIcon } from "../../../../../stuff/types";
+import SuperAwesomeIcon from "$/components/SuperAwesomeIcon";
+
 import { vstorage } from "../..";
 
 const { FormSwitchRow } = Forms;
@@ -62,13 +63,11 @@ export default () => {
         (x) => x[1].manifest.name?.toLowerCase().includes(search),
       )}
       renderItem={({ item: [id, item] }) => {
-        vstorage.pluginSettings ??= {};
         const config = vstorage.pluginSettings[id] ?? {
           syncPlugin: true,
           syncStorage: true,
         };
         const updateConfig = () => {
-          vstorage.pluginSettings ??= {};
           if (config.syncPlugin === true && config.syncStorage === true)
             delete vstorage.pluginSettings[id];
           else vstorage.pluginSettings[id] = config;

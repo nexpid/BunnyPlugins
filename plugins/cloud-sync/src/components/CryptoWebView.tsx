@@ -1,6 +1,7 @@
 import { React } from "@vendetta/metro/common";
 
-import { WebView } from "../../../../stuff/types";
+import { WebView } from "$/deps";
+
 import cryptoWebview from "../../assets/cryptoWebview.html";
 
 type WVRes =

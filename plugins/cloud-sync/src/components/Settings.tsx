@@ -10,13 +10,12 @@ import { getAssetIDByName } from "@vendetta/ui/assets";
 import { Forms, General } from "@vendetta/ui/components";
 import { showToast } from "@vendetta/ui/toasts";
 
-import {
-  BetterTableRowGroup,
-  FileManager,
-  LineDivider,
-  openSheet,
-  SimpleText,
-} from "../../../../stuff/types";
+import { BetterTableRowGroup } from "$/components/BetterTableRow";
+import LineDivider from "$/components/LineDivider";
+import SimpleText from "$/components/SimpleText";
+import { openSheet } from "$/types";
+import RNFS from "$/wrappers/RNFS";
+
 import { cache, emitterAvailable, vstorage } from "..";
 import constants, { defaultClientId, defaultRoot } from "../constants";
 import {
@@ -111,7 +110,7 @@ export default function () {
             <FormRow.Icon source={getAssetIDByName("ic_contact_sync")} />
           }
           onValueChange={() => (vstorage.autoSync = !vstorage.autoSync)}
-          value={vstorage.autoSync ?? false}
+          value={vstorage.autoSync}
         />
         {!emitterAvailable && vstorage.autoSync && (
           <SimpleText
@@ -129,7 +128,7 @@ export default function () {
           onValueChange={() =>
             (vstorage.addToSettings = !vstorage.addToSettings)
           }
-          value={vstorage.addToSettings ?? false}
+          value={vstorage.addToSettings}
         />
         <FormRow
           label="Plugin Settings"
@@ -196,7 +195,6 @@ export default function () {
                   confirmText: "Log out",
                   confirmColor: "BRAND" as ButtonColors,
                   onConfirm: () => {
-                    vstorage.auth ??= {};
                     delete vstorage.auth[UserStore.getCurrentUser().id];
                     delete cache.save;
 
@@ -222,7 +220,6 @@ export default function () {
                   confirmColor: "RED" as ButtonColors,
                   onConfirm: async () => {
                     await deleteSaveData();
-                    vstorage.auth ??= {};
                     delete vstorage.auth[UserStore.getCurrentUser().id];
                     delete cache.save;
 
@@ -344,26 +341,44 @@ export default function () {
                       );
                     }
 
-                    showToast(
-                      "Preparing for download...",
-                      getAssetIDByName("ic_upload"),
-                    );
-                    let data: Awaited<ReturnType<typeof uploadFile>>;
-                    try {
-                      data = await uploadFile(text);
-                    } catch (e) {
-                      unBusy("local_export");
-                      return showToast(
-                        e?.message ?? `${e}`,
-                        getAssetIDByName("Small"),
+                    if (RNFS.hasRNFS) {
+                      // yay!
+                      const file = `CloudSync_${Math.floor(
+                        Math.random() * 10000,
+                      )}.txt`;
+                      RNFS.writeFile(
+                        RNFS.DownloadDirectoryPath + `/${file}`,
+                        text,
+                      );
+                      showToast(
+                        `Backup Saved to ${file}`,
+                        getAssetIDByName("ic_file_small_document"),
+                      );
+                    } else {
+                      showToast(
+                        "Preparing for download...",
+                        getAssetIDByName("ic_upload"),
+                      );
+                      let data: Awaited<ReturnType<typeof uploadFile>>;
+                      try {
+                        data = await uploadFile(text);
+                      } catch (e) {
+                        unBusy("local_export");
+                        return showToast(
+                          e?.message ?? `${e}`,
+                          getAssetIDByName("Small"),
+                        );
+                      }
+
+                      showToast(
+                        `Backup Saved to ${data.key}.txt`,
+                        getAssetIDByName("ic_file_small_document"),
+                      );
+                      downloadMediaAsset(
+                        `https://hst.sh/raw/${data.key}.txt`,
+                        3,
                       );
                     }
-
-                    showToast(
-                      "Backup Saved",
-                      getAssetIDByName("ic_file_small_document"),
-                    );
-                    downloadMediaAsset(`https://hst.sh/raw/${data.key}.txt`, 3);
                     unBusy("local_export");
                   },
                 });
@@ -393,10 +408,7 @@ export default function () {
                     },
                   );
                   if (type === "text/plain" || !fileCopyUri)
-                    text = await FileManager.readFile(
-                      fileCopyUri.slice(5),
-                      "utf8",
-                    );
+                    text = await RNFS.readFile(fileCopyUri.slice(5), "utf8");
                 } catch (e) {
                   if (!DocumentPicker.isCancel(e))
                     showToast(`Got an error! ${e}`, getAssetIDByName("Small"));
