@@ -91,7 +91,7 @@ export type VendettaSysColors = Record<
 
 type PlusColorResolvable =
   | string
-  | [string, string | undefined, string | undefined, string | undefined];
+  | [string, string | undefined, string | undefined];
 export interface PlusStructureV0 {
   icons?: {
     [icon: string]: PlusColorResolvable;

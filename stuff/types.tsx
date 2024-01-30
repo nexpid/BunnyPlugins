@@ -5,14 +5,11 @@ import {
   findByProps,
   findByStoreName,
 } from "@vendetta/metro";
-import { React, ReactNative as RN, stylesheet } from "@vendetta/metro/common";
-import { semanticColors } from "@vendetta/ui";
+import { React } from "@vendetta/metro/common";
 import { getAssetIDByName } from "@vendetta/ui/assets";
-import { Forms, General } from "@vendetta/ui/components";
 import { showToast } from "@vendetta/ui/toasts";
-import { without } from "@vendetta/utils";
-import type _WebView from "react-native-webview";
 
+import Modal from "./components/Modal";
 import type { Redesign as _Redesign } from "./redesign";
 
 const ThemeStore = findByStoreName("ThemeStore");
@@ -23,10 +20,6 @@ const colorResolver = colorModule?.internal ?? colorModule?.meta;
 
 export const TextStyleSheet = findByProps("TextStyleSheet")
   .TextStyleSheet as _TextStyleSheet;
-
-const { View, Text, Pressable } = General;
-const { FormRow } = Forms;
-const { TableRow } = findByProps("TableRow");
 
 export const ActionSheet =
   findByProps("ActionSheet")?.ActionSheet ??
@@ -53,21 +46,11 @@ export const modalCloseButton =
   findByProps("getHeaderCloseButton")?.getHeaderCloseButton;
 export const { popModal, pushModal } = findByProps("popModal", "pushModal");
 
-const BaseSearch = findByProps("useSearchControls");
-const SettingSearch = findByProps("useSettingSearchQuery");
-const SettingSearchBar = findByName("SettingSearchBar");
-
-export const { SvgXml } = findByProps("SvgXml");
-
-export const { useInMainTabsExperiment, isInMainTabsExperiment } = findByProps(
-  "useInMainTabsExperiment",
-  "isInMainTabsExperiment",
-);
-
-export const WebView = find((x) => x?.WebView && !x.default)
-  .WebView as typeof _WebView;
-
-export const Redesign = findByProps("Button", "SegmentedControl") as _Redesign;
+export const Redesign = (findByProps(
+  "Button",
+  "SegmentedControl",
+  "TextInput",
+) ?? {}) as _Redesign;
 
 export type Entries<T> = [keyof T, T[keyof T]];
 
@@ -161,14 +144,14 @@ export function doHaptic(dur: number): Promise<void> {
 
 // ...
 
-// the AdvancedSearch code below was given to me by Rosie :3
-
 type TextStyleSheetCase =
   | "normal"
   | "medium"
   | "semibold"
   | "bold"
   | "extrabold";
+type TextStyleSheetRedesignCase = "normal" | "medium" | "semibold" | "bold";
+
 export type TextStyleSheetVariant =
   | `heading-sm/${TextStyleSheetCase}`
   | `heading-md/${TextStyleSheetCase}`
@@ -176,15 +159,18 @@ export type TextStyleSheetVariant =
   | `heading-xl/${TextStyleSheetCase}`
   | `heading-xxl/${TextStyleSheetCase}`
   | "eyebrow"
+  | "redesign/heading-18/bold"
   | `text-xxs/${TextStyleSheetCase}`
   | `text-xs/${TextStyleSheetCase}`
   | `text-sm/${TextStyleSheetCase}`
   | `text-md/${TextStyleSheetCase}`
   | `text-lg/${TextStyleSheetCase}`
+  | `redesign/message-preview/${TextStyleSheetRedesignCase}`
+  | `redesign/channel-title/${TextStyleSheetRedesignCase}`
   | "display-sm"
   | "display-md"
   | "display-lg";
-// ignoring redesign/ and deprecated styles
+// ignoring deprecated styles
 
 type _TextStyleSheet = Record<
   TextStyleSheetVariant,
@@ -197,417 +183,10 @@ type _TextStyleSheet = Record<
     letterSpacing?: number;
   }
 >;
-interface SearchContext {
+
+export interface SearchContext {
   type: string;
   [key: PropertyKey]: any;
-}
-interface AdvancedSearchProps {
-  searchContext: SearchContext;
-  controls: any;
-}
-
-export const useAdvancedSearch = (searchContext: SearchContext) => {
-  const query: string = SettingSearch.useSettingSearchQuery();
-  const controls: Record<string, any> = BaseSearch.useSearchControls(
-    searchContext,
-    false,
-    () => void 0,
-  );
-
-  React.useEffect(
-    () => () => {
-      SettingSearch.setSettingSearchQuery("");
-      SettingSearch.setIsSettingSearchActive(false);
-    },
-    [],
-  );
-
-  return [query, controls] as const;
-};
-
-const _AdvancedSearch = (({ searchContext, controls }: AdvancedSearchProps) => (
-  <RN.ScrollView scrollEnabled={false}>
-    <BaseSearch.default searchContext={searchContext} controls={controls}>
-      <SettingSearchBar />
-    </BaseSearch.default>
-  </RN.ScrollView>
-)) as {
-  (props: AdvancedSearchProps): React.ReactElement;
-  useAdvancedSearch: typeof useAdvancedSearch;
-};
-export const AdvancedSearch = Object.assign(_AdvancedSearch, {
-  useAdvancedSearch,
-});
-
-export function AutoRow({
-  label,
-  icon,
-  onPress,
-}: {
-  label: string;
-  icon: number;
-  onPress?: () => void;
-}) {
-  const styles = stylesheet.createThemedStyleSheet({
-    icon: {
-      width: 24,
-      height: 24,
-      tintColor: semanticColors.INTERACTIVE_NORMAL,
-      opacity: 0.6,
-    },
-  });
-  const tabbed = useInMainTabsExperiment();
-
-  if (tabbed)
-    return (
-      <TableRow
-        label={label}
-        icon={<RN.Image style={styles.icon} source={icon} />}
-        onPress={onPress}
-      />
-    );
-  else
-    return (
-      <FormRow
-        label={label}
-        leading={<FormRow.Icon source={icon} />}
-        onPress={onPress}
-      />
-    );
-}
-
-export const FileManager = (window.nativeModuleProxy.DCDFileManager ??
-  window.nativeModuleProxy.RTNFileManager) as {
-  /**
-   * @param path **Full** path to file
-   */
-  fileExists: (path: string) => Promise<boolean>;
-  /**
-   * Allowed URI schemes on Android: `file://`, `content://` ([See here](https://developer.android.com/reference/android/content/ContentResolver#accepts-the-following-uri-schemes:_3))
-   */
-  getSize: (uri: string) => Promise<boolean>;
-  /**
-   * @param path **Full** path to file
-   * @param encoding Set to `base64` in order to encode response
-   */
-  readFile(path: string, encoding: "base64" | "utf8"): Promise<string>;
-  saveFileToGallery?(
-    uri: string,
-    fileName: string,
-    fileType: "PNG" | "JPEG",
-  ): Promise<string>;
-  /**
-   * Beware! This function has differing functionality on iOS and Android.
-   * @param storageDir Either `cache` or `documents`.
-   * @param path Path in `storageDir`, parents are recursively created.
-   * @param data The data to write to the file
-   * @param encoding Set to `base64` if `data` is base64 encoded.
-   * @returns Promise that resolves to path of the file once it got written
-   */
-  writeFile(
-    storageDir: "cache" | "documents",
-    path: string,
-    data: string,
-    encoding: "base64" | "utf8",
-  ): Promise<string>;
-  removeFile(storageDir: "cache" | "documents", path: string): Promise<unknown>;
-  getConstants: () => {
-    /**
-     * The path the `documents` storage dir (see {@link writeFile}) represents.
-     */
-    DocumentsDirPath: string;
-    CacheDirPath: string;
-  };
-  /**
-   * Will apparently cease to exist some time in the future so please use {@link getConstants} instead.
-   * @deprecated
-   */
-  DocumentsDirPath: string;
-};
-
-export const BundleUpdaterManager = window.nativeModuleProxy
-  .BundleUpdaterManager as {
-  reload: () => void;
-};
-export const MMKVManager = window.nativeModuleProxy.MMKVManager as {
-  getItem: (key: string) => Promise<string | null>;
-  removeItem: (key: string) => void;
-  setItem: (key: string, value: string) => void;
-  refresh: (exclude: string[]) => Promise<Record<string, string>>;
-  clear: () => void;
-};
-export const SoundManager = window.nativeModuleProxy.DCDSoundManager as {
-  pause: (soundId: number) => void;
-  play: (soundId: number) => void;
-  stop: (soundId: number) => void;
-  prepare: (
-    url: string,
-    type: "notification",
-    soundId: number,
-    callback: (
-      error: any,
-      meta: { numberOfChannels: number; duration: number },
-    ) => any,
-  ) => void;
-};
-
-export function Modal(
-  props: React.PropsWithChildren<{
-    mkey: string;
-    headerRight?: React.FunctionComponent;
-    title?: string;
-  }>,
-) {
-  if (!Navigator || !modalCloseButton) return null;
-  return (
-    <Navigator
-      initialRouteName={props.mkey}
-      screens={{
-        [props.mkey]: Object.assign(without(props, "mkey", "children"), {
-          headerLeft: modalCloseButton?.(() => popModal(props.mkey)),
-          render: () => props.children,
-        }),
-      }}
-    />
-  );
-}
-
-export function BetterTableRowTitle({
-  title,
-  onPress,
-  icon,
-}: {
-  title: string;
-  onPress?: () => void;
-  icon?: number;
-}) {
-  const styles = stylesheet.createThemedStyleSheet({
-    androidRipple: {
-      color: semanticColors.ANDROID_RIPPLE,
-    },
-    icon: {
-      height: 18,
-      tintColor: semanticColors.HEADER_SECONDARY,
-      opacity: 0.5,
-    },
-  });
-  const UseCompontent = onPress ? Pressable : View;
-
-  return (
-    <UseCompontent
-      android_ripple={styles.androidRipple}
-      disabled={false}
-      accessibilityRole={"button"}
-      onPress={onPress}
-      style={{
-        marginBottom: 8,
-        flexDirection: "row",
-        justifyContent: "flex-start",
-        alignItems: "center",
-      }}
-    >
-      {icon && (
-        <View style={{ marginRight: 4 }}>
-          <RN.Image style={styles.icon} source={icon} resizeMode="contain" />
-        </View>
-      )}
-      <SimpleText variant="text-sm/semibold" color="HEADER_SECONDARY">
-        {title}
-      </SimpleText>
-    </UseCompontent>
-  );
-}
-
-export function BetterTableRowGroup({
-  title,
-  onTitlePress,
-  icon,
-  children,
-  padding,
-}: React.PropsWithChildren<{
-  title: string;
-  onTitlePress?: () => void;
-  icon?: number;
-  padding?: boolean;
-}>) {
-  const styles = stylesheet.createThemedStyleSheet({
-    main: {
-      backgroundColor: semanticColors.CARD_PRIMARY_BG,
-      borderRadius: 16,
-      overflow: "hidden",
-      flex: 1,
-    },
-  });
-
-  return (
-    <View style={{ marginHorizontal: 16, marginTop: 16 }}>
-      <BetterTableRowTitle title={title} onPress={onTitlePress} icon={icon} />
-      <View style={styles.main}>
-        {padding ? (
-          <View style={{ paddingHorizontal: 16, paddingVertical: 16 }}>
-            {children}
-          </View>
-        ) : (
-          children
-        )}
-      </View>
-    </View>
-  );
-}
-
-export function LineDivider({ addPadding }: { addPadding?: boolean }) {
-  const styles = stylesheet.createThemedStyleSheet({
-    line: {
-      width: "100%",
-      height: 2,
-      backgroundColor: semanticColors.BACKGROUND_ACCENT,
-      borderRadius: 2147483647,
-    },
-  });
-
-  return (
-    <View
-      style={[
-        { marginTop: 16, marginBottom: 16 },
-        addPadding && { marginHorizontal: 16 },
-      ]}
-    >
-      <View style={styles.line} />
-    </View>
-  );
-}
-
-export namespace RichText {
-  export function Bold({
-    children,
-    onPress,
-  }: React.PropsWithChildren<{
-    onPress?: () => void;
-  }>) {
-    return (
-      <SimpleText variant={"text-md/bold"} onPress={onPress}>
-        {children}
-      </SimpleText>
-    );
-  }
-
-  export function Underline({
-    children,
-    onPress,
-  }: React.PropsWithChildren<{
-    onPress?: () => void;
-  }>) {
-    return (
-      <Text style={{ textDecorationLine: "underline" }} onPress={onPress}>
-        {children}
-      </Text>
-    );
-  }
-}
-
-export function SimpleText({
-  variant,
-  lineClamp,
-  color,
-  align,
-  style,
-  onPress,
-  getChildren,
-  children,
-  liveUpdate,
-}: React.PropsWithChildren<{
-  variant?: TextStyleSheetVariant;
-  lineClamp?: number;
-  color?: string;
-  align?: "left" | "right" | "center";
-  style?: any;
-  onPress?: () => void;
-  getChildren?: () => React.ReactNode | undefined;
-  liveUpdate?: boolean;
-}>) {
-  const [_, forceUpdate] = React.useReducer((x) => ~x, 0);
-
-  React.useEffect(() => {
-    if (!liveUpdate) return;
-    const nextSecond = new Date().setMilliseconds(1000);
-
-    let interval: any;
-    const timeout = setTimeout(() => {
-      forceUpdate();
-      interval = setInterval(forceUpdate, 1000);
-    }, nextSecond - Date.now());
-
-    return () => {
-      clearTimeout(timeout);
-      clearInterval(interval);
-    };
-  }, []);
-
-  return (
-    <Text
-      style={[
-        variant ? TextStyleSheet[variant] : {},
-        color ? { color: resolveSemanticColor(semanticColors[color]) } : {},
-        align ? { textAlign: align } : {},
-        style ?? {},
-      ]}
-      numberOfLines={lineClamp}
-      onPress={onPress}
-    >
-      {getChildren?.() ?? children}
-    </Text>
-  );
-}
-
-export function SuperAwesomeIcon({
-  onPress,
-  onLongPress,
-  icon,
-  style,
-  destructive,
-  color,
-}: {
-  onPress?: () => void;
-  onLongPress?: () => void;
-  destructive?: boolean;
-  color?: any;
-  icon: number;
-  style: "header" | "card" | any;
-}) {
-  const styles = stylesheet.createThemedStyleSheet({
-    headerStyleIcon: {
-      width: 24,
-      height: 24,
-      marginRight: 10,
-      tintColor: semanticColors.HEADER_PRIMARY,
-    },
-    cardStyleIcon: {
-      width: 22,
-      height: 22,
-      marginLeft: 5,
-      tintColor: semanticColors.INTERACTIVE_NORMAL,
-    },
-    destructiveIcon: {
-      tintColor: semanticColors.TEXT_DANGER,
-    },
-  });
-
-  return (
-    <RN.TouchableOpacity onPress={onPress} onLongPress={onLongPress}>
-      <RN.Image
-        style={[
-          typeof style === "string"
-            ? style === "header"
-              ? styles.headerStyleIcon
-              : styles.cardStyleIcon
-            : style,
-          destructive && styles.destructiveIcon,
-          color && { tintColor: color },
-        ].filter((x) => !!x)}
-        source={icon}
-      />
-    </RN.TouchableOpacity>
-  );
 }
 
 export function isObject(x: Record<any, any>) {

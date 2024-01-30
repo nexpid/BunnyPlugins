@@ -1,14 +1,14 @@
 import { findByProps, findByStoreName } from "@vendetta/metro";
 import { React } from "@vendetta/metro/common";
 
-import { SimpleText } from "../types";
+import SimpleText from "./SimpleText";
 
 const { showUserProfile } = findByProps("showUserProfile");
 const { fetchProfile } = findByProps("fetchProfile");
 
 const UserStore = findByStoreName("UserStore");
 
-export default function ({
+export default function SmartMention({
   userId,
   color,
   loadUsername,
