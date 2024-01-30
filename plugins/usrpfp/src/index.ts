@@ -1,6 +1,8 @@
 import { logger } from "@vendetta";
 import { id } from "@vendetta/plugin";
 import { stopPlugin } from "@vendetta/plugins";
+import { getAssetIDByName } from "@vendetta/ui/assets";
+import { showToast } from "@vendetta/ui/toasts";
 
 import patcher from "./stuff/patcher";
 
@@ -23,7 +25,9 @@ export default {
     try {
       unpatch = await patcher();
     } catch (e) {
+      console.error("[UsrPFP] Errored while patching!");
       logger.error(`Errored while patching!\n${e.stack}`);
+      showToast("UsrPFP errored while patching!", getAssetIDByName("Small"));
       stopPlugin(id);
     }
   },

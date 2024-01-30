@@ -1,6 +1,8 @@
 import { logger } from "@vendetta";
 import { findByProps, findByStoreName } from "@vendetta/metro";
 import { after } from "@vendetta/patcher";
+import { getAssetIDByName } from "@vendetta/ui/assets";
+import { showToast } from "@vendetta/ui/toasts";
 import { safeFetch } from "@vendetta/utils";
 
 import { dataURL, enabled, hash, staticGifURL } from "..";
@@ -17,7 +19,9 @@ const fetchData = async () => {
       await safeFetch(`${dataURL}?_=${hash}`, { cache: "no-store" })
     ).json();
   } catch (e) {
+    console.error("[UsrPFP] Failed to fetch avatars!");
     logger.error(`Failed to fetch avatars!\n${e.stack}`);
+    showToast("USRPFP failed to fetch avatars!", getAssetIDByName("Small"));
   }
 };
 
