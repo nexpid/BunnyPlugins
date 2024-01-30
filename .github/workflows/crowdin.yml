@@ -20,7 +20,7 @@ jobs:
           path: main
 
       - name: Crowdin
-        uses: crowdin/github-action@1.16.1
+        uses: crowdin/github-action@v1.16.1
         with:
           config: crowdin.yml
           upload_translations: true
