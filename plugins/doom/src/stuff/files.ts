@@ -1,54 +1,36 @@
-import { ReactNative as RN } from "@vendetta/metro/common";
-
-import { FileManager } from "../../../../stuff/types";
+import RNFS from "$/wrappers/RNFS";
 
 export const downloadSource =
-  "https://raw.githubusercontent.com/nexpid/VendettaPlugins/main/plugins/doom/assets/download/";
+  "https://raw.githubusercontent.com/nexpid/VendettaDOOM/main/";
+export const storePrefix = `vendetta/DOOM/`;
 
-export const toDownloadPrefix = "vendetta/doomPlugin/";
-export const toDownload = [
-  "doom.jsdos",
-  "js-dos.css",
-  "js-dos.js",
-  "wdosbox.js",
-  "wdosbox.wasm",
-];
-export const toDownloadMimes = [
-  "application/zip",
-  "text/css",
-  "text/javascript",
-  "text/javascript",
-  "application/octet-stream",
-];
-
-export type ToDownloadContent = {
-  [k in (typeof toDownload)[number]]: string;
-};
-
-export async function existsFile(fileName: string) {
-  return await FileManager.fileExists(
-    `${FileManager.getConstants().DocumentsDirPath}/${
-      toDownloadPrefix + fileName
-    }`,
-  );
+export function existsFile(fileName: string) {
+  return RNFS.exists(`${RNFS.DocumentDirectoryPath}/${storePrefix + fileName}`);
 }
-export async function saveFile(fileName: string, data: string) {
-  fileName = toDownloadPrefix + fileName;
-  return await FileManager.writeFile(
-    "documents",
-    RN.Platform.select({
-      default: fileName,
-      ios: FileManager.saveFileToGallery ? fileName : `Documents/${fileName}`,
-    }),
+export async function saveFile(
+  fileName: string,
+  data: string,
+  encoding: "utf8" | "base64" = "utf8",
+) {
+  const dir = (storePrefix + fileName).split("/").slice(0, -1).join("/");
+  if (RNFS.hasRNFS) await RNFS.mkdir(`${RNFS.DocumentDirectoryPath}/${dir}`);
+  return await RNFS.writeFile(
+    `${RNFS.DocumentDirectoryPath}/${storePrefix + fileName}`,
     data,
-    "utf8",
+    encoding,
   );
 }
-export async function readFile(fileName: string) {
-  return await FileManager.readFile(
-    `${FileManager.getConstants().DocumentsDirPath}/${
-      toDownloadPrefix + fileName
-    }`,
-    "utf8",
+export async function readFile(
+  fileName: string,
+  encoding: "utf8" | "base64" = "utf8",
+) {
+  const dir = (storePrefix + fileName).split("/").slice(0, -1).join("/");
+  if (RNFS.hasRNFS) await RNFS.mkdir(`${RNFS.DocumentDirectoryPath}/${dir}`);
+  return await RNFS.readFile(
+    `${RNFS.DocumentDirectoryPath}/${storePrefix + fileName}`,
+    encoding,
   );
+}
+export function purgeFiles() {
+  return RNFS.unlink(`${RNFS.DocumentDirectoryPath}/${storePrefix}`);
 }
