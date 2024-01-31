@@ -67,4 +67,4 @@ jobs:
 
           git commit -m "chore(i18n): sync translations" || true
 
-          git push
+          git push --set-upstream origin test
