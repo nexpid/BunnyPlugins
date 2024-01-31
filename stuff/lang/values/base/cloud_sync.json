@@ -93,5 +93,5 @@
   "page.plugin_settings": "Plugin Settings",
 
   "log.import.result.success": "Finished! Imported $plugins and $themes. All imports were successful.",
-  "log.import.result.fail": "Finished! Imported $plugins and $themes. Failed to import $plugins and $themes."
+  "log.import.result.fail": "Finished! Imported $plugins and $themes. Failed to import $failed_plugins and $failed_themes."
 }
