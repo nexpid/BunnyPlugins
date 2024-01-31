@@ -39,6 +39,9 @@ jobs:
   merge:
     needs: sync-crowdin
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
     steps:
       - name: Pull main
         uses: actions/checkout@v4
