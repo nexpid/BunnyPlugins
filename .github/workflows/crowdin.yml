@@ -42,11 +42,14 @@ jobs:
     steps:
       - name: Pull main
         uses: actions/checkout@v4
+        with:
+          path: main
 
       - name: Pull i18n
         uses: actions/checkout@v4
         with:
           ref: i18n
+          path: i18n
 
       - name: Write files
         run: node /main/.github/scripts/crowdin.mjs
