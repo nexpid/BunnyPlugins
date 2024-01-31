@@ -56,6 +56,7 @@ jobs:
         working-directory: i18n/stuff/lang/values
 
       - name: Publish changes
+        working-directory: main
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"

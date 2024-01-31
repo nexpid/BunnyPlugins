@@ -10,7 +10,7 @@ for (const lang of await readdir(".")) {
   const data = {};
   for (const file of await readdir(lang))
     data[file.split(".")[0]] = JSON.parse(
-      await readFile(join(".", "lang", file), "utf8"),
+      await readFile(join(".", lang, file), "utf8"),
     );
 
   await writeFile(
