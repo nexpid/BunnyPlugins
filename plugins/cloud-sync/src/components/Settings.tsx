@@ -192,7 +192,6 @@ export default function () {
                 showConfirmationAlert({
                   title: "Log out",
                   content: "Are you sure you want to log out?",
-                  confirmText: "Log out",
                   confirmColor: "BRAND" as ButtonColors,
                   onConfirm: () => {
                     delete vstorage.auth[UserStore.getCurrentUser().id];
@@ -203,7 +202,6 @@ export default function () {
                       getAssetIDByName("ic_logout_24px"),
                     );
                   },
-                  cancelText: "Cancel",
                 })
               }
             />
@@ -228,7 +226,6 @@ export default function () {
                       getAssetIDByName("trash"),
                     );
                   },
-                  cancelText: "Cancel",
                 })
               }
             />
@@ -283,7 +280,6 @@ export default function () {
 
                     unBusy("save_api");
                   },
-                  cancelText: "Cancel",
                 })
               }
             />
@@ -324,7 +320,6 @@ export default function () {
                   title: "Enter encryption key",
                   placeholder: "secret password",
                   confirmText: "Enter",
-                  cancelText: "Cancel",
                   onConfirm: async (inp) => {
                     if (!inp) throw new Error("An encryption key must be set");
                     if (isBusy.length) return;

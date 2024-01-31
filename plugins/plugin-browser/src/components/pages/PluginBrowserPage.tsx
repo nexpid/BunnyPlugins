@@ -24,7 +24,7 @@ import ChooseSheet from "../sheets/ChooseSheet";
 
 const { View } = General;
 
-enum Filter {
+enum Sort {
   DateNewest = "Creation date (new to old)",
   DateOldest = "Creation date (old to new)",
   NameAZ = "Name (A-Z)",
@@ -32,7 +32,7 @@ enum Filter {
 }
 
 let refreshCallback: () => void;
-let filterCallback: () => void;
+let sortCallback: () => void;
 export default () => {
   const navigation = NavigationNative.useNavigation();
 
@@ -53,11 +53,11 @@ export default () => {
   const [search, controller] = useRedesignSearch();
 
   const changes = React.useRef(getChanges()).current;
-  const [filter, setFilter] = React.useState(Filter.DateNewest);
+  const [sort, setSort] = React.useState(Sort.DateNewest);
   const [parsed, setParsed] = React.useState<PluginsFullJson | null>(null);
 
-  const currentSetFilter = React.useRef(setFilter);
-  currentSetFilter.current = setFilter;
+  const currentSetSort = React.useRef(setSort);
+  currentSetSort.current = setSort;
 
   const sortedData = React.useMemo(() => {
     if (!parsed) return;
@@ -70,12 +70,12 @@ export default () => {
           i.description?.toLowerCase().includes(search),
       )
       .slice();
-    if ([Filter.NameAZ, Filter.NameZA].includes(filter))
+    if ([Sort.NameAZ, Sort.NameZA].includes(sort))
       dt = dt.sort((a, b) => (a.name < b.name ? -1 : a.name > b.name ? 1 : 0));
-    if ([Filter.NameZA, Filter.DateNewest].includes(filter)) dt.reverse();
+    if ([Sort.NameZA, Sort.DateNewest].includes(sort)) dt.reverse();
 
     return dt;
-  }, [filter, parsed, search]);
+  }, [sort, parsed, search]);
 
   React.useEffect(updateChanges, []);
 
@@ -98,13 +98,13 @@ export default () => {
   }, [parsed]);
 
   refreshCallback = () => parsed && setParsed(null);
-  filterCallback = () =>
+  sortCallback = () =>
     parsed &&
     openSheet(ChooseSheet, {
-      label: "Filter",
-      value: filter,
-      choices: Object.values(Filter),
-      update: (val) => currentSetFilter.current(val as Filter),
+      label: "Sorting",
+      value: sort,
+      choices: Object.values(Sort),
+      update: (val) => currentSetSort.current(val as Sort),
     });
 
   navigation.addListener("focus", () => {
@@ -118,7 +118,7 @@ export default () => {
             style="header"
           />
           <SuperAwesomeIcon
-            onPress={() => filterCallback?.()}
+            onPress={() => sortCallback?.()}
             icon={getAssetIDByName("ic_filter")}
             style="header"
           />

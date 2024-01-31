@@ -124,7 +124,6 @@ export default function ImportActionSheet({
                         unproxiedPlugins: true,
                       },
                     }),
-                  cancelText: "Cancel",
                 })
               : setOptions({
                   ...options,

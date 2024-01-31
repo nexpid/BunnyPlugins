@@ -37,7 +37,6 @@ export default () => {
               title: "Revert Settings",
               content: "Are you sure you want to revert all plugin settings?",
               confirmText: "Revert",
-              cancelText: "Cancel",
               confirmColor: "red" as ButtonColors,
               onConfirm: () => (vstorage.pluginSettings = {}),
             })
