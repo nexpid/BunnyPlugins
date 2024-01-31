@@ -66,8 +66,6 @@ jobs:
 
           git add stuff/lang/values/*.json
 
-          git checkout -b test
-
           git commit -m "chore(i18n): sync translations" || true
 
-          git push --set-upstream origin test
+          git push
