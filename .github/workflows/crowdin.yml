@@ -52,7 +52,7 @@ jobs:
           path: i18n
 
       - name: Write files
-        run: node /main/.github/scripts/crowdin.mjs
+        run: node ../../../../main/.github/scripts/crowdin.mjs
         working-directory: i18n/stuff/lang/values
 
       - name: Publish changes
