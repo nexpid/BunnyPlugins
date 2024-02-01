@@ -1,9 +1,9 @@
 {
   "plugin.name": "UsrPFP",
 
-  "log.patch_error": "Errored while patching!",
+  "log.patch_error": "Encountered an error while loading!",
   "log.fetch_error": "Failed to fetch avatars!",
 
-  "toast.patch_error": "UsrPFP errored while patching!",
+  "toast.patch_error": "UsrPFP encountered an error while loading!",
   "toast.fetch_error": "UsrPFP failed to fetch avatars!"
 }
