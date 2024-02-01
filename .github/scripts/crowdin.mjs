@@ -7,9 +7,9 @@ const dir = dirname(fileURLToPath(import.meta.url));
 const data = {};
 
 for (const lang of await readdir(".")) {
-  if (lang === "base" || !lang.endsWith(".json")) continue;
+  if (lang === "base" || lang.endsWith(".json")) continue;
 
-  for (const file of await readdir(lang)) {
+  for (const file of await readdir(join(".", lang))) {
     const key = file.split(".")[0];
     data[key] ??= {};
     data[key][lang] = JSON.parse(await readFile(join(".", lang, file), "utf8"));
