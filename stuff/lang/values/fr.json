@@ -109,9 +109,6 @@
         "sheet.sort.name_az": "Nom (A à Z)",
         "sheet.sort.name_za": "Nom (Z à A)"
     },
-    "testing": {
-        "crowdin_testing": "IGNORE THIS"
-    },
     "usrpfp": {
         "plugin.name": "UsrPFP",
         "log.patch_error": "Encountered an error while loading!",

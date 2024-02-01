@@ -109,9 +109,6 @@
         "sheet.sort.name_az": "İsim (A'dan Z'ye)",
         "sheet.sort.name_za": "İsim (Z'den A'ya)"
     },
-    "testing": {
-        "crowdin_testing": "IGNORE THIS"
-    },
     "usrpfp": {
         "plugin.name": "UsrPFP",
         "log.patch_error": "Yüklenirken bir şeyler ters gitti!",

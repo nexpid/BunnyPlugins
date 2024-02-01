@@ -109,9 +109,6 @@
         "sheet.sort.name_az": "Jméno (A až Z)",
         "sheet.sort.name_za": "Jméno (Z až A)"
     },
-    "testing": {
-        "crowdin_testing": "IGNORE THIS"
-    },
     "usrpfp": {
         "plugin.name": "UsrPFP",
         "log.patch_error": "Encountered an error while loading!",
