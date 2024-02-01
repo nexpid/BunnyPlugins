@@ -109,7 +109,7 @@
         "sheet.sort.name_az": "Nome (A - Z)",
         "sheet.sort.name_za": "Nome (Z - A)"
     },
-    "twemoji-everywhere": {
+    "twemoji_everywhere": {
         "settings.title": "Settings",
         "settings.emojipacks.title": "Emoji pack",
         "settings.emojipacks.choose.default": "Default (Twemoji)",

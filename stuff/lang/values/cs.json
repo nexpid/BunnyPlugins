@@ -109,7 +109,7 @@
         "sheet.sort.name_az": "Jméno (A až Z)",
         "sheet.sort.name_za": "Jméno (Z až A)"
     },
-    "twemoji-everywhere": {
+    "twemoji_everywhere": {
         "settings.title": "Settings",
         "settings.emojipacks.title": "Emoji pack",
         "settings.emojipacks.choose.default": "Default (Twemoji)",
@@ -121,9 +121,9 @@
     },
     "usrpfp": {
         "plugin.name": "UsrPFP",
-        "log.patch_error": "Encountered an error while loading!",
+        "log.patch_error": "Chyba při načítání!",
         "log.fetch_error": "Nepovedlo se načíst avatary!",
-        "toast.patch_error": "UsrPFP encountered an error while loading!",
+        "toast.patch_error": "UsrPFP dostalo chybu při načítání!",
         "toast.fetch_error": "UsrPFP se nepovedlo načíst avatary!"
     }
 }

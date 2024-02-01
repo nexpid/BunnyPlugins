@@ -109,7 +109,7 @@
         "sheet.sort.name_az": "İsim (A'dan Z'ye)",
         "sheet.sort.name_za": "İsim (Z'den A'ya)"
     },
-    "twemoji-everywhere": {
+    "twemoji_everywhere": {
         "settings.title": "Settings",
         "settings.emojipacks.title": "Emoji pack",
         "settings.emojipacks.choose.default": "Default (Twemoji)",
