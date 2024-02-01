@@ -5,7 +5,7 @@ import { fileURLToPath } from "url";
 const dir = dirname(fileURLToPath(import.meta.url));
 
 for (const lang of await readdir(".")) {
-  if (lang === "base") continue;
+  if (lang === "base" || lang.endsWith(".json")) continue;
 
   const data = {};
   for (const file of await readdir(lang))

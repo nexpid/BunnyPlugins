@@ -25,7 +25,6 @@ jobs:
         uses: crowdin/github-action@v1.16.1
         with:
           config: crowdin.yml
-          upload_translations: true
           download_translations: true
           push_translations: true
           create_pull_request: false
