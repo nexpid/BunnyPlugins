@@ -109,6 +109,16 @@
         "sheet.sort.name_az": "İsim (A'dan Z'ye)",
         "sheet.sort.name_za": "İsim (Z'den A'ya)"
     },
+    "twemoji-everywhere": {
+        "settings.title": "Settings",
+        "settings.emojipacks.title": "Emoji pack",
+        "settings.emojipacks.choose.default": "Default (Twemoji)",
+        "settings.emojipacks.choose.default.ios": "Default (iOs Emoji)",
+        "settings.emojipacks.choose.twemoji": "Twemoji (CDN)",
+        "settings.emojipacks.choose.fluentui_static": "FluentUI Emoji (Static)",
+        "settings.emojipacks.choose.fluentui_animated": "FluentUI Emoji (Animated)",
+        "settings.emojipacks.choose.noto_emoji": "Noto Emoji"
+    },
     "usrpfp": {
         "plugin.name": "UsrPFP",
         "log.patch_error": "Yüklenirken bir şeyler ters gitti!",
