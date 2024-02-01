@@ -1,13 +1,13 @@
 name: Sync Crowdin
 
 on:
-  push:
-    branches:
-      - main
-    paths:
-      - crowdin.yml
-      - stuff/lang/values/base/*
-      - .github/workflows/crowdin.yml
+  # push:
+  #   branches:
+  #     - main
+  #   paths:
+  #     - crowdin.yml
+  #     - stuff/lang/values/base/*
+  #     - .github/workflows/crowdin.yml
   schedule:
     - cron: "59 16 * * 6" # “At 16:59 on Saturday.”
   workflow_dispatch:
