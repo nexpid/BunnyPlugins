@@ -4,19 +4,24 @@ import { fileURLToPath } from "url";
 
 const dir = dirname(fileURLToPath(import.meta.url));
 
+const data = {};
+
 for (const lang of await readdir(".")) {
-  if (lang === "base" || lang.endsWith(".json")) continue;
+  if (lang === "base" || !lang.endsWith(".json")) continue;
 
-  const data = {};
-  for (const file of await readdir(lang))
-    data[file.split(".")[0]] = JSON.parse(
-      await readFile(join(".", lang, file), "utf8"),
-    );
-
-  await writeFile(
-    join(dir, "../../stuff/lang/values", lang + ".json"),
-    JSON.stringify(data, undefined, 4),
-  );
-  console.log(`Wrote ${lang}.json`);
+  for (const file of await readdir(lang)) {
+    const key = file.split(".")[0];
+    data[key] ??= {};
+    data[key][lang] = JSON.parse(await readFile(join(".", lang, file), "utf8"));
+  }
 }
+
+for (const [plugin, dt] of Object.entries(data)) {
+  await writeFile(
+    join(dir, "../../stuff/lang/values", plugin + ".json"),
+    JSON.stringify(dt, undefined, 4),
+  );
+  console.log(`Wrote ${plugin}.json`);
+}
+
 console.log("Done");

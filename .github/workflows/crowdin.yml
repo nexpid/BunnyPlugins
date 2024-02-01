@@ -8,6 +8,7 @@ on:
       - crowdin.yml
       - stuff/lang/values/base/*
       - .github/workflows/crowdin.yml
+      - .github/scripts/crowdin.mjs
   schedule:
     - cron: "59 16 * * 6" # “At 16:59 on Saturday.”
   workflow_dispatch:
@@ -53,6 +54,10 @@ jobs:
         with:
           ref: i18n
           path: i18n
+
+      - name: Clear old files
+        run: rm -rf *.json
+        working-directory: main/stuff/lang/values
 
       - name: Write files
         run: node ../../../../main/.github/scripts/crowdin.mjs
