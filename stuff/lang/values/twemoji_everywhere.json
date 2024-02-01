@@ -1,0 +1,302 @@
+{
+    "bg": {
+        "settings.title": "Settings",
+        "settings.emojipacks.title": "Emoji pack",
+        "settings.emojipacks.choose.default": "Default (Twemoji)",
+        "settings.emojipacks.choose.default.ios": "Default (iOs Emoji)",
+        "settings.emojipacks.choose.twemoji": "Twemoji (CDN)",
+        "settings.emojipacks.choose.fluentui_static": "FluentUI Emoji (Static)",
+        "settings.emojipacks.choose.fluentui_animated": "FluentUI Emoji (Animated)",
+        "settings.emojipacks.choose.noto_emoji": "Noto Emoji"
+    },
+    "cs": {
+        "settings.title": "Nastavení",
+        "settings.emojipacks.title": "Sada emoji",
+        "settings.emojipacks.choose.default": "Výchozí (Twemoji)",
+        "settings.emojipacks.choose.default.ios": "Výchozí (iOs Emoji)",
+        "settings.emojipacks.choose.twemoji": "Twemoji (CDN)",
+        "settings.emojipacks.choose.fluentui_static": "FluentUI Emoji (statické)",
+        "settings.emojipacks.choose.fluentui_animated": "FluentUI Emoji (animované)",
+        "settings.emojipacks.choose.noto_emoji": "Noto Emoji"
+    },
+    "da": {
+        "settings.title": "Settings",
+        "settings.emojipacks.title": "Emoji pack",
+        "settings.emojipacks.choose.default": "Default (Twemoji)",
+        "settings.emojipacks.choose.default.ios": "Default (iOs Emoji)",
+        "settings.emojipacks.choose.twemoji": "Twemoji (CDN)",
+        "settings.emojipacks.choose.fluentui_static": "FluentUI Emoji (Static)",
+        "settings.emojipacks.choose.fluentui_animated": "FluentUI Emoji (Animated)",
+        "settings.emojipacks.choose.noto_emoji": "Noto Emoji"
+    },
+    "de": {
+        "settings.title": "Settings",
+        "settings.emojipacks.title": "Emoji pack",
+        "settings.emojipacks.choose.default": "Default (Twemoji)",
+        "settings.emojipacks.choose.default.ios": "Default (iOs Emoji)",
+        "settings.emojipacks.choose.twemoji": "Twemoji (CDN)",
+        "settings.emojipacks.choose.fluentui_static": "FluentUI Emoji (Static)",
+        "settings.emojipacks.choose.fluentui_animated": "FluentUI Emoji (Animated)",
+        "settings.emojipacks.choose.noto_emoji": "Noto Emoji"
+    },
+    "el": {
+        "settings.title": "Settings",
+        "settings.emojipacks.title": "Emoji pack",
+        "settings.emojipacks.choose.default": "Default (Twemoji)",
+        "settings.emojipacks.choose.default.ios": "Default (iOs Emoji)",
+        "settings.emojipacks.choose.twemoji": "Twemoji (CDN)",
+        "settings.emojipacks.choose.fluentui_static": "FluentUI Emoji (Static)",
+        "settings.emojipacks.choose.fluentui_animated": "FluentUI Emoji (Animated)",
+        "settings.emojipacks.choose.noto_emoji": "Noto Emoji"
+    },
+    "en_GB": {
+        "settings.title": "Settings",
+        "settings.emojipacks.title": "Emoji pack",
+        "settings.emojipacks.choose.default": "Default (Twemoji)",
+        "settings.emojipacks.choose.default.ios": "Default (iOs Emoji)",
+        "settings.emojipacks.choose.twemoji": "Twemoji (CDN)",
+        "settings.emojipacks.choose.fluentui_static": "FluentUI Emoji (Static)",
+        "settings.emojipacks.choose.fluentui_animated": "FluentUI Emoji (Animated)",
+        "settings.emojipacks.choose.noto_emoji": "Noto Emoji"
+    },
+    "en_US": {
+        "settings.title": "Settings",
+        "settings.emojipacks.title": "Emoji pack",
+        "settings.emojipacks.choose.default": "Default (Twemoji)",
+        "settings.emojipacks.choose.default.ios": "Default (iOs Emoji)",
+        "settings.emojipacks.choose.twemoji": "Twemoji (CDN)",
+        "settings.emojipacks.choose.fluentui_static": "FluentUI Emoji (Static)",
+        "settings.emojipacks.choose.fluentui_animated": "FluentUI Emoji (Animated)",
+        "settings.emojipacks.choose.noto_emoji": "Noto Emoji"
+    },
+    "es": {
+        "settings.title": "Settings",
+        "settings.emojipacks.title": "Emoji pack",
+        "settings.emojipacks.choose.default": "Default (Twemoji)",
+        "settings.emojipacks.choose.default.ios": "Default (iOs Emoji)",
+        "settings.emojipacks.choose.twemoji": "Twemoji (CDN)",
+        "settings.emojipacks.choose.fluentui_static": "FluentUI Emoji (Static)",
+        "settings.emojipacks.choose.fluentui_animated": "FluentUI Emoji (Animated)",
+        "settings.emojipacks.choose.noto_emoji": "Noto Emoji"
+    },
+    "es_419": {
+        "settings.title": "Settings",
+        "settings.emojipacks.title": "Emoji pack",
+        "settings.emojipacks.choose.default": "Default (Twemoji)",
+        "settings.emojipacks.choose.default.ios": "Default (iOs Emoji)",
+        "settings.emojipacks.choose.twemoji": "Twemoji (CDN)",
+        "settings.emojipacks.choose.fluentui_static": "FluentUI Emoji (Static)",
+        "settings.emojipacks.choose.fluentui_animated": "FluentUI Emoji (Animated)",
+        "settings.emojipacks.choose.noto_emoji": "Noto Emoji"
+    },
+    "fi": {
+        "settings.title": "Settings",
+        "settings.emojipacks.title": "Emoji pack",
+        "settings.emojipacks.choose.default": "Default (Twemoji)",
+        "settings.emojipacks.choose.default.ios": "Default (iOs Emoji)",
+        "settings.emojipacks.choose.twemoji": "Twemoji (CDN)",
+        "settings.emojipacks.choose.fluentui_static": "FluentUI Emoji (Static)",
+        "settings.emojipacks.choose.fluentui_animated": "FluentUI Emoji (Animated)",
+        "settings.emojipacks.choose.noto_emoji": "Noto Emoji"
+    },
+    "fr": {
+        "settings.title": "Settings",
+        "settings.emojipacks.title": "Emoji pack",
+        "settings.emojipacks.choose.default": "Default (Twemoji)",
+        "settings.emojipacks.choose.default.ios": "Default (iOs Emoji)",
+        "settings.emojipacks.choose.twemoji": "Twemoji (CDN)",
+        "settings.emojipacks.choose.fluentui_static": "FluentUI Emoji (Static)",
+        "settings.emojipacks.choose.fluentui_animated": "FluentUI Emoji (Animated)",
+        "settings.emojipacks.choose.noto_emoji": "Noto Emoji"
+    },
+    "hi": {
+        "settings.title": "Settings",
+        "settings.emojipacks.title": "Emoji pack",
+        "settings.emojipacks.choose.default": "Default (Twemoji)",
+        "settings.emojipacks.choose.default.ios": "Default (iOs Emoji)",
+        "settings.emojipacks.choose.twemoji": "Twemoji (CDN)",
+        "settings.emojipacks.choose.fluentui_static": "FluentUI Emoji (Static)",
+        "settings.emojipacks.choose.fluentui_animated": "FluentUI Emoji (Animated)",
+        "settings.emojipacks.choose.noto_emoji": "Noto Emoji"
+    },
+    "hr": {
+        "settings.title": "Settings",
+        "settings.emojipacks.title": "Emoji pack",
+        "settings.emojipacks.choose.default": "Default (Twemoji)",
+        "settings.emojipacks.choose.default.ios": "Default (iOs Emoji)",
+        "settings.emojipacks.choose.twemoji": "Twemoji (CDN)",
+        "settings.emojipacks.choose.fluentui_static": "FluentUI Emoji (Static)",
+        "settings.emojipacks.choose.fluentui_animated": "FluentUI Emoji (Animated)",
+        "settings.emojipacks.choose.noto_emoji": "Noto Emoji"
+    },
+    "hu": {
+        "settings.title": "Settings",
+        "settings.emojipacks.title": "Emoji pack",
+        "settings.emojipacks.choose.default": "Default (Twemoji)",
+        "settings.emojipacks.choose.default.ios": "Default (iOs Emoji)",
+        "settings.emojipacks.choose.twemoji": "Twemoji (CDN)",
+        "settings.emojipacks.choose.fluentui_static": "FluentUI Emoji (Static)",
+        "settings.emojipacks.choose.fluentui_animated": "FluentUI Emoji (Animated)",
+        "settings.emojipacks.choose.noto_emoji": "Noto Emoji"
+    },
+    "it": {
+        "settings.title": "Settings",
+        "settings.emojipacks.title": "Emoji pack",
+        "settings.emojipacks.choose.default": "Default (Twemoji)",
+        "settings.emojipacks.choose.default.ios": "Default (iOs Emoji)",
+        "settings.emojipacks.choose.twemoji": "Twemoji (CDN)",
+        "settings.emojipacks.choose.fluentui_static": "FluentUI Emoji (Static)",
+        "settings.emojipacks.choose.fluentui_animated": "FluentUI Emoji (Animated)",
+        "settings.emojipacks.choose.noto_emoji": "Noto Emoji"
+    },
+    "ja": {
+        "settings.title": "Settings",
+        "settings.emojipacks.title": "Emoji pack",
+        "settings.emojipacks.choose.default": "Default (Twemoji)",
+        "settings.emojipacks.choose.default.ios": "Default (iOs Emoji)",
+        "settings.emojipacks.choose.twemoji": "Twemoji (CDN)",
+        "settings.emojipacks.choose.fluentui_static": "FluentUI Emoji (Static)",
+        "settings.emojipacks.choose.fluentui_animated": "FluentUI Emoji (Animated)",
+        "settings.emojipacks.choose.noto_emoji": "Noto Emoji"
+    },
+    "ko": {
+        "settings.title": "Settings",
+        "settings.emojipacks.title": "Emoji pack",
+        "settings.emojipacks.choose.default": "Default (Twemoji)",
+        "settings.emojipacks.choose.default.ios": "Default (iOs Emoji)",
+        "settings.emojipacks.choose.twemoji": "Twemoji (CDN)",
+        "settings.emojipacks.choose.fluentui_static": "FluentUI Emoji (Static)",
+        "settings.emojipacks.choose.fluentui_animated": "FluentUI Emoji (Animated)",
+        "settings.emojipacks.choose.noto_emoji": "Noto Emoji"
+    },
+    "lt": {
+        "settings.title": "Settings",
+        "settings.emojipacks.title": "Emoji pack",
+        "settings.emojipacks.choose.default": "Default (Twemoji)",
+        "settings.emojipacks.choose.default.ios": "Default (iOs Emoji)",
+        "settings.emojipacks.choose.twemoji": "Twemoji (CDN)",
+        "settings.emojipacks.choose.fluentui_static": "FluentUI Emoji (Static)",
+        "settings.emojipacks.choose.fluentui_animated": "FluentUI Emoji (Animated)",
+        "settings.emojipacks.choose.noto_emoji": "Noto Emoji"
+    },
+    "nl": {
+        "settings.title": "Settings",
+        "settings.emojipacks.title": "Emoji pack",
+        "settings.emojipacks.choose.default": "Default (Twemoji)",
+        "settings.emojipacks.choose.default.ios": "Default (iOs Emoji)",
+        "settings.emojipacks.choose.twemoji": "Twemoji (CDN)",
+        "settings.emojipacks.choose.fluentui_static": "FluentUI Emoji (Static)",
+        "settings.emojipacks.choose.fluentui_animated": "FluentUI Emoji (Animated)",
+        "settings.emojipacks.choose.noto_emoji": "Noto Emoji"
+    },
+    "no": {
+        "settings.title": "Settings",
+        "settings.emojipacks.title": "Emoji pack",
+        "settings.emojipacks.choose.default": "Default (Twemoji)",
+        "settings.emojipacks.choose.default.ios": "Default (iOs Emoji)",
+        "settings.emojipacks.choose.twemoji": "Twemoji (CDN)",
+        "settings.emojipacks.choose.fluentui_static": "FluentUI Emoji (Static)",
+        "settings.emojipacks.choose.fluentui_animated": "FluentUI Emoji (Animated)",
+        "settings.emojipacks.choose.noto_emoji": "Noto Emoji"
+    },
+    "pl": {
+        "settings.title": "Settings",
+        "settings.emojipacks.title": "Emoji pack",
+        "settings.emojipacks.choose.default": "Default (Twemoji)",
+        "settings.emojipacks.choose.default.ios": "Default (iOs Emoji)",
+        "settings.emojipacks.choose.twemoji": "Twemoji (CDN)",
+        "settings.emojipacks.choose.fluentui_static": "FluentUI Emoji (Static)",
+        "settings.emojipacks.choose.fluentui_animated": "FluentUI Emoji (Animated)",
+        "settings.emojipacks.choose.noto_emoji": "Noto Emoji"
+    },
+    "pt_BR": {
+        "settings.title": "Settings",
+        "settings.emojipacks.title": "Emoji pack",
+        "settings.emojipacks.choose.default": "Default (Twemoji)",
+        "settings.emojipacks.choose.default.ios": "Default (iOs Emoji)",
+        "settings.emojipacks.choose.twemoji": "Twemoji (CDN)",
+        "settings.emojipacks.choose.fluentui_static": "FluentUI Emoji (Static)",
+        "settings.emojipacks.choose.fluentui_animated": "FluentUI Emoji (Animated)",
+        "settings.emojipacks.choose.noto_emoji": "Noto Emoji"
+    },
+    "ro": {
+        "settings.title": "Settings",
+        "settings.emojipacks.title": "Emoji pack",
+        "settings.emojipacks.choose.default": "Default (Twemoji)",
+        "settings.emojipacks.choose.default.ios": "Default (iOs Emoji)",
+        "settings.emojipacks.choose.twemoji": "Twemoji (CDN)",
+        "settings.emojipacks.choose.fluentui_static": "FluentUI Emoji (Static)",
+        "settings.emojipacks.choose.fluentui_animated": "FluentUI Emoji (Animated)",
+        "settings.emojipacks.choose.noto_emoji": "Noto Emoji"
+    },
+    "ru": {
+        "settings.title": "Settings",
+        "settings.emojipacks.title": "Emoji pack",
+        "settings.emojipacks.choose.default": "Default (Twemoji)",
+        "settings.emojipacks.choose.default.ios": "Default (iOs Emoji)",
+        "settings.emojipacks.choose.twemoji": "Twemoji (CDN)",
+        "settings.emojipacks.choose.fluentui_static": "FluentUI Emoji (Static)",
+        "settings.emojipacks.choose.fluentui_animated": "FluentUI Emoji (Animated)",
+        "settings.emojipacks.choose.noto_emoji": "Noto Emoji"
+    },
+    "sv": {
+        "settings.title": "Settings",
+        "settings.emojipacks.title": "Emoji pack",
+        "settings.emojipacks.choose.default": "Default (Twemoji)",
+        "settings.emojipacks.choose.default.ios": "Default (iOs Emoji)",
+        "settings.emojipacks.choose.twemoji": "Twemoji (CDN)",
+        "settings.emojipacks.choose.fluentui_static": "FluentUI Emoji (Static)",
+        "settings.emojipacks.choose.fluentui_animated": "FluentUI Emoji (Animated)",
+        "settings.emojipacks.choose.noto_emoji": "Noto Emoji"
+    },
+    "th": {
+        "settings.title": "Settings",
+        "settings.emojipacks.title": "Emoji pack",
+        "settings.emojipacks.choose.default": "Default (Twemoji)",
+        "settings.emojipacks.choose.default.ios": "Default (iOs Emoji)",
+        "settings.emojipacks.choose.twemoji": "Twemoji (CDN)",
+        "settings.emojipacks.choose.fluentui_static": "FluentUI Emoji (Static)",
+        "settings.emojipacks.choose.fluentui_animated": "FluentUI Emoji (Animated)",
+        "settings.emojipacks.choose.noto_emoji": "Noto Emoji"
+    },
+    "tr": {
+        "settings.title": "Settings",
+        "settings.emojipacks.title": "Emoji pack",
+        "settings.emojipacks.choose.default": "Default (Twemoji)",
+        "settings.emojipacks.choose.default.ios": "Default (iOs Emoji)",
+        "settings.emojipacks.choose.twemoji": "Twemoji (CDN)",
+        "settings.emojipacks.choose.fluentui_static": "FluentUI Emoji (Static)",
+        "settings.emojipacks.choose.fluentui_animated": "FluentUI Emoji (Animated)",
+        "settings.emojipacks.choose.noto_emoji": "Noto Emoji"
+    },
+    "uk": {
+        "settings.title": "Settings",
+        "settings.emojipacks.title": "Emoji pack",
+        "settings.emojipacks.choose.default": "Default (Twemoji)",
+        "settings.emojipacks.choose.default.ios": "Default (iOs Emoji)",
+        "settings.emojipacks.choose.twemoji": "Twemoji (CDN)",
+        "settings.emojipacks.choose.fluentui_static": "FluentUI Emoji (Static)",
+        "settings.emojipacks.choose.fluentui_animated": "FluentUI Emoji (Animated)",
+        "settings.emojipacks.choose.noto_emoji": "Noto Emoji"
+    },
+    "vi": {
+        "settings.title": "Settings",
+        "settings.emojipacks.title": "Emoji pack",
+        "settings.emojipacks.choose.default": "Default (Twemoji)",
+        "settings.emojipacks.choose.default.ios": "Default (iOs Emoji)",
+        "settings.emojipacks.choose.twemoji": "Twemoji (CDN)",
+        "settings.emojipacks.choose.fluentui_static": "FluentUI Emoji (Static)",
+        "settings.emojipacks.choose.fluentui_animated": "FluentUI Emoji (Animated)",
+        "settings.emojipacks.choose.noto_emoji": "Noto Emoji"
+    },
+    "zh-Hant": {
+        "settings.title": "Settings",
+        "settings.emojipacks.title": "Emoji pack",
+        "settings.emojipacks.choose.default": "Default (Twemoji)",
+        "settings.emojipacks.choose.default.ios": "Default (iOs Emoji)",
+        "settings.emojipacks.choose.twemoji": "Twemoji (CDN)",
+        "settings.emojipacks.choose.fluentui_static": "FluentUI Emoji (Static)",
+        "settings.emojipacks.choose.fluentui_animated": "FluentUI Emoji (Animated)",
+        "settings.emojipacks.choose.noto_emoji": "Noto Emoji"
+    }
+}
