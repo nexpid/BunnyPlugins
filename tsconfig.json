@@ -14,5 +14,5 @@
     }
   },
   "include": ["plugins", "stuff", "node_modules/vendetta-types", "global.d.ts"],
-  "exclude": ["archive", "dist", "scripts"]
+  "exclude": ["archive", "dist", "lang", "scripts"]
 }

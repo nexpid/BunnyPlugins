@@ -30,7 +30,7 @@ for (const file of await readdir(join(".", "base"))) {
     .filter((x) => x[1].length > 0);
 
   defs.push(`  ${plugin}: {`);
-  defs.push(`    values: import("./values/base/${plugin}.json");`);
+  defs.push(`    values: typeof import("./values/base/${plugin}.json");`);
   if (fillers.length > 0) {
     defs.push("    fillers: {");
     for (const [key, stuff] of fillers)

@@ -1,6 +1,6 @@
 export interface LangValues {
   cloud_sync: {
-    values: import("./values/base/cloud_sync.json");
+    values: typeof import("./values/base/cloud_sync.json");
     fillers: {
       "combo.plugins.plural": ["$count"];
       "combo.themes.plural": ["$count"];
@@ -26,7 +26,7 @@ export interface LangValues {
     };
   };
   plugin_browser: {
-    values: import("./values/base/plugin_browser.json");
+    values: typeof import("./values/base/plugin_browser.json");
     fillers: {
       "plugin.name.changes": ["$changes"];
       "toast.plugin.update.success": ["$plugin"];
@@ -38,11 +38,11 @@ export interface LangValues {
     };
   };
   twemoji_everywhere: {
-    values: import("./values/base/twemoji_everywhere.json");
+    values: typeof import("./values/base/twemoji_everywhere.json");
     fillers: null;
   };
   usrpfp: {
-    values: import("./values/base/usrpfp.json");
+    values: typeof import("./values/base/usrpfp.json");
     fillers: null;
   };
 }

@@ -55,12 +55,14 @@ jobs:
           ref: i18n
           path: i18n
 
-      - uses: pnpm/action-setup@v2
-
       - uses: actions/setup-node@v4
         with:
           node-version: "21"
           cache: "pnpm"
+
+      - uses: pnpm/action-setup@v2
+        with:
+          package_json_file: main/package.json
 
       - run: pnpm install --frozen-lockfile
         working-directory: main
