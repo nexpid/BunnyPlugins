@@ -10,6 +10,10 @@ on:
       - plugins/*/status.toml
   workflow_dispatch:
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   readmes:
     name: Make readmes
@@ -47,4 +51,5 @@ jobs:
 
           git commit -m "style(readmes): update readmes ($GITHUB_SHA)" || true
 
+          git pull
           git push
