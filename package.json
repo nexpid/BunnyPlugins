@@ -1,9 +1,9 @@
 {
   "private": true,
   "scripts": {
-    "build": "node build.mjs --nominify",
-    "build:debug": "node build.mjs --debug",
-    "build:minify": "node build.mjs",
+    "build": "node scripts/build.mjs --nominify",
+    "build:debug": "node scripts/build.mjs --debug",
+    "build:minify": "node scripts/build.mjs",
     "dev": "http-server dist --port 8731",
     "lint": "eslint .",
     "lint:fix": "pnpm lint --fix",

@@ -30,7 +30,7 @@ jobs:
       - run: pnpm install --frozen-lockfile
 
       - name: Write READMEs
-        run: node ./readmes.mjs
+        run: node ./scripts/readmes.mjs
 
       - name: Publish changes
         run: |
