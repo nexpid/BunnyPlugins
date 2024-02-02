@@ -32,6 +32,9 @@ jobs:
       - name: Write READMEs
         run: node ./scripts/readmes.mjs
 
+      - name: Install prettier (why is this needed??)
+        run: npm i -g prettier
+
       - name: Format READMEs
         run: prettier '**/README.md' --write --ignore-path
 
