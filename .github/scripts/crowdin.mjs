@@ -19,7 +19,7 @@ for (const lang of await readdir(".")) {
 for (const [plugin, dt] of Object.entries(data)) {
   await writeFile(
     join(dir, "../../stuff/lang/values", plugin + ".json"),
-    JSON.stringify(dt, undefined, 4),
+    JSON.stringify(dt),
   );
   console.log(`Wrote ${plugin}.json`);
 }
