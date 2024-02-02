@@ -5,7 +5,7 @@ on:
     branches: [main]
     paths:
       - .github/workflows/deploy.yml
-      - build.mjs
+      - scripts/build.mjs
       - plugins/*/manifest.json
       - plugins/*/src/**/*.*
       - stuff/**/*.*

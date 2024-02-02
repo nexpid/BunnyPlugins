@@ -5,7 +5,7 @@ on:
     branches: [main]
     paths:
       - .github/workflows/readmes.yml
-      - readmes.mjs
+      - scripts/readmes.mjs
       - plugins/*/manifest.json
       - plugins/*/status.toml
   workflow_dispatch:
