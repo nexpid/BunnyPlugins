@@ -59,13 +59,14 @@ jobs:
         with:
           package_json_file: main/package.json
 
-      - run: pnpm install --frozen-lockfile
-        working-directory: main
-
       - uses: actions/setup-node@v4
         with:
           node-version: "21"
           cache: "pnpm"
+          cache-dependency-path: main/pnpm-lock.yaml
+
+      - run: pnpm install --frozen-lockfile
+        working-directory: main
 
       - name: Clear old files
         run: rm *.json

@@ -45,12 +45,12 @@ jobs:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v2
 
-      - run: pnpm install --frozen-lockfile
-
       - uses: actions/setup-node@v4
         with:
           node-version: "18"
           cache: "pnpm"
+
+      - run: pnpm install --frozen-lockfile
 
       - name: Build plugins
         run: pnpm build:minify

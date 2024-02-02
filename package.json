@@ -30,7 +30,7 @@
     "eslint-plugin-simple-import-sort": "^10.0.0",
     "eslint-plugin-unused-imports": "^3.0.0",
     "joi": "^17.11.0",
-    "prettier": "^3.1.1",
+    "prettier": "^3.2.4",
     "react-native-buffer": "^6.0.3",
     "react-native-svg": "^14.1.0",
     "react-native-webview": "^13.6.2",
