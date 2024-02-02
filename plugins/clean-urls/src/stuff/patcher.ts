@@ -18,8 +18,8 @@ const clean = (text: string) =>
     const rules = getRules();
 
     const host =
-      Object.entries(rules.byHost).find(
-        (x) => rules.hostMap[x[0]]?.test(url.hostname),
+      Object.entries(rules.byHost).find((x) =>
+        rules.hostMap[x[0]]?.test(url.hostname),
       )?.[1] ?? [];
 
     for (const r of [...rules.universal, ...host]) {

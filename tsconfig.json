@@ -10,9 +10,9 @@
     "skipLibCheck": true,
     "resolveJsonModule": true,
     "paths": {
-      "$/*": ["./stuff/*"]
-    }
+      "$/*": ["./stuff/*"],
+    },
   },
   "include": ["plugins", "stuff", "node_modules/vendetta-types", "global.d.ts"],
-  "exclude": ["archive", "dist", "lang", "scripts"]
+  "exclude": ["archive", "dist", "lang", "scripts"],
 }

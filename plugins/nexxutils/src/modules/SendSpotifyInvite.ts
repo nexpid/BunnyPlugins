@@ -88,9 +88,8 @@ export default new Module({
               textComp.style = [styles.text, disabled && styles.disabledText];
             }
 
-            const iconComp = findInReactTree(
-              a.children,
-              (x) => x?.props?.style?.find((y: any) => y?.tintColor),
+            const iconComp = findInReactTree(a.children, (x) =>
+              x?.props?.style?.find((y: any) => y?.tintColor),
             );
             if (iconComp)
               iconComp.type = () =>

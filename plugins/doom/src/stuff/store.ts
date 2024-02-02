@@ -113,8 +113,9 @@ export async function getFiles(
   const hashes = await getHashes(signal);
   if (!hashes) return "Failed to get file: hashes.text";
 
-  const root = manifest.games.find((x) => x.id === vstorage.settings.game)
-    ?.root;
+  const root = manifest.games.find(
+    (x) => x.id === vstorage.settings.game,
+  )?.root;
   const files = [
     ...Object.entries(manifest.required),
     root && ["URL_GAME_LINK", root],

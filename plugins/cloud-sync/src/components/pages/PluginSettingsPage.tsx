@@ -58,8 +58,8 @@ export default () => {
       }
       style={{ paddingHorizontal: 10, paddingTop: 10 }}
       contentContainerStyle={{ paddingBottom: 20 }}
-      data={Object.entries(plugins).filter(
-        (x) => x[1].manifest.name?.toLowerCase().includes(search),
+      data={Object.entries(plugins).filter((x) =>
+        x[1].manifest.name?.toLowerCase().includes(search),
       )}
       renderItem={({ item: [id, item] }) => {
         const config = vstorage.pluginSettings[id] ?? {

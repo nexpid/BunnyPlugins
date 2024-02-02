@@ -18,8 +18,9 @@ const { View } = General;
 const ChannelSettingsModal = findByName("ChannelSettingsModal", false);
 const ChannelPinsConnected = findByName("ChannelPinsConnected", false);
 const screens = findByProps("MessagesScreen", "MessageContentScreen");
-const useOnPressSearchItem = findByProps("useOnPressSearchItem")
-  ?.useOnPressSearchItem;
+const useOnPressSearchItem = findByProps(
+  "useOnPressSearchItem",
+)?.useOnPressSearchItem;
 const FlashList = findByProps("FlashList")?.FlashList;
 
 const PrivateChannels = findByName("ConnectedPrivateChannels", false);
