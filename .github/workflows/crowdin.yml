@@ -56,7 +56,7 @@ jobs:
           path: i18n
 
       - name: Clear old files
-        run: rm*.json
+        run: rm *.json
         working-directory: main/stuff/lang/values
 
       - name: Write files
