@@ -9,8 +9,6 @@ on:
       - plugins/*/manifest.json
       - plugins/*/src/**/*.*
       - stuff/**/*.*
-    paths-ignore:
-      - stuff/lang/defs.d.ts
   workflow_dispatch:
 
 jobs:

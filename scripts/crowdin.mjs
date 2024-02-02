@@ -42,7 +42,7 @@ for (const file of await readdir(join(".", "base"))) {
 
 for (const [plugin, dt] of Object.entries(data)) {
   await writeFile(
-    join(dir, "../stuff/lang/values", plugin + ".json"),
+    join(dir, "../lang/values", plugin + ".json"),
     JSON.stringify(dt),
   );
 
@@ -50,7 +50,7 @@ for (const [plugin, dt] of Object.entries(data)) {
 }
 
 defs.push("}\n");
-await writeFile(join(dir, "../stuff/lang/defs.d.ts"), defs.join("\n"));
+await writeFile(join(dir, "../lang/defs.d.ts"), defs.join("\n"));
 console.log("Updated defs.d.ts");
 
 console.log("Done");

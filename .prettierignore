@@ -1,4 +1,4 @@
 dist
 archive
 pnpm-lock.yaml
-stuff/lang/values/*
+lang/values/*
