@@ -22,7 +22,7 @@ const fetchData = async () => {
     const txt = lang.format("log.fetch_error", {});
     console.error(`[UsrPFP] ${txt}`);
     logger.error(`${txt}\n${e.stack}`);
-    
+
     showToast(lang.format("toast.fetch_error", {}), getAssetIDByName("Small"));
   }
 };

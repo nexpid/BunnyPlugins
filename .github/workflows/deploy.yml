@@ -34,10 +34,23 @@ jobs:
         run: pnpm testTsc
 
       - name: Lint
-        run: pnpm lint
+        run: pnpm lint:fix
 
       - name: Styles
-        run: pnpm styles
+        run: pnpm styles:fix
+
+      - name: Publish changes
+        working-directory: main
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add .
+
+          git commit -m "chore: ci" || true
+
+          git pull
+          git push
   build:
     needs: ci
 
@@ -68,7 +81,7 @@ jobs:
           destination: dist/_html
 
       - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v2
         with:
           path: dist/_html
 
@@ -86,4 +99,4 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v2
