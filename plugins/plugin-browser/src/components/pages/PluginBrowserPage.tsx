@@ -15,7 +15,7 @@ import RedesignSearch, {
 import SuperAwesomeIcon from "$/components/SuperAwesomeIcon";
 import { openSheet } from "$/types";
 
-import { pluginsURL } from "../..";
+import { lang, pluginsURL } from "../..";
 import { getChanges, updateChanges } from "../../stuff/pluginChecker";
 import { emitterAvailable } from "../../stuff/util";
 import { PluginsFullJson } from "../../types";
@@ -25,10 +25,10 @@ import ChooseSheet from "../sheets/ChooseSheet";
 const { View } = General;
 
 enum Sort {
-  DateNewest = "Creation date (new to old)",
-  DateOldest = "Creation date (old to new)",
-  NameAZ = "Name (A-Z)",
-  NameZA = "Name (Z-A)",
+  DateNewest = "sheet.sort.date_newest",
+  DateOldest = "sheet.sort.date_oldest",
+  NameAZ = "sheet.sort.name_az",
+  NameZA = "sheet.sort.name_za",
 }
 
 let refreshCallback: () => void;
@@ -38,10 +38,8 @@ export default () => {
 
   if (!emitterAvailable) {
     showConfirmationAlert({
-      title: "Can't use",
-      content:
-        "You must reinstall Vendetta first in order for Plugin Browser to function properly",
-      confirmText: "Dismiss",
+      title: lang.format("alert.unusable.title", {}),
+      content: lang.format("alert.unusable.body", {}),
       confirmColor: "brand" as ButtonColors,
       onConfirm: () => {},
       isDismissable: true,
@@ -89,11 +87,17 @@ export default () => {
             .json()
             .then((x) => setParsed(x))
             .catch(() =>
-              showToast("Failed to parse plugins", getAssetIDByName("Small")),
+              showToast(
+                lang.format("toast.data.fail_parse", {}),
+                getAssetIDByName("Small"),
+              ),
             ),
         )
         .catch(() =>
-          showToast("Failed to fetch plugins", getAssetIDByName("Small")),
+          showToast(
+            lang.format("toast.data.fail_fetch", {}),
+            getAssetIDByName("Small"),
+          ),
         );
   }, [parsed]);
 
@@ -101,15 +105,15 @@ export default () => {
   sortCallback = () =>
     parsed &&
     openSheet(ChooseSheet, {
-      label: "Sorting",
-      value: sort,
-      choices: Object.values(Sort),
+      label: lang.format("sheet.sort.title", {}),
+      value: lang.format(sort, {}),
+      choices: Object.values(Sort).map((x) => lang.format(x, {})),
       update: (val) => currentSetSort.current(val as Sort),
     });
 
   navigation.addListener("focus", () => {
     navigation.setOptions({
-      title: "Plugin Browser",
+      title: lang.format("plugin.name", {}),
       headerRight: () => (
         <View style={{ flexDirection: "row-reverse" }}>
           <SuperAwesomeIcon

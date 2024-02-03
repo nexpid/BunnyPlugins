@@ -9,6 +9,7 @@ import CustomBadgeTag from "$/components/CustomBadgeTag";
 import SimpleText from "$/components/SimpleText";
 import SmartMention from "$/components/SmartMention";
 
+import { lang } from "..";
 import { matchGithubLink, properLink, refetchPlugin } from "../stuff/util";
 import { PluginsFullJson } from "../types";
 import usePlugin from "./hooks/usePlugin";
@@ -40,7 +41,10 @@ export default function ({
       onPress: () => url.openURL(githubLink),
       onLongPress: () => {
         clipboard.setString(githubLink);
-        showToast("Copied GitHub link", getAssetIDByName("toast_copy_link"));
+        showToast(
+          lang.format("toast.copy.github_link", {}),
+          getAssetIDByName("toast_copy_link"),
+        );
       },
     });
 
@@ -81,13 +85,17 @@ export default function ({
                       refetchPlugin(proxiedLink)
                         .then(() =>
                           showToast(
-                            `Successfully updated ${item.name}`,
+                            lang.format("toast.plugin.update.success", {
+                              plugin: item.name,
+                            }),
                             getAssetIDByName("ic_sync_24px"),
                           ),
                         )
                         .catch(() =>
                           showToast(
-                            `Failed to update ${item.name}!`,
+                            lang.format("toast.plugin.update.fail", {
+                              plugin: item.name,
+                            }),
                             getAssetIDByName("Small"),
                           ),
                         )
@@ -102,12 +110,16 @@ export default function ({
                       try {
                         removePlugin(proxiedLink);
                         showToast(
-                          `Successfully deleted ${item.name}`,
+                          lang.format("toast.plugin.delete.success", {
+                            plugin: item.name,
+                          }),
                           getAssetIDByName("ic_message_delete"),
                         );
                       } catch {
                         showToast(
-                          `Failed to delete ${item.name}!`,
+                          lang.format("toast.plugin.delete.fail", {
+                            plugin: item.name,
+                          }),
                           getAssetIDByName("Small"),
                         );
                       }
@@ -116,7 +128,7 @@ export default function ({
                     onLongPress: () => {
                       clipboard.setString(item.vendetta.original);
                       showToast(
-                        "Copied unproxied link",
+                        lang.format("toast.copy.unproxied_link", {}),
                         getAssetIDByName("toast_copy_link"),
                       );
                     },
@@ -131,13 +143,18 @@ export default function ({
                       installPlugin(proxiedLink, true)
                         .then(() => {
                           showToast(
-                            `Successfully installed ${item.name}`,
+                            lang.format("toast.plugin.install.success", {
+                              plugin: item.name,
+                            }),
                             getAssetIDByName("toast_image_saved"),
                           );
                         })
                         .catch((e: any) =>
                           showToast(
-                            e?.message ?? `Failed to install ${item.name}!`,
+                            e?.message ??
+                              lang.format("toast.plugin.install.fail", {
+                                plugin: item.name,
+                              }),
                             getAssetIDByName("Small"),
                           ),
                         )
@@ -146,7 +163,7 @@ export default function ({
                     onLongPress: () => {
                       clipboard.setString(item.vendetta.original);
                       showToast(
-                        "Copied unproxied link",
+                        lang.format("toast.copy.unproxied_link", {}),
                         getAssetIDByName("toast_copy_link"),
                       );
                     },

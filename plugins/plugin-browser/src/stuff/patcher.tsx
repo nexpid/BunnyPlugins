@@ -3,6 +3,7 @@ import { getAssetIDByName } from "@vendetta/ui/assets";
 
 import { patchSettingsPin } from "$/pinToSettings";
 
+import { lang } from "..";
 import PluginBrowserPage from "../components/pages/PluginBrowserPage";
 import SettingsSection from "../components/SettingsSection";
 import { getChanges, initThing } from "./pluginChecker";
@@ -25,7 +26,9 @@ export default (): (() => void) => {
         get title() {
           const changes = getChanges().filter((x) => x[1] === "new").length;
 
-          return `Plugin Browser${changes ? ` (+${changes})` : ""}`;
+          return changes
+            ? lang.format("plugin.name.changes", { changes })
+            : lang.format("plugin.name", {});
         },
         page: {
           render: PluginBrowserPage,

@@ -5,6 +5,7 @@ import { ErrorBoundary, Forms } from "@vendetta/ui/components";
 import CustomBadgeTag from "$/components/CustomBadgeTag";
 import SimpleText from "$/components/SimpleText";
 
+import { lang } from "..";
 import PluginBrowserPage from "./pages/PluginBrowserPage";
 
 const { FormRow } = Forms;
@@ -17,7 +18,7 @@ export default ({ changes }: { changes: number }) => {
       <FormRow
         label={
           <SimpleText variant="text-md/semibold" color="HEADER_PRIMARY">
-            Plugin Browser
+            {lang.format("plugin.name", {})}
             {changes ? (
               <CustomBadgeTag text={changes.toString()} marginLeft={true} />
             ) : (
