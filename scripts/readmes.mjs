@@ -158,7 +158,7 @@ ${plugin.description}`;
 
     await writeFile(
       `${path}README.md`,
-      format(preadme, { parser: "markdown" }),
+      await format(preadme, { parser: "markdown" }),
     );
     console.log(`Wrote ${path}README.md`);
   } catch (e) {
@@ -387,7 +387,7 @@ ${invalidPlugins.map((x) => `> - ${x[0]}  `).join("\n")}`
 }\n`;
 // TODO make use of the second parameter in invalidPlugins
 
-await writeFile("./README.md", format(mreadme, { parser: "markdown" }));
+await writeFile("./README.md", await format(mreadme, { parser: "markdown" }));
 console.log("Wrote ./README.md");
 
 console.log("");
