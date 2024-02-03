@@ -5,7 +5,7 @@ import { getAssetIDByName } from "@vendetta/ui/assets";
 import { showToast } from "@vendetta/ui/toasts";
 import { safeFetch } from "@vendetta/utils";
 
-import { dataURL, enabled, hash, staticGifURL } from "..";
+import { dataURL, enabled, hash, lang, staticGifURL } from "..";
 import { DataFile } from "../types";
 
 const avatarStuff = findByProps("getUserAvatarURL", "getUserAvatarSource");
@@ -19,9 +19,11 @@ const fetchData = async () => {
       await safeFetch(`${dataURL}?_=${hash}`, { cache: "no-store" })
     ).json();
   } catch (e) {
-    console.error("[UsrPFP] Failed to fetch avatars!");
-    logger.error(`Failed to fetch avatars!\n${e.stack}`);
-    showToast("USRPFP failed to fetch avatars!", getAssetIDByName("Small"));
+    const txt = lang.format("log.fetch_error", {});
+    console.error(`[UsrPFP] ${txt}`);
+    logger.error(`${txt}\n${e.stack}`);
+    
+    showToast(lang.format("toast.fetch_error", {}), getAssetIDByName("Small"));
   }
 };
 
