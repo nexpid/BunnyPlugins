@@ -1,6 +1,7 @@
 import { existsSync } from "fs";
 import { readdir, readFile, writeFile } from "fs/promises";
 import { parse } from "smol-toml";
+import { format } from "prettier";
 
 console.time("Done");
 
@@ -155,7 +156,10 @@ for (const x of await readdir("./plugins")) {
 
 ${plugin.description}`;
 
-    await writeFile(`${path}README.md`, preadme);
+    await writeFile(
+      `${path}README.md`,
+      format(preadme, { parser: "markdown" }),
+    );
     console.log(`Wrote ${path}README.md`);
   } catch (e) {
     console.log(`Failed to parse ${path}!`, e);
@@ -383,7 +387,7 @@ ${invalidPlugins.map((x) => `> - ${x[0]}  `).join("\n")}`
 }\n`;
 // TODO make use of the second parameter in invalidPlugins
 
-await writeFile("./README.md", mreadme);
+await writeFile("./README.md", format(mreadme, { parser: "markdown" }));
 console.log("Wrote ./README.md");
 
 console.log("");

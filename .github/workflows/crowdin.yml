@@ -80,13 +80,6 @@ jobs:
         run: node ../../../main/scripts/crowdin.mjs
         working-directory: i18n/lang/values
 
-      - name: Install prettier (why is this needed??)
-        run: npm i -g prettier
-
-      - name: Format defs.d.ts
-        run: prettier lang/defs.d.ts --write
-        working-directory: main
-
       - name: Publish changes
         working-directory: main
         run: |

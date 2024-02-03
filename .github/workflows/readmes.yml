@@ -36,12 +36,6 @@ jobs:
       - name: Write READMEs
         run: node ./scripts/readmes.mjs
 
-      - name: Install prettier (why is this needed??)
-        run: npm i -g prettier
-
-      - name: Format READMEs
-        run: prettier plugins/*/README.md README.md --write --ignore-path
-
       - name: Publish changes
         run: |
           git config --global user.name "github-actions[bot]"

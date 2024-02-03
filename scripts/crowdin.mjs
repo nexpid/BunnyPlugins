@@ -1,6 +1,7 @@
 import { readdir, readFile, writeFile } from "fs/promises";
 import { dirname, join } from "path";
 import { fileURLToPath } from "url";
+import { write } from "./make_defs.mjs";
 
 const dir = dirname(fileURLToPath(import.meta.url));
 
@@ -16,30 +17,6 @@ for (const lang of await readdir(".")) {
   }
 }
 
-/** @type {string[]} */
-const defs = [];
-defs.push("export interface LangValues {");
-
-for (const file of await readdir(join(".", "base"))) {
-  if (!file.endsWith(".json")) continue;
-  const plugin = file.split(".")[0];
-
-  const data = JSON.parse(await readFile(join(".", "base", file)));
-  const fillers = Object.entries(data)
-    .map((x) => [x[0], x[1].match(/\$\w+/g) ?? []])
-    .filter((x) => x[1].length > 0);
-
-  defs.push(`  ${plugin}: {`);
-  defs.push(`    values: typeof import("./values/base/${plugin}.json");`);
-  if (fillers.length > 0) {
-    defs.push("    fillers: {");
-    for (const [key, stuff] of fillers)
-      defs.push(`      ${JSON.stringify(key)}: ${JSON.stringify(stuff)};`);
-    defs.push("    }");
-  } else defs.push("    fillers: null;");
-  defs.push("  };");
-}
-
 for (const [plugin, dt] of Object.entries(data)) {
   await writeFile(
     join(dir, "../lang/values", plugin + ".json"),
@@ -49,8 +26,6 @@ for (const [plugin, dt] of Object.entries(data)) {
   console.log(`Wrote ${plugin}.json`);
 }
 
-defs.push("}\n");
-await writeFile(join(dir, "../lang/defs.d.ts"), defs.join("\n"));
-console.log("Updated defs.d.ts");
+write(join(".", "base"), join("..", "lang", "defs.d.ts"));
 
 console.log("Done");

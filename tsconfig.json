@@ -13,6 +13,12 @@
       "$/*": ["./stuff/*"],
     },
   },
-  "include": ["plugins", "stuff", "node_modules/vendetta-types", "global.d.ts"],
-  "exclude": ["archive", "dist", "lang", "scripts"],
+  "include": [
+    "plugins",
+    "stuff",
+    "lang",
+    "node_modules/vendetta-types",
+    "global.d.ts",
+  ],
+  "exclude": ["archive", "dist", "scripts"],
 }
