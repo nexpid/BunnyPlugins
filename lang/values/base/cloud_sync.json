@@ -31,7 +31,7 @@
   "settings.dev.api_url.description": "Custom URL for the Cloud Sync backend API",
   "settings.dev.client_id.title": "Client ID",
   "settings.dev.client_id.description": "Custom client ID for OAuth2",
-  "settings.auth.title": "Authentication",
+  "settings.auth.title": "Authorization",
   "settings.auth.log_out.title": "Log out",
   "settings.auth.log_out.description": "Logs you out of Cloud Sync",
   "settings.auth.delete_data.title": "Delete data",
