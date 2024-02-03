@@ -1,6 +1,4 @@
 {
-  "plugin.name": "UsrPFP",
-
   "log.patch_error": "Encountered an error while loading!",
   "log.fetch_error": "Failed to fetch avatars!",
 

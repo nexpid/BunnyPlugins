@@ -20,7 +20,7 @@
 
   "settings.current_data.title": "Current Data",
   "settings.current_data.plugins": "plugins",
-  "settings.current_data.thenes": "themes",
+  "settings.current_data.themes": "themes",
   "settings.config.title": "Settings",
   "settings.config.auto_save.title": "Auto Save",
   "settings.config.auto_save.description": "Automatically save data to cloud",
@@ -31,6 +31,7 @@
   "settings.dev.api_url.description": "Custom URL for the Cloud Sync backend API",
   "settings.dev.client_id.title": "Client ID",
   "settings.dev.client_id.description": "Custom client ID for OAuth2",
+  "settings.auth.title": "Authentication",
   "settings.auth.log_out.title": "Log out",
   "settings.auth.log_out.description": "Logs you out of Cloud Sync",
   "settings.auth.delete_data.title": "Delete data",
@@ -39,7 +40,6 @@
   "settings.data.title": "Data Management",
   "settings.data.save_data.title": "Save Data",
   "settings.data.save_data.description": "Saves your data to the Cloud Sync API",
-  "settings.data.import_data.title": "Import Data",
   "settings.data.import_data.description": "Imports data from the Cloud Sync API",
   "settings.data.export_local_data.title": "Export Local Data",
   "settings.data.export_local_data.description": "Exports data to a .txt file",
@@ -61,6 +61,9 @@
   "log.import.theme.fail": "Failed to import theme: $name\n$error",
   "log.import.total": "Imported $plugins and $themes",
   "log.import.select_theme": "Selecting theme: $theme",
+  "log.plugins": "PLUGINS",
+  "log.themes": "THEMES",
+  "log.importer": "IMPORTER",
 
   "alert.change_theme.title": "Theme selected",
   "alert.change_theme.body": "A reload is required to see the selected theme. Do you want to reload now?",
@@ -90,7 +93,10 @@
   "alert.plugin_settings_revert.confirm": "Revert",
 
   "page.import_logs": "Import Logs",
-  "page.plugin_settings": "Plugin Settings",
+
+  "page.plugin_settings.title": "Plugin Settings",
+  "page.plugin_settings.sync_plugin": "Sync Plugin",
+  "page.plugin_settings.sync_plugin_storage": "Sync Plugin Storage",
 
   "log.import.result.success": "Finished! Imported $plugins and $themes. All imports were successful.",
   "log.import.result.fail": "Finished! Imported $plugins and $themes. Failed to import $failed_plugins and $failed_themes."
