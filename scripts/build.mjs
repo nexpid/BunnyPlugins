@@ -4,7 +4,7 @@ import swc from "@swc/core";
 import { createHash } from "crypto";
 import { existsSync } from "fs";
 import { mkdir, readdir, readFile, writeFile } from "fs/promises";
-import { extname } from "path";
+import { extname, join } from "path";
 import { rollup } from "rollup";
 import esbuild from "rollup-plugin-esbuild";
 import tsConfigPaths from "rollup-plugin-tsconfig-paths";
@@ -37,8 +37,12 @@ ${mdNote}
 </div>\n`,
 );
 
-/** @type import("rollup").InputPluginOption */
-const plugins = [
+const langFiles = (await readdir(join("lang", "values"))).filter((p) =>
+  p.endsWith(".json"),
+);
+
+/** @returns {Promise<import("rollup").InputPluginOption>} */
+const plugins = async (plugin) => [
   tsConfigPaths(),
   nodeResolve(),
   commonjs(),
@@ -103,6 +107,11 @@ const plugins = [
     minify: !onominify,
     define: {
       IS_DEV: String(onominify),
+      DEV_LANG: onominify
+        ? langFiles.find((x) => x === plugin + ".json")
+          ? await readFile(join("lang", "values", plugin + ".json"), "utf8")
+          : "null"
+        : "undefined",
     },
   }),
 ];
@@ -141,7 +150,7 @@ ${mdNote}
     const bundle = await rollup({
       input: `./plugins/${plug}/${manifest.main}`,
       onwarn: () => {},
-      plugins,
+      plugins: await plugins(plug.replace(/-/g, "_")),
     });
 
     await bundle.write({

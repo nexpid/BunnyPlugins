@@ -16,6 +16,10 @@ declare module "*.html" {
 }
 
 declare const IS_DEV: boolean;
+declare const DEV_LANG:
+  | Record<string, Record<string, string>>
+  | null
+  | undefined;
 
 // Buffer types coming soon:tm:
 declare const Buffer: any;
