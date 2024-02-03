@@ -13,7 +13,7 @@ import {
   hideActionSheet,
 } from "$/types";
 
-import { active } from "../..";
+import { active, lang } from "../..";
 
 const { FormRow } = Forms;
 
@@ -54,18 +54,29 @@ export default function () {
               }
             />
             {[
-              ["Description", [iconpack.description]],
               [
-                "Authors",
+                lang.format("sheet.iconpack_info.description", {}),
+                [iconpack.description],
+              ],
+              [
+                lang.format("sheet.iconpack_info.authors", {}),
                 iconpackAuthors,
                 iconpack.credits.authors
                   .map((x) => parseAuthor(x)[0])
                   .join(", "),
               ],
-              ["Description", [iconpack.description]],
-              ["Source", [iconpack.credits.source]],
-              ["Icon Suffix", [iconpack.suffix ?? "N/A"]],
-              ["Load URL", [iconpack.load ?? "N/A"]],
+              [
+                lang.format("sheet.iconpack_info.source", {}),
+                [iconpack.credits.source],
+              ],
+              [
+                lang.format("sheet.iconpack_info.file_suffix", {}),
+                [iconpack.suffix ?? "-"],
+              ],
+              [
+                lang.format("sheet.iconpack_info.base_url", {}),
+                [iconpack.load ?? "-"],
+              ],
             ].map(
               ([label, val, copyable]: [string, any[], string | undefined]) => (
                 <FormRow
@@ -73,7 +84,10 @@ export default function () {
                   subLabel={label}
                   onLongPress={() => {
                     clipboard.setString(copyable ?? val.join(""));
-                    showToast("Copied", getAssetIDByName("toast_copy_link"));
+                    showToast(
+                      lang.format("toast.copied_iconpack_info_value", {}),
+                      getAssetIDByName("toast_copy_link"),
+                    );
                   }}
                 />
               ),
@@ -81,7 +95,7 @@ export default function () {
           </>
         ) : (
           <SimpleText variant="text-md/semibold" color="TEXT_NORMAL">
-            womp womp
+            {lang.format("sheet.iconpack_info.failed_to_load", {})}
           </SimpleText>
         )}
       </ActionSheetContentContainer>

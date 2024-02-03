@@ -4,6 +4,8 @@ import { ReactNative as RN } from "@vendetta/metro/common";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { showToast } from "@vendetta/ui/toasts";
 
+import { lang } from "..";
+
 export function flattenStyle(x: any) {
   return RN.StyleSheet.flatten(x) ?? {};
 }
@@ -20,9 +22,11 @@ export function reloadUI() {
     setAMOLEDThemeEnabled(!state);
     setAMOLEDThemeEnabled(state);
   } catch (e) {
-    console.error(`[Themes+] Init error!`);
-    logger.error(`Init error!\n${e.stack}`);
-    showToast("Themes+ init error!", getAssetIDByName("Small"));
+    const log = lang.format("log.init_error", {});
+    console.error(`[${lang.format("plugin.name", {})}] ${log}`);
+    logger.error(`${log}\n${e.stack}`);
+
+    showToast(lang.format("toast.init_error", {}), getAssetIDByName("Small"));
   }
 }
 

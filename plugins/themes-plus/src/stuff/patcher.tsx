@@ -61,7 +61,7 @@ export default async () => {
       await safeFetch(`${constants.iconpacks.list}?_=${cacheID}`)
     ).json()) as IconPackData;
   } catch {
-    active.blehhh.push(InactiveReason.IconpacksListNuhUh);
+    active.blehhh.push(InactiveReason.NoIconpacksList);
   }
 
   active.iconpackList = iconpacks.list;
@@ -94,7 +94,7 @@ export default async () => {
         await safeFetch(`${iconpack.config}?_=${cacheID}`)
       ).json();
     } catch {
-      active.blehhh.push(InactiveReason.IconpackConfigNuhUh);
+      active.blehhh.push(InactiveReason.NoIconpackConfig);
     }
 
   let iconpackPaths = new Array<string>();
@@ -110,7 +110,7 @@ export default async () => {
         .replace(/\r/g, "")
         .split("\n");
     } catch {
-      active.blehhh.push(InactiveReason.IconpackTreeNuhUh);
+      active.blehhh.push(InactiveReason.NoIconpackFiles);
     }
 
   if (!enabled) return () => undefined;

@@ -7,7 +7,7 @@ import SimpleText from "$/components/SimpleText";
 import { WebView } from "$/deps";
 import { doHaptic, openModal, openSheet, TextStyleSheet } from "$/types";
 
-import { active, PatchType } from "..";
+import { active, lang, PatchType } from "..";
 import DevModal from "./modals/DevModal";
 import IconpackInfoSheet from "./sheets/IconpackInfoSheet";
 
@@ -54,30 +54,28 @@ export default function () {
                   : (lastTap = Date.now() + 500)
               }
             >
-              Themes+ is Active
+              {lang.format("settings.is_active", {})}
             </SimpleText>
           </View>
           <View style={{ flexDirection: "column", marginHorizontal: 16 }}>
             {[
-              [PatchType.Icons, ["Custom icon colors"]],
-              [PatchType.UnreadBadgeColor, ["Unread badge color"]],
-              [PatchType.CustomIconOverlays, ["Custom icon overlays"]],
-              [PatchType.MentionLineColor, ["Mention line color"]],
+              [PatchType.Icons],
+              [PatchType.UnreadBadgeColor],
+              [PatchType.CustomIconOverlays],
+              [PatchType.MentionLineColor],
               [
                 PatchType.IconPack,
-                active.iconpack
-                  ? [
-                      <SimpleText
-                        variant="text-lg/bold"
-                        color="TEXT_LINK"
-                        onPress={() => openSheet(IconpackInfoSheet, undefined)}
-                      >
-                        Custom icon pack
-                      </SimpleText>,
-                    ]
-                  : ["Custom icon pack"],
+                active.iconpack && (
+                  <SimpleText
+                    variant="text-lg/bold"
+                    color="TEXT_LINK"
+                    onPress={() => openSheet(IconpackInfoSheet, undefined)}
+                  >
+                    {lang.format("settings.patch.iconpack", {})}
+                  </SimpleText>
+                ),
               ],
-            ].map(([type, children]: [PatchType, any[]]) => (
+            ].map(([type, children]: [PatchType, any]) => (
               <View style={{ flexDirection: "row", maxWidth: "85%" }}>
                 <RN.Image
                   source={getAssetIDByName(
@@ -91,10 +89,15 @@ export default function () {
                     aspectRatio: 1 / 1,
                     marginTop: 4,
                   }}
+                  resizeMode="cover"
                 />
-                <SimpleText variant="text-lg/semibold" color="TEXT_NORMAL">
-                  {children}
-                </SimpleText>
+                {children ? (
+                  children
+                ) : (
+                  <SimpleText variant="text-lg/semibold" color="TEXT_NORMAL">
+                    {lang.format(`settings.patch.${type}`, {})}
+                  </SimpleText>
+                )}
               </View>
             ))}
           </View>
@@ -122,7 +125,7 @@ export default function () {
               } else lastTap = Date.now() + 500;
             }}
           >
-            Themes+ is not Active
+            {lang.format("settings.is_inactive", {})}
           </SimpleText>
         </View>
       )}
@@ -150,7 +153,7 @@ export default function () {
             color="TEXT_NORMAL"
             style={{ flexWrap: "wrap" }}
           >
-            {reason}
+            {lang.format(`settings.inactive.${reason}`, {})}
           </SimpleText>
         </View>
       ))}
@@ -160,7 +163,7 @@ export default function () {
         style={{ textDecorationLine: "underline", marginTop: 32 }}
         onPress={() =>
           showConfirmationAlert({
-            title: "GitHub FAQ",
+            title: lang.format("alert.faq.title", {}),
             //@ts-expect-error unadded in typings
             children: (
               <View style={{ height: 400 }}>
@@ -172,7 +175,7 @@ export default function () {
                 />
               </View>
             ),
-            confirmText: "Open in browser",
+            confirmText: lang.format("alert.faq.confirm", {}),
             confirmColor: "brand" as ButtonColors,
             onConfirm: () =>
               url.openURL("https://github.com/nexpid/VendettaThemesPlus#faq"),
@@ -180,7 +183,7 @@ export default function () {
           })
         }
       >
-        Why is Themes+ inactive?
+        {lang.format("settings.open_faq", {})}
       </SimpleText>
     </View>
   );

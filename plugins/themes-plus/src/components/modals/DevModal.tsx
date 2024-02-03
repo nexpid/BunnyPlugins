@@ -8,7 +8,7 @@ import Modal from "$/components/Modal";
 import SimpleText from "$/components/SimpleText";
 import { openSheet, popModal } from "$/types";
 
-import { resetCacheID, runPatch, runUnpatch, vstorage } from "../..";
+import { lang, resetCacheID, runPatch, runUnpatch, vstorage } from "../..";
 import { reloadUI } from "../../stuff/util";
 import IconpackListSheet from "../sheets/IconpackListSheet";
 
@@ -23,15 +23,21 @@ export default function () {
   useProxy(vstorage);
 
   return (
-    <Modal mkey="dev-modal" title="Developer Modal">
+    <Modal mkey="dev-modal" title={lang.format("modal.dev.title", {})}>
       <ScrollView>
         <View style={{ marginHorizontal: 16, marginVertical: 16 }}>
           <BadgableTabBar
             activeTab={tab}
             onTabSelected={setTab}
             tabs={[
-              { id: "iconpack", title: "Force Iconpack" },
-              { id: "custom-iconpack", title: "Custom Iconpack" },
+              {
+                id: "iconpack",
+                title: lang.format("modal.dev.nav.iconpack", {}),
+              },
+              {
+                id: "custom-iconpack",
+                title: lang.format("modal.dev.nav.custom_iconpack", {}),
+              },
             ]}
           />
         </View>
@@ -42,24 +48,24 @@ export default function () {
               color="TEXT_NORMAL"
               style={{ marginHorizontal: 16 }}
             >
-              Uses a custom iconpack which doesn't exist in the iconpacks list
+              {lang.format("modal.dev.custom_iconpack.title", {})}
             </SimpleText>
             <FormInput
-              title="Root URL (raw.githubusercontent.com)"
+              title={lang.format("modal.dev.custom_iconpack.base_url", {})}
               value={vstorage.iconpack.url ?? ""}
               onChange={(x: string) =>
                 (vstorage.iconpack.url = x.match(HTTP_REGEX_MULTI)?.[0] ?? null)
               }
             />
             <FormInput
-              title="Icon Suffix"
+              title={lang.format("modal.dev.custom_iconpack.file_suffix", {})}
               value={vstorage.iconpack.suffix}
               onChange={(x: string) => (vstorage.iconpack.suffix = x)}
             />
             <Button
               size="small"
               color="green"
-              text="Reload"
+              text={lang.format("modal.dev.reload", {})}
               onPress={() => {
                 vstorage.iconpack.force = null;
                 popModal("dev-modal");
@@ -78,13 +84,14 @@ export default function () {
               color="TEXT_NORMAL"
               style={{ marginHorizontal: 16 }}
             >
-              Uses an iconpack regardless of the current theme's setting
+              {lang.format("modal.dev.iconpack.title", {})}
             </SimpleText>
             <FormRow
-              label="Selected Iconpack"
+              label={lang.format("modal.dev.iconpack.selected_iconpack", {})}
               trailing={
                 <SimpleText variant="text-md/medium" color="TEXT_MUTED">
-                  {vstorage.iconpack.force ?? "None"}
+                  {vstorage.iconpack.force ??
+                    lang.format("sheet.select_iconpack.none", {})}
                 </SimpleText>
               }
               onPress={() =>
@@ -97,7 +104,7 @@ export default function () {
             <Button
               size="small"
               color="green"
-              text="Reload"
+              text={lang.format("modal.dev.reload", {})}
               onPress={() => {
                 vstorage.iconpack.url = null;
                 vstorage.iconpack.suffix = "";

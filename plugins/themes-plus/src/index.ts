@@ -1,3 +1,4 @@
+import { Lang } from "$/lang";
 import { makeStorage } from "$/storage";
 
 import settings from "./components/Settings";
@@ -5,19 +6,19 @@ import patcher from "./stuff/patcher";
 import { IconPack, IconPackData } from "./types";
 
 export enum PatchType {
-  Icons,
-  UnreadBadgeColor,
-  CustomIconOverlays,
-  MentionLineColor,
-  IconPack,
+  Icons = "icons",
+  UnreadBadgeColor = "unread_badge_color",
+  CustomIconOverlays = "custom_icon_overlays",
+  MentionLineColor = "mention_line_color",
+  IconPack = "iconpack",
 }
 
 export enum InactiveReason {
-  NoTheme = "No theme selected",
-  ThemesPlusUnsupported = "Selected theme doesn't support Themes+",
-  IconpacksListNuhUh = "Couldn't fetch list of iconpacks",
-  IconpackConfigNuhUh = "Couldn't fetch iconpack config",
-  IconpackTreeNuhUh = "Couldn't fetch iconpack tree",
+  NoTheme = "no_theme",
+  ThemesPlusUnsupported = "themes_plus_unsupported",
+  NoIconpacksList = "no_iconpacks_list",
+  NoIconpackConfig = "no_iconpack_config",
+  NoIconpackFiles = "no_iconpack_files",
 }
 
 export const active: {
@@ -58,6 +59,8 @@ export function runUnpatch(exit: boolean) {
   enabled = false;
   unpatch?.(exit);
 }
+
+export const lang = new Lang("themes_plus");
 
 export default {
   onLoad: () => runPatch(),

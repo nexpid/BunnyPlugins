@@ -37,6 +37,10 @@ export interface LangValues {
       "toast.plugin.install.fail": ["plugin"];
     };
   };
+  themes_plus: {
+    values: typeof import("./values/base/themes_plus.json");
+    fillers: null;
+  };
   twemoji_everywhere: {
     values: typeof import("./values/base/twemoji_everywhere.json");
     fillers: null;

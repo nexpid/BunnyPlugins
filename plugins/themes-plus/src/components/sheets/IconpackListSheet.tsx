@@ -9,7 +9,7 @@ import {
   hideActionSheet,
 } from "$/types";
 
-import { active } from "../..";
+import { active, lang } from "../..";
 
 const { FormRow, FormRadioRow } = Forms;
 
@@ -25,7 +25,7 @@ export default function ({
 
   const options = [
     {
-      label: "None",
+      label: lang.format("sheet.select_iconpack.none", {}),
       value: null,
     },
     ...active.iconpackList.map((x) => ({
@@ -38,7 +38,7 @@ export default function ({
     <ActionSheet>
       <ActionSheetContentContainer>
         <ActionSheetTitleHeader
-          title={"Select Iconpack"}
+          title={lang.format("sheet.select_iconpack.title", {})}
           trailing={
             <ActionSheetCloseButton onPress={() => hideActionSheet()} />
           }
