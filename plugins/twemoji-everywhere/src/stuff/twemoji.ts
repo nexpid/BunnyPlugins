@@ -1,41 +1,41 @@
 import { ReactNative as RN } from "@vendetta/metro/common";
 import rawEmojiRegex from "twemoji-parser/dist/lib/regex";
 
-import { vstorage } from "..";
+import { lang, vstorage } from "..";
 const emojiRegex = new RegExp(`(${rawEmojiRegex.source})`, rawEmojiRegex.flags);
 
 export interface EmojiPack {
-  title: string;
+  title: keyof typeof lang.Values;
   format: (src: string) => string;
 }
 
 export const emojipacks = {
   default: {
     get title() {
-      return `Default (${RN.Platform.select({
-        default: "Twemoji",
-        ios: "iOs Emoji",
-      })})`;
+      return RN.Platform.select({
+        default: "settings.emojipacks.choose.default",
+        ios: "settings.emojipacks.choose.default.ios",
+      }) as any;
     },
     format: (src) => `asset:/emoji-${src}.png`,
   },
   twemoji: {
-    title: "Twemoji (CDN)",
+    title: "settings.emojipacks.choose.twemoji",
     format: (src) =>
       `https://cdn.jsdelivr.net/gh/twitter/twemoji@v14.0.2/assets/72x72/${src}.png`,
   },
   fluentuiStatic: {
-    title: "FluentUI Emoji (Static)",
+    title: "settings.emojipacks.choose.fluentui_static",
     format: (src) =>
       `https://raw.githubusercontent.com/bignutty/fluent-emoji/main/static/${src}.png`,
   },
   fluentuiAnimated: {
-    title: "FluentUI Emoji (Animated)",
+    title: "settings.emojipacks.choose.fluentui_animated",
     format: (src) =>
       `https://raw.githubusercontent.com/bignutty/fluent-emoji/main/animated-static/${src}.png`,
   },
   notoEmoji: {
-    title: "Noto Emoji",
+    title: "settings.emojipacks.choose.noto_emoji",
     format: (src) =>
       `https://raw.githubusercontent.com/googlefonts/noto-emoji/main/png/72/emoji_u${src
         .split("-")

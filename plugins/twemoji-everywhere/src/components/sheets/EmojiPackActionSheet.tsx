@@ -11,7 +11,7 @@ import {
   hideActionSheet,
 } from "$/types";
 
-import { vstorage } from "../..";
+import { lang, vstorage } from "../..";
 import { convert, emojipacks } from "../../stuff/twemoji";
 import CustomTwemoji from "../CustomTwemoji";
 
@@ -32,7 +32,7 @@ export default ({ called }: { called: number }) => {
     <ActionSheet>
       <ActionSheetContentContainer>
         <ActionSheetTitleHeader
-          title="Emoji Pack"
+          title={lang.format("settings.emojipacks.title", {})}
           trailing={
             <ActionSheetCloseButton onPress={() => hideActionSheet()} />
           }

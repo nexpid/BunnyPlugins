@@ -1,5 +1,6 @@
 import { ReactNative as RN } from "@vendetta/metro/common";
 
+import { Lang } from "$/lang";
 import { makeStorage } from "$/storage";
 
 import settings from "./components/Settings";
@@ -12,6 +13,8 @@ export const vstorage = makeStorage({
     ios: "twemoji",
   }) as keyof typeof emojipacks,
 });
+
+export const lang = new Lang("twemoji_everywhere");
 
 let unpatch: () => void;
 export default {
