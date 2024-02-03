@@ -1,6 +1,18 @@
 import { i18n } from "@vendetta/metro/common";
 
+import RNFS from "$/wrappers/RNFS";
+
 import type { LangValues } from "../../lang/defs";
+
+const url = `https://raw.githubusercontent.com/nexpid/VendettaPlugins/main/lang/values/`;
+
+const make = () =>
+  RNFS.hasRNFS &&
+  RNFS.mkdir(`${RNFS.DocumentDirectoryPath}/vendetta/NexpidLang`);
+const filePath = (plugin: string) =>
+  `${RNFS.DocumentDirectoryPath}/vendetta/NexpidLang/${plugin}.json`;
+const etagPath = (plugin: string) =>
+  `${RNFS.DocumentDirectoryPath}/vendetta/NexpidLang/${plugin}_etag.txt`;
 
 export class Lang<Plugin extends keyof LangValues> {
   private values: Record<string, Record<string, string>> | null = null;
@@ -21,7 +33,45 @@ export class Lang<Plugin extends keyof LangValues> {
   }
 
   private async load() {
+    const read = async () => {
+      if (await RNFS.exists(filePath(this.plugin)))
+        try {
+          this.values = JSON.parse(await RNFS.readFile(filePath(this.plugin)));
+        } catch {
+          return;
+        }
+    };
+
     if (DEV_LANG) this.values = DEV_LANG;
+    else {
+      const res = await fetch(`${url}${this.plugin}.json`, {
+        headers: {
+          "cache-control": "public, max-age=20",
+        },
+      });
+      if (!res.ok) return read();
+
+      make();
+      const lastEtag =
+        (await RNFS.exists(etagPath(this.plugin))) &&
+        (await RNFS.readFile(etagPath(this.plugin)));
+
+      const newEtag = res.headers.get("etag");
+      if (!newEtag) return read();
+
+      if (newEtag !== lastEtag) {
+        RNFS.writeFile(etagPath(this.plugin), newEtag);
+
+        const txt = await res.text();
+        RNFS.writeFile(filePath(this.plugin), txt);
+
+        try {
+          this.values = JSON.parse(txt);
+        } catch {
+          return;
+        }
+      } else read();
+    }
   }
 
   unload() {
