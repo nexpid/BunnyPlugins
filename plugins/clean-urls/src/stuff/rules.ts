@@ -8,9 +8,12 @@ import rawList from "../../assets/list.json";
 import { listUrl } from "..";
 
 const make = () =>
-  RNFS.hasRNFS && RNFS.mkdir(`${RNFS.DocumentDirectoryPath}/CleanURLs`);
-const filePath = () => `${RNFS.DocumentDirectoryPath}/CleanURLs/list.json`;
-const etagPath = () => `${RNFS.DocumentDirectoryPath}/CleanURLs/list_etag.txt`;
+  RNFS.hasRNFS &&
+  RNFS.mkdir(`${RNFS.DocumentDirectoryPath}/vendetta/CleanURLs`);
+const filePath = () =>
+  `${RNFS.DocumentDirectoryPath}/vendetta/CleanURLs/list.json`;
+const etagPath = () =>
+  `${RNFS.DocumentDirectoryPath}/vendetta/CleanURLs/list_etag.txt`;
 
 const Rules = Joi.object({
   main: [Joi.string()],
@@ -61,21 +64,31 @@ const parseRules = (rules: {
 };
 
 const fetchRules = async () => {
+  const read = async () => {
+    if (await RNFS.exists(filePath()))
+      try {
+        cachedRules = parseRules(JSON.parse(await RNFS.readFile(filePath())));
+      } catch {
+        // continue
+      }
+  };
+
   if (IS_DEV) {
     cachedRules = parseRules(rawList);
   } else {
-    make();
-    const lastEtag =
-      (await RNFS.exists(etagPath())) && (await RNFS.readFile(etagPath()));
     const res = await fetch(listUrl, {
       headers: {
         "cache-control": "public; max-age=20",
       },
     });
-    if (!res.ok) return;
+    if (!res.ok) return read();
+
+    make();
+    const lastEtag =
+      (await RNFS.exists(etagPath())) && (await RNFS.readFile(etagPath()));
 
     const newEtag = res.headers.get("etag");
-    if (!newEtag) return;
+    if (!newEtag) return read();
 
     if (newEtag !== lastEtag) {
       RNFS.writeFile(etagPath(), newEtag);
@@ -85,9 +98,9 @@ const fetchRules = async () => {
       try {
         cachedRules = parseRules(JSON.parse(txt));
       } catch {
-        // continue
+        return;
       }
-    }
+    } else read();
   }
 };
 
