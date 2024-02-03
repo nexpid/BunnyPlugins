@@ -17,7 +17,7 @@ import {
   openSheet,
 } from "$/types";
 
-import { cache, canImport, isPluginProxied } from "../..";
+import { cache, canImport, isPluginProxied, lang } from "../..";
 import { importData, SyncImportOptions } from "../../stuff/syncStuff";
 import { DBSave } from "../../types/api/latest";
 import { openImportLogsPage } from "../pages/ImportLogsPage";
@@ -72,7 +72,7 @@ export default function ImportActionSheet({
     <ActionSheet>
       <ActionSheetContentContainer>
         <ActionSheetTitleHeader
-          title={"Import Data"}
+          title={lang.format("sheet.import_data.title", {})}
           trailing={
             <ActionSheetCloseButton onPress={() => hideActionSheet()} />
           }
@@ -97,7 +97,7 @@ export default function ImportActionSheet({
                 color="TEXT_BRAND"
                 align="center"
               >
-                All addons in the cloud are already imported
+                {lang.format("sheet.import_data.already_synced", {})}
               </SimpleText>
             </View>
           </>
@@ -109,11 +109,13 @@ export default function ImportActionSheet({
             has.unproxiedPlugins &&
             (!options.unproxiedPlugins && !defOptions
               ? showConfirmationAlert({
-                  title: "Warning",
-                  content:
-                    "Installing unproxied plugins can be dangerous since they haven't been verified by Vendetta staff. Are you sure you want to import them?",
+                  title: lang.format("alert.unproxied_plugin_warn.title", {}),
+                  content: lang.format("alert.unproxied_plugin_warn.body", {}),
                   isDismissable: true,
-                  confirmText: "Yes",
+                  confirmText: lang.format(
+                    "alert.unproxied_plugin_warn.confirm",
+                    {},
+                  ),
                   confirmColor: "brand" as ButtonColors,
                   onConfirm: () =>
                     openSheet(ImportActionSheet, {
@@ -133,7 +135,9 @@ export default function ImportActionSheet({
           selected={options.unproxiedPlugins}
         />
         <FormCheckboxRow
-          label={`Plugins (${has.plugins})`}
+          label={lang.format("sheet.import_data.plugins", {
+            count: has.plugins,
+          })}
           disabled={!has.plugins}
           onPress={() =>
             has.plugins &&
@@ -145,7 +149,7 @@ export default function ImportActionSheet({
           selected={options.plugins}
         />
         <FormCheckboxRow
-          label={`Themes (${has.themes})`}
+          label={lang.format("sheet.import_data.themes", { count: has.themes })}
           disabled={!has.themes}
           onPress={() =>
             has.themes &&
@@ -157,7 +161,7 @@ export default function ImportActionSheet({
           selected={options.themes}
         />
         <RedesignButton
-          text="Import"
+          text={lang.format("sheet.import_data.import", {})}
           variant="positive"
           size="md"
           icon={getAssetIDByName("ic_download_24px")}

@@ -9,7 +9,7 @@ import { showToast } from "@vendetta/ui/toasts";
 
 import { RNBundleUpdaterManager, RNMMKVManager } from "$/deps";
 
-import { canImport, isPluginProxied, vstorage } from "..";
+import { canImport, isPluginProxied, lang, vstorage } from "..";
 import {
   addLog,
   clearLogs,
@@ -52,6 +52,11 @@ export function setImportCallback(fnc: typeof importCallback) {
   importCallback = fnc;
 }
 
+const plural = (len: number) =>
+  len !== 1
+    ? lang.format("combo.plugins.plural", { count: len })
+    : lang.format("combo.plugins", {});
+
 export type SyncImportOptions = Record<
   "unproxiedPlugins" | "plugins" | "themes",
   boolean
@@ -85,31 +90,31 @@ export async function importData(
 
   if (!iplugins[0] && !ithemes[0]) {
     importCallback?.(false);
-    return showToast("Nothing to import", getAssetIDByName("Small"));
+    return showToast(
+      lang.format("toast.sync.no_import", {}),
+      getAssetIDByName("Small"),
+    );
   }
 
   clearLogs();
   addLog(
     "importer",
-    `Starting to import ${iplugins.length} plugin${
-      iplugins.length !== 1 ? "s" : ""
-    } and ${ithemes.length} theme${ithemes.length !== 1 ? "s" : ""}`,
+    lang.format("log.import.start.combo", {
+      plugins: plural(iplugins.length),
+      themes: plural(ithemes.length),
+    }),
   );
 
   if (!isInPage)
     showToast(
-      `Importing ${[
-        iplugins.length &&
-          `${iplugins.length} plugin${iplugins.length !== 1 ? "s" : ""}`,
-        ithemes.length &&
-          `${ithemes.length} theme${ithemes.length !== 1 ? "s" : ""}`,
-      ]
-        .filter((x) => !!x)
-        .join(" and ")}`,
+      lang.format("log.import.start.combo", {
+        plugins: plural(iplugins.length),
+        themes: plural(ithemes.length),
+      }),
       getAssetIDByName("toast_image_saved"),
     );
 
-  const status = { plugins: 0, themes: 0, failed: 0 };
+  const status = { plugins: 0, themes: 0, fPlugins: 0, fThemes: 0 };
   await Promise.all([
     ...iplugins.map(
       (x) =>
@@ -118,11 +123,17 @@ export async function importData(
           installPlugin(x.id, x.enabled)
             .then(() => {
               status.plugins++;
-              addLog("plugins", `Successfully imported plugin: ${x.id}`);
+              addLog(
+                "plugins",
+                lang.format("log.import.plugin.success", { name: x.id }),
+              );
             })
             .catch((e) => {
-              status.failed++;
-              addLog("plugins", `Failed to import plugin: ${x.id}\n${e}`);
+              status.fPlugins++;
+              addLog(
+                "plugins",
+                lang.format("log.import.plugin.fail", { name: x.id, error: e }),
+              );
             })
             .finally(res);
         }),
@@ -133,11 +144,17 @@ export async function importData(
           installTheme(x.id)
             .then(() => {
               status.themes++;
-              addLog("themes", `Successfully imported theme: ${x.id}`);
+              addLog(
+                "themes",
+                lang.format("log.import.theme.success", { name: x.id }),
+              );
             })
             .catch((e) => {
-              status.failed++;
-              addLog("themes", `Failed to import theme: ${x.id}\n${e}`);
+              status.fThemes++;
+              addLog(
+                "themes",
+                lang.format("log.import.theme.fail", { name: x.id, error: e }),
+              );
             })
             .finally(res),
         ),
@@ -146,37 +163,37 @@ export async function importData(
 
   if (!isInPage)
     showToast(
-      `Imported ${[
-        [status.plugins, "plugin"],
-        [status.themes, "theme"],
-      ]
-        .map(([count, label]) => `${count} ${label}${count !== 1 ? "s" : ""}`)
-        .join(" and ")}! (${status.failed} failed)`,
-      getAssetIDByName("check"),
+      lang.format("log.import.total", {
+        plugins: plural(status.plugins),
+        themes: plural(status.themes),
+      }),
+      getAssetIDByName("Check"),
     );
 
   const selectTheme = themes[ithemes.find((x) => x.enabled)?.id];
   if (selectTheme) {
-    addLog("themes", `Selecting theme: ${selectTheme.id}`);
+    addLog(
+      "themes",
+      lang.format("log.import.select_theme", { theme: selectTheme.id }),
+    );
     await createFileBackend("vendetta_theme.json").set(
       Object.assign(selectTheme, {
         selected: true,
       }),
     );
-    addLog("themes", "Prompting user to reload");
+
     await (() =>
       new Promise<void>((res) =>
         showConfirmationAlert({
-          title: "Theme selected",
-          content:
-            "A reload is required to see the theme. Do you want to reload now?",
-          confirmText: "Reload",
+          title: lang.format("alert.change_theme.title", {}),
+          content: lang.format("alert.change_theme.body", {}),
+          confirmText: lang.format("alert.change_theme.confirm", {}),
           confirmColor: "red" as ButtonColors,
           onConfirm: () => {
             RNBundleUpdaterManager.reload();
             res();
           },
-          cancelText: "Skip",
+          cancelText: lang.format("alert.change_theme.cancel", {}),
           onCancel: res,
           isDismissable: true,
         }),
@@ -185,15 +202,17 @@ export async function importData(
 
   addLog(
     "importer",
-    `Finished! Imported ${status.plugins} plugin${
-      status.plugins !== 1 ? "s" : ""
-    } and ${status.themes} theme${status.themes !== 1 ? "s" : ""}. ${
-      status.failed
-        ? `Failed to import ${status.failed} plugin${
-            status.failed !== 1 ? "s" : ""
-          }/theme${status.failed !== 1 ? "s" : ""}`
-        : "All imports were successful"
-    }`,
+    status.fPlugins || status.fThemes
+      ? lang.format("log.import.result.fail", {
+          plugins: plural(status.plugins),
+          themes: plural(status.themes),
+          failed_plugins: plural(status.fPlugins),
+          failed_themes: plural(status.fThemes),
+        })
+      : lang.format("log.import.result.success", {
+          plugins: plural(status.plugins),
+          themes: plural(status.themes),
+        }),
   );
   importCallback?.(false);
 }

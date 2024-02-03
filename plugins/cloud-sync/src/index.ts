@@ -4,6 +4,7 @@ import { plugins } from "@vendetta/plugins";
 import { createStorage, wrapSync } from "@vendetta/storage";
 import { themes } from "@vendetta/themes";
 
+import { Lang } from "$/lang";
 import { makeStorage } from "$/storage";
 
 import Settings from "./components/Settings";
@@ -67,6 +68,8 @@ const autoSync = async () => {
 const emitterSymbol = Symbol.for("vendetta.storage.emitter");
 export const emitterAvailable =
   !!(plugins as any)[emitterSymbol] && !!(themes as any)[emitterSymbol];
+
+export const lang = new Lang("cloud_sync");
 
 const patches = [];
 export default {

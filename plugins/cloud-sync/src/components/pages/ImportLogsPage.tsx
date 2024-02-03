@@ -6,6 +6,8 @@ import {
 } from "@vendetta/metro/common";
 import { semanticColors } from "@vendetta/ui";
 
+import { lang } from "../..";
+
 export let isInPage = false;
 
 let logged: () => void;
@@ -67,7 +69,7 @@ export const ImportLogsPage = () => {
               },
             ]}
           >
-            [{scope.toUpperCase()}]:
+            [{lang.format(`log.${scope as keyof typeof logScopes}`, {})}]:
           </RN.Text>,
           ` ${message}\n`,
         ])}
@@ -79,6 +81,6 @@ export const ImportLogsPage = () => {
 export function openImportLogsPage(navigation: any) {
   navigation.push("VendettaCustomPage", {
     render: ImportLogsPage,
-    title: "Import Logs",
+    title: lang.format("page.import_logs", {}),
   });
 }

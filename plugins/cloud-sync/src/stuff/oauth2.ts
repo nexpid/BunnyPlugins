@@ -2,7 +2,7 @@ import { findByName, findByProps, findByStoreName } from "@vendetta/metro";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { showToast } from "@vendetta/ui/toasts";
 
-import { fillCache, vstorage } from "..";
+import { fillCache, lang, vstorage } from "..";
 import constants from "../constants";
 import { getOauth2Response } from "./api";
 
@@ -37,7 +37,10 @@ export function openOauth2Modal() {
             vstorage.auth[UserStore.getCurrentUser().id] = token;
             fillCache();
 
-            showToast("Successfully authenticated", getAssetIDByName("Check"));
+            showToast(
+              lang.format("toast.oauth.authorized", {}),
+              getAssetIDByName("Check"),
+            );
           } catch (e: any) {
             showToast(String(e), getAssetIDByName("Small"));
           }

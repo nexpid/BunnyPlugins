@@ -11,7 +11,7 @@ import { Forms, Search, Summary } from "@vendetta/ui/components";
 
 import SuperAwesomeIcon from "$/components/SuperAwesomeIcon";
 
-import { vstorage } from "../..";
+import { lang, vstorage } from "../..";
 
 const { FormSwitchRow } = Forms;
 
@@ -29,14 +29,17 @@ export default () => {
   const unsub = navigation.addListener("focus", () => {
     unsub();
     navigation.setOptions({
-      title: "Plugin Settings",
+      title: lang.format("page.plugin_settings.title", {}),
       headerRight: () => (
         <SuperAwesomeIcon
           onPress={() =>
             showConfirmationAlert({
-              title: "Revert Settings",
-              content: "Are you sure you want to revert all plugin settings?",
-              confirmText: "Revert",
+              title: lang.format("alert.plugin_settings_revert.title", {}),
+              content: lang.format("alert.plugin_settings_revert.body", {}),
+              confirmText: lang.format(
+                "alert.plugin_settings_revert.confirm",
+                {},
+              ),
               confirmColor: "red" as ButtonColors,
               onConfirm: () => (vstorage.pluginSettings = {}),
             })
@@ -80,7 +83,7 @@ export default () => {
             icon={item.manifest.vendetta.icon ?? ":3"}
           >
             <FormSwitchRow
-              label="Sync Plugin"
+              label={lang.format("page.plugin_settings.sync_plugin", {})}
               onValueChange={() => {
                 config.syncPlugin = !config.syncPlugin;
                 updateConfig();
@@ -88,7 +91,10 @@ export default () => {
               value={config.syncPlugin}
             />
             <FormSwitchRow
-              label="Sync Plugin Storage"
+              label={lang.format(
+                "page.plugin_settings.sync_plugin_storage",
+                {},
+              )}
               onValueChange={() => {
                 config.syncStorage = !config.syncStorage;
                 updateConfig();

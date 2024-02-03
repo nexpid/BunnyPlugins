@@ -1,6 +1,6 @@
 import { findByStoreName } from "@vendetta/metro";
 
-import { AuthRecord, vstorage } from "..";
+import { AuthRecord, lang, vstorage } from "..";
 import constants from "../constants";
 import { DBSave } from "../types/api/latest";
 
@@ -24,7 +24,7 @@ export function currentAuthorization(): AuthRecord | undefined {
   return vstorage.auth[UserStore.getCurrentUser()?.id];
 }
 export async function getAuthorization(): Promise<string> {
-  const e = new Error("Unauthorized, try logging out and back in again");
+  const e = new Error(lang.format("toast.api.unauthorized", {}));
   let auth = currentAuthorization();
   if (!auth) throw e;
 

@@ -4,6 +4,8 @@ import { General } from "@vendetta/ui/components";
 
 import { TextStyleSheet } from "$/types";
 
+import { lang } from "..";
+
 const { View, Text } = General;
 
 const styles = stylesheet.createThemedStyleSheet({
@@ -23,7 +25,7 @@ export default function ({
   subtitle,
   count,
 }: {
-  subtitle: string;
+  subtitle: keyof typeof lang.Values;
   count: string | number;
 }) {
   return (
@@ -35,7 +37,7 @@ export default function ({
       }}
     >
       <Text style={styles.count}>{count}</Text>
-      <Text style={styles.subtitle}>{subtitle}</Text>
+      <Text style={styles.subtitle}>{lang.format(subtitle, {})}</Text>
     </View>
   );
 }

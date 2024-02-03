@@ -2,6 +2,7 @@ import { NavigationNative } from "@vendetta/metro/common";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { ErrorBoundary, Forms } from "@vendetta/ui/components";
 
+import { lang } from "..";
 import Settings from "./Settings";
 
 const { FormRow } = Forms;
@@ -13,12 +14,12 @@ export default () => {
   return (
     <ErrorBoundary>
       <FormRow
-        label="Cloud Sync"
+        label={lang.format("plugin.name", {})}
         leading={<FormRow.Icon source={getAssetIDByName("ic_contact_sync")} />}
         trailing={FormRow.Arrow}
         onPress={() =>
           navigation.push("VendettaCustomPage", {
-            title: "CloudSync",
+            title: lang.format("plugin.name", {}),
             render: Settings,
           })
         }
