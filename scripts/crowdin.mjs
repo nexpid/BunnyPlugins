@@ -26,6 +26,6 @@ for (const [plugin, dt] of Object.entries(data)) {
   console.log(`Wrote ${plugin}.json`);
 }
 
-write(join(".", "base"), join("..", "lang", "defs.d.ts"));
+write(join(".", "base"), join(dir, "..", "lang", "defs.d.ts"));
 
 console.log("Done");
