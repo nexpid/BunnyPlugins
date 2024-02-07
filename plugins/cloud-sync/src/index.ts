@@ -5,7 +5,6 @@ import { createStorage, wrapSync } from "@vendetta/storage";
 import { themes } from "@vendetta/themes";
 
 import { Lang } from "$/lang";
-import { makeStorage } from "$/storage";
 
 import Settings from "./components/Settings";
 import { currentAuthorization, getSaveData, syncSaveData } from "./stuff/api";
@@ -20,20 +19,20 @@ export interface AuthRecord {
   expiresAt: number;
 }
 
-export const vstorage = makeStorage({
-  autoSync: false,
-  addToSettings: false,
-  pluginSettings: {} as Record<
+export const vstorage = storage as {
+  autoSync: boolean;
+  addToSettings: boolean;
+  pluginSettings: Record<
     string,
     {
       syncPlugin: boolean;
       syncStorage: boolean;
     }
-  >,
-  auth: {} as Record<string, AuthRecord>,
-  host: undefined as string,
-  clientId: undefined as string,
-});
+  >;
+  auth: Record<string, AuthRecord>;
+  host?: string;
+  clientId?: string;
+};
 
 let _cache: any;
 export const cache: {
@@ -74,6 +73,11 @@ export const lang = new Lang("cloud_sync");
 const patches = [];
 export default {
   onLoad: () => {
+    vstorage.autoSync ??= false;
+    vstorage.addToSettings ??= false;
+    vstorage.pluginSettings ??= {};
+    vstorage.auth ??= {};
+
     if (currentAuthorization()) fillCache();
 
     if (emitterAvailable) {

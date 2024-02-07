@@ -1,14 +1,13 @@
 import { logger } from "@vendetta";
 import { findByProps, findByStoreName } from "@vendetta/metro";
 import { React } from "@vendetta/metro/common";
-import { id } from "@vendetta/plugin";
+import { id, storage } from "@vendetta/plugin";
 import { createFileBackend } from "@vendetta/storage";
 import { showConfirmationAlert, showCustomAlert } from "@vendetta/ui/alerts";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { showToast } from "@vendetta/ui/toasts";
 
 import { RNBundleUpdaterManager } from "$/deps";
-import { makeStorage } from "$/storage";
 import { VendettaSysColors } from "$/typings";
 
 import settings, { setColorsFromDynamic } from "./components/Settings";
@@ -51,29 +50,26 @@ export const makeApplyCache = (
 export const makeThemeApplyCache = () =>
   JSON.stringify(vstorage.config.style === "auto" ? ThemeStore.theme : null);
 
-const initSyscolors = window[
-  window.__vendetta_loader?.features?.syscolors?.prop
-] as VendettaSysColors | null | undefined;
-export const vstorage = makeStorage({
+export const vstorage = storage as {
   colors: {
-    neutral1: initSyscolors?.neutral1[7] ?? "#747679",
-    neutral2: initSyscolors?.neutral2[7] ?? "#70777C",
-    accent1: initSyscolors?.accent1[7] ?? "#007FAC",
-    accent2: initSyscolors?.accent2[7] ?? "#657985",
-    accent3: initSyscolors?.accent3[7] ?? "#787296",
-  },
+    neutral1: string;
+    neutral2: string;
+    accent1: string;
+    accent2: string;
+    accent3: string;
+  };
   config: {
-    style: "auto" as "dark" | "light" | "auto",
-    wallpaper: "none" as string | "none",
-  },
-  autoReapply: false,
-  applyCache: makeApplyCache(initSyscolors),
-  themeApplyCache: null,
+    style: "dark" | "light" | "auto";
+    wallpaper: string | "none";
+  };
+  autoReapply: boolean;
+  applyCache: string;
+  themeApplyCache?: string;
   patches: {
-    from: "git",
-    commit: undefined as string | undefined,
-  },
-});
+    from: "git" | "local";
+    commit?: string;
+  };
+};
 
 const Alerts = findByProps("openLazy", "close");
 
@@ -82,6 +78,26 @@ export const patches = [];
 export default {
   settings,
   onLoad: async () => {
+    const initSyscolors = window[
+      window.__vendetta_loader?.features?.syscolors?.prop
+    ] as VendettaSysColors | null | undefined;
+    vstorage.colors ??= {
+      neutral1: initSyscolors?.neutral1[7] ?? "#747679",
+      neutral2: initSyscolors?.neutral2[7] ?? "#70777C",
+      accent1: initSyscolors?.accent1[7] ?? "#007FAC",
+      accent2: initSyscolors?.accent2[7] ?? "#657985",
+      accent3: initSyscolors?.accent3[7] ?? "#787296",
+    };
+    vstorage.config ??= {
+      style: "auto",
+      wallpaper: "none",
+    };
+    vstorage.autoReapply ??= false;
+    vstorage.applyCache ??= makeApplyCache(initSyscolors);
+    vstorage.patches ??= {
+      from: "git",
+    };
+
     const syscolors = getSysColors();
     const made = makeApplyCache(syscolors);
     const themeMade = makeThemeApplyCache();

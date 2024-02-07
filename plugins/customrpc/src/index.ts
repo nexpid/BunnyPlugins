@@ -1,5 +1,6 @@
+import { storage } from "@vendetta/plugin";
+
 import { RNMMKVManager } from "$/deps";
-import { makeStorage } from "$/storage";
 
 import settings from "./components/Settings";
 import {
@@ -12,22 +13,22 @@ import {
 import { registerDefaultChanges, unregisterChanges } from "./stuff/autochange";
 import PresetProfiles from "./stuff/presetProfiles";
 
-export const vstorage = makeStorage({
+export const vstorage = storage as {
   settings: {
-    edit: false,
-    display: false,
+    edit: boolean;
+    display: boolean;
     debug: {
-      enabled: false,
-      visible: false,
-      boykisserDead: false,
-    },
-  },
+      enabled: boolean;
+      visible: boolean;
+      boykisserDead: boolean;
+    };
+  };
   activity: {
-    profile: undefined as string | undefined,
-    editing: makeEmptySettingsActivity(),
-  },
-  profiles: PresetProfiles as Record<string, SettingsActivity>,
-});
+    profile?: string;
+    editing: SettingsActivity;
+  };
+  profiles: Record<string, SettingsActivity>;
+};
 
 export const debug: {
   lastRawActivity: RawActivity | undefined;
@@ -39,6 +40,20 @@ export const debug: {
 
 export default {
   onLoad: async () => {
+    vstorage.settings ??= {
+      edit: false,
+      display: false,
+      debug: {
+        enabled: false,
+        visible: false,
+        boykisserDead: false,
+      },
+    };
+    vstorage.activity ??= {
+      editing: makeEmptySettingsActivity(),
+    };
+    vstorage.profiles ??= PresetProfiles;
+
     if (vstorage.settings.debug)
       vstorage.settings.debug.boykisserDead =
         (await RNMMKVManager.getItem("CRPC_boykisser")) === "true";

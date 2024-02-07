@@ -1,12 +1,12 @@
-import { makeStorage } from "$/storage";
+import { storage } from "@vendetta/plugin";
 
 import settings from "./components/Settings";
 import patcher from "./stuff/patcher";
 
-export const vstorage = makeStorage({
-  pinned: {} as Record<string, { id: string; pinned: number }[]>,
-  preferFilters: ["server", "local"] as ("server" | "local")[],
-});
+export const vstorage = storage as {
+  pinned: Record<string, { id: string; pinned: number }[]>;
+  preferFilters: ("server" | "local")[];
+};
 
 // TODO add some kind of compression
 export function getPins(channel: string) {
@@ -40,7 +40,12 @@ export function removePin(channel: string, id: string) {
 
 let unpatch: () => void;
 export default {
-  onLoad: () => (unpatch = patcher()),
+  onLoad: () => {
+    vstorage.pinned ??= {};
+    vstorage.preferFilters ??= ["server", "local"];
+
+    unpatch = patcher();
+  },
   onUnload: () => unpatch(),
   settings,
 };

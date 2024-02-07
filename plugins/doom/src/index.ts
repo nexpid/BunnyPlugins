@@ -1,8 +1,8 @@
 import { findByStoreName } from "@vendetta/metro";
 
-import { makeStorage } from "$/storage";
-
 const UserStore = findByStoreName("UserStore");
+
+import { storage } from "@vendetta/plugin";
 
 import App from "./components/App";
 
@@ -23,10 +23,14 @@ export function newGameSuggestionURL() {
   return `https://github.com/nexpid/VendettaDOOM/issues/new?${params}`;
 }
 
-export const vstorage = makeStorage({
+export const vstorage = storage as {
   settings: {
-    game: "doom1",
-  },
-});
+    game: string;
+  };
+};
 
+export const onLoad = () =>
+  (vstorage.settings ??= {
+    game: "doom1",
+  });
 export const settings = App;

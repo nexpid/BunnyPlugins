@@ -1,5 +1,6 @@
+import { storage } from "@vendetta/plugin";
+
 import { Lang } from "$/lang";
-import { makeStorage } from "$/storage";
 
 import settings from "./components/Settings";
 import patcher from "./stuff/patcher";
@@ -35,13 +36,13 @@ export const active: {
   blehhh: [],
 };
 
-export const vstorage = makeStorage({
+export const vstorage = storage as {
   iconpack: {
-    url: null,
-    suffix: "",
-    force: null,
-  },
-});
+    url: null;
+    suffix: "";
+    force: null;
+  };
+};
 
 export let cacheID = Math.floor(Math.random() * Number.MAX_SAFE_INTEGER);
 export function resetCacheID() {
@@ -63,7 +64,14 @@ export function runUnpatch(exit: boolean) {
 export const lang = new Lang("themes_plus");
 
 export default {
-  onLoad: () => runPatch(),
+  onLoad: () => {
+    vstorage.iconpack ??= {
+      url: null,
+      suffix: "",
+      force: null,
+    };
+    runPatch();
+  },
   onUnload: () => runUnpatch(true),
   settings,
 };

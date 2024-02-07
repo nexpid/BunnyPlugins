@@ -1,6 +1,5 @@
+import { storage } from "@vendetta/plugin";
 import { createStorage, wrapSync } from "@vendetta/storage";
-
-import { makeStorage } from "$/storage";
 
 import settings from "./components/Settings";
 import { currentAuthorization, getSaveData } from "./stuff/api";
@@ -13,10 +12,10 @@ export interface AuthRecord {
   expiresAt: number;
 }
 
-export const vstorage = makeStorage({
-  host: undefined as string,
-  auth: {} as Record<string, AuthRecord>,
-});
+export const vstorage = storage as {
+  host?: string;
+  auth: Record<string, AuthRecord>;
+};
 
 let _cache: any;
 export const cache: {
@@ -41,6 +40,8 @@ export async function fillCache() {
 let unpatch: () => void;
 export default {
   onLoad: () => {
+    vstorage.auth ??= {};
+
     if (currentAuthorization()) fillCache();
     unpatch = patcher();
   },
