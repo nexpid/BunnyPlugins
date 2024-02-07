@@ -38,9 +38,9 @@ export const active: {
 
 export const vstorage = storage as {
   iconpack: {
-    url: null;
-    suffix: "";
-    force: null;
+    url?: string;
+    suffix: string;
+    force?: string;
   };
 };
 
