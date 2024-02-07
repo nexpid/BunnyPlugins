@@ -42,7 +42,7 @@ interface Window {
       ) => void;
       props: {
         collect: (key: string, prop: string, parent: any) => void;
-        redeem: (key: string) => object | undefined;
+        redeem: (key: string, save?: boolean) => object | undefined;
       };
     };
   };

@@ -75,9 +75,43 @@ export default function () {
         collect: (key: string, prop: string, parent: any) => {
           collected.get(key)?.unpatch();
 
+          let ran = false;
           const unpatch = before(prop, parent, ([props]) => {
-            for (const p of Object.keys(props))
-              !(p in data && props[p]) && (data[p] = props[p]);
+            for (const p of Object.keys(props)) {
+              if (!data[p] && ran)
+                data[p] ??= {
+                  kinds: ["undefined"],
+                  stuff: ["undefined"],
+                };
+              else
+                data[p] ??= {
+                  kinds: [],
+                  stuff: [],
+                };
+              ran = true;
+
+              const stuff = Array.isArray(props[p]) ? props[p] : [props[p]];
+              for (const x of stuff) {
+                const kind = Array.isArray(x) ? "array" : typeof x;
+                if (
+                  !data[p].stuff.find(
+                    (y: any) => JSON.stringify(y) === JSON.stringify(x),
+                  )
+                )
+                  data[p].stuff.push(x);
+                if (!data[p].kinds.includes(kind)) data[p].kinds.push(kind);
+              }
+
+              console.log(`[NX]: Collected new prop for "${key}"`);
+            }
+
+            for (const r of Object.keys(data))
+              if (!(r in props)) {
+                if (!data[r].kinds.includes("undefined"))
+                  data[r].kinds.push("undefined");
+                if (!data[r].stuff.includes("undefined"))
+                  data[r].stuff.push("undefined");
+              }
           });
           patches.push(unpatch);
 
@@ -87,12 +121,17 @@ export default function () {
             get: () => data,
           });
         },
-        redeem: (key: string) => {
+        redeem: (key: string, save?: boolean) => {
           const coll = collected.get(key);
           if (!coll) return;
 
           coll.unpatch();
-          return coll.get();
+          if (save) {
+            // this is a debug thing i added to vdebug lol
+            console.log(
+              `DEBUG\0SAVEFILE\0${JSON.stringify("nexxutils_" + key + ".json")}\0${JSON.stringify(JSON.stringify(coll.get(), undefined, 3))}`,
+            );
+          } else return coll.get();
         },
       },
     },
