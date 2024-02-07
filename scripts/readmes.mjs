@@ -343,6 +343,16 @@ const mreadme = `${mdNote}
 
 A collection of all my awesome plugins for Vendetta
 
+# EOL
+
+Soo, Vendetta has reached an EOL.
+
+## What now?
+
+For starters, I'm not ready to quit the whole Discord modding scene just yet. That's why, if I ever find a good successor to Vendetta, (e.g. a well maintained Vendetta fork/Enmity V3, or something completely new!) I'll port over my plugins to said project!
+
+thank you to every dev that decided to contribute to any of my plugins or Vendetta. y'all are so cool
+
 # 📊 Stats
 
 I've coded a total of **${stats.all}** plugin${plur(stats.all)}.  
