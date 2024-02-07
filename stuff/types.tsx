@@ -46,11 +46,8 @@ export const modalCloseButton =
   findByProps("getHeaderCloseButton")?.getHeaderCloseButton;
 export const { popModal, pushModal } = findByProps("popModal", "pushModal");
 
-export const Redesign = (findByProps(
-  "Button",
-  "SegmentedControl",
-  "TextInput",
-) ?? {}) as _Redesign;
+export const Redesign = (findByProps("Button", "ContextMenu", "TextInput") ??
+  {}) as _Redesign;
 
 export type Entries<T> = [keyof T, T[keyof T]];
 

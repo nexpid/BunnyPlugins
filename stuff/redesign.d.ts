@@ -14,6 +14,13 @@ type TextButtonIcon = React.FC<{
   variant?: "entity";
 }>;
 
+interface ContextMenuItem {
+  label: string;
+  iconSource?: import("react-native").ImageSourcePropType;
+  IconComponent?: React.JSXElementConstructor;
+  action: () => void;
+}
+
 export type Redesign = {
   Button: React.FC<{
     variant: ButtonVariant;
@@ -31,15 +38,14 @@ export type Redesign = {
     Icon: TextButtonIcon;
   };
 
-  SegmentedControl: React.FC<{
-    state: any;
-    variant?: any;
-    activeIndex: any;
-    scrollOverflow: any;
-    items: any[];
-    pageWidth: number;
-    pressedIndex: any;
-    setActiveIndex: any;
+  ContextMenu: React.FC<{
+    triggerOnLongPress?: boolean;
+    items?: ContextMenuItem[] | ContextMenuItem[][];
+    align?: "left" | "below" | "above" | "right";
+    title?: string;
+    children?: () => React.ReactNode;
+    disableGesture?: boolean;
+    returnRef?: object;
   }>;
 
   TextInput: React.FC<{
