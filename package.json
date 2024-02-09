@@ -29,7 +29,7 @@
     "chokidar": "^3.5.3",
     "esbuild": "^0.20.0",
     "eslint": "^8.56.0",
-    "eslint-plugin-simple-import-sort": "^10.0.0",
+    "eslint-plugin-simple-import-sort": "^11.0.0",
     "eslint-plugin-unused-imports": "^3.0.0",
     "joi": "^17.11.0",
     "prettier": "^3.2.4",
