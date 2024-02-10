@@ -16,10 +16,8 @@ import { FadeView } from "$/components/Animations";
 import { BetterTableRowGroup } from "$/components/BetterTableRow";
 import LineDivider from "$/components/LineDivider";
 import SuperAwesomeIcon from "$/components/SuperAwesomeIcon";
-import { RNMMKVManager } from "$/deps";
-import { openPluginReportSheet } from "$/githubReport";
 
-import { vstorage } from "..";
+import { isDead, setDied, vstorage } from "..";
 import {
   dispatchActivityIfPossible,
   isActivitySaved,
@@ -67,33 +65,16 @@ export default () => {
 
   useProxy(vstorage);
 
-  React.useEffect(() => {
-    if (vstorage.settings.debug.boykisserDead === undefined) return;
-    if (vstorage.settings.display) dispatchActivityIfPossible();
-  }, [
-    JSON.stringify(vstorage.activity.editing),
-    vstorage.settings.display,
-    vstorage.settings.debug.boykisserDead === undefined,
-  ]);
-
-  if (vstorage.settings.debug.boykisserDead === undefined) {
-    RNMMKVManager.getItem("CRPC_boykisser").then((x) => {
-      vstorage.settings.debug.boykisserDead = x === "true";
-      forceUpdate();
-    });
-    return <RN.ActivityIndicator style={{ flex: 1 }} />;
-  }
+  React.useEffect(
+    () => vstorage.settings.display && dispatchActivityIfPossible(),
+    [JSON.stringify(vstorage.activity.editing), vstorage.settings.display],
+  );
 
   const unsub = navigation.addListener("focus", () => {
     unsub();
     navigation.setOptions({
       headerRight: () => (
         <View style={{ flexDirection: "row-reverse" }}>
-          <SuperAwesomeIcon
-            style="header"
-            icon={getAssetIDByName("ic_report_message")}
-            onPress={() => openPluginReportSheet("customrpc")}
-          />
           <SuperAwesomeIcon
             style="header"
             icon={getAssetIDByName("ic_essentials_sparkle")}
@@ -133,7 +114,7 @@ export default () => {
         ]}
         fade={"out"}
         duration={1000}
-        trigger={vstorage.settings.debug.boykisserDead}
+        trigger={isDead()}
         setDisplay={true}
         animateOnInit={false}
       />
@@ -149,7 +130,7 @@ export default () => {
               vstorage.settings.debug.visible =
                 !vstorage.settings.debug.visible;
               showToast(
-                vstorage.settings.debug.boykisserDead
+                isDead()
                   ? `debug tab ${
                       vstorage.settings.debug.visible ? "on" : "off"
                     }`
@@ -169,13 +150,13 @@ export default () => {
               if (dbgCounter < 7) {
                 const more = 7 - dbgCounter;
                 return showToast(
-                  vstorage.settings.debug.boykisserDead
+                  isDead()
                     ? `tap ${more} more time${more !== 1 ? "s" : ""}`
                     : `${more} more taps`,
                 );
               } else {
                 showToast(
-                  vstorage.settings.debug.boykisserDead
+                  isDead()
                     ? "the sin of murdering boykisser continues to haunt you"
                     : "Behold! You can now debug!",
                 );
@@ -374,7 +355,7 @@ export default () => {
               }}
             />
 
-            {!vstorage.settings.debug.boykisserDead && (
+            {!isDead() && (
               <>
                 <LineDivider addPadding={true} />
                 <View style={{ paddingHorizontal: 16, paddingBottom: 16 }}>
@@ -394,8 +375,7 @@ export default () => {
                     }}
                     delayLongPress={500}
                     onLongPress={() => {
-                      if (vstorage.settings.debug.boykisserDead)
-                        return showToast("fuck you");
+                      if (isDead()) return showToast("fuck you");
 
                       if (bkCounterTimeout) clearTimeout(bkCounterTimeout);
                       bkCounterTimeout = setTimeout(() => {
@@ -415,8 +395,7 @@ export default () => {
                       ];
 
                       if (!messages[bkCounter]) {
-                        vstorage.settings.debug.boykisserDead = true;
-                        RNMMKVManager.setItem("CRPC_boykisser", "true");
+                        setDied(true);
                         forceUpdate();
                         showToast("you have MURDERED boykisser. fuck you");
                       } else showToast(messages[bkCounter]);

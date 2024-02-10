@@ -7,7 +7,7 @@ import SimpleText from "$/components/SimpleText";
 import { debug, vstorage } from "../..";
 import { dispatchActivityIfPossible } from "../../stuff/activity";
 
-const { View, Text } = General;
+const { ScrollView, Text } = General;
 const { FormSection } = Forms;
 
 export let forceUpdateLiveRawActivityView: () => void;
@@ -24,7 +24,7 @@ export const LiveRawActivityView = () => {
   });
 
   return (
-    <View>
+    <ScrollView style={{ flex: 1, marginBottom: 50 }}>
       <FormSection title="Live Raw Activity">
         {debug.lastRawActivity ? (
           <Text style={styles.code}>
@@ -52,7 +52,7 @@ export const LiveRawActivityView = () => {
             : "-"}
         </SimpleText>
       </FormSection>
-    </View>
+    </ScrollView>
   );
 };
 
