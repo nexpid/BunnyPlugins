@@ -186,7 +186,7 @@ export default () => {
   const debug = getDebugInfo() as any;
   const syscolors = window[
     window.__vendetta_loader?.features?.syscolors?.prop
-  ] as VendettaSysColors | null | undefined;
+  ] as VendettaSysColors | null;
 
   if (debug.os.name !== "Android")
     showMessage = {
@@ -198,12 +198,6 @@ export default () => {
     showMessage = {
       error: false,
       message: "Dynamic colors are only available on Android 12+ (SDK 31+).",
-      onPress: () => {},
-    };
-  else if (syscolors === undefined)
-    showMessage = {
-      error: false,
-      message: "Dynamic colors are only available on newest Vendetta version.",
       onPress: () => {},
     };
   else if (syscolors === null)

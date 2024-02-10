@@ -11,6 +11,8 @@ import { semanticColors } from "@vendetta/ui";
 import { ErrorBoundary, Forms } from "@vendetta/ui/components";
 import { findInReactTree, without } from "@vendetta/utils";
 
+import { getClient } from "./types";
+
 const { FormSection } = Forms;
 
 const getScreens = findByName("getScreens");
@@ -125,7 +127,7 @@ export function patchSettingsPin(
       const sections = nw ? cloned?.[0]?.sections : cloned;
       if (!Array.isArray(sections)) return sections;
 
-      const title = "Vendetta";
+      const title = getClient();
       const section = sections.find(
         (x) => x?.title === title || x?.label === title,
       );
@@ -174,7 +176,7 @@ export function patchSettingsPin(
                   ancestorRendererData: rendererConfig[screenKey],
                   setting: screenKey,
                   title: () => you.title,
-                  breadcrumbs: ["Vendetta"],
+                  breadcrumbs: [getClient()],
                   icon: rendererConfig[screenKey].icon,
                 },
               ]
@@ -220,7 +222,7 @@ export function patchSettingsPin(
       patches.push(
         after("getSettingListSearchResultItems", gettersModule, (_, ret) => {
           for (const s of ret)
-            if (s.setting === screenKey) s.breadcrumbs = ["Vendetta"];
+            if (s.setting === screenKey) s.breadcrumbs = [getClient()];
         }),
       );
 

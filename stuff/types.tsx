@@ -1,11 +1,10 @@
-import { logger } from "@vendetta";
+import { constants, logger } from "@vendetta";
 import {
   find,
   findByName,
   findByProps,
   findByStoreName,
 } from "@vendetta/metro";
-import { React } from "@vendetta/metro/common";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { showToast } from "@vendetta/ui/toasts";
 
@@ -115,7 +114,7 @@ export function openModal(key: string, modal: typeof Modal) {
         modalCloseButton ? empty : "modalCloseButton",
       ]
         .filter((x) => x !== empty)
-        .join(", ")} is missing! Please try reinstalling Vendetta`,
+        .join(", ")} is missing! Please try reinstalling your client.`,
       getAssetIDByName("Small"),
     );
 
@@ -137,6 +136,13 @@ export function doHaptic(dur: number): Promise<void> {
   return new Promise((res) =>
     setTimeout(() => res(clearInterval(interval)), dur),
   );
+}
+
+export function getClient() {
+  const gh = constants.GITHUB;
+  if (gh.includes("vendetta-mod")) return "Vendetta";
+  else if (gh.includes("revenge-mod")) return "Revenge";
+  else return "Enmity"; // troll
 }
 
 // ...

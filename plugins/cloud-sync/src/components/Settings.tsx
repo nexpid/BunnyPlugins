@@ -118,7 +118,7 @@ export default function () {
             color="TEXT_DANGER"
             style={{ marginHorizontal: 20, marginVertical: 2 }}
           >
-            You must reinstall Vendetta in order to use Auto Save!
+            You must reinstall your client in order to use Auto Save!
           </SimpleText>
         )}
         <FormSwitchRow

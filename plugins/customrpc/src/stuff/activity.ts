@@ -1,6 +1,7 @@
 import { FluxDispatcher } from "@vendetta/metro/common";
 
 import { Joi } from "$/deps";
+import { getClient } from "$/types";
 
 import { debug, vstorage } from "..";
 import { forceUpdateLiveRawActivityView } from "../components/pages/LiveRawActivityView";
@@ -204,7 +205,7 @@ export async function dispatchActivity(
   FluxDispatcher.dispatch({
     type: "LOCAL_ACTIVITY_UPDATE",
     activity: send,
-    socketId: "CustomRPC@Vendetta", // based on Last.fm plugin
+    socketId: `CustomRPC@${getClient()}`, // based on Last.fm plugin
   });
 }
 
