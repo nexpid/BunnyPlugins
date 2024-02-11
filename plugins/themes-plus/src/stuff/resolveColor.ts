@@ -37,14 +37,3 @@ export default function (color: PlusColorResolvable): string | undefined {
     return `#${color[1].repeat(2)}${color[2].repeat(2)}${color[3].repeat(2)}`;
   else if (color.startsWith("#") && color.length === 7) return color;
 }
-
-export function androidifyColor(color: string, alpha = 255): number {
-  const [_, r, g, b] = color.match(/#([A-F0-9]{2})([A-F0-9]{2})([A-F0-9]{2})/i);
-
-  return (
-    ((alpha & 0xff) << 24) |
-    ((parseInt(r, 16) & 0xff) << 16) |
-    ((parseInt(g, 16) & 0xff) << 8) |
-    (parseInt(b, 16) & 0xff)
-  );
-}

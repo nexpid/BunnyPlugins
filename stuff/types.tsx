@@ -145,6 +145,17 @@ export function getClient() {
   else return "Enmity"; // troll
 }
 
+export function androidifyColor(color: string, alpha = 255): number {
+  const [_, r, g, b] = color.match(/#([A-F0-9]{2})([A-F0-9]{2})([A-F0-9]{2})/i);
+
+  return (
+    ((alpha & 0xff) << 24) |
+    ((parseInt(r, 16) & 0xff) << 16) |
+    ((parseInt(g, 16) & 0xff) << 8) |
+    (parseInt(b, 16) & 0xff)
+  );
+}
+
 // ...
 
 type TextStyleSheetCase =

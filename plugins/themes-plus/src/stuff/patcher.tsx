@@ -6,7 +6,7 @@ import { getAssetByID, getAssetIDByName } from "@vendetta/ui/assets";
 import { General } from "@vendetta/ui/components";
 import { findInReactTree, safeFetch } from "@vendetta/utils";
 
-import { resolveSemanticColor } from "$/types";
+import { androidifyColor, resolveSemanticColor } from "$/types";
 import { PlusStructure } from "$/typings";
 
 import {
@@ -25,7 +25,7 @@ import { getUnreadBadgeColor } from "../handlers/unreadBadge";
 import { CoolAsset, IconPack, IconPackConfig, IconPackData } from "../types";
 import constants from "./constants";
 import { getPlusData } from "./plusLookup";
-import resolveColor, { androidifyColor } from "./resolveColor";
+import resolveColor from "./resolveColor";
 import { addToStyle, flattenStyle, queueReloadUI } from "./util";
 
 const { View } = General;
