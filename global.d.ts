@@ -41,7 +41,12 @@ interface Window {
         oneTime?: boolean,
       ) => void;
       props: {
-        collect: (key: string, prop: string, parent: any, parser?: (obj: any) => any) => void;
+        collect: (
+          key: string,
+          prop: string,
+          parent: any,
+          parser?: (obj: any) => any,
+        ) => void;
         redeem: (key: string, save?: boolean) => object | undefined;
       };
     };
