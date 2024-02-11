@@ -12,7 +12,7 @@ export default new Module({
   id: "wario",
   label: "Wario",
   sublabel: "Mama mia",
-  category: ModuleCategory.Useful,
+  category: ModuleCategory.Fun,
   icon: getAssetIDByName("wumpus-mario"),
   handlers: {
     onStart() {

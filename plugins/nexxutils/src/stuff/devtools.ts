@@ -1,7 +1,10 @@
+import { findByStoreName } from "@vendetta/metro";
 import { after, before } from "@vendetta/patcher";
 import { semanticColors } from "@vendetta/ui";
 
 import { resolveSemanticColor } from "$/types";
+
+const ThemeStore = findByStoreName("ThemeStore");
 
 export default function () {
   const patches = new Array<() => void>();
@@ -42,11 +45,15 @@ export default function () {
     },
     findSemantic(hex: string) {
       hex ??= "";
+      const theme = ThemeStore.theme;
+
       return Object.fromEntries(
         Object.entries(window.nx.semantic)
           .map(([x, y]) => [
             x,
-            Object.fromEntries(Object.entries(y).filter(([_, z]) => z === hex)),
+            Object.fromEntries(
+              Object.entries(y).filter(([k, z]) => k === theme && z === hex),
+            ),
           ])
           .filter(([_, z]) => Object.entries(z)[0]),
       );
@@ -72,46 +79,69 @@ export default function () {
         patches.push(patch);
       },
       props: {
-        collect: (key: string, prop: string, parent: any) => {
+        collect: (
+          key: string,
+          prop: string,
+          parent: any,
+          parser?: (obj: any) => any,
+        ) => {
           collected.get(key)?.unpatch();
 
-          let ran = false;
-          const unpatch = before(prop, parent, ([props]) => {
-            for (const p of Object.keys(props)) {
-              if (!data[p] && ran)
-                data[p] ??= {
-                  kinds: ["undefined"],
-                  stuff: ["undefined"],
-                };
-              else
-                data[p] ??= {
-                  kinds: [],
-                  stuff: [],
-                };
-              ran = true;
+          const ran = new Array<string>();
+          const unpatch = before(prop, parent, (args) => {
+            const props = parser?.(args) ?? args[0];
+            const runFor = (propper: any, assign: any, tree = ".") => {
+              for (const p of Object.keys(propper)) {
+                if (!assign[p] && ran.includes(tree))
+                  assign[p] ??= {
+                    kinds: ["undefined"],
+                    stuff: ["undefined"],
+                  };
+                else {
+                  assign[p] ??= {
+                    kinds: [],
+                    stuff: [],
+                  };
+                  ran.push(tree);
+                }
 
-              const stuff = Array.isArray(props[p]) ? props[p] : [props[p]];
-              for (const x of stuff) {
-                const kind = Array.isArray(x) ? "array" : typeof x;
-                if (
-                  !data[p].stuff.find(
-                    (y: any) => JSON.stringify(y) === JSON.stringify(x),
+                const stuff = Array.isArray(propper[p])
+                  ? propper[p]
+                  : [propper[p]];
+                for (const x of stuff) {
+                  const array = Array.isArray(x);
+                  const kind = array ? "array" : typeof x;
+
+                  if (typeof x === "object" && x !== null) {
+                    let set = assign[p].stuff.find(
+                      (y: any) => typeof y === "object" && y !== null,
+                    );
+                    if (!set)
+                      set = assign[p].stuff[assign[p].stuff.push({}) - 1];
+
+                    runFor(x, set, `${tree}${p}.`);
+                  } else if (
+                    !assign[p].stuff.find(
+                      (y: any) => JSON.stringify(y) === JSON.stringify(x),
+                    )
                   )
-                )
-                  data[p].stuff.push(x);
-                if (!data[p].kinds.includes(kind)) data[p].kinds.push(kind);
+                    assign[p].stuff.push(x);
+                  if (!assign[p].kinds.includes(kind))
+                    assign[p].kinds.push(kind);
+                }
               }
 
-              console.log(`[NX]: Collected new prop for "${key}"`);
-            }
+              for (const r of Object.keys(assign))
+                if (propper[r] === undefined) {
+                  if (!assign[r].kinds.includes("undefined"))
+                    assign[r].kinds.push("undefined");
+                  if (!assign[r].stuff.includes("undefined"))
+                    assign[r].stuff.push("undefined");
+                }
+            };
 
-            for (const r of Object.keys(data))
-              if (!(r in props)) {
-                if (!data[r].kinds.includes("undefined"))
-                  data[r].kinds.push("undefined");
-                if (!data[r].stuff.includes("undefined"))
-                  data[r].stuff.push("undefined");
-              }
+            runFor(props, data);
+            console.log(`[NX]: Collected new prop for "${key}"`);
           });
           patches.push(unpatch);
 

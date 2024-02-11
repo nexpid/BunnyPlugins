@@ -5,6 +5,7 @@
     "build:debug": "node scripts/build.mjs --debug",
     "build:minify": "node scripts/build.mjs",
     "watch:defs": "node scripts/watch_defs.mjs",
+    "sorter": "node scripts/sorter.mjs",
     "dev": "http-server dist --port 8731",
     "lint": "eslint .",
     "lint:fix": "pnpm lint --fix",

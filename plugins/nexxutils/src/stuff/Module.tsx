@@ -19,6 +19,7 @@ const { FormRow, FormSwitchRow, FormDivider } = Forms;
 export enum ModuleCategory {
   Useful,
   Fixes,
+  Fun
 }
 export const moduleCategoryMap = [
   {
@@ -31,6 +32,11 @@ export const moduleCategoryMap = [
     title: "Fixes",
     icon: getAssetIDByName("debug"),
   },
+  {
+    category: ModuleCategory.Fun,
+    title: "Fun",
+    icon: getAssetIDByName("games")
+  }
 ] as {
   category: ModuleCategory;
   title: string;

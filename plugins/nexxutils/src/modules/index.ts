@@ -1,22 +1,23 @@
 import type { Module } from "../stuff/Module";
 import BetterComponents from "./BetterComponents";
-import Freemix from "./Freemix";
 import NoInviteToServers from "./NoInviteToServers";
 import NSFWChannelTag from "./NSFWChannelTag";
+import PluginEmbeds from "./PluginEmbeds";
 import RestoreEmojiInfoReaction from "./RestoreEmojiInfoReaction";
 import SendSpotifyInvite from "./SendSpotifyInvite";
 import SpotifyListenAlong from "./SpotifyListenAlong";
 import TenorGifFix from "./TenorGifFix";
 import Wario from "./Wario";
 
+// hook: keep sorted alphabetically
 export default [
-  Freemix,
-  TenorGifFix,
-  SpotifyListenAlong,
-  SendSpotifyInvite,
-  NoInviteToServers,
   BetterComponents,
-  RestoreEmojiInfoReaction,
   NSFWChannelTag,
+  NoInviteToServers,
+  PluginEmbeds,
+  RestoreEmojiInfoReaction,
+  SendSpotifyInvite,
+  SpotifyListenAlong,
+  TenorGifFix,
   Wario,
-] as Module<any>[];
+].sort((a, b) => (a.id < b.id ? -1 : 1)) as Module<any>[];
