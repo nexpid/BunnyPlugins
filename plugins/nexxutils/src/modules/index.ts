@@ -7,7 +7,6 @@ import RestoreEmojiInfoReaction from "./RestoreEmojiInfoReaction";
 import SendSpotifyInvite from "./SendSpotifyInvite";
 import SpotifyListenAlong from "./SpotifyListenAlong";
 import TenorGifFix from "./TenorGifFix";
-import Wario from "./Wario";
 
 // hook: keep sorted alphabetically
 export default [
@@ -19,5 +18,4 @@ export default [
   SendSpotifyInvite,
   SpotifyListenAlong,
   TenorGifFix,
-  Wario,
 ].sort((a, b) => (a.id < b.id ? -1 : 1)) as Module<any>[];
