@@ -1,0 +1,14 @@
+{
+  "name": "ReactionNotifications",
+  "description": "Get notified about message reactions (ported from ItzOnlyAnimal/AliuPlugins/ReactionNotifier)",
+  "authors": [
+    {
+      "name": "nexpid",
+      "id": "853550207039832084"
+    }
+  ],
+  "main": "src/index.ts",
+  "vendetta": {
+    "icon": "ic_add_reaction_v2"
+  }
+}

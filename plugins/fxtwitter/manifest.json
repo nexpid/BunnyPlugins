@@ -1,0 +1,14 @@
+{
+  "name": "FxTwitter",
+  "description": "Automatically converts twitter.com links to fxtwitter.com",
+  "authors": [
+    {
+      "name": "nexpid",
+      "id": "853550207039832084"
+    }
+  ],
+  "main": "src/index.ts",
+  "vendetta": {
+    "icon": "img_account_sync_twitter_white"
+  }
+}

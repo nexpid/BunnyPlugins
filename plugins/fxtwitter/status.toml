@@ -1,0 +1,4 @@
+status = "discontinued"
+discontinuedFor = "TextReplace rule"
+
+usable = true
