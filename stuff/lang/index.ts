@@ -4,7 +4,7 @@ import RNFS from "$/wrappers/RNFS";
 
 import type { LangValues } from "../../lang/defs";
 
-const url = `https://raw.githubusercontent.com/nexpid/VendettaPlugins/main/lang/values/`;
+const url = `https://raw.githubusercontent.com/nexpid/RevengePlugins/main/lang/values/`;
 
 const make = () =>
   RNFS.hasRNFS &&

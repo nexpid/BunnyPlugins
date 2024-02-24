@@ -22,6 +22,7 @@
     "twemoji-parser": "^14.0.0"
   },
   "devDependencies": {
+    "@revenge-mod/vendetta-types": "github:revenge-mod/vendetta-types",
     "@rollup/plugin-commonjs": "^25.0.4",
     "@rollup/plugin-node-resolve": "^15.2.0",
     "@swc/core": "^1.3.78",
@@ -40,8 +41,7 @@
     "rollup": "^4.0.0",
     "rollup-plugin-esbuild": "^6.0.0",
     "smol-toml": "^1.1.3",
-    "typescript": "^5.3.3",
-    "vendetta-types": "latest"
+    "typescript": "^5.3.3"
   },
   "packageManager": "pnpm@8.15.1",
   "pnpm": {
@@ -52,6 +52,6 @@
       ]
     }
   },
-  "repository": "https://github.com/nexpid/VendettaPlugins",
+  "repository": "https://github.com/nexpid/RevengePlugins",
   "author": "nexpid (https://github.com/nexpid)"
 }

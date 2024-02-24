@@ -14,7 +14,7 @@ export default {
   get api() {
     return api();
   },
-  raw: "https://raw.githubusercontent.com/nexpid/VendettaPlugins/main/plugins/cloud-sync/",
+  raw: "https://raw.githubusercontent.com/nexpid/RevengePlugins/main/plugins/cloud-sync/",
   oauth2: {
     get clientId() {
       return vstorage.clientId || defaultClientId;

@@ -17,7 +17,7 @@
     "plugins",
     "stuff",
     "lang",
-    "node_modules/vendetta-types",
+    "node_modules/@revenge-mod/vendetta-types",
     "global.d.ts",
   ],
   "exclude": ["archive", "dist", "scripts"],

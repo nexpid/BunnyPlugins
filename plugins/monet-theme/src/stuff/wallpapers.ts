@@ -7,6 +7,8 @@ export interface Collection {
   }[];
 }
 
+const prefix = `https://raw.githubusercontent.com/nexpid/RevengePlugins/main/plugins/monet-theme/assets/backgrounds/`;
+
 export default <Collection[]>[
   {
     label: "Pixel 4 XL",
@@ -14,35 +16,35 @@ export default <Collection[]>[
     content: [
       {
         title: "Cinnamon",
-        url: "https://raw.githubusercontent.com/nexpid/VendettaPlugins/main/plugins/monet-theme/assets/backgrounds/pixel4l/cinnamon.png",
+        url: prefix + "pixel4l/cinnamon.png",
       },
       {
         title: "Default",
-        url: "https://raw.githubusercontent.com/nexpid/VendettaPlugins/main/plugins/monet-theme/assets/backgrounds/pixel4l/default.png",
+        url: prefix + "pixel4l/default.png",
       },
       {
         title: "Green",
-        url: "https://raw.githubusercontent.com/nexpid/VendettaPlugins/main/plugins/monet-theme/assets/backgrounds/pixel4l/green.png",
+        url: prefix + "pixel4l/green.png",
       },
       {
         title: "Ocean",
-        url: "https://raw.githubusercontent.com/nexpid/VendettaPlugins/main/plugins/monet-theme/assets/backgrounds/pixel4l/ocean.png",
+        url: prefix + "pixel4l/ocean.png",
       },
       {
         title: "Orchid",
-        url: "https://raw.githubusercontent.com/nexpid/VendettaPlugins/main/plugins/monet-theme/assets/backgrounds/pixel4l/orchid.png",
+        url: prefix + "pixel4l/orchid.png",
       },
       {
         title: "Purple",
-        url: "https://raw.githubusercontent.com/nexpid/VendettaPlugins/main/plugins/monet-theme/assets/backgrounds/pixel4l/purple.png",
+        url: prefix + "pixel4l/purple.png",
       },
       {
         title: "Space",
-        url: "https://raw.githubusercontent.com/nexpid/VendettaPlugins/main/plugins/monet-theme/assets/backgrounds/pixel4l/space.png",
+        url: prefix + "pixel4l/space.png",
       },
       {
         title: "White",
-        url: "https://raw.githubusercontent.com/nexpid/VendettaPlugins/main/plugins/monet-theme/assets/backgrounds/pixel4l/white.png",
+        url: prefix + "pixel4l/white.png",
       },
     ],
   },
