@@ -13,7 +13,7 @@
 </div>
 <br/>
 <div align="center">
-  <h1>AppDirectory</h1>
+  <h1>App Directory</h1>
 </div>
 
 Brings the app directory to mobile

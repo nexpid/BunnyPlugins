@@ -13,7 +13,7 @@
 </div>
 <br/>
 <div align="center">
-  <h1>TwemojiEverywhere</h1>
+  <h1>Twemoji Everywhere</h1>
 </div>
 
 Turns all (possible) system emoji into Twemoji 👋😀🎉

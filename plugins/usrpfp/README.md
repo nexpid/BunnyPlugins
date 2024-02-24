@@ -13,7 +13,7 @@
 </div>
 <br/>
 <div align="center">
-  <h1>USRPFP</h1>
+  <h1>UserPFP</h1>
 </div>
 
 https://userpfp.github.io/UserPFP/#how-to-request-a-profile-picture-pfp

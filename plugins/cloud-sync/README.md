@@ -16,7 +16,7 @@
 </div>
 <br/>
 <div align="center">
-  <h1>CloudSync</h1>
+  <h1>Cloud Sync</h1>
 </div>
 
 Syncs your plugins and themes to the cloud

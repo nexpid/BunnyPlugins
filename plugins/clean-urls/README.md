@@ -13,7 +13,7 @@
 </div>
 <br/>
 <div align="center">
-  <h1>CleanURLs</h1>
+  <h1>Clean URLs</h1>
 </div>
 
 Removes tracking data garbage from links (Vencord port)

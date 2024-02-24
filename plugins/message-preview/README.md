@@ -13,7 +13,7 @@
 </div>
 <br/>
 <div align="center">
-  <h1>MessagePreview</h1>
+  <h1>Message Preview</h1>
 </div>
 
 Adds a button to preview your message before sending it

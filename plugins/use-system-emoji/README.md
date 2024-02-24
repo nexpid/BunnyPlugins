@@ -13,7 +13,7 @@
 </div>
 <br/>
 <div align="center">
-  <h1>UseSystemEmoji</h1>
+  <h1>Use System Emoji</h1>
 </div>
 
 Replaces Twemoji with system emoji in messages

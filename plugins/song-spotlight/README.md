@@ -16,7 +16,7 @@
 </div>
 <br/>
 <div align="center">
-  <h1>SongSpotlight</h1>
+  <h1>Song Spotlight</h1>
 </div>
 
 Makes it so you can pin songs to your profile

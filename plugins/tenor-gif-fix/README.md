@@ -13,7 +13,7 @@
 </div>
 <br/>
 <div align="center">
-  <h1>TenorGifFix</h1>
+  <h1>Tenor Gif Fix</h1>
 </div>
 
 Download and share Tenor links as GIFs instead of MP4s (thanks to rosie <3)

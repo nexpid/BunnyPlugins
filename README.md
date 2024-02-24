@@ -43,40 +43,40 @@ I'm working on **4** plugins, and **0** plugins are discontinued.
 
 ## ✅ Finished
 
-- CharCounter — Adds a character counter above the chat input
+- Char Counter — Adds a character counter above the chat input
   - [<img alt="copy_link" src="https://img.shields.io/badge/copy_link-1e1e2e?style=for-the-badge" />](https://vendetta.nexpid.xyz/char-counter) [<img alt="view_code" src="https://img.shields.io/badge/view_code-1e1e2e?style=for-the-badge" />](https://github.com/nexpid/RevengePlugins/tree/main/plugins/char-counter)
-- CleanURLs — Removes tracking data garbage from links (Vencord port)
+- Clean URLs — Removes tracking data garbage from links (Vencord port)
   - [<img alt="copy_link" src="https://img.shields.io/badge/copy_link-1e1e2e?style=for-the-badge" />](https://vendetta.nexpid.xyz/clean-urls) [<img alt="view_code" src="https://img.shields.io/badge/view_code-1e1e2e?style=for-the-badge" />](https://github.com/nexpid/RevengePlugins/tree/main/plugins/clean-urls)
-- CloudSync — Syncs your plugins and themes to the cloud
+- Cloud Sync — Syncs your plugins and themes to the cloud
   - [<img alt="copy_link" src="https://img.shields.io/badge/copy_link-1e1e2e?style=for-the-badge" />](https://vendetta.nexpid.xyz/cloud-sync) [<img alt="view_code" src="https://img.shields.io/badge/view_code-1e1e2e?style=for-the-badge" />](https://github.com/nexpid/RevengePlugins/tree/main/plugins/cloud-sync) [<img alt="view_backend_code" src="https://img.shields.io/badge/view_backend_code-1e1e2e?style=for-the-badge" />](https://github.com/nexpid/VendettaCloudSync)
 - DOOM — Play DOOM inside of Discord by going to the Settings (powered by js-dos)
   - [<img alt="copy_link" src="https://img.shields.io/badge/copy_link-1e1e2e?style=for-the-badge" />](https://vendetta.nexpid.xyz/doom) [<img alt="view_code" src="https://img.shields.io/badge/view_code-1e1e2e?style=for-the-badge" />](https://github.com/nexpid/RevengePlugins/tree/main/plugins/doom)
-- HideServers — Allows you to locally hide servers from your server list
+- Hide Servers — Allows you to locally hide servers from your server list
   - [<img alt="copy_link" src="https://img.shields.io/badge/copy_link-1e1e2e?style=for-the-badge" />](https://vendetta.nexpid.xyz/hide-servers) [<img alt="view_code" src="https://img.shields.io/badge/view_code-1e1e2e?style=for-the-badge" />](https://github.com/nexpid/RevengePlugins/tree/main/plugins/hide-servers)
-- LocalPins — Adds a button to locally pin a message
+- Local Pins — Adds a button to locally pin a message
   - [<img alt="copy_link" src="https://img.shields.io/badge/copy_link-1e1e2e?style=for-the-badge" />](https://vendetta.nexpid.xyz/local-pins) [<img alt="view_code" src="https://img.shields.io/badge/view_code-1e1e2e?style=for-the-badge" />](https://github.com/nexpid/RevengePlugins/tree/main/plugins/local-pins)
-- MessagePreview — Adds a button to preview your message before sending it
+- Message Preview — Adds a button to preview your message before sending it
   - [<img alt="copy_link" src="https://img.shields.io/badge/copy_link-1e1e2e?style=for-the-badge" />](https://vendetta.nexpid.xyz/message-preview) [<img alt="view_code" src="https://img.shields.io/badge/view_code-1e1e2e?style=for-the-badge" />](https://github.com/nexpid/RevengePlugins/tree/main/plugins/message-preview)
-- MonetTheme — A material you theme generator
+- Monet Theme — A material you theme generator
   - [<img alt="copy_link" src="https://img.shields.io/badge/copy_link-1e1e2e?style=for-the-badge" />](https://vendetta.nexpid.xyz/monet-theme) [<img alt="view_code" src="https://img.shields.io/badge/view_code-1e1e2e?style=for-the-badge" />](https://github.com/nexpid/RevengePlugins/tree/main/plugins/monet-theme)
-- PluginBrowser — Browse all proxied plugins
+- Plugin Browser — Browse all proxied plugins
   - [<img alt="copy_link" src="https://img.shields.io/badge/copy_link-1e1e2e?style=for-the-badge" />](https://vendetta.nexpid.xyz/plugin-browser) [<img alt="view_code" src="https://img.shields.io/badge/view_code-1e1e2e?style=for-the-badge" />](https://github.com/nexpid/RevengePlugins/tree/main/plugins/plugin-browser)
 - Plugin Embeds — Shows an embed with plugin info when a plugin link is sent in chat
   - [<img alt="copy_link" src="https://img.shields.io/badge/copy_link-1e1e2e?style=for-the-badge" />](https://vendetta.nexpid.xyz/plugin-embeds) [<img alt="view_code" src="https://img.shields.io/badge/view_code-1e1e2e?style=for-the-badge" />](https://github.com/nexpid/RevengePlugins/tree/main/plugins/plugin-embeds)
-- SongSpotlight — Makes it so you can pin songs to your profile
+- Song Spotlight — Makes it so you can pin songs to your profile
   - [<img alt="copy_link" src="https://img.shields.io/badge/copy_link-1e1e2e?style=for-the-badge" />](https://vendetta.nexpid.xyz/song-spotlight) [<img alt="view_code" src="https://img.shields.io/badge/view_code-1e1e2e?style=for-the-badge" />](https://github.com/nexpid/RevengePlugins/tree/main/plugins/song-spotlight) [<img alt="view_backend_code" src="https://img.shields.io/badge/view_backend_code-1e1e2e?style=for-the-badge" />](https://github.com/nexpid/VendettaSongSpotlight)
-- TwemojiEverywhere — Turns all (possible) system emoji into Twemoji 👋😀🎉
+- Twemoji Everywhere — Turns all (possible) system emoji into Twemoji 👋😀🎉
   - [<img alt="copy_link" src="https://img.shields.io/badge/copy_link-1e1e2e?style=for-the-badge" />](https://vendetta.nexpid.xyz/twemoji-everywhere) [<img alt="view_code" src="https://img.shields.io/badge/view_code-1e1e2e?style=for-the-badge" />](https://github.com/nexpid/RevengePlugins/tree/main/plugins/twemoji-everywhere)
-- UseSystemEmoji — Replaces Twemoji with system emoji in messages
+- Use System Emoji — Replaces Twemoji with system emoji in messages
   - [<img alt="copy_link" src="https://img.shields.io/badge/copy_link-1e1e2e?style=for-the-badge" />](https://vendetta.nexpid.xyz/use-system-emoji) [<img alt="view_code" src="https://img.shields.io/badge/view_code-1e1e2e?style=for-the-badge" />](https://github.com/nexpid/RevengePlugins/tree/main/plugins/use-system-emoji)
-- USRPFP — https://userpfp.github.io/UserPFP/#how-to-request-a-profile-picture-pfp
+- UserPFP — https://userpfp.github.io/UserPFP/#how-to-request-a-profile-picture-pfp
   - [<img alt="copy_link" src="https://img.shields.io/badge/copy_link-1e1e2e?style=for-the-badge" />](https://vendetta.nexpid.xyz/usrpfp) [<img alt="view_code" src="https://img.shields.io/badge/view_code-1e1e2e?style=for-the-badge" />](https://github.com/nexpid/RevengePlugins/tree/main/plugins/usrpfp)
 - Wario — Mamma mia (hold on the bottom Guilds/Chat button to disable the plugin)
   - [<img alt="copy_link" src="https://img.shields.io/badge/copy_link-1e1e2e?style=for-the-badge" />](https://vendetta.nexpid.xyz/wario) [<img alt="view_code" src="https://img.shields.io/badge/view_code-1e1e2e?style=for-the-badge" />](https://github.com/nexpid/RevengePlugins/tree/main/plugins/wario)
 
 ## ❌ Unfinished
 
-- AppDirectory — Brings the app directory to mobile
+- App Directory — Brings the app directory to mobile
   - [<img alt="copy_link" src="https://img.shields.io/badge/copy_link-1e1e2e?style=for-the-badge" />](https://vendetta.nexpid.xyz/app-directory) [<img alt="view_code" src="https://img.shields.io/badge/view_code-1e1e2e?style=for-the-badge" />](https://github.com/nexpid/RevengePlugins/tree/main/plugins/app-directory)
 - CustomRPC — Displays a custom RPC activity on your profile! (idea from Vencord) (RECODED)
   - [<img alt="copy_link" src="https://img.shields.io/badge/copy_link-1e1e2e?style=for-the-badge" />](https://vendetta.nexpid.xyz/customrpc) [<img alt="view_code" src="https://img.shields.io/badge/view_code-1e1e2e?style=for-the-badge" />](https://github.com/nexpid/RevengePlugins/tree/main/plugins/customrpc)
@@ -87,6 +87,6 @@ I'm working on **4** plugins, and **0** plugins are discontinued.
 
 ## 🎫 Discontinued
 
-- TenorGifFix — Download and share Tenor links as GIFs instead of MP4s (thanks to rosie <3)
+- Tenor Gif Fix — Download and share Tenor links as GIFs instead of MP4s (thanks to rosie <3)
   - **Discontinued For:** Replaced by NexxUtils
   - [<img alt="copy_link" src="https://img.shields.io/badge/copy_link-1e1e2e?style=for-the-badge" />](https://vendetta.nexpid.xyz/tenor-gif-fix) [<img alt="view_code" src="https://img.shields.io/badge/view_code-1e1e2e?style=for-the-badge" />](https://github.com/nexpid/RevengePlugins/tree/main/plugins/tenor-gif-fix)

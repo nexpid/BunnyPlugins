@@ -13,7 +13,7 @@
 </div>
 <br/>
 <div align="center">
-  <h1>HideServers</h1>
+  <h1>Hide Servers</h1>
 </div>
 
 Allows you to locally hide servers from your server list

@@ -13,7 +13,7 @@
 </div>
 <br/>
 <div align="center">
-  <h1>LocalPins</h1>
+  <h1>Local Pins</h1>
 </div>
 
 Adds a button to locally pin a message

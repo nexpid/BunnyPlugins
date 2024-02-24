@@ -13,7 +13,7 @@
 </div>
 <br/>
 <div align="center">
-  <h1>PluginBrowser</h1>
+  <h1>Plugin Browser</h1>
 </div>
 
 Browse all proxied plugins

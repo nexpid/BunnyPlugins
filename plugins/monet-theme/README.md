@@ -13,7 +13,7 @@
 </div>
 <br/>
 <div align="center">
-  <h1>MonetTheme</h1>
+  <h1>Monet Theme</h1>
 </div>
 
 A material you theme generator

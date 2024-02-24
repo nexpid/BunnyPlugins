@@ -13,7 +13,7 @@
 </div>
 <br/>
 <div align="center">
-  <h1>CharCounter</h1>
+  <h1>Char Counter</h1>
 </div>
 
 Adds a character counter above the chat input
