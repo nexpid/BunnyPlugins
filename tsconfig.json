@@ -10,15 +10,15 @@
     "skipLibCheck": true,
     "resolveJsonModule": true,
     "paths": {
-      "$/*": ["./stuff/*"],
-    },
+      "$/*": ["./stuff/*"]
+    }
   },
   "include": [
     "plugins",
     "stuff",
     "lang",
     "node_modules/@revenge-mod/vendetta-types",
-    "global.d.ts",
+    "global.d.ts"
   ],
-  "exclude": ["archive", "dist", "scripts"],
+  "exclude": ["archive", "dist", "scripts"]
 }
