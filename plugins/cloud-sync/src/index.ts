@@ -5,6 +5,7 @@ import { createStorage, wrapSync } from "@vendetta/storage";
 import { themes } from "@vendetta/themes";
 
 import { Lang } from "$/lang";
+import migrate from "$/migrate";
 
 import Settings from "./components/Settings";
 import { currentAuthorization, getSaveData, syncSaveData } from "./stuff/api";
@@ -77,6 +78,8 @@ export default {
     vstorage.addToSettings ??= false;
     vstorage.pluginSettings ??= {};
     vstorage.auth ??= {};
+
+    migrate();
 
     if (currentAuthorization()) fillCache();
 

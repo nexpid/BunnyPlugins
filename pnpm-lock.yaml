@@ -24,7 +24,7 @@ dependencies:
 devDependencies:
   '@revenge-mod/vendetta-types':
     specifier: github:revenge-mod/vendetta-types
-    version: github.com/revenge-mod/vendetta-types/00c0fd02311a2842ac6f835c65d1ded684c3ac29
+    version: github.com/revenge-mod/vendetta-types/b5d1d98d68bb1ad0c752dc523c3273a571049a93
   '@rollup/plugin-commonjs':
     specifier: ^25.0.7
     version: 25.0.7(rollup@4.12.0)
@@ -2057,8 +2057,8 @@ packages:
     engines: {node: '>=10'}
     dev: true
 
-  github.com/revenge-mod/vendetta-types/00c0fd02311a2842ac6f835c65d1ded684c3ac29:
-    resolution: {tarball: https://codeload.github.com/revenge-mod/vendetta-types/tar.gz/00c0fd02311a2842ac6f835c65d1ded684c3ac29}
+  github.com/revenge-mod/vendetta-types/b5d1d98d68bb1ad0c752dc523c3273a571049a93:
+    resolution: {tarball: https://codeload.github.com/revenge-mod/vendetta-types/tar.gz/b5d1d98d68bb1ad0c752dc523c3273a571049a93}
     name: '@revenge-mod/vendetta-types'
     version: 2.4.21
     dependencies:
