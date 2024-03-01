@@ -5,10 +5,6 @@ import { getAssetIDByName } from "@vendetta/ui/assets";
 import { General } from "@vendetta/ui/components";
 import { showToast } from "@vendetta/ui/toasts";
 
-import CustomBadgeTag from "$/components/CustomBadgeTag";
-import SimpleText from "$/components/SimpleText";
-import SmartMention from "$/components/SmartMention";
-
 import { lang } from "..";
 import { matchGithubLink, properLink, refetchPlugin } from "../stuff/util";
 import { PluginsFullJson } from "../types";
@@ -18,11 +14,15 @@ import ScuffedPluginCard from "./ScuffedPluginCard";
 const { View } = General;
 
 export default function ({
+  index,
   item,
   changes,
+  highlight,
 }: {
+  index: number;
   item: PluginsFullJson[number];
   changes: [string, "new" | "update"][];
+  highlight: string;
 }) {
   const proxiedLink = properLink(
     `https://vd-plugins.github.io/proxy/${item.vendetta.original}`,
@@ -50,26 +50,14 @@ export default function ({
 
   return (
     <ScuffedPluginCard
-      headerLabel={
-        <View style={{ flexDirection: "row" }}>
-          {change && (
-            <CustomBadgeTag text={change[1] === "new" ? "New" : "Upd"} />
-          )}
-          <SimpleText variant="text-md/semibold" color="HEADER_PRIMARY">
-            {item.name}
-            {item.authors[0] && " by "}
-            {...item.authors.map((x, i, a) => (
-              <>
-                <SmartMention userId={x.id} color="TEXT_LINK">
-                  {x.name}
-                </SmartMention>
-                {i !== a.length - 1 && ", "}
-              </>
-            ))}
-          </SimpleText>
-        </View>
+      index={index}
+      update={change && (change[1] === "new" ? "New" : "Upd")}
+      headerLabel={item.name}
+      headerSublabel={
+        item.authors?.[0] && `by ${item.authors.map((i) => i.name).join(", ")}`
       }
-      headerIcon={getAssetIDByName(item.vendetta.icon)}
+      headerIcon={item.vendetta?.icon || "ic_application_command_24px"}
+      highlight={highlight}
       descriptionLabel={item.description}
       actions={
         pluginProgress

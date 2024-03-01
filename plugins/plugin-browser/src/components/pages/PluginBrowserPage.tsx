@@ -5,13 +5,10 @@ import {
 } from "@vendetta/metro/common";
 import { showConfirmationAlert } from "@vendetta/ui/alerts";
 import { getAssetIDByName } from "@vendetta/ui/assets";
-import { General } from "@vendetta/ui/components";
+import { General, Search } from "@vendetta/ui/components";
 import { showToast } from "@vendetta/ui/toasts";
 import { safeFetch } from "@vendetta/utils";
 
-import RedesignSearch, {
-  useRedesignSearch,
-} from "$/components/compat/RedesignSearch";
 import SuperAwesomeIcon from "$/components/SuperAwesomeIcon";
 import { openSheet } from "$/types";
 
@@ -48,7 +45,7 @@ export default () => {
     return null;
   }
 
-  const [search, controller] = useRedesignSearch();
+  const [search, setSearch] = React.useState("");
 
   const changes = React.useRef(getChanges()).current;
   const [sort, setSort] = React.useState(Sort.DateNewest);
@@ -61,11 +58,15 @@ export default () => {
     if (!parsed) return;
 
     let dt = parsed
-      .filter(
-        (i) =>
-          i.name?.toLowerCase().includes(search) ||
-          i.authors?.some((x) => x.name?.toLowerCase().includes(search)) ||
-          i.description?.toLowerCase().includes(search),
+      .filter((i) =>
+        [
+          i.vendetta.original,
+          i.name,
+          i.description,
+          i.authors?.map((x) => x.name),
+        ]
+          .flat()
+          .some((x) => x?.toLowerCase().includes(search)),
       )
       .slice();
     if ([Sort.NameAZ, Sort.NameZA].includes(sort))
@@ -138,13 +139,20 @@ export default () => {
     <RN.FlatList
       ListHeaderComponent={
         <View style={{ marginBottom: 10 }}>
-          <RedesignSearch controller={controller} />
+          <Search onChangeText={setSearch} />
         </View>
       }
       style={{ paddingHorizontal: 10 }}
       contentContainerStyle={{ paddingBottom: 20 }}
       data={sortedData}
-      renderItem={({ item }) => <PluginThing item={item} changes={changes} />}
+      renderItem={({ item, index }) => (
+        <PluginThing
+          index={index}
+          highlight={search}
+          item={item}
+          changes={changes}
+        />
+      )}
       removeClippedSubviews={true}
     />
   );
