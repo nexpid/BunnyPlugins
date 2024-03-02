@@ -1,8 +1,9 @@
 import { url } from "@vendetta/metro/common";
 import { showConfirmationAlert } from "@vendetta/ui/alerts";
 
-import { getClient } from "./types";
 import RNFS from "$/wrappers/RNFS";
+
+import { getClient } from "./types";
 
 // Symbol used so this notice appears only once even when included in multiple plugins
 const sym = Symbol.for("nexpid.vendetta.migrate");
@@ -24,7 +25,8 @@ export default async function () {
         url.openURL(
           "https://github.com/Revenge-mod/Revenge#%EF%B8%8F-installing",
         ),
-      onCancel: async () => await RNFS.writeFile(filePath, "dismissed (maisy was here :3)"),
+      onCancel: async () =>
+        await RNFS.writeFile(filePath, "dismissed (maisy was here :3)"),
       cancelText: "I'll pass (hide this popup forever)",
     });
   }
