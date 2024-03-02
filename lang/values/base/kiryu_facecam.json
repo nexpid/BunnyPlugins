@@ -1,0 +1,10 @@
+{
+  "settings.title": "Settings",
+
+  "settings.appear_style.title": "Appear style",
+  "settings.appear_style.description": "Choose how Kazum Kiryu appears",
+  "settings.appear_style.fly": "Fly in",
+  "settings.appear_style.fade": "Fade in",
+  "settings.facecam_swinging": "Facecam swinging",
+  "settings.facecam_bouncing": "Facecam bouncing"
+}

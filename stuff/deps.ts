@@ -1,7 +1,5 @@
 import { find, findByProps } from "@vendetta/metro";
 import { ReactNative as RN } from "@vendetta/metro/common";
-import * as _Joi from "joi";
-import * as RNSVG from "react-native-svg";
 import RNWebView from "react-native-webview";
 
 //
@@ -10,10 +8,14 @@ import RNWebView from "react-native-webview";
 export const WebView = find((x) => x?.WebView && !x.default)
   .WebView as typeof RNWebView;
 
-export const Svg = findByProps("SvgXml") as typeof RNSVG;
+export const Svg = findByProps("SvgXml") as typeof import("react-native-svg");
 
 //@ts-expect-error "isJoi" is an untyped property in Joi
-export const Joi = findByProps("isJoi") as typeof _Joi;
+export const Joi = findByProps("isJoi") as typeof import("joi");
+
+export const Reanimated = findByProps(
+  "useSharedValue",
+) as typeof import("react-native-reanimated");
 
 //
 // raw native modules

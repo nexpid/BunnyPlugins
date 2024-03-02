@@ -25,6 +25,10 @@ export interface LangValues {
       ];
     };
   };
+  kiryu_facecam: {
+    values: typeof import("./values/base/kiryu_facecam.json");
+    fillers: null;
+  };
   plugin_browser: {
     values: typeof import("./values/base/plugin_browser.json");
     fillers: {
