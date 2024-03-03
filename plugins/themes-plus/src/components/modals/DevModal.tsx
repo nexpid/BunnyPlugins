@@ -5,7 +5,7 @@ import { useProxy } from "@vendetta/storage";
 import { Button, Forms, General } from "@vendetta/ui/components";
 
 import Modal from "$/components/Modal";
-import SimpleText from "$/components/SimpleText";
+import SimpleText, { TrailingText } from "$/components/SimpleText";
 import { openSheet, popModal } from "$/types";
 
 import { lang, resetCacheID, runPatch, runUnpatch, vstorage } from "../..";
@@ -89,10 +89,10 @@ export default function () {
             <FormRow
               label={lang.format("modal.dev.iconpack.selected_iconpack", {})}
               trailing={
-                <SimpleText variant="text-md/medium" color="TEXT_MUTED">
+                <TrailingText>
                   {vstorage.iconpack.force ??
                     lang.format("sheet.select_iconpack.none", {})}
-                </SimpleText>
+                </TrailingText>
               }
               onPress={() =>
                 openSheet(IconpackListSheet, {

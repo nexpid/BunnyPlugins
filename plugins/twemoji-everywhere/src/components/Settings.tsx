@@ -3,7 +3,7 @@ import { getAssetIDByName } from "@vendetta/ui/assets";
 import { Forms, General } from "@vendetta/ui/components";
 
 import { BetterTableRowGroup } from "$/components/BetterTableRow";
-import SimpleText from "$/components/SimpleText";
+import { TrailingText } from "$/components/SimpleText";
 import { openSheet } from "$/types";
 
 import { lang, vstorage } from "..";
@@ -29,11 +29,11 @@ export default () => {
             <FormRow.Icon source={getAssetIDByName("ic_message_edit")} />
           }
           trailing={
-            <SimpleText variant="text-md/medium" color="TEXT_MUTED">
+            <TrailingText>
               {emojipacks[vstorage.emojipack]
                 ? lang.format(emojipacks[vstorage.emojipack].title, {})
                 : "-"}
-            </SimpleText>
+            </TrailingText>
           }
           onPress={() =>
             openSheet(EmojiPackActionSheet, { called: Date.now() })

@@ -6,24 +6,21 @@ import { Forms, General } from "@vendetta/ui/components";
 import { showToast } from "@vendetta/ui/toasts";
 
 import { BetterTableRowGroup } from "$/components/BetterTableRow";
-import SimpleText from "$/components/SimpleText";
+import ChooseSheet from "$/components/sheets/ChooseSheet";
+import SimpleText, { TrailingText } from "$/components/SimpleText";
 import { openSheet, resolveSemanticColor } from "$/types";
 
 import { vstorage } from "../..";
 import wallpapers from "../../stuff/wallpapers";
 import { stsPatches } from "../Settings";
-import ChooseSheet from "../sheets/ChooseSheet";
 
 const { View, ScrollView } = General;
 const { FormRow } = Forms;
 
 const readableThemeStyle = {
   auto: "Automatic",
-  Automatic: "auto",
   dark: "Dark",
-  Dark: "dark",
   light: "Light",
-  Light: "light",
 };
 
 export const ConfigurePage = () => {
@@ -79,22 +76,29 @@ export const ConfigurePage = () => {
             <FormRow.Icon source={getAssetIDByName("ic_message_edit")} />
           }
           trailing={
-            <SimpleText variant="text-md/medium" color="TEXT_MUTED">
+            <TrailingText>
               {readableThemeStyle[vstorage.config.style]}
-            </SimpleText>
+            </TrailingText>
           }
           onPress={() =>
             openSheet(ChooseSheet, {
-              label: "Theme Style",
-              value: readableThemeStyle[vstorage.config.style],
-              choices: [
-                readableThemeStyle.auto,
-                readableThemeStyle.dark,
-                readableThemeStyle.light,
+              title: "Theme Style",
+              value: vstorage.config.style,
+              options: [
+                {
+                  name: readableThemeStyle.auto,
+                  value: "auto",
+                },
+                {
+                  name: readableThemeStyle.dark,
+                  value: "dark",
+                },
+                {
+                  name: readableThemeStyle.light,
+                  value: "light",
+                },
               ],
-              update: (v) =>
-                vstorage.config &&
-                (vstorage.config.style = readableThemeStyle[v]),
+              callback: (v) => (vstorage.config.style = v as any),
             })
           }
         />

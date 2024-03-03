@@ -9,6 +9,7 @@ import { General, Search } from "@vendetta/ui/components";
 import { showToast } from "@vendetta/ui/toasts";
 import { safeFetch } from "@vendetta/utils";
 
+import ChooseSheet from "$/components/sheets/ChooseSheet";
 import SuperAwesomeIcon from "$/components/SuperAwesomeIcon";
 import { openSheet } from "$/types";
 
@@ -17,7 +18,6 @@ import { getChanges, updateChanges } from "../../stuff/pluginChecker";
 import { emitterAvailable } from "../../stuff/util";
 import { PluginsFullJson } from "../../types";
 import PluginThing from "../PluginThing";
-import ChooseSheet from "../sheets/ChooseSheet";
 
 const { View } = General;
 
@@ -106,10 +106,13 @@ export default () => {
   sortCallback = () =>
     parsed &&
     openSheet(ChooseSheet, {
-      label: lang.format("sheet.sort.title", {}),
-      value: lang.format(sort, {}),
-      choices: Object.values(Sort).map((x) => lang.format(x, {})),
-      update: (val) => currentSetSort.current(val as Sort),
+      title: lang.format("sheet.sort.title", {}),
+      value: sort,
+      options: Object.values(Sort).map((value) => ({
+        name: lang.format(value, {}),
+        value,
+      })),
+      callback: (val) => currentSetSort.current(val as Sort),
     });
 
   navigation.addListener("focus", () => {

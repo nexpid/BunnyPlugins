@@ -40,7 +40,7 @@ export default ({ called }: { called: number }) => {
         {Object.entries(emojipacks).map(
           ([id, info]: Entries<typeof emojipacks>) => (
             <FormRow
-              label={info.title}
+              label={lang.format(info.title, {})}
               trailing={
                 <CustomTwemoji
                   emoji={emoji}
