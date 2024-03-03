@@ -26,8 +26,8 @@ export const kyriuStyles = stylesheet.createThemedStyleSheet({
     left: 0,
     top: 0,
     width: "100%",
+    height: "100%",
     flexDirection: "row",
-    justifyContent: "center",
   },
   frame: {
     width,
@@ -50,63 +50,109 @@ export default function Kiryu({ oldUI }: { oldUI: boolean }) {
   const [open, setOpen] = React.useState(false);
   openSet = setOpen;
 
-  const off = oldUI ? rem(2.5) : rem(6);
+  const wHeight = RN.Dimensions.get("screen").height;
+
+  let yPosOff = 0;
+  let yPos = 0;
+
+  const padding = wHeight / 5;
+
+  if (vstorage.styling.yPos === "top") {
+    yPosOff = -height - padding;
+    yPos = oldUI ? rem(2.5) : rem(6);
+  } else if (vstorage.styling.yPos === "middle") {
+    yPosOff = -height - wHeight;
+    yPos = 0;
+  } else {
+    yPosOff = -height - padding;
+    yPos = rem(5);
+  }
 
   const posVal = Reanimated.useSharedValue(
-    vstorage.appearStyle === "fly" ? -height - 15 : off,
+    vstorage.appear.style === "fly" ? yPosOff : yPos,
   );
   const opVal = Reanimated.useSharedValue(
-    vstorage.appearStyle === "fly" ? 1 : 0,
+    vstorage.appear.style !== "fade" ? vstorage.styling.opacity / 10 : 0,
   );
   const rotVal = Reanimated.useSharedValue(
-    vstorage.swinging ? "-5deg" : "0deg",
+    vstorage.effects.swinging.enabled ? "-5deg" : "0deg",
   );
   const scaleVal = Reanimated.useSharedValue(1);
 
   React.useEffect(() => {
-    if (vstorage.appearStyle === "fly") {
-      opVal.value = 1;
-      posVal.value = Reanimated.withTiming(open ? off : -height - 15, {
-        duration: 600,
+    if (vstorage.appear.style === "fly") {
+      opVal.value = vstorage.styling.opacity / 10;
+      posVal.value = Reanimated.withTiming(open ? yPos : yPosOff, {
+        duration: vstorage.appear.speed,
         easing: open
           ? Reanimated.Easing.out(Reanimated.Easing.back(1.5))
           : Reanimated.Easing.in(Reanimated.Easing.cubic),
       });
+    } else if (vstorage.appear.style === "fade") {
+      posVal.value = yPos;
+      opVal.value = Reanimated.withTiming(
+        open ? vstorage.styling.opacity / 10 : 0,
+        {
+          duration: vstorage.appear.speed,
+        },
+      );
     } else {
-      posVal.value = off;
-      opVal.value = Reanimated.withTiming(open ? 1 : 0, {
-        duration: 222,
-      });
+      posVal.value = yPos;
+      opVal.value = vstorage.styling.opacity / 10;
     }
-  }, [open, vstorage.appearStyle]);
+  }, [
+    open,
+    vstorage.appear.style,
+    vstorage.appear.speed,
+    vstorage.styling.opacity,
+  ]);
 
   React.useEffect(() => {
-    if (vstorage.swinging)
+    if (vstorage.effects.swinging.enabled)
       rotVal.value = Reanimated.withRepeat(
         Reanimated.withTiming("5deg", {
-          duration: 900,
+          duration: vstorage.effects.swinging.speed,
         }),
         -1,
         true,
       );
     else rotVal.value = "0deg";
-  }, [vstorage.swinging]);
+  }, [vstorage.effects.swinging.enabled, vstorage.effects.swinging.speed]);
 
   scaleSet = () => {
-    if (!vstorage.bounce) return;
-    scaleVal.value = 1.05;
+    if (!vstorage.effects.bounce.enabled) return;
+    scaleVal.value = vstorage.effects.bounce.multiplier;
     scaleVal.value = Reanimated.withTiming(1, {
-      duration: 90,
+      duration: vstorage.effects.bounce.speed,
     });
   };
 
   return (
-    <RN.View style={kyriuStyles.base} pointerEvents="none">
+    <RN.View
+      style={[
+        kyriuStyles.base,
+        {
+          justifyContent:
+            vstorage.styling.xPos === "left"
+              ? "flex-start"
+              : vstorage.styling.xPos === "right"
+                ? "flex-end"
+                : "center",
+          alignItems:
+            vstorage.styling.yPos === "top"
+              ? "flex-start"
+              : vstorage.styling.yPos === "bottom"
+                ? "flex-end"
+                : "center",
+        },
+      ]}
+      pointerEvents="none"
+    >
       <Reanimated.default.View
         style={[
           kyriuStyles.frame,
           {
-            marginTop: posVal,
+            marginVertical: posVal,
             opacity: opVal,
             transform: [{ rotate: rotVal }, { scale: scaleVal }],
           },
@@ -114,13 +160,13 @@ export default function Kiryu({ oldUI }: { oldUI: boolean }) {
       >
         <RN.Image
           source={{ uri: kazuma }}
-          style={{
-            position: "absolute",
-            left: -(frame % kyrDt.col) * width,
-            top: -Math.floor(frame / kyrDt.col) * height,
-            width: width * kyrDt.col,
-            height: height * kyrDt.row,
-          }}
+          style={[
+            kyriuStyles.empty,
+            {
+              left: -(frame % kyrDt.col) * width,
+              top: -Math.floor(frame / kyrDt.col) * height,
+            },
+          ]}
           resizeMode="stretch"
         />
       </Reanimated.default.View>
