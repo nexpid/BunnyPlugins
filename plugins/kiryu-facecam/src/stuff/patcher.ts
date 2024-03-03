@@ -1,32 +1,39 @@
 import { findByProps } from "@vendetta/metro";
 import { React, ReactNative as RN } from "@vendetta/metro/common";
-import { after } from "@vendetta/patcher";
+import { after, before } from "@vendetta/patcher";
 import { findInReactTree } from "@vendetta/utils";
 
 import Kiryu, { openSet } from "../components/Kiryu";
 import { sendAction } from "./frames";
 
 const { ChatInput } = findByProps("ChatInput");
+const messaging = findByProps("sendMessage", "receiveMessage");
 
 export default function () {
   const patches = new Array<() => void>();
 
   patches.push(
     after("render", RN.View, ([{ children, style }], ret) => {
-      if (
-        style &&
-        Array.isArray(children) &&
-        Object.keys(style).length === 2 &&
-        style.flex === 1 &&
-        style.overflow === "hidden" &&
-        children.find((y: any) => y?.type?.name === "ChatViewConnected")
-      ) {
-        return React.createElement(
-          React.Fragment,
-          {},
-          ret,
-          React.createElement(Kiryu),
-        );
+      if (style && Array.isArray(children)) {
+        const oldUI =
+          Object.keys(style).length === 1 &&
+          style.flex === 1 &&
+          children.find((y: any) => y?.type?.name === "ChannelRoutes");
+
+        if (
+          oldUI ||
+          (Object.keys(style).length === 2 &&
+            style.flex === 1 &&
+            style.overflow === "hidden" &&
+            children.find((y: any) => y?.type?.name === "ChatViewConnected"))
+        ) {
+          return React.createElement(
+            React.Fragment,
+            {},
+            ret,
+            React.createElement(Kiryu, { oldUI }),
+          );
+        }
       }
     }),
   );
@@ -52,12 +59,19 @@ export default function () {
       if (!props?.onChangeText) return;
 
       patches.push(
-        after("onChangeText", props, () =>
-          sendAction(Math.random() < 0.5 ? "left" : "right"),
+        after(
+          "onChangeText",
+          props,
+          ([txt]) =>
+            txt !== "" && sendAction(Math.random() < 0.5 ? "left" : "right"),
         ),
       );
     }),
   );
+
+  const nod = () => sendAction("nod", 1000 / 10);
+  patches.push(before("sendMessage", messaging, nod));
+  patches.push(before("editMessage", messaging, nod));
 
   return () => patches.forEach((x) => x());
 }

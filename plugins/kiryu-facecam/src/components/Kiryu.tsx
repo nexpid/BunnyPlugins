@@ -8,8 +8,8 @@ import { vstorage } from "..";
 export const kyrDt = {
   w: 220,
   h: 146,
-  col: 3,
-  row: 2,
+  col: 5,
+  row: 4,
 };
 
 const rem = (rad: number) => rad * 16;
@@ -44,14 +44,16 @@ export const kyriuStyles = stylesheet.createThemedStyleSheet({
   },
 });
 
-export default function Kiryu() {
+export default function Kiryu({ oldUI }: { oldUI: boolean }) {
   const [frame, setFrame] = React.useState(0);
   frameSet = setFrame;
   const [open, setOpen] = React.useState(false);
   openSet = setOpen;
 
+  const off = oldUI ? rem(2.5) : rem(6);
+
   const posVal = Reanimated.useSharedValue(
-    vstorage.appearStyle === "fly" ? -height - 15 : rem(6),
+    vstorage.appearStyle === "fly" ? -height - 15 : off,
   );
   const opVal = Reanimated.useSharedValue(
     vstorage.appearStyle === "fly" ? 1 : 0,
@@ -64,14 +66,14 @@ export default function Kiryu() {
   React.useEffect(() => {
     if (vstorage.appearStyle === "fly") {
       opVal.value = 1;
-      posVal.value = Reanimated.withTiming(open ? rem(6) : -height - 15, {
+      posVal.value = Reanimated.withTiming(open ? off : -height - 15, {
         duration: 600,
         easing: open
           ? Reanimated.Easing.out(Reanimated.Easing.back(1.5))
           : Reanimated.Easing.in(Reanimated.Easing.cubic),
       });
     } else {
-      posVal.value = rem(6);
+      posVal.value = off;
       opVal.value = Reanimated.withTiming(open ? 1 : 0, {
         duration: 222,
       });
