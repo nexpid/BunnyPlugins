@@ -1,8 +1,9 @@
+import { existsSync } from "fs";
 import { readFile, writeFile, readdir } from "fs/promises";
 import { join } from "path";
 import { format } from "prettier";
 
-export async function write(path, defsPath) {
+export async function write(path, defsPath, fillPath) {
   /** @type {string[]} */
   const defs = [];
   defs.push("export interface LangValues {");
@@ -15,9 +16,51 @@ export async function write(path, defsPath) {
     try {
       dt = JSON.parse(await readFile(join(path, file)));
     } catch {
-      console.log("Failed to parse", file);
+      console.log(`Failed to parse values/base/${file}`);
       continue;
     }
+
+    if (fillPath) {
+      let changed = false;
+
+      if (!existsSync(join(fillPath, file))) {
+        changed = await writeFile(
+          join(fillPath, file),
+          JSON.stringify({ en: dt }),
+        );
+      } else {
+        let vals;
+        try {
+          vals = JSON.parse(await readFile(join(fillPath, file)));
+        } catch {
+          console.log(`Failed to parse values/${file}`);
+        }
+
+        if (vals) {
+          for (const [lang, dict] of Object.entries(vals)) {
+            for (const langKey of Object.keys(dict).filter(
+              (langKey) => !(langKey in dt),
+            )) {
+              changed = true;
+              delete dict[langKey];
+            }
+
+            for (const dtKey of Object.keys(dt).filter((dtKey) =>
+              lang === "en" ? dict[dtKey] !== dt[dtKey] : !(dtKey in dict),
+            )) {
+              changed = true;
+              dict[dtKey] = dt[dtKey];
+            }
+          }
+
+          if (changed)
+            await writeFile(join(fillPath, file), JSON.stringify(vals));
+        }
+      }
+
+      if (changed) console.log(`Updated values/${file}`);
+    }
+
     const fillers = Object.entries(dt)
       .map((x) => [x[0], x[1].match(/\$\w+/g)?.map((x) => x.slice(1)) ?? []])
       .filter((x) => x[1].length > 0);

@@ -7,7 +7,11 @@ const changed = async (file) => {
   if (file) console.log("Update!", file, "\n");
   else console.log("Ready!\n");
 
-  write(join("lang", "values", "base"), join("lang", "defs.d.ts"));
+  write(
+    join("lang", "values", "base"),
+    join("lang", "defs.d.ts"),
+    join("lang", "values"),
+  );
 };
 
 chokidar
