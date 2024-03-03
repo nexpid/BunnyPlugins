@@ -2,7 +2,7 @@ import { React } from "@vendetta/metro/common";
 import { ReactNative as RN, stylesheet } from "@vendetta/metro/common";
 import { rawColors } from "@vendetta/ui";
 
-import { lerp, resolveCustomSemantic } from "../../../stuff/colors";
+import { lerp, resolveCustomSemantic } from "$/types";
 
 const AnimatedPressable = RN.Animated.createAnimatedComponent(RN.Pressable);
 

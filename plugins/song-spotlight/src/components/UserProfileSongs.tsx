@@ -8,12 +8,13 @@ import { showToast } from "@vendetta/ui/toasts";
 
 import SimpleText from "$/components/SimpleText";
 import { Svg, WebView } from "$/deps";
-import { openSheet, TextStyleSheet } from "$/types";
-
 import {
   lerp,
+  openSheet,
   resolveCustomSemantic,
-} from "../../../nexxutils/src/stuff/colors";
+  TextStyleSheet,
+} from "$/types";
+
 import next from "../../assets/card/next.svg";
 import pause from "../../assets/card/pause.svg";
 import play from "../../assets/card/play.svg";

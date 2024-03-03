@@ -1,4 +1,3 @@
-import { findByStoreName } from "@vendetta/metro";
 import { ReactNative as RN, url } from "@vendetta/metro/common";
 
 import { API } from "../types/api";
@@ -9,11 +8,6 @@ export const rebuildLink = (
   id: API.Song["id"],
 ): string =>
   service === "spotify" ? `https://open.spotify.com/${type}/${id}` : undefined;
-
-const ThemeStore = findByStoreName("ThemeStore");
-
-export const resolveCustomSemantic = (dark: string, light: string) =>
-  ThemeStore.theme !== "light" ? dark : light;
 
 export async function openSpotify(uri: string) {
   if (await RN.Linking.canOpenURL(uri)) url.openDeeplink(uri);
