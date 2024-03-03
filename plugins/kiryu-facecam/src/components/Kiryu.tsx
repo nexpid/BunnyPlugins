@@ -1,4 +1,5 @@
 import { React, ReactNative as RN, stylesheet } from "@vendetta/metro/common";
+import { useProxy } from "@vendetta/storage";
 
 import { Reanimated } from "$/deps";
 
@@ -45,6 +46,8 @@ export const kyriuStyles = stylesheet.createThemedStyleSheet({
 });
 
 export default function Kiryu({ oldUI }: { oldUI: boolean }) {
+  useProxy(vstorage);
+
   const [frame, setFrame] = React.useState(0);
   frameSet = setFrame;
   const [open, setOpen] = React.useState(false);
