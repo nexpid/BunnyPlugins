@@ -2,7 +2,6 @@ import { clipboard, React, url } from "@vendetta/metro/common";
 import { plugins } from "@vendetta/plugins";
 import { installPlugin, removePlugin } from "@vendetta/plugins";
 import { getAssetIDByName } from "@vendetta/ui/assets";
-import { General } from "@vendetta/ui/components";
 import { showToast } from "@vendetta/ui/toasts";
 
 import { lang } from "..";
@@ -10,8 +9,6 @@ import { matchGithubLink, properLink, refetchPlugin } from "../stuff/util";
 import { PluginsFullJson } from "../types";
 import usePlugin from "./hooks/usePlugin";
 import ScuffedPluginCard from "./ScuffedPluginCard";
-
-const { View } = General;
 
 export default function ({
   index,
