@@ -10,6 +10,14 @@ import {
 
 const { Text } = General;
 
+export function TrailingText({ children }: React.PropsWithChildren<object>) {
+  return (
+    <SimpleText variant="text-md/medium" color="TEXT_MUTED">
+      {children}
+    </SimpleText>
+  );
+}
+
 export default function SimpleText({
   variant,
   lineClamp,

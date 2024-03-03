@@ -75,4 +75,20 @@ export type Redesign = {
     grow?: boolean;
     onChange?: (value: string) => void;
   }>;
+
+  Slider: React.FC<{
+    value: number;
+    accessibilityLabel?: string;
+    accessibilityValue?: {
+      text: string;
+    };
+    step: number;
+    onValueChange?: (value: number) => void;
+    minimumValue: number;
+    maximumValue: number;
+    onSlidingStart?: () => void;
+    onSlidingComplete?: () => void;
+    startIcon?: React.ReactNode;
+    endIcon?: React.ReactNode;
+  }>;
 };
