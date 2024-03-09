@@ -1,4 +1,4 @@
-import { HTTP_REGEX_MULTI,  } from "@vendetta/constants";
+import { HTTP_REGEX_MULTI } from "@vendetta/constants";
 import { findByProps } from "@vendetta/metro";
 import { ReactNative as RN } from "@vendetta/metro/common";
 import { before, instead } from "@vendetta/patcher";

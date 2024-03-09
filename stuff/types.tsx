@@ -1,4 +1,4 @@
-import { constants, logger } from "@vendetta";
+import { logger } from "@vendetta";
 import {
   find,
   findByName,
