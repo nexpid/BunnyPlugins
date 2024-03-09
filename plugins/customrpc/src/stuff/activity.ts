@@ -1,7 +1,7 @@
 import { FluxDispatcher } from "@vendetta/metro/common";
 
+import { getClient } from "$/compat";
 import { Joi } from "$/deps";
-import { getClient } from "$/types";
 
 import { debug, vstorage } from "..";
 import { forceUpdateLiveRawActivityView } from "../components/pages/LiveRawActivityView";

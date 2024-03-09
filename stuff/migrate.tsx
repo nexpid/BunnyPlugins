@@ -3,7 +3,7 @@ import { showConfirmationAlert } from "@vendetta/ui/alerts";
 
 import RNFS from "$/wrappers/RNFS";
 
-import { getClient } from "./types";
+import { getClient } from "./compat";
 
 // Symbol used so this notice appears only once even when included in multiple plugins
 const sym = Symbol.for("nexpid.vendetta.migrate");

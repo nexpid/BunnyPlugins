@@ -156,13 +156,6 @@ export function doHaptic(dur: number): Promise<void> {
   );
 }
 
-export function getClient() {
-  const gh = constants.GITHUB;
-  if (gh.includes("vendetta-mod")) return "Vendetta";
-  else if (gh.includes("revenge-mod")) return "Revenge";
-  else return "Enmity"; // troll
-}
-
 export function androidifyColor(color: string, alpha = 255): number {
   const [_, r, g, b] = color.match(/#([A-F0-9]{2})([A-F0-9]{2})([A-F0-9]{2})/i);
 

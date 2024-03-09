@@ -1,9 +1,9 @@
-import { PROXY_PREFIXES } from "@vendetta/constants";
 import { storage } from "@vendetta/plugin";
 import { plugins } from "@vendetta/plugins";
 import { createStorage, wrapSync } from "@vendetta/storage";
 import { themes } from "@vendetta/themes";
 
+import { pluginProxies } from "$/compat";
 import { Lang } from "$/lang";
 import migrate from "$/migrate";
 
@@ -51,7 +51,7 @@ export const fillCache = async () =>
   getSaveData().then((x) => (cache.save = x));
 
 export function isPluginProxied(id: string) {
-  return PROXY_PREFIXES.some((x) => id.startsWith(x));
+  return pluginProxies().some((x) => id.startsWith(x));
 }
 export function canImport(id: string) {
   return !id.includes("cloud-sync");

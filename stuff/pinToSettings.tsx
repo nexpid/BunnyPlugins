@@ -11,7 +11,7 @@ import { semanticColors } from "@vendetta/ui";
 import { ErrorBoundary, Forms } from "@vendetta/ui/components";
 import { findInReactTree, without } from "@vendetta/utils";
 
-import { getClient } from "./types";
+import { getClient } from "./compat";
 
 const { FormSection } = Forms;
 
