@@ -54,5 +54,6 @@
     }
   },
   "repository": "https://github.com/nexpid/RevengePlugins",
-  "author": "nexpid (https://github.com/nexpid)"
+  "author": "nexpid (https://github.com/nexpid)",
+  "license": "CC-BY-4.0"
 }
