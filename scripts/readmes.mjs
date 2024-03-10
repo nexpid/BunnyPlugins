@@ -290,7 +290,7 @@ const plist = categories
   .map((x) => [x[0], plugins.filter((y) => y.status === x[1])])
   .map(
     ([status, plugins]) =>
-      `## ${status}\n\n${plugins
+      `### ${status}\n\n${plugins
         .map(
           (y) =>
             `- ${y.name} — ${y.description}${
@@ -336,11 +336,11 @@ const mreadme = `${mdNote}
 
 A collection of all my awesome plugins for Revenge
 
-# 🥼 Vendetta EOL
+## 🥼 Vendetta EOL
 
 I've switched to using [Revenge](https://github.com/revenge-mod/Revenge) now, make sure to check it out!
 
-# 📊 Stats
+## 📊 Stats
 
 I've coded a total of **${stats.all}** plugin${plur(stats.all)}.  
 Out of the plugins I've coded, **${stats.finished}** ${plur(
@@ -358,7 +358,7 @@ I'm working on **${stats.unfinished}** plugin${plur(stats.unfinished)}, and **${
   )}" width=600 />
 </div>
 
-# 📃 Plugin List
+## 📃 Plugin List
 
 ${plist.join("\n\n")}${
   invalidPlugins.length > 0
@@ -374,7 +374,7 @@ ${invalidPlugins.map((x) => `> - ${x[0]}  `).join("\n")}`
     : ""
 }
 
-# 📜 Licensing
+## 📜 Licensing
 
 <details>
   <summary>This project now uses the CC-BY-4.0 license</summary>
