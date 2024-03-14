@@ -162,9 +162,10 @@ export default function ImportActionSheet({
         />
         <RedesignButton
           text={lang.format("sheet.import_data.import", {})}
-          variant="positive"
+          variant="primary"
           size="md"
-          icon={getAssetIDByName("ic_download_24px")}
+          iconPosition="start"
+          icon={getAssetIDByName("DownloadIcon")}
           onPress={() => {
             openImportLogsPage(navigation);
             importData(save, options);
