@@ -1,13 +1,26 @@
+/*
+  button variant update around version 222.4:
+  removed:
+    - primary-on-blurple
+    - primary-alt
+    - primary-alt-on-blurple
+    - secondary-alt
+    - secondary-input
+  changed:
+    - danger > destructive
+    - positive > active
+
+  avoiding using removed/changed button variants is easier than adding some sort of compatibility :3
+ */
+
 type ButtonVariant =
   | "primary"
-  | "primary-on-blurple"
-  | "primary-alt"
-  | "primary-alt-on-blurple"
   | "secondary"
-  | "secondary-alt"
-  | "secondary-input"
-  | "danger"
-  | "positive";
+  | "tertiary"
+  | "primary-overlay"
+  | "secondary-overlay"
+  | "destructive"
+  | "active";
 
 type TextButtonIcon = React.FC<{
   source: import("react-native").ImageSourcePropType;
@@ -23,17 +36,21 @@ interface ContextMenuItem {
 
 export type Redesign = {
   Button: React.FC<{
-    variant: ButtonVariant;
-    size: "sm" | "md" | "lg";
-    onPress?: () => any;
     text: string;
+    variant?: ButtonVariant;
+    size?: "sm" | "md" | "lg";
+    onPress?: () => void;
+    onPressIn?: () => void;
+    onPressOut?: () => void;
+    onTouchStart?: () => void;
+    disabled?: boolean;
     icon?:
       | import("react-native").ImageSourcePropType
       | React.JSXElementConstructor;
     iconPosition?: "start" | "end";
-    style?: import("react-native").StyleProp<import("react-native").ViewStyle>;
-    disabled?: boolean;
+    grow?: boolean;
     loading?: boolean;
+    style?: import("react-native").StyleProp<import("react-native").ViewStyle>;
   }> & {
     Icon: TextButtonIcon;
   };
