@@ -42,6 +42,30 @@ export function patchSettingsPin(
 ): () => void {
   const patches = [];
 
+  //REVIEW the Bunny code below freezes the client :3 not ready for production yet
+
+  // const bunny = (window as any).bunny;
+
+  // console.log("clint", getClient(), bunny?.ui?.settings?.registerSection);
+  // if (getClient() === "Bunny" && bunny?.ui?.settings?.registerSection) {
+  //   console.log("BUNNEYYYY");
+  //   if (you) {
+  //     console.log("yew");
+  //     patches.push(
+  //       bunny.ui.settings.registerSection({
+  //         name: you.key,
+  //         items: [
+  //           {
+  //             key: `BUNNY_PLUGIN_${lodash.snakeCase(you.key).toUpperCase()}`,
+  //             title: () => you.title,
+  //             icon: you.icon,
+  //             render: you.page.render,
+  //           },
+  //         ],
+  //       }),
+  //     );
+  //   }
+
   const unpatch = after(
     "default",
     settingsModule,
@@ -81,7 +105,7 @@ export function patchSettingsPin(
   patches.push(unpatch);
 
   if (getScreens && you) {
-    const screenKey = `VENDETTA_PLUGIN_${lodash
+    const screenKey = `${lodash.snakeCase(getClient()).toUpperCase()}_PLUGIN_${lodash
       .snakeCase(you.key)
       .toUpperCase()}`;
 
@@ -112,7 +136,7 @@ export function patchSettingsPin(
         icon: you.icon,
         parent: null,
         screen: {
-          route: `VendettaPlugin${lodash
+          route: `${getClient()}Plugin${lodash
             .chain(you.key)
             .camelCase()
             .upperFirst()

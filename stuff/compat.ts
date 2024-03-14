@@ -5,10 +5,11 @@ import { constants } from "@vendetta";
 export function getClient() {
   const gh = constants.GITHUB;
 
+  if ("bunny" in window) return "Bunny";
+
   if (gh.includes("vendetta-mod")) return "Vendetta";
   else if (gh.includes("revenge-mod")) return "Revenge";
-  else if (gh.includes("pyoncord")) return "Bunny";
-  else return "Unknown Client";
+  else return "UnknownClient";
 }
 
 export function pluginProxies() {
