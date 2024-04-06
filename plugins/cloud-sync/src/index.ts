@@ -1,11 +1,10 @@
+import { constants } from "@vendetta";
 import { storage } from "@vendetta/plugin";
 import { plugins } from "@vendetta/plugins";
 import { createStorage, wrapSync } from "@vendetta/storage";
 import { themes } from "@vendetta/themes";
 
-import { pluginProxies } from "$/compat";
 import { Lang } from "$/lang";
-import migrate from "$/migrate";
 
 import Settings from "./components/Settings";
 import { currentAuthorization, getSaveData, syncSaveData } from "./stuff/api";
@@ -51,7 +50,7 @@ export const fillCache = async () =>
   getSaveData().then((x) => (cache.save = x));
 
 export function isPluginProxied(id: string) {
-  return pluginProxies().some((x) => id.startsWith(x));
+  return id.startsWith(constants.PROXY_PREFIX);
 }
 export function canImport(id: string) {
   return !id.includes("cloud-sync");
@@ -78,8 +77,6 @@ export default {
     vstorage.addToSettings ??= false;
     vstorage.pluginSettings ??= {};
     vstorage.auth ??= {};
-
-    migrate();
 
     if (currentAuthorization()) fillCache();
 

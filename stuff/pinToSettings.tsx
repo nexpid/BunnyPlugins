@@ -11,8 +11,6 @@ import { semanticColors } from "@vendetta/ui";
 import { ErrorBoundary, Forms } from "@vendetta/ui/components";
 import { findInReactTree, without } from "@vendetta/utils";
 
-import { getClient } from "./compat";
-
 const { FormSection } = Forms;
 
 const getScreens = findByName("getScreens");
@@ -43,6 +41,7 @@ export function patchSettingsPin(
   const patches = [];
 
   //REVIEW the Bunny code below freezes the client :3 not ready for production yet
+  //REVIEW check again, maybe it's fixed now??
 
   // const bunny = (window as any).bunny;
 
@@ -105,9 +104,7 @@ export function patchSettingsPin(
   patches.push(unpatch);
 
   if (getScreens && you) {
-    const screenKey = `${lodash.snakeCase(getClient()).toUpperCase()}_PLUGIN_${lodash
-      .snakeCase(you.key)
-      .toUpperCase()}`;
+    const screenKey = `BUNNY_PLUGIN_${lodash.snakeCase(you.key).toUpperCase()}`;
 
     const Page = you.page.render;
     const component = React.memo(({ navigation }: any) => {
@@ -136,7 +133,7 @@ export function patchSettingsPin(
         icon: you.icon,
         parent: null,
         screen: {
-          route: `${getClient()}Plugin${lodash
+          route: `BunnyPlugin${lodash
             .chain(you.key)
             .camelCase()
             .upperFirst()
@@ -151,7 +148,7 @@ export function patchSettingsPin(
       const sections = nw ? cloned?.[0]?.sections : cloned;
       if (!Array.isArray(sections)) return sections;
 
-      const title = getClient();
+      const title = "Bunny";
       const section = sections.find(
         (x) => x?.title === title || x?.label === title,
       );
@@ -200,7 +197,7 @@ export function patchSettingsPin(
                   ancestorRendererData: rendererConfig[screenKey],
                   setting: screenKey,
                   title: () => you.title,
-                  breadcrumbs: [getClient()],
+                  breadcrumbs: ["Bunny", "Nexpid"],
                   icon: rendererConfig[screenKey].icon,
                 },
               ]
@@ -246,7 +243,7 @@ export function patchSettingsPin(
       patches.push(
         after("getSettingListSearchResultItems", gettersModule, (_, ret) => {
           for (const s of ret)
-            if (s.setting === screenKey) s.breadcrumbs = [getClient()];
+            if (s.setting === screenKey) s.breadcrumbs = ["Bunny", "Nexpid"];
         }),
       );
 

@@ -40,6 +40,9 @@ devDependencies:
   '@typescript-eslint/parser':
     specifier: ^7.0.2
     version: 7.0.2(eslint@8.57.0)(typescript@5.3.3)
+  acorn:
+    specifier: ^8.11.3
+    version: 8.11.3
   chokidar:
     specifier: ^3.6.0
     version: 3.6.0
@@ -55,6 +58,9 @@ devDependencies:
   eslint-plugin-unused-imports:
     specifier: ^3.1.0
     version: 3.1.0(@typescript-eslint/eslint-plugin@7.0.2)(eslint@8.57.0)
+  estree-walker:
+    specifier: ^3.0.3
+    version: 3.0.3
   joi:
     specifier: ^17.12.2
     version: 17.12.2
@@ -1757,6 +1763,12 @@ packages:
 
   /estree-walker@2.0.2:
     resolution: {integrity: sha512-Rfkk/Mp/DL7JVje3u18FxFujQlTNR2q6QfMSMB7AvCBx91NGj/ba3kCfza0f6dVDbw7YlRf/nDrn7pQrCCyQ/w==}
+    dev: true
+
+  /estree-walker@3.0.3:
+    resolution: {integrity: sha512-7RUKfXgSMMkzt6ZuXmqapOurLGPPfgj6l9uRZ7lRGolvk0y2yocc35LdcxKC5PQZdn2DMqioAQ2NoWcrTKmm6g==}
+    dependencies:
+      '@types/estree': 1.0.5
     dev: true
 
   /esutils@2.0.3:

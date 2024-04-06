@@ -1,3 +1,4 @@
+import { constants } from "@vendetta";
 import { HTTP_REGEX_MULTI } from "@vendetta/constants";
 import { findByProps } from "@vendetta/metro";
 import { ReactNative as RN } from "@vendetta/metro/common";
@@ -5,8 +6,6 @@ import { before, instead } from "@vendetta/patcher";
 import { installPlugin, plugins, removePlugin } from "@vendetta/plugins";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { showToast } from "@vendetta/ui/toasts";
-
-import { pluginProxies } from "$/compat";
 
 import { Iterable } from "..";
 import { pluginMessageCache, updateMessages } from "./messages";
@@ -31,7 +30,7 @@ export default () => {
               for (const url of x.content.match(HTTP_REGEX_MULTI) ?? [])
                 if (
                   [
-                    ...pluginProxies(),
+                    constants.PROXY_PREFIX,
                     "https://vendetta.nexpid.xyz/", // :3
                     /^https?:\/\/\w+\.github\.io\//i,
                   ].some((x) =>

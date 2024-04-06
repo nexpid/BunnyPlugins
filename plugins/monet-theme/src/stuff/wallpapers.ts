@@ -1,3 +1,5 @@
+import constants from "$/constants";
+
 export interface Collection {
   label: string;
   variant: "dark" | "light" | "any";
@@ -7,7 +9,7 @@ export interface Collection {
   }[];
 }
 
-const prefix = `https://raw.githubusercontent.com/nexpid/RevengePlugins/main/plugins/monet-theme/assets/backgrounds/`;
+const prefix = `${constants.github.raw}plugins/monet-theme/assets/backgrounds/`;
 
 export default <Collection[]>[
   {

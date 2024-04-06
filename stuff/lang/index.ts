@@ -1,10 +1,11 @@
 import { i18n } from "@vendetta/metro/common";
 
+import constants from "$/constants";
 import RNFS from "$/wrappers/RNFS";
 
 import type { LangValues } from "../../lang/defs";
 
-const url = `https://raw.githubusercontent.com/nexpid/RevengePlugins/main/lang/values/`;
+const url = `${constants.github.raw}lang/values/`;
 
 const make = () =>
   RNFS.hasRNFS &&
@@ -79,18 +80,21 @@ export class Lang<Plugin extends keyof LangValues> {
   }
 
   format<Key extends keyof LangValues[Plugin]["values"]>(
-    key: Key,
+    _key: Key,
     fillers: Key extends keyof LangValues[Plugin]["fillers"]
       ? //@ts-expect-error shut up shut up shut up shut up
         Record<LangValues[Plugin]["fillers"][Key][number], string | number>
       : Record<string, never>,
+    /** @deprecated This gets filled in by the builder, do not use!!!! */
+    _def?: never,
   ): string {
+    const def = _def as string;
+    const key = _key as string;
+
     if (!this.values) return String(key);
 
-    const lang = this.values[Lang.getLang()];
-    if (!lang) return String(key);
-
-    let val = lang[String(key)];
+    let val =
+      this.values[Lang.getLang()]?.[key] ?? this.values.en?.[key] ?? def;
     if (!val) return String(key);
 
     const reqs = val.match(/\$\w+/g)?.map((x) => x.slice(1)) ?? [];

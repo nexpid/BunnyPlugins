@@ -64,7 +64,7 @@ export default () => {
         />
         <FormRadioRow
           label="Remaining"
-          subLabel="200"
+          subLabel="-200"
           onPress={() => (vstorage.display = "remaining")}
           trailing={<FormRow.Arrow />}
           selected={vstorage.display === "remaining"}

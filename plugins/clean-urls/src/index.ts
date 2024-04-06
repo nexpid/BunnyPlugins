@@ -1,6 +1,8 @@
+import constants from "$/constants";
+
 import patcher from "./stuff/patcher";
 
-export const listUrl = `https://raw.githubusercontent.com/nexpid/RevengePlugins/main/plugins/clean-urls/assets/list.json`;
+export const listUrl = `${constants.github.raw}plugins/clean-urls/assets/list.json`;
 
 let unpatch: () => void;
 

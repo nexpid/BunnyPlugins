@@ -6,6 +6,8 @@ import {
 } from "@vendetta/plugins";
 import { themes } from "@vendetta/themes";
 
+import constants from "$/constants";
+
 export function properLink(id: string): string {
   return !id.endsWith("/") ? id + "/" : id;
 }
@@ -20,9 +22,7 @@ const linkMatches = {
 // will update sometimes for other plugin devs
 const customLinks = {
   "vendetta.nexpid.xyz": (path: string[]) =>
-    `https://github.com/nexpid/RevengePlugins/tree/main/plugins/${path.join(
-      "/",
-    )}`,
+    `${constants.github.url}plugins/${path.join("/")}`,
   "vendetta.sdh.gay": (path: string[]) =>
     `https://github.com/sdhhhhh/vd-repo/tree/master/plugins/${path.join("/")}`,
   "plugins.obamabot.me": (path: string[]) =>

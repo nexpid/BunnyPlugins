@@ -1,3 +1,5 @@
+import constants from "$/constants";
+
 import { vstorage } from ".";
 
 export const defaultRoot = "https://cloudsync.nexpid.xyz/";
@@ -14,7 +16,7 @@ export default {
   get api() {
     return api();
   },
-  raw: "https://raw.githubusercontent.com/nexpid/RevengePlugins/main/plugins/cloud-sync/",
+  raw: `${constants.github.raw}plugins/cloud-sync/`,
   oauth2: {
     get clientId() {
       return vstorage.clientId || defaultClientId;
