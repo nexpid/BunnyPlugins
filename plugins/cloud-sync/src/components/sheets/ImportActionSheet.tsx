@@ -6,8 +6,7 @@ import { showConfirmationAlert } from "@vendetta/ui/alerts";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { Forms, General } from "@vendetta/ui/components";
 
-import RedesignButton from "$/components/compat/RedesignButton";
-import SimpleText from "$/components/SimpleText";
+import Text from "$/components/Text";
 import {
   ActionSheet,
   ActionSheetCloseButton,
@@ -15,6 +14,7 @@ import {
   ActionSheetTitleHeader,
   hideActionSheet,
   openSheet,
+  Redesign,
 } from "$/types";
 
 import { cache, canImport, isPluginProxied, lang } from "../..";
@@ -92,13 +92,13 @@ export default function ImportActionSheet({
                 style={styles.icon}
                 resizeMode="cover"
               />
-              <SimpleText
+              <Text
                 variant="text-md/semibold"
                 color="TEXT_BRAND"
                 align="center"
               >
                 {lang.format("sheet.import_data.already_synced", {})}
-              </SimpleText>
+              </Text>
             </View>
           </>
         )}
@@ -160,7 +160,7 @@ export default function ImportActionSheet({
           }
           selected={options.themes}
         />
-        <RedesignButton
+        <Redesign.Button
           text={lang.format("sheet.import_data.import", {})}
           variant="primary"
           size="md"

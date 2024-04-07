@@ -4,7 +4,7 @@ import { semanticColors } from "@vendetta/ui";
 import { General } from "@vendetta/ui/components";
 
 import { FadeView } from "$/components/Animations";
-import SimpleText from "$/components/SimpleText";
+import Text from "$/components/Text";
 import { TextStyleSheet } from "$/types";
 
 import { vstorage } from "..";
@@ -101,15 +101,15 @@ export default ({ inputProps }: { inputProps: any }) => {
           duration={100}
           style={styles.extraMessagesCircle}
         >
-          <SimpleText
+          <Text
             variant="text-xs/semibold"
             color="TEXT_NORMAL"
             style={{ paddingHorizontal: xsFontSize / 2 }}
           >
             {extraMessages}
-          </SimpleText>
+          </Text>
         </FadeView>
-        <SimpleText
+        <Text
           variant="text-xs/semibold"
           color={dspLength <= maxLength ? "TEXT_NORMAL" : "TEXT_DANGER"}
           style={{
@@ -118,7 +118,7 @@ export default ({ inputProps }: { inputProps: any }) => {
           }}
         >
           {display(dspLength)}
-        </SimpleText>
+        </Text>
       </UseComponent>
     </FadeView>
   );

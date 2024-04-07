@@ -3,7 +3,7 @@ import { semanticColors } from "@vendetta/ui";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { General } from "@vendetta/ui/components";
 
-import SimpleText from "$/components/SimpleText";
+import Text from "$/components/Text";
 import { openModal } from "$/types";
 
 import { hasAnyPin } from "..";
@@ -60,13 +60,13 @@ export default function ChannelPinsRow() {
           resizeMode="cover"
         />
       </View>
-      <SimpleText
+      <Text
         variant="text-md/medium"
         color="CHANNELS_DEFAULT"
         style={styles.text}
       >
         Local Pinned
-      </SimpleText>
+      </Text>
     </RN.Pressable>
   );
 }

@@ -1,6 +1,6 @@
 import { React } from "@vendetta/metro/common";
 
-import SimpleText from "$/components/SimpleText";
+import Text from "$/components/Text";
 
 import { getSongName } from "../stuff/songs";
 import { EditableSong } from "../types";
@@ -28,11 +28,11 @@ export default function ({
   }, [id]);
 
   return (
-    <SimpleText
+    <Text
       variant={normal ? "text-md/semibold" : "text-md/medium"}
       color={normal ? "TEXT_NORMAL" : "TEXT_MUTED"}
     >
       {songName ?? "-"}
-    </SimpleText>
+    </Text>
   );
 }

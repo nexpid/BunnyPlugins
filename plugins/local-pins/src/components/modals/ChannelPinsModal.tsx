@@ -4,7 +4,7 @@ import { useProxy } from "@vendetta/storage";
 import { showConfirmationAlert } from "@vendetta/ui/alerts";
 import { General } from "@vendetta/ui/components";
 
-import SimpleText from "$/components/SimpleText";
+import Text from "$/components/Text";
 import { openSheet } from "$/types";
 
 import { clearPins, vstorage } from "../..";
@@ -52,9 +52,9 @@ export default function ChannelPinsModal({ channelId }: { channelId: string }) {
   ) : (
     <View style={{ alignItems: "center", justifyContent: "center", flex: 1 }}>
       <RN.ActivityIndicator size="large" style={{ marginBottom: 10 }} />
-      <SimpleText variant="text-lg/semibold" color="TEXT_NORMAL" align="center">
+      <Text variant="text-lg/semibold" color="TEXT_NORMAL" align="center">
         {Math.floor(status * 100)}%
-      </SimpleText>
+      </Text>
     </View>
   );
 }

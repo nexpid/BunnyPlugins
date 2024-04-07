@@ -2,7 +2,7 @@ import { findByProps } from "@vendetta/metro";
 import { React, ReactNative as RN, stylesheet } from "@vendetta/metro/common";
 import { semanticColors } from "@vendetta/ui";
 
-import SimpleText from "$/components/SimpleText";
+import Text from "$/components/Text";
 
 import TextButton from "./TextButton";
 const Alerts = findByProps("openLazy", "close");
@@ -106,15 +106,15 @@ export default function ({
   return (
     <RN.View style={styles.container}>
       <RN.View style={styles.textContent}>
-        <SimpleText variant="text-lg/semibold" color="TEXT_NORMAL">
+        <Text variant="text-lg/semibold" color="TEXT_NORMAL">
           {title}
-        </SimpleText>
+        </Text>
         {children ? (
           <RN.View style={{ padding: 0 }}>{children}</RN.View>
         ) : (
-          <SimpleText variant="text-md/semibold" color="TEXT_NORMAL">
+          <Text variant="text-md/semibold" color="TEXT_NORMAL">
             {body}
-          </SimpleText>
+          </Text>
         )}
       </RN.View>
       <RN.View style={styles.actions}>

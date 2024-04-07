@@ -10,8 +10,7 @@ import { getAssetIDByName } from "@vendetta/ui/assets";
 import { Forms } from "@vendetta/ui/components";
 import { showToast } from "@vendetta/ui/toasts";
 
-import RedesignButton from "$/components/compat/RedesignButton";
-import SimpleText from "$/components/SimpleText";
+import Text from "$/components/Text";
 import usePromise from "$/hooks/usePromise";
 import {
   ActionSheet,
@@ -19,6 +18,7 @@ import {
   ActionSheetContentContainer,
   ActionSheetTitleHeader,
   hideActionSheet,
+  Redesign,
 } from "$/types";
 
 import { newGameSuggestionURL, vstorage } from "../..";
@@ -37,7 +37,7 @@ const styles = stylesheet.createThemedStyleSheet({
   },
 });
 
-const destructiveText: Parameters<typeof SimpleText>[0] = {
+const destructiveText: Parameters<typeof Text>[0] = {
   color: "TEXT_DANGER",
   variant: "text-md/semibold",
 };
@@ -70,13 +70,13 @@ export default function SettingsActionSheet({
               <ActionSheetCloseButton onPress={() => hideActionSheet()} />
             }
           />
-          <SimpleText
+          <Text
             variant="text-lg/semibold"
             color="TEXT_DANGER"
             style={styles.wompwomp}
           >
             Manifest failed to load.
-          </SimpleText>
+          </Text>
         </ActionSheetContentContainer>
       </ActionSheet>
     );
@@ -115,7 +115,7 @@ export default function SettingsActionSheet({
           onPress={() => url.openURL(newGameSuggestionURL())}
         />
         <FormRow
-          label={<SimpleText {...destructiveText}>Delete Files</SimpleText>}
+          label={<Text {...destructiveText}>Delete Files</Text>}
           leading={
             <FormRow.Icon
               style={styles.destructiveIcon}
@@ -138,7 +138,7 @@ export default function SettingsActionSheet({
             })
           }
         />
-        <RedesignButton
+        <Redesign.Button
           variant="primary"
           size="md"
           text="Apply Changes"

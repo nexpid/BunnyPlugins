@@ -3,7 +3,7 @@ import { React, ReactNative as RN } from "@vendetta/metro/common";
 import { useProxy } from "@vendetta/storage";
 import { General } from "@vendetta/ui/components";
 
-import SimpleText from "$/components/SimpleText";
+import Text from "$/components/Text";
 
 import { vstorage } from "../..";
 import useLocalPinned from "../../hooks/useLocalPinned";
@@ -55,9 +55,9 @@ export default function PinsScreen({
   ) : (
     <View style={{ alignItems: "center", justifyContent: "center", flex: 1 }}>
       <RN.ActivityIndicator size="large" style={{ marginBottom: 10 }} />
-      <SimpleText variant="text-lg/semibold" color="TEXT_NORMAL" align="center">
+      <Text variant="text-lg/semibold" color="TEXT_NORMAL" align="center">
         {Math.floor(status * 100)}%
-      </SimpleText>
+      </Text>
     </View>
   );
 }

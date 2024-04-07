@@ -2,11 +2,11 @@ import { HTTP_REGEX_MULTI } from "@vendetta/constants";
 import { findByProps } from "@vendetta/metro";
 import { React } from "@vendetta/metro/common";
 import { useProxy } from "@vendetta/storage";
-import { Button, Forms, General } from "@vendetta/ui/components";
+import { Forms, General } from "@vendetta/ui/components";
 
 import Modal from "$/components/Modal";
-import SimpleText, { TrailingText } from "$/components/SimpleText";
-import { openSheet, popModal } from "$/types";
+import Text, { TrailingText } from "$/components/Text";
+import { openSheet, popModal, Redesign } from "$/types";
 
 import { lang, resetCacheID, runPatch, runUnpatch, vstorage } from "../..";
 import { reloadUI } from "../../stuff/util";
@@ -20,6 +20,7 @@ export default function () {
   const [tab, setTab] = React.useState<"iconpack" | "custom-iconpack">(
     "iconpack",
   );
+  const [debounce, setDebounce] = React.useState(false);
   useProxy(vstorage);
 
   return (
@@ -43,13 +44,13 @@ export default function () {
         </View>
         {tab === "custom-iconpack" ? (
           <>
-            <SimpleText
+            <Text
               variant="text-md/semibold"
               color="TEXT_NORMAL"
               style={{ marginHorizontal: 16 }}
             >
               {lang.format("modal.dev.custom_iconpack.title", {})}
-            </SimpleText>
+            </Text>
             <FormInput
               title={lang.format("modal.dev.custom_iconpack.base_url", {})}
               value={vstorage.iconpack.url ?? ""}
@@ -62,11 +63,14 @@ export default function () {
               value={vstorage.iconpack.suffix}
               onChange={(x: string) => (vstorage.iconpack.suffix = x)}
             />
-            <Button
-              size="small"
-              color="green"
+            <Redesign.Button
+              size="md"
+              variant="primary"
               text={lang.format("modal.dev.reload", {})}
               onPress={() => {
+                if (debounce) return;
+                setDebounce(true);
+
                 vstorage.iconpack.force = null;
                 popModal("dev-modal");
                 runUnpatch(false);
@@ -74,18 +78,19 @@ export default function () {
                 runPatch();
                 reloadUI();
               }}
+              loading={debounce}
               style={{ marginHorizontal: 16 }}
             />
           </>
         ) : (
           <>
-            <SimpleText
+            <Text
               variant="text-md/semibold"
               color="TEXT_NORMAL"
               style={{ marginHorizontal: 16 }}
             >
               {lang.format("modal.dev.iconpack.title", {})}
-            </SimpleText>
+            </Text>
             <FormRow
               label={lang.format("modal.dev.iconpack.selected_iconpack", {})}
               trailing={
@@ -101,11 +106,14 @@ export default function () {
                 })
               }
             />
-            <Button
-              size="small"
-              color="green"
+            <Redesign.Button
+              size="md"
+              variant="primary"
               text={lang.format("modal.dev.reload", {})}
               onPress={() => {
+                if (debounce) return;
+                setDebounce(true);
+
                 vstorage.iconpack.url = null;
                 vstorage.iconpack.suffix = "";
                 popModal("dev-modal");
@@ -114,6 +122,7 @@ export default function () {
                 runPatch();
                 reloadUI();
               }}
+              loading={debounce}
               style={{ marginHorizontal: 16 }}
             />
           </>

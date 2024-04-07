@@ -8,7 +8,7 @@ import { Forms, General } from "@vendetta/ui/components";
 import { showToast } from "@vendetta/ui/toasts";
 
 import { RichText } from "$/components/RichText";
-import SimpleText from "$/components/SimpleText";
+import Text from "$/components/Text";
 import {
   ActionSheet,
   ActionSheetCloseButton,
@@ -40,7 +40,7 @@ const styles = stylesheet.createThemedStyleSheet({
     tintColor: semanticColors.TEXT_DANGER,
   },
 });
-const destructiveText: Parameters<typeof SimpleText>[0] = {
+const destructiveText: Parameters<typeof Text>[0] = {
   color: "TEXT_DANGER",
   variant: "text-md/semibold",
 };
@@ -171,7 +171,7 @@ export function ImageActionSheet({
         />
         {image && (
           <FormRow
-            label={<SimpleText {...destructiveText}>Remove Image</SimpleText>}
+            label={<Text {...destructiveText}>Remove Image</Text>}
             leading={
               <FormRow.Icon
                 style={styles.destructiveIcon}
@@ -238,9 +238,7 @@ export function ButtonActionSheet({
         />
         {url && (
           <FormRow
-            label={
-              <SimpleText {...destructiveText}>Remove Button URL</SimpleText>
-            }
+            label={<Text {...destructiveText}>Remove Button URL</Text>}
             leading={
               <FormRow.Icon
                 style={styles.destructiveIcon}
@@ -255,7 +253,7 @@ export function ButtonActionSheet({
         )}
         {text && (
           <FormRow
-            label={<SimpleText {...destructiveText}>Remove Button</SimpleText>}
+            label={<Text {...destructiveText}>Remove Button</Text>}
             leading={
               <FormRow.Icon
                 style={styles.destructiveIcon}
@@ -328,9 +326,7 @@ export function ApplicationActionSheet({
         />
         {appId && (
           <FormRow
-            label={
-              <SimpleText {...destructiveText}>Remove Application</SimpleText>
-            }
+            label={<Text {...destructiveText}>Remove Application</Text>}
             leading={
               <FormRow.Icon
                 style={styles.destructiveIcon}
@@ -489,9 +485,7 @@ export function TimestampActionSheet({
         )}
         {start !== undefined && (
           <FormRow
-            label={
-              <SimpleText {...destructiveText}>Remove Start Time</SimpleText>
-            }
+            label={<Text {...destructiveText}>Remove Start Time</Text>}
             leading={
               <FormRow.Icon
                 style={styles.destructiveIcon}
@@ -533,9 +527,7 @@ export function TimestampActionSheet({
         )}
         {end !== undefined && (
           <FormRow
-            label={
-              <SimpleText {...destructiveText}>Remove End Time</SimpleText>
-            }
+            label={<Text {...destructiveText}>Remove End Time</Text>}
             leading={
               <FormRow.Icon
                 style={styles.destructiveIcon}

@@ -2,7 +2,7 @@ import { React, stylesheet } from "@vendetta/metro/common";
 import { useProxy } from "@vendetta/storage";
 
 import { FadeView } from "$/components/Animations";
-import SimpleText from "$/components/SimpleText";
+import Text from "$/components/Text";
 
 import { vstorage } from "..";
 import getMessageLength, { display, hasSLM } from "../stuff/getMessageLength";
@@ -34,12 +34,12 @@ export default function () {
       fade={shouldAppear ? "in" : "out"}
       setDisplay={true}
     >
-      <SimpleText
+      <Text
         variant="text-xs/semibold"
         color={dspLength <= maxLength ? "TEXT_NORMAL" : "TEXT_DANGER"}
       >
         {display(dspLength)}
-      </SimpleText>
+      </Text>
     </FadeView>
   );
 }

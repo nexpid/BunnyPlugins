@@ -4,7 +4,7 @@ import { getAssetIDByName } from "@vendetta/ui/assets";
 import { Forms } from "@vendetta/ui/components";
 import { showToast } from "@vendetta/ui/toasts";
 
-import SimpleText from "$/components/SimpleText";
+import Text from "$/components/Text";
 import {
   ActionSheet,
   ActionSheetCloseButton,
@@ -20,7 +20,7 @@ import { API } from "../../types/api";
 
 const { FormRow } = Forms;
 
-const destructiveText: Parameters<typeof SimpleText>[0] = {
+const destructiveText: Parameters<typeof Text>[0] = {
   color: "TEXT_DANGER",
   variant: "text-md/semibold",
 };
@@ -98,7 +98,7 @@ export default function ({
         )}
         {remove && (
           <FormRow
-            label={<SimpleText {...destructiveText}>Remove song</SimpleText>}
+            label={<Text {...destructiveText}>Remove song</Text>}
             leading={
               <FormRow.Icon
                 style={styles.destructiveIcon}

@@ -1,7 +1,7 @@
 import { ReactNative as RN } from "@vendetta/metro/common";
 import { General } from "@vendetta/ui/components";
 
-import SimpleText from "$/components/SimpleText";
+import Text from "$/components/Text";
 
 const { View } = General;
 
@@ -13,13 +13,9 @@ export default () => {
         style={{ marginBottom: 12 }}
         color="#fff"
       />
-      <SimpleText
-        variant="text-lg/semibold"
-        align="center"
-        style={{ color: "#fff" }}
-      >
+      <Text variant="text-lg/semibold" align="center" style={{ color: "#fff" }}>
         MonetTheme is reapplying...
-      </SimpleText>
+      </Text>
     </View>
   );
 };

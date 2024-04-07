@@ -6,7 +6,7 @@ import { getAssetIDByName } from "@vendetta/ui/assets";
 import { General } from "@vendetta/ui/components";
 import { showToast } from "@vendetta/ui/toasts";
 
-import SimpleText from "$/components/SimpleText";
+import Text from "$/components/Text";
 import { Svg, WebView } from "$/deps";
 import {
   lerp,
@@ -301,7 +301,7 @@ const SpotifySongEmbed = ({
         onPress={jump}
         onLongPress={more}
       >
-        <SimpleText
+        <Text
           style={[
             styles.cardTracklistEntryTitle,
             !playable && styles.unplayableItem,
@@ -310,10 +310,10 @@ const SpotifySongEmbed = ({
           lineClamp={1}
         >
           {item.title}
-        </SimpleText>
+        </Text>
         <View style={styles.cardContentArtist}>
           {item.isExplicit && (
-            <SimpleText
+            <Text
               variant="text-xs/semibold"
               style={[
                 styles.cardContentTag,
@@ -321,15 +321,15 @@ const SpotifySongEmbed = ({
               ]}
             >
               E
-            </SimpleText>
+            </Text>
           )}
-          <SimpleText
+          <Text
             variant={selected ? "text-xs/bold" : "text-xs/semibold"}
             style={[styles.secondaryText, !playable && styles.unplayableItem]}
             lineClamp={1}
           >
             {item.subtitle}
-          </SimpleText>
+          </Text>
         </View>
         <View style={styles.cardTracklistEntryOther}>
           <RN.Pressable android_ripple={styles.androidRipple} onPress={more}>
@@ -372,39 +372,39 @@ const SpotifySongEmbed = ({
                 }))}
             />
             <View style={styles.cardContent}>
-              <SimpleText
+              <Text
                 variant="text-sm/bold"
                 style={{ color: "#ffffff" }}
                 lineClamp={1}
               >
                 {songData.title}
-              </SimpleText>
+              </Text>
               {songData.type === "track" ? (
                 <View style={styles.cardContentArtist}>
                   {songData.isExplicit && (
-                    <SimpleText
+                    <Text
                       variant="text-xs/semibold"
                       style={styles.cardContentTag}
                     >
                       E
-                    </SimpleText>
+                    </Text>
                   )}
-                  <SimpleText
+                  <Text
                     variant="text-xs/semibold"
                     style={styles.secondaryText}
                     lineClamp={1}
                   >
                     {songData.artists.map((x) => x.name).join(", ")}
-                  </SimpleText>
+                  </Text>
                 </View>
               ) : (
-                <SimpleText
+                <Text
                   variant="text-xs/semibold"
                   style={[styles.secondaryText, { color: "#ffffff" }]}
                   lineClamp={1}
                 >
                   {songData.subtitle}
-                </SimpleText>
+                </Text>
               )}
             </View>
           </View>

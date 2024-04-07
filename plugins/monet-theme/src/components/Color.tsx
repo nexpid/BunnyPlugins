@@ -5,7 +5,7 @@ import { getAssetIDByName } from "@vendetta/ui/assets";
 import { General } from "@vendetta/ui/components";
 import { showToast } from "@vendetta/ui/toasts";
 
-import SimpleText from "$/components/SimpleText";
+import Text from "$/components/Text";
 import { openSheet } from "$/types";
 
 const { View, Pressable } = General;
@@ -70,9 +70,9 @@ export default ({
           showToast("Copied", getAssetIDByName("toast_copy_message"));
         }}
       />
-      <SimpleText variant="text-sm/semibold" color="TEXT_NORMAL" align="center">
+      <Text variant="text-sm/semibold" color="TEXT_NORMAL" align="center">
         {title}
-      </SimpleText>
+      </Text>
     </View>
   );
 };

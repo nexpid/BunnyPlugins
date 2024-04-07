@@ -7,12 +7,9 @@ import {
 } from "@vendetta/metro/common";
 import { semanticColors } from "@vendetta/ui";
 import { getAssetIDByName } from "@vendetta/ui/assets";
-import { General } from "@vendetta/ui/components";
+import { General, Search } from "@vendetta/ui/components";
 
-import RedesignSearch, {
-  useRedesignSearch,
-} from "$/components/compat/RedesignSearch";
-import SimpleText from "$/components/SimpleText";
+import Text from "$/components/Text";
 import usePromise from "$/hooks/usePromise";
 
 import {
@@ -37,8 +34,7 @@ export default function AppDirectoryPage({
 }) {
   const locale = i18n.getLocale();
 
-  const [search, controller] = useRedesignSearch();
-
+  const [search, setSearch] = React.useState("");
   const [selCategory, setSelCategory] = React.useState(undefined);
 
   const categoriesPromise = usePromise(
@@ -220,7 +216,7 @@ export default function AppDirectoryPage({
         paddingTop: 12,
       }}
     >
-      <RedesignSearch controller={controller} />
+      <Search placeholder="Search..." onChangeText={setSearch} />
       <View style={{ height: 12 }} />
       {categories ? (
         <RN.FlatList
@@ -264,9 +260,9 @@ export default function AppDirectoryPage({
                   }[item.id] ?? "",
                 )}
               />
-              <SimpleText variant="text-md/semibold" color="TEXT_NORMAL">
+              <Text variant="text-md/semibold" color="TEXT_NORMAL">
                 {item.name}
-              </SimpleText>
+              </Text>
             </RN.Pressable>
           )}
           ItemSeparatorComponent={() => <View style={{ width: 8 }} />}
@@ -299,36 +295,30 @@ export default function AppDirectoryPage({
                         }}
                       />
                       <View style={collectionStyles.smallProfileThing}>
-                        <SimpleText
-                          variant="text-md/semibold"
-                          color="TEXT_NORMAL"
-                        >
+                        <Text variant="text-md/semibold" color="TEXT_NORMAL">
                           {app.name}
-                        </SimpleText>
+                        </Text>
                         {app.categories[0] && (
-                          <SimpleText
-                            variant="text-md/medium"
-                            color="TEXT_MUTED"
-                          >
+                          <Text variant="text-md/medium" color="TEXT_MUTED">
                             {app.categories[0].name}
-                          </SimpleText>
+                          </Text>
                         )}
                       </View>
                     </View>
-                    <SimpleText
+                    <Text
                       variant="text-md/medium"
                       color="TEXT_MUTED"
                       style={{ paddingBottom: 8 }}
                     >
                       {inServers(app.directory_entry.guild_count)}
-                    </SimpleText>
-                    <SimpleText
+                    </Text>
+                    <Text
                       variant="text-md/semibold"
                       color="TEXT_NORMAL"
                       lineClamp={2}
                     >
                       {app.directory_entry.short_description}
-                    </SimpleText>
+                    </Text>
                   </View>
                 </RN.Pressable>
               )}
@@ -347,12 +337,12 @@ export default function AppDirectoryPage({
                 disabled={isFirst}
                 key={"page-back"}
               >
-                <SimpleText
+                <Text
                   variant="text-sm/bold"
                   color={isFirst ? "TEXT_MUTED" : "TEXT_NORMAL"}
                 >
                   &lt;
-                </SimpleText>
+                </Text>
               </RN.Pressable>
               {!pageFirst && (
                 <>
@@ -361,17 +351,17 @@ export default function AppDirectoryPage({
                     onPress={() => setSearchPage(0)}
                     key={"page-1"}
                   >
-                    <SimpleText variant="text-sm/semibold" color="TEXT_NORMAL">
+                    <Text variant="text-sm/semibold" color="TEXT_NORMAL">
                       1
-                    </SimpleText>
+                    </Text>
                   </RN.Pressable>
-                  <SimpleText
+                  <Text
                     variant="text-md/semibold"
                     color="TEXT_MUTED"
                     key={"page-sep-left"}
                   >
                     ...
-                  </SimpleText>
+                  </Text>
                 </>
               )}
               {renderPushPages.map((x) => (
@@ -384,28 +374,28 @@ export default function AppDirectoryPage({
                   onPress={() => setSearchPage(x.num - 1)}
                   key={`page-${x.num}`}
                 >
-                  <SimpleText variant="text-sm/semibold" color="TEXT_NORMAL">
+                  <Text variant="text-sm/semibold" color="TEXT_NORMAL">
                     {x.num}
-                  </SimpleText>
+                  </Text>
                 </RN.Pressable>
               ))}
               {!pageLast && (
                 <>
-                  <SimpleText
+                  <Text
                     variant="text-md/semibold"
                     color="TEXT_MUTED"
                     key={"page-sep-right"}
                   >
                     ...
-                  </SimpleText>
+                  </Text>
                   <RN.Pressable
                     style={styles.bottomNavItem}
                     onPress={() => setSearchPage(searchResults.num_pages - 1)}
                     key={`page-${searchResults.num_pages}`}
                   >
-                    <SimpleText variant="text-sm/semibold" color="TEXT_NORMAL">
+                    <Text variant="text-sm/semibold" color="TEXT_NORMAL">
                       {searchResults.num_pages}
-                    </SimpleText>
+                    </Text>
                   </RN.Pressable>
                 </>
               )}
@@ -422,12 +412,12 @@ export default function AppDirectoryPage({
                 disabled={isLast}
                 key={"page-next"}
               >
-                <SimpleText
+                <Text
                   variant="text-sm/bold"
                   color={isLast ? "TEXT_MUTED" : "TEXT_NORMAL"}
                 >
                   &gt;
-                </SimpleText>
+                </Text>
               </RN.Pressable>
             </View>
           </>
@@ -435,13 +425,13 @@ export default function AppDirectoryPage({
           <>
             {collections.map((x, i) => (
               <>
-                <SimpleText
+                <Text
                   variant="text-lg/bold"
                   color="TEXT_NORMAL"
                   style={{ paddingBottom: 24, paddingTop: i !== 0 ? 30 : 0 }}
                 >
                   {x.title}
-                </SimpleText>
+                </Text>
                 <RN.FlatList
                   horizontal
                   data={x.application_directory_collection_items.sort(
@@ -465,20 +455,20 @@ export default function AppDirectoryPage({
                           />
                         )}
                         <View style={collectionStyles.cardContent}>
-                          <SimpleText
+                          <Text
                             variant="text-lg/semibold"
                             color="TEXT_NORMAL"
                             style={{ paddingBottom: 4 }}
                           >
                             {app.application.name}
-                          </SimpleText>
-                          <SimpleText
+                          </Text>
+                          <Text
                             variant="text-md/semibold"
                             color="TEXT_NORMAL"
                             lineClamp={2}
                           >
                             {app.application.directory_entry.short_description}
-                          </SimpleText>
+                          </Text>
                         </View>
                       </RN.Pressable>
                     ) : x.type === APICollectionType.Medium ? (
@@ -497,13 +487,10 @@ export default function AppDirectoryPage({
                           />
                         )}
                         <View style={collectionStyles.cardContent}>
-                          <SimpleText
-                            variant="text-md/semibold"
-                            color="TEXT_NORMAL"
-                          >
+                          <Text variant="text-md/semibold" color="TEXT_NORMAL">
                             {app.application.name}
-                          </SimpleText>
-                          <SimpleText
+                          </Text>
+                          <Text
                             variant="text-md/medium"
                             color="TEXT_MUTED"
                             style={{ paddingBottom: 8 }}
@@ -511,26 +498,26 @@ export default function AppDirectoryPage({
                             {app.application.categories[0] && (
                               <>
                                 {app.application.categories[0].name}
-                                <SimpleText
+                                <Text
                                   variant="text-md/bold"
                                   color="TEXT_MUTED"
                                   style={{ opacity: 0.5 }}
                                 >
                                   {"  "}·{"  "}
-                                </SimpleText>
+                                </Text>
                               </>
                             )}
                             {inServers(
                               app.application.directory_entry.guild_count,
                             )}
-                          </SimpleText>
-                          <SimpleText
+                          </Text>
+                          <Text
                             variant="text-md/semibold"
                             color="TEXT_NORMAL"
                             lineClamp={2}
                           >
                             {app.application.directory_entry.short_description}
-                          </SimpleText>
+                          </Text>
                         </View>
                       </RN.Pressable>
                     ) : (
@@ -551,23 +538,23 @@ export default function AppDirectoryPage({
                               }}
                             />
                             <View style={collectionStyles.smallProfileThing}>
-                              <SimpleText
+                              <Text
                                 variant="text-md/semibold"
                                 color="TEXT_NORMAL"
                               >
                                 {app.application.name}
-                              </SimpleText>
+                              </Text>
                               {app.application.categories[0] && (
-                                <SimpleText
+                                <Text
                                   variant="text-md/medium"
                                   color="TEXT_MUTED"
                                 >
                                   {app.application.categories[0].name}
-                                </SimpleText>
+                                </Text>
                               )}
                             </View>
                           </View>
-                          <SimpleText
+                          <Text
                             variant="text-md/medium"
                             color="TEXT_MUTED"
                             style={{ paddingBottom: 8 }}
@@ -575,14 +562,14 @@ export default function AppDirectoryPage({
                             {inServers(
                               app.application.directory_entry.guild_count,
                             )}
-                          </SimpleText>
-                          <SimpleText
+                          </Text>
+                          <Text
                             variant="text-md/semibold"
                             color="TEXT_NORMAL"
                             lineClamp={2}
                           >
                             {app.application.directory_entry.short_description}
-                          </SimpleText>
+                          </Text>
                         </View>
                       </RN.Pressable>
                     )

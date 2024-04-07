@@ -26,7 +26,6 @@ export class Lang<Plugin extends keyof LangValues> {
   }
 
   static getLang(): string {
-    //REVIEW - can this even be undefined? who knows
     const lang = i18n.getLocale()?.replace(/-/g, "_") ?? "en";
 
     if (lang.startsWith("en_")) return "en";

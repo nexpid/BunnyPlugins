@@ -4,7 +4,7 @@ import { semanticColors } from "@vendetta/ui";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { General } from "@vendetta/ui/components";
 
-import SimpleText from "$/components/SimpleText";
+import Text from "$/components/Text";
 import { openModal } from "$/types";
 
 import { hasAnyPin } from "..";
@@ -75,12 +75,12 @@ export default function RedesignChannelPinsRow({ ret }: { ret: any }) {
               resizeMode="cover"
             />
           </View>
-          <SimpleText
+          <Text
             variant="redesign/channel-title/semibold"
             color="REDESIGN_CHANNEL_NAME_MUTED_TEXT"
           >
             Local Pinned
-          </SimpleText>
+          </Text>
         </View>
       </RN.Pressable>
     </>

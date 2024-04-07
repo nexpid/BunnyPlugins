@@ -10,8 +10,8 @@
     - danger > destructive
     - positive > active
 
-  avoiding using removed/changed button variants is easier than adding some sort of compatibility :3
- */
+  avoiding using removed/changed button variants is easier than adding some sort of compatibility :3*/
+// REVIEW true ^
 
 type ButtonVariant =
   | "primary"
@@ -46,7 +46,8 @@ export type Redesign = {
     disabled?: boolean;
     icon?:
       | import("react-native").ImageSourcePropType
-      | React.JSXElementConstructor;
+      | React.ReactNode
+      | React.FC;
     iconPosition?: "start" | "end";
     grow?: boolean;
     loading?: boolean;

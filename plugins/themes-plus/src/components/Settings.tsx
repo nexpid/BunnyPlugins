@@ -3,7 +3,7 @@ import { showConfirmationAlert } from "@vendetta/ui/alerts";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { General } from "@vendetta/ui/components";
 
-import SimpleText from "$/components/SimpleText";
+import Text from "$/components/Text";
 import { WebView } from "$/deps";
 import { doHaptic, openModal, openSheet, TextStyleSheet } from "$/types";
 
@@ -45,7 +45,7 @@ export default function () {
                 marginTop: 6,
               }}
             />
-            <SimpleText
+            <Text
               variant="heading-xxl/semibold"
               color="TEXT_NORMAL"
               onPress={() =>
@@ -55,7 +55,7 @@ export default function () {
               }
             >
               {lang.format("settings.is_active", {})}
-            </SimpleText>
+            </Text>
           </View>
           <View style={{ flexDirection: "column", marginHorizontal: 16 }}>
             {[
@@ -66,13 +66,13 @@ export default function () {
               [
                 PatchType.IconPack,
                 active.iconpack && (
-                  <SimpleText
+                  <Text
                     variant="text-lg/bold"
                     color="TEXT_LINK"
                     onPress={() => openSheet(IconpackInfoSheet, undefined)}
                   >
                     {lang.format("settings.patch.iconpack", {})}
-                  </SimpleText>
+                  </Text>
                 ),
               ],
             ].map(([type, children]: [PatchType, any]) => (
@@ -94,9 +94,9 @@ export default function () {
                 {children ? (
                   children
                 ) : (
-                  <SimpleText variant="text-lg/semibold" color="TEXT_NORMAL">
+                  <Text variant="text-lg/semibold" color="TEXT_NORMAL">
                     {lang.format(`settings.patch.${type}`, {})}
-                  </SimpleText>
+                  </Text>
                 )}
               </View>
             ))}
@@ -115,7 +115,7 @@ export default function () {
               marginTop: 6,
             }}
           />
-          <SimpleText
+          <Text
             variant="heading-xxl/semibold"
             color="TEXT_NORMAL"
             onPress={() => {
@@ -126,7 +126,7 @@ export default function () {
             }}
           >
             {lang.format("settings.is_inactive", {})}
-          </SimpleText>
+          </Text>
         </View>
       )}
       {active.blehhh.map((reason) => (
@@ -148,16 +148,16 @@ export default function () {
               marginTop: 6,
             }}
           />
-          <SimpleText
+          <Text
             variant="text-lg/semibold"
             color="TEXT_NORMAL"
             style={{ flexWrap: "wrap" }}
           >
             {lang.format(`settings.inactive.${reason}`, {})}
-          </SimpleText>
+          </Text>
         </View>
       ))}
-      <SimpleText
+      <Text
         variant="text-lg/bold"
         color="TEXT_LINK"
         style={{ textDecorationLine: "underline", marginTop: 32 }}
@@ -184,7 +184,7 @@ export default function () {
         }
       >
         {lang.format("settings.open_faq", {})}
-      </SimpleText>
+      </Text>
     </View>
   );
 }

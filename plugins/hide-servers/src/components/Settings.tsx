@@ -5,7 +5,7 @@ import { getAssetIDByName } from "@vendetta/ui/assets";
 import { Forms, General } from "@vendetta/ui/components";
 
 import { BetterTableRowGroup } from "$/components/BetterTableRow";
-import SimpleText from "$/components/SimpleText";
+import Text from "$/components/Text";
 
 import { hiddenList } from "..";
 import { openManageHiddenServersPage } from "./pages/ManageHiddenServers";
@@ -18,7 +18,7 @@ const styles = stylesheet.createThemedStyleSheet({
     tintColor: semanticColors.TEXT_DANGER,
   },
 });
-const destructiveText: Parameters<typeof SimpleText>[0] = {
+const destructiveText: Parameters<typeof Text>[0] = {
   color: "TEXT_DANGER",
   variant: "text-md/semibold",
 };
@@ -38,9 +38,7 @@ export default () => {
           onPress={() => openManageHiddenServersPage(navigation)}
         />
         <FormRow
-          label={
-            <SimpleText {...destructiveText}>Clear hidden servers</SimpleText>
-          }
+          label={<Text {...destructiveText}>Clear hidden servers</Text>}
           leading={
             <FormRow.Icon
               style={styles.destructiveIcon}

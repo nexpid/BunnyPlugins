@@ -2,7 +2,7 @@ import { ReactNative as RN, stylesheet } from "@vendetta/metro/common";
 import { semanticColors } from "@vendetta/ui";
 import { General } from "@vendetta/ui/components";
 
-import SimpleText from "./SimpleText";
+import Text from "./Text";
 
 const { View, Pressable } = General;
 
@@ -45,9 +45,9 @@ export function BetterTableRowTitle({
           <RN.Image style={styles.icon} source={icon} resizeMode="contain" />
         </View>
       )}
-      <SimpleText variant="text-sm/semibold" color="HEADER_SECONDARY">
+      <Text variant="text-sm/semibold" color="HEADER_SECONDARY">
         {title}
-      </SimpleText>
+      </Text>
     </UseCompontent>
   );
 }

@@ -18,7 +18,7 @@ import { showToast } from "@vendetta/ui/toasts";
 import { BetterTableRowGroup } from "$/components/BetterTableRow";
 import LineDivider from "$/components/LineDivider";
 import { RichText } from "$/components/RichText";
-import SimpleText from "$/components/SimpleText";
+import Text from "$/components/Text";
 import { RNBundleUpdaterManager } from "$/deps";
 import { LazyActionSheet, TextStyleSheet } from "$/types";
 import { ThemeDataWithPlus, VendettaSysColors } from "$/typings";
@@ -232,7 +232,7 @@ export default () => {
               marginRight: 4,
             }}
           />
-          <SimpleText
+          <Text
             variant="text-md/semibold"
             color={showMessage.error ? "TEXT_DANGER" : "TEXT_BRAND"}
           >
@@ -242,7 +242,7 @@ export default () => {
                 {showMessage.cta}
               </RichText.Underline>
             )}
-          </SimpleText>
+          </Text>
         </View>
       )}
       <BetterTableRowGroup
@@ -285,19 +285,19 @@ export default () => {
                 style={styles.labelIcon}
                 resizeMode="cover"
               />
-              <SimpleText variant="text-md/semibold" color="TEXT_NORMAL">
+              <Text variant="text-md/semibold" color="TEXT_NORMAL">
                 Autofill
-              </SimpleText>
+              </Text>
             </Pressable>
           )}
           {syscolors && (
-            <SimpleText
+            <Text
               variant="text-md/semibold"
               color="TEXT_NORMAL"
               style={{ marginHorizontal: 5 }}
             >
               •
-            </SimpleText>
+            </Text>
           )}
           <Pressable
             android_ripple={styles.androidRipple}
@@ -340,9 +340,9 @@ export default () => {
               style={styles.labelIcon}
               resizeMode="cover"
             />
-            <SimpleText variant="text-md/semibold" color="TEXT_NORMAL">
+            <Text variant="text-md/semibold" color="TEXT_NORMAL">
               Use Repainter theme
-            </SimpleText>
+            </Text>
           </Pressable>
         </View>
         <View
@@ -442,21 +442,21 @@ export default () => {
                   alignItems: "center",
                 }}
               >
-                <SimpleText
+                <Text
                   variant="text-md/semibold"
                   color="TEXT_DANGER"
                   align="center"
                 >
                   You got ratelimited by GitHub. Congrats!
-                </SimpleText>
-                <SimpleText
+                </Text>
+                <Text
                   variant="text-md/semibold"
                   color="TEXT_DANGER"
                   align="center"
                   onPress={() => setCommits(undefined)}
                 >
                   <RichText.Underline>Tap to retry</RichText.Underline>
-                </SimpleText>
+                </Text>
               </View>
             )}
             <LineDivider addPadding={true} />

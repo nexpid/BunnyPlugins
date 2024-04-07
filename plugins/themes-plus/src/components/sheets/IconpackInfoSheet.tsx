@@ -3,8 +3,8 @@ import { getAssetIDByName } from "@vendetta/ui/assets";
 import { Forms } from "@vendetta/ui/components";
 import { showToast } from "@vendetta/ui/toasts";
 
-import SimpleText from "$/components/SimpleText";
 import SmartMention from "$/components/SmartMention";
+import Text from "$/components/Text";
 import {
   ActionSheet,
   ActionSheetCloseButton,
@@ -94,9 +94,9 @@ export default function () {
             )}
           </>
         ) : (
-          <SimpleText variant="text-md/semibold" color="TEXT_NORMAL">
+          <Text variant="text-md/semibold" color="TEXT_NORMAL">
             {lang.format("sheet.iconpack_info.failed_to_load", {})}
-          </SimpleText>
+          </Text>
         )}
       </ActionSheetContentContainer>
     </ActionSheet>

@@ -10,7 +10,7 @@ import { Codeblock, General } from "@vendetta/ui/components";
 import { showToast } from "@vendetta/ui/toasts";
 
 import Modal from "$/components/Modal";
-import SimpleText from "$/components/SimpleText";
+import Text from "$/components/Text";
 
 const { ScrollView, View } = General;
 
@@ -107,9 +107,9 @@ const Card = ({
           </RN.Pressable>
         </View>
         <View style={styles.middle}>
-          <SimpleText variant="text-lg/bold" color="TEXT_NORMAL" align="center">
+          <Text variant="text-lg/bold" color="TEXT_NORMAL" align="center">
             {label}
-          </SimpleText>
+          </Text>
         </View>
         <View style={styles.trailing}>
           <RN.Pressable

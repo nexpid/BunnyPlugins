@@ -8,17 +8,17 @@ import {
   TextStyleSheetVariant,
 } from "../types";
 
-const { Text } = General;
+const { Text: _Text } = General;
 
 export function TrailingText({ children }: React.PropsWithChildren<object>) {
   return (
-    <SimpleText variant="text-md/medium" color="TEXT_MUTED">
+    <Text variant="text-md/medium" color="TEXT_MUTED">
       {children}
-    </SimpleText>
+    </Text>
   );
 }
 
-export default function SimpleText({
+export default function Text({
   variant,
   lineClamp,
   color,
@@ -57,7 +57,7 @@ export default function SimpleText({
   }, []);
 
   return (
-    <Text
+    <_Text
       style={[
         variant ? TextStyleSheet[variant] : {},
         color ? { color: resolveSemanticColor(semanticColors[color]) } : {},
@@ -68,6 +68,6 @@ export default function SimpleText({
       onPress={onPress}
     >
       {getChildren?.() ?? children}
-    </Text>
+    </_Text>
   );
 }

@@ -1,7 +1,7 @@
 import { React, ReactNative as RN, stylesheet } from "@vendetta/metro/common";
 import { rawColors, semanticColors } from "@vendetta/ui";
 
-import SimpleText from "$/components/SimpleText";
+import Text from "$/components/Text";
 import { lerp, resolveCustomSemantic, resolveSemanticColor } from "$/types";
 
 const AnimatedPressable = RN.Animated.createAnimatedComponent(RN.Pressable);
@@ -93,12 +93,12 @@ export default ({
           color={resolveSemanticColor(semanticColors[`TEXT_${color}`])}
         />
       ) : (
-        <SimpleText
+        <Text
           variant="text-md/semibold"
           color={enabled ? `TEXT_${color}` : "TEXT_MUTED"}
         >
           {label}
-        </SimpleText>
+        </Text>
       )}
     </AnimatedPressable>
   );

@@ -9,7 +9,7 @@ import { Forms, General } from "@vendetta/ui/components";
 import { showToast } from "@vendetta/ui/toasts";
 
 import { BetterTableRowGroup } from "$/components/BetterTableRow";
-import SimpleText from "$/components/SimpleText";
+import Text from "$/components/Text";
 import { openSheet } from "$/types";
 
 import { cache, vstorage } from "..";
@@ -156,13 +156,9 @@ export default function () {
             ))}
           </View>
         ) : !isAuthed ? (
-          <SimpleText
-            variant="text-md/semibold"
-            color="TEXT_NORMAL"
-            align="center"
-          >
+          <Text variant="text-md/semibold" color="TEXT_NORMAL" align="center">
             Authenticate first to manage your songs
-          </SimpleText>
+          </Text>
         ) : (
           <RN.ActivityIndicator size="small" style={{ flex: 1 }} />
         )}

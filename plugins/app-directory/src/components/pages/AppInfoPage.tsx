@@ -13,9 +13,9 @@ import { getAssetIDByName } from "@vendetta/ui/assets";
 import { General } from "@vendetta/ui/components";
 import { showToast } from "@vendetta/ui/toasts";
 
-import RedesignButton from "$/components/compat/RedesignButton";
-import SimpleText from "$/components/SimpleText";
+import Text from "$/components/Text";
 import usePromise from "$/hooks/usePromise";
+import { Redesign } from "$/types";
 
 import {
   APICollectionApplication,
@@ -229,32 +229,32 @@ export default function AppInfoPage({
         }}
       />
       <View style={styles.group}>
-        <SimpleText variant="text-lg/semibold" color="TEXT_NORMAL">
+        <Text variant="text-lg/semibold" color="TEXT_NORMAL">
           {app.name}
-        </SimpleText>
-        <SimpleText
+        </Text>
+        <Text
           variant="text-md/normal"
           color="TEXT_MUTED"
           style={{ paddingBottom: 8 }}
           lineClamp={1}
         >
           {inServers(app.directory_entry.guild_count)}
-        </SimpleText>
+        </Text>
         {app.categories.length > 0 && (
-          <SimpleText
+          <Text
             variant="text-md/normal"
             color="TEXT_MUTED"
             style={{ paddingBottom: 8 }}
             lineClamp={1}
           >
             {app.categories.map((x) => x.name).join(", ")}
-          </SimpleText>
+          </Text>
         )}
         <View style={{ marginBottom: 12 }}>
           <TableRowDivider />
         </View>
         <View style={styles.baseAppActions}>
-          <RedesignButton
+          <Redesign.Button
             style={{ flex: 1 / 2 }}
             text={
               i18n.Messages.APP_DIRECTORY_PROFILE_SHARE_BUTTON || "Copy Link"
@@ -272,7 +272,7 @@ export default function AppInfoPage({
               );
             }}
           />
-          <RedesignButton
+          <Redesign.Button
             style={{ flex: 1 / 2 }}
             text={
               i18n.Messages.APP_DIRECTORY_PROFILE_ADD_BUTTON || "Add to Server"
@@ -304,7 +304,7 @@ export default function AppInfoPage({
         ).map(({ title, content }, i, a) => (
           <>
             <TableRowGroupTitle title={title} />
-            <SimpleText
+            <Text
               variant="text-md/normal"
               color="TEXT_NORMAL"
               style={{
@@ -312,7 +312,7 @@ export default function AppInfoPage({
               }}
             >
               {parse(content.join("\n"))}
-            </SimpleText>
+            </Text>
           </>
         ))}
       </View>
@@ -332,20 +332,20 @@ export default function AppInfoPage({
                   { marginBottom: i !== a.length - 1 ? 8 : 0 },
                 ]}
               >
-                <SimpleText
+                <Text
                   variant="text-md/semibold"
                   color="TEXT_NORMAL"
                   style={styles.popularCommandCmd}
                 >
                   /{x.name}
-                </SimpleText>
-                <SimpleText
+                </Text>
+                <Text
                   variant="text-md/normal"
                   color="HEADER_SECONDARY"
                   lineClamp={1}
                 >
                   {x.description}
-                </SimpleText>
+                </Text>
               </View>
             ),
           )}

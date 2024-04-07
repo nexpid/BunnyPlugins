@@ -2,7 +2,7 @@ import { stylesheet } from "@vendetta/metro/common";
 import { semanticColors } from "@vendetta/ui";
 import { General } from "@vendetta/ui/components";
 
-import SimpleText from "./SimpleText";
+import Text from "./Text";
 
 const { View } = General;
 const styles = stylesheet.createThemedStyleSheet({
@@ -33,9 +33,9 @@ export default function CustomBadgeTag({
       ]}
     >
       <View style={styles.content}>
-        <SimpleText variant="eyebrow" color="TEXT_NORMAL">
+        <Text variant="eyebrow" color="TEXT_NORMAL">
           {text}
-        </SimpleText>
+        </Text>
       </View>
     </View>
   );

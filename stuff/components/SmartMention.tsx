@@ -1,7 +1,7 @@
 import { findByProps, findByStoreName } from "@vendetta/metro";
 import { React } from "@vendetta/metro/common";
 
-import SimpleText from "./SimpleText";
+import Text from "./Text";
 
 const { showUserProfile } = findByProps("showUserProfile");
 const { fetchProfile } = findByProps("fetchProfile");
@@ -33,7 +33,7 @@ export default function SmartMention({
   );
 
   return (
-    <SimpleText
+    <Text
       variant="text-md/bold"
       color={color ?? "TEXT_NORMAL"}
       onPress={() =>
@@ -43,6 +43,6 @@ export default function SmartMention({
       }
     >
       {loadUsername ? `@${loadedUsername ?? "..."}` : children}
-    </SimpleText>
+    </Text>
   );
 }

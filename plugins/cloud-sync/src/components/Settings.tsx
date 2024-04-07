@@ -12,7 +12,7 @@ import { showToast } from "@vendetta/ui/toasts";
 
 import { BetterTableRowGroup } from "$/components/BetterTableRow";
 import LineDivider from "$/components/LineDivider";
-import SimpleText from "$/components/SimpleText";
+import Text from "$/components/Text";
 import { openSheet } from "$/types";
 import RNFS from "$/wrappers/RNFS";
 
@@ -113,13 +113,13 @@ export default function () {
           value={vstorage.autoSync}
         />
         {!emitterAvailable && vstorage.autoSync && (
-          <SimpleText
+          <Text
             variant="text-md/semibold"
             color="TEXT_DANGER"
             style={{ marginHorizontal: 20, marginVertical: 2 }}
           >
             You must reinstall your client in order to use Auto Save!
-          </SimpleText>
+          </Text>
         )}
         <FormSwitchRow
           label={lang.format("settings.config.settings_pin.title", {})}
@@ -469,13 +469,9 @@ export default function () {
             />
           </>
         ) : !isAuthed ? (
-          <SimpleText
-            variant="text-md/semibold"
-            color="TEXT_NORMAL"
-            align="center"
-          >
+          <Text variant="text-md/semibold" color="TEXT_NORMAL" align="center">
             {lang.format("settings.label.auth_needed", {})}
-          </SimpleText>
+          </Text>
         ) : (
           <RN.ActivityIndicator size="small" style={{ flex: 1 }} />
         )}

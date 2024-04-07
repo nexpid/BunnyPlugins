@@ -3,7 +3,7 @@ import { getAssetIDByName } from "@vendetta/ui/assets";
 import { ErrorBoundary, Forms } from "@vendetta/ui/components";
 
 import CustomBadgeTag from "$/components/CustomBadgeTag";
-import SimpleText from "$/components/SimpleText";
+import Text from "$/components/Text";
 
 import { lang } from "..";
 import PluginBrowserPage from "./pages/PluginBrowserPage";
@@ -17,14 +17,14 @@ export default ({ changes }: { changes: number }) => {
     <ErrorBoundary>
       <FormRow
         label={
-          <SimpleText variant="text-md/semibold" color="HEADER_PRIMARY">
+          <Text variant="text-md/semibold" color="HEADER_PRIMARY">
             {lang.format("plugin.name", {})}
             {changes ? (
               <CustomBadgeTag text={changes.toString()} marginLeft={true} />
             ) : (
               <></>
             )}
-          </SimpleText>
+          </Text>
         }
         leading={
           <FormRow.Icon source={getAssetIDByName("ic_search_items_24px")} />

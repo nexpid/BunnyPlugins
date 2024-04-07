@@ -3,7 +3,7 @@ import { getAssetIDByName } from "@vendetta/ui/assets";
 import { Forms, General } from "@vendetta/ui/components";
 
 import { BetterTableRowGroup } from "$/components/BetterTableRow";
-import { TrailingText } from "$/components/SimpleText";
+import { TrailingText } from "$/components/Text";
 import { openSheet } from "$/types";
 
 import { lang, vstorage } from "..";

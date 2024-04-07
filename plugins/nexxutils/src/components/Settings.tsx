@@ -1,7 +1,7 @@
 import { ErrorBoundary, General } from "@vendetta/ui/components";
 
 import { BetterTableRowGroup } from "$/components/BetterTableRow";
-import SimpleText from "$/components/SimpleText";
+import Text from "$/components/Text";
 
 import { version } from "..";
 import modules from "../modules";
@@ -24,9 +24,9 @@ export default () => {
         }}
       >
         <SillyAvatar />
-        <SimpleText variant="text-lg/semibold" color="TEXT_NORMAL">
+        <Text variant="text-lg/semibold" color="TEXT_NORMAL">
           NexxUtils v{version}
-        </SimpleText>
+        </Text>
       </View>
       {moduleCategoryMap.map(({ category, title, icon }) => {
         const mods = modules.filter(
@@ -45,13 +45,13 @@ export default () => {
                 </ErrorBoundary>
               ))
             ) : (
-              <SimpleText
+              <Text
                 variant="text-md/semibold"
                 color="TEXT_NORMAL"
                 style={{ fontStyle: "italic" }}
               >
                 {`No plugins in the ${title} category yet!`}
-              </SimpleText>
+              </Text>
             )}
           </BetterTableRowGroup>
         );

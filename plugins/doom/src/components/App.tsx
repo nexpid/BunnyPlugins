@@ -10,8 +10,8 @@ import { semanticColors } from "@vendetta/ui";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { General } from "@vendetta/ui/components";
 
-import SimpleText from "$/components/SimpleText";
 import SuperAwesomeIcon from "$/components/SuperAwesomeIcon";
+import Text from "$/components/Text";
 import { WebView } from "$/deps";
 import usePromise from "$/hooks/usePromise";
 import { openSheet } from "$/types";
@@ -140,9 +140,9 @@ export default function App() {
           />
         ) : (
           <View style={styles.webviewUnder}>
-            <SimpleText variant="text-lg/semibold" color="WHITE" align="center">
+            <Text variant="text-lg/semibold" color="WHITE" align="center">
               {typeof files === "string" ? files : text}
-            </SimpleText>
+            </Text>
           </View>
         )}
       </View>

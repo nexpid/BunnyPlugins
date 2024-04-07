@@ -8,8 +8,8 @@ import { getAssetIDByName } from "@vendetta/ui/assets";
 import { General, Search } from "@vendetta/ui/components";
 import { showToast } from "@vendetta/ui/toasts";
 
-import SimpleText from "$/components/SimpleText";
 import SuperAwesomeIcon from "$/components/SuperAwesomeIcon";
+import Text from "$/components/Text";
 
 import { getApplications, SimpleAPIApplication } from "../../stuff/api";
 import { applicationListCallback } from "../../stuff/prompts";
@@ -95,16 +95,12 @@ export const ApplicationList = () => {
                 }}
               />
               <View style={{ flexDirection: "column", marginLeft: 8 }}>
-                <SimpleText variant="text-md/semibold" color="TEXT_NORMAL">
+                <Text variant="text-md/semibold" color="TEXT_NORMAL">
                   {item.name}
-                </SimpleText>
-                <SimpleText
-                  variant="text-sm/medium"
-                  color="TEXT_MUTED"
-                  lineClamp={1}
-                >
+                </Text>
+                <Text variant="text-sm/medium" color="TEXT_MUTED" lineClamp={1}>
                   {item.description}
-                </SimpleText>
+                </Text>
               </View>
             </View>
           </RN.TouchableOpacity>

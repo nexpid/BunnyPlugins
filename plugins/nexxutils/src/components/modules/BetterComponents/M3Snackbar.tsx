@@ -1,7 +1,7 @@
 import { ReactNative as RN, stylesheet } from "@vendetta/metro/common";
 import { semanticColors } from "@vendetta/ui";
 
-import SimpleText from "$/components/SimpleText";
+import Text from "$/components/Text";
 
 export default function (props: { content: any; source?: any; icon?: any }) {
   const styles = stylesheet.createThemedStyleSheet({
@@ -53,13 +53,13 @@ export default function (props: { content: any; source?: any; icon?: any }) {
 
   return (
     <RN.View style={[styles.container, styles.shadow]}>
-      <SimpleText
+      <Text
         variant="text-md/semibold"
         color="TEXT_NORMAL"
         style={{ width: 280 }}
       >
         <Content />
-      </SimpleText>
+      </Text>
       {img && (
         <RN.View style={styles.iconContainer}>
           <Image />

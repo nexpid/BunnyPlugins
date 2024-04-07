@@ -10,7 +10,7 @@ import { getAssetIDByName } from "@vendetta/ui/assets";
 import { General } from "@vendetta/ui/components";
 
 import Modal from "$/components/Modal";
-import SimpleText from "$/components/SimpleText";
+import Text from "$/components/Text";
 import { hideActionSheet, popModal } from "$/types";
 
 import { hasAnyPin, removePin } from "../..";
@@ -98,9 +98,9 @@ const Message = ({
           source={getAssetIDByName("ic_chat_bubble_16px")}
           resizeMode="cover"
         />
-        <SimpleText variant="text-md/medium" color="TEXT_NORMAL">
+        <Text variant="text-md/medium" color="TEXT_NORMAL">
           {channel?.name ?? "unknown"}
-        </SimpleText>
+        </Text>
       </View>
       <ChatItemWrapper
         rowGenerator={new RowManager()}
@@ -143,14 +143,10 @@ export default function LocalPinnedModal() {
             resizeMode="contain"
             style={{ marginLeft: 35 }}
           />
-          <SimpleText
-            variant="text-md/medium"
-            color="TEXT_MUTED"
-            align="center"
-          >
+          <Text variant="text-md/medium" color="TEXT_MUTED" align="center">
             {i18n.Messages.NO_PINS_IN_CHANNEL ??
               "This channel doesn't have any\npinned messages... yet."}
-          </SimpleText>
+          </Text>
         </View>
       </Modal>
     );
@@ -162,13 +158,9 @@ export default function LocalPinnedModal() {
           style={{ alignItems: "center", justifyContent: "center", flex: 1 }}
         >
           <RN.ActivityIndicator size="large" style={{ marginBottom: 10 }} />
-          <SimpleText
-            variant="text-lg/semibold"
-            color="TEXT_NORMAL"
-            align="center"
-          >
+          <Text variant="text-lg/semibold" color="TEXT_NORMAL" align="center">
             {Math.floor(status * 100)}%
-          </SimpleText>
+          </Text>
         </View>
       ) : (
         <ScrollView style={{ flex: 1 }}>

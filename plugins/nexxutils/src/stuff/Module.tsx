@@ -2,12 +2,12 @@ import { logger } from "@vendetta";
 import { React, ReactNative as RN, stylesheet } from "@vendetta/metro/common";
 import { semanticColors } from "@vendetta/ui";
 import { getAssetIDByName } from "@vendetta/ui/assets";
-import { Button, Forms, General } from "@vendetta/ui/components";
+import { Forms, General } from "@vendetta/ui/components";
 import { showToast } from "@vendetta/ui/toasts";
 
-import SimpleText from "$/components/SimpleText";
 import SmartMention from "$/components/SmartMention";
-import { openModal, openSheet, resolveSemanticColor } from "$/types";
+import Text from "$/components/Text";
+import { openModal, openSheet, Redesign, resolveSemanticColor } from "$/types";
 
 import { vstorage } from "..";
 import ErrorViewerModal from "../components/modals/ErrorViewerModal";
@@ -318,12 +318,9 @@ export class Module<Settings extends Record<string, ModuleSetting>> {
                     {extra.map((x) => {
                       const children = (
                         <>
-                          <SimpleText
-                            variant="text-md/semibold"
-                            color={x.color}
-                          >
+                          <Text variant="text-md/semibold" color={x.color}>
                             {x.content}
-                          </SimpleText>
+                          </Text>
                           {x.action && (
                             <View style={styles.rowTailing}>
                               <FormRow.Arrow />
@@ -376,17 +373,17 @@ export class Module<Settings extends Record<string, ModuleSetting>> {
                     />
                   ) : setting.type === "button" ? (
                     <View style={{ marginVertical: 12 }}>
-                      <Button
-                        size="small"
+                      <Redesign.Button
+                        size="md"
+                        variant="primary"
                         text={setting.label}
-                        color="brand"
                         onPress={() => setting.action.bind(this)()}
-                        renderIcon={() => (
+                        icon={
                           <RN.Image
                             style={{ marginRight: 8 }}
                             source={setting.icon}
                           />
-                        )}
+                        }
                       />
                     </View>
                   ) : (
@@ -413,13 +410,10 @@ export class Module<Settings extends Record<string, ModuleSetting>> {
                         }
                         leading={<FormRow.Icon source={setting.icon} />}
                         trailing={
-                          <SimpleText
-                            variant="text-md/medium"
-                            color="TEXT_MUTED"
-                          >
+                          <Text variant="text-md/medium" color="TEXT_MUTED">
                             {/*@ts-expect-error type string cannot be used to index type*/}
                             {this.storage.options[id]}
-                          </SimpleText>
+                          </Text>
                         }
                       />
                     )

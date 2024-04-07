@@ -2,7 +2,7 @@ import { stylesheet } from "@vendetta/metro/common";
 import { semanticColors } from "@vendetta/ui";
 import { General } from "@vendetta/ui/components";
 
-import SimpleText from "$/components/SimpleText";
+import Text from "$/components/Text";
 
 const { View } = General;
 
@@ -23,14 +23,14 @@ const styles = stylesheet.createThemedStyleSheet({
 export default function NSFWBadge({ padding }: { padding: boolean }) {
   return (
     <View style={[styles.main, padding && { marginRight: 4 }]}>
-      <SimpleText
+      <Text
         variant="text-xs/bold"
         color="STATUS_DANGER_TEXT"
         align="center"
         style={{ marginTop: -2 }}
       >
         NSFW
-      </SimpleText>
+      </Text>
     </View>
   );
 }

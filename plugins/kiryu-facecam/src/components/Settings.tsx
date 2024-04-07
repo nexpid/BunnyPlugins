@@ -13,7 +13,7 @@ import { BetterTableRowGroup } from "$/components/BetterTableRow";
 import RedesignSlider from "$/components/compat/RedesignSlider";
 import LineDivider from "$/components/LineDivider";
 import ChooseSheet from "$/components/sheets/ChooseSheet";
-import { TrailingText } from "$/components/SimpleText";
+import { TrailingText } from "$/components/Text";
 import { Reanimated } from "$/deps";
 import { openSheet } from "$/types";
 

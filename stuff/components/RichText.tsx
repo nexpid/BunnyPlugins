@@ -1,8 +1,8 @@
 import { General } from "@vendetta/ui/components";
 
-import SimpleText from "./SimpleText";
+import Text from "./Text";
 
-const { Text } = General;
+const { Text: _Text } = General;
 
 export namespace RichText {
   export function Bold({
@@ -12,9 +12,9 @@ export namespace RichText {
     onPress?: () => void;
   }>) {
     return (
-      <SimpleText variant={"text-md/bold"} onPress={onPress}>
+      <Text variant={"text-md/bold"} onPress={onPress}>
         {children}
-      </SimpleText>
+      </Text>
     );
   }
 
@@ -25,9 +25,9 @@ export namespace RichText {
     onPress?: () => void;
   }>) {
     return (
-      <Text style={{ textDecorationLine: "underline" }} onPress={onPress}>
+      <_Text style={{ textDecorationLine: "underline" }} onPress={onPress}>
         {children}
-      </Text>
+      </_Text>
     );
   }
 }

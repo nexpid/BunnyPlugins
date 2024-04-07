@@ -3,7 +3,7 @@ import { NavigationNative, React, stylesheet } from "@vendetta/metro/common";
 import { semanticColors } from "@vendetta/ui";
 import { Button, General } from "@vendetta/ui/components";
 
-import SimpleText from "$/components/SimpleText";
+import Text from "$/components/Text";
 import { openSheet } from "$/types";
 
 import {
@@ -71,7 +71,7 @@ export default ({ edit, act }: { edit: boolean; act: SettingsActivity }) => {
     return (
       <>
         <View style={styles.actTypeCont}>
-          <SimpleText
+          <Text
             variant="eyebrow"
             color="TEXT_NORMAL"
             onPress={() =>
@@ -85,7 +85,7 @@ export default ({ edit, act }: { edit: boolean; act: SettingsActivity }) => {
             }
           >
             {activityTypePreview[act.type ?? ActivityType.Playing]} ...
-          </SimpleText>
+          </Text>
         </View>
         <View style={styles.card}>
           <View style={{ padding: 16 }}>
@@ -143,7 +143,7 @@ export default ({ edit, act }: { edit: boolean; act: SettingsActivity }) => {
                 </View>
               </View>
               <View style={{ flex: 1 }}>
-                <SimpleText
+                <Text
                   variant="text-md/semibold"
                   color="TEXT_NORMAL"
                   onPress={() =>
@@ -167,8 +167,8 @@ export default ({ edit, act }: { edit: boolean; act: SettingsActivity }) => {
                   }
                 >
                   {act.app.name ?? placeholders.appName}
-                </SimpleText>
-                <SimpleText
+                </Text>
+                <Text
                   variant="text-sm/normal"
                   color="TEXT_NORMAL"
                   onPress={() =>
@@ -183,8 +183,8 @@ export default ({ edit, act }: { edit: boolean; act: SettingsActivity }) => {
                   }
                 >
                   {act.details ?? placeholders.details}
-                </SimpleText>
-                <SimpleText
+                </Text>
+                <Text
                   variant="text-sm/normal"
                   color="TEXT_NORMAL"
                   onPress={() =>
@@ -199,8 +199,8 @@ export default ({ edit, act }: { edit: boolean; act: SettingsActivity }) => {
                   }
                 >
                   {act.state ?? placeholders.state}
-                </SimpleText>
-                <SimpleText
+                </Text>
+                <Text
                   variant="text-sm/normal"
                   color="TEXT_NORMAL"
                   onPress={() =>

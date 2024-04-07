@@ -2,12 +2,12 @@ import { constants, React, stylesheet } from "@vendetta/metro/common";
 import { semanticColors } from "@vendetta/ui";
 import { Forms, General } from "@vendetta/ui/components";
 
-import SimpleText from "$/components/SimpleText";
+import Text from "$/components/Text";
 
 import { debug, vstorage } from "../..";
 import { dispatchActivityIfPossible } from "../../stuff/activity";
 
-const { ScrollView, Text } = General;
+const { ScrollView, Text: DText } = General;
 const { FormSection } = Forms;
 
 export let forceUpdateLiveRawActivityView: () => void;
@@ -27,30 +27,30 @@ export const LiveRawActivityView = () => {
     <ScrollView style={{ flex: 1, marginBottom: 50 }}>
       <FormSection title="Live Raw Activity">
         {debug.lastRawActivity ? (
-          <Text style={styles.code}>
+          <DText style={styles.code}>
             {JSON.stringify(debug.lastRawActivity, undefined, 3)}
-          </Text>
+          </DText>
         ) : vstorage.settings.display ? (
-          <SimpleText variant="text-md/semibold">
+          <Text variant="text-md/semibold">
             Display activity setting is disabled. You need to actually enable it
             for the raw activity to show up lmao
-          </SimpleText>
+          </Text>
         ) : (
-          <SimpleText
+          <Text
             variant="text-md/semibold"
             onPress={() => dispatchActivityIfPossible()}
           >
             No last raw activity yet. Tap text to force update
-          </SimpleText>
+          </Text>
         )}
       </FormSection>
       <FormSection title="Info">
-        <SimpleText variant="text-md/semibold" color="TEXT_NORMAL">
+        <Text variant="text-md/semibold" color="TEXT_NORMAL">
           Last raw activity update:{" "}
           {debug.lastRawActivityTimestamp
             ? new Date(debug.lastRawActivityTimestamp).toLocaleString("en-US")
             : "-"}
-        </SimpleText>
+        </Text>
       </FormSection>
     </ScrollView>
   );

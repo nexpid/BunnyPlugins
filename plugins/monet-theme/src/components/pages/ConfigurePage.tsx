@@ -7,7 +7,7 @@ import { showToast } from "@vendetta/ui/toasts";
 
 import { BetterTableRowGroup } from "$/components/BetterTableRow";
 import ChooseSheet from "$/components/sheets/ChooseSheet";
-import SimpleText, { TrailingText } from "$/components/SimpleText";
+import Text, { TrailingText } from "$/components/Text";
 import { openSheet, resolveSemanticColor } from "$/types";
 
 import { vstorage } from "../..";
@@ -111,9 +111,9 @@ export const ConfigurePage = () => {
         {collections.map((x, i, a) => (
           <View style={{ marginBottom: i !== a.length - 1 ? 8 : 0 }}>
             <View style={{ marginBottom: 8 }}>
-              <SimpleText variant="eyebrow" color="TEXT_NORMAL">
+              <Text variant="eyebrow" color="TEXT_NORMAL">
                 {x.label}
-              </SimpleText>
+              </Text>
             </View>
             <ScrollView horizontal={true}>
               <View style={{ marginRight: 8, flexDirection: "column" }}>
@@ -142,14 +142,14 @@ export const ConfigurePage = () => {
                     }}
                   />
                 </RN.TouchableOpacity>
-                <SimpleText
+                <Text
                   variant="text-sm/semibold"
                   color="TEXT_NORMAL"
                   align="center"
                   style={{ marginTop: 8 }}
                 >
                   None
-                </SimpleText>
+                </Text>
               </View>
               {x.content.map((x) => (
                 <View style={{ marginRight: 8, flexDirection: "column" }}>
@@ -178,14 +178,14 @@ export const ConfigurePage = () => {
                       }}
                     />
                   </RN.TouchableOpacity>
-                  <SimpleText
+                  <Text
                     variant="text-sm/semibold"
                     color="TEXT_NORMAL"
                     align="center"
                     style={{ marginTop: 8 }}
                   >
                     {x.title}
-                  </SimpleText>
+                  </Text>
                 </View>
               ))}
             </ScrollView>

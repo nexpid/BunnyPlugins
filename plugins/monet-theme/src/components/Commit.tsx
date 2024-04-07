@@ -6,7 +6,7 @@ import {
 import { semanticColors } from "@vendetta/ui";
 import { General } from "@vendetta/ui/components";
 
-import SimpleText from "$/components/SimpleText";
+import Text from "$/components/Text";
 export interface CommitUser {
   login: string;
   id: number;
@@ -131,30 +131,30 @@ export default ({
               }}
               source={{ uri: commit.committer.avatar_url }}
             />
-            <SimpleText
+            <Text
               style={{ marginRight: 8 }}
               variant="text-sm/semibold"
               color="TEXT_NORMAL"
             >
               {commit.committer.login}
-            </SimpleText>
-            <SimpleText
+            </Text>
+            <Text
               style={{ marginRight: 8 }}
               variant="text-sm/semibold"
               color="TEXT_NORMAL"
             >
               •
-            </SimpleText>
-            <SimpleText
+            </Text>
+            <Text
               color="TEXT_NORMAL"
               style={{ fontFamily: constants.Fonts.CODE_SEMIBOLD }}
             >
               {commit.sha.slice(0, 7)}
-            </SimpleText>
+            </Text>
           </View>
-          <SimpleText variant="text-md/semibold" color="TEXT_NORMAL">
+          <Text variant="text-md/semibold" color="TEXT_NORMAL">
             {commit.commit.message}
-          </SimpleText>
+          </Text>
         </View>
       </UseComponent>
     </View>
