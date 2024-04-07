@@ -1,23 +1,15 @@
-import {
-  clipboard,
-  NavigationNative,
-  React,
-  ReactNative as RN,
-  stylesheet,
-} from "@vendetta/metro/common";
+import { clipboard, NavigationNative, React } from "@vendetta/metro/common";
 import { useProxy } from "@vendetta/storage";
-import { semanticColors } from "@vendetta/ui";
 import { showConfirmationAlert } from "@vendetta/ui/alerts";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { Forms, General } from "@vendetta/ui/components";
 import { showToast } from "@vendetta/ui/toasts";
 
-import { FadeView } from "$/components/Animations";
 import { BetterTableRowGroup } from "$/components/BetterTableRow";
 import LineDivider from "$/components/LineDivider";
 import SuperAwesomeIcon from "$/components/SuperAwesomeIcon";
 
-import { isDead, setDied, vstorage } from "..";
+import { vstorage } from "..";
 import {
   dispatchActivityIfPossible,
   isActivitySaved,
@@ -31,7 +23,7 @@ import { openLiveRawActivityView } from "./pages/LiveRawActivityView";
 import { showProfileList } from "./pages/ProfileList";
 import RPCPreview from "./RPCPreview";
 
-const { ScrollView, View, Pressable } = General;
+const { ScrollView, View } = General;
 const { FormSwitchRow, FormIcon, FormRow } = Forms;
 
 export const placeholders = {
@@ -49,13 +41,6 @@ export const activityTypePreview = {
   3: "Watching",
   5: "Competing in",
 };
-
-const styles = stylesheet.createThemedStyleSheet({
-  androidRipple: {
-    color: semanticColors.ANDROID_RIPPLE,
-    cornerRadius: 8,
-  },
-});
 
 export let forceUpdateSettings: () => void;
 export default () => {
@@ -97,27 +82,9 @@ export default () => {
 
   let dbgCounter = 0,
     dbgCounterTimeout: number;
-  let bkCounter = -1,
-    bkCounterTimeout: number;
 
   return (
     <>
-      <FadeView
-        style={[
-          {
-            backgroundColor: "#f11",
-            position: "absolute",
-            width: "100%",
-            height: "100%",
-            zIndex: 2,
-          },
-        ]}
-        fade={"out"}
-        duration={1000}
-        trigger={isDead()}
-        setDisplay={true}
-        animateOnInit={false}
-      />
       <ScrollView
         style={{
           zIndex: 1,
@@ -130,13 +97,9 @@ export default () => {
               vstorage.settings.debug.visible =
                 !vstorage.settings.debug.visible;
               showToast(
-                isDead()
-                  ? `debug tab ${
-                      vstorage.settings.debug.visible ? "on" : "off"
-                    }`
-                  : `Debug tab ${
-                      vstorage.settings.debug.visible ? "visible" : "hidden"
-                    }`,
+                `Debug tab ${
+                  vstorage.settings.debug.visible ? "visible" : "hidden"
+                }`,
               );
             } else {
               if (dbgCounterTimeout) clearTimeout(dbgCounterTimeout);
@@ -149,17 +112,9 @@ export default () => {
 
               if (dbgCounter < 7) {
                 const more = 7 - dbgCounter;
-                return showToast(
-                  isDead()
-                    ? `tap ${more} more time${more !== 1 ? "s" : ""}`
-                    : `${more} more taps`,
-                );
+                return showToast(`${more} more taps`);
               } else {
-                showToast(
-                  isDead()
-                    ? "the sin of murdering boykisser continues to haunt you"
-                    : "Behold! You can now debug!",
-                );
+                showToast("Behold! You can now debug!");
                 vstorage.settings.debug.visible = true;
                 vstorage.settings.debug.enabled = true;
                 forceUpdate();
@@ -345,76 +300,15 @@ export default () => {
                   delete proxyAssetCache[x];
                 }
 
-                const faces = ":3,>:3,:D,>:D,:P,>:P".split(",");
+                const faces = ":P,:3,:D,:-D,:>,x3,xD,:x,:^),:v".split(",");
                 showToast(
-                  `flushed cache ${
+                  `Flushed MP cache ${
                     faces[Math.floor(Math.random() * faces.length)]
                   }`,
                 );
                 if (changes > 0) dispatchActivityIfPossible();
               }}
             />
-
-            {!isDead() && (
-              <>
-                <LineDivider addPadding={true} />
-                <View style={{ paddingHorizontal: 16, paddingBottom: 16 }}>
-                  <Pressable
-                    android_ripple={styles.androidRipple}
-                    disabled={false}
-                    accessibilityRole={"button"}
-                    accessibilityLabel="boykisser"
-                    accessibilityHint="tap to boykiss"
-                    onPress={() => {
-                      const messages = "nya,mwah,uwu,nya~,guh,blehhh >:P".split(
-                        ",",
-                      );
-                      showToast(
-                        messages[Math.floor(Math.random() * messages.length)],
-                      );
-                    }}
-                    delayLongPress={500}
-                    onLongPress={() => {
-                      if (isDead()) return showToast("fuck you");
-
-                      if (bkCounterTimeout) clearTimeout(bkCounterTimeout);
-                      bkCounterTimeout = setTimeout(() => {
-                        bkCounter = -1;
-                      }, 3000);
-                      bkCounter++;
-
-                      const messages = [
-                        "tapping and holding on boykisser will kill him. are you sure?",
-                        "i am serious, are you sure?",
-                        "are you TOTALLY sure you want to kill him?",
-                        "this cannot be undone",
-                        "please, have mercy on him",
-                        "this is your last warning, he will be forever killed",
-                        "you don't want to do this",
-                        "please, i beg you",
-                      ];
-
-                      if (!messages[bkCounter]) {
-                        setDied(true);
-                        forceUpdate();
-                        showToast("you have MURDERED boykisser. fuck you");
-                      } else showToast(messages[bkCounter]);
-                    }}
-                  >
-                    <RN.Image
-                      source={{
-                        uri: "https://cdn.discordapp.com/attachments/919655852724604978/1126175249424191548/723.gif",
-                      }}
-                      style={{
-                        borderRadius: 8,
-                        width: "100%",
-                        aspectRatio: 1,
-                      }}
-                    />
-                  </Pressable>
-                </View>
-              </>
-            )}
           </BetterTableRowGroup>
         )}
         <View style={{ marginBottom: 20 }} />

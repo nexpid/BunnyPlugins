@@ -4,7 +4,7 @@ import { semanticColors } from "@vendetta/ui";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { General } from "@vendetta/ui/components";
 
-import { FadeView } from "$/components/Animations";
+import { Reanimated } from "$/deps";
 
 import openPreview from "../stuff/openPreview";
 import { patches } from "../stuff/patcher";
@@ -40,6 +40,7 @@ const styles = stylesheet.createThemedStyleSheet({
 
 export default ({ inputProps }): JSX.Element => {
   const [text, setText] = React.useState("");
+  const fade = Reanimated.useSharedValue(0);
 
   patches.push(
     after("onChangeText", inputProps, ([txt]: [string]) => setText(txt), true),
@@ -48,28 +49,25 @@ export default ({ inputProps }): JSX.Element => {
   const shouldAppear = text.length > 0;
   const UseComponent = shouldAppear ? Pressable : View;
 
+  React.useEffect(() => {
+    fade.value = Reanimated.withTiming(shouldAppear ? 1 : 0, { duration: 100 });
+  }, [shouldAppear]);
+
   return (
-    <FadeView
-      style={{
-        flexDirection: "row",
-        position: "absolute",
-        left: 0,
-        top: -ACTION_ICON_SIZE,
-        zIndex: 3,
-      }}
-      duration={100}
-      fade={shouldAppear ? "in" : "out"}
+    <Reanimated.default.View
+      style={[
+        {
+          flexDirection: "row",
+          position: "absolute",
+          left: 0,
+          top: -ACTION_ICON_SIZE,
+          zIndex: 3,
+        },
+        { opacity: fade },
+      ]}
     >
       <UseComponent
         android_ripple={styles.androidRipple}
-        disabled={false}
-        accessibilityRole={"button"}
-        accessibilityState={{
-          disabled: false,
-          expanded: false,
-        }}
-        accessibilityLabel="Open markdown preview"
-        accessibilityHint="Open a modal which shows your message's markdown preview"
         onPress={shouldAppear ? () => openPreview() : undefined}
         style={styles.actionButton}
       >
@@ -78,6 +76,6 @@ export default ({ inputProps }): JSX.Element => {
           source={getAssetIDByName("ic_eye")}
         />
       </UseComponent>
-    </FadeView>
+    </Reanimated.default.View>
   );
 };

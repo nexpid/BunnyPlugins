@@ -1,8 +1,8 @@
 import { React, stylesheet } from "@vendetta/metro/common";
 import { useProxy } from "@vendetta/storage";
 
-import { FadeView } from "$/components/Animations";
 import Text from "$/components/Text";
+import { Reanimated } from "$/deps";
 
 import { vstorage } from "..";
 import getMessageLength, { display, hasSLM } from "../stuff/getMessageLength";
@@ -19,6 +19,7 @@ const styles = stylesheet.createThemedStyleSheet({
 
 export default function () {
   useProxy(lastText);
+  const fade = Reanimated.useSharedValue(0);
 
   const curLength = lastText.value.length,
     maxLength = getMessageLength();
@@ -26,13 +27,17 @@ export default function () {
   const dspLength = curLength - extraMessages * maxLength;
 
   const shouldAppear = curLength >= vstorage.minChars;
+  React.useEffect(() => {
+    fade.value = Reanimated.withTiming(shouldAppear ? 1 : 0, { duration: 100 });
+  }, [shouldAppear]);
 
   return (
-    <FadeView
-      duration={100}
-      style={styles.container}
-      fade={shouldAppear ? "in" : "out"}
-      setDisplay={true}
+    <Reanimated.default.View
+      style={[
+        styles.container,
+        { opacity: fade },
+        !shouldAppear && { display: "none" },
+      ]}
     >
       <Text
         variant="text-xs/semibold"
@@ -40,6 +45,6 @@ export default function () {
       >
         {display(dspLength)}
       </Text>
-    </FadeView>
+    </Reanimated.default.View>
   );
 }

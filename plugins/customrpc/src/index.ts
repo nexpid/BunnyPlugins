@@ -1,7 +1,4 @@
 import { storage } from "@vendetta/plugin";
-import { wrapSync } from "@vendetta/storage";
-
-import { RNMMKVManager } from "$/deps";
 
 import settings from "./components/Settings";
 import {
@@ -13,18 +10,6 @@ import {
 } from "./stuff/activity";
 import { registerDefaultChanges, unregisterChanges } from "./stuff/autochange";
 import PresetProfiles from "./stuff/presetProfiles";
-
-let died = wrapSync(
-  RNMMKVManager.getItem("CRPC_boykisser")
-    .then((x) => x === "true")
-    .catch(() => false),
-);
-export function setDied(dead: boolean) {
-  died = dead;
-}
-export function isDead() {
-  return died;
-}
 
 export const vstorage = storage as {
   settings: {

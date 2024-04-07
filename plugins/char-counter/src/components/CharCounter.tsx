@@ -1,17 +1,14 @@
-import { React, stylesheet } from "@vendetta/metro/common";
+import { React, ReactNative as RN, stylesheet } from "@vendetta/metro/common";
 import { after } from "@vendetta/patcher";
 import { semanticColors } from "@vendetta/ui";
-import { General } from "@vendetta/ui/components";
 
-import { FadeView } from "$/components/Animations";
 import Text from "$/components/Text";
+import { Reanimated } from "$/deps";
 import { TextStyleSheet } from "$/types";
 
 import { vstorage } from "..";
 import getMessageLength, { display, hasSLM } from "../stuff/getMessageLength";
 import { lastText } from "../stuff/patcher";
-
-const { View, Pressable } = General;
 
 const xsFontSize = TextStyleSheet["text-xs/semibold"].fontSize;
 const styles = stylesheet.createThemedStyleSheet({
@@ -57,6 +54,9 @@ export default ({ inputProps }: { inputProps: any }) => {
   const [isToggled, setIsToggled] = React.useState(false);
   const [text, setText] = React.useState("");
 
+  const fade = Reanimated.useSharedValue(0);
+  const fadeExtra = Reanimated.useSharedValue(0);
+
   lastText.value = text;
   after("onChangeText", inputProps, ([txt]: [string]) => setText(txt), true);
 
@@ -68,22 +68,35 @@ export default ({ inputProps }: { inputProps: any }) => {
   const elY = styles.text.fontSize * 2 + styles.text.paddingVertical;
 
   const shouldAppear = curLength >= (vstorage.minChars ?? 1);
-  const UseComponent = shouldAppear ? Pressable : View;
+  React.useEffect(() => {
+    fade.value = Reanimated.withTiming(
+      shouldAppear ? (isToggled ? 0.3 : 1) : 0,
+      { duration: 100 },
+    );
+  }, [shouldAppear, isToggled]);
+
+  React.useEffect(() => {
+    fadeExtra.value = Reanimated.withTiming(extraMessages > 0 ? 1 : 0, {
+      duration: 100,
+    });
+  }, [extraMessages]);
 
   return (
-    <FadeView
-      duration={100}
-      style={{
-        flexDirection: "row-reverse",
-        position: "absolute",
-        right: 0,
-        top: -elY,
-        zIndex: 1,
-      }}
-      fade={shouldAppear ? "in" : "out"}
-      customOpacity={isToggled && shouldAppear ? 0.3 : undefined}
+    <Reanimated.default.View
+      style={[
+        {
+          flexDirection: "row-reverse",
+          position: "absolute",
+          right: 0,
+          top: -elY,
+          zIndex: 1,
+        },
+        {
+          opacity: fade,
+        },
+      ]}
     >
-      <UseComponent
+      <RN.Pressable
         android_ripple={styles.androidRipple}
         disabled={false}
         accessibilityRole={"button"}
@@ -96,10 +109,8 @@ export default ({ inputProps }: { inputProps: any }) => {
         style={styles.container}
         onPress={shouldAppear ? () => setIsToggled(!isToggled) : undefined}
       >
-        <FadeView
-          fade={extraMessages > 0 && shouldAppear ? "in" : "out"}
-          duration={100}
-          style={styles.extraMessagesCircle}
+        <Reanimated.default.View
+          style={[styles.extraMessagesCircle, { opacity: fadeExtra }]}
         >
           <Text
             variant="text-xs/semibold"
@@ -108,7 +119,7 @@ export default ({ inputProps }: { inputProps: any }) => {
           >
             {extraMessages}
           </Text>
-        </FadeView>
+        </Reanimated.default.View>
         <Text
           variant="text-xs/semibold"
           color={dspLength <= maxLength ? "TEXT_NORMAL" : "TEXT_DANGER"}
@@ -119,7 +130,7 @@ export default ({ inputProps }: { inputProps: any }) => {
         >
           {display(dspLength)}
         </Text>
-      </UseComponent>
-    </FadeView>
+      </RN.Pressable>
+    </Reanimated.default.View>
   );
 };
