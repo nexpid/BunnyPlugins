@@ -54,7 +54,7 @@ export default ({ inputProps }: { inputProps: any }) => {
   const [isToggled, setIsToggled] = React.useState(false);
   const [text, setText] = React.useState("");
 
-  const fade = Reanimated.useSharedValue(0);
+  const fade = Reanimated.useSharedValue(vstorage.minChars === 0 ? 1 : 0);
   const fadeExtra = Reanimated.useSharedValue(0);
 
   lastText.value = text;
@@ -98,15 +98,8 @@ export default ({ inputProps }: { inputProps: any }) => {
     >
       <RN.Pressable
         android_ripple={styles.androidRipple}
-        disabled={false}
-        accessibilityRole={"button"}
-        accessibilityState={{
-          disabled: false,
-          expanded: false,
-        }}
-        accessibilityLabel="Character counter"
-        accessibilityHint="Tap to toggle character counter translucency"
         style={styles.container}
+        pointerEvents={shouldAppear ? "box-only" : "none"}
         onPress={shouldAppear ? () => setIsToggled(!isToggled) : undefined}
       >
         <Reanimated.default.View

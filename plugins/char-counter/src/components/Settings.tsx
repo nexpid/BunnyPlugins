@@ -85,7 +85,7 @@ export default () => {
           onChange={(x: string) =>
             (vstorage.minChars = Math.max(
               Number.isNaN(Number(x)) ? 1 : Number(x),
-              1,
+              0,
             ))
           }
           style={{ marginTop: -25, marginHorizontal: 12 }}

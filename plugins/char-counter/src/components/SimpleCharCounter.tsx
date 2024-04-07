@@ -19,7 +19,8 @@ const styles = stylesheet.createThemedStyleSheet({
 
 export default function () {
   useProxy(lastText);
-  const fade = Reanimated.useSharedValue(0);
+  const fade = Reanimated.useSharedValue(vstorage.minChars === 0 ? 1 : 0);
+  const [visible, setVisible] = React.useState(vstorage.minChars === 0);
 
   const curLength = lastText.value.length,
     maxLength = getMessageLength();
@@ -27,16 +28,24 @@ export default function () {
   const dspLength = curLength - extraMessages * maxLength;
 
   const shouldAppear = curLength >= vstorage.minChars;
+
+  let shallTimeout = React.useRef(0);
   React.useEffect(() => {
+    if (shouldAppear) setVisible(true);
+
     fade.value = Reanimated.withTiming(shouldAppear ? 1 : 0, { duration: 100 });
+    clearTimeout(shallTimeout.current);
+
+    if (!shouldAppear)
+      shallTimeout.current = setTimeout(() => setVisible(false), 100);
   }, [shouldAppear]);
 
   return (
     <Reanimated.default.View
       style={[
         styles.container,
+        !visible && { display: "none" },
         { opacity: fade },
-        !shouldAppear && { display: "none" },
       ]}
     >
       <Text
