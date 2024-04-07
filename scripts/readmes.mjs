@@ -334,7 +334,8 @@ const mreadme = `${mdNote}
   <h1>💮 Detta Plugins</h1>
 </div>
 
-A collection of all my awesome plugins for [Pyoncord](https://github.com/pyoncord/Pyoncord#installing)
+A collection of all my awesome plugins for [Pyoncord](https://github.com/pyoncord/Pyoncord#installing).  
+My plugins assume you're using version atleast **211.10** (211210) from **January 1st**, they might not work properly if you use an older version than that.
 
 ## 📊 Stats
 
@@ -343,8 +344,7 @@ Out of the plugins I've coded, **${stats.finished}** ${plur(
   stats.finished,
   "are finished",
   "is finished",
-)} (**${Math.floor((stats.finished / stats.all) * 100)}%**)
-I'm working on **${stats.unfinished}** plugin${plur(stats.unfinished)}, and **${
+)}. I'm working on **${stats.unfinished}** plugin${plur(stats.unfinished)}, and **${
   stats.discontinued
 }** plugin${plur(stats.discontinued, "s are", " is")} discontinued.
 
