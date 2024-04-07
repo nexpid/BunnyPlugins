@@ -1,12 +1,12 @@
 name: Plugin Suggestion
 description: Suggest an idea for a plugin!
-title: "suggest(PLUGIN): "
+title: "[Plugin Name] Short suggestion description"
 labels: [suggestion]
 body:
   - type: markdown
     attributes:
       value: |
-        ## Thanks for taking the time to suggest a plugin feature!
+        ## Thanks for taking the time to suggest a plugin feature! Make sure to fill in the issue title.
   - type: checkboxes
     attributes:
       label: Check all the boxes below

@@ -1,12 +1,12 @@
 name: Plugin Bug Report
 description: Report a bug in a plugin!
-title: "bug(PLUGIN): "
+title: "[Plugin Name] Short bug description"
 labels: [bug]
 body:
   - type: markdown
     attributes:
       value: |
-        ## Thank you for taking the time to report a plugin bug!
+        ## Thank you for taking the time to report a plugin bug! Make sure to fill in the issue title.
   - type: checkboxes
     attributes:
       label: Check all the boxes below
@@ -50,7 +50,7 @@ body:
     id: bug-screenshot
     attributes:
       label: Bug Screenshot
-      description: If this bug doesn't cause a crash, enter a screenshot of it
+      description: If this bug doesn't cause a crash, provide a screenshot of it
     validations:
       required: false
   - type: textarea
