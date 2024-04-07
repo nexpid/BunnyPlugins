@@ -2,7 +2,6 @@ import { findByProps } from "@vendetta/metro";
 import {
   clipboard,
   i18n,
-  NavigationNative,
   React,
   ReactNative as RN,
   stylesheet,
@@ -24,6 +23,7 @@ import {
 import { parse } from "../../stuff/markdown";
 import { openOauth2Modal } from "../../stuff/oauth2";
 import { inServers, parseDesc } from "../../stuff/util";
+import { managePage } from "$/lib/ui";
 
 const { ScrollView, View } = General;
 
@@ -118,12 +118,8 @@ export default function AppInfoPage({
     },
   });
 
-  const navigation = NavigationNative.useNavigation();
-  const unsub = navigation.addListener("focus", () => {
-    unsub();
-    navigation.setOptions({
-      title: app.name,
-    });
+  managePage({
+    title: app.name,
   });
 
   const carouselProgress = React.useRef(new RN.Animated.Value(0)).current;

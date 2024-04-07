@@ -22,6 +22,7 @@ import { stringVariables } from "../stuff/variables";
 import { openLiveRawActivityView } from "./pages/LiveRawActivityView";
 import { showProfileList } from "./pages/ProfileList";
 import RPCPreview from "./RPCPreview";
+import { managePage } from "$/lib/ui";
 
 const { ScrollView, View } = General;
 const { FormSwitchRow, FormIcon, FormRow } = Forms;
@@ -55,29 +56,24 @@ export default () => {
     [JSON.stringify(vstorage.activity.editing), vstorage.settings.display],
   );
 
-  const unsub = navigation.addListener("focus", () => {
-    unsub();
-    navigation.setOptions({
-      headerRight: () => (
-        <View style={{ flexDirection: "row-reverse" }}>
-          <SuperAwesomeIcon
-            style="header"
-            icon={getAssetIDByName("ic_essentials_sparkle")}
-            onPress={() =>
-              showConfirmationAlert({
-                title: "String Variables",
-                content: `String variables can be used in any text component\nHere's the entire list:\n\n${stringVariables
-                  .map((x) => `**\`${x.match}\`**\n — ${x.description}`)
-                  .join("\n")}`,
-                confirmText: "Dismiss",
-                confirmColor: "brand" as ButtonColors,
-                onConfirm: () => undefined,
-              })
-            }
-          />
-        </View>
-      ),
-    });
+  managePage({
+    headerRight: () => (
+      <SuperAwesomeIcon
+        style="header"
+        icon={getAssetIDByName("SparklesIcon")}
+        onPress={() =>
+          showConfirmationAlert({
+            title: "String Variables",
+            content: `String variables can be used in any text component\nHere's the entire list:\n\n${stringVariables
+              .map((x) => `**\`${x.match}\`**\n — ${x.description}`)
+              .join("\n")}`,
+            confirmText: "Dismiss",
+            confirmColor: "brand" as ButtonColors,
+            onConfirm: () => undefined,
+          })
+        }
+      />
+    ),
   });
 
   let dbgCounter = 0,

@@ -1,8 +1,4 @@
-import {
-  NavigationNative,
-  React,
-  ReactNative as RN,
-} from "@vendetta/metro/common";
+import { React, ReactNative as RN } from "@vendetta/metro/common";
 import { plugins } from "@vendetta/plugins";
 import { useProxy } from "@vendetta/storage";
 import { showConfirmationAlert } from "@vendetta/ui/alerts";
@@ -12,6 +8,7 @@ import { Forms, Search, Summary } from "@vendetta/ui/components";
 import SuperAwesomeIcon from "$/components/SuperAwesomeIcon";
 
 import { lang, vstorage } from "../..";
+import { managePage } from "$/lib/ui";
 
 const { FormSwitchRow } = Forms;
 
@@ -24,31 +21,27 @@ export default () => {
   }, []);
 
   useProxy(vstorage);
-  const navigation = NavigationNative.useNavigation();
 
-  const unsub = navigation.addListener("focus", () => {
-    unsub();
-    navigation.setOptions({
-      title: lang.format("page.plugin_settings.title", {}),
-      headerRight: () => (
-        <SuperAwesomeIcon
-          onPress={() =>
-            showConfirmationAlert({
-              title: lang.format("alert.plugin_settings_revert.title", {}),
-              content: lang.format("alert.plugin_settings_revert.body", {}),
-              confirmText: lang.format(
-                "alert.plugin_settings_revert.confirm",
-                {},
-              ),
-              confirmColor: "red" as ButtonColors,
-              onConfirm: () => (vstorage.pluginSettings = {}),
-            })
-          }
-          icon={getAssetIDByName("ic_message_delete")}
-          style="header"
-        />
-      ),
-    });
+  managePage({
+    title: lang.format("page.plugin_settings.title", {}),
+    headerRight: () => (
+      <SuperAwesomeIcon
+        onPress={() =>
+          showConfirmationAlert({
+            title: lang.format("alert.plugin_settings_revert.title", {}),
+            content: lang.format("alert.plugin_settings_revert.body", {}),
+            confirmText: lang.format(
+              "alert.plugin_settings_revert.confirm",
+              {},
+            ),
+            confirmColor: "red" as ButtonColors,
+            onConfirm: () => (vstorage.pluginSettings = {}),
+          })
+        }
+        icon={getAssetIDByName("ic_message_delete")}
+        style="header"
+      />
+    ),
   });
 
   return (

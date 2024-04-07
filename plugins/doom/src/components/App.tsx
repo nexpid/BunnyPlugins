@@ -21,6 +21,7 @@ import webviewHtml from "../../assets/webview.html";
 import { vstorage } from "..";
 import { getFiles } from "../stuff/store";
 import SettingsActionSheet from "./sheets/SettingsActionSheet";
+import { managePage } from "$/lib/ui";
 
 const { View } = General;
 const Orientation = findByProps("OrientationType", "useOrientation");
@@ -37,21 +38,18 @@ export default function App() {
     height: isLandscape ? _width : _height,
   }).current;
 
-  const unsub = navigation.addListener("focus", () => {
-    unsub();
-    navigation.setOptions({
-      headerRight: () => (
-        <SuperAwesomeIcon
-          onPress={() =>
-            openSheet(SettingsActionSheet, {
-              kaboom: () => navigation.goBack(),
-            })
-          }
-          icon={getAssetIDByName("ic_cog")}
-          style="header"
-        />
-      ),
-    });
+  managePage({
+    headerRight: () => (
+      <SuperAwesomeIcon
+        onPress={() =>
+          openSheet(SettingsActionSheet, {
+            kaboom: () => navigation.goBack(),
+          })
+        }
+        icon={getAssetIDByName("SettingsIcon")}
+        style="header"
+      />
+    ),
   });
 
   const styles = stylesheet.createThemedStyleSheet({

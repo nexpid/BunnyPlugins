@@ -1,9 +1,4 @@
-import {
-  NavigationNative,
-  React,
-  ReactNative as RN,
-} from "@vendetta/metro/common";
-import { showConfirmationAlert } from "@vendetta/ui/alerts";
+import { React, ReactNative as RN } from "@vendetta/metro/common";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { General, Search } from "@vendetta/ui/components";
 import { showToast } from "@vendetta/ui/toasts";
@@ -15,9 +10,9 @@ import { openSheet } from "$/types";
 
 import { lang, pluginsURL } from "../..";
 import { getChanges, updateChanges } from "../../stuff/pluginChecker";
-import { emitterAvailable } from "../../stuff/util";
 import { PluginsFullJson } from "../../types";
 import PluginThing from "../PluginThing";
+import { managePage } from "$/lib/ui";
 
 const { View } = General;
 
@@ -31,20 +26,6 @@ enum Sort {
 let refreshCallback: () => void;
 let sortCallback: () => void;
 export default () => {
-  const navigation = NavigationNative.useNavigation();
-
-  if (!emitterAvailable) {
-    showConfirmationAlert({
-      title: lang.format("alert.unusable.title", {}),
-      content: lang.format("alert.unusable.body", {}),
-      confirmColor: "brand" as ButtonColors,
-      onConfirm: () => {},
-      isDismissable: true,
-    });
-    navigation.goBack();
-    return null;
-  }
-
   const [search, setSearch] = React.useState("");
 
   const changes = React.useRef(getChanges()).current;
@@ -115,24 +96,22 @@ export default () => {
       callback: (val) => currentSetSort.current(val as Sort),
     });
 
-  navigation.addListener("focus", () => {
-    navigation.setOptions({
-      title: lang.format("plugin.name", {}),
-      headerRight: () => (
-        <View style={{ flexDirection: "row-reverse" }}>
-          <SuperAwesomeIcon
-            onPress={() => refreshCallback?.()}
-            icon={getAssetIDByName("ic_sync_24px")}
-            style="header"
-          />
-          <SuperAwesomeIcon
-            onPress={() => sortCallback?.()}
-            icon={getAssetIDByName("ic_filter")}
-            style="header"
-          />
-        </View>
-      ),
-    });
+  managePage({
+    title: lang.format("plugin.name", {}),
+    headerRight: () => (
+      <View style={{ flexDirection: "row-reverse" }}>
+        <SuperAwesomeIcon
+          onPress={() => refreshCallback?.()}
+          icon={getAssetIDByName("RetryIcon")}
+          style="header"
+        />
+        <SuperAwesomeIcon
+          onPress={() => sortCallback?.()}
+          icon={getAssetIDByName("FiltersHorizontalIcon")}
+          style="header"
+        />
+      </View>
+    ),
   });
 
   if (!parsed)

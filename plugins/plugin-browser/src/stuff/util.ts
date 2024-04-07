@@ -59,5 +59,3 @@ export async function refetchPlugin(plugin: any) {
 }
 
 export const emitterSymbol = Symbol.for("vendetta.storage.emitter");
-export const emitterAvailable =
-  !!(plugins as any)[emitterSymbol] && !!(themes as any)[emitterSymbol];

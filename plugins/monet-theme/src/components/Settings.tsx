@@ -42,6 +42,7 @@ import Commit, { CommitObj } from "./Commit";
 import { openCommitsPage } from "./pages/CommitsPage";
 import { openConfigurePage } from "./pages/ConfigurePage";
 import PreviewButton from "./PreviewButton";
+import { managePage } from "$/lib/ui";
 
 const { ScrollView, View, Pressable } = General;
 const { FormRow, FormSwitchRow } = Forms;
@@ -163,13 +164,10 @@ export default () => {
         );
   }, [commits]);
 
+  managePage({
+    headerRight: () => <PreviewButton onPressExtra={forceUpdate} />,
+  });
   React.useEffect(() => {
-    const unsub = navigation.addListener("focus", () => {
-      unsub();
-      navigation.setOptions({
-        headerRight: () => <PreviewButton onPressExtra={forceUpdate} />,
-      });
-    });
     navigation.addListener("beforeRemove", () => {
       toggle(false);
       forceUpdate();

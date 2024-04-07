@@ -13,7 +13,7 @@ export default ({ onPressExtra }: { onPressExtra: () => void }) => {
     <SuperAwesomeIcon
       style="header"
       color={enabled && rawColors.BRAND_500}
-      icon={getAssetIDByName("ic_eye")}
+      icon={getAssetIDByName("SparklesIcon")}
       onPress={() => {
         toggle(!enabled);
         forceUpdate();

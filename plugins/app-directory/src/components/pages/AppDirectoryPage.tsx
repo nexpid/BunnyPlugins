@@ -22,6 +22,7 @@ import {
 } from "../../stuff/api";
 import { inServers } from "../../stuff/util";
 import { getAppInfoPageRender } from "./AppInfoPage";
+import { managePage } from "$/lib/ui";
 
 const { ScrollView, View } = General;
 
@@ -165,11 +166,8 @@ export default function AppDirectoryPage({
   });
 
   const navigation = NavigationNative.useNavigation();
-  const unsub = navigation.addListener("focus", () => {
-    unsub();
-    navigation.setOptions({
-      title: "App Directory",
-    });
+  managePage({
+    title: "App Directory",
   });
 
   const onAppPress =

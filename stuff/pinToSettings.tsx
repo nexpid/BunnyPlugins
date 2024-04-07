@@ -10,6 +10,7 @@ import { after, before } from "@vendetta/patcher";
 import { semanticColors } from "@vendetta/ui";
 import { ErrorBoundary, Forms } from "@vendetta/ui/components";
 import { findInReactTree, without } from "@vendetta/utils";
+import { managePage } from "./lib/ui";
 
 const { FormSection } = Forms;
 
@@ -108,10 +109,10 @@ export function patchSettingsPin(
 
     const Page = you.page.render;
     const component = React.memo(({ navigation }: any) => {
-      const unsub = navigation.addListener("focus", () => {
-        unsub();
-        navigation.setOptions(without(you.page, "noErrorBoundary", "render"));
-      });
+      managePage(
+        without(you.page, "noErrorBoundary", "render") as any,
+        navigation,
+      );
 
       return (
         <RN.View style={styles.container}>
