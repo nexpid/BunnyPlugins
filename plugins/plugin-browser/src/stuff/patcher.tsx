@@ -1,7 +1,7 @@
 import { plugin } from "@vendetta";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 
-import { patchSettingsPin } from "$/pinToSettings";
+import { patchSettingsPin } from "$/lib/pinToSettings";
 
 import { lang } from "..";
 import PluginBrowserPage from "../components/pages/PluginBrowserPage";

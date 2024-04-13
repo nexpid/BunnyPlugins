@@ -10,7 +10,8 @@ import { after, before } from "@vendetta/patcher";
 import { semanticColors } from "@vendetta/ui";
 import { ErrorBoundary, Forms } from "@vendetta/ui/components";
 import { findInReactTree, without } from "@vendetta/utils";
-import { managePage } from "./lib/ui";
+
+import { managePage } from "./ui";
 
 const { FormSection } = Forms;
 
@@ -131,6 +132,7 @@ export function patchSettingsPin(
       [screenKey]: {
         type: "route",
         title: () => you.title,
+        usePredicate: shouldAppear,
         icon: you.icon,
         parent: null,
         screen: {
