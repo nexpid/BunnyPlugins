@@ -17,7 +17,7 @@ export const LiveRawActivityView = () => {
 
   const styles = stylesheet.createThemedStyleSheet({
     code: {
-      fontFamily: constants.Fonts.CODE_SEMIBOLD,
+      fontFamily: constants.Fonts.CODE_SEMIBOLD || constants.Fonts.CODE_NORMAL,
       includeFontPadding: false,
       color: semanticColors.TEXT_NORMAL,
     },

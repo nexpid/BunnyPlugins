@@ -147,7 +147,10 @@ export default ({
             </Text>
             <Text
               color="TEXT_NORMAL"
-              style={{ fontFamily: constants.Fonts.CODE_SEMIBOLD }}
+              style={{
+                fontFamily:
+                  constants.Fonts.CODE_SEMIBOLD || constants.Fonts.CODE_NORMAL,
+              }}
             >
               {commit.sha.slice(0, 7)}
             </Text>
