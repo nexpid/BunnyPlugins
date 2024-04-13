@@ -1,10 +1,8 @@
 {
   "plugin.name": "Cloud Sync",
 
-  "combo.plugins": "1 plugin",
-  "combo.plugins.plural": "$count plugins",
-  "combo.themes": "1 theme",
-  "combo.themes.plural": "$count themes",
+  "plugins": "{plugins, plural,\n=0 {# plugins}\none {# plugin}\nother {# plugins}\n}",
+  "themes": "{themes, plural,\n=0 {# themes}\none {# theme}\nother {# themes}\n}",
 
   "toast.sync.no_import": "Nothing to import.",
   "toast.oauth.authorized": "Successfully authorized!",
@@ -13,9 +11,9 @@
   "toast.deleted_data": "Successfully deleted data.",
   "toast.saved_data": "Successfully saved data.",
   "toast.encrypt_fail": "Failed to encrypt!",
-  "toast.backup_saved": "Backup Saved to $file.",
+  "toast.backup_saved": "Backup Saved to {file}.",
   "toast.backup_download_prepare": "Preparing for download...",
-  "toast.errored": "Got an error! $error",
+  "toast.errored": "Got an error! {error}",
   "toast.decrypt_fail": "Failed to decrypt!",
 
   "settings.current_data.title": "Current Data",
@@ -49,18 +47,18 @@
 
   "sheet.import_data.title": "Import Data",
   "sheet.import_data.already_synced": "All addons in the cloud are already imported",
-  "sheet.import_data.unproxied_plugins": "Unproxied Plugins ($count)",
-  "sheet.import_data.plugins": "Plugins ($count)",
-  "sheet.import_data.themes": "Themes ($count)",
+  "sheet.import_data.unproxied_plugins": "Unproxied Plugins ({count})",
+  "sheet.import_data.plugins": "Plugins ({count})",
+  "sheet.import_data.themes": "Themes ({count})",
   "sheet.import_data.import": "Import",
 
-  "log.import.start.combo": "Starting to import $plugins and $themes",
-  "log.import.plugin.success": "Imported plugin: $name",
-  "log.import.plugin.fail": "Failed to import plugin: $name\n$error",
-  "log.import.theme.success": "Imported theme: $name",
-  "log.import.theme.fail": "Failed to import theme: $name\n$error",
-  "log.import.total": "Imported $plugins and $themes",
-  "log.import.select_theme": "Selecting theme: $theme",
+  "log.import.start.combo": "Starting to import {plugins} and {themes}",
+  "log.import.plugin.success": "Imported plugin: {name}",
+  "log.import.plugin.fail": "Failed to import plugin: {name}\n{error}",
+  "log.import.theme.success": "Imported theme: {name}",
+  "log.import.theme.fail": "Failed to import theme: {name}\n{error}",
+  "log.import.total": "Imported {plugins} and {themes}",
+  "log.import.select_theme": "Selecting theme: {theme}",
   "log.plugins": "PLUGINS",
   "log.themes": "THEMES",
   "log.importer": "IMPORTER",
@@ -98,6 +96,6 @@
   "page.plugin_settings.sync_plugin": "Sync Plugin",
   "page.plugin_settings.sync_plugin_storage": "Sync Plugin Storage",
 
-  "log.import.result.success": "Finished! Imported $plugins and $themes. All imports were successful.",
-  "log.import.result.fail": "Finished! Imported $plugins and $themes. Failed to import $failed_plugins and $failed_themes."
+  "log.import.result.success": "Finished! Imported {plugins} and {themes}. All imports were successful.",
+  "log.import.result.fail": "Finished! Imported {plugins} and {themes}. Failed to import {failed_plugins} and {failed_themes}."
 }

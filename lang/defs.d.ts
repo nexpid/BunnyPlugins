@@ -2,27 +2,27 @@ export interface LangValues {
   cloud_sync: {
     values: typeof import("./values/base/cloud_sync.json");
     fillers: {
-      "combo.plugins.plural": ["count"];
-      "combo.themes.plural": ["count"];
-      "toast.backup_saved": ["file"];
-      "toast.errored": ["error"];
-      "sheet.import_data.unproxied_plugins": ["count"];
-      "sheet.import_data.plugins": ["count"];
-      "sheet.import_data.themes": ["count"];
-      "log.import.start.combo": ["plugins", "themes"];
-      "log.import.plugin.success": ["name"];
-      "log.import.plugin.fail": ["name", "error"];
-      "log.import.theme.success": ["name"];
-      "log.import.theme.fail": ["name", "error"];
-      "log.import.total": ["plugins", "themes"];
-      "log.import.select_theme": ["theme"];
-      "log.import.result.success": ["plugins", "themes"];
-      "log.import.result.fail": [
-        "plugins",
-        "themes",
-        "failed_plugins",
-        "failed_themes",
-      ];
+      plugins: { plugins: number };
+      themes: { themes: number };
+      "toast.backup_saved": { file: string };
+      "toast.errored": { error: string };
+      "sheet.import_data.unproxied_plugins": { count: string };
+      "sheet.import_data.plugins": { count: string };
+      "sheet.import_data.themes": { count: string };
+      "log.import.start.combo": { plugins: string; themes: string };
+      "log.import.plugin.success": { name: string };
+      "log.import.plugin.fail": { name: string; error: string };
+      "log.import.theme.success": { name: string };
+      "log.import.theme.fail": { name: string; error: string };
+      "log.import.total": { plugins: string; themes: string };
+      "log.import.select_theme": { theme: string };
+      "log.import.result.success": { plugins: string; themes: string };
+      "log.import.result.fail": {
+        plugins: string;
+        themes: string;
+        failed_plugins: string;
+        failed_themes: string;
+      };
     };
   };
   kiryu_facecam: {
@@ -32,18 +32,20 @@ export interface LangValues {
   plugin_browser: {
     values: typeof import("./values/base/plugin_browser.json");
     fillers: {
-      "plugin.name.changes": ["changes"];
-      "toast.plugin.update.success": ["plugin"];
-      "toast.plugin.update.fail": ["plugin"];
-      "toast.plugin.delete.success": ["plugin"];
-      "toast.plugin.delete.fail": ["plugin"];
-      "toast.plugin.install.success": ["plugin"];
-      "toast.plugin.install.fail": ["plugin"];
+      "plugin.name.changes": { changes: string };
+      "toast.plugin.update.success": { plugin: string };
+      "toast.plugin.update.fail": { plugin: string };
+      "toast.plugin.delete.success": { plugin: string };
+      "toast.plugin.delete.fail": { plugin: string };
+      "toast.plugin.install.success": { plugin: string };
+      "toast.plugin.install.fail": { plugin: string };
     };
   };
   themes_plus: {
     values: typeof import("./values/base/themes_plus.json");
-    fillers: null;
+    fillers: {
+      "settings.header": { active: boolean };
+    };
   };
   twemoji_everywhere: {
     values: typeof import("./values/base/twemoji_everywhere.json");

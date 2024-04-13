@@ -1,9 +1,13 @@
+import { findByProps } from "@vendetta/metro";
 import { i18n } from "@vendetta/metro/common";
 
 import constants from "$/constants";
 import RNFS from "$/wrappers/RNFS";
 
 import type { LangValues } from "../../lang/defs";
+import { parseVariableRules, replaceVariableRules } from "../crowdin.mjs";
+
+const intl = findByProps("defaultLocale", "prototype");
 
 const url = `${constants.github.raw}lang/values/`;
 
@@ -18,6 +22,7 @@ const etagPath = (plugin: string) =>
 export class Lang<Plugin extends keyof LangValues> {
   private values: Record<string, Record<string, string>> | null = null;
   private controller = new AbortController();
+  private variableRules: Record<string, any> = {};
 
   public Values: LangValues[Plugin]["values"];
 
@@ -74,35 +79,45 @@ export class Lang<Plugin extends keyof LangValues> {
     }
   }
 
+  private makeVariableRules(text: string) {
+    const rules = parseVariableRules(text);
+
+    this.variableRules = rules;
+    return rules;
+  }
+
   unload() {
     this.controller.abort();
   }
 
   format<Key extends keyof LangValues[Plugin]["values"]>(
     _key: Key,
-    fillers: Key extends keyof LangValues[Plugin]["fillers"]
-      ? //@ts-expect-error shut up shut up shut up shut up
-        Record<LangValues[Plugin]["fillers"][Key][number], string | number>
+    input: Key extends keyof LangValues[Plugin]["fillers"]
+      ? LangValues[Plugin]["fillers"][Key]
       : Record<string, never>,
     /** @deprecated This gets filled in by the builder, do not use!!!! */
-    _def?: never,
+    _defaultValue?: never,
   ): string {
-    const def = _def as string;
+    // comments provided by Rosie :)
+
+    const defaultValue = _defaultValue as string;
     const key = _key as string;
+    const locale = Lang.getLang();
 
     if (!this.values) return String(key);
 
-    let val =
-      this.values[Lang.getLang()]?.[key] ?? this.values.en?.[key] ?? def;
+    const val =
+      this.values[locale]?.[key] ?? this.values.en?.[key] ?? defaultValue;
     if (!val) return String(key);
 
-    const reqs = val.match(/\$\w+/g)?.map((x) => x.slice(1)) ?? [];
-    for (const r of reqs)
-      val = val.replace(
-        new RegExp(`\\$${r}`, "g"),
-        String(r in fillers ? fillers[r] : ""),
+    const rules = this.variableRules[val] ?? this.makeVariableRules(val);
+    if (rules.length > 0)
+      return replaceVariableRules(
+        val,
+        rules,
+        input,
+        intl.prototype._findPluralRuleFunction(locale),
       );
-
-    return val;
+    else return val;
   }
 }
