@@ -1,7 +1,7 @@
 import { plugin } from "@vendetta";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 
-import { patchSettingsPin } from "$/pinToSettings";
+import { patchSettingsPin } from "$/lib/pinToSettings";
 
 import { lang, vstorage } from "..";
 import Settings from "../components/Settings";
@@ -16,9 +16,13 @@ export default (): (() => void) => {
       {
         key: plugin.manifest.name,
         icon: getAssetIDByName("ic_contact_sync"),
-        title: lang.format("plugin.name", {}),
+        get title() {
+          return lang.format("plugin.name", {});
+        },
         page: {
-          title: lang.format("plugin.name", {}),
+          get title() {
+            return lang.format("plugin.name", {});
+          },
           render: Settings,
         },
       },
