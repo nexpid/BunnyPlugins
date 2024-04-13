@@ -12,5 +12,5 @@ export function managePage(
 
   React.useEffect(() => {
     navigation.setOptions(options);
-  }, []);
+  }, [navigation]);
 }
