@@ -122,7 +122,6 @@ const plugins = async (plugin) => [
       });
 
       const cod = code.split("");
-      let codOffset = 0;
 
       const lang = Object.entries(langFiles).find(([p]) =>
         id.includes(
@@ -141,11 +140,12 @@ const plugins = async (plugin) => [
             ) {
               const lastArg = node.arguments[node.arguments.length - 1];
               const key = node.arguments[0]?.value;
-              if (lastArg && key) {
-                const insert = `, ${JSON.stringify(lang[key] || null)}`;
-                cod.splice(lastArg.end + codOffset, 0, ...insert.split(""));
-                codOffset += insert.length;
-              }
+              if (lastArg && key)
+                cod.splice(
+                  lastArg.end,
+                  1,
+                  `, ${JSON.stringify(lang[key] || null)}${cod[lastArg.end]}`,
+                );
             }
           },
         });
