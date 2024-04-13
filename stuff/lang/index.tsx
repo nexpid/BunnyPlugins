@@ -1,7 +1,9 @@
 import { findByProps } from "@vendetta/metro";
 import { i18n } from "@vendetta/metro/common";
 
+import Text from "$/components/Text";
 import constants from "$/constants";
+import { TextStyleSheetHasCase } from "$/types";
 import RNFS from "$/wrappers/RNFS";
 
 import type { LangValues } from "../../lang/defs";
@@ -35,6 +37,36 @@ export class Lang<Plugin extends keyof LangValues> {
 
     if (lang.startsWith("en_")) return "en";
     else return lang;
+  }
+
+  static basicFormat(
+    text: string,
+    textVariant = "text-md" as TextStyleSheetHasCase,
+    color = "TEXT_NORMAL",
+  ): React.ReactNode {
+    const rules = [
+      {
+        regex: /\*\*(.*?)\*\*/g,
+        react: (txt: string) => (
+          <Text variant={`${textVariant}/bold`} color={color}>
+            {txt}
+          </Text>
+        ),
+      },
+    ];
+
+    const txt = text.split("") as (string | React.ReactNode)[];
+    let off = 0;
+    for (const rule of rules) {
+      const matches = Array.from(text.matchAll(rule.regex));
+      for (const match of matches)
+        if (match[1]) {
+          txt.splice(match.index + off, match[0].length, rule.react(match[1]));
+          off -= match[0].length + 1;
+        }
+    }
+
+    return txt;
   }
 
   private async load() {

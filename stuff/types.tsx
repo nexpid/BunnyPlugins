@@ -169,33 +169,33 @@ export function androidifyColor(color: string, alpha = 255): number {
 
 // ...
 
-type TextStyleSheetCase =
-  | "normal"
-  | "medium"
-  | "semibold"
-  | "bold"
-  | "extrabold";
-type TextStyleSheetRedesignCase = "normal" | "medium" | "semibold" | "bold";
+export type TextStyleSheetCase = "normal" | "medium" | "semibold" | "bold";
+
+type TextStyleSheetHasExtraBoldCase =
+  | "heading-sm"
+  | "heading-md"
+  | "heading-lg"
+  | "heading-xl"
+  | "heading-xxl"
+  | "heading-deprecated-12";
+export type TextStyleSheetHasCase =
+  | TextStyleSheetHasExtraBoldCase
+  | "text-xxs"
+  | "text-xs"
+  | "text-sm"
+  | "text-md"
+  | "text-lg"
+  | "redesign/message-preview"
+  | "redesign/channel-title";
 
 export type TextStyleSheetVariant =
-  | `heading-sm/${TextStyleSheetCase}`
-  | `heading-md/${TextStyleSheetCase}`
-  | `heading-lg/${TextStyleSheetCase}`
-  | `heading-xl/${TextStyleSheetCase}`
-  | `heading-xxl/${TextStyleSheetCase}`
+  | `${TextStyleSheetHasCase}/${TextStyleSheetCase}`
+  | `${TextStyleSheetHasExtraBoldCase}/${TextStyleSheetCase | "extrabold"}`
   | "eyebrow"
   | "redesign/heading-18/bold"
-  | `text-xxs/${TextStyleSheetCase}`
-  | `text-xs/${TextStyleSheetCase}`
-  | `text-sm/${TextStyleSheetCase}`
-  | `text-md/${TextStyleSheetCase}`
-  | `text-lg/${TextStyleSheetCase}`
-  | `redesign/message-preview/${TextStyleSheetRedesignCase}`
-  | `redesign/channel-title/${TextStyleSheetRedesignCase}`
   | "display-sm"
   | "display-md"
   | "display-lg";
-// ignoring deprecated styles
 
 type _TextStyleSheet = Record<
   TextStyleSheetVariant,
