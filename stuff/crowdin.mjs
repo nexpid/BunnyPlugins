@@ -73,10 +73,10 @@ export function replaceVariableRules(text, rules, input, pluralRuleFunction) {
 
   let offset = 0;
   for (const rule of rules.sort((a, b) => a.start - b.start)) {
-    let replace = input[rule.variable] ?? "";
+    let replace = input[String(rule.variable)] ?? "";
     if (rule.type === "choose") {
       if (rule.kind === "select")
-        replace = rule.replacers[replace] ?? rule.replacers.other;
+        replace = rule.replacers[replace] ?? rule.replacers.other ?? "";
       else if (rule.kind === "plural") {
         const num = Number(replace);
 
@@ -93,7 +93,7 @@ export function replaceVariableRules(text, rules, input, pluralRuleFunction) {
       }
     }
 
-    chars.splice(rule.start + offset, rule.length, replace);
+    chars.splice(rule.start + offset, rule.length, replace ?? "");
     offset -= rule.length - 1;
   }
 
