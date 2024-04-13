@@ -103,7 +103,9 @@ export default function ImportActionSheet({
           </>
         )}
         <FormCheckboxRow
-          label={`Unproxied Plugins (${has.unproxiedPlugins})`}
+          label={lang.format("sheet.import_data.unproxied_plugins", {
+            count: String(has.plugins),
+          })}
           disabled={!has.unproxiedPlugins}
           onPress={() =>
             has.unproxiedPlugins &&
@@ -136,7 +138,7 @@ export default function ImportActionSheet({
         />
         <FormCheckboxRow
           label={lang.format("sheet.import_data.plugins", {
-            count: has.plugins,
+            count: String(has.plugins),
           })}
           disabled={!has.plugins}
           onPress={() =>
@@ -149,7 +151,9 @@ export default function ImportActionSheet({
           selected={options.plugins}
         />
         <FormCheckboxRow
-          label={lang.format("sheet.import_data.themes", { count: has.themes })}
+          label={lang.format("sheet.import_data.themes", {
+            count: String(has.themes),
+          })}
           disabled={!has.themes}
           onPress={() =>
             has.themes &&
