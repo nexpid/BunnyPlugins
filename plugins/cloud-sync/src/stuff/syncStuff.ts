@@ -52,11 +52,6 @@ export function setImportCallback(fnc: typeof importCallback) {
   importCallback = fnc;
 }
 
-const plural = (len: number) =>
-  len !== 1
-    ? lang.format("combo.plugins.plural", { count: len })
-    : lang.format("combo.plugins", {});
-
 export type SyncImportOptions = Record<
   "unproxiedPlugins" | "plugins" | "themes",
   boolean
@@ -100,16 +95,16 @@ export async function importData(
   addLog(
     "importer",
     lang.format("log.import.start.combo", {
-      plugins: plural(iplugins.length),
-      themes: plural(ithemes.length),
+      plugins: lang.format("plugins", { plugins: iplugins.length }),
+      themes: lang.format("themes", { themes: ithemes.length }),
     }),
   );
 
   if (!isInPage)
     showToast(
       lang.format("log.import.start.combo", {
-        plugins: plural(iplugins.length),
-        themes: plural(ithemes.length),
+        plugins: lang.format("plugins", { plugins: iplugins.length }),
+        themes: lang.format("themes", { themes: ithemes.length }),
       }),
       getAssetIDByName("toast_image_saved"),
     );
@@ -164,8 +159,8 @@ export async function importData(
   if (!isInPage)
     showToast(
       lang.format("log.import.total", {
-        plugins: plural(status.plugins),
-        themes: plural(status.themes),
+        plugins: lang.format("plugins", { plugins: status.plugins }),
+        themes: lang.format("themes", { themes: status.themes }),
       }),
       getAssetIDByName("Check"),
     );
@@ -204,14 +199,14 @@ export async function importData(
     "importer",
     status.fPlugins || status.fThemes
       ? lang.format("log.import.result.fail", {
-          plugins: plural(status.plugins),
-          themes: plural(status.themes),
-          failed_plugins: plural(status.fPlugins),
-          failed_themes: plural(status.fThemes),
+          plugins: lang.format("plugins", { plugins: status.plugins }),
+          themes: lang.format("themes", { themes: status.themes }),
+          failed_plugins: lang.format("plugins", { plugins: status.fPlugins }),
+          failed_themes: lang.format("themes", { themes: status.fThemes }),
         })
       : lang.format("log.import.result.success", {
-          plugins: plural(status.plugins),
-          themes: plural(status.themes),
+          plugins: lang.format("plugins", { plugins: status.plugins }),
+          themes: lang.format("themes", { themes: status.themes }),
         }),
   );
   importCallback?.(false);
