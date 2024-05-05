@@ -1,9 +1,7 @@
 import { findByProps } from "@vendetta/metro";
-import { i18n } from "@vendetta/metro/common";
+import { i18n, ReactNative as RN } from "@vendetta/metro/common";
 
-import Text from "$/components/Text";
 import constants from "$/constants";
-import { TextStyleSheetHasCase } from "$/types";
 import RNFS from "$/wrappers/RNFS";
 
 import type { LangValues } from "../../lang/defs";
@@ -39,18 +37,12 @@ export class Lang<Plugin extends keyof LangValues> {
     else return lang;
   }
 
-  static basicFormat(
-    text: string,
-    textVariant = "text-md" as TextStyleSheetHasCase,
-    color = "TEXT_NORMAL",
-  ): React.ReactNode {
+  static basicFormat(text: string): React.ReactNode {
     const rules = [
       {
         regex: /\*\*(.*?)\*\*/g,
         react: (txt: string) => (
-          <Text variant={`${textVariant}/bold`} color={color}>
-            {txt}
-          </Text>
+          <RN.Text style={{ fontWeight: "900" }}>{txt}</RN.Text>
         ),
       },
     ];
