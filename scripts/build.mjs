@@ -20,8 +20,7 @@ const mdNote = `<!--
 const extensions = [".js", ".jsx", ".mjs", ".ts", ".tsx", ".cts", ".mts"];
 
 const onlyPlugins = process.argv.slice(2).filter((x) => !x.startsWith("--"));
-const onominify = process.argv.includes("--nominify");
-const odebug = process.argv.includes("--debug");
+const isDev = process.argv.includes("--dev");
 
 if (!existsSync("./dist")) await mkdir("./dist");
 await writeFile(
@@ -156,10 +155,11 @@ const plugins = async (plugin) => [
     },
   },
   esbuild({
-    minify: !onominify,
+    minifySyntax: true,
+    minifyWhitespace: true,
     define: {
-      IS_DEV: String(onominify),
-      DEV_LANG: onominify
+      IS_DEV: String(isDev),
+      DEV_LANG: isDev
         ? langFiles[plugin + ".json"]
           ? langFiles[plugin + ".json"].values
           : "null"
@@ -195,7 +195,7 @@ ${mdNote}
 </div>
 
 > **Note**
-> This is just a simple landing page for **${manifest.name}**. The proper way to load this plugin is to go in Bunny's settings, going to Plugins, tapping the plus icon and pasting the plugin link\n`,
+> This is a landing page for the plugin **${manifest.name}**. The proper way to install this plugin is going to Bunny's Plugins page and adding it there.\n`,
   );
 
   try {
@@ -221,16 +221,6 @@ ${mdNote}
       exports: "named",
     });
     await bundle.close();
-
-    if (odebug)
-      await writeFile(
-        outPath,
-        Buffer.concat([
-          Buffer.from("vendetta=>{return "),
-          await readFile(`./dist/${plug}/index.js`),
-          Buffer.from("}\n//# sourceURL="),
-        ]),
-      );
 
     const toHash = await readFile(outPath);
     manifest.hash = createHash("sha256").update(toHash).digest("hex");

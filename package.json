@@ -1,9 +1,8 @@
 {
   "private": true,
   "scripts": {
-    "build": "node scripts/build.mjs --nominify",
-    "build:debug": "node scripts/build.mjs --debug",
-    "build:minify": "node scripts/build.mjs",
+    "build": "node scripts/build.mjs",
+    "build:dev": "node scripts/build.mjs --dev",
     "watch:defs": "node scripts/watch_defs.mjs",
     "sorter": "node scripts/sorter.mjs",
     "dev": "http-server dist --port 8731",

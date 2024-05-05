@@ -74,7 +74,7 @@ jobs:
       - run: pnpm install --frozen-lockfile
 
       - name: Build plugins
-        run: pnpm build:minify
+        run: pnpm build
 
       - name: Copy README
         run: cp README.md dist/index.md
