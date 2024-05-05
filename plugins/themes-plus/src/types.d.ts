@@ -4,14 +4,18 @@ export interface IconPackConfig {
 
 export interface IconPack {
   id: string;
+  name: string;
   description: string;
   credits: {
-    authors: string[];
+    authors: {
+      name: string;
+      id?: string;
+    }[];
     source: string;
   };
   config: string | null;
-  suffix: string | null;
-  load: string | null;
+  suffix: string;
+  load: string;
 }
 
 export interface IconPackData {

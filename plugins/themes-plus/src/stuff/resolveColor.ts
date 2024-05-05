@@ -7,23 +7,21 @@ import { PlusColorResolvable } from "$/typings";
 const ThemeStore = findByStoreName("ThemeStore");
 
 export function matchTheme(colors: {
-  dark?: string;
+  darker?: string;
   light?: string;
   midnight?: string;
 }): string | undefined {
   const theme = ThemeStore.theme;
 
-  if (["dark", "darker"].includes(theme)) return colors.dark ?? colors.midnight;
-  else if (theme === "light") return colors.light;
-  else if (["midnight", "amoled"].includes(theme))
-    return colors.midnight ?? colors.dark;
-  else return colors.dark;
+  if (theme in colors) return colors[theme];
+  else if (["dark", "midnight"].includes(theme)) return colors.darker;
+  else return colors.light;
 }
 
 export default function (color: PlusColorResolvable): string | undefined {
   if (Array.isArray(color))
     return matchTheme({
-      dark: color[0],
+      darker: color[0],
       light: color[1],
       midnight: color[2],
     });

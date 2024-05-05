@@ -1,25 +1,44 @@
-import { findByProps } from "@vendetta/metro";
-import { ReactNative as RN, stylesheet } from "@vendetta/metro/common";
-import { semanticColors } from "@vendetta/ui";
+import { ReactNative as RN } from "@vendetta/metro/common";
 import { getAssetByID } from "@vendetta/ui/assets";
 import { General } from "@vendetta/ui/components";
 
 import { PlusStructure } from "$/typings";
 
-import innerCheck from "../../assets/iconOverlays/innerCheck.png";
-import { asIcon } from "./icons";
+import check from "../../assets/check.png";
+import resolveColor from "./resolveColor";
+
+export function getIconTint(
+  plus: PlusStructure,
+  icon: number,
+  customName?: string,
+): string | undefined {
+  const name = customName ?? getAssetByID(icon)?.name;
+  if (!name) return;
+  if (!plus.icons[name]) return;
+
+  return resolveColor(plus.icons[name]);
+}
+
+export function asIcon<T extends JSX.Element>(
+  plus: PlusStructure,
+  customName: string,
+  img: T,
+): T {
+  if (typeof img.props.source === "number") {
+    const clr = getIconTint(plus, img.props.source, customName);
+    if (clr)
+      img.props.style = [
+        img.props.style,
+        {
+          tintColor: clr,
+        },
+      ];
+  }
+  img.props.ignore = true;
+  return img;
+}
 
 const { View } = General;
-const { MaskedBadge } = findByProps("MaskedBadge");
-
-const styles = stylesheet.createThemedStyleSheet({
-  maskPins: {
-    position: "absolute",
-    right: -10,
-    bottom: -10,
-    backgroundColor: semanticColors.BACKGROUND_SECONDARY,
-  },
-});
 
 export function getIconOverlay(
   plus: PlusStructure,
@@ -31,21 +50,11 @@ export function getIconOverlay(
   const ic = getAssetByID(icon)?.name;
   if (!ic) return;
 
-  if (["ic_new_pins_light", "ic_new_pins"].includes(ic))
-    return {
-      replace: ic.includes("light") ? "icon-pins" : "ic_pins",
-      children: (
-        <View style={{ position: "absolute", right: 0, bottom: 0 }}>
-          <MaskedBadge maskStyle={styles.maskPins} value={1} hideCount={true} />
-        </View>
-      ),
-    };
-  else if (
+  if (
     [
-      "ic_selection_checked_24px",
-      "ic_radio_square_checked_24px",
-      "ic_check",
       "ic_radio_circle_checked",
+      "ic_radio_square_checked_24px",
+      "ic_selection_checked_24px",
     ].includes(ic)
   )
     return {
@@ -58,7 +67,7 @@ export function getIconOverlay(
             plus,
             `${ic}__overlay`,
             <RN.Image
-              source={{ uri: innerCheck }}
+              source={{ uri: check }}
               style={[
                 ...style,
                 {
@@ -83,7 +92,7 @@ export function getIconOverlay(
             plus,
             `${ic}__overlay`,
             <RN.Image
-              source={{ uri: innerCheck }}
+              source={{ uri: check }}
               style={[
                 ...style,
                 {
