@@ -97,6 +97,7 @@ export default async function load() {
   state.iconpack.iconpack = isCustomIconpack
     ? {
         id: "custom-iconpack",
+        name: "Custom iconpack",
         description: "A custom iconpack, created by you!",
         credits: {
           authors: [

@@ -27,7 +27,9 @@ export default (): (() => void) => {
           const changes = getChanges().filter((x) => x[1] === "new").length;
 
           return changes
-            ? lang.format("plugin.name.changes", { changes })
+            ? lang.format("plugin.name.changes", {
+                changes: changes.toString(),
+              })
             : lang.format("plugin.name", {});
         },
         page: {
