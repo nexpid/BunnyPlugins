@@ -20,9 +20,10 @@ export function BetterTableRowTitle({
       color: semanticColors.ANDROID_RIPPLE,
     },
     icon: {
-      height: 18,
-      tintColor: semanticColors.HEADER_SECONDARY,
-      opacity: 0.5,
+      width: 16,
+      height: 16,
+      marginTop: 1.5,
+      tintColor: semanticColors.TEXT_MUTED,
     },
   });
   const UseCompontent = onPress ? Pressable : View;
@@ -35,17 +36,15 @@ export function BetterTableRowTitle({
       onPress={onPress}
       style={{
         marginBottom: 8,
+        gap: 4,
         flexDirection: "row",
-        justifyContent: "flex-start",
         alignItems: "center",
       }}
     >
       {icon && (
-        <View style={{ marginRight: 4 }}>
-          <RN.Image style={styles.icon} source={icon} resizeMode="contain" />
-        </View>
+        <RN.Image style={styles.icon} source={icon} resizeMode="cover" />
       )}
-      <Text variant="text-sm/semibold" color="HEADER_SECONDARY">
+      <Text variant="text-sm/semibold" color="TEXT_MUTED">
         {title}
       </Text>
     </UseCompontent>
@@ -59,7 +58,7 @@ export function BetterTableRowGroup({
   children,
   padding,
 }: React.PropsWithChildren<{
-  title: string;
+  title?: string;
   onTitlePress?: () => void;
   icon?: number;
   padding?: boolean;
@@ -75,7 +74,9 @@ export function BetterTableRowGroup({
 
   return (
     <View style={{ marginHorizontal: 16, marginTop: 16 }}>
-      <BetterTableRowTitle title={title} onPress={onTitlePress} icon={icon} />
+      {title && (
+        <BetterTableRowTitle title={title} onPress={onTitlePress} icon={icon} />
+      )}
       <View style={styles.main}>
         {padding ? (
           <View style={{ paddingHorizontal: 16, paddingVertical: 16 }}>

@@ -1,4 +1,4 @@
-import { React } from "@vendetta/metro/common";
+import { React, ReactNative as RN } from "@vendetta/metro/common";
 import { Forms } from "@vendetta/ui/components";
 
 import {
@@ -9,7 +9,7 @@ import {
   hideActionSheet,
 } from "$/types";
 
-const { FormRadioRow } = Forms;
+const { FormRow } = Forms;
 
 export default function ({
   title,
@@ -18,10 +18,14 @@ export default function ({
   callback,
 }: {
   title: string;
-  value: string | number | null;
+  value: string | number | boolean | null;
   options: {
     name: string;
+    description?: string;
     value: typeof _value;
+    icon?: import("react-native").ImageSourcePropType;
+    iconColor?: any;
+    iconComponent?: React.ReactNode;
   }[];
   callback: (v: typeof _value) => void;
 }) {
@@ -37,13 +41,25 @@ export default function ({
           }
         />
         {options.map((x) => (
-          <FormRadioRow
+          <FormRow
             label={x.name}
+            subLabel={x.description}
+            trailing={
+              x.iconComponent
+                ? x.iconComponent
+                : x.icon && (
+                    <RN.Image
+                      source={x.icon}
+                      resizeMode="cover"
+                      style={{ width: 24, height: 24, tintColor: x.iconColor }}
+                    />
+                  )
+            }
+            leading={<FormRow.Radio selected={x.value === value} />}
             onPress={() => {
               setValue(x.value);
               callback(x.value);
             }}
-            selected={x.value === value}
           />
         ))}
       </ActionSheetContentContainer>
