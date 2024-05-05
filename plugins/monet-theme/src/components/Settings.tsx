@@ -20,6 +20,7 @@ import LineDivider from "$/components/LineDivider";
 import { RichText } from "$/components/RichText";
 import Text from "$/components/Text";
 import { RNBundleUpdaterManager } from "$/deps";
+import { managePage } from "$/lib/ui";
 import { LazyActionSheet, TextStyleSheet } from "$/types";
 import { ThemeDataWithPlus, VendettaSysColors } from "$/typings";
 
@@ -42,7 +43,6 @@ import Commit, { CommitObj } from "./Commit";
 import { openCommitsPage } from "./pages/CommitsPage";
 import { openConfigurePage } from "./pages/ConfigurePage";
 import PreviewButton from "./PreviewButton";
-import { managePage } from "$/lib/ui";
 
 const { ScrollView, View, Pressable } = General;
 const { FormRow, FormSwitchRow } = Forms;

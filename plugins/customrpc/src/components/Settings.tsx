@@ -8,6 +8,7 @@ import { showToast } from "@vendetta/ui/toasts";
 import { BetterTableRowGroup } from "$/components/BetterTableRow";
 import LineDivider from "$/components/LineDivider";
 import SuperAwesomeIcon from "$/components/SuperAwesomeIcon";
+import { managePage } from "$/lib/ui";
 
 import { vstorage } from "..";
 import {
@@ -22,7 +23,6 @@ import { stringVariables } from "../stuff/variables";
 import { openLiveRawActivityView } from "./pages/LiveRawActivityView";
 import { showProfileList } from "./pages/ProfileList";
 import RPCPreview from "./RPCPreview";
-import { managePage } from "$/lib/ui";
 
 const { ScrollView, View } = General;
 const { FormSwitchRow, FormIcon, FormRow } = Forms;

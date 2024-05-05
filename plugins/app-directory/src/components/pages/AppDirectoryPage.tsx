@@ -11,6 +11,7 @@ import { General, Search } from "@vendetta/ui/components";
 
 import Text from "$/components/Text";
 import usePromise from "$/hooks/usePromise";
+import { managePage } from "$/lib/ui";
 
 import {
   APICollectionApplication,
@@ -22,7 +23,6 @@ import {
 } from "../../stuff/api";
 import { inServers } from "../../stuff/util";
 import { getAppInfoPageRender } from "./AppInfoPage";
-import { managePage } from "$/lib/ui";
 
 const { ScrollView, View } = General;
 

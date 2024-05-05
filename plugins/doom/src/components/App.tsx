@@ -14,6 +14,7 @@ import SuperAwesomeIcon from "$/components/SuperAwesomeIcon";
 import Text from "$/components/Text";
 import { WebView } from "$/deps";
 import usePromise from "$/hooks/usePromise";
+import { managePage } from "$/lib/ui";
 import { openSheet } from "$/types";
 
 import webviewCss from "../../assets/webview.css";
@@ -21,7 +22,6 @@ import webviewHtml from "../../assets/webview.html";
 import { vstorage } from "..";
 import { getFiles } from "../stuff/store";
 import SettingsActionSheet from "./sheets/SettingsActionSheet";
-import { managePage } from "$/lib/ui";
 
 const { View } = General;
 const Orientation = findByProps("OrientationType", "useOrientation");

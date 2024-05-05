@@ -6,13 +6,13 @@ import { safeFetch } from "@vendetta/utils";
 
 import ChooseSheet from "$/components/sheets/ChooseSheet";
 import SuperAwesomeIcon from "$/components/SuperAwesomeIcon";
+import { managePage } from "$/lib/ui";
 import { openSheet } from "$/types";
 
 import { lang, pluginsURL } from "../..";
 import { getChanges, updateChanges } from "../../stuff/pluginChecker";
 import { PluginsFullJson } from "../../types";
 import PluginThing from "../PluginThing";
-import { managePage } from "$/lib/ui";
 
 const { View } = General;
 

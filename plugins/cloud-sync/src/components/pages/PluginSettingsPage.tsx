@@ -6,9 +6,9 @@ import { getAssetIDByName } from "@vendetta/ui/assets";
 import { Forms, Search, Summary } from "@vendetta/ui/components";
 
 import SuperAwesomeIcon from "$/components/SuperAwesomeIcon";
+import { managePage } from "$/lib/ui";
 
 import { lang, vstorage } from "../..";
-import { managePage } from "$/lib/ui";
 
 const { FormSwitchRow } = Forms;
 

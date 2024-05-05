@@ -1,10 +1,4 @@
-import {
-  fetchPlugin,
-  plugins,
-  startPlugin,
-  stopPlugin,
-} from "@vendetta/plugins";
-import { themes } from "@vendetta/themes";
+import { fetchPlugin, startPlugin, stopPlugin } from "@vendetta/plugins";
 
 import constants from "$/constants";
 
