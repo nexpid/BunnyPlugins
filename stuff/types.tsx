@@ -9,7 +9,6 @@ import { getAssetIDByName } from "@vendetta/ui/assets";
 import { showToast } from "@vendetta/ui/toasts";
 
 import Modal from "./components/Modal";
-import type { Redesign as _Redesign } from "./redesign";
 
 const ThemeStore = findByStoreName("ThemeStore");
 const { triggerHaptic } = findByProps("triggerHaptic");
@@ -44,9 +43,6 @@ export const modalCloseButton =
   findByProps("getRenderCloseButton")?.getRenderCloseButton ??
   findByProps("getHeaderCloseButton")?.getHeaderCloseButton;
 export const { popModal, pushModal } = findByProps("popModal", "pushModal");
-
-export const Redesign = (findByProps("Button", "ContextMenu", "TextInput") ??
-  {}) as _Redesign;
 
 export type Entries<T> = [keyof T, T[keyof T]];
 

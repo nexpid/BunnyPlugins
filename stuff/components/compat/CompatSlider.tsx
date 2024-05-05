@@ -1,11 +1,11 @@
 import { React, ReactNative as RN, stylesheet } from "@vendetta/metro/common";
 
 import { Reanimated } from "$/deps";
-import { Redesign, resolveCustomSemantic } from "$/types";
+import { resolveCustomSemantic } from "$/types";
 
 import SliderIcon from "../SliderIcon";
 
-export default function RedesignSlider({
+export default function CompatSlider({
   value,
   step,
   onValueChange,
@@ -51,23 +51,6 @@ export default function RedesignSlider({
       }}
     />
   );
-
-  if ("Slider" in Redesign)
-    return (
-      <RN.View
-        style={{ marginHorizontal: 16, marginTop: 16, marginBottom: 12 }}
-      >
-        <Redesign.Slider
-          value={value}
-          step={step}
-          onValueChange={(val) => value !== val && onValueChange?.(val)}
-          minimumValue={minimumValue}
-          startIcon={start}
-          maximumValue={maximumValue}
-          endIcon={end}
-        />
-      </RN.View>
-    );
 
   const styles = stylesheet.createThemedStyleSheet({
     base: {
