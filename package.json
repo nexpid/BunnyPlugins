@@ -46,7 +46,7 @@
     "smol-toml": "^1.1.4",
     "typescript": "^5.3.3"
   },
-  "packageManager": "pnpm@8.15.4",
+  "packageManager": "pnpm@9.0.6",
   "pnpm": {
     "peerDependencyRules": {
       "ignoreMissing": [
