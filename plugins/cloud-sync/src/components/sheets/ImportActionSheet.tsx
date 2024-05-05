@@ -7,6 +7,7 @@ import { getAssetIDByName } from "@vendetta/ui/assets";
 import { Forms, General } from "@vendetta/ui/components";
 
 import Text from "$/components/Text";
+import { Button } from "$/lib/redesign";
 import {
   ActionSheet,
   ActionSheetCloseButton,
@@ -14,7 +15,6 @@ import {
   ActionSheetTitleHeader,
   hideActionSheet,
   openSheet,
-  Redesign,
 } from "$/types";
 
 import { cache, canImport, isPluginProxied, lang } from "../..";
@@ -164,7 +164,7 @@ export default function ImportActionSheet({
           }
           selected={options.themes}
         />
-        <Redesign.Button
+        <Button
           text={lang.format("sheet.import_data.import", {})}
           variant="primary"
           size="md"

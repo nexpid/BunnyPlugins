@@ -10,11 +10,11 @@ import { getAssetIDByName } from "@vendetta/ui/assets";
 import { Forms } from "@vendetta/ui/components";
 
 import { BetterTableRowGroup } from "$/components/BetterTableRow";
-import RedesignSlider from "$/components/compat/RedesignSlider";
 import LineDivider from "$/components/LineDivider";
 import ChooseSheet from "$/components/sheets/ChooseSheet";
 import { TrailingText } from "$/components/Text";
 import { Reanimated } from "$/deps";
+import { Slider } from "$/lib/redesign";
 import { openSheet } from "$/types";
 
 import kazuma from "../../assets/kazuma.png";
@@ -195,7 +195,7 @@ const StylingPage = () => {
         }
         onPress={() => (vstorage.styling.opacity = 10)}
       />
-      <RedesignSlider
+      <Slider
         value={vstorage.styling.opacity}
         step={1}
         onValueChange={(val) => (vstorage.styling.opacity = val)}
@@ -317,7 +317,7 @@ const AppearPage = () => {
         }
         onPress={() => (vstorage.appear.speed = 500)}
       />
-      <RedesignSlider
+      <Slider
         value={vstorage.appear.speed}
         step={100}
         onValueChange={(val) => (vstorage.appear.speed = val)}
@@ -352,7 +352,7 @@ const EffectsPage = () => {
         }
         onPress={() => (vstorage.effects.swinging.speed = 900)}
       />
-      <RedesignSlider
+      <Slider
         value={vstorage.effects.swinging.speed}
         step={100}
         onValueChange={(val) => (vstorage.effects.swinging.speed = val)}
@@ -378,7 +378,7 @@ const EffectsPage = () => {
         }
         onPress={() => (vstorage.effects.bounce.speed = 100)}
       />
-      <RedesignSlider
+      <Slider
         value={vstorage.effects.bounce.speed}
         step={100}
         onValueChange={(val) => (vstorage.effects.bounce.speed = val)}
@@ -395,7 +395,7 @@ const EffectsPage = () => {
         }
         onPress={() => (vstorage.effects.bounce.multiplier = 1.05)}
       />
-      <RedesignSlider
+      <Slider
         value={vstorage.effects.bounce.multiplier * 100}
         step={5}
         onValueChange={(val) =>

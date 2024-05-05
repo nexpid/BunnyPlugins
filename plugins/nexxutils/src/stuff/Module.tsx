@@ -7,7 +7,8 @@ import { showToast } from "@vendetta/ui/toasts";
 
 import SmartMention from "$/components/SmartMention";
 import Text from "$/components/Text";
-import { openModal, openSheet, Redesign, resolveSemanticColor } from "$/types";
+import { Button } from "$/lib/redesign";
+import { openModal, openSheet, resolveSemanticColor } from "$/types";
 
 import { vstorage } from "..";
 import ErrorViewerModal from "../components/modals/ErrorViewerModal";
@@ -373,7 +374,7 @@ export class Module<Settings extends Record<string, ModuleSetting>> {
                     />
                   ) : setting.type === "button" ? (
                     <View style={{ marginVertical: 12 }}>
-                      <Redesign.Button
+                      <Button
                         size="md"
                         variant="primary"
                         text={setting.label}

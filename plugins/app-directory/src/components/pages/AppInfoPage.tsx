@@ -14,7 +14,8 @@ import { showToast } from "@vendetta/ui/toasts";
 
 import Text from "$/components/Text";
 import usePromise from "$/hooks/usePromise";
-import { Redesign } from "$/types";
+import { Button } from "$/lib/redesign";
+import { managePage } from "$/lib/ui";
 
 import {
   APICollectionApplication,
@@ -23,7 +24,6 @@ import {
 import { parse } from "../../stuff/markdown";
 import { openOauth2Modal } from "../../stuff/oauth2";
 import { inServers, parseDesc } from "../../stuff/util";
-import { managePage } from "$/lib/ui";
 
 const { ScrollView, View } = General;
 
@@ -250,7 +250,7 @@ export default function AppInfoPage({
           <TableRowDivider />
         </View>
         <View style={styles.baseAppActions}>
-          <Redesign.Button
+          <Button
             style={{ flex: 1 / 2 }}
             text={
               i18n.Messages.APP_DIRECTORY_PROFILE_SHARE_BUTTON || "Copy Link"
@@ -268,7 +268,7 @@ export default function AppInfoPage({
               );
             }}
           />
-          <Redesign.Button
+          <Button
             style={{ flex: 1 / 2 }}
             text={
               i18n.Messages.APP_DIRECTORY_PROFILE_ADD_BUTTON || "Add to Server"

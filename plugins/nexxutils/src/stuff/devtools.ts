@@ -91,6 +91,7 @@ export default function () {
           const unpatch = before(prop, parent, (args) => {
             const props = parser?.(args) ?? args[0];
             const runFor = (propper: any, assign: any, tree = ".") => {
+              if ("_value" in propper) return;
               for (const p of Object.keys(propper)) {
                 if (!assign[p] && ran.includes(tree))
                   assign[p] ??= {

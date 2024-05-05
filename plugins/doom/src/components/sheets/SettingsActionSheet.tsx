@@ -12,13 +12,13 @@ import { showToast } from "@vendetta/ui/toasts";
 
 import Text from "$/components/Text";
 import usePromise from "$/hooks/usePromise";
+import { Button } from "$/lib/redesign";
 import {
   ActionSheet,
   ActionSheetCloseButton,
   ActionSheetContentContainer,
   ActionSheetTitleHeader,
   hideActionSheet,
-  Redesign,
 } from "$/types";
 
 import { newGameSuggestionURL, vstorage } from "../..";
@@ -138,7 +138,7 @@ export default function SettingsActionSheet({
             })
           }
         />
-        <Redesign.Button
+        <Button
           variant="primary"
           size="md"
           text="Apply Changes"
