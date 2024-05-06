@@ -24,7 +24,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v2
+      - uses: pnpm/action-setup@v3
 
       - uses: actions/setup-node@v4
         with:
@@ -43,7 +43,7 @@ jobs:
 
           git add plugins/*/README.md README.md -f
 
-          git commit -m "style(readmes): update readmes ($GITHUB_SHA)" || true
+          git commit -m "style(readmes): update readmes (${{ github.sha || github.triggering_actor }})" || true
 
           git pull
           git push
