@@ -80,7 +80,7 @@ importers:
         version: 15.2.0(react-native@0.74.1(@babel/core@7.24.0)(@babel/preset-env@7.24.5(@babel/core@7.24.0))(@types/react@18.0.26)(react@18.3.1))(react@18.3.1)
       react-native-webview:
         specifier: ^13.8.1
-        version: 13.8.1(react-native@0.74.1(@babel/core@7.24.0)(@babel/preset-env@7.24.5(@babel/core@7.24.0))(@types/react@18.0.26)(react@18.3.1))(react@18.3.1)
+        version: 13.8.7(react-native@0.74.1(@babel/core@7.24.0)(@babel/preset-env@7.24.5(@babel/core@7.24.0))(@types/react@18.0.26)(react@18.3.1))(react@18.3.1)
       rollup:
         specifier: ^4.12.0
         version: 4.12.0
@@ -2935,8 +2935,8 @@ packages:
       react: '*'
       react-native: '*'
 
-  react-native-webview@13.8.1:
-    resolution: {integrity: sha512-7Jqm1WzWJrOWraBAXQfKtr/Uo5Jw/IJHzC40jYLwgV/eVGmLJ9BpGKw6QVw7wpRkjmTZ2Typ4B1aHJLJJQFslA==}
+  react-native-webview@13.8.7:
+    resolution: {integrity: sha512-r8y+qlyh2+mtuPhOvgPB9Ccn2itDXacvaVFuB61AYTfisz1YhJ57iFEE8j32DfDpvl6NhaaFIzzHsumwJk92bQ==}
     peerDependencies:
       react: '*'
       react-native: '*'
@@ -6728,7 +6728,7 @@ snapshots:
       react: 18.3.1
       react-native: 0.74.1(@babel/core@7.24.0)(@babel/preset-env@7.24.5(@babel/core@7.24.0))(@types/react@18.0.26)(react@18.3.1)
 
-  react-native-webview@13.8.1(react-native@0.74.1(@babel/core@7.24.0)(@babel/preset-env@7.24.5(@babel/core@7.24.0))(@types/react@18.0.26)(react@18.3.1))(react@18.3.1):
+  react-native-webview@13.8.7(react-native@0.74.1(@babel/core@7.24.0)(@babel/preset-env@7.24.5(@babel/core@7.24.0))(@types/react@18.0.26)(react@18.3.1))(react@18.3.1):
     dependencies:
       escape-string-regexp: 2.0.0
       invariant: 2.2.4
