@@ -86,7 +86,7 @@ export default ({
     androidRipple: {
       color: semanticColors.ANDROID_RIPPLE,
       cornerRadius: 8,
-    },
+    } as any,
     container: {
       backgroundColor: semanticColors.BG_MOD_FAINT,
       flexDirection: "column",

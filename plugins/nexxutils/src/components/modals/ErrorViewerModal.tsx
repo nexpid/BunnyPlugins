@@ -55,12 +55,12 @@ const Card = ({
       color: semanticColors.ANDROID_RIPPLE,
       cornerRadius: 8,
       foreground: true,
-    },
+    } as any,
     androidRippleRound: {
       color: semanticColors.ANDROID_RIPPLE,
       cornerRadius: 2147483647,
       foreground: true,
-    },
+    } as any,
   });
 
   const [expanded, setExpanded] = React.useState(false);

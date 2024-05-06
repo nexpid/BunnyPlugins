@@ -1,5 +1,5 @@
 import { stylesheet } from "@vendetta/metro/common";
-import { rawColors, semanticColors } from "@vendetta/ui";
+import { semanticColors } from "@vendetta/ui";
 import { General } from "@vendetta/ui/components";
 
 import Text from "$/components/Text";

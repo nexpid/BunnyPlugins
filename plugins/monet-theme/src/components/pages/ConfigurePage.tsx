@@ -44,7 +44,7 @@ export const ConfigurePage = () => {
     androidRipple: {
       color: semanticColors.ANDROID_RIPPLE,
       cornerRadius: 8,
-    },
+    } as any,
     window: {
       height: "100%",
       backgroundColor: semanticColors.BG_BASE_SECONDARY,

@@ -15,7 +15,7 @@ const styles = stylesheet.createThemedStyleSheet({
   androidRipple: {
     color: semanticColors.ANDROID_RIPPLE,
     cornerRadius: 8,
-  },
+  } as any,
   container: {
     backgroundColor: semanticColors.BACKGROUND_TERTIARY,
     borderRadius: 8,
@@ -65,7 +65,8 @@ export default ({ inputProps }: { inputProps: any }) => {
   const extraMessages = hasSLM() ? Math.floor(curLength / maxLength) : 0;
   const dspLength = curLength - extraMessages * maxLength;
 
-  const elY = styles.text.fontSize * 2 + styles.text.paddingVertical;
+  const elY =
+    (styles.text as any).fontSize * 2 + (styles.text as any).paddingVertical;
 
   const shouldAppear = curLength >= (vstorage.minChars ?? 1);
   React.useEffect(() => {
@@ -97,7 +98,7 @@ export default ({ inputProps }: { inputProps: any }) => {
       ]}
     >
       <RN.Pressable
-        android_ripple={styles.androidRipple}
+        android_ripple={styles.androidRipple as any}
         style={styles.container}
         pointerEvents={shouldAppear ? "box-only" : "none"}
         onPress={shouldAppear ? () => setIsToggled(!isToggled) : undefined}

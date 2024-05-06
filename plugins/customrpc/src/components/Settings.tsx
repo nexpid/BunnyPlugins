@@ -77,7 +77,7 @@ export default () => {
   });
 
   let dbgCounter = 0,
-    dbgCounterTimeout: number;
+    dbgCounterTimeout: any;
 
   return (
     <>

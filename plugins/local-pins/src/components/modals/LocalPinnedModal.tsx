@@ -56,7 +56,7 @@ const Message = ({
       color: semanticColors.ANDROID_RIPPLE,
       cornerRadius: 8,
       foreground: true,
-    },
+    } as any,
   });
 
   return (

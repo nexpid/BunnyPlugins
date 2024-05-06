@@ -76,7 +76,7 @@ const ListItem = ({
               perspective: 100,
             },
           ],
-        },
+        } as any,
       ]}
       entering={thing}
       exiting={out}
@@ -100,14 +100,11 @@ const ListItem = ({
   );
 };
 
-let startTrollingTimeout: number;
+let startTrollingTimeout: any;
 let startTrollingCounter = 0;
 
 const transition = Reanimated.LinearTransition.duration(100).easing(
   Reanimated.Easing.inOut(Reanimated.Easing.ease),
-);
-const inLeft = Reanimated.FadeInLeft.duration(200).easing(
-  Reanimated.Easing.out(Reanimated.Easing.ease),
 );
 const inUp = Reanimated.FadeInUp.duration(200).easing(
   Reanimated.Easing.out(Reanimated.Easing.ease),

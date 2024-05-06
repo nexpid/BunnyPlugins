@@ -126,7 +126,7 @@ export default function AppDirectoryPage({
       color: semanticColors.ANDROID_RIPPLE,
       cornerRadius: 8,
       foreground: true,
-    },
+    } as any,
   });
   const collectionStyles = stylesheet.createThemedStyleSheet({
     card: {

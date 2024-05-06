@@ -168,7 +168,7 @@ export default function CompatSlider({
                     ),
                     100,
                   ) + "%",
-              },
+              } as any,
             ]}
           >
             <Reanimated.default.View

@@ -56,7 +56,7 @@ export default function RedesignChannelPinsRow({ ret }: { ret: any }) {
     androidRipple: {
       color: semanticColors.STATUS_WARNING_TEXT,
       cornerRadius: layout === "cozy" ? 16 : 12,
-    },
+    } as any,
   });
 
   return (

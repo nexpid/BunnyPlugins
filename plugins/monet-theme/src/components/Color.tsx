@@ -25,7 +25,7 @@ export default ({
     androidRipple: {
       color: semanticColors.ANDROID_RIPPLE,
       cornerRadius: 2147483647,
-    },
+    } as any,
   });
 
   return (

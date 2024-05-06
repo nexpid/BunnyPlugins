@@ -1,7 +1,7 @@
 import { cache } from "..";
 import { syncSaveData } from "./api";
 
-let syncTimeout = 0;
+let syncTimeout: any = 0;
 export function hsync(run: () => void) {
   clearTimeout(syncTimeout);
   syncTimeout = setTimeout(run, 1500);

@@ -44,7 +44,7 @@ export default function ChannelPinsRow() {
     androidRipple: {
       color: semanticColors.STATUS_WARNING_TEXT,
       cornerRadius: 4,
-    },
+    } as any,
   });
 
   return (

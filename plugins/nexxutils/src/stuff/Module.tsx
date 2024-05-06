@@ -202,7 +202,7 @@ export class Module<Settings extends Record<string, ModuleSetting>> {
         androidRipple: {
           color: semanticColors.ANDROID_RIPPLE,
           cornerRadius: 8,
-        },
+        } as any,
       });
 
       const extra: {

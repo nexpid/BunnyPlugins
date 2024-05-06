@@ -90,7 +90,7 @@ export default () => {
     androidRipple: {
       color: semanticColors.ANDROID_RIPPLE,
       cornerRadius: 8,
-    },
+    } as any,
     warning: {
       color: semanticColors.TEXT_DANGER,
     },

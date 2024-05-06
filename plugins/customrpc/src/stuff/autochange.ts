@@ -20,7 +20,7 @@ export function registerChangeCronJob(
   if (cronjobs[key]) return;
   const change = {
     default: isDefault,
-    timeout: -1,
+    timeout: -1 as any,
   };
   cronjobs[key] = change;
 

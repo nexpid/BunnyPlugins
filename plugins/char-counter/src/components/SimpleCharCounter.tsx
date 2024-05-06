@@ -29,7 +29,7 @@ export default function () {
 
   const shouldAppear = curLength >= vstorage.minChars;
 
-  const shallTimeout = React.useRef(0);
+  const shallTimeout = React.useRef<any>(0);
   React.useEffect(() => {
     if (shouldAppear) setVisible(true);
 

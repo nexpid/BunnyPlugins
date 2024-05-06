@@ -94,7 +94,7 @@ export default function App() {
     androidRipple: {
       color: semanticColors.ANDROID_RIPPLE,
       cornerRadius: 2147483647,
-    },
+    } as any,
   });
 
   const [text, setText] = React.useState("Updating...");

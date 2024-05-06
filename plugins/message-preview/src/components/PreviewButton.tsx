@@ -16,7 +16,7 @@ const styles = stylesheet.createThemedStyleSheet({
   androidRipple: {
     color: semanticColors.ANDROID_RIPPLE,
     cornerRadius: 2147483647,
-  },
+  } as any,
   actionButton: {
     borderRadius: 2147483647,
     height: ACTION_ICON_SIZE,
