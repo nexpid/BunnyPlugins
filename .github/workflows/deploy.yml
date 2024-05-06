@@ -41,9 +41,6 @@ jobs:
       - name: Styles
         run: pnpm styles:fix
 
-      - name: Sorter
-        run: pnpm sorter
-
       - name: Publish changes
         run: |
           git config --global user.name "github-actions[bot]"
