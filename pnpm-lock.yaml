@@ -74,10 +74,10 @@ importers:
         version: 6.0.3(react-native-fast-base64@0.1.2(react-native@0.74.1(@babel/core@7.24.0)(@babel/preset-env@7.24.5(@babel/core@7.24.0))(@types/react@18.0.26)(react@18.3.1))(react@18.3.1))(react-native@0.74.1(@babel/core@7.24.0)(@babel/preset-env@7.24.5(@babel/core@7.24.0))(@types/react@18.0.26)(react@18.3.1))(react@18.3.1)
       react-native-reanimated:
         specifier: ^3.7.2
-        version: 3.7.2(@babel/core@7.24.0)(@babel/plugin-proposal-nullish-coalescing-operator@7.18.6(@babel/core@7.24.0))(@babel/plugin-proposal-optional-chaining@7.21.0(@babel/core@7.24.0))(@babel/plugin-transform-arrow-functions@7.23.3(@babel/core@7.24.0))(@babel/plugin-transform-shorthand-properties@7.23.3(@babel/core@7.24.0))(@babel/plugin-transform-template-literals@7.23.3(@babel/core@7.24.0))(react-native@0.74.1(@babel/core@7.24.0)(@babel/preset-env@7.24.5(@babel/core@7.24.0))(@types/react@18.0.26)(react@18.3.1))(react@18.3.1)
+        version: 3.7.2(@babel/core@7.24.0)(@babel/plugin-proposal-nullish-coalescing-operator@7.18.6(@babel/core@7.24.0))(@babel/plugin-proposal-optional-chaining@7.21.0(@babel/core@7.24.0))(@babel/plugin-transform-arrow-functions@7.24.1(@babel/core@7.24.0))(@babel/plugin-transform-shorthand-properties@7.24.1(@babel/core@7.24.0))(@babel/plugin-transform-template-literals@7.24.1(@babel/core@7.24.0))(react-native@0.74.1(@babel/core@7.24.0)(@babel/preset-env@7.24.5(@babel/core@7.24.0))(@types/react@18.0.26)(react@18.3.1))(react@18.3.1)
       react-native-svg:
-        specifier: ^14.1.0
-        version: 14.1.0(react-native@0.74.1(@babel/core@7.24.0)(@babel/preset-env@7.24.5(@babel/core@7.24.0))(@types/react@18.0.26)(react@18.3.1))(react@18.3.1)
+        specifier: ^15.0.0
+        version: 15.2.0(react-native@0.74.1(@babel/core@7.24.0)(@babel/preset-env@7.24.5(@babel/core@7.24.0))(@types/react@18.0.26)(react@18.3.1))(react@18.3.1)
       react-native-webview:
         specifier: ^13.8.1
         version: 13.8.1(react-native@0.74.1(@babel/core@7.24.0)(@babel/preset-env@7.24.5(@babel/core@7.24.0))(@types/react@18.0.26)(react@18.3.1))(react@18.3.1)
@@ -519,12 +519,6 @@ packages:
     peerDependencies:
       '@babel/core': ^7.0.0
 
-  '@babel/plugin-transform-arrow-functions@7.23.3':
-    resolution: {integrity: sha512-NzQcQrzaQPkaEwoTm4Mhyl8jI1huEL/WWIEvudjTCMJ9aBZNpsJbMASx7EQECtQQPS/DcnFpo0FIh3LvEO9cxQ==}
-    engines: {node: '>=6.9.0'}
-    peerDependencies:
-      '@babel/core': ^7.0.0-0
-
   '@babel/plugin-transform-arrow-functions@7.24.1':
     resolution: {integrity: sha512-ngT/3NkRhsaep9ck9uj2Xhv9+xB1zShY3tM3g6om4xxCELwCDN4g4Aq5dRn48+0hasAql7s2hdBOysCfNpr4fw==}
     engines: {node: '>=6.9.0'}
@@ -807,12 +801,6 @@ packages:
     peerDependencies:
       '@babel/core': ^7.0.0-0
 
-  '@babel/plugin-transform-shorthand-properties@7.23.3':
-    resolution: {integrity: sha512-ED2fgqZLmexWiN+YNFX26fx4gh5qHDhn1O2gvEhreLW2iI63Sqm4llRLCXALKrCnbN4Jy0VcMQZl/SAzqug/jg==}
-    engines: {node: '>=6.9.0'}
-    peerDependencies:
-      '@babel/core': ^7.0.0-0
-
   '@babel/plugin-transform-shorthand-properties@7.24.1':
     resolution: {integrity: sha512-LyjVB1nsJ6gTTUKRjRWx9C1s9hE7dLfP/knKdrfeH9UPtAGjYGgxIbFfx7xyLIEWs7Xe1Gnf8EWiUqfjLhInZA==}
     engines: {node: '>=6.9.0'}
@@ -827,12 +815,6 @@ packages:
 
   '@babel/plugin-transform-sticky-regex@7.24.1':
     resolution: {integrity: sha512-9v0f1bRXgPVcPrngOQvLXeGNNVLc8UjMVfebo9ka0WF3/7+aVUHmaJVT3sa0XCzEFioPfPHZiOcYG9qOsH63cw==}
-    engines: {node: '>=6.9.0'}
-    peerDependencies:
-      '@babel/core': ^7.0.0-0
-
-  '@babel/plugin-transform-template-literals@7.23.3':
-    resolution: {integrity: sha512-Flok06AYNp7GV2oJPZZcP9vZdszev6vPBkHLwxwSpaIqx75wn6mUd3UFWsSsA0l8nXAKkyCmL/sR02m8RYGeHg==}
     engines: {node: '>=6.9.0'}
     peerDependencies:
       '@babel/core': ^7.0.0-0
@@ -2947,8 +2929,8 @@ packages:
       react: '*'
       react-native: '*'
 
-  react-native-svg@14.1.0:
-    resolution: {integrity: sha512-HeseElmEk+AXGwFZl3h56s0LtYD9HyGdrpg8yd9QM26X+d7kjETrRQ9vCjtxuT5dCZEIQ5uggU1dQhzasnsCWA==}
+  react-native-svg@15.2.0:
+    resolution: {integrity: sha512-R0E6IhcJfVLsL0lRmnUSm72QO+mTqcAOM5Jb8FVGxJqX3NfJMlMP0YyvcajZiaRR8CqQUpEoqrY25eyZb006kw==}
     peerDependencies:
       react: '*'
       react-native: '*'
@@ -3940,11 +3922,6 @@ snapshots:
       '@babel/helper-create-regexp-features-plugin': 7.22.15(@babel/core@7.24.0)
       '@babel/helper-plugin-utils': 7.24.5
 
-  '@babel/plugin-transform-arrow-functions@7.23.3(@babel/core@7.24.0)':
-    dependencies:
-      '@babel/core': 7.24.0
-      '@babel/helper-plugin-utils': 7.24.5
-
   '@babel/plugin-transform-arrow-functions@7.24.1(@babel/core@7.24.0)':
     dependencies:
       '@babel/core': 7.24.0
@@ -4241,11 +4218,6 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@babel/plugin-transform-shorthand-properties@7.23.3(@babel/core@7.24.0)':
-    dependencies:
-      '@babel/core': 7.24.0
-      '@babel/helper-plugin-utils': 7.24.5
-
   '@babel/plugin-transform-shorthand-properties@7.24.1(@babel/core@7.24.0)':
     dependencies:
       '@babel/core': 7.24.0
@@ -4258,11 +4230,6 @@ snapshots:
       '@babel/helper-skip-transparent-expression-wrappers': 7.22.5
 
   '@babel/plugin-transform-sticky-regex@7.24.1(@babel/core@7.24.0)':
-    dependencies:
-      '@babel/core': 7.24.0
-      '@babel/helper-plugin-utils': 7.24.5
-
-  '@babel/plugin-transform-template-literals@7.23.3(@babel/core@7.24.0)':
     dependencies:
       '@babel/core': 7.24.0
       '@babel/helper-plugin-utils': 7.24.5
@@ -4857,7 +4824,7 @@ snapshots:
       '@babel/plugin-syntax-flow': 7.24.1(@babel/core@7.24.0)
       '@babel/plugin-syntax-nullish-coalescing-operator': 7.8.3(@babel/core@7.24.0)
       '@babel/plugin-syntax-optional-chaining': 7.8.3(@babel/core@7.24.0)
-      '@babel/plugin-transform-arrow-functions': 7.23.3(@babel/core@7.24.0)
+      '@babel/plugin-transform-arrow-functions': 7.24.1(@babel/core@7.24.0)
       '@babel/plugin-transform-async-to-generator': 7.24.1(@babel/core@7.24.0)
       '@babel/plugin-transform-block-scoping': 7.24.5(@babel/core@7.24.0)
       '@babel/plugin-transform-classes': 7.24.5(@babel/core@7.24.0)
@@ -4876,7 +4843,7 @@ snapshots:
       '@babel/plugin-transform-react-jsx-self': 7.24.5(@babel/core@7.24.0)
       '@babel/plugin-transform-react-jsx-source': 7.24.1(@babel/core@7.24.0)
       '@babel/plugin-transform-runtime': 7.24.3(@babel/core@7.24.0)
-      '@babel/plugin-transform-shorthand-properties': 7.23.3(@babel/core@7.24.0)
+      '@babel/plugin-transform-shorthand-properties': 7.24.1(@babel/core@7.24.0)
       '@babel/plugin-transform-spread': 7.24.1(@babel/core@7.24.0)
       '@babel/plugin-transform-sticky-regex': 7.24.1(@babel/core@7.24.0)
       '@babel/plugin-transform-typescript': 7.24.5(@babel/core@7.24.0)
@@ -6739,22 +6706,22 @@ snapshots:
       react: 18.3.1
       react-native: 0.74.1(@babel/core@7.24.0)(@babel/preset-env@7.24.5(@babel/core@7.24.0))(@types/react@18.0.26)(react@18.3.1)
 
-  react-native-reanimated@3.7.2(@babel/core@7.24.0)(@babel/plugin-proposal-nullish-coalescing-operator@7.18.6(@babel/core@7.24.0))(@babel/plugin-proposal-optional-chaining@7.21.0(@babel/core@7.24.0))(@babel/plugin-transform-arrow-functions@7.23.3(@babel/core@7.24.0))(@babel/plugin-transform-shorthand-properties@7.23.3(@babel/core@7.24.0))(@babel/plugin-transform-template-literals@7.23.3(@babel/core@7.24.0))(react-native@0.74.1(@babel/core@7.24.0)(@babel/preset-env@7.24.5(@babel/core@7.24.0))(@types/react@18.0.26)(react@18.3.1))(react@18.3.1):
+  react-native-reanimated@3.7.2(@babel/core@7.24.0)(@babel/plugin-proposal-nullish-coalescing-operator@7.18.6(@babel/core@7.24.0))(@babel/plugin-proposal-optional-chaining@7.21.0(@babel/core@7.24.0))(@babel/plugin-transform-arrow-functions@7.24.1(@babel/core@7.24.0))(@babel/plugin-transform-shorthand-properties@7.24.1(@babel/core@7.24.0))(@babel/plugin-transform-template-literals@7.24.1(@babel/core@7.24.0))(react-native@0.74.1(@babel/core@7.24.0)(@babel/preset-env@7.24.5(@babel/core@7.24.0))(@types/react@18.0.26)(react@18.3.1))(react@18.3.1):
     dependencies:
       '@babel/core': 7.24.0
       '@babel/plugin-proposal-nullish-coalescing-operator': 7.18.6(@babel/core@7.24.0)
       '@babel/plugin-proposal-optional-chaining': 7.21.0(@babel/core@7.24.0)
-      '@babel/plugin-transform-arrow-functions': 7.23.3(@babel/core@7.24.0)
+      '@babel/plugin-transform-arrow-functions': 7.24.1(@babel/core@7.24.0)
       '@babel/plugin-transform-object-assign': 7.23.3(@babel/core@7.24.0)
-      '@babel/plugin-transform-shorthand-properties': 7.23.3(@babel/core@7.24.0)
-      '@babel/plugin-transform-template-literals': 7.23.3(@babel/core@7.24.0)
+      '@babel/plugin-transform-shorthand-properties': 7.24.1(@babel/core@7.24.0)
+      '@babel/plugin-transform-template-literals': 7.24.1(@babel/core@7.24.0)
       '@babel/preset-typescript': 7.23.3(@babel/core@7.24.0)
       convert-source-map: 2.0.0
       invariant: 2.2.4
       react: 18.3.1
       react-native: 0.74.1(@babel/core@7.24.0)(@babel/preset-env@7.24.5(@babel/core@7.24.0))(@types/react@18.0.26)(react@18.3.1)
 
-  react-native-svg@14.1.0(react-native@0.74.1(@babel/core@7.24.0)(@babel/preset-env@7.24.5(@babel/core@7.24.0))(@types/react@18.0.26)(react@18.3.1))(react@18.3.1):
+  react-native-svg@15.2.0(react-native@0.74.1(@babel/core@7.24.0)(@babel/preset-env@7.24.5(@babel/core@7.24.0))(@types/react@18.0.26)(react@18.3.1))(react@18.3.1):
     dependencies:
       css-select: 5.1.0
       css-tree: 1.1.3
