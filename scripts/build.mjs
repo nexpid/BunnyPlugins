@@ -40,18 +40,6 @@ ${markdownHeader}
 </div>\n`,
 );
 
-let langFiles = {};
-for (const plugin of (await readdir(join("lang", "values"))).filter((p) =>
-  p.endsWith(".json"),
-)) {
-  langFiles[plugin] = {
-    values: await readFile(join("lang", "values", plugin), "utf8"),
-    def: JSON.parse(
-      await readFile(join("lang", "values", "base", plugin), "utf8"),
-    ),
-  };
-}
-
 for (const plug of await readdir("./plugins")) {
   if (onlyPlugins.length && !onlyPlugins.includes(plug)) continue;
 

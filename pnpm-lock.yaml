@@ -51,15 +51,12 @@ importers:
         specifier: ^14.0.0
         version: 14.0.0
     devDependencies:
+      '@eslint/js':
+        specifier: ^9.2.0
+        version: 9.2.0
       '@revenge-mod/vendetta-types':
         specifier: github:revenge-mod/vendetta-types
         version: https://codeload.github.com/revenge-mod/vendetta-types/tar.gz/b5d1d98d68bb1ad0c752dc523c3273a571049a93(react-native@0.74.1(@babel/core@7.24.5)(@babel/preset-env@7.24.5(@babel/core@7.24.5))(@types/react@18.0.26)(react@18.3.1))(react@18.3.1)
-      '@typescript-eslint/eslint-plugin':
-        specifier: ^7.0.2
-        version: 7.8.0(@typescript-eslint/parser@7.8.0(eslint@9.2.0)(typescript@5.4.5))(eslint@9.2.0)(typescript@5.4.5)
-      '@typescript-eslint/parser':
-        specifier: ^7.0.2
-        version: 7.8.0(eslint@9.2.0)(typescript@5.4.5)
       eslint:
         specifier: ^9.2.0
         version: 9.2.0
@@ -87,6 +84,9 @@ importers:
       typescript:
         specifier: ^5.3.3
         version: 5.4.5
+      typescript-eslint:
+        specifier: ^7.8.0
+        version: 7.8.0(eslint@9.2.0)(typescript@5.4.5)
 
 packages:
 
@@ -1754,7 +1754,7 @@ packages:
     engines: {node: '>= 0.8.0'}
 
   concat-map@0.0.1:
-    resolution: {integrity: sha1-2Klr13/Wjfd5OnMDajug1UBdR3s=}
+    resolution: {integrity: sha512-/Srv4dswyQNBfohGpz9o6Yb3Gz3SrUDqBH5rTuhGR7ahtlbYKnVxw2bCFMRljaA7EXHaXZ8wsHdodFvbkhKmqg==}
 
   connect@3.7.0:
     resolution: {integrity: sha512-ZqRXc+tZukToSNmh5C2iWMSoV3X1YUcPbqEM4DkEG5tNQXrQUZCNVGGv3IuicnkMtPfGf3Xtp8WCXs295iQ1pQ==}
@@ -3185,6 +3185,16 @@ packages:
   type-fest@0.7.1:
     resolution: {integrity: sha512-Ne2YiiGN8bmrmJJEuTWTLJR32nh/JdL1+PSicowtNb0WFpn59GK8/lfD61bVtzguz7b3PBt74nxpv/Pw5po5Rg==}
     engines: {node: '>=8'}
+
+  typescript-eslint@7.8.0:
+    resolution: {integrity: sha512-sheFG+/D8N/L7gC3WT0Q8sB97Nm573Yfr+vZFzl/4nBdYcmviBPtwGSX9TJ7wpVg28ocerKVOt+k2eGmHzcgVA==}
+    engines: {node: ^18.18.0 || >=20.0.0}
+    peerDependencies:
+      eslint: ^8.56.0
+      typescript: '*'
+    peerDependenciesMeta:
+      typescript:
+        optional: true
 
   typescript-paths@1.5.1:
     resolution: {integrity: sha512-lYErSLCON2MSplVV5V/LBgD4UNjMgY3guATdFCZY2q1Nr6OZEu4q6zX/rYMsG1TaWqqQSszg6C9EU7AGWMDrIw==}
@@ -6891,6 +6901,17 @@ snapshots:
   type-detect@4.0.8: {}
 
   type-fest@0.7.1: {}
+
+  typescript-eslint@7.8.0(eslint@9.2.0)(typescript@5.4.5):
+    dependencies:
+      '@typescript-eslint/eslint-plugin': 7.8.0(@typescript-eslint/parser@7.8.0(eslint@9.2.0)(typescript@5.4.5))(eslint@9.2.0)(typescript@5.4.5)
+      '@typescript-eslint/parser': 7.8.0(eslint@9.2.0)(typescript@5.4.5)
+      '@typescript-eslint/utils': 7.8.0(eslint@9.2.0)(typescript@5.4.5)
+      eslint: 9.2.0
+    optionalDependencies:
+      typescript: 5.4.5
+    transitivePeerDependencies:
+      - supports-color
 
   typescript-paths@1.5.1(typescript@5.4.5):
     dependencies:

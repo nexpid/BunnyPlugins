@@ -12,15 +12,15 @@ export function parseColor(clr: string): string | undefined {
 
   if (rawColors[clr]) return rawColors[clr];
   else if (clr.startsWith("N1_"))
-    return getLABShade(vstorage.colors.neutral1!, 500 - shade + 500);
+    return getLABShade(vstorage.colors.neutral1, 500 - shade + 500);
   else if (clr.startsWith("N2_"))
-    return getLABShade(vstorage.colors.neutral2!, 500 - shade + 500);
+    return getLABShade(vstorage.colors.neutral2, 500 - shade + 500);
   else if (clr.startsWith("A1_"))
-    return getLABShade(vstorage.colors.accent1!, 500 - shade + 500);
+    return getLABShade(vstorage.colors.accent1, 500 - shade + 500);
   else if (clr.startsWith("A2_"))
-    return getLABShade(vstorage.colors.accent2!, 500 - shade + 500);
+    return getLABShade(vstorage.colors.accent2, 500 - shade + 500);
   else if (clr.startsWith("A3_"))
-    return getLABShade(vstorage.colors.accent3!, 500 - shade + 500);
+    return getLABShade(vstorage.colors.accent3, 500 - shade + 500);
   else if (clr.match(/^#(?:[0-9a-f]{6})|(?:[0-9a-f]{3})$/i)) return clr;
 }
 

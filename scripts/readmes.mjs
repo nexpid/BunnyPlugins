@@ -1,7 +1,7 @@
 import { existsSync } from "fs";
 import { readdir, readFile, writeFile } from "fs/promises";
-import { parse } from "smol-toml";
 import { format } from "prettier";
+import { parse } from "smol-toml";
 
 // a proper proxy for Bunny wasn't implemented yet, so I'll link to the raw plugin
 

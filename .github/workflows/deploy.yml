@@ -36,7 +36,7 @@ jobs:
         run: pnpm testTsc
 
       - name: Lint
-        run: eslint . --fix
+        run: pnpm lint:fix
 
       - name: Styles
         run: pnpm styles:fix

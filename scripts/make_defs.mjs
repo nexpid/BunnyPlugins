@@ -1,8 +1,9 @@
 import { existsSync } from "fs";
-import { readFile, writeFile, readdir } from "fs/promises";
-import { parseVariableRules } from "../stuff/crowdin.mjs";
+import { readdir, readFile, writeFile } from "fs/promises";
 import { join } from "path";
 import { format } from "prettier";
+
+import { parseVariableRules } from "../stuff/crowdin.mjs";
 
 const is = (arr, ...values) =>
   values.every((x) => arr.includes(x)) && arr.length === values.length;

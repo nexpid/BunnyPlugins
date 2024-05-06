@@ -5,7 +5,7 @@ import Text from "$/components/Text";
 
 import { version } from "..";
 import modules from "../modules";
-import { Module, moduleCategoryMap } from "../stuff/Module";
+import { moduleCategoryMap } from "../stuff/Module";
 import SillyAvatar from "./SillyAvatar";
 
 const { View, ScrollView } = General;
@@ -29,9 +29,7 @@ export default () => {
         </Text>
       </View>
       {moduleCategoryMap.map(({ category, title, icon }) => {
-        const mods = modules.filter(
-          (x) => x.category === category,
-        ) as Module<any>[];
+        const mods = modules.filter((x) => x.category === category);
         return (
           <BetterTableRowGroup
             title={title}

@@ -135,7 +135,7 @@ export default () => {
   const origGetParams = Object.getOwnPropertyDescriptor(
     MessagesHandlers.prototype,
     "params",
-  )!.get;
+  ).get;
   origGetParams &&
     Object.defineProperty(MessagesHandlers.prototype, "params", {
       configurable: true,

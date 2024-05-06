@@ -8,7 +8,7 @@
     "lint:fix": "eslint . --fix",
     "styles": "prettier . --check",
     "styles:fix": "prettier . --write",
-    "test:fix": "pnpm testTsc && eslint . --fix && pnpm styles:fix",
+    "test:fix": "pnpm testTsc && pnpm lint:fix && pnpm styles:fix",
     "testTsc": "tsc --noEmit",
     "watch:defs": "node scripts/watch_defs.mjs"
   },
@@ -29,9 +29,8 @@
     "twemoji-parser": "^14.0.0"
   },
   "devDependencies": {
+    "@eslint/js": "^9.2.0",
     "@revenge-mod/vendetta-types": "github:revenge-mod/vendetta-types",
-    "@typescript-eslint/eslint-plugin": "^7.0.2",
-    "@typescript-eslint/parser": "^7.0.2",
     "eslint": "^9.2.0",
     "eslint-plugin-simple-import-sort": "^12.0.0",
     "eslint-plugin-unused-imports": "^3.1.0",
@@ -40,7 +39,8 @@
     "react-native-reanimated": "^3.11.0",
     "react-native-svg": "^15.0.0",
     "react-native-webview": "^13.8.1",
-    "typescript": "^5.3.3"
+    "typescript": "^5.3.3",
+    "typescript-eslint": "^7.8.0"
   },
   "packageManager": "pnpm@9.0.6",
   "pnpm": {
