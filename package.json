@@ -5,10 +5,10 @@
     "build:dev": "node scripts/build.mjs --dev",
     "dev": "http-server dist --port 8731",
     "lint": "eslint .",
-    "lint:fix": "pnpm lint --fix",
+    "lint:fix": "eslint . --fix",
     "styles": "prettier . --check",
     "styles:fix": "prettier . --write",
-    "test:fix": "pnpm testTsc && pnpm lint:fix && pnpm styles:fix",
+    "test:fix": "pnpm testTsc && eslint . --fix && pnpm styles:fix",
     "testTsc": "tsc --noEmit",
     "watch:defs": "node scripts/watch_defs.mjs"
   },
