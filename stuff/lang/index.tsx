@@ -1,15 +1,14 @@
-import { findByProps } from "@vendetta/metro";
+import { findByName } from "@vendetta/metro";
 import { i18n, ReactNative as RN } from "@vendetta/metro/common";
 
 import constants from "$/constants";
 import RNFS from "$/wrappers/RNFS";
 
 import type { LangValues } from "../../lang/defs";
-import { parseVariableRules, replaceVariableRules } from "../crowdin.mjs";
+import { parseVariableRules } from "../crowdin.mjs";
 
-const intl = findByProps("defaultLocale", "prototype");
-
-const url = `${constants.github.raw}lang/values/`;
+// from Pyoncord
+const IntlMessageFormat = findByName("MessageFormat");
 
 const make = () =>
   RNFS.hasRNFS &&
@@ -73,11 +72,14 @@ export class Lang<Plugin extends keyof LangValues> {
 
     if (DEV_LANG) this.values = DEV_LANG;
     else {
-      const res = await fetch(`${url}${this.plugin}.json`, {
-        headers: {
-          "cache-control": "public, max-age=20",
+      const res = await fetch(
+        `${constants.github.raw}lang/values/${this.plugin}.json`,
+        {
+          headers: {
+            "cache-control": "public, max-age=20",
+          },
         },
-      });
+      );
       if (!res.ok) return read();
 
       make();
@@ -119,29 +121,20 @@ export class Lang<Plugin extends keyof LangValues> {
     input: Key extends keyof LangValues[Plugin]["fillers"]
       ? LangValues[Plugin]["fillers"][Key]
       : Record<string, never>,
-    /** @deprecated This gets filled in by the builder, do not use!!!! */
-    _defaultValue?: never,
   ): string {
-    // comments provided by Rosie :)
-
-    const defaultValue = _defaultValue as string;
     const key = _key as string;
     const locale = Lang.getLang();
 
     if (!this.values) return String(key);
 
     const val =
-      this.values[locale]?.[key] ?? this.values.en?.[key] ?? defaultValue;
+      this.values[locale]?.[key] ??
+      this.values.en?.[key] ??
+      DEFAULT_LANG?.[key];
     if (!val) return String(key);
 
     const rules = this.variableRules[val] ?? this.makeVariableRules(val);
-    if (rules.length > 0)
-      return replaceVariableRules(
-        val,
-        rules,
-        input,
-        intl.prototype._findPluralRuleFunction(locale),
-      );
+    if (rules.length > 0) return new IntlMessageFormat(val).format(input);
     else return val;
   }
 }
