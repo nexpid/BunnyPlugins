@@ -26,17 +26,17 @@ export const moduleCategoryMap = [
   {
     category: ModuleCategory.Useful,
     title: "Useful",
-    icon: getAssetIDByName("img_nitro_remixing"),
+    icon: getAssetIDByName("PencilSparkleIcon"),
   },
   {
     category: ModuleCategory.Fixes,
     title: "Fixes",
-    icon: getAssetIDByName("debug"),
+    icon: getAssetIDByName("WrenchIcon"),
   },
   {
     category: ModuleCategory.Fun,
     title: "Fun",
-    icon: getAssetIDByName("games"),
+    icon: getAssetIDByName("GameControllerIcon"),
   },
 ] as {
   category: ModuleCategory;
@@ -134,7 +134,7 @@ export class Module<Settings extends Record<string, ModuleSetting>> {
     this.icon = icon;
     this.settings = Object.fromEntries(
       Object.entries(settings ?? {}).map(([x, y]) => {
-        if ("default" in y) y.icon ??= getAssetIDByName("ic_message_edit");
+        if ("default" in y) y.icon ??= getAssetIDByName("PencilIcon");
         return [x, y];
       }),
     ) as Settings;
@@ -351,7 +351,7 @@ export class Module<Settings extends Record<string, ModuleSetting>> {
                     forceUpdate();
                   }}
                   leading={
-                    <FormRow.Icon source={getAssetIDByName("ic_cog_24px")} />
+                    <FormRow.Icon source={getAssetIDByName("SettingsIcon")} />
                   }
                   value={this.storage.enabled}
                 />

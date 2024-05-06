@@ -68,7 +68,7 @@ export default new Module({
   label: "Send Spotify invite",
   sublabel: "Adds an option to send a Spotify Listen Along invite in chat",
   category: ModuleCategory.Useful,
-  icon: getAssetIDByName("ic_spotify_white_16px"),
+  icon: getAssetIDByName("img_account_sync_spotify_white"),
   handlers: {
     onStart() {
       this.patches.add(

@@ -41,7 +41,7 @@ export default function () {
         source={{
           uri: urImage
             ? getUserAvatar(UserStore.getCurrentUser(), true)
-            : "https://cdn.discordapp.com/attachments/919655852724604978/1131722678450004118/fish.gif",
+            : "https://cdn.discordapp.com/avatars/853550207039832084/a_b4f88a6cb2e7afd485fb3ebc5ee078b8.gif?size=4096",
         }}
       />
     </Pressable>

@@ -15,7 +15,7 @@ export default new Module({
   label: "Add Listen Along",
   sublabel: "Adds a Listen Along button to Spotify activites",
   category: ModuleCategory.Useful,
-  icon: getAssetIDByName("ic_music"),
+  icon: getAssetIDByName("MusicIcon"),
   extra: {
     credits: ["1001086404203389018"],
   },

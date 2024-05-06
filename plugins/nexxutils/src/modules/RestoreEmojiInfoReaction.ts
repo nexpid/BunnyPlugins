@@ -17,7 +17,7 @@ export default new Module({
   extra: {
     credits: ["492949202121261067"],
   },
-  icon: getAssetIDByName("ic_add_reaction_v2"),
+  icon: getAssetIDByName("ReactionIcon"),
   handlers: {
     onStart() {
       const silly = new (findByProps("MessagesHandlers").MessagesHandlers)();

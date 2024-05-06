@@ -12,7 +12,7 @@ export default new Module({
   label: "No Invite to Servers",
   sublabel: "Removes the 'Invite to Servers' button from profiles",
   category: ModuleCategory.Fixes,
-  icon: getAssetIDByName("icon-invite"),
+  icon: getAssetIDByName("UserPlusIcon"),
   handlers: {
     onStart() {
       this.patches.add(

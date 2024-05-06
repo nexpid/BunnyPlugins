@@ -23,7 +23,7 @@ export default new Module({
   label: "Tenor GIF Fix",
   sublabel: "Downloads Tenor links as GIFs instead of videos",
   category: ModuleCategory.Fixes,
-  icon: getAssetIDByName("ic_gif_24px"),
+  icon: getAssetIDByName("GifIcon"),
   handlers: {
     onStart() {
       this.patches.add(

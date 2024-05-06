@@ -45,7 +45,7 @@ export default new Module({
   sublabel:
     "Changes some Discord UI components to their M3 variants (and more!)",
   category: ModuleCategory.Useful,
-  icon: getAssetIDByName("img_nitro_remixing"),
+  icon: getAssetIDByName("BeakerIcon"),
   settings: {
     switch: {
       label: "Switch",
