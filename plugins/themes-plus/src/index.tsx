@@ -1,16 +1,9 @@
-import { findByProps } from "@vendetta/metro";
-import { ReactNative as RN } from "@vendetta/metro/common";
-import { id, storage } from "@vendetta/plugin";
-import { showCustomAlert } from "@vendetta/ui/alerts";
+import { storage } from "@vendetta/plugin";
 
 import { Lang } from "$/lang";
 
-import ctaCard1 from "../assets/cta-card-version1.png";
-import ctaCard2 from "../assets/cta-card-version2.png";
 import settings from "./components/Settings";
 import load, { patches } from "./stuff/loader";
-
-const Alerts = findByProps("openLazy", "close");
 
 export enum PatchType {
   Icons = "icons",
@@ -55,35 +48,6 @@ export const lang = new Lang("themes_plus");
 
 export default {
   onLoad: () => {
-    if (!storage.showedVroAwesomeCtaCard) {
-      // please update vro
-      const whichVersion = id.includes("theme-minus") ? ctaCard1 : ctaCard2;
-
-      const win = RN.Dimensions.get("screen").width * 0.9;
-
-      showCustomAlert(
-        () => (
-          <RN.Pressable
-            onPress={() => {
-              Alerts.close();
-              storage.showedVroAwesomeCtaCard = true;
-            }}
-          >
-            <RN.Image
-              source={{ uri: whichVersion }}
-              style={{
-                width: win,
-                height: win,
-                borderRadius: win * 0.1,
-              }}
-              resizeMode="stretch"
-            />
-          </RN.Pressable>
-        ),
-        {},
-      );
-    }
-
     vstorage.iconpack ??= {
       mode: ConfigIconpackMode.Automatic,
       custom: {
