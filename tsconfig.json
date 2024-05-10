@@ -20,5 +20,5 @@
     "node_modules/@revenge-mod/vendetta-types",
     "global.d.ts"
   ],
-  "exclude": ["archive", "dist", "scripts"]
+  "exclude": ["dist", "scripts"]
 }
