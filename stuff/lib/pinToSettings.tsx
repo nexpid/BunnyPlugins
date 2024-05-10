@@ -67,6 +67,7 @@ export function patchSettingsPin(
   //     );
   //   }
 
+  // STUB pinToSettings old ui
   const unpatch = after(
     "default",
     settingsModule,
