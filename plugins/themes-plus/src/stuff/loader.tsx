@@ -11,24 +11,11 @@ import { IconPackConfig } from "../types";
 import { state, updateState } from "./active";
 import constants from "./constants";
 import getIconpackData from "./iconpackDataGetter";
+import { customUrl } from "./util";
 
 const UserStore = findByStoreName("UserStore");
 
 export const patches = new Array<() => void>();
-
-// TODO remove by next week
-const parseAuthor = (x: string) => {
-  const splat = x.split(" <");
-  if (splat[1])
-    return {
-      name: splat[0],
-      id: splat[1].slice(0, -1),
-    };
-  else
-    return {
-      name: splat[0],
-    };
-};
 
 export default async function load() {
   // biunny...
@@ -110,19 +97,9 @@ export default async function load() {
         },
         config: null,
         suffix: vstorage.iconpack.custom.suffix,
-        load: vstorage.iconpack.custom.url,
+        load: customUrl(),
       }
     : state.iconpack.list.find((x) => useIconpack === x.id);
-
-  if (
-    state.iconpack.iconpack?.credits?.authors?.some(
-      (x) => typeof x === "string",
-    )
-  )
-    state.iconpack.iconpack.credits.authors =
-      state.iconpack.iconpack.credits.authors.map((x) =>
-        typeof x === "string" ? parseAuthor(x) : x,
-      );
 
   let iconpackConfig: IconPackConfig = {
     biggerStatus: false,

@@ -20,6 +20,7 @@ import { openSheet } from "$/types";
 
 import { ConfigIconpackMode, lang, vstorage } from "../..";
 import { state } from "../../stuff/active";
+import { customUrl } from "../../stuff/util";
 
 const { FormRow, FormRadioRow, FormCheckboxRow } = Forms;
 
@@ -146,7 +147,7 @@ const tabs = {
                         <RN.Image
                           style={styles.previewImage}
                           source={{
-                            uri: `${vstorage.iconpack.custom.url}images/native/main_tabs/Messages${vstorage.iconpack.custom.suffix}.png`,
+                            uri: `${customUrl()}images/native/main_tabs/Messages${vstorage.iconpack.custom.suffix}.png`,
                           }}
                           resizeMode="cover"
                         />
@@ -156,11 +157,7 @@ const tabs = {
                     <TextInput
                       size="md"
                       value={vstorage.iconpack.custom.url}
-                      onChange={(v) =>
-                        (vstorage.iconpack.custom.url = !v.endsWith("/")
-                          ? `${v}/`
-                          : v)
-                      }
+                      onChange={(v) => (vstorage.iconpack.custom.url = v)}
                       label={lang.format(
                         "modal.config.iconpack.custom.url",
                         {},
