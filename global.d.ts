@@ -19,8 +19,16 @@ declare const IS_DEV: boolean;
 declare const DEFAULT_LANG: Record<string, string> | undefined;
 declare const DEV_LANG: Record<string, Record<string, string>> | undefined;
 
-// Buffer types coming soon:tm:
-declare const Buffer: any;
+// simple Buffer type
+type Encoding = "base64" | "utf8" | "ascii";
+declare const Buffer: {
+  from: (
+    data: any,
+    encoding?: Encoding,
+  ) => {
+    toString(encoding?: Encoding): string;
+  };
+};
 
 interface Window {
   nx?: {
