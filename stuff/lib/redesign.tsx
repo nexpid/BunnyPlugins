@@ -1,5 +1,6 @@
 import { findByProps } from "@vendetta/metro";
 import { React, ReactNative as RN } from "@vendetta/metro/common";
+import { semanticColors } from "@vendetta/ui";
 import { showToast } from "@vendetta/ui/toasts";
 
 import CompatSlider from "$/components/compat/CompatSlider";
@@ -39,6 +40,20 @@ const findFuncRequired = (...props: string[]) =>
     - danger > destructive
     - positive > active
 */
+
+// STUB button variant polyfill
+export function buttonVariantPolyfill() {
+  if ("REDESIGN_BUTTON_ACTIVE_TEXT" in semanticColors)
+    return {
+      active: "active",
+      destructive: "destructive",
+    };
+  else
+    return {
+      active: "positive",
+      destructive: "danger",
+    };
+}
 
 type ButtonVariant =
   | "primary"
@@ -85,6 +100,8 @@ const BetterSlider = (props: any) => (
     />
   </RN.View>
 );
+
+// STUB compat slider
 export const Slider = (_Slider ? BetterSlider : CompatSlider) as React.FC<{
   value: number;
   accessibilityLabel?: string;
