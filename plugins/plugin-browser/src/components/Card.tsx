@@ -37,15 +37,15 @@ const styles = stylesheet.createThemedStyleSheet({
     flexDirection: "row",
     alignItems: "center",
   },
-  headerIcon: {
-    tintColor: semanticColors.TEXT_NORMAL,
-    width: 18,
-    height: 18,
-  },
-  header: {
+  title: {
     flexDirection: "row",
     alignItems: "center",
     gap: 6,
+  },
+  pluginIcon: {
+    tintColor: semanticColors.TEXT_NORMAL,
+    width: 18,
+    height: 18,
   },
   actions: {
     flexDirection: "row-reverse",
@@ -117,20 +117,26 @@ export default function Card(props: CardProps) {
       <Stack spacing={16}>
         <RN.View style={styles.content}>
           <Stack spacing={0}>
-            <RN.View style={styles.header}>
-              {props.headerIcon && (
-                <RN.Image
-                  style={styles.headerIcon}
-                  source={getAssetIDByName(props.headerIcon)}
-                />
-              )}
-              <Text variant="text-md/semibold" color="TEXT_NORMAL">
+            <RN.View style={styles.title}>
+              <Text
+                variant="heading-md/semibold"
+                color="TEXT_NORMAL"
+                lineClamp={1}
+              >
+                {props.headerIcon && (
+                  <>
+                    <RN.Image
+                      style={styles.pluginIcon}
+                      source={getAssetIDByName(props.headerIcon)}
+                    />{" "}
+                  </>
+                )}
                 {props.headerLabel}
               </Text>
               {props.headerSuffix}
             </RN.View>
             {props.headerSublabel && (
-              <Text variant="text-md/medium" color="TEXT_MUTED">
+              <Text variant="text-md/semibold" color="TEXT_MUTED">
                 {props.headerSublabel}
               </Text>
             )}
