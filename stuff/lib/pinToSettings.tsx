@@ -32,6 +32,7 @@ export function patchSettingsPin(
     key: string;
     icon?: number;
     title: string;
+    trailing?: React.FC;
     page: {
       render: React.ComponentType;
       noErrorBoundary?: boolean;
@@ -129,11 +130,16 @@ export function patchSettingsPin(
       );
     });
 
+    let predicateReq = true;
+    patches.push(() => (predicateReq = false));
+
     const rendererConfig = {
       [screenKey]: {
         type: "route",
         title: () => you.title,
-        usePredicate: shouldAppear,
+        usePredicate: () =>
+          predicateReq && (shouldAppear ? shouldAppear() : true),
+        useTrailing: you.trailing,
         icon: you.icon,
         parent: null,
         screen: {
