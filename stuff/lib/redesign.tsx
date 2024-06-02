@@ -64,29 +64,50 @@ type ButtonVariant =
   | "destructive"
   | "active";
 
-export const Button = findThingRequired("Button") as React.FC<{
-  text: string;
-  variant?: ButtonVariant;
-  size?: "sm" | "md" | "lg";
+type PrimitiveButton = {
   onPress?: () => void;
-  onPressIn?: () => void;
-  onPressOut?: () => void;
-  onTouchStart?: () => void;
-  onLongPress?: () => void;
   disabled?: boolean;
-  icon?:
-    | import("react-native").ImageSourcePropType
-    | React.ReactNode
-    | React.FC;
-  iconPosition?: "start" | "end";
-  grow?: boolean;
-  loading?: boolean;
+  icon?: import("react-native").ImageSourcePropType | React.ReactNode;
   style?: import("react-native").StyleProp<import("react-native").ViewStyle>;
-}> & {
-  Icon: React.FC<{
-    source: import("react-native").ImageSourcePropType;
-    variant?: "entity";
-  }>;
+};
+type PrimitiveButtonIcon = {
+  source: import("react-native").ImageSourcePropType;
+};
+
+export const Button = findThingRequired("Button") as React.FC<
+  PrimitiveButton & {
+    variant?: ButtonVariant;
+    size?: "sm" | "md" | "lg";
+    text: string;
+    iconPosition?: "start" | "end";
+    grow?: boolean;
+    loading?: boolean;
+    onPressIn?: () => void;
+    onPressOut?: () => void;
+  }
+> & {
+  Icon: React.FC<PrimitiveButtonIcon>;
+};
+
+export const RowButton = findThingRequired("RowButton") as React.FC<
+  PrimitiveButton & {
+    label: string;
+    subLabel?: string;
+    variant?: "primary" | "secondary";
+    trailing?: React.ReactNode;
+    draggable?: boolean;
+    arrow?: boolean;
+    /** Requires onPress to bet set */
+    onPressIn?: () => void;
+    /** Requires onPress to bet set */
+    onPressOut?: () => void;
+  }
+> & {
+  Icon: React.FC<
+    PrimitiveButtonIcon & {
+      variant?: "secondary" | "danger" | "blurple" | "boosting-pink";
+    }
+  >;
 };
 
 const _Slider = findThing("Slider");
@@ -155,6 +176,9 @@ export const TextInput = findThingRequired("TextInput") as React.FC<{
   isCentered?: boolean;
   returnKeyType?: "search";
   grow?: boolean;
+  autoCapitalize?: string;
+  autoCorrect?: boolean;
+  isRound?: boolean;
   onChange?: (value: string) => void;
 }>;
 

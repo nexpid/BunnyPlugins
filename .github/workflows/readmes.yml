@@ -2,7 +2,7 @@ name: Make readmes
 
 on:
   push:
-    branches: [main]
+    branches: [main, dev]
     paths:
       - .github/workflows/readmes.yml
       - scripts/readmes.mjs

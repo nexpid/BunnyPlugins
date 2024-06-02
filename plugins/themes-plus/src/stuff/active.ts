@@ -1,14 +1,14 @@
 import { React } from "@vendetta/metro/common";
 
 import { InactiveReason, PatchType } from "..";
-import { IconPack, IconPackData } from "../types";
+import { Iconpack, IconpackData } from "../types";
 
 export const state = {
   loading: true,
   active: false,
   iconpack: null as {
-    iconpack: IconPack | null;
-    list: IconPackData["list"];
+    iconpack: Iconpack | null;
+    list: IconpackData["list"];
   },
   patches: [] as PatchType[],
   inactive: [] as InactiveReason[],

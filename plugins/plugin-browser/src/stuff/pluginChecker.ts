@@ -1,41 +1,35 @@
-import { plugins } from "@vendetta";
 import { safeFetch } from "@vendetta/utils";
 
-import { pluginsURL, vstorage } from "..";
-import { PluginsFullJson } from "../types";
+import { vstorage } from "..";
+import { FullPlugin } from "../types";
+import constants from "./constants";
+import { properLink } from "./util";
 
-let lastPluginCache: Record<string, string> = {};
-export function getChanges(): [string, "new" | "update"][] {
-  if (!Object.keys(lastPluginCache)[0] || !vstorage.pluginCache[0]) return [];
-  return Object.entries(lastPluginCache)
-    .map(([id, hash]) =>
-      !vstorage.pluginCache.includes(id)
-        ? [id, "new"]
-        : plugins.plugins[id] && plugins.plugins[id].manifest.hash !== hash
-          ? [id, "update"]
-          : undefined,
-    )
-    .filter((x) => !!x) as [string, "new" | "update"][];
+let lastPluginCache = new Array<string>();
+export function getChanges(): string[] {
+  if (!lastPluginCache[0] || !vstorage.pluginCache[0]) return [];
+  return lastPluginCache.filter((id) => !vstorage.pluginCache.includes(id));
 }
 
 export function updateChanges() {
-  vstorage.pluginCache = Object.keys(lastPluginCache);
+  vstorage.pluginCache = lastPluginCache;
 }
 
-export async function run() {
-  const res = (await (
-    await safeFetch(pluginsURL, { cache: "no-store" })
-  ).json()) as PluginsFullJson;
-  lastPluginCache = Object.fromEntries(
-    res.map((x) => [
-      `https://vd-plugins.github.io/proxy/${x.vendetta.original}`,
-      x.hash,
-    ]),
+export async function run(data?: FullPlugin[]) {
+  const res =
+    data ??
+    ((await (
+      await safeFetch(`${constants.proxyUrl}plugins.json`, {
+        cache: "no-store",
+      })
+    ).json()) as FullPlugin[]);
+  lastPluginCache = res.map((x) =>
+    typeof x === "string" ? properLink(x) : properLink(x.vendetta.original),
   );
 }
 
 export function initThing(): () => void {
-  const interval = setInterval(run, 1000 * 60 * 10);
+  const interval = setInterval(run, 1000 * 60 * 60);
   run();
 
   return () => clearInterval(interval);
