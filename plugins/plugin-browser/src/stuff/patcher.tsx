@@ -29,9 +29,7 @@ export default (): (() => void) => {
           if (changes > 0)
             return <TextBadge variant="danger">{changes}</TextBadge>;
         },
-        get title() {
-          return lang.format("plugin.name", {});
-        },
+        title: () => lang.format("plugin.name", {}),
         page: {
           render: PluginBrowserPage,
         },
