@@ -7,7 +7,10 @@
 <div align="center">
   <img alt="plugin_status" src="https://img.shields.io/badge/plugin_status-discontinued-f38ba8?style=for-the-badge&labelColor=1e1e2e" />
   <br/>
-  <a href="https://vendetta.nexpid.xyz/tenor-gif-fix">
+  <a href="https://bn-plugins.github.io/vd-proxy/bunny.nexpid.xyz/tenor-gif-fix">
+    <img alt="copy_proxied_link" src="https://img.shields.io/badge/copy_proxied_link-11111b?style=for-the-badge" />
+  </a>
+<a href="https://bunny.nexpid.xyz/tenor-gif-fix">
     <img alt="copy_link" src="https://img.shields.io/badge/copy_link-1e1e2e?style=for-the-badge" />
   </a>
 </div>

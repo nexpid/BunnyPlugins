@@ -26,7 +26,6 @@
     "rollup": "^4.17.2",
     "rollup-plugin-esbuild": "^6.1.1",
     "rollup-plugin-tsconfig-paths": "^1.5.2",
-    "smol-toml": "^1.1.4",
     "twemoji-parser": "^14.0.0"
   },
   "devDependencies": {

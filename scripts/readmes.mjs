@@ -1,19 +1,15 @@
 import { existsSync } from "fs";
 import { readdir, readFile, writeFile } from "fs/promises";
 import { format } from "prettier";
-import { parse } from "smol-toml";
-
-// a proper proxy for Bunny wasn't implemented yet, so I'll link to the raw plugin
 
 console.time("Done");
+
+const pluginBase = "bunny.nexpid.xyz/";
 
 const invalidPlugins = [];
 const plugins = [];
 const links = {
-  proxied: "https://vd-plugins.github.io/proxy/vendetta.nexpid.xyz/",
-  oldProxied:
-    "https://vd-plugins.github.io/proxy/gabe616.github.io/BunnyPlugins/",
-  unproxied: "https://vendetta.nexpid.xyz/",
+  proxied: `https://bn-plugins.github.io/vd-proxy/${pluginBase}`,
   code: `https://github.com/nexpid/BunnyPlugins/tree/main/plugins/`,
   external: {
     backend: "https://github.com/nexpid/",
@@ -40,6 +36,11 @@ const shieldColors = {
   ghissues: "#74c7ec".slice(1),
   ghpullreqs: "#a6e3a1".slice(1),
   discord: "#eba0ac".slice(1),
+
+  proxiedlink: "#11111b".slice(1),
+  unproxiedlink: "#1e1e2e".slice(1),
+  externallink: "#45475a".slice(1),
+  codelink: "#313244".slice(1),
 };
 const shieldLogos = {
   ghstars: "starship&logoColor=fff",
@@ -54,61 +55,71 @@ const categories = [
   ["🎫 Discontinued", "discontinued"],
 ];
 
-const makeBadge = (label, text, textColor) =>
+const makeBadge = (label, text, textColor, labelColor = shieldLabelColor) =>
   `<img alt="${label}" src="https://img.shields.io/badge/${label}${
     text ? `-${text}` : ""
   }${textColor && text ? `-${textColor}` : ""}${
-    !text ? `-${shieldLabelColor}` : ""
-  }?style=for-the-badge${text ? `&labelColor=${shieldLabelColor}` : ""}" />`;
+    !text ? `-${labelColor}` : ""
+  }?style=for-the-badge${text ? `&labelColor=${labelColor}` : ""}" />`;
 const makeHref = (href, text, spacing = 0) => `<a href="${href}">
 ${"  ".repeat(spacing + 1)}${text}
 ${"  ".repeat(spacing)}</a>`;
-const makeHrefBadge = (href, label, text, textColor, spacing = 0) =>
-  makeHref(href, makeBadge(label, text, textColor), spacing);
+const makeHrefBadge = (href, label, text, textColor, labelColor, spacing = 0) =>
+  makeHref(href, makeBadge(label, text, textColor, labelColor), spacing);
 
-const makeMDHrefBadge = (href, label, text, textColor) =>
-  `[${makeBadge(label, text, textColor)}](${href})`;
+const makeMDHrefBadge = (href, label, text, textColor, labelColor) =>
+  `[${makeBadge(label, text, textColor, labelColor)}](${href})`;
 
-for (const x of await readdir("./plugins")) {
-  const path = `./plugins/${x}/`;
+for (const x of await readdir("plugins")) {
+  const path = `plugins/${x}/`;
   if (!existsSync(`${path}manifest.json`)) {
     console.log(`Could not find ${path}manifest.json`);
-    invalidPlugins.push([x, "no manifest.json"]);
+    invalidPlugins.push(x);
     continue;
   }
-  if (!existsSync(`${path}status.toml`)) {
-    console.log(`Could not find ${path}status.toml`);
-    invalidPlugins.push([x, "no status.toml"]);
+  if (!existsSync(`${path}status.json`)) {
+    console.log(`Could not find ${path}status.json`);
+    invalidPlugins.push(x);
     continue;
   }
 
   try {
     const manifest = JSON.parse(await readFile(`${path}manifest.json`, "utf8"));
-    const { status, proxied, usable, discontinuedFor, external } = parse(
-      await readFile(`${path}status.toml`, "utf8"),
+    const { status, proxied, usable, discontinuedFor, external } = JSON.parse(
+      await readFile(`${path}status.json`, "utf8"),
     );
 
     const plugin = {
+      id: x,
       name: manifest.name,
       description: manifest.description,
-      discontinuedFor,
-      id: x,
       status,
       proxied,
+      discontinuedFor,
       links: {
-        copy: (status === "finished" || usable) && {
-          title: "copy_link",
-          link: links.unproxied + x,
-        },
+        copy: [
+          proxied && {
+            title: "copy_proxied_link",
+            link: `${links.proxied}${x}`,
+            color: shieldColors.proxiedlink,
+          },
+          (status === "finished" || usable) && {
+            title: "copy_link",
+            link: `https://${pluginBase}${x}`,
+            color: shieldColors.unproxiedlink,
+          },
+        ],
         external: [
           external?.backend && {
             title: "view_backend_code",
             link: `${links.external.backend}${external.backend}`,
+            color: shieldColors.externallink,
           },
         ].filter((x) => !!x),
         code: {
           title: "view_code",
           link: `${links.code}${x}`,
+          color: shieldColors.codelink,
         },
       },
     };
@@ -116,18 +127,18 @@ for (const x of await readdir("./plugins")) {
 
     const badges = {
       copy:
-        plugin.links.copy &&
-        makeHrefBadge(
-          plugin.links.copy.link,
-          plugin.links.copy.title,
-          undefined,
-          undefined,
-          1,
-        ),
+        plugin.links.copy[0] &&
+        plugin.links.copy
+          .map((x) =>
+            makeHrefBadge(x.link, x.title, undefined, undefined, x.color, 1),
+          )
+          .join("\n"),
       external:
         plugin.links.external[0] &&
         plugin.links.external
-          .map((x) => makeHrefBadge(x.link, x.title, undefined, undefined, 1))
+          .map((x) =>
+            makeHrefBadge(x.link, x.title, undefined, undefined, x.color, 1),
+          )
           .join("\n"),
     };
 
@@ -162,14 +173,11 @@ ${plugin.description}`;
 
 const stats = {
   all: plugins.length,
-  finished: plugins.filter((x) => x.status === "finished" || x.proxied).length,
-  proxied: plugins.filter((x) => x.proxied).length,
+  finished: plugins.filter((x) => x.status === "finished").length,
   unproxied: plugins.filter((x) => x.status === "finished" && !x.proxied)
     .length,
-  unfinished: plugins.filter((x) => x.status === "unfinished" && !x.proxied)
-    .length,
-  discontinued: plugins.filter((x) => x.status === "discontinued" && !x.proxied)
-    .length,
+  unfinished: plugins.filter((x) => x.status === "unfinished").length,
+  discontinued: plugins.filter((x) => x.status === "discontinued").length,
 };
 
 const plur = (x, p = "s", s = "") => (x !== 1 ? p : s);
@@ -297,9 +305,9 @@ const plist = categories
               y.discontinuedFor
                 ? `\n  - **Discontinued For:** ${y.discontinuedFor}`
                 : ""
-            }\n  - ${[y.links.copy, y.links.code, ...y.links.external]
+            }\n  - ${[...y.links.copy, y.links.code, ...y.links.external]
               .filter((z) => !!z)
-              .map((z) => makeMDHrefBadge(z.link, z.title))
+              .map((z) => makeMDHrefBadge(z.link, z.title, z.color))
               .join(" ")}`,
         )
         .join("\n")}`,
@@ -372,7 +380,7 @@ ${plist.join("\n\n")}${
         "s aren't",
         " isn't",
       )} being shown due to being formatted incorrectly:  
-${invalidPlugins.map((x) => `> - ${x[0]}  `).join("\n")}`
+${invalidPlugins.map((x) => `> - ${x}  `).join("\n")}`
     : ""
 }
 
@@ -383,10 +391,9 @@ ${invalidPlugins.map((x) => `> - ${x[0]}  `).join("\n")}`
 
   The Creative Commons Attribution 4.0 International License is an open and flexible license that grants users the ability to share, adapt, and build upon the contents of this project for any purpose, including commercial endeavors. Under this license, users are required to provide appropriate attribution to the original author(s), acknowledging their contribution to the work. This license promotes collaboration and innovation by allowing individuals and organizations to leverage and modify the project while ensuring that credit is given to the creators.
 </details>\n`;
-// TODO make use of the second parameter in invalidPlugins
 
-await writeFile("./README.md", await format(mreadme, { parser: "markdown" }));
-console.log("Wrote ./README.md");
+await writeFile("README.md", await format(mreadme, { parser: "markdown" }));
+console.log("Wrote README.md");
 
 console.log("");
 console.timeEnd("Done");
