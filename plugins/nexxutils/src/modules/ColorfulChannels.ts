@@ -4,8 +4,6 @@ import { after } from "@vendetta/patcher";
 import { semanticColors } from "@vendetta/ui";
 import { getAssetByID, getAssetIDByName } from "@vendetta/ui/assets";
 
-import TextBadge from "$/components/TextBadge";
-
 import { resolveSemanticColor } from "../../../../stuff/types";
 import lockAnnouncements from "../../assets/ColorfulChannels/announcement/lock.png";
 import warningAnnouncements from "../../assets/ColorfulChannels/announcement/warning.png";
@@ -21,6 +19,7 @@ import warningText from "../../assets/ColorfulChannels/text/warning.png";
 import bothVoice from "../../assets/ColorfulChannels/voice/both.png";
 import warning from "../../assets/ColorfulChannels/warning.png";
 import warningBottom from "../../assets/ColorfulChannels/warningBottom.png";
+import NSFWBadge from "../components/modules/NSFWChannelTag/NSFWBadge";
 import { Module, ModuleCategory } from "../stuff/Module";
 
 const locks = [
@@ -70,8 +69,7 @@ export default new Module({
             React.createElement(
               React.Fragment,
               {},
-              channel.nsfw_ &&
-                React.createElement(TextBadge, { variant: "danger" }, "nsfw"),
+              channel.nsfw_ && React.createElement(NSFWBadge),
               ret,
             ),
           ),

@@ -10,7 +10,7 @@ export enum PatchType {
   UnreadBadgeColor = "unread_badge_color",
   CustomIconOverlays = "custom_icon_overlays",
   MentionLineColor = "mention_line_color",
-  Iconpack = "iconpack",
+  IconPack = "iconpack",
 }
 
 export enum InactiveReason {
@@ -40,11 +40,6 @@ export const vstorage = storage as {
     };
     isCustom: boolean;
   };
-  cache: {
-    list?: string;
-    links: Record<string, string>;
-  };
-  downloadIconpackModalDismissed?: boolean;
 };
 
 export let enabled = false;
@@ -63,9 +58,6 @@ export default {
         },
       },
       isCustom: false,
-    };
-    vstorage.cache ??= {
-      links: {}
     };
     enabled = true;
 

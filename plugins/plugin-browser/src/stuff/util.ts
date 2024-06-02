@@ -1,6 +1,6 @@
 import { fetchPlugin, startPlugin, stopPlugin } from "@vendetta/plugins";
 
-import constants from "./constants";
+import constants from "$/constants";
 
 export function properLink(id: string): string {
   return !id.endsWith("/") ? id + "/" : id;
@@ -11,6 +11,22 @@ const linkMatches = {
   multiplePluginGitio: /^(.*?)(?=\.)\.github\.io\/(.*?)(?=\/)\/(.*)/,
   singlePluginGitio: /^(.*?)(?=\.)\.github\.io\/(.*)/,
   githubReleases: /^github\.com\/(.*?)(?=\/)\/(.*?)(?=\/)\/releases/,
+};
+
+// will update sometimes for other plugin devs
+const customLinks = {
+  "vendetta.nexpid.xyz": (path: string[]) =>
+    `${constants.github.url}plugins/${path.join("/")}`,
+  "vendetta.sdh.gay": (path: string[]) =>
+    `https://github.com/sdhhhhh/vd-repo/tree/master/plugins/${path.join("/")}`,
+  "plugins.obamabot.me": (path: string[]) =>
+    `https://github.com/WolfPlugs/${path[0]}/tree/master/${path
+      .slice(1)
+      .join("/")}`,
+  "mugman.catvibers.me": (path: string[]) =>
+    `https://github.com/mugman174/${path[0]}/tree/master/plugins/${path
+      .slice(1)
+      .join("/")}`,
 };
 
 export function matchGithubLink(link: string): string | undefined {
@@ -24,8 +40,7 @@ export function matchGithubLink(link: string): string | undefined {
   if (single?.[0]) return `https://github.com/${single[1]}/${single[2]}`;
 
   const [_, origin, path] = link.match(linkMatches.origin);
-  if (constants.customLinks[origin])
-    return constants.customLinks[origin](path.split("/"));
+  if (customLinks[origin]) return customLinks[origin](path.split("/"));
 }
 
 export async function refetchPlugin(plugin: any) {

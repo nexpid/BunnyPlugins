@@ -16,8 +16,13 @@ export default (): (() => void) => {
       {
         key: plugin.manifest.name,
         icon: getAssetIDByName("ic_contact_sync"),
-        title: () => lang.format("plugin.name", {}),
+        get title() {
+          return lang.format("plugin.name", {});
+        },
         page: {
+          get title() {
+            return lang.format("plugin.name", {});
+          },
           render: Settings,
         },
       },

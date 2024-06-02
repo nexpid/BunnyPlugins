@@ -9,6 +9,6 @@
   ],
   "main": "src/index.ts",
   "vendetta": {
-    "icon": "ChannelListMagnifyingGlassIcon"
+    "icon": "ic_search_items_24px"
   }
 }

@@ -7,7 +7,7 @@ import { ConfigIconpackMode, enabled, InactiveReason, vstorage } from "..";
 import patchIcons from "../patches/icons";
 import patchMentionLineColors from "../patches/mentionLineColor";
 import patchUnreadBadgeColor from "../patches/unreadBadgeColor";
-import { IconpackConfig } from "../types";
+import { IconPackConfig } from "../types";
 import { state, updateState } from "./active";
 import constants from "./constants";
 import getIconpackData from "./iconpackDataGetter";
@@ -26,7 +26,7 @@ export default async function load() {
 
   state.loading = true;
   state.active = false;
-  state.iconpack = vstorage.cache.list ? JSON.parse(vstorage.cache.list) : null;
+  state.iconpack = null;
   state.patches = [];
   state.inactive = [];
   updateState();
@@ -42,13 +42,10 @@ export default async function load() {
         ).json()
       ).list,
     };
-    vstorage.cache.list = JSON.stringify(state.iconpack.list);
   } catch {
-    if (!state.iconpack) {
-      state.loading = false;
-      state.inactive.push(InactiveReason.NoIconpacksList);
-      return updateState();
-    }
+    state.loading = false;
+    state.inactive.push(InactiveReason.NoIconpacksList);
+    return updateState();
   }
 
   let selectedTheme = Object.values(bunny.managers.themes.themes).find(
@@ -96,7 +93,7 @@ export default async function load() {
               id: user.id,
             },
           ],
-          sources: ["N/A"],
+          source: "N/A",
         },
         config: null,
         suffix: vstorage.iconpack.custom.suffix,
@@ -104,7 +101,7 @@ export default async function load() {
       }
     : state.iconpack.list.find((x) => useIconpack === x.id);
 
-  let iconpackConfig: IconpackConfig = {
+  let iconpackConfig: IconPackConfig = {
     biggerStatus: false,
   };
   let tree = [];

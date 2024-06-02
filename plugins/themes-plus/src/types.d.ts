@@ -1,8 +1,8 @@
-export interface IconpackConfig {
+export interface IconPackConfig {
   biggerStatus?: boolean;
 }
 
-export interface Iconpack {
+export interface IconPack {
   id: string;
   name: string;
   description: string;
@@ -11,18 +11,16 @@ export interface Iconpack {
       name: string;
       id?: string;
     }[];
-    /** @deprecated */
-    source?: string;
-    sources: string[];
+    source: string;
   };
   config: string | null;
   suffix: string;
   load: string;
 }
 
-export interface IconpackData {
+export interface IconPackData {
   $schema: string;
-  list: Iconpack[];
+  list: IconPack[];
 }
 
 export interface CoolAsset {

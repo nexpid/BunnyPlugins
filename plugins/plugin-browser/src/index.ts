@@ -4,6 +4,9 @@ import { Lang } from "$/lang";
 
 import patcher from "./stuff/patcher";
 
+export const pluginsURL =
+  "https://vd-plugins.github.io/proxy/plugins-full.json";
+
 export const vstorage = storage as {
   pluginCache: string[];
 };

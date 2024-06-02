@@ -17,9 +17,6 @@ export const Reanimated = findByProps(
   "useSharedValue",
 ) as typeof import("react-native-reanimated");
 
-export const FlashList = findByProps("FlashList")
-  .FlashList as typeof import("@shopify/flash-list").FlashList;
-
 //
 // raw native modules
 //

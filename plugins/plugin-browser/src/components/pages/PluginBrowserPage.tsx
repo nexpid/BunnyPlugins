@@ -1,21 +1,20 @@
 import { React, ReactNative as RN } from "@vendetta/metro/common";
 import { getAssetIDByName } from "@vendetta/ui/assets";
+import { General, Search } from "@vendetta/ui/components";
 import { showToast } from "@vendetta/ui/toasts";
 import { safeFetch } from "@vendetta/utils";
-import fuzzysort from "fuzzysort";
 
 import ChooseSheet from "$/components/sheets/ChooseSheet";
-import { FlashList } from "$/deps";
+import SuperAwesomeIcon from "$/components/SuperAwesomeIcon";
 import { managePage } from "$/lib/ui";
 import { openSheet } from "$/types";
 
-import { lang } from "../..";
-import constants from "../../stuff/constants";
-import { getChanges, run, updateChanges } from "../../stuff/pluginChecker";
-import { properLink } from "../../stuff/util";
-import { FullPlugin } from "../../types";
-import PluginCard from "../PluginCard";
-import Search from "../Search";
+import { lang, pluginsURL } from "../..";
+import { getChanges, updateChanges } from "../../stuff/pluginChecker";
+import { PluginsFullJson } from "../../types";
+import PluginThing from "../PluginThing";
+
+const { View } = General;
 
 enum Sort {
   DateNewest = "sheet.sort.date_newest",
@@ -24,34 +23,33 @@ enum Sort {
   NameZA = "sheet.sort.name_za",
 }
 
+let refreshCallback: () => void;
+let sortCallback: () => void;
 export default () => {
-  const [parsed, setParsed] = React.useState<FullPlugin[] | null>(null);
   const [search, setSearch] = React.useState("");
 
+  const changes = React.useRef(getChanges()).current;
   const [sort, setSort] = React.useState(Sort.DateNewest);
+  const [parsed, setParsed] = React.useState<PluginsFullJson | null>(null);
 
   const currentSetSort = React.useRef(setSort);
   currentSetSort.current = setSort;
 
-  const changes = React.useRef(getChanges());
-
   const sortedData = React.useMemo(() => {
-    if (!parsed) return [];
+    if (!parsed) return;
 
-    let dt = search
-      ? fuzzysort
-          .go(search, parsed, {
-            keys: [
-              "vendetta.original",
-              "name",
-              "description",
-              "authors.0.name",
-              "authors.1.name",
-              "authors.2.name", // THREE authors
-            ],
-          })
-          .map((x) => x.obj)
-      : parsed.slice();
+    let dt = parsed
+      .filter((i) =>
+        [
+          i.vendetta.original,
+          i.name,
+          i.description,
+          i.authors?.map((x) => x.name),
+        ]
+          .flat()
+          .some((x) => x?.toLowerCase().includes(search)),
+      )
+      .slice();
     if ([Sort.NameAZ, Sort.NameZA].includes(sort))
       dt = dt.sort((a, b) => (a.name < b.name ? -1 : a.name > b.name ? 1 : 0));
     if ([Sort.NameZA, Sort.DateNewest].includes(sort)) dt.reverse();
@@ -59,34 +57,17 @@ export default () => {
     return dt;
   }, [sort, parsed, search]);
 
-  React.useEffect(() => {
-    // when user exits out of the page
-    return () => updateChanges();
-  }, []);
+  React.useEffect(updateChanges, []);
 
   React.useEffect(() => {
     if (!parsed)
-      safeFetch(`${constants.proxyUrl}plugins-full.json`, {
+      safeFetch(pluginsURL, {
         cache: "no-store",
       })
         .then((x) =>
           x
             .json()
-            .then((x) =>
-              // pluh 🗣
-              x.map((plug: any) => ({
-                ...plug,
-                vendetta: {
-                  ...plug.vendetta,
-                  original: properLink(plug.vendetta.original),
-                },
-              })),
-            )
-            .then((x) => {
-              run(x);
-              changes.current = getChanges();
-              setParsed(x);
-            })
+            .then((x) => setParsed(x))
             .catch(() =>
               showToast(
                 lang.format("toast.data.fail_parse", {}),
@@ -102,44 +83,59 @@ export default () => {
         );
   }, [parsed]);
 
+  refreshCallback = () => parsed && setParsed(null);
+  sortCallback = () =>
+    parsed &&
+    openSheet(ChooseSheet, {
+      title: lang.format("sheet.sort.title", {}),
+      value: sort,
+      options: Object.values(Sort).map((value) => ({
+        name: lang.format(value, {}),
+        value,
+      })),
+      callback: (val) => currentSetSort.current(val as Sort),
+    });
+
   managePage({
     title: lang.format("plugin.name", {}),
+    headerRight: () => (
+      <View style={{ flexDirection: "row-reverse" }}>
+        <SuperAwesomeIcon
+          onPress={() => refreshCallback?.()}
+          icon={getAssetIDByName("RetryIcon")}
+          style="header"
+        />
+        <SuperAwesomeIcon
+          onPress={() => sortCallback?.()}
+          icon={getAssetIDByName("FiltersHorizontalIcon")}
+          style="header"
+        />
+      </View>
+    ),
   });
 
+  if (!parsed)
+    return <RN.ActivityIndicator size={"large"} style={{ flex: 1 }} />;
+
   return (
-    <FlashList
+    <RN.FlatList
       ListHeaderComponent={
-        <Search
-          onChangeText={setSearch}
-          onPressFilters={() =>
-            openSheet(ChooseSheet, {
-              title: lang.format("sheet.sort.title", {}),
-              value: sort,
-              options: Object.values(Sort).map((value) => ({
-                name: lang.format(value, {}),
-                value,
-              })),
-              callback: (val) => currentSetSort.current(val as Sort),
-            })
-          }
-        />
+        <View style={{ marginBottom: 10 }}>
+          <Search onChangeText={setSearch} />
+        </View>
       }
-      ListFooterComponent={<RN.View style={{ height: 20 }} />}
-      ItemSeparatorComponent={() => <RN.View style={{ height: 15 }} />}
-      contentContainerStyle={{ paddingHorizontal: 10 }}
+      style={{ paddingHorizontal: 10 }}
+      contentContainerStyle={{ paddingBottom: 20 }}
       data={sortedData}
-      estimatedItemSize={111}
-      renderItem={({ item }) => (
-        <PluginCard item={item} changes={changes.current} />
-      )}
-      removeClippedSubviews
-      refreshControl={
-        <RN.RefreshControl
-          refreshing={parsed === null}
-          /* onRefresh doesn't seem to work with FlashList no matter how hard I try /shrug */
-          onRefresh={() => parsed !== null && setParsed(null)}
+      renderItem={({ item, index }) => (
+        <PluginThing
+          index={index}
+          highlight={search}
+          item={item}
+          changes={changes}
         />
-      }
+      )}
+      removeClippedSubviews={true}
     />
   );
 };

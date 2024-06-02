@@ -1,0 +1,5 @@
+status = "finished"
+proxied = true
+
+[external]
+backend = "VendettaSongSpotlight"

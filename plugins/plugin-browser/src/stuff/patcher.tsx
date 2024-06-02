@@ -1,9 +1,6 @@
 import { plugin } from "@vendetta";
-import { React } from "@vendetta/metro/common";
-import { manifest } from "@vendetta/plugin";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 
-import TextBadge from "$/components/TextBadge";
 import { patchSettingsPin } from "$/lib/pinToSettings";
 
 import { lang } from "..";
@@ -18,18 +15,23 @@ export default (): (() => void) => {
   patches.push(
     patchSettingsPin(
       () => true,
-      () => <SettingsSection changes={Object.keys(getChanges()).length} />,
+      () => (
+        <SettingsSection
+          changes={getChanges().filter((x) => x[1] === "new").length}
+        />
+      ),
       {
         key: plugin.manifest.name,
-        icon: getAssetIDByName(manifest.vendetta.icon),
-        trailing: () => {
-          const changes = React.useRef(
-            Object.keys(getChanges()).length,
-          ).current;
-          if (changes > 0)
-            return <TextBadge variant="danger">{changes}</TextBadge>;
+        icon: getAssetIDByName("ic_search_items_24px"),
+        get title() {
+          const changes = getChanges().filter((x) => x[1] === "new").length;
+
+          return changes
+            ? lang.format("plugin.name.changes", {
+                changes: changes.toString(),
+              })
+            : lang.format("plugin.name", {});
         },
-        title: () => lang.format("plugin.name", {}),
         page: {
           render: PluginBrowserPage,
         },

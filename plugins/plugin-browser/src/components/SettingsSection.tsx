@@ -2,8 +2,8 @@ import { NavigationNative } from "@vendetta/metro/common";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { ErrorBoundary, Forms } from "@vendetta/ui/components";
 
+import CustomBadgeTag from "$/components/CustomBadgeTag";
 import Text from "$/components/Text";
-import TextBadge from "$/components/TextBadge";
 
 import { lang } from "..";
 import PluginBrowserPage from "./pages/PluginBrowserPage";
@@ -17,12 +17,14 @@ export default ({ changes }: { changes: number }) => {
     <ErrorBoundary>
       <FormRow
         label={
-          <>
-            <Text variant="text-md/semibold" color="HEADER_PRIMARY">
-              {lang.format("plugin.name", {})}
-            </Text>
-            {changes && <TextBadge variant="danger">{changes}</TextBadge>}
-          </>
+          <Text variant="text-md/semibold" color="HEADER_PRIMARY">
+            {lang.format("plugin.name", {})}
+            {changes ? (
+              <CustomBadgeTag text={changes.toString()} marginLeft={true} />
+            ) : (
+              <></>
+            )}
+          </Text>
         }
         leading={
           <FormRow.Icon source={getAssetIDByName("ic_search_items_24px")} />

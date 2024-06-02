@@ -43,7 +43,7 @@ const { View } = General;
 export function getIconOverlay(
   plus: PlusStructure,
   icon: number,
-  style?: any,
+  style?: any[],
 ):
   | React.PropsWithChildren<{ style?: Record<string, any>; replace?: string }>
   | undefined {
@@ -69,7 +69,7 @@ export function getIconOverlay(
             <RN.Image
               source={{ uri: check }}
               style={[
-                style,
+                ...style,
                 {
                   tintColor: "#FFF",
                 },
@@ -94,7 +94,7 @@ export function getIconOverlay(
             <RN.Image
               source={{ uri: check }}
               style={[
-                style,
+                ...style,
                 {
                   tintColor: "#FFF",
                 },

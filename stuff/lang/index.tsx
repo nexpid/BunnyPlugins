@@ -52,8 +52,8 @@ export class Lang<Plugin extends keyof LangValues> {
       const matches = Array.from(text.matchAll(rule.regex));
       for (const match of matches)
         if (match[1]) {
-          txt.splice(match.index - off, match[0].length, rule.react(match[1]));
-          off += match[0].length - 1;
+          txt.splice(match.index + off, match[0].length, rule.react(match[1]));
+          off -= match[0].length + 1;
         }
     }
 

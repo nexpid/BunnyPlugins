@@ -8,10 +8,9 @@ import { BetterTableRowGroup } from "$/components/BetterTableRow";
 import LineDivider from "$/components/LineDivider";
 import Modal from "$/components/Modal";
 import ChooseSheet from "$/components/sheets/ChooseSheet";
-import Text from "$/components/Text";
+import Text, { TrailingText } from "$/components/Text";
 import { Lang } from "$/lang";
 import {
-  RowButton,
   SegmentedControlPages,
   Tabs,
   TextInput,
@@ -22,9 +21,8 @@ import { openSheet } from "$/types";
 import { ConfigIconpackMode, lang, vstorage } from "../..";
 import { state } from "../../stuff/active";
 import { customUrl } from "../../stuff/util";
-import IconpackRow from "../IconpackRow";
 
-const { FormRow, FormCheckboxRow } = Forms;
+const { FormRow, FormRadioRow, FormCheckboxRow } = Forms;
 
 const tabs = {
   iconpack: {
@@ -51,13 +49,17 @@ const tabs = {
 
       return (
         <>
-          <RN.View style={{ marginHorizontal: 16, marginTop: 8 }}>
-            <RowButton
+          <BetterTableRowGroup>
+            <FormRow
               label={lang.format("modal.config.iconpack.mode", {})}
-              subLabel={lang.format(
-                `modal.config.iconpack.mode.${vstorage.iconpack.mode}.desc`,
-                {},
-              )}
+              trailing={
+                <TrailingText>
+                  {lang.format(
+                    `modal.config.iconpack.mode.${vstorage.iconpack.mode}`,
+                    {},
+                  )}
+                </TrailingText>
+              }
               onPress={() =>
                 openSheet(ChooseSheet, {
                   title: lang.format("modal.config.iconpack.mode", {}),
@@ -80,15 +82,28 @@ const tabs = {
                 })
               }
             />
-          </RN.View>
+          </BetterTableRowGroup>
           {vstorage.iconpack.mode === ConfigIconpackMode.Manual && (
             <>
               <BetterTableRowGroup
                 title={lang.format("modal.config.iconpack.choose", {})}
               >
                 {state.iconpack.list.map((pack) => (
-                  <IconpackRow
-                    pack={pack}
+                  <FormRow
+                    label={pack.name}
+                    subLabel={pack.description}
+                    leading={
+                      <FormRow.Radio
+                        selected={vstorage.iconpack.pack === pack.id}
+                      />
+                    }
+                    trailing={
+                      <FormRow.Icon
+                        source={{
+                          uri: `${pack.load}images/native/main_tabs/Messages${pack.suffix}.png`,
+                        }}
+                      />
+                    }
                     onPress={() => {
                       vstorage.iconpack.pack = pack.id;
                       vstorage.iconpack.isCustom = false;
@@ -96,11 +111,9 @@ const tabs = {
                     }}
                   />
                 ))}
-                <FormRow
+                <FormRadioRow
                   label={lang.format("modal.config.iconpack.choose.custom", {})}
-                  trailing={
-                    <FormRow.Radio selected={vstorage.iconpack.isCustom} />
-                  }
+                  selected={vstorage.iconpack.isCustom}
                   onPress={() => {
                     vstorage.iconpack.isCustom = true;
                     delete vstorage.iconpack.pack;

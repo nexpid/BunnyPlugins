@@ -7,11 +7,10 @@ export function managePage(
     headerRight?: React.FC;
   },
   navigation?: any,
-  ...deps: any[]
 ) {
   if (!navigation) navigation = NavigationNative.useNavigation();
 
   React.useEffect(() => {
     navigation.setOptions(options);
-  }, [navigation, ...deps]);
+  }, [navigation]);
 }
