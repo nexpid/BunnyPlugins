@@ -21,11 +21,11 @@
   "modal.config.iconpack.title": "Iconpack",
   "modal.config.iconpack.mode": "Mode",
   "modal.config.iconpack.mode.automatic": "Automatic",
-  "modal.config.iconpack.mode.automatic.desc": "Based on your current theme",
+  "modal.config.iconpack.mode.automatic.desc": "Iconpack chosen by your current theme",
   "modal.config.iconpack.mode.manual": "Manual",
-  "modal.config.iconpack.mode.manual.desc": "Choose an iconpack",
+  "modal.config.iconpack.mode.manual.desc": "Choose an iconpack manually",
   "modal.config.iconpack.mode.disabled": "Disabled",
-  "modal.config.iconpack.mode.disabled.desc": "No iconpack",
+  "modal.config.iconpack.mode.disabled.desc": "Use Discord's default icons",
   "modal.config.iconpack.choose": "Iconpack",
   "modal.config.iconpack.choose.custom": "Custom",
   "modal.config.iconpack.custom.url": "URL",
@@ -34,5 +34,11 @@
   "modal.config.iconpack.custom.suffix.desc": "Appends a string after the icon name for compability with iOs based iconpacks. **Avoid** using this in new iconpacks.",
   "modal.config.iconpack.custom.config.bigger_status": "Bigger status icons",
   "modal.config.iconpack.custom.config.bigger_status.desc": "Makes status icons a bit bigger for compability. **Avoid** using this in new iconpacks.",
-  "modal.config.iconpack.custom.preview": "Preview icon"
+  "modal.config.iconpack.custom.preview": "Preview icon",
+
+  "alert.downloadpack.title": "Download iconpack",
+  "alert.downloadpack.body": "Are you sure you want to download **{iconpack}**? This will take up **{space}**.",
+  "alert.downloadpack.confirm": "Download",
+  "alert.downloadpack.cancel": "Cancel",
+  "alert.downloadpack.dontshowagain_toggle": "Don't show again"
 }
