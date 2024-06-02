@@ -95,6 +95,11 @@ Out of the plugins I've coded, **16** are finished. I'm working on **4** plugins
   - **Discontinued For:** Temporarily replaced by NexxUtils
   - [<img alt="copy_proxied_link" src="https://img.shields.io/badge/copy_proxied_link-11111b?style=for-the-badge&labelColor=1e1e2e" />](https://bn-plugins.github.io/vd-proxy/vendetta.nexpid.xyz/tenor-gif-fix) [<img alt="copy_link" src="https://img.shields.io/badge/copy_link-1e1e2e?style=for-the-badge&labelColor=1e1e2e" />](https://bunny.nexpid.xyz/tenor-gif-fix) [<img alt="view_code" src="https://img.shields.io/badge/view_code-313244?style=for-the-badge&labelColor=1e1e2e" />](https://github.com/nexpid/BunnyPlugins/tree/main/plugins/tenor-gif-fix)
 
+> **Note**  
+> **1** plugin isn't being shown due to being formatted incorrectly:
+>
+> - migrate
+
 ## 📜 Licensing
 
 <details>
