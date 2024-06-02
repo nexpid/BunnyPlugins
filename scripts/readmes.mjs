@@ -9,7 +9,8 @@ const pluginBase = "bunny.nexpid.xyz/";
 const invalidPlugins = [];
 const plugins = [];
 const links = {
-  proxied: `https://bn-plugins.github.io/vd-proxy/${pluginBase}`,
+  // STUB vendetta.nexpid.xyz => bunny.nexpid.xyz
+  proxied: `https://bn-plugins.github.io/vd-proxy/vendetta.nexpid.xyz/`,
   code: `https://github.com/nexpid/BunnyPlugins/tree/main/plugins/`,
   external: {
     backend: "https://github.com/nexpid/",
