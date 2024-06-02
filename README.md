@@ -26,6 +26,12 @@
 A collection of all my awesome plugins for [Bunny](https://github.com/pyoncord/Bunny#installing).  
 My plugins assume you're using version atleast **211.10** (211210) from **January 1st**, they might not work properly if you use an older version than that.
 
+## 🌐 Localization
+
+<a href="https://crowdin.com/project/nexpid-vendetta-plugins">
+  <img src=".github/localization.png" alt="Help me by translating my plugins into your language on Crowdin!" />
+</a>
+
 ## 📊 Stats
 
 I've coded a total of **21** plugins.  
