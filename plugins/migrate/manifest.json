@@ -1,0 +1,14 @@
+{
+  "name": "Plugin Migration",
+  "description": "This plugin migrates nexpid's plugins to their latest versions. Go into the plugin's settings and press confirm to migrate.",
+  "authors": [
+    {
+      "name": "nexpid",
+      "id": "853550207039832084"
+    }
+  ],
+  "main": "src/index.ts",
+  "vendetta": {
+    "icon": "EmbedIcon"
+  }
+}
