@@ -91,11 +91,6 @@ Out of the plugins I've coded, **18** are finished. I'm working on **4** plugins
   - **Discontinued For:** Replaced by NexxUtils
   - [<img alt="copy_link" src="https://img.shields.io/badge/copy_link-1e1e2e?style=for-the-badge" />](https://vendetta.nexpid.xyz/tenor-gif-fix) [<img alt="view_code" src="https://img.shields.io/badge/view_code-1e1e2e?style=for-the-badge" />](https://github.com/nexpid/DettaPlugins/tree/main/plugins/tenor-gif-fix)
 
-> **Note**  
-> **1** plugin isn't being shown due to being formatted incorrectly:
->
-> - migrate
-
 ## 📜 Licensing
 
 <details>
