@@ -136,6 +136,12 @@ jobs:
           path: devpages
           token: ${{ secrets.DEV_PAGES_TOKEN }}
 
+      - name: Download GitHub pages artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: github-pages
+          path: built.tar
+
       - name: Copy files
         run: |
           mkdir devpages-tmp
@@ -143,7 +149,7 @@ jobs:
           mv devpages/.git devpages-tmp/.git
 
           rm -rf devpages/*
-          cp built/* devpages/*
+          tar -xvf built.tar -C devpages
 
           mv devpages-tmp/CNAME devpages/CNAME
           mv devpages-tmp/.git devpages/.git
