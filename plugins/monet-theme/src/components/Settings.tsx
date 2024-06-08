@@ -7,48 +7,41 @@ import {
   ReactNative as RN,
   stylesheet,
 } from "@vendetta/metro/common";
-import { id } from "@vendetta/plugin";
-import { createFileBackend, useProxy } from "@vendetta/storage";
+import { useProxy } from "@vendetta/storage";
 import { semanticColors } from "@vendetta/ui";
-import { showConfirmationAlert, showInputAlert } from "@vendetta/ui/alerts";
+import { showInputAlert } from "@vendetta/ui/alerts";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { Forms, General } from "@vendetta/ui/components";
 import { showToast } from "@vendetta/ui/toasts";
+import { safeFetch } from "@vendetta/utils";
 
 import { BetterTableRowGroup } from "$/components/BetterTableRow";
 import LineDivider from "$/components/LineDivider";
 import { RichText } from "$/components/RichText";
 import Text from "$/components/Text";
-import { RNBundleUpdaterManager } from "$/deps";
-import { managePage } from "$/lib/ui";
-import { LazyActionSheet, TextStyleSheet } from "$/types";
+import { LazyActionSheet } from "$/types";
 import { ThemeDataWithPlus, VendettaSysColors } from "$/typings";
 
+import RepainterIcon from "../../assets/icons/RepainterIcon.png";
 import {
   commitsURL,
   devPatchesURL,
   getSysColors,
-  makeApplyCache,
-  makeThemeApplyCache,
   patchesURL,
   vstorage,
 } from "..";
-import { build } from "../stuff/buildTheme";
+import { apply, build } from "../stuff/buildTheme";
 import { parse } from "../stuff/jsoncParser";
-import { toggle } from "../stuff/livePreview";
 import { checkForURL, fetchRawTheme, parseTheme } from "../stuff/repainter";
 import { Patches } from "../types";
 import Color from "./Color";
 import Commit, { CommitObj } from "./Commit";
 import { openCommitsPage } from "./pages/CommitsPage";
 import { openConfigurePage } from "./pages/ConfigurePage";
-import PreviewButton from "./PreviewButton";
 
 const { ScrollView, View, Pressable } = General;
 const { FormRow, FormSwitchRow } = Forms;
 const { showSimpleActionSheet } = findByProps("showSimpleActionSheet");
-
-const mdSize = TextStyleSheet["text-md/semibold"].fontSize;
 
 export function setColorsFromDynamic(clr: VendettaSysColors) {
   vstorage.colors = {
@@ -64,7 +57,7 @@ export let stsCommits: CommitObj[];
 export let stsPatches: Patches;
 export default () => {
   const navigation = NavigationNative.useNavigation();
-  const [_, forceUpdate] = React.useReducer((x) => ~x, 0);
+
   const [commits, setCommits] = React.useState<CommitObj[] | undefined>(
     undefined,
   );
@@ -72,142 +65,93 @@ export default () => {
   stsCommits = commits;
   stsPatches = patches;
 
-  const patchesControllerRef = React.useRef<AbortController>();
-  const commitsControllerRef = React.useRef<AbortController>();
-
-  const applyCache = makeApplyCache(getSysColors());
-  if (JSON.stringify(vstorage.applyCache) !== JSON.stringify(applyCache))
-    vstorage.applyCache = applyCache;
-  const themeApplyCache = makeThemeApplyCache();
-  if (
-    JSON.stringify(vstorage.themeApplyCache) !== JSON.stringify(themeApplyCache)
-  )
-    vstorage.themeApplyCache = themeApplyCache;
-
   useProxy(vstorage);
 
   const styles = stylesheet.createThemedStyleSheet({
+    pill: {
+      flexDirection: "row",
+      alignItems: "center",
+      paddingHorizontal: 6,
+      paddingVertical: 4,
+      backgroundColor: semanticColors.BG_MOD_SUBTLE,
+      borderRadius: 8,
+    },
     androidRipple: {
       color: semanticColors.ANDROID_RIPPLE,
       cornerRadius: 8,
     } as any,
-    warning: {
-      color: semanticColors.TEXT_DANGER,
-    },
-    info: {
-      color: semanticColors.TEXT_BRAND,
-    },
-    experimental: {
-      backgroundColor: semanticColors.TEXT_BRAND,
-      borderRadius: 4,
-      paddingHorizontal: 3,
-      paddingVertical: 3,
-      justifyContent: "center",
-      alignItems: "center",
-      flexDirection: "row",
-    },
-    window: {
-      height: "100%",
-      backgroundColor: semanticColors.BG_BASE_SECONDARY,
+    help: {
+      width: 16,
+      height: 16,
+      tintColor: semanticColors.TEXT_BRAND,
+      marginRight: 4,
     },
     labelIcon: {
-      width: mdSize,
-      height: mdSize,
-      marginRight: 4,
+      width: 14,
+      height: 14,
+      marginRight: 6,
       tintColor: semanticColors.TEXT_NORMAL,
     },
   });
 
   React.useEffect(() => {
-    if (patches) return;
-    patchesControllerRef.current?.abort();
-
-    const controller = new AbortController();
-    patchesControllerRef.current = controller;
-    fetch(vstorage.patches.from === "local" ? devPatchesURL : patchesURL(), {
-      cache: "no-store",
-      signal: controller.signal,
-    })
+    safeFetch(
+      vstorage.patches.from === "local" ? devPatchesURL : patchesURL(),
+      {
+        headers: { "cache-control": "public, max-age=120" },
+      },
+    )
       .then((x) =>
         x.text().then((text) => {
           try {
             setPatches(parse(text.replace(/\r/g, "")));
           } catch {
             return showToast(
-              "Failed to parse patches.json",
+              "Failed to parse color patches!",
               getAssetIDByName("Small"),
             );
           }
         }),
       )
       .catch(() =>
-        showToast("Failed to fetch patches.json", getAssetIDByName("Small")),
+        showToast("Failed to fetch color patches!", getAssetIDByName("Small")),
       );
   }, [patches]);
-  React.useEffect(() => {
-    commitsControllerRef.current?.abort();
 
-    const controller = new AbortController();
-    commitsControllerRef.current = controller;
-    if (!commits)
-      fetch(commitsURL, { cache: "no-store", signal: controller.signal })
-        .then((x) =>
-          x
-            .json()
-            .then((x) => setCommits(x))
-            .catch(() =>
-              showToast("Failed to parse commits", getAssetIDByName("Small")),
+  React.useEffect(() => {
+    safeFetch(commitsURL, {
+      headers: { "cache-control": "public, max-age=3600" },
+    })
+      .then((x) =>
+        x
+          .json()
+          .then((x) => setCommits(x))
+          .catch(() =>
+            showToast(
+              "Failed to parse GitHub commits!",
+              getAssetIDByName("Small"),
             ),
-        )
-        .catch(() =>
-          showToast("Failed to fetch commits", getAssetIDByName("Small")),
-        );
+          ),
+      )
+      .catch(() =>
+        showToast("Failed to fetch GitHub commits!", getAssetIDByName("Small")),
+      );
   }, [commits]);
 
-  managePage({
-    headerRight: () => <PreviewButton onPressExtra={forceUpdate} />,
-  });
-  React.useEffect(() => {
-    navigation.addListener("beforeRemove", () => {
-      toggle(false);
-      forceUpdate();
-    });
-  }, [navigation]);
-
-  let showMessage: {
-    error: boolean;
-    message: string;
-    cta?: string;
-    onPress: () => void;
-  };
+  let showMessage: string;
 
   const debug = getDebugInfo() as any;
-  const syscolors = window[
-    window.__vendetta_loader?.features?.syscolors?.prop
-  ] as VendettaSysColors | null;
+  const syscolors = getSysColors();
 
   if (debug.os.name !== "Android")
-    showMessage = {
-      error: false,
-      message: "Dynamic colors are only available on Android.",
-      onPress: () => {},
-    };
+    showMessage = "Dynamic colors are only available on Android.";
   else if (debug.os.sdk < 31)
-    showMessage = {
-      error: false,
-      message: "Dynamic colors are only available on Android 12+ (SDK 31+).",
-      onPress: () => {},
-    };
-  else if (syscolors === null)
-    showMessage = {
-      error: false,
-      message: "Dynamic colors are unavailable.",
-      onPress: () => {},
-    };
+    showMessage = "Dynamic colors are only available on Android 12+ (SDK 31+).";
+  else if (syscolors === null) showMessage = "Dynamic colors are unavailable.";
 
   let lastThemePressTime = 0;
   return (
-    <ScrollView style={styles.window}>
+    <ScrollView style={{ flex: 1 }}>
       {showMessage && (
         <View
           style={{
@@ -218,34 +162,17 @@ export default () => {
           }}
         >
           <RN.Image
-            source={getAssetIDByName(
-              showMessage.error ? "ic_warning_24px" : "ic_info_24px",
-            )}
-            style={{
-              width: mdSize,
-              height: mdSize,
-              tintColor: showMessage.error
-                ? styles.warning.color
-                : styles.info.color,
-              marginRight: 4,
-            }}
+            source={getAssetIDByName("CircleInformationIcon")}
+            style={styles.help}
           />
-          <Text
-            variant="text-md/semibold"
-            color={showMessage.error ? "TEXT_DANGER" : "TEXT_BRAND"}
-          >
-            {showMessage.message}
-            {showMessage.cta && (
-              <RichText.Underline onPress={showMessage.onPress}>
-                {showMessage.cta}
-              </RichText.Underline>
-            )}
+          <Text variant="text-md/semibold" color={"TEXT_BRAND"}>
+            {showMessage}
           </Text>
         </View>
       )}
       <BetterTableRowGroup
         title="Colors"
-        icon={getAssetIDByName("ic_theme_24px")}
+        icon={getAssetIDByName("PaintPaletteIcon")}
         padding={true}
       >
         <View
@@ -259,60 +186,37 @@ export default () => {
           {syscolors && (
             <Pressable
               android_ripple={styles.androidRipple}
-              disabled={false}
-              accessibilityRole={"button"}
-              accessibilityState={{
-                disabled: false,
-                expanded: false,
-              }}
-              accessibilityLabel="Autofill button"
-              accessibilityHint="Autofills colors to system's dynamic colors"
-              style={{
-                flexDirection: "row",
-                alignItems: "center",
-                paddingHorizontal: 4,
-                paddingVertical: 4,
-              }}
+              style={styles.pill}
               onPress={() => {
                 setColorsFromDynamic(syscolors);
-                showToast("Autofilled", getAssetIDByName("Check"));
+                showToast(
+                  "Autofilled colors",
+                  getAssetIDByName("PencilSparkleIcon"),
+                );
               }}
             >
               <RN.Image
-                source={getAssetIDByName("img_nitro_remixing")}
+                source={getAssetIDByName("PencilSparkleIcon")}
                 style={styles.labelIcon}
                 resizeMode="cover"
               />
-              <Text variant="text-md/semibold" color="TEXT_NORMAL">
+              <Text variant="text-sm/semibold" color="TEXT_NORMAL">
                 Autofill
               </Text>
             </Pressable>
           )}
           {syscolors && (
             <Text
-              variant="text-md/semibold"
+              variant="text-sm/semibold"
               color="TEXT_NORMAL"
-              style={{ marginHorizontal: 5 }}
+              style={{ marginHorizontal: 6 }}
             >
               •
             </Text>
           )}
           <Pressable
             android_ripple={styles.androidRipple}
-            disabled={false}
-            accessibilityRole={"button"}
-            accessibilityState={{
-              disabled: false,
-              expanded: false,
-            }}
-            accessibilityLabel="Use Repainter theme"
-            accessibilityHint="Inputs a Repainter theme"
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              paddingHorizontal: 4,
-              paddingVertical: 4,
-            }}
+            style={styles.pill}
             onPress={async () => {
               const link = checkForURL((await clipboard.getString()) ?? "");
               showInputAlert({
@@ -326,7 +230,9 @@ export default () => {
 
                   const theme = parseTheme(await fetchRawTheme(link));
                   vstorage.colors = theme.colors;
-                  showToast("Imported", getAssetIDByName("toast_image_saved"));
+
+                  //@ts-expect-error Invalid type!!
+                  showToast("Imported Repainter theme", { uri: RepainterIcon });
                 },
                 confirmColor: "brand" as ButtonColors,
                 cancelText: "Cancel",
@@ -334,11 +240,11 @@ export default () => {
             }}
           >
             <RN.Image
-              source={getAssetIDByName("ic_theme_24px")}
+              source={{ uri: RepainterIcon }}
               style={styles.labelIcon}
               resizeMode="cover"
             />
-            <Text variant="text-md/semibold" color="TEXT_NORMAL">
+            <Text variant="text-sm/semibold" color="TEXT_NORMAL">
               Use Repainter theme
             </Text>
           </Pressable>
@@ -379,7 +285,7 @@ export default () => {
       </BetterTableRowGroup>
       <BetterTableRowGroup
         title="Theme"
-        icon={getAssetIDByName("ic_cog_24px")}
+        icon={getAssetIDByName("SettingsIcon")}
         padding={!patches}
         onTitlePress={() => {
           if (lastThemePressTime >= Date.now()) {
@@ -388,7 +294,7 @@ export default () => {
             const otter = vstorage.patches.from === "local" ? "git" : "local";
             showToast(
               `Switched to ${otter === "git" ? "GitHub" : "local"} patches`,
-              getAssetIDByName("toast_invite_sent"),
+              getAssetIDByName("RetryIcon"),
             );
             vstorage.patches.from = otter;
             setPatches(undefined);
@@ -422,7 +328,10 @@ export default () => {
                       {
                         label: "Use latest commit as patches",
                         onPress: () => {
-                          showToast("Using latest commit");
+                          showToast(
+                            "Using latest commit",
+                            getAssetIDByName("ThreadPlusIcon"),
+                          );
                           delete vstorage.patches.commit;
                         },
                       },
@@ -445,7 +354,7 @@ export default () => {
                   color="TEXT_DANGER"
                   align="center"
                 >
-                  You got ratelimited by GitHub. Congrats!
+                  You've been ratelimited by GitHub.
                 </Text>
                 <Text
                   variant="text-md/semibold"
@@ -460,7 +369,7 @@ export default () => {
             <LineDivider addPadding={true} />
             <FormRow
               label="Load Theme"
-              leading={<FormRow.Icon source={getAssetIDByName("debug")} />}
+              leading={<FormRow.Icon source={getAssetIDByName("WrenchIcon")} />}
               onPress={async () => {
                 let theme: ThemeDataWithPlus;
                 try {
@@ -468,28 +377,14 @@ export default () => {
                 } catch (e) {
                   return showToast(e.toString(), getAssetIDByName("Small"));
                 }
-                await createFileBackend("vendetta_theme.json").set({
-                  id: id,
-                  selected: true,
-                  data: theme,
-                } as Theme);
-                showToast("Loaded theme", getAssetIDByName("Check"));
 
-                showConfirmationAlert({
-                  title: "Reload required",
-                  content:
-                    "A reload is required to load this theme. Do you want to reload?",
-                  confirmText: "Reload Now",
-                  confirmColor: "red" as ButtonColors,
-                  cancelText: "Later",
-                  onConfirm: () => RNBundleUpdaterManager.reload(),
-                });
+                apply(theme);
               }}
             />
             <FormRow
               label="Configure Theme"
               leading={
-                <FormRow.Icon source={getAssetIDByName("ic_message_edit")} />
+                <FormRow.Icon source={getAssetIDByName("SettingsIcon")} />
               }
               trailing={<FormRow.Arrow />}
               onPress={() => openConfigurePage(navigation)}
@@ -498,7 +393,7 @@ export default () => {
               label="Automatically Reapply Theme"
               subLabel="Automatically reapplies the theme upon reload when your system colors change"
               leading={
-                <FormRow.Icon source={getAssetIDByName("ic_message_edit")} />
+                <FormRow.Icon source={getAssetIDByName("DownloadIcon")} />
               }
               onValueChange={() =>
                 (vstorage.autoReapply = !vstorage.autoReapply)
@@ -513,7 +408,7 @@ export default () => {
                 vstorage.patches.from === "local" ? "local" : "GitHub"
               })`}
               leading={
-                <FormRow.Icon source={getAssetIDByName("ic_sync_24px")} />
+                <FormRow.Icon source={getAssetIDByName("ActivitiesIcon")} />
               }
               onPress={() => setPatches(undefined)}
             />

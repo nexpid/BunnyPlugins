@@ -68,12 +68,12 @@ export const ConfigurePage = () => {
     <ScrollView style={styles.window}>
       <BetterTableRowGroup
         title="Basic Config"
-        icon={getAssetIDByName("ic_cog_24px")}
+        icon={getAssetIDByName("SettingsIcon")}
       >
         <FormRow
           label="Theme Style"
           leading={
-            <FormRow.Icon source={getAssetIDByName("ic_message_edit")} />
+            <FormRow.Icon source={getAssetIDByName("PaintPaletteIcon")} />
           }
           trailing={
             <TrailingText>
@@ -105,7 +105,7 @@ export const ConfigurePage = () => {
       </BetterTableRowGroup>
       <BetterTableRowGroup
         title="Backgrounds"
-        icon={getAssetIDByName("ic_image")}
+        icon={getAssetIDByName("ImageIcon")}
         padding={true}
       >
         {collections.map((x, i, a) => (
@@ -119,7 +119,10 @@ export const ConfigurePage = () => {
               <View style={{ marginRight: 8, flexDirection: "column" }}>
                 <RN.TouchableOpacity
                   onPress={() => {
-                    showToast("Removed background", getAssetIDByName("Check"));
+                    showToast(
+                      "Removed background",
+                      getAssetIDByName("TrashIcon"),
+                    );
                     vstorage.config.wallpaper = "none";
                   }}
                   style={[
@@ -132,7 +135,7 @@ export const ConfigurePage = () => {
                   ]}
                 >
                   <RN.Image
-                    source={getAssetIDByName("img_none")}
+                    source={getAssetIDByName("EyeSlashIcon")}
                     style={{
                       width: "100%",
                       aspectRatio: 1 / 1,
@@ -157,7 +160,7 @@ export const ConfigurePage = () => {
                     onPress={() => {
                       showToast(
                         `Set background to ${x.title}`,
-                        getAssetIDByName("Check"),
+                        getAssetIDByName("ImagePlusIcon"),
                       );
                       vstorage.config.wallpaper = x.url;
                     }}

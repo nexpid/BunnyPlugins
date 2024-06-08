@@ -2,6 +2,7 @@ import { findByProps } from "@vendetta/metro";
 import { ReactNative as RN, stylesheet, url } from "@vendetta/metro/common";
 import { useProxy } from "@vendetta/storage";
 import { semanticColors } from "@vendetta/ui";
+import { getAssetIDByName } from "@vendetta/ui/assets";
 import { General } from "@vendetta/ui/components";
 import { showToast } from "@vendetta/ui/toasts";
 
@@ -46,7 +47,10 @@ export const CommitsPage = () => {
                       ? {
                           label: "Use commit as patches",
                           onPress: () => {
-                            showToast(`Using commit ${x.sha.slice(0, 7)}`);
+                            showToast(
+                              `Using commit ${x.sha.slice(0, 7)}`,
+                              getAssetIDByName("ThreadIcon"),
+                            );
                             vstorage.patches.commit = x.sha;
                           },
                         }
@@ -54,7 +58,10 @@ export const CommitsPage = () => {
                           label: "Don't use commit as patches",
                           isDestructive: true,
                           onPress: () => {
-                            showToast("Using latest commit");
+                            showToast(
+                              "Using latest commit",
+                              getAssetIDByName("ThreadPlusIcon"),
+                            );
                             delete vstorage.patches.commit;
                           },
                         },

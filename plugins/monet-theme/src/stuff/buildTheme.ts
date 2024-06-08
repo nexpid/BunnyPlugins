@@ -1,5 +1,8 @@
+import { logger } from "@vendetta";
 import { findByStoreName } from "@vendetta/metro";
 import { rawColors } from "@vendetta/ui";
+import { getAssetIDByName } from "@vendetta/ui/assets";
+import { showToast } from "@vendetta/ui/toasts";
 
 import { ThemeDataWithPlus } from "$/typings";
 
@@ -9,18 +12,36 @@ import { getLABShade, parseColor } from "./colors";
 
 const ThemeStore = findByStoreName("ThemeStore");
 
+export function apply(theme: ThemeDataWithPlus | false) {
+  const bunny = (window as any).bunny;
+
+  const val = theme
+    ? {
+        id: "monet-theme",
+        selected: false,
+        data: theme,
+      }
+    : null;
+
+  try {
+    bunny.managers.themes.selectTheme(val);
+    bunny.managers.themes.applyTheme(val);
+    if (!val) showToast("Cleared theme", getAssetIDByName("TrashIcon"));
+    else showToast("Applied theme", getAssetIDByName("PaintPaletteIcon"));
+  } catch (e: any) {
+    showToast("Couldn't apply theme!", getAssetIDByName("Small"));
+    logger.error(`Failed to apply theme!\n${e.stack}`);
+  }
+}
+
 export function build(patches: Patches): ThemeDataWithPlus {
   const theme: ThemeDataWithPlus = {
-    name: "Material You Theme 1.0.43",
-    description: "A Discord theme with Material You theming.",
+    name: "Material You Theme 2.0",
+    description: "A Bunny theme with Material You theming.",
     authors: [
       {
         name: "nexpid",
         id: "853550207039832084",
-      },
-      {
-        name: "Taki_Shiwa",
-        id: "466968658997149706",
       },
     ],
     semanticColors: {},
