@@ -140,7 +140,6 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: github-pages
-          path: built.tar
 
       - name: Copy files
         run: |
@@ -149,7 +148,7 @@ jobs:
           mv devpages/.git devpages-tmp/.git
 
           rm -rf devpages/*
-          tar -xvf built.tar -C devpages
+          tar -xvf artifact.tar -C devpages
 
           mv devpages-tmp/CNAME devpages/CNAME
           mv devpages-tmp/.git devpages/.git
