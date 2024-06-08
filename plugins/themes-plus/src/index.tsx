@@ -65,7 +65,7 @@ export default {
       isCustom: false,
     };
     vstorage.cache ??= {
-      links: {}
+      links: {},
     };
     enabled = true;
 
