@@ -162,7 +162,7 @@ jobs:
 
           git add .
 
-          git commit -m "chore: ${{ github.sha || 'deploy' }})" || true 
+          git commit -m "chore: ${{ 'github.sha' || 'deploy' }}" || true 
 
           git pull --ff-only
           git push
