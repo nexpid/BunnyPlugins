@@ -29,7 +29,7 @@ My plugins assume you're using version atleast **211.10** (211210) from **Januar
 ## 🌐 Localization
 
 <a href="https://crowdin.com/project/nexpid-vendetta-plugins">
-  <img src="./assets/localization.png" alt="Help me by translating my plugins into your language on Crowdin!" />
+  <img src=".github/localization.png" alt="Help me by translating my plugins into your language on Crowdin!" />
 </a>
 
 ## 📊 Stats
