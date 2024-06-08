@@ -45,5 +45,5 @@ jobs:
 
           git commit -m "style(readmes): update readmes (${{ github.sha || github.triggering_actor }})" || true
 
-          git pull
+          git pull --ff-only
           git push

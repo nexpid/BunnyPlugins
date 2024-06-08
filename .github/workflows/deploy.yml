@@ -50,7 +50,7 @@ jobs:
 
           git commit -m "chore: ci" || true
 
-          git pull
+          git pull --ff-only
           git push
   build:
     needs: ci

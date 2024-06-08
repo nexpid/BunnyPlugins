@@ -90,5 +90,5 @@ jobs:
 
           git commit -m "chore(i18n): sync translations (${{ github.sha || github.triggering_actor }})" || true
 
-          git pull
+          git pull --ff-only
           git push
