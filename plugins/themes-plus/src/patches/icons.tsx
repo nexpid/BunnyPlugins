@@ -46,6 +46,8 @@ export default function patchIcons(
 
         // @ts-expect-error these properties are missing from the Asset type
         const asset: CoolAsset = getAssetByID(source);
+        if (!asset?.httpServerLocation) return orig(...args);
+
         const assetIconpackLocation =
           iconpack &&
           [
