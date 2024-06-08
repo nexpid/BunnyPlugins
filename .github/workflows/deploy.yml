@@ -34,6 +34,7 @@ jobs:
         with:
           node-version: "21"
           cache: "pnpm"
+          cache-dependency-path: base/pnpm-lock.yaml
 
       - run: pnpm install --frozen-lockfile
         working-directory: base
@@ -74,14 +75,15 @@ jobs:
         with:
           path: base
 
-      - uses: pnpm/action-setup@v2
+      - uses: pnpm/action-setup@v4
         with:
           package_json_file: base/package.json
 
       - uses: actions/setup-node@v4
         with:
-          node-version: "18"
+          node-version: "21"
           cache: "pnpm"
+          cache-dependency-path: base/pnpm-lock.yaml
 
       - run: pnpm install --frozen-lockfile
         working-directory: base
