@@ -2,7 +2,7 @@ name: CI, Build and deploy
 
 on:
   push:
-    branches: [main]
+    branches: [main, dev]
     paths:
       - .github/workflows/deploy.yml
       - scripts/build.mjs
@@ -94,10 +94,18 @@ jobs:
 
     environment:
       name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+      url: ${{ steps.deployment-dev.outputs.page_url || steps.deployment.outputs.page_url }}
 
     runs-on: ubuntu-latest
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
+        if: github.ref_name == 'main'
         uses: actions/deploy-pages@v4
+
+      - name: Deploy to GitHub Pages (dev)
+        id: deployment-dev
+        if: github.ref_name == 'dev'
+        uses: actions/deploy-pages@v4
+        with:
+          token: ${{ secrets.DEV_PAGES_TOKEN }}
