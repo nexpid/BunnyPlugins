@@ -95,6 +95,7 @@ jobs:
       - name: Copy README
         working-directory: base
         run: cp README.md dist/index.md
+          cp assets dist/assets
 
       - uses: actions/jekyll-build-pages@v1
         with:
