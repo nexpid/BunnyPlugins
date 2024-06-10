@@ -24,7 +24,7 @@ export const getSysColors = () =>
   (
     window as any
   ).bunny.api.native.loader.getSysColors() as VendettaSysColors | null;
-const hasTheme = () =>
+export const hasTheme = () =>
   (window as any).bunny.managers.themes
     .getCurrentTheme()
     ?.id.includes("monet-theme");

@@ -27,6 +27,7 @@ import {
   commitsURL,
   devPatchesURL,
   getSysColors,
+  hasTheme,
   patchesURL,
   vstorage,
 } from "..";
@@ -42,6 +43,7 @@ import { openConfigurePage } from "./pages/ConfigurePage";
 const { ScrollView, View, Pressable } = General;
 const { FormRow, FormSwitchRow } = Forms;
 const { showSimpleActionSheet } = findByProps("showSimpleActionSheet");
+const IconButton = findByProps("IconButton").IconButton;
 
 export function setColorsFromDynamic(clr: VendettaSysColors) {
   vstorage.colors = {
@@ -64,6 +66,8 @@ export default () => {
   const [patches, setPatches] = React.useState<Patches | undefined>(undefined);
   stsCommits = commits;
   stsPatches = patches;
+
+  const [isLoadedTheme, setIsLoadedTheme] = React.useState(hasTheme());
 
   useProxy(vstorage);
 
@@ -370,6 +374,15 @@ export default () => {
             <FormRow
               label="Load Theme"
               leading={<FormRow.Icon source={getAssetIDByName("WrenchIcon")} />}
+              trailing={
+                <IconButton
+                  onPress={() => apply(null) && setIsLoadedTheme(false)}
+                  disabled={!isLoadedTheme}
+                  size="sm"
+                  variant={"secondary"}
+                  icon={getAssetIDByName("TrashIcon")}
+                />
+              }
               onPress={async () => {
                 let theme: ThemeDataWithPlus;
                 try {
@@ -378,7 +391,7 @@ export default () => {
                   return showToast(e.toString(), getAssetIDByName("Small"));
                 }
 
-                apply(theme);
+                if (apply(theme)) setIsLoadedTheme(true);
               }}
             />
             <FormRow

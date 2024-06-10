@@ -26,8 +26,10 @@ export function apply(theme: ThemeDataWithPlus | false) {
   try {
     bunny.managers.themes.selectTheme(val);
     bunny.managers.themes.applyTheme(val);
+
     if (!val) showToast("Cleared theme", getAssetIDByName("TrashIcon"));
     else showToast("Applied theme", getAssetIDByName("PaintPaletteIcon"));
+    return true;
   } catch (e: any) {
     showToast("Couldn't apply theme!", getAssetIDByName("Small"));
     logger.error(`Failed to apply theme!\n${e.stack}`);
