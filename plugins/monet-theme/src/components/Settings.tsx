@@ -19,6 +19,7 @@ import { BetterTableRowGroup } from "$/components/BetterTableRow";
 import LineDivider from "$/components/LineDivider";
 import { RichText } from "$/components/RichText";
 import Text from "$/components/Text";
+import { buttonVariantPolyfill } from "$/lib/redesign";
 import { LazyActionSheet } from "$/types";
 import { ThemeDataWithPlus, VendettaSysColors } from "$/typings";
 
@@ -378,8 +379,8 @@ export default () => {
                 <IconButton
                   onPress={() => apply(null) && setIsLoadedTheme(false)}
                   disabled={!isLoadedTheme}
-                  size="sm"
-                  variant={"secondary"}
+                  size="md"
+                  variant={buttonVariantPolyfill().destructive}
                   icon={getAssetIDByName("TrashIcon")}
                 />
               }
