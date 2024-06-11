@@ -20,6 +20,8 @@ export const devPatchesURL = "http://192.168.2.22:8730/patches.jsonc";
 export const commitsURL =
   "https://api.github.com/repos/nexpid/VendettaMonetTheme/commits?path=patches.jsonc";
 
+const ThemeStore = findByStoreName("ThemeStore");
+
 export const getSysColors = () =>
   (
     window as any
@@ -28,8 +30,13 @@ export const hasTheme = () =>
   (window as any).bunny.managers.themes
     .getCurrentTheme()
     ?.id.includes("monet-theme");
+export const getDiscordTheme = () => {
+  // getDefaultFallbackTheme is not exported :(
+  const theme = ThemeStore.theme;
 
-const ThemeStore = findByStoreName("ThemeStore");
+  if (theme.startsWith("vd-theme-")) return theme.split("-")[3];
+  else return theme;
+};
 
 export const vstorage = storage as {
   colors: {
@@ -40,7 +47,6 @@ export const vstorage = storage as {
     accent3: string;
   };
   config: {
-    style: "dark" | "light" | "auto";
     wallpaper: string | "none";
   };
   autoReapply: boolean;
@@ -69,7 +75,6 @@ export default {
       accent3: syscolors?.accent3[7] ?? "#787296",
     };
     vstorage.config ??= {
-      style: "auto",
       wallpaper: "none",
     };
     vstorage.autoReapply ??= false;
@@ -77,32 +82,22 @@ export default {
       from: "git",
     };
 
-    const oldColors = vstorage.reapplyCache.colors;
-    const oldTheme = vstorage.reapplyCache.theme;
+    const oldColors = vstorage.reapplyCache?.colors;
+    const oldTheme = vstorage.reapplyCache?.theme;
 
+    let lTheme = getDiscordTheme();
     vstorage.reapplyCache = {
       colors: JSON.stringify(syscolors),
-      theme: JSON.stringify(ThemeStore.theme),
+      theme: lTheme,
     };
 
-    if (
-      !oldTheme ||
-      !oldColors ||
-      !vstorage.autoReapply ||
-      !hasTheme() ||
-      !syscolors
-    )
-      return;
+    const reapply = async () => {
+      if (!vstorage.autoReapply || !hasTheme()) return;
+      showToast("Reapplying Monet Theme", getAssetIDByName("RetryIcon"));
 
-    if (
-      vstorage.reapplyCache.colors !== oldColors ||
-      vstorage.reapplyCache.theme !== oldTheme
-    ) {
-      showToast("Monet Theme is reapplying...", getAssetIDByName("RetryIcon"));
-
-      let patches: Patches;
+      let cpatches: Patches;
       try {
-        patches = parse(
+        cpatches = parse(
           (
             await (
               await safeFetch(
@@ -110,7 +105,7 @@ export default {
                   ? devPatchesURL
                   : patchesURL(),
                 {
-                  cache: "no-store",
+                  headers: { "cache-control": "public, max-age=600" },
                 },
               )
             ).text()
@@ -125,13 +120,31 @@ export default {
 
       let theme: ThemeDataWithPlus;
       try {
-        theme = build(patches);
+        theme = build(cpatches);
       } catch (e: any) {
         return showToast("Failed to build theme!", getAssetIDByName("Small"));
       }
 
       apply(theme);
-    }
+    };
+
+    if (
+      oldTheme &&
+      oldColors &&
+      syscolors &&
+      (vstorage.reapplyCache.colors !== oldColors ||
+        vstorage.reapplyCache.theme !== oldTheme)
+    )
+      reapply();
+
+    const onThemeChanged = () => {
+      const newLTheme = getDiscordTheme();
+      if (lTheme !== newLTheme) reapply();
+      lTheme = newLTheme;
+    };
+
+    ThemeStore.addChangeListener(onThemeChanged);
+    patches.push(() => ThemeStore.removeChangeListener(onThemeChanged));
   },
   onUnload: () => {
     patches.forEach((x) => x());

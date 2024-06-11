@@ -379,8 +379,12 @@ export default () => {
                 <IconButton
                   onPress={() => apply(null) && setIsLoadedTheme(false)}
                   disabled={!isLoadedTheme}
-                  size="md"
-                  variant={buttonVariantPolyfill().destructive}
+                  size="sm"
+                  variant={
+                    isLoadedTheme
+                      ? buttonVariantPolyfill().destructive
+                      : "secondary"
+                  }
                   icon={getAssetIDByName("TrashIcon")}
                 />
               }
@@ -405,7 +409,7 @@ export default () => {
             />
             <FormSwitchRow
               label="Automatically Reapply Theme"
-              subLabel="Automatically reapplies the theme upon reload when your system colors change"
+              subLabel="Automatically reapplies Monet Theme when you change your Discord color scheme or restart the app"
               leading={
                 <FormRow.Icon source={getAssetIDByName("DownloadIcon")} />
               }

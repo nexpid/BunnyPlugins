@@ -1,16 +1,13 @@
 import { logger } from "@vendetta";
-import { findByStoreName } from "@vendetta/metro";
 import { rawColors } from "@vendetta/ui";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { showToast } from "@vendetta/ui/toasts";
 
 import { ThemeDataWithPlus } from "$/typings";
 
-import { vstorage } from "..";
+import { getDiscordTheme, vstorage } from "..";
 import { Patches, PatchThing } from "../types";
 import { getLABShade, parseColor } from "./colors";
-
-const ThemeStore = findByStoreName("ThemeStore");
 
 export function apply(theme: ThemeDataWithPlus | false) {
   const bunny = (window as any).bunny;
@@ -51,12 +48,7 @@ export function build(patches: Patches): ThemeDataWithPlus {
     spec: 2,
   };
 
-  const style =
-    vstorage.config.style === "auto"
-      ? ThemeStore.theme !== "light"
-        ? "dark"
-        : "light"
-      : vstorage.config.style;
+  const style = getDiscordTheme();
 
   const get = <T extends PatchThing<any>>(lk: T): T["both"] =>
     Object.assign(lk.both, style === "light" ? lk.light : lk.dark);
@@ -76,22 +68,7 @@ export function build(patches: Patches): ThemeDataWithPlus {
     return shouldPut;
   };
 
-  if (patches.version === 2)
-    for (const [x, y] of entries(get(patches.replacers))) {
-      const clr = parseColor(y[0]);
-      if (!clr) continue;
-
-      for (const c of Object.keys(rawColors).filter((l) =>
-        l.startsWith(`${x.split("_")[0]}_`),
-      )) {
-        const shade = Number(c.split("_")[1]);
-        if (!checkShouldPut(shade, x.split("_").slice(1))) continue;
-
-        const mult = y[1];
-        theme.rawColors[c] = getLABShade(clr, shade, mult);
-      }
-    }
-  else if (patches.version === 3)
+  if (patches.version === 3)
     for (const [x, y] of entries(get(patches.replacers))) {
       const clr = parseColor(y.color);
       if (!clr) continue;
@@ -136,8 +113,8 @@ export function build(patches: Patches): ThemeDataWithPlus {
 
   if (patches.version === 3 && patches.plus) {
     theme.plus = {
-      version: 0,
       customOverlays: true,
+      version: 0,
       icons: {},
     };
 

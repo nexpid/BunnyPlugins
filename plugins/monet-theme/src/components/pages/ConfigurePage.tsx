@@ -2,26 +2,18 @@ import { React, ReactNative as RN, stylesheet } from "@vendetta/metro/common";
 import { useProxy } from "@vendetta/storage";
 import { semanticColors } from "@vendetta/ui";
 import { getAssetIDByName } from "@vendetta/ui/assets";
-import { Forms, General } from "@vendetta/ui/components";
+import { General } from "@vendetta/ui/components";
 import { showToast } from "@vendetta/ui/toasts";
 
 import { BetterTableRowGroup } from "$/components/BetterTableRow";
-import ChooseSheet from "$/components/sheets/ChooseSheet";
-import Text, { TrailingText } from "$/components/Text";
-import { openSheet, resolveSemanticColor } from "$/types";
+import Text from "$/components/Text";
+import { resolveSemanticColor } from "$/types";
 
-import { vstorage } from "../..";
+import { getDiscordTheme, vstorage } from "../..";
 import wallpapers from "../../stuff/wallpapers";
 import { stsPatches } from "../Settings";
 
 const { View, ScrollView } = General;
-const { FormRow } = Forms;
-
-const readableThemeStyle = {
-  auto: "Automatic",
-  dark: "Dark",
-  light: "Light",
-};
 
 export const ConfigurePage = () => {
   useProxy(vstorage);
@@ -58,7 +50,7 @@ export const ConfigurePage = () => {
       </ScrollView>
     );
 
-  const bestVariant = vstorage.config.style;
+  const bestVariant = getDiscordTheme() !== "light" ? "dark" : "light";
   const collections = wallpapers.filter(
     (x) => x.variant === bestVariant || x.variant === "any",
   );
@@ -66,43 +58,6 @@ export const ConfigurePage = () => {
   const dims = RN.Dimensions.get("window");
   return (
     <ScrollView style={styles.window}>
-      <BetterTableRowGroup
-        title="Basic Config"
-        icon={getAssetIDByName("SettingsIcon")}
-      >
-        <FormRow
-          label="Theme Style"
-          leading={
-            <FormRow.Icon source={getAssetIDByName("PaintPaletteIcon")} />
-          }
-          trailing={
-            <TrailingText>
-              {readableThemeStyle[vstorage.config.style]}
-            </TrailingText>
-          }
-          onPress={() =>
-            openSheet(ChooseSheet, {
-              title: "Theme Style",
-              value: vstorage.config.style,
-              options: [
-                {
-                  name: readableThemeStyle.auto,
-                  value: "auto",
-                },
-                {
-                  name: readableThemeStyle.dark,
-                  value: "dark",
-                },
-                {
-                  name: readableThemeStyle.light,
-                  value: "light",
-                },
-              ],
-              callback: (v) => (vstorage.config.style = v as any),
-            })
-          }
-        />
-      </BetterTableRowGroup>
       <BetterTableRowGroup
         title="Backgrounds"
         icon={getAssetIDByName("ImageIcon")}
