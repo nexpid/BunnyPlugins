@@ -420,10 +420,10 @@ export default () => {
             />
             <FormRow
               label="Reload Theme Patches"
-              subLabel={`Patch v${patches.version}, ${
-                JSON.stringify(patches).length / 100
-              }kB (using ${
-                vstorage.patches.from === "local" ? "local" : "GitHub"
+              subLabel={`Patch v${patches.version} (${
+                vstorage.patches.from === "local"
+                  ? "from a local source"
+                  : "from GitHub"
               })`}
               leading={
                 <FormRow.Icon source={getAssetIDByName("ActivitiesIcon")} />
