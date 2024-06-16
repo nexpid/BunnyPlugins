@@ -15,7 +15,7 @@ import { Iconpack } from "../types";
 
 const IconButton = findByProps("IconButton").IconButton;
 
-const { FormRow, FormCheckbox } = Forms;
+const { FormRow } = Forms;
 
 const wait = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
@@ -107,10 +107,10 @@ export default function IconpackRow({
     };
 
     let balls = vstorage.downloadIconpackModalDismissed;
-    if (!vstorage.downloadIconpackModalDismissed && !willUninstall)
+    if (!balls && !willUninstall)
       showConfirmationAlert({
         title: lang.format("alert.downloadpack.title", {}),
-        //@ts-expect-error body is missing from type
+        //@ts-expect-error children is missing from type
         children: (
           <>
             <Text
@@ -161,22 +161,25 @@ export default function IconpackRow({
       }
       trailing={
         <RN.View style={styles.headerTrailing}>
-          <RN.View style={styles.actions}>
-            <IconButton
-              onPress={doInstall}
-              destructive={packStatus.installed}
-              loading={!!packStatus.loading}
-              size="sm"
-              variant={
-                packStatus.installed
-                  ? buttonVariantPolyfill().destructive
-                  : "secondary"
-              }
-              icon={getAssetIDByName(
-                packStatus.installed ? "TrashIcon" : "DownloadIcon",
-              )}
-            />
-          </RN.View>
+          {/* TODO beta:tm: iconpack downloading */}
+          {IS_DEV && (
+            <RN.View style={styles.actions}>
+              <IconButton
+                onPress={doInstall}
+                destructive={packStatus.installed}
+                loading={!!packStatus.loading}
+                size="sm"
+                variant={
+                  packStatus.installed
+                    ? buttonVariantPolyfill().destructive
+                    : "secondary"
+                }
+                icon={getAssetIDByName(
+                  packStatus.installed ? "TrashIcon" : "DownloadIcon",
+                )}
+              />
+            </RN.View>
+          )}
           <FormRow.Radio selected={vstorage.iconpack.pack === pack.id} />
         </RN.View>
       }
