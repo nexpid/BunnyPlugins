@@ -22,4 +22,4 @@
   <h1>Cloud Sync</h1>
 </div>
 
-Syncs your plugins and themes to the cloud
+Syncs your plugins, themes and fonts to the cloud
