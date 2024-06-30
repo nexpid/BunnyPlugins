@@ -1,12 +1,12 @@
-import { find, findByProps } from "@vendetta/metro";
+import { find, findByName, findByProps } from "@vendetta/metro";
 import { ReactNative as RN } from "@vendetta/metro/common";
-import RNWebView from "react-native-webview";
+import { type StateStorage } from "zustand/middleware";
 
 //
-// JS wrappers
+// JS deps
 //
 export const WebView = find((x) => x?.WebView && !x.default)
-  .WebView as typeof RNWebView;
+  .WebView as typeof import("react-native-webview").default;
 
 export const Svg = findByProps("SvgXml") as typeof import("react-native-svg");
 
@@ -19,6 +19,12 @@ export const Reanimated = findByProps(
 
 export const FlashList = findByProps("FlashList")
   .FlashList as typeof import("@shopify/flash-list").FlashList;
+
+export const zustand = {
+  create: findByName("create") as typeof import("zustand").create,
+};
+
+export const RNMMKVManager = RN.NativeModules.MMKVManager as StateStorage;
 
 //
 // raw native modules
@@ -75,14 +81,6 @@ export const RNFileManager = (RN.NativeModules.DCDFileManager ??
 // TODO finish types for RNBundleUpdaterManager
 export const RNBundleUpdaterManager = RN.NativeModules.BundleUpdaterManager as {
   reload: () => void;
-};
-
-export const RNMMKVManager = RN.NativeModules.MMKVManager as {
-  getItem: (key: string) => Promise<string | null>;
-  removeItem: (key: string) => void;
-  setItem: (key: string, value: string) => void;
-  refresh: (exclude: string[]) => Promise<Record<string, string>>;
-  clear: () => void;
 };
 
 export const RNSoundManager = RN.NativeModules.DCDSoundManager as {

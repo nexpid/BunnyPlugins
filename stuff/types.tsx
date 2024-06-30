@@ -5,6 +5,7 @@ import {
   findByProps,
   findByStoreName,
 } from "@vendetta/metro";
+import { FluxDispatcher } from "@vendetta/metro/common";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { showToast } from "@vendetta/ui/toasts";
 
@@ -161,6 +162,11 @@ export function androidifyColor(color: string, alpha = 255): number {
     ((parseInt(g, 16) & 0xff) << 8) |
     (parseInt(b, 16) & 0xff)
   );
+}
+
+export function fluxSubscribe(topic: string, callback: () => void) {
+  FluxDispatcher.subscribe(topic, callback);
+  return () => FluxDispatcher.unsubscribe(topic, callback);
 }
 
 // ...
