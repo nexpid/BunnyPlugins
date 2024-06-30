@@ -1,6 +1,6 @@
 import { safeFetch } from "@vendetta/utils";
 
-import { vstorage } from "..";
+import { useCacheStore } from "../stores/CacheStore";
 import { IconpackConfig } from "../types";
 import constants from "./constants";
 
@@ -27,22 +27,24 @@ export default async function getIconpackData(
       .then((x) => x.replaceAll("\r", "").split("\n")),
   ]);
 
+  const cache = useCacheStore.getState();
+
   // save to cache!!!
   if (config.status === "fulfilled" && config.value !== ignore)
-    vstorage.cache.links[configUrl] = JSON.stringify(config.value);
+    cache.writeCache(configUrl, config.value);
   if (tree.status === "fulfilled" && tree.value)
-    vstorage.cache.links[treeUrl] = JSON.stringify(tree.value);
+    cache.writeCache(treeUrl, tree.value);
 
   // read from cache!!!
-  if (config.status === "rejected" && vstorage.cache.links[configUrl])
+  if (config.status === "rejected" && cache.isCached(configUrl))
     config = {
       status: "fulfilled",
-      value: JSON.parse(vstorage.cache.links[configUrl]),
+      value: cache.readCache(configUrl),
     };
-  if (tree.status === "rejected" && vstorage.cache.links[treeUrl])
+  if (tree.status === "rejected" && cache.isCached(treeUrl))
     tree = {
       status: "fulfilled",
-      value: JSON.parse(vstorage.cache.links[treeUrl]),
+      value: cache.readCache(treeUrl),
     };
 
   return {

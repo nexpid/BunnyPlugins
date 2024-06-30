@@ -7,6 +7,7 @@ import { ConfigIconpackMode, enabled, InactiveReason, vstorage } from "..";
 import patchIcons from "../patches/icons";
 import patchMentionLineColors from "../patches/mentionLineColor";
 import patchUnreadBadgeColor from "../patches/unreadBadgeColor";
+import { useCacheStore } from "../stores/CacheStore";
 import { IconpackConfig } from "../types";
 import { state, updateState } from "./active";
 import constants from "./constants";
@@ -24,9 +25,11 @@ export default async function load() {
   patches.forEach((x) => x());
   patches.length = 0;
 
+  const cache = useCacheStore.getState();
+
   state.loading = true;
   state.active = false;
-  state.iconpack = vstorage.cache.list ? JSON.parse(vstorage.cache.list) : null;
+  state.iconpack = cache.list ? JSON.parse(cache.list) : null;
   state.patches = [];
   state.inactive = [];
   updateState();
@@ -42,7 +45,7 @@ export default async function load() {
         ).json()
       ).list,
     };
-    vstorage.cache.list = JSON.stringify(state.iconpack.list);
+    cache.list = JSON.stringify(state.iconpack.list);
   } catch {
     if (!state.iconpack) {
       state.loading = false;

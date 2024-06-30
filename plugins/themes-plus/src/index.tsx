@@ -40,10 +40,6 @@ export const vstorage = storage as {
     };
     isCustom: boolean;
   };
-  cache: {
-    list?: string;
-    links: Record<string, string>;
-  };
   downloadIconpackModalDismissed?: boolean;
 };
 
@@ -63,9 +59,6 @@ export default {
         },
       },
       isCustom: false,
-    };
-    vstorage.cache ??= {
-      links: {},
     };
     enabled = true;
 
