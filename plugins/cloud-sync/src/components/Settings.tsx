@@ -1,11 +1,12 @@
-import { findByProps, findByStoreName } from "@vendetta/metro";
+import { findByProps } from "@vendetta/metro";
 import {
+  i18n,
   NavigationNative,
   React,
   ReactNative as RN,
 } from "@vendetta/metro/common";
-import { useProxy, wrapSync } from "@vendetta/storage";
-import { showConfirmationAlert, showInputAlert } from "@vendetta/ui/alerts";
+import { useProxy } from "@vendetta/storage";
+import { showConfirmationAlert } from "@vendetta/ui/alerts";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { Forms, General } from "@vendetta/ui/components";
 import { showToast } from "@vendetta/ui/toasts";
@@ -13,23 +14,25 @@ import { showToast } from "@vendetta/ui/toasts";
 import { BetterTableRowGroup } from "$/components/BetterTableRow";
 import LineDivider from "$/components/LineDivider";
 import Text from "$/components/Text";
+import { Lang } from "$/lang";
 import { openSheet } from "$/types";
 import RNFS from "$/wrappers/RNFS";
 
-import { cache, emitterAvailable, lang, vstorage } from "..";
-import constants, { defaultClientId, defaultRoot } from "../constants";
+import { lang, vstorage } from "..";
+import constants, { defaultClientId, defaultHost } from "../constants";
+import { useAuthorizationStore } from "../stores/AuthorizationStore";
+import { fillData, useCacheStore } from "../stores/CacheStore";
 import {
-  currentAuthorization,
-  deleteSaveData,
-  syncSaveData,
-  uploadFile,
+  decompressRawData,
+  deleteData,
+  getRawData,
+  saveData,
 } from "../stuff/api";
 import { openOauth2Modal } from "../stuff/oauth2";
-import { makeSound } from "../stuff/sound";
 import { grabEverything, setImportCallback } from "../stuff/syncStuff";
-import { CryptoWebViewHandler, decrypt, encrypt } from "./CryptoWebView";
+import { SavedUserData } from "../types";
 import DataStat from "./DataStat";
-import PluginSettingsPage from "./pages/PluginSettingsPage";
+import IgnoredPluginsPage from "./pages/IgnoredPluginsPage";
 import ImportActionSheet from "./sheets/ImportActionSheet";
 
 const DocumentPicker = findByProps("pickSingle", "isCancel");
@@ -38,19 +41,10 @@ const { downloadMediaAsset } = findByProps("downloadMediaAsset");
 const { ScrollView, View } = General;
 const { FormRow, FormInput, FormSwitchRow } = Forms;
 
-const UserStore = findByStoreName("UserStore");
-
-const deltaruneCreepyJingle = wrapSync(
-  makeSound(`${constants.raw}assets/snd_creepyjingle.ogg`, 1.6),
-);
-const undertaleMysteryGo = wrapSync(
-  makeSound(`${constants.raw}assets/snd_mysterygo.ogg`, 2.2),
-);
-
 export default function () {
   const [showDev, setShowDev] = React.useState(false);
   const [isBusy, setIsBusy] = React.useState([]);
-  useProxy(cache);
+  const { data } = useCacheStore();
   useProxy(vstorage);
 
   const setBusy = (x: string) =>
@@ -61,15 +55,13 @@ export default function () {
 
   const navigation = NavigationNative.useNavigation();
 
-  const isAuthed = !!currentAuthorization();
-  const hasData = !!cache.save;
+  const { isAuthorized } = useAuthorizationStore();
 
   return (
     <ScrollView>
-      <CryptoWebViewHandler />
       <BetterTableRowGroup
-        title={lang.format("settings.current_data.title", {})}
-        icon={getAssetIDByName("ic_contact_sync")}
+        title={lang.format("settings.your_data.title", {})}
+        icon={getAssetIDByName("MobilePhoneShareIcon")}
         padding={true}
       >
         <View
@@ -81,62 +73,77 @@ export default function () {
           }}
         >
           <DataStat
-            count={cache.save?.sync?.plugins?.length ?? "-"}
-            subtitle={"settings.current_data.plugins"}
+            count={data ? Object.keys(data.plugins).length : "-"}
+            subtitle={"settings.your_data.plugins"}
           />
           <DataStat
-            count={cache.save?.sync?.themes?.length ?? "-"}
-            subtitle={"settings.current_data.themes"}
+            count={data ? Object.keys(data.themes).length : "-"}
+            subtitle={"settings.your_data.themes"}
+          />
+          <DataStat
+            count={
+              data
+                ? Object.keys(data.fonts.installed).length +
+                  data.fonts.custom.length
+                : "-"
+            }
+            subtitle={"settings.your_data.fonts"}
           />
         </View>
+        {data && (
+          <Text variant="text-sm/medium" color="TEXT_MUTED" align="center">
+            {Lang.basicFormat(
+              lang.format("settings.your_data.last_synced", {
+                date: new Date(data.at).toLocaleString(i18n.getLocale(), {
+                  weekday: "long",
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                  hour: "numeric",
+                  minute: "numeric",
+                  second: "numeric",
+                }),
+              }),
+            )}
+          </Text>
+        )}
       </BetterTableRowGroup>
       <BetterTableRowGroup
         title={lang.format("settings.config.title", {})}
-        icon={getAssetIDByName("ic_cog_24px")}
+        icon={getAssetIDByName("SettingsIcon")}
         onTitlePress={() =>
           lastTap >= Date.now()
-            ? (showDev
-                ? undertaleMysteryGo.play()
-                : deltaruneCreepyJingle.play(),
-              setShowDev(!showDev),
-              (lastTap = 0))
+            ? (setShowDev(!showDev), (lastTap = 0))
             : (lastTap = Date.now() + 500)
         }
       >
         <FormSwitchRow
           label={lang.format("settings.config.auto_save.title", {})}
           subLabel={lang.format("settings.config.auto_save.description", {})}
-          leading={
-            <FormRow.Icon source={getAssetIDByName("ic_contact_sync")} />
+          leading={<FormRow.Icon source={getAssetIDByName("RefreshIcon")} />}
+          onValueChange={() =>
+            (vstorage.config.autoSync = !vstorage.config.autoSync)
           }
-          onValueChange={() => (vstorage.autoSync = !vstorage.autoSync)}
-          value={vstorage.autoSync}
+          value={vstorage.config.autoSync}
         />
-        {!emitterAvailable && vstorage.autoSync && (
-          <Text
-            variant="text-md/semibold"
-            color="TEXT_DANGER"
-            style={{ marginHorizontal: 20, marginVertical: 2 }}
-          >
-            You must reinstall your client in order to use Auto Save!
-          </Text>
-        )}
         <FormSwitchRow
           label={lang.format("settings.config.settings_pin.title", {})}
           subLabel={lang.format("settings.config.settings_pin.description", {})}
-          leading={<FormRow.Icon source={getAssetIDByName("ic_message_pin")} />}
+          leading={<FormRow.Icon source={getAssetIDByName("PinIcon")} />}
           onValueChange={() =>
-            (vstorage.addToSettings = !vstorage.addToSettings)
+            (vstorage.config.addToSettings = !vstorage.config.addToSettings)
           }
-          value={vstorage.addToSettings}
+          value={vstorage.config.addToSettings}
         />
         <FormRow
-          label={lang.format("page.plugin_settings.title", {})}
-          leading={<FormRow.Icon source={getAssetIDByName("debug")} />}
+          label={lang.format("page.ignored_plugins.title", {})}
+          leading={
+            <FormRow.Icon source={getAssetIDByName("ListBulletsIcon")} />
+          }
           trailing={<FormRow.Arrow />}
           onPress={() =>
             navigation.push("VendettaCustomPage", {
-              render: PluginSettingsPage,
+              render: IgnoredPluginsPage,
             })
           }
         />
@@ -146,30 +153,28 @@ export default function () {
             <FormRow
               label={lang.format("settings.dev.api_url.title", {})}
               subLabel={lang.format("settings.dev.api_url.description", {})}
-              leading={
-                <FormRow.Icon source={getAssetIDByName("ic_message_edit")} />
-              }
+              leading={<FormRow.Icon source={getAssetIDByName("PencilIcon")} />}
             />
             <FormInput
               title=""
-              placeholder={defaultRoot}
-              value={constants.api}
-              onChange={(x: string) => (vstorage.host = x || defaultRoot)}
+              placeholder={defaultHost}
+              value={vstorage.custom.host || defaultHost}
+              onChange={(x: string) =>
+                (vstorage.custom.host = x.length > 0 ? x : null)
+              }
               style={{ marginTop: -25, marginHorizontal: 12 }}
             />
             <FormRow
               label={lang.format("settings.dev.client_id.title", {})}
               subLabel={lang.format("settings.dev.client_id.description", {})}
-              leading={
-                <FormRow.Icon source={getAssetIDByName("ic_message_edit")} />
-              }
+              leading={<FormRow.Icon source={getAssetIDByName("PencilIcon")} />}
             />
             <FormInput
               title=""
               placeholder={defaultClientId}
-              value={constants.oauth2.clientId}
+              value={constants.oauth2.clientId || defaultClientId}
               onChange={(x: string) =>
-                (vstorage.clientId = x || defaultClientId)
+                (vstorage.custom.clientId = x.length > 0 ? x : null)
               }
               style={{ marginTop: -25, marginHorizontal: 12 }}
             />
@@ -178,24 +183,25 @@ export default function () {
       </BetterTableRowGroup>
       <BetterTableRowGroup
         title={lang.format("settings.auth.title", {})}
-        icon={getAssetIDByName("lock")}
+        icon={getAssetIDByName("LockIcon")}
       >
-        {currentAuthorization() ? (
+        {isAuthorized() ? (
           <>
             <FormRow
               label={lang.format("settings.auth.log_out.title", {})}
               subLabel={lang.format("settings.auth.log_out.description", {})}
+              // STUB use new logout icon :3
               leading={
                 <FormRow.Icon source={getAssetIDByName("ic_logout_24px")} />
               }
+              destructive
               onPress={() =>
                 showConfirmationAlert({
                   title: lang.format("alert.log_out.title", {}),
                   content: lang.format("alert.log_out.body", {}),
-                  confirmColor: "BRAND" as ButtonColors,
                   onConfirm: () => {
-                    delete vstorage.auth[UserStore.getCurrentUser().id];
-                    delete cache.save;
+                    useAuthorizationStore.getState().setToken(null);
+                    useCacheStore.getState().updateData(null);
 
                     showToast(
                       lang.format("toast.logout", {}),
@@ -211,21 +217,21 @@ export default function () {
                 "settings.auth.delete_data.description",
                 {},
               )}
-              leading={<FormRow.Icon source={getAssetIDByName("trash")} />}
+              leading={<FormRow.Icon source={getAssetIDByName("TrashIcon")} />}
               onPress={() =>
                 showConfirmationAlert({
                   title: lang.format("alert.delete_data.title", {}),
                   content: lang.format("alert.delete_data.body", {}),
                   confirmText: lang.format("alert.delete_data.confirm", {}),
-                  confirmColor: "RED" as ButtonColors,
+                  confirmColor: "red" as ButtonColors,
                   onConfirm: async () => {
-                    await deleteSaveData();
-                    delete vstorage.auth[UserStore.getCurrentUser().id];
-                    delete cache.save;
+                    await deleteData();
+                    useAuthorizationStore.getState().setToken(null);
+                    useCacheStore.getState().updateData(null);
 
                     showToast(
                       lang.format("toast.deleted_data", {}),
-                      getAssetIDByName("trash"),
+                      getAssetIDByName("TrashIcon"),
                     );
                   },
                 })
@@ -235,29 +241,30 @@ export default function () {
         ) : (
           <FormRow
             label={lang.format("settings.auth.authorize", {})}
-            leading={<FormRow.Icon source={getAssetIDByName("copy")} />}
+            leading={<FormRow.Icon source={getAssetIDByName("LinkIcon")} />}
             trailing={FormRow.Arrow}
             onPress={openOauth2Modal}
           />
         )}
       </BetterTableRowGroup>
       <BetterTableRowGroup
-        title={lang.format("settings.data.title", {})}
-        icon={getAssetIDByName("ic_message_edit")}
-        padding={!isAuthed || !hasData}
+        title={lang.format("settings.manage_data.title", {})}
+        icon={getAssetIDByName("UserIcon")}
+        padding={!isAuthorized() || !data}
       >
-        {isAuthed && hasData ? (
+        {isAuthorized() && !!data ? (
           <>
             <FormRow
-              label={lang.format("settings.data.save_data.title", {})}
-              subLabel={lang.format("settings.data.save_data.description", {})}
+              label={lang.format("settings.manage_data.save_data.title", {})}
+              subLabel={lang.format(
+                "settings.manage_data.save_data.description",
+                {},
+              )}
               leading={
                 isBusy.includes("save_api") ? (
                   <RN.ActivityIndicator size="small" />
                 ) : (
-                  <FormRow.Icon
-                    source={getAssetIDByName("ic_file_upload_24px")}
-                  />
+                  <FormRow.Icon source={getAssetIDByName("UploadIcon")} />
                 )
               }
               onPress={() =>
@@ -265,18 +272,19 @@ export default function () {
                   title: lang.format("alert.save_data.title", {}),
                   content: lang.format("alert.save_data.body", {}),
                   confirmText: lang.format("alert.save_data.confirm", {}),
-                  confirmColor: "BRAND" as ButtonColors,
                   onConfirm: async () => {
                     setBusy("save_api");
                     try {
-                      cache.save = await syncSaveData(await grabEverything());
+                      const everything = await grabEverything();
+                      await saveData(everything);
+                      useCacheStore.getState().updateData(fillData(everything));
 
                       showToast(
                         lang.format("toast.saved_data", {}),
-                        getAssetIDByName("Check"),
+                        getAssetIDByName("CircleCheckIcon-primary"),
                       );
-                    } catch (e) {
-                      showToast(String(e), getAssetIDByName("Small"));
+                    } catch {
+                      // handled in saveData
                     }
 
                     unBusy("save_api");
@@ -287,14 +295,14 @@ export default function () {
             <FormRow
               label={lang.format("sheet.import_data.title", {})}
               subLabel={lang.format(
-                "settings.data.import_data.description",
+                "settings.manage_data.import_data.description",
                 {},
               )}
               leading={
                 isBusy.includes("import_api") ? (
                   <RN.ActivityIndicator size="small" />
                 ) : (
-                  <FormRow.Icon source={getAssetIDByName("ic_download_24px")} />
+                  <FormRow.Icon source={getAssetIDByName("DownloadIcon")} />
                 )
               }
               onPress={() => {
@@ -308,106 +316,72 @@ export default function () {
             />
             <LineDivider addPadding={true} />
             <FormRow
-              label={lang.format("settings.data.export_local_data.title", {})}
+              label={lang.format(
+                "settings.manage_data.download_compressed.title",
+                {},
+              )}
               subLabel={lang.format(
-                "settings.data.export_local_data.description",
+                "settings.manage_data.download_compressed.description",
                 {},
               )}
               leading={
-                isBusy.includes("export_local") ? (
+                isBusy.includes("download_compressed") ? (
                   <RN.ActivityIndicator size="small" />
                 ) : (
-                  <FormRow.Icon
-                    source={getAssetIDByName("ic_file_upload_24px")}
-                  />
-                )
-              }
-              onPress={async () => {
-                showInputAlert({
-                  title: lang.format("alert.encryption_key.title", {}),
-                  placeholder: lang.format(
-                    "alert.encryption_key.placeholder",
-                    {},
-                  ),
-                  confirmText: lang.format("alert.encryption_key.confirm", {}),
-                  onConfirm: async (inp) => {
-                    if (!inp)
-                      throw new Error(
-                        lang.format("alert.encryption_key.required", {}),
-                      );
-                    if (isBusy.length) return;
-                    setBusy("local_export");
-
-                    let text: string;
-                    try {
-                      text = await encrypt(JSON.stringify(cache.save), inp);
-                    } catch {
-                      unBusy("local_export");
-                      return showToast(
-                        lang.format("toast.encrypt_fail", {}),
-                        getAssetIDByName("Small"),
-                      );
-                    }
-
-                    if (RNFS.hasRNFS) {
-                      // yay!
-                      const file = `CloudSync_${Math.floor(
-                        Math.random() * 10000,
-                      )}.txt`;
-                      RNFS.writeFile(
-                        RNFS.DownloadDirectoryPath + `/${file}`,
-                        text,
-                      );
-                      showToast(
-                        lang.format("toast.backup_saved", { file }),
-                        getAssetIDByName("ic_file_small_document"),
-                      );
-                    } else {
-                      showToast(
-                        lang.format("toast.backup_download_prepare", {}),
-                        getAssetIDByName("ic_upload"),
-                      );
-                      let data: Awaited<ReturnType<typeof uploadFile>>;
-                      try {
-                        data = await uploadFile(text);
-                      } catch (e) {
-                        unBusy("local_export");
-                        return showToast(
-                          e?.message ?? `${e}`,
-                          getAssetIDByName("Small"),
-                        );
-                      }
-
-                      showToast(
-                        lang.format("toast.backup_saved", { file: data.key }),
-                        getAssetIDByName("ic_file_small_document"),
-                      );
-                      downloadMediaAsset(
-                        `https://hst.sh/raw/${data.key}.txt`,
-                        3,
-                      );
-                    }
-                    unBusy("local_export");
-                  },
-                });
-              }}
-            />
-            <FormRow
-              label={lang.format("settings.data.import_local_data.title", {})}
-              subLabel={lang.format(
-                "settings.data.import_local_data.description",
-                {},
-              )}
-              leading={
-                isBusy.includes("import_local") ? (
-                  <RN.ActivityIndicator size="small" />
-                ) : (
-                  <FormRow.Icon source={getAssetIDByName("ic_download_24px")} />
+                  <FormRow.Icon source={getAssetIDByName("DownloadIcon")} />
                 )
               }
               onPress={async () => {
                 if (isBusy.length) return;
-                setBusy("import_local");
+                setBusy("download_compressed");
+
+                let data: string;
+                try {
+                  data = await getRawData();
+                } catch {
+                  return unBusy("download_compressed");
+                }
+
+                try {
+                  const file = `CloudSync_${new Array(5)
+                    .fill(0)
+                    .map(() => Math.floor(Math.random() * 9) + 1)
+                    .join("")}.txt`;
+                  await RNFS.writeFile(
+                    RNFS.DownloadDirectoryPath + "/" + file,
+                    data,
+                  );
+
+                  showToast(
+                    `Downloaded as ${file}`,
+                    getAssetIDByName("FileIcon"),
+                  );
+                } catch (e) {
+                  showToast(e.toString(), getAssetIDByName("CircleXIcon"));
+                }
+
+                unBusy("download_compressed");
+              }}
+            />
+            <FormRow
+              label={lang.format(
+                "settings.manage_data.import_compressed.title",
+                {},
+              )}
+              subLabel={lang.format(
+                "settings.manage_data.import_compressed.description",
+                {},
+              )}
+              leading={
+                isBusy.includes("import_compressed") ? (
+                  <RN.ActivityIndicator size="small" />
+                ) : (
+                  <FormRow.Icon source={getAssetIDByName("UploadIcon")} />
+                )
+              }
+              onPress={async () => {
+                if (isBusy.length) return;
+                setBusy("import_compressed");
 
                 let text: string;
                 try {
@@ -418,57 +392,40 @@ export default function () {
                       copyTo: "cachesDirectory",
                     },
                   );
-                  if (type === "text/plain" || !fileCopyUri)
+                  if (type === "text/plain" && fileCopyUri)
                     text = await RNFS.readFile(fileCopyUri.slice(5), "utf8");
                 } catch (e) {
                   if (!DocumentPicker.isCancel(e))
                     showToast(
-                      lang.format("toast.errored", { error: e }),
-                      getAssetIDByName("Small"),
+                      lang.format(e.toString(), {}),
+                      getAssetIDByName("CircleXIcon"),
                     );
                 }
 
-                unBusy("import_local");
+                unBusy("import_compressed");
                 if (!text) return;
 
-                showInputAlert({
-                  title: lang.format("alert.decryption_key.title", {}),
-                  placeholder: lang.format(
-                    "alert.decryption_key.placeholder",
-                    {},
-                  ),
-                  confirmText: lang.format("alert.decryption_key.confirm", {}),
-                  onConfirm: async (inp) => {
-                    if (!inp)
-                      throw new Error(
-                        lang.format("alert.decryption_key.required", {}),
-                      );
-                    if (isBusy.length) return;
-                    setBusy("import_local");
+                let data: SavedUserData;
+                try {
+                  data = await decompressRawData(text);
+                } catch {
+                  return unBusy("import_compressed");
+                }
 
-                    try {
-                      const data = JSON.parse(await decrypt(text, inp));
-                      openSheet(ImportActionSheet, {
-                        save: data,
-                        navigation,
-                      });
-                      unBusy("import_local");
-                      setImportCallback((x) =>
-                        x ? setBusy("import_local") : unBusy("import_local"),
-                      );
-                    } catch {
-                      unBusy("import_local");
-                      return showToast(
-                        lang.format("toast.decrypt_fail", {}),
-                        getAssetIDByName("Small"),
-                      );
-                    }
-                  },
+                openSheet(ImportActionSheet, {
+                  data,
+                  navigation,
                 });
+                unBusy("import_compressed");
+                setImportCallback((val) =>
+                  val
+                    ? setBusy("import_compressed")
+                    : unBusy("import_compressed"),
+                );
               }}
             />
           </>
-        ) : !isAuthed ? (
+        ) : !isAuthorized() ? (
           <Text variant="text-md/semibold" color="TEXT_NORMAL" align="center">
             {lang.format("settings.label.auth_needed", {})}
           </Text>

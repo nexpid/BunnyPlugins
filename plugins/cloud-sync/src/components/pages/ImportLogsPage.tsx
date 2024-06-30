@@ -22,9 +22,10 @@ export function addLog(scope: keyof typeof logScopes, message: string) {
 }
 
 const logScopes = {
-  themes: "#42f5a4",
-  plugins: "#4290f5",
-  importer: "#e6f542",
+  plugins: "#70d6ff",
+  themes: "#ff70a6",
+  fonts: "#ff9770",
+  importer: "#ffd670",
 };
 
 const styles = stylesheet.createThemedStyleSheet({

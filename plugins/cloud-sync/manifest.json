@@ -9,6 +9,6 @@
   ],
   "main": "src/index.ts",
   "vendetta": {
-    "icon": "ic_contact_sync"
+    "icon": "MobilePhoneShareIcon"
   }
 }

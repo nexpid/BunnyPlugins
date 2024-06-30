@@ -1,3 +1,4 @@
+import { settings } from "@vendetta";
 import { React, ReactNative as RN, stylesheet } from "@vendetta/metro/common";
 import { plugins } from "@vendetta/plugins";
 import { themes } from "@vendetta/themes";
@@ -17,9 +18,11 @@ import {
   openSheet,
 } from "$/types";
 
-import { cache, canImport, isPluginProxied, lang } from "../..";
+import { canImport, isPluginProxied, lang } from "../..";
+import { useCacheStore } from "../../stores/CacheStore";
+import { getFonts, hasFontByName, hasFontBySource } from "../../stuff/fonts";
 import { importData, SyncImportOptions } from "../../stuff/syncStuff";
-import { DBSave } from "../../types/api/latest";
+import { SavedUserData } from "../../types";
 import { openImportLogsPage } from "../pages/ImportLogsPage";
 
 const { View } = General;
@@ -27,21 +30,28 @@ const { FormCheckboxRow } = Forms;
 
 export default function ImportActionSheet({
   defOptions,
-  save = cache.save,
+  data = useCacheStore.getState().data,
   navigation,
 }: {
   defOptions?: SyncImportOptions;
-  save?: DBSave.Save;
+  data?: SavedUserData;
   navigation: any;
 }) {
+  const fonts = getFonts();
   const has = {
-    unproxiedPlugins: save.sync.plugins.filter(
-      (x) => !plugins[x.id] && !isPluginProxied(x.id) && canImport(x.id),
+    unproxiedPlugins: Object.keys(data.plugins).filter(
+      (id) => !plugins[id] && !isPluginProxied(id) && canImport(id),
     ).length,
-    plugins: save.sync.plugins.filter(
-      (x) => !plugins[x.id] && isPluginProxied(x.id) && canImport(x.id),
+    plugins: Object.keys(data.plugins).filter(
+      (id) => !plugins[id] && isPluginProxied(id) && canImport(id),
     ).length,
-    themes: save.sync.themes.filter((x) => !themes[x.id]).length,
+    themes: Object.keys(data.themes).filter((id) => !themes[id]).length,
+    fonts:
+      Object.keys(data.fonts.installed).filter(
+        (id) => !hasFontBySource(id, fonts),
+      ).length +
+      data.fonts.custom.filter(({ name }) => !hasFontByName(name, fonts))
+        .length,
   };
   const total = [has.unproxiedPlugins, has.plugins, has.themes].reduce(
     (x, a) => x + a,
@@ -52,6 +62,7 @@ export default function ImportActionSheet({
       unproxiedPlugins: false,
       plugins: !!has.plugins,
       themes: !!has.themes,
+      fonts: !!has.fonts,
     },
   );
 
@@ -88,7 +99,7 @@ export default function ImportActionSheet({
               }}
             >
               <RN.Image
-                source={getAssetIDByName("ic_info_24px")}
+                source={getAssetIDByName("CircleInformationIcon")}
                 style={styles.icon}
                 resizeMode="cover"
               />
@@ -104,12 +115,14 @@ export default function ImportActionSheet({
         )}
         <FormCheckboxRow
           label={lang.format("sheet.import_data.unproxied_plugins", {
-            count: String(has.plugins),
+            count: String(has.unproxiedPlugins),
           })}
           disabled={!has.unproxiedPlugins}
           onPress={() =>
             has.unproxiedPlugins &&
-            (!options.unproxiedPlugins && !defOptions
+            (!options.unproxiedPlugins &&
+            !defOptions &&
+            !settings.developerSettings
               ? showConfirmationAlert({
                   title: lang.format("alert.unproxied_plugin_warn.title", {}),
                   content: lang.format("alert.unproxied_plugin_warn.body", {}),
@@ -118,10 +131,9 @@ export default function ImportActionSheet({
                     "alert.unproxied_plugin_warn.confirm",
                     {},
                   ),
-                  confirmColor: "brand" as ButtonColors,
                   onConfirm: () =>
                     openSheet(ImportActionSheet, {
-                      save,
+                      data,
                       navigation,
                       defOptions: {
                         ...options,
@@ -164,6 +176,20 @@ export default function ImportActionSheet({
           }
           selected={options.themes}
         />
+        <FormCheckboxRow
+          label={lang.format("sheet.import_data.fonts", {
+            count: String(has.fonts),
+          })}
+          disabled={!has.fonts}
+          onPress={() =>
+            has.fonts &&
+            setOptions({
+              ...options,
+              fonts: !options.fonts,
+            })
+          }
+          selected={options.fonts}
+        />
         <Button
           text={lang.format("sheet.import_data.import", {})}
           variant="primary"
@@ -172,7 +198,7 @@ export default function ImportActionSheet({
           icon={getAssetIDByName("DownloadIcon")}
           onPress={() => {
             openImportLogsPage(navigation);
-            importData(save, options);
+            importData(data, options);
             hideActionSheet();
           }}
           style={{
@@ -180,7 +206,10 @@ export default function ImportActionSheet({
             marginVertical: 16,
           }}
           disabled={
-            !options.unproxiedPlugins && !options.plugins && !options.themes
+            !options.unproxiedPlugins &&
+            !options.plugins &&
+            !options.themes &&
+            !options.fonts
           }
         />
       </ActionSheetContentContainer>
