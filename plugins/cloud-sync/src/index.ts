@@ -30,6 +30,9 @@ export const vstorage = storage as {
     host: string | null;
     clientId: string | null;
   };
+  realTrackingAnalyticsSentToChina: {
+    pressedSettings?: boolean;
+  };
 };
 
 export const fillCache = async () =>
@@ -76,6 +79,9 @@ export default {
     vstorage.custom ??= {
       host: null,
       clientId: null,
+    };
+    vstorage.realTrackingAnalyticsSentToChina ??= {
+      pressedSettings: false,
     };
 
     const emitters = {

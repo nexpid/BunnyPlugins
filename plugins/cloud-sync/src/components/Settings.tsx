@@ -1,11 +1,14 @@
+import { settings } from "@vendetta";
 import { findByProps } from "@vendetta/metro";
 import {
   i18n,
   NavigationNative,
   React,
   ReactNative as RN,
+  stylesheet,
 } from "@vendetta/metro/common";
 import { useProxy } from "@vendetta/storage";
+import { semanticColors } from "@vendetta/ui";
 import { showConfirmationAlert } from "@vendetta/ui/alerts";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { Forms, General } from "@vendetta/ui/components";
@@ -14,6 +17,7 @@ import { showToast } from "@vendetta/ui/toasts";
 import { BetterTableRowGroup } from "$/components/BetterTableRow";
 import LineDivider from "$/components/LineDivider";
 import Text from "$/components/Text";
+import { Reanimated } from "$/deps";
 import { Lang } from "$/lang";
 import { openSheet } from "$/types";
 import RNFS from "$/wrappers/RNFS";
@@ -36,26 +40,94 @@ import IgnoredPluginsPage from "./pages/IgnoredPluginsPage";
 import ImportActionSheet from "./sheets/ImportActionSheet";
 
 const DocumentPicker = findByProps("pickSingle", "isCancel");
-const { downloadMediaAsset } = findByProps("downloadMediaAsset");
 
 const { ScrollView, View } = General;
 const { FormRow, FormInput, FormSwitchRow } = Forms;
 
 export default function () {
+  useProxy(vstorage);
   const [showDev, setShowDev] = React.useState(false);
   const [isBusy, setIsBusy] = React.useState([]);
   const { data } = useCacheStore();
-  useProxy(vstorage);
+  const { isAuthorized } = useAuthorizationStore();
+
+  const navigation = NavigationNative.useNavigation();
 
   const setBusy = (x: string) =>
     !isBusy.includes(x) && setIsBusy([...isBusy, x]);
   const unBusy = (x: string) => setIsBusy(isBusy.filter((y) => x !== y));
-
   let lastTap = 0;
 
-  const navigation = NavigationNative.useNavigation();
+  const bumpyScaleX = Reanimated.useSharedValue(1);
+  const bumpyScaleY = Reanimated.useSharedValue(1);
 
-  const { isAuthorized } = useAuthorizationStore();
+  const bumpyPressScale = Reanimated.useSharedValue(1);
+  const bumpyPressRot = Reanimated.useSharedValue("0deg");
+
+  const doBumpiness = () => {
+    if (
+      !settings.developerSettings ||
+      vstorage.realTrackingAnalyticsSentToChina.pressedSettings
+    )
+      return;
+
+    bumpyPressScale.value = 1.09;
+    bumpyPressScale.value = Reanimated.withTiming(1, { duration: 300 });
+
+    const actRot = Math.random() * 10 + 3;
+    bumpyPressRot.value = `${Math.random() < 0.5 ? -actRot : actRot}deg`;
+    bumpyPressRot.value = Reanimated.withTiming("0deg", { duration: 300 });
+  };
+
+  React.useEffect(() => {
+    if (
+      !settings.developerSettings ||
+      vstorage.realTrackingAnalyticsSentToChina.pressedSettings
+    ) {
+      bumpyScaleX.value = Reanimated.withTiming(1, { duration: 150 });
+      bumpyScaleY.value = Reanimated.withTiming(1, { duration: 150 });
+      return;
+    }
+
+    const mult = 1.08;
+
+    bumpyScaleX.value = 1 / mult;
+    bumpyScaleY.value = mult;
+
+    bumpyScaleX.value = Reanimated.withRepeat(
+      Reanimated.withTiming(mult, {
+        easing: Reanimated.Easing.inOut(Reanimated.Easing.quad),
+        duration: 500,
+      }),
+      -1,
+      true,
+    );
+    bumpyScaleY.value = Reanimated.withRepeat(
+      Reanimated.withTiming(1 / mult, {
+        easing: Reanimated.Easing.inOut(Reanimated.Easing.quad),
+        duration: 500,
+      }),
+      -1,
+      true,
+    );
+  }, [
+    settings.developerSettings,
+    vstorage.realTrackingAnalyticsSentToChina.pressedSettings,
+  ]);
+
+  const styles = stylesheet.createThemedStyleSheet({
+    androidRipple: {
+      color: semanticColors.ANDROID_RIPPLE,
+      //@ts-expect-error cornerRadius does not exist :nerd_face:
+      cornerRadius: 4,
+    },
+    titleIcon: {
+      width: 16,
+      height: 16,
+      marginTop: 1.5,
+      tintColor: semanticColors.TEXT_MUTED,
+    },
+  });
 
   return (
     <ScrollView>
@@ -109,13 +181,54 @@ export default function () {
         )}
       </BetterTableRowGroup>
       <BetterTableRowGroup
-        title={lang.format("settings.config.title", {})}
-        icon={getAssetIDByName("SettingsIcon")}
-        onTitlePress={() =>
-          lastTap >= Date.now()
-            ? (setShowDev(!showDev), (lastTap = 0))
-            : (lastTap = Date.now() + 500)
+        title={
+          <RN.Pressable
+            android_ripple={styles.androidRipple}
+            disabled={false}
+            accessibilityRole={"button"}
+            onPress={() => {
+              if (!vstorage.realTrackingAnalyticsSentToChina.pressedSettings)
+                doBumpiness();
+
+              if (lastTap >= Date.now()) {
+                vstorage.realTrackingAnalyticsSentToChina.pressedSettings =
+                  true;
+                setShowDev(!showDev);
+                lastTap = 0;
+              } else lastTap = Date.now() + 500;
+            }}
+            style={{ width: "100%", marginBottom: 8 }}
+          >
+            <Reanimated.default.View
+              style={[
+                {
+                  gap: 4,
+                  flexDirection: "row",
+                  alignItems: "center",
+                  alignSelf: "flex-start",
+                },
+                {
+                  transform: [
+                    { scaleX: bumpyScaleX },
+                    { scaleY: bumpyScaleY },
+                    { scale: bumpyPressScale },
+                    { rotate: bumpyPressRot },
+                  ],
+                },
+              ]}
+            >
+              <RN.Image
+                style={styles.titleIcon}
+                source={getAssetIDByName("SettingsIcon")}
+                resizeMode="cover"
+              />
+              <Text variant="text-sm/semibold" color="TEXT_MUTED">
+                {lang.format("settings.config.title", {})}
+              </Text>
+            </Reanimated.default.View>
+          </RN.Pressable>
         }
+        icon={getAssetIDByName("SettingsIcon")}
       >
         <FormSwitchRow
           label={lang.format("settings.config.auto_save.title", {})}
