@@ -1,110 +1,73 @@
-// copied from https://github.com/Vendicated/Vencord/blob/main/src/plugins/clearURLs/defaultRules.ts
-//
-
-import { Joi } from "$/deps";
 import RNFS from "$/wrappers/RNFS";
 
-import rawList from "../../assets/list.json";
-import { listUrl } from "..";
+import { vstorage } from "..";
+import { RulesType, useRulesStore } from "../stores/RulesStore";
 
-const make = () =>
-  RNFS.hasRNFS &&
-  RNFS.mkdir(`${RNFS.DocumentDirectoryPath}/vendetta/CleanURLs`);
-const filePath = () =>
+/** @deprecated */
+export const _depreacted_filePath = () =>
   `${RNFS.DocumentDirectoryPath}/vendetta/CleanURLs/list.json`;
-const etagPath = () =>
-  `${RNFS.DocumentDirectoryPath}/vendetta/CleanURLs/list_etag.txt`;
 
-const Rules = Joi.object({
-  main: [Joi.string()],
-  extended: [Joi.string()],
-});
+const useProvider = (
+  provider: RulesType["providers"][string],
+  urlObj: URL,
+): string => {
+  const url = urlObj.toString();
 
-interface ParsedRules {
-  universal: RegExp[];
-  byHost: Record<string, RegExp[]>;
-  hostMap: Record<string, RegExp>;
-}
-let cachedRules: ParsedRules;
-const parseRules = (rules: {
-  main: string[];
-  extended: string[];
-}): ParsedRules | undefined => {
-  if (Rules.validate(rules).error) throw new Error(":(");
+  const query = new Array<string>();
+  urlObj.searchParams.forEach((_, key) => query.push(key));
 
-  const reEscaper = /[\\^$.*+?()[\]{}|]/g;
-  const reEscape = (str: string) => str.replace(reEscaper, "\\$&");
-
-  const universal = new Array<RegExp>();
-  const byHost: Record<string, RegExp[]> = {};
-  const hostMap: Record<string, RegExp> = {};
-
-  for (const mrule of [...rules.main, ...rules.extended]) {
-    const [rule, host] = mrule.split("@");
-    const reRule = new RegExp(`^${reEscape(rule).replace(/\*/g, ".+?")}$`);
-
-    if (!host) {
-      universal.push(reRule);
-      continue;
-    }
-
-    const reHost = new RegExp(
-      `^(?:www\\.)?${reEscape(host)
-        .replace(/\*\./g, "(?:.+?\\.)?")
-        .replace(/\*/g, ".+?")}$`,
+  // should we redirect?
+  if (vstorage.config.redirect && provider.redirections) {
+    const redirect = provider.redirections.find((reg) =>
+      url.match(new RegExp(reg, "i")),
     );
-    const reHostStr = reHost.toString();
-
-    hostMap[reHostStr] = reHost;
-    byHost[reHostStr] ??= [];
-    byHost[reHostStr].push(reRule);
+    const red = redirect && url.match(new RegExp(redirect, "i"))?.[1];
+    if (red) return cleanUrl(decodeURIComponent(red));
   }
 
-  return { universal, byHost, hostMap };
+  // apply raw rules
+  if (provider.rawRules && query.length > 0)
+    for (const rule of provider.rawRules)
+      urlObj.search = urlObj.search.replace(new RegExp(rule, "gi"), "");
+
+  // apply rules & referrals
+  const toRemove = [].concat(
+    provider?.rules ?? [],
+    (vstorage.config.referrals && provider?.referralMarketing) ?? [],
+  );
+
+  if (toRemove.length > 0 && query.length > 0)
+    for (const rule of toRemove)
+      for (const key of query)
+        if (new RegExp(`^${rule}$`, "i").test(key))
+          urlObj.searchParams.delete(key);
+
+  return urlObj.toString();
 };
 
-const fetchRules = async () => {
-  const read = async () => {
-    if (await RNFS.exists(filePath()))
-      try {
-        cachedRules = parseRules(JSON.parse(await RNFS.readFile(filePath())));
-      } catch {
-        // continue
-      }
-  };
-
-  if (IS_DEV) {
-    cachedRules = parseRules(rawList);
-  } else {
-    const res = await fetch(listUrl, {
-      headers: {
-        "cache-control": "public; max-age=20",
-      },
-    });
-    if (!res.ok) return read();
-
-    make();
-    const lastEtag =
-      (await RNFS.exists(etagPath())) && (await RNFS.readFile(etagPath()));
-
-    const newEtag = res.headers.get("etag");
-    if (!newEtag) return read();
-
-    if (newEtag !== lastEtag) {
-      RNFS.writeFile(etagPath(), newEtag);
-
-      const txt = await res.text();
-      RNFS.writeFile(filePath(), txt);
-      try {
-        cachedRules = parseRules(JSON.parse(txt));
-      } catch {
-        return;
-      }
-    } else read();
+export function cleanUrl(url: string) {
+  let urlObj: URL;
+  try {
+    urlObj = new URL(url);
+  } catch {
+    return url;
   }
-};
 
-export function getRules(): ParsedRules {
-  fetchRules();
-  return cachedRules ?? { universal: [], byHost: {}, hostMap: {} };
+  const rules = useRulesStore.getState().rules;
+  for (const provider of Object.values(rules.providers)) {
+    if (!provider.urlPattern) continue;
+
+    // should we apply this rule?
+    if (!new RegExp(provider.urlPattern, "i").test(url)) continue;
+    if (provider.exceptions?.some((reg) => new RegExp(reg, "i").test(url)))
+      continue;
+
+    try {
+      urlObj = new URL(useProvider(provider, urlObj));
+    } catch {
+      return urlObj.toString();
+    }
+  }
+
+  return urlObj.toString();
 }
