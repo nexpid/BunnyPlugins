@@ -23,10 +23,8 @@ const OhFuckFunction = (prop: string) => () => {
 };
 
 const findThing = (...props: string[]) => findByProps(...props)?.[props[0]];
-const findThingRequired = (...props: string[]) =>
-  findThing(...props) ?? OhFuck(props[0]);
-const findFuncRequired = (...props: string[]) =>
-  findThing(...props) ?? OhFuckFunction(props[0]);
+const findThingRequired = (alt: (prop: string) => void, ...props: string[]) =>
+  findThing(...props) ?? alt(props[0]);
 
 /*
   button variant update around version 222.4:
@@ -74,7 +72,7 @@ type PrimitiveButtonIcon = {
   source: import("react-native").ImageSourcePropType;
 };
 
-export const Button = findThingRequired("Button") as React.FC<
+export const Button = findThingRequired(OhFuck, "Button") as React.FC<
   PrimitiveButton & {
     variant?: ButtonVariant;
     size?: "sm" | "md" | "lg";
@@ -89,7 +87,7 @@ export const Button = findThingRequired("Button") as React.FC<
   Icon: React.FC<PrimitiveButtonIcon>;
 };
 
-export const RowButton = findThingRequired("RowButton") as React.FC<
+export const RowButton = findThingRequired(OhFuck, "RowButton") as React.FC<
   PrimitiveButton & {
     label: string;
     subLabel?: string;
@@ -140,6 +138,7 @@ export const Slider = (_Slider ? BetterSlider : CompatSlider) as React.FC<{
 }>;
 
 export const FloatingActionButton = findThingRequired(
+  OhFuck,
   "FloatingActionButton",
 ) as React.FC<{
   icon: import("react-native").ImageSourcePropType;
@@ -151,7 +150,7 @@ export const FloatingActionButton = findThingRequired(
   };
 }>;
 
-export const TextInput = findThingRequired("TextInput") as React.FC<{
+export const TextInput = findThingRequired(OhFuck, "TextInput") as React.FC<{
   size?: "sm" | "md" | "lg";
   label?: string;
   description?: React.ReactNode;
@@ -184,16 +183,18 @@ export const TextInput = findThingRequired("TextInput") as React.FC<{
 
 type controlState = symbol;
 
-export const Tabs = findThingRequired("Tabs") as React.FC<{
+export const Tabs = findThingRequired(OhFuck, "Tabs") as React.FC<{
   state: controlState;
 }>;
 export const SegmentedControlPages = findThingRequired(
+  OhFuck,
   "SegmentedControlPages",
 ) as React.FC<{
   state: controlState;
 }>;
 
-export const useSegmentedControlState = findFuncRequired(
+export const useSegmentedControlState = findThingRequired(
+  OhFuckFunction,
   "useSegmentedControlState",
 ) as (state: {
   defaultIndex: number;
