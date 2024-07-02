@@ -19,4 +19,4 @@
   <h1>Clean URLs</h1>
 </div>
 
-Removes tracking data garbage from links (Vencord port)
+Removes tracking garbage from links you send
