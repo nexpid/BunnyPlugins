@@ -19,4 +19,4 @@
   <h1>Clean URLs</h1>
 </div>
 
-Removes tracking garbage from links you send
+Removes tracking garbage from links you send and receive
