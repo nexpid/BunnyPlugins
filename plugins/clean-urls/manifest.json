@@ -1,6 +1,6 @@
 {
   "name": "Clean URLs",
-  "description": "Removes tracking garbage from links you send",
+  "description": "Removes tracking garbage from links you send and receive",
   "authors": [
     {
       "name": "nexpid",
