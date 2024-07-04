@@ -1,6 +1,6 @@
 // https://github.com/decor-discord/vendetta-plugin/blob/main/src/lib/stores/AuthorizationStore.ts
 import { findByStoreName } from "@vendetta/metro";
-import { persist } from "zustand/middleware";
+import { createJSONStorage, persist } from "zustand/middleware";
 
 import { RNMMKVManager, zustand } from "$/deps";
 import { fluxSubscribe } from "$/types";
@@ -34,7 +34,7 @@ export const useAuthorizationStore = zustand.create<
     }),
     {
       name: "cloudsync-auth",
-      getStorage: () => RNMMKVManager,
+      storage: createJSONStorage(() => RNMMKVManager),
       partialize: (state) => ({ tokens: state.tokens }),
       onRehydrateStorage: () => (state) => state.init(),
     },
