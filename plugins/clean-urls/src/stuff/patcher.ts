@@ -5,6 +5,7 @@ import { before } from "@vendetta/patcher";
 
 import RNFS from "$/wrappers/RNFS";
 
+import { unsubRulesStore } from "../stores/RulesStore";
 import { _depreacted_filePath, cleanUrl } from "./rules";
 
 const Messages = findByProps("sendMessage", "editMessage");
@@ -48,7 +49,9 @@ export default function () {
   const patches = new Array<() => void>();
 
   // STUB[epic=plugin] get rid of this one day
-  if (RNFS.exists(_depreacted_filePath())) RNFS.unlink(_depreacted_filePath());
+  RNFS.exists(_depreacted_filePath()).then(
+    (yes) => yes && RNFS.unlink(_depreacted_filePath()),
+  );
 
   patches.push(
     before("sendMessage", Messages, (args) => handleMessage(args[1])),
@@ -67,6 +70,8 @@ export default function () {
       args[1] = JSON.stringify(rows);
     }),
   );
+
+  patches.push(unsubRulesStore);
 
   return () => patches.forEach((x) => x());
 }

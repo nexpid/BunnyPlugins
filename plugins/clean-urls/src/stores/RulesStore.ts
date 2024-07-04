@@ -1,6 +1,7 @@
-import { persist } from "zustand/middleware";
+import { createJSONStorage, persist } from "zustand/middleware";
 
 import { RNMMKVManager, zustand } from "$/deps";
+import { fluxSubscribe } from "$/types";
 
 import { listUrl } from "..";
 
@@ -51,7 +52,7 @@ export const useRulesStore = zustand.create<
     }),
     {
       name: "clean-urls-rules",
-      getStorage: () => RNMMKVManager,
+      storage: createJSONStorage(() => RNMMKVManager),
       partialize: (state) => ({
         rules: state.rules,
         lastModified: state.lastModified,
@@ -59,4 +60,9 @@ export const useRulesStore = zustand.create<
       onRehydrateStorage: () => (state) => state.update(),
     },
   ),
+);
+
+// update rules when user has internet
+export const unsubRulesStore = fluxSubscribe("CONNECTION_OPEN", () =>
+  useRulesStore.getState().update(),
 );

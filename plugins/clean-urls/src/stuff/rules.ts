@@ -46,6 +46,9 @@ const useProvider = (
 };
 
 export function cleanUrl(url: string) {
+  const rules = useRulesStore.getState().rules;
+  if (!rules?.providers) return url;
+
   let urlObj: URL;
   try {
     urlObj = new URL(url);
@@ -53,7 +56,6 @@ export function cleanUrl(url: string) {
     return url;
   }
 
-  const rules = useRulesStore.getState().rules;
   for (const provider of Object.values(rules.providers)) {
     if (!provider.urlPattern) continue;
 
