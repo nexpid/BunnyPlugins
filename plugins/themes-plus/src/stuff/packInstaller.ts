@@ -41,7 +41,7 @@ export async function installIconpack(
   const { tree } = await getIconpackData(pack.id);
   if (!tree) throw new Error("Failed to get iconpack tree");
 
-  await RNFS.mkdir(`${iconsPath}${pack.id}`);
+  if (RNFS.hasRNFS) await RNFS.mkdir(`${iconsPath}${pack.id}`);
   await RNFS.writeFile(`${iconsPath}${pack.id}.hash`, hash);
 
   const shouldDownload = (Object.values(all) as any as CoolAsset[]).map(
