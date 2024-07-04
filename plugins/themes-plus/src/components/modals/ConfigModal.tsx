@@ -87,8 +87,7 @@ const tabs = {
                   if (!vstorage.iconpackDownloading)
                     showToast("Yay!", getAssetIDByName("SparklesIcon"));
 
-                  vstorage.iconpackDownloading =
-                    !vstorage.iconpackDownloading;
+                  vstorage.iconpackDownloading = !vstorage.iconpackDownloading;
                 }, 3_000))
               }
               onPressOut={() => clearTimeout(superSecretTimeout.current)}
