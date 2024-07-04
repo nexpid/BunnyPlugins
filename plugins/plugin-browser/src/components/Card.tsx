@@ -118,19 +118,18 @@ export default function Card(props: CardProps) {
         <RN.View style={styles.content}>
           <Stack spacing={0}>
             <RN.View style={styles.title}>
+              {props.headerIcon && (
+                <RN.Image
+                  style={styles.pluginIcon}
+                  resizeMode="cover"
+                  source={getAssetIDByName(props.headerIcon)}
+                />
+              )}
               <Text
                 variant="heading-md/semibold"
                 color="TEXT_NORMAL"
                 lineClamp={1}
               >
-                {props.headerIcon && (
-                  <>
-                    <RN.Image
-                      style={styles.pluginIcon}
-                      source={getAssetIDByName(props.headerIcon)}
-                    />{" "}
-                  </>
-                )}
                 {props.headerLabel}
               </Text>
               {props.headerSuffix}
