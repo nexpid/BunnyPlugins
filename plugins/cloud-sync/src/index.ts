@@ -106,6 +106,7 @@ export default {
     );
 
     patches.push(patcher());
+    patches.push(lang.unload);
   },
   onUnload: () => patches.forEach((x) => x()),
   settings: Settings,

@@ -1,6 +1,7 @@
 import { React, ReactNative as RN } from "@vendetta/metro/common";
 import { before } from "@vendetta/patcher";
 
+import { lang } from "..";
 import CustomTwemoji from "../components/CustomTwemoji";
 import { getSrc, parse } from "./twemoji";
 
@@ -45,6 +46,8 @@ export default function () {
       x.children = children;
     }),
   );
+
+  patches.push(lang.unload);
 
   return () => patches.forEach((x) => x());
 }
