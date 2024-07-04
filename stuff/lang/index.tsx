@@ -77,7 +77,6 @@ export class Lang<Plugin extends keyof LangValues> {
     const locale = Lang.getLang();
 
     const values = useLangStore.getState().values;
-    console.log("Has values?", !!values, this.plugin);
     if (!values) return String(key);
 
     const val =
