@@ -9,6 +9,8 @@ import { PatchType } from "..";
 import { state } from "../stuff/active";
 import { getIconOverlay, getIconTint } from "../stuff/iconOverlays";
 import { patches } from "../stuff/loader";
+import { iconsPath, isPackInstalled } from "../stuff/packInstaller";
+import { flattenFilePath } from "../stuff/util";
 import { CoolAsset, IconpackConfig } from "../types";
 
 const Status = findByName("Status", false);
@@ -31,6 +33,9 @@ export default function patchIcons(
         return c;
       }),
     );
+
+  let isInstalled = false;
+  isPackInstalled(iconpack).then((x) => (isInstalled = !!x));
 
   if (plus.icons || plus.customOverlays || iconpack) {
     if (plus.icons) state.patches.push(PatchType.Icons);
@@ -80,7 +85,9 @@ export default function patchIcons(
 
         if (useIconpack) {
           x.source = {
-            uri: iconpack.load + assetIconpackLocation,
+            uri: isInstalled
+              ? `file://${iconsPath}${iconpack.id}/${flattenFilePath(assetIconpackLocation)}`
+              : iconpack.load + assetIconpackLocation,
             headers: {
               "cache-contorl": "public, max-age=3600",
             },

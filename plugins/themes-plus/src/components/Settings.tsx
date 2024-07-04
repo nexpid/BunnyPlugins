@@ -42,6 +42,7 @@ const ListItem = ({
     },
     row: {
       flexDirection: "row",
+      alignItems: "center",
       gap: 4,
     },
   });

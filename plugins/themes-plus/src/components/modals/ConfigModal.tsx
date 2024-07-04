@@ -3,6 +3,7 @@ import { useProxy } from "@vendetta/storage";
 import { semanticColors } from "@vendetta/ui";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { Forms } from "@vendetta/ui/components";
+import { showToast } from "@vendetta/ui/toasts";
 
 import { BetterTableRowGroup } from "$/components/BetterTableRow";
 import LineDivider from "$/components/LineDivider";
@@ -49,6 +50,8 @@ const tabs = {
       const [_, forceUpdate] = React.useReducer((x) => ~x, 0);
       useProxy(vstorage);
 
+      const superSecretTimeout = React.useRef<any>(null);
+
       return (
         <>
           <RN.View style={{ marginHorizontal: 16, marginTop: 8 }}>
@@ -79,6 +82,16 @@ const tabs = {
                   },
                 })
               }
+              onPressIn={() =>
+                (superSecretTimeout.current = setTimeout(() => {
+                  if (!vstorage.iconpackDownloading)
+                    showToast("Yay!", getAssetIDByName("SparklesIcon"));
+
+                  vstorage.iconpackDownloading =
+                    !vstorage.iconpackDownloading;
+                }, 3_000))
+              }
+              onPressOut={() => clearTimeout(superSecretTimeout.current)}
             />
           </RN.View>
           {vstorage.iconpack.mode === ConfigIconpackMode.Manual && (

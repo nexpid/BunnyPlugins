@@ -6,9 +6,10 @@ import { Iconpack, IconpackData } from "../types";
 export const state = {
   loading: true,
   active: false,
-  iconpack: null as {
-    iconpack: Iconpack | null;
-    list: IconpackData["list"];
+  iconpack: {
+    iconpack: null as Iconpack | null,
+    list: [] as IconpackData["list"],
+    hashes: {} as Record<string, { hash: string; size: number }>,
   },
   patches: [] as PatchType[],
   inactive: [] as InactiveReason[],

@@ -11,13 +11,19 @@ import { Lang } from "$/lang";
 import { buttonVariantPolyfill } from "$/lib/redesign";
 
 import { lang, vstorage } from "..";
+import { state, useState } from "../stuff/active";
+import {
+  installIconpack,
+  isPackInstalled,
+  uninstallIconpack,
+} from "../stuff/packInstaller";
+import { formatBytes } from "../stuff/util";
 import { Iconpack } from "../types";
+import ProgressCircle from "./ProgressCircle";
 
 const IconButton = findByProps("IconButton").IconButton;
 
 const { FormRow } = Forms;
-
-const wait = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 export default function IconpackRow({
   pack,
@@ -39,70 +45,79 @@ export default function IconpackRow({
     },
   });
 
-  const [packStatus, setPackStatus] = React.useState<{
+  const [packStatus, setPackStatus] = React.useState<null | {
     installed: boolean;
+    outdated: boolean;
     loading: boolean;
-    progress: number;
   }>({
     installed: false,
-    loading: false,
-    progress: 0,
+    outdated: false,
+    loading: true,
   });
-  const progressRef = React.useRef<number>(null);
+  const [progressCnt, setProgressCnt] = React.useState(null);
 
   React.useEffect(() => {
-    return () => cancelRef.current();
+    isPackInstalled(pack).then((x) =>
+      setPackStatus({
+        installed: !!x,
+        outdated: x === "outdated",
+        loading: false,
+      }),
+    );
   }, []);
 
+  const size = state.iconpack.hashes[pack.id]?.size;
+  useState();
+
   const doInstall = () => {
-    if (packStatus.loading) {
-      showToast("Cancel");
-      progressRef.current = null;
-      setPackStatus({
+    if (cancelRef.current) {
+      cancelRef.current();
+      return setPackStatus({
         installed: packStatus.installed,
+        outdated: packStatus.outdated,
         loading: false,
-        progress: 0,
       });
-      return;
     }
+    if (!size || packStatus.loading) return;
 
-    const willUninstall = packStatus.installed;
+    const willUninstall = packStatus.outdated ? false : packStatus.installed;
     const cont = async () => {
-      const rng = Math.random();
-      progressRef.current = rng;
-
       setPackStatus({
         installed: willUninstall,
+        outdated: packStatus.outdated,
         loading: true,
-        progress: 0,
       });
 
-      if (willUninstall) {
-        await wait(1000);
-        if (progressRef.current !== rng) return;
-      } else {
-        let progress = 0;
-        const toDo = 100;
+      const controller = new AbortController();
+      if (!willUninstall)
+        cancelRef.current = async () => {
+          controller.abort();
+          if (!packStatus.outdated) await uninstallIconpack(pack);
+        };
 
-        while (progress < toDo) {
-          if (progressRef.current !== rng) return;
+      try {
+        if (willUninstall) await uninstallIconpack(pack);
+        else await installIconpack(pack, controller.signal, setProgressCnt);
+      } catch (e) {
+        cancelRef.current = null;
+        setProgressCnt(0);
 
-          setPackStatus({
-            installed: willUninstall,
-            loading: true,
-            progress: progress / toDo,
-          });
-          progress++;
-          if (Math.random() <= 0.2)
-            await wait(Math.floor(Math.random() * 200) + 100);
-          else await wait(Math.floor(Math.random() * 60));
-        }
+        if (!controller.signal.aborted)
+          showToast(e.toString(), getAssetIDByName("Small"));
+        return setPackStatus({
+          installed: willUninstall,
+          outdated: packStatus.outdated,
+          loading: false,
+        });
       }
+
+      cancelRef.current = null;
+      setProgressCnt(0);
 
       setPackStatus({
         installed: !willUninstall,
+        outdated: false,
         loading: false,
-        progress: 0,
       });
     };
 
@@ -121,7 +136,7 @@ export default function IconpackRow({
               {Lang.basicFormat(
                 lang.format("alert.downloadpack.body", {
                   iconpack: pack.name,
-                  space: "5MB",
+                  space: formatBytes(size),
                 }),
               )}
             </Text>
@@ -143,9 +158,9 @@ export default function IconpackRow({
   };
 
   const cancelRef = React.useRef(null);
-  cancelRef.current = () => {
-    if (packStatus.loading) doInstall();
-  };
+  React.useEffect(() => {
+    return () => cancelRef.current?.();
+  }, []);
 
   return (
     <FormRow
@@ -161,22 +176,43 @@ export default function IconpackRow({
       }
       trailing={
         <RN.View style={styles.headerTrailing}>
-          {/* TODO beta:tm: iconpack downloading */}
-          {IS_DEV && (
+          {/* TODO finally finish this */}
+          {(IS_DEV || vstorage.iconpackDownloading) && (
             <RN.View style={styles.actions}>
+              {progressCnt !== null && (
+                <ProgressCircle
+                  radius={16}
+                  stroke={3}
+                  color="#fff"
+                  progress={progressCnt ?? null}
+                />
+              )}
               <IconButton
                 onPress={doInstall}
-                destructive={packStatus.installed}
-                loading={!!packStatus.loading}
+                loading={!packStatus || packStatus.loading}
                 size="sm"
                 variant={
-                  packStatus.installed
-                    ? buttonVariantPolyfill().destructive
+                  packStatus && packStatus.installed
+                    ? packStatus.outdated
+                      ? "primary"
+                      : buttonVariantPolyfill().destructive
                     : "secondary"
                 }
-                icon={getAssetIDByName(
-                  packStatus.installed ? "TrashIcon" : "DownloadIcon",
-                )}
+                disabled={
+                  !packStatus ||
+                  !size ||
+                  (packStatus.loading && !cancelRef.current)
+                }
+                icon={
+                  packStatus &&
+                  getAssetIDByName(
+                    packStatus.installed
+                      ? packStatus.outdated
+                        ? "GlobeEarthIcon"
+                        : "TrashIcon"
+                      : "DownloadIcon",
+                  )
+                }
               />
             </RN.View>
           )}
