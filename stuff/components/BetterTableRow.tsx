@@ -68,6 +68,8 @@ export function BetterTableRowGroup({
   const styles = stylesheet.createThemedStyleSheet({
     main: {
       backgroundColor: semanticColors.CARD_PRIMARY_BG,
+      borderColor: semanticColors.BORDER_FAINT,
+      borderWidth: 1,
       borderRadius: 16,
       overflow: "hidden",
       flex: 1,
