@@ -1,11 +1,16 @@
 import { findByProps } from "@vendetta/metro";
-import { before } from "@vendetta/patcher";
+import { i18n, ReactNative as RN, url } from "@vendetta/metro/common";
+import { before, instead } from "@vendetta/patcher";
 import { getAssetIDByName } from "@vendetta/ui/assets";
+import { showToast } from "@vendetta/ui/toasts";
 
 import { Module, ModuleCategory } from "../stuff/Module";
 
 const MediaManager = findByProps("downloadMediaAsset");
 const ActionSheet = findByProps("openLazy", "hideActionSheet");
+
+const showContextMenu = findByProps("showContextMenu");
+const handleClick = findByProps("handleClick", "isLinkTrusted");
 
 const parseURL = (url: string): string | undefined => {
   const path = url.split("/");
@@ -26,6 +31,7 @@ export default new Module({
   icon: getAssetIDByName("GifIcon"),
   handlers: {
     onStart() {
+      // STUB[epic=plugin] older versions
       this.patches.add(
         before("downloadMediaAsset", MediaManager, (args) => {
           const url = args[0];
@@ -57,6 +63,69 @@ export default new Module({
           }
 
           args.syncer.sources[0] = data;
+        }),
+      );
+
+      // newer versions
+      this.patches.add(
+        before("showContextMenu", showContextMenu, (args) => {
+          const [{ items }] = args as [
+            {
+              items: {
+                iconSource: number;
+                label: string;
+                action: () => void;
+                _action?: () => void;
+              }[];
+            },
+          ];
+          if (
+            !["OPEN_IN_BROWSER", "SHARE", "JUMP_TO_MESSAGE"].every((x) =>
+              items.find((y) => y.label === i18n.Messages[x]),
+            ) ||
+            items.length !== 3
+          )
+            return;
+
+          let link: string;
+          for (const item of items) {
+            if (!item._action) item._action = item.action;
+
+            if (item.label === i18n.Messages.OPEN_IN_BROWSER) {
+              // fake press to get the link
+              const unpatch = instead("handleClick", handleClick, (args) => {
+                link = parseURL(args[0].href);
+                unpatch();
+              });
+              item._action();
+
+              item.action = () => {
+                if (!link) return item._action();
+                else
+                  handleClick.handleClick({
+                    href: link,
+                    onConfirm: () => url.openURL(link),
+                  });
+              };
+            } else if (item.label === i18n.Messages.SHARE) {
+              item.action = () => {
+                if (!link) return item._action();
+                else RN.Share.share({ message: link });
+              };
+            }
+          }
+
+          items.unshift({
+            iconSource: getAssetIDByName("DownloadIcon"),
+            label: i18n.Messages.SAVE,
+            action: () =>
+              link
+                ? MediaManager.downloadMediaAsset(link, 1)
+                : showToast(
+                    "Failed to download gif using NexxUtils",
+                    getAssetIDByName("CircleXIcon-primary"),
+                  ),
+          });
         }),
       );
     },

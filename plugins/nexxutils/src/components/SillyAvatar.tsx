@@ -1,7 +1,9 @@
 import { findByStoreName } from "@vendetta/metro";
-import { React, ReactNative as RN } from "@vendetta/metro/common";
+import { React } from "@vendetta/metro/common";
 import { General } from "@vendetta/ui/components";
+import { showToast } from "@vendetta/ui/toasts";
 
+import { Reanimated } from "$/deps";
 import { getUserAvatar } from "$/types";
 
 const { Pressable } = General;
@@ -9,39 +11,50 @@ const { Pressable } = General;
 const UserStore = findByStoreName("UserStore");
 
 export default function () {
-  const [rot, setRot] = React.useState(0);
-  const [urImage, setUrImage] = React.useState(false);
-  const anim = React.useRef(new RN.Animated.Value(0)).current;
+  const spinAnim = Reanimated.useSharedValue("0deg");
+  const scaleAnim = Reanimated.useSharedValue(1);
 
-  React.useEffect(() => {
-    RN.Animated.timing(anim, {
-      toValue: rot * (Math.PI / 180),
-      duration: 4000,
-      easing: RN.Easing.out(RN.Easing.quad),
-      useNativeDriver: true,
-    }).start();
-  }, [rot]);
+  const rot = React.useRef(0);
+
+  const comboTimer = React.useRef<[any, number]>([0, 0]);
 
   return (
     <Pressable
-      onPress={() => setRot(rot + 360 * 5)}
-      style={{ marginRight: 12 }}
-      onLongPress={() => {
-        setUrImage(!urImage);
-        RN.LayoutAnimation.configureNext({ duration: 700 });
+      onPressIn={() => {
+        rot.current += 540;
+        spinAnim.value = Reanimated.withSpring(`${rot.current}deg`, {
+          mass: 3,
+          stiffness: 250,
+          reduceMotion: Reanimated.ReduceMotion.Never,
+        });
+
+        clearTimeout(comboTimer.current[0]);
+        comboTimer.current[0] = setTimeout(() => {
+          comboTimer.current[1] = 0;
+        }, 1_000);
+
+        comboTimer.current[1] += 1;
+        if (comboTimer.current[1] >= 5) {
+          showToast(
+            `COMBO: ${comboTimer.current[1].toString().padStart(3, "0")}`,
+          );
+          scaleAnim.value = 1 + comboTimer.current[1] / 50;
+          scaleAnim.value = Reanimated.withTiming(1, { duration: 500 });
+        }
       }}
+      style={{ marginRight: 12 }}
     >
-      <RN.Animated.Image
-        style={{
-          height: 85,
-          width: 85,
-          borderRadius: 18,
-          transform: [{ rotate: anim }],
-        }}
+      <Reanimated.default.Image
+        style={[
+          {
+            height: 85,
+            width: 85,
+            borderRadius: 18,
+          },
+          { transform: [{ rotate: spinAnim }, { scale: scaleAnim }] },
+        ]}
         source={{
-          uri: urImage
-            ? getUserAvatar(UserStore.getCurrentUser(), true)
-            : "https://cdn.discordapp.com/avatars/853550207039832084/a_b4f88a6cb2e7afd485fb3ebc5ee078b8.gif?size=4096",
+          uri: getUserAvatar(UserStore.getCurrentUser(), true),
         }}
       />
     </Pressable>
