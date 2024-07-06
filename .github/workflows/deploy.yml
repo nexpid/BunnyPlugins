@@ -97,7 +97,7 @@ jobs:
         run: |
           cp README.md dist/index.md
           cp -r assets dist/assets
-      
+
       - name: Upload raw artifact
         if: github.ref_name == 'dev'
         uses: actions/upload-artifact@v3
