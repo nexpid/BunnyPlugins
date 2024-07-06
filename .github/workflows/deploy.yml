@@ -100,7 +100,7 @@ jobs:
 
       - name: Upload raw artifact
         if: github.ref_name == 'dev'
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: raw
           path: base/dist
@@ -154,7 +154,7 @@ jobs:
           mv devpages/.git devpages-tmp/.git
           rm -rf devpages/*
 
-      - name: Download GitHub pages artifact
+      - name: Download raw artifact
         uses: actions/download-artifact@v4
         with:
           name: raw
