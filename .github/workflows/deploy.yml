@@ -98,21 +98,12 @@ jobs:
           cp README.md dist/index.md
           cp -r assets dist/assets
 
-      - name: Upload raw artifact
-        if: github.ref_name == 'dev'
-        uses: actions/upload-artifact@v4
-        with:
-          name: raw
-          path: base/dist
-
       - uses: actions/jekyll-build-pages@v1
-        if: github.ref_name == 'main'
         with:
           source: base/dist
           destination: built
 
       - name: Upload Pages artifact
-        if: github.ref_name == 'main'
         uses: actions/upload-pages-artifact@v3
         with:
           path: built
@@ -147,21 +138,20 @@ jobs:
           path: devpages
           token: ${{ secrets.DEV_PAGES_TOKEN }}
 
-      - name: Move out files
+      - name: Download GitHub pages artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: github-pages
+
+      - name: Copy files
         run: |
           mkdir devpages-tmp
           mv devpages/CNAME devpages-tmp/CNAME
           mv devpages/.git devpages-tmp/.git
+
           rm -rf devpages/*
+          tar -xvf artifact.tar -C devpages
 
-      - name: Download raw artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: raw
-          path: devpages
-
-      - name: Move in files
-        run: |
           mv devpages-tmp/CNAME devpages/CNAME
           mv devpages-tmp/.git devpages/.git
           rm -rf devpages-tmp
