@@ -162,7 +162,9 @@ jobs:
 
       - name: Move in files
         run: |
-          mv devpages-tmp/* devpages/
+          mv devpages-tmp/CNAME devpages/CNAME
+          mv devpages-tmp/.git devpages/.git
+          rm -rf devpages-tmp
 
       - name: Deploy to GitHub pages
         working-directory: devpages
