@@ -1,0 +1,14 @@
+{
+  "commentAnchors.tags.anchors": {
+    "STUB": {
+      "iconColor": "purple",
+      "highlightColor": "#BA68C8",
+      "scope": "workspace",
+      "behavior": "anchor"
+    }
+  },
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "always"
+  }
+}
