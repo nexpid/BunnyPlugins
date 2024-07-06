@@ -14,7 +14,7 @@ const devPluginBase = "dev.bunny.nexpid.xyz/";
 const invalidPlugins = [];
 const plugins = [];
 const links = {
-  // STUB vendetta.nexpid.xyz => bunny.nexpid.xyz
+  // STUB[epic=proxy] vendetta.nexpid.xyz => bunny.nexpid.xyz
   proxied: `https://bn-plugins.github.io/vd-proxy/vendetta.nexpid.xyz/`,
   code: `https://github.com/nexpid/BunnyPlugins/tree/${branch}/plugins/`,
   external: {

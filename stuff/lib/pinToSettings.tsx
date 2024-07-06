@@ -67,7 +67,7 @@ export function patchSettingsPin(
   //     );
   //   }
 
-  // STUB pinToSettings old ui
+  // STUB[epic=plugin] pinToSettings old ui
   const unpatch = after(
     "default",
     settingsModule,

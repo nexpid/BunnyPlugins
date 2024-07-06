@@ -39,7 +39,7 @@ const findThingRequired = (alt: (prop: string) => void, ...props: string[]) =>
     - positive > active
 */
 
-// STUB button variant polyfill
+// STUB[epic=plugin] button variant polyfill
 export function buttonVariantPolyfill() {
   if ("REDESIGN_BUTTON_ACTIVE_TEXT" in semanticColors)
     return {
@@ -120,7 +120,7 @@ const BetterSlider = (props: any) => (
   </RN.View>
 );
 
-// STUB compat slider
+// STUB[epic=plugin]compat slider
 export const Slider = (_Slider ? BetterSlider : CompatSlider) as React.FC<{
   value: number;
   accessibilityLabel?: string;
