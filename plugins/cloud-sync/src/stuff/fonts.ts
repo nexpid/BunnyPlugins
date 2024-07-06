@@ -1,4 +1,4 @@
-// STUB Bunny types; fonts :3
+// STUB[epic=types] fonts :3
 
 import { without } from "@vendetta/utils";
 

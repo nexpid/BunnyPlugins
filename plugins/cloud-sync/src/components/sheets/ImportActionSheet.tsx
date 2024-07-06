@@ -22,7 +22,7 @@ import { canImport, isPluginProxied, lang } from "../..";
 import { useCacheStore } from "../../stores/CacheStore";
 import { getFonts, hasFontByName, hasFontBySource } from "../../stuff/fonts";
 import { importData, SyncImportOptions } from "../../stuff/syncStuff";
-import { SavedUserData } from "../../types";
+import { UserData } from "../../types";
 import { openImportLogsPage } from "../pages/ImportLogsPage";
 
 const { View } = General;
@@ -34,7 +34,7 @@ export default function ImportActionSheet({
   navigation,
 }: {
   defOptions?: SyncImportOptions;
-  data?: SavedUserData;
+  data?: UserData;
   navigation: any;
 }) {
   const fonts = getFonts();

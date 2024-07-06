@@ -2,10 +2,10 @@ import { findByName, findByProps } from "@vendetta/metro";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { showToast } from "@vendetta/ui/toasts";
 
-import { fillCache, lang } from "..";
+import { lang } from "..";
 import constants from "../constants";
 import { useAuthorizationStore } from "../stores/AuthorizationStore";
-import { authFetch } from "./api";
+import { authFetch, getData } from "./api";
 
 const { pushModal, popModal } = findByProps("pushModal", "popModal");
 const OAuth2AuthorizeModal = findByName("OAuth2AuthorizeModal");
@@ -32,7 +32,7 @@ export function openOauth2Modal() {
           try {
             const token = await (await authFetch(location)).text();
             useAuthorizationStore.getState().setToken(token);
-            fillCache();
+            getData();
 
             showToast(
               lang.format("toast.oauth.authorized", {}),

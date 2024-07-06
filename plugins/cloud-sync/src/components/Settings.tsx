@@ -25,7 +25,7 @@ import RNFS from "$/wrappers/RNFS";
 import { lang, vstorage } from "..";
 import constants, { defaultClientId, defaultHost } from "../constants";
 import { useAuthorizationStore } from "../stores/AuthorizationStore";
-import { fillData, useCacheStore } from "../stores/CacheStore";
+import { useCacheStore } from "../stores/CacheStore";
 import {
   decompressRawData,
   deleteData,
@@ -34,7 +34,7 @@ import {
 } from "../stuff/api";
 import { openOauth2Modal } from "../stuff/oauth2";
 import { grabEverything, setImportCallback } from "../stuff/syncStuff";
-import { SavedUserData } from "../types";
+import { UserData } from "../types";
 import DataStat from "./DataStat";
 import IgnoredPluginsPage from "./pages/IgnoredPluginsPage";
 import ImportActionSheet from "./sheets/ImportActionSheet";
@@ -48,7 +48,7 @@ export default function () {
   useProxy(vstorage);
   const [showDev, setShowDev] = React.useState(false);
   const [isBusy, setIsBusy] = React.useState([]);
-  const { data } = useCacheStore();
+  const { data, at, hasData } = useCacheStore();
   const { isAuthorized } = useAuthorizationStore();
 
   const navigation = NavigationNative.useNavigation();
@@ -162,11 +162,11 @@ export default function () {
             subtitle={"settings.your_data.fonts"}
           />
         </View>
-        {data && (
+        {at && (
           <Text variant="text-sm/medium" color="TEXT_MUTED" align="center">
             {Lang.basicFormat(
               lang.format("settings.your_data.last_synced", {
-                date: new Date(data.at).toLocaleString(i18n.getLocale(), {
+                date: new Date(at).toLocaleString(i18n.getLocale(), {
                   weekday: "long",
                   year: "numeric",
                   month: "long",
@@ -303,7 +303,7 @@ export default function () {
             <FormRow
               label={lang.format("settings.auth.log_out.title", {})}
               subLabel={lang.format("settings.auth.log_out.description", {})}
-              // STUB use new logout icon :3
+              // STUB[epic=icon] use new logout icon :3
               leading={
                 <FormRow.Icon source={getAssetIDByName("ic_logout_24px")} />
               }
@@ -314,7 +314,6 @@ export default function () {
                   content: lang.format("alert.log_out.body", {}),
                   onConfirm: () => {
                     useAuthorizationStore.getState().setToken(null);
-                    useCacheStore.getState().updateData(null);
 
                     showToast(
                       lang.format("toast.logout", {}),
@@ -340,7 +339,6 @@ export default function () {
                   onConfirm: async () => {
                     await deleteData();
                     useAuthorizationStore.getState().setToken(null);
-                    useCacheStore.getState().updateData(null);
 
                     showToast(
                       lang.format("toast.deleted_data", {}),
@@ -365,7 +363,7 @@ export default function () {
         icon={getAssetIDByName("UserIcon")}
         padding={!isAuthorized() || !data}
       >
-        {isAuthorized() && !!data ? (
+        {isAuthorized() && hasData() ? (
           <>
             <FormRow
               label={lang.format("settings.manage_data.save_data.title", {})}
@@ -390,7 +388,6 @@ export default function () {
                     try {
                       const everything = await grabEverything();
                       await saveData(everything);
-                      useCacheStore.getState().updateData(fillData(everything));
 
                       showToast(
                         lang.format("toast.saved_data", {}),
@@ -518,7 +515,7 @@ export default function () {
                 unBusy("import_compressed");
                 if (!text) return;
 
-                let data: SavedUserData;
+                let data: UserData;
                 try {
                   data = await decompressRawData(text);
                 } catch {

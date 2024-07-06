@@ -8,7 +8,3 @@ export interface UserData {
     custom: (FontDefinition & { enabled: boolean })[];
   };
 }
-
-export type SavedUserData = UserData & {
-  at: string;
-};

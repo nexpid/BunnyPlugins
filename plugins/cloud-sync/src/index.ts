@@ -2,13 +2,12 @@ import { constants } from "@vendetta";
 import { storage } from "@vendetta/plugin";
 import { plugins } from "@vendetta/plugins";
 import { themes } from "@vendetta/themes";
-import { without } from "@vendetta/utils";
 
 import { Lang } from "$/lang";
 
 import Settings from "./components/Settings";
 import { useAuthorizationStore } from "./stores/AuthorizationStore";
-import { fillData, useCacheStore } from "./stores/CacheStore";
+import { useCacheStore } from "./stores/CacheStore";
 import { getData, saveData } from "./stuff/api";
 import { debounceSync } from "./stuff/http";
 import patcher from "./stuff/patcher";
@@ -35,14 +34,11 @@ export const vstorage = storage as {
   };
 };
 
-export const fillCache = async () =>
-  getData().then((x) => useCacheStore.getState().updateData(x));
-
 export function isPluginProxied(id: string) {
   return [
     constants.PROXY_PREFIX,
 
-    // STUB Bunny types; constants :3
+    // STUB[epic=types] constants :3
     //@ts-expect-error Bunny types stub
     constants.BUNNY_PROXY_PREFIX,
   ].some((x) => id.startsWith(x));
@@ -57,11 +53,8 @@ const autoSync = async () => {
   const cache = useCacheStore.getState();
 
   const everything = await grabEverything();
-  if (JSON.stringify(without(cache.data, "at")) !== JSON.stringify(everything))
-    debounceSync(async () => {
-      await saveData(everything);
-      cache.updateData(fillData(everything));
-    });
+  if (JSON.stringify(cache.data) !== JSON.stringify(everything))
+    debounceSync(async () => saveData(everything));
 };
 
 const emitterSymbol = Symbol.for("vendetta.storage.emitter");
@@ -102,7 +95,7 @@ export default {
     });
 
     useAuthorizationStore.persist.onFinishHydration(
-      () => useAuthorizationStore.getState().isAuthorized() && fillCache(),
+      () => useAuthorizationStore.getState().isAuthorized() && getData(),
     );
 
     patches.push(patcher());

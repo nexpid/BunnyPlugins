@@ -3,36 +3,35 @@ import { findByStoreName } from "@vendetta/metro";
 import { zustand } from "$/deps";
 import { fluxSubscribe } from "$/types";
 
-import { SavedUserData, UserData } from "../types";
+import { UserData } from "../types";
 
 const UserStore = findByStoreName("UserStore");
 
 interface CacheState {
-  data: SavedUserData | null;
-  dir: Record<string, SavedUserData>;
+  data: UserData | null;
+  at: string | null;
+  dir: Record<string, { data: UserData; at: string }>;
   init: () => void;
-  updateData: (data: SavedUserData) => void;
+  updateData: (data: UserData | null, at: string | null) => void;
   hasData: () => boolean;
 }
 
 export const useCacheStore = zustand.create<CacheState>((set, get) => ({
   data: null,
+  at: null,
   dir: {},
-  init: () => set({ data: get().dir[UserStore.getCurrentUser()?.id] ?? null }),
-  updateData: (data: SavedUserData | null) =>
+  init: () => {
+    const dt = get().dir[UserStore.getCurrentUser()?.id];
+    set({ data: dt?.data, at: dt?.at });
+  },
+  updateData: (data: UserData | null, at: string | null) =>
     set({
       data,
-      dir: { ...get().dir, [UserStore.getCurrentUser()?.id]: data },
+      at,
+      dir: { ...get().dir, [UserStore.getCurrentUser()?.id]: { data, at } },
     }),
-  hasData: () => !!get().data,
+  hasData: () => !!get().data && !!get().at,
 }));
-
-export function fillData(data: UserData): SavedUserData {
-  return {
-    ...data,
-    at: new Date().toUTCString(),
-  };
-}
 
 export const unsubCacheStore = fluxSubscribe("CONNECTION_OPEN", () =>
   useCacheStore.getState().init(),
