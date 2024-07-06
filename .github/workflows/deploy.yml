@@ -156,6 +156,8 @@ jobs:
           mv devpages-tmp/.git devpages/.git
           rm -rf devpages-tmp
 
+          grep -rl 'https://bunny.nexpid.xyz' devpages/. | xargs -I '{}' sed -i -e 's/https:\/\/bunny.nexpid.xyz/https:\/\/dev.bunny.nexpid.xyz/g' {}
+
       - name: Deploy to GitHub pages
         working-directory: devpages
         run: |
