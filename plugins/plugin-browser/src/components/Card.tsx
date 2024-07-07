@@ -4,6 +4,7 @@
 import { React, ReactNative as RN, stylesheet } from "@vendetta/metro/common";
 import { rawColors, semanticColors } from "@vendetta/ui";
 import { getAssetIDByName } from "@vendetta/ui/assets";
+import { Forms } from "@vendetta/ui/components";
 
 import { hideActionSheet } from "$/components/ActionSheet";
 import { showSimpleActionSheet } from "$/components/ActionSheet";
@@ -11,6 +12,8 @@ import Text from "$/components/Text";
 import { Reanimated } from "$/deps";
 import { buttonVariantPolyfill, IconButton, Stack } from "$/lib/redesign";
 import { lerp } from "$/types";
+
+const { FormRow } = Forms;
 
 // TODO: These styles work weirdly. iOS has cramped text, Android with low DPI probably does too. Fix?
 
@@ -154,7 +157,11 @@ export default function Card(props: CardProps) {
                       key: "CardOverflow",
                       header: {
                         title: props.overflowTitle,
-                        icon: getAssetIDByName(props.headerIcon),
+                        icon: getAssetIDByName(props.headerIcon) && (
+                          <FormRow.Icon
+                            source={getAssetIDByName(props.headerIcon)}
+                          />
+                        ),
                         onClose: () => hideActionSheet(),
                       },
                       options: props.overflowActions?.map((i) => ({
