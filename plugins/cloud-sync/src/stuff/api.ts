@@ -18,7 +18,7 @@ export async function authFetch(url: RequestInfo, options?: RequestInit) {
   if (res.ok) return res;
   else {
     const text = await res.text();
-    showToast(text, getAssetIDByName("CircleXIcon"));
+    showToast(text, getAssetIDByName("CircleXIcon-primary"));
     throw new Error(text);
   }
 }

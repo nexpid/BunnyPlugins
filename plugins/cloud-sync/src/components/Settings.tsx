@@ -485,7 +485,10 @@ export default function () {
                   getAssetIDByName("FileIcon"),
                 );
               } catch (e) {
-                showToast(e.toString(), getAssetIDByName("CircleXIcon"));
+                showToast(
+                  e.toString(),
+                  getAssetIDByName("CircleXIcon-primary"),
+                );
               }
 
               unBusy("download_compressed");
@@ -524,7 +527,7 @@ export default function () {
                 if (!DocumentPicker.isCancel(e))
                   showToast(
                     lang.format(e.toString(), {}),
-                    getAssetIDByName("CircleXIcon"),
+                    getAssetIDByName("CircleXIcon-primary"),
                   );
               }
 

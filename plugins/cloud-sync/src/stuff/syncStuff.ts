@@ -109,7 +109,7 @@ export async function importData(data: UserData, options: SyncImportOptions) {
     importCallback?.(false);
     return showToast(
       lang.format("toast.sync.no_import", {}),
-      getAssetIDByName("CircleXIcon"),
+      getAssetIDByName("CircleXIcon-primary"),
     );
   }
 
