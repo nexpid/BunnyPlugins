@@ -10,12 +10,12 @@ import { semanticColors } from "@vendetta/ui";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { General } from "@vendetta/ui/components";
 
+import { ActionSheet } from "$/components/ActionSheet";
 import SuperAwesomeIcon from "$/components/SuperAwesomeIcon";
 import Text from "$/components/Text";
 import { WebView } from "$/deps";
 import usePromise from "$/hooks/usePromise";
 import { managePage } from "$/lib/ui";
-import { openSheet } from "$/types";
 
 import webviewCss from "../../assets/webview.css";
 import webviewHtml from "../../assets/webview.html";
@@ -42,7 +42,7 @@ export default function App() {
     headerRight: () => (
       <SuperAwesomeIcon
         onPress={() =>
-          openSheet(SettingsActionSheet, {
+          ActionSheet.open(SettingsActionSheet, {
             kaboom: () => navigation.goBack(),
           })
         }

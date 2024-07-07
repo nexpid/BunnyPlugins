@@ -4,10 +4,11 @@ import { before, instead } from "@vendetta/patcher";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { showToast } from "@vendetta/ui/toasts";
 
+import { LazyActionSheet } from "$/components/ActionSheet";
+
 import { Module, ModuleCategory } from "../stuff/Module";
 
 const MediaManager = findByProps("downloadMediaAsset");
-const ActionSheet = findByProps("openLazy", "hideActionSheet");
 
 const showContextMenu = findByProps("showContextMenu");
 const handleClick = findByProps("handleClick", "isLinkTrusted");
@@ -46,7 +47,7 @@ export default new Module({
       );
 
       this.patches.add(
-        before("openLazy", ActionSheet, (ctx) => {
+        before("openLazy", LazyActionSheet, (ctx) => {
           const [_, action, args] = ctx;
 
           if (action !== "MediaShareActionSheet") return;

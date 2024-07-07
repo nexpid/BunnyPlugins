@@ -1,10 +1,4 @@
-import { logger } from "@vendetta";
-import {
-  find,
-  findByName,
-  findByProps,
-  findByStoreName,
-} from "@vendetta/metro";
+import { findByName, findByProps, findByStoreName } from "@vendetta/metro";
 import { FluxDispatcher } from "@vendetta/metro/common";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { showToast } from "@vendetta/ui/toasts";
@@ -19,24 +13,6 @@ const colorResolver = colorModule?.internal ?? colorModule?.meta;
 
 export const TextStyleSheet = findByProps("TextStyleSheet")
   .TextStyleSheet as _TextStyleSheet;
-
-export const ActionSheet =
-  findByProps("ActionSheet")?.ActionSheet ??
-  find((x) => x.render?.name === "ActionSheet"); // thank you to @pylixonly for fixing this
-
-export const LazyActionSheet = findByProps("openLazy", "hideActionSheet");
-export const { openLazy, hideActionSheet } = LazyActionSheet;
-
-export const {
-  ActionSheetTitleHeader,
-  ActionSheetCloseButton,
-  ActionSheetContentContainer,
-} = findByProps(
-  "ActionSheetTitleHeader",
-  "ActionSheetCloseButton",
-  "ActionSheetContentContainer",
-);
-export const ActionSheetRow = findByProps("ActionSheetRow")?.ActionSheetRow;
 
 export const Navigator =
   findByName("Navigator") ?? findByProps("Navigator")?.Navigator;
@@ -95,29 +71,6 @@ export function getUserAvatar(
           ? (parseInt(user.id) >> 22) % 6
           : parseInt(user.discriminator) % 5
       }`;
-}
-
-export function openSheet<T extends React.FunctionComponent>(
-  sheet: T,
-  props: Parameters<T>[0],
-) {
-  try {
-    openLazy(
-      new Promise((x) =>
-        x({
-          default: sheet,
-        }),
-      ),
-      "ActionSheet",
-      props,
-    );
-  } catch (e) {
-    logger.error(e.stack);
-    showToast(
-      "Got error when opening ActionSheet! Please check debug logs",
-      getAssetIDByName("Smal"),
-    );
-  }
 }
 
 export function openModal(key: string, modal: typeof Modal) {

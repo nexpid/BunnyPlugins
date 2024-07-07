@@ -8,9 +8,9 @@ import { getAssetIDByName } from "@vendetta/ui/assets";
 import { Forms, General } from "@vendetta/ui/components";
 import { showToast } from "@vendetta/ui/toasts";
 
+import { ActionSheet } from "$/components/ActionSheet";
 import { BetterTableRowGroup } from "$/components/BetterTableRow";
 import Text from "$/components/Text";
-import { openSheet } from "$/types";
 
 import { cache, vstorage } from "..";
 import { currentAuthorization, deleteSaveData } from "../stuff/api";
@@ -90,7 +90,7 @@ export default function () {
                 }
                 onLongPress={() =>
                   x &&
-                  openSheet(SongInfoSheet, {
+                  ActionSheet.open(SongInfoSheet, {
                     song: x,
                     remove: () => (cache.data.songs[i] = null),
                   })

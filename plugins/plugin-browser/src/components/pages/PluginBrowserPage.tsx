@@ -4,10 +4,10 @@ import { showToast } from "@vendetta/ui/toasts";
 import { safeFetch } from "@vendetta/utils";
 import fuzzysort from "fuzzysort";
 
+import { ActionSheet } from "$/components/ActionSheet";
 import ChooseSheet from "$/components/sheets/ChooseSheet";
 import { FlashList } from "$/deps";
 import { managePage } from "$/lib/ui";
-import { openSheet } from "$/types";
 
 import { lang } from "../..";
 import constants from "../../stuff/constants";
@@ -112,7 +112,7 @@ export default () => {
         <Search
           onChangeText={setSearch}
           onPressFilters={() =>
-            openSheet(ChooseSheet, {
+            ActionSheet.open(ChooseSheet, {
               title: lang.format("sheet.sort.title", {}),
               value: sort,
               options: Object.values(Sort).map((value) => ({

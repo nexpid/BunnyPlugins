@@ -3,8 +3,8 @@ import { NavigationNative, React, stylesheet } from "@vendetta/metro/common";
 import { semanticColors } from "@vendetta/ui";
 import { Button, General } from "@vendetta/ui/components";
 
+import { ActionSheet } from "$/components/ActionSheet";
 import Text from "$/components/Text";
-import { openSheet } from "$/types";
 
 import {
   ActivityType,
@@ -75,7 +75,7 @@ export default ({ edit, act }: { edit: boolean; act: SettingsActivity }) => {
             variant="eyebrow"
             color="TEXT_NORMAL"
             onPress={() =>
-              openSheet(ActivityTypeActionSheet, {
+              ActionSheet.open(ActivityTypeActionSheet, {
                 type: act.type ?? ActivityType.Playing,
                 update: (x) => {
                   act.type = x;
@@ -93,7 +93,7 @@ export default ({ edit, act }: { edit: boolean; act: SettingsActivity }) => {
               <View style={styles.images}>
                 <Pressable
                   onPress={() =>
-                    openSheet(ImageActionSheet, {
+                    ActionSheet.open(ImageActionSheet, {
                       appId: act.app.id,
                       role: "Large",
                       image: act.assets.largeImg,
@@ -117,7 +117,7 @@ export default ({ edit, act }: { edit: boolean; act: SettingsActivity }) => {
                 <View style={styles.smallImageBg}>
                   <Pressable
                     onPress={() =>
-                      openSheet(ImageActionSheet, {
+                      ActionSheet.open(ImageActionSheet, {
                         appId: act.app.id,
                         role: "Small",
                         image: act.assets.smallImg,
@@ -147,7 +147,7 @@ export default ({ edit, act }: { edit: boolean; act: SettingsActivity }) => {
                   variant="text-md/semibold"
                   color="TEXT_NORMAL"
                   onPress={() =>
-                    openSheet(ApplicationActionSheet, {
+                    ActionSheet.open(ApplicationActionSheet, {
                       appId: act.app.id,
                       appName: act.app.name,
                       navigation,
@@ -204,7 +204,7 @@ export default ({ edit, act }: { edit: boolean; act: SettingsActivity }) => {
                   variant="text-sm/normal"
                   color="TEXT_NORMAL"
                   onPress={() =>
-                    openSheet(TimestampActionSheet, {
+                    ActionSheet.open(TimestampActionSheet, {
                       start: act.timestamps.start,
                       end: act.timestamps.end,
                       update: (x) => {
@@ -240,7 +240,7 @@ export default ({ edit, act }: { edit: boolean; act: SettingsActivity }) => {
                 style={{ backgroundColor: "grey" }}
                 size={"small"}
                 onPress={() =>
-                  openSheet(ButtonActionSheet, {
+                  ActionSheet.open(ButtonActionSheet, {
                     role: "1",
                     text: act.buttons[0]?.text,
                     url: act.buttons[0]?.url,
@@ -264,7 +264,7 @@ export default ({ edit, act }: { edit: boolean; act: SettingsActivity }) => {
                 style={{ backgroundColor: "grey" }}
                 size={"small"}
                 onPress={() =>
-                  openSheet(ButtonActionSheet, {
+                  ActionSheet.open(ButtonActionSheet, {
                     role: "2",
                     text: act.buttons[1]?.text,
                     url: act.buttons[1]?.url,

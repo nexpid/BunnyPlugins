@@ -5,6 +5,7 @@ import { getAssetIDByName } from "@vendetta/ui/assets";
 import { Forms } from "@vendetta/ui/components";
 import { showToast } from "@vendetta/ui/toasts";
 
+import { ActionSheet } from "$/components/ActionSheet";
 import { BetterTableRowGroup } from "$/components/BetterTableRow";
 import Modal from "$/components/Modal";
 import ChooseSheet from "$/components/sheets/ChooseSheet";
@@ -17,7 +18,6 @@ import {
   TextInput,
   useSegmentedControlState,
 } from "$/lib/redesign";
-import { openSheet } from "$/types";
 
 import { ConfigIconpackMode, lang, vstorage } from "../..";
 import { state } from "../../stuff/active";
@@ -61,7 +61,7 @@ const tabs = {
                 {},
               )}
               onPress={() =>
-                openSheet(ChooseSheet, {
+                ActionSheet.open(ChooseSheet, {
                   title: lang.format("modal.config.iconpack.mode", {}),
                   value: vstorage.iconpack.mode,
                   options: [

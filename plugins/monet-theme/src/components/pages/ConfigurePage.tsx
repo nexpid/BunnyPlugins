@@ -5,9 +5,9 @@ import { semanticColors } from "@vendetta/ui";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { showToast } from "@vendetta/ui/toasts";
 
+import { ActionSheet, hideActionSheet } from "$/components/ActionSheet";
 import { BetterTableRowGroup } from "$/components/BetterTableRow";
 import Text from "$/components/Text";
-import { LazyActionSheet, openSheet } from "$/types";
 
 import { getDiscordTheme, vstorage } from "../..";
 import wallpapers, {
@@ -139,7 +139,7 @@ function WallpaperCollection({
             centerImage
             selected={false}
             onPress={() =>
-              openSheet(AddBackgroundSheet, { add: configurable.add })
+              ActionSheet.open(AddBackgroundSheet, { add: configurable.add })
             }
           />
         )}
@@ -162,7 +162,7 @@ function WallpaperCollection({
                   key: "CardOverflow",
                   header: {
                     title: x.title,
-                    onClose: () => LazyActionSheet.hideActionSheet(),
+                    onClose: () => hideActionSheet(),
                   },
                   options: [
                     {

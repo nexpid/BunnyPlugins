@@ -5,14 +5,15 @@ import { getAssetIDByName } from "@vendetta/ui/assets";
 import { Forms, General } from "@vendetta/ui/components";
 import { showToast } from "@vendetta/ui/toasts";
 
+import { ActionSheet } from "$/components/ActionSheet";
+import ChooseSheet from "$/components/sheets/ChooseSheet";
 import SmartMention from "$/components/SmartMention";
 import Text from "$/components/Text";
 import { Button } from "$/lib/redesign";
-import { openModal, openSheet, resolveSemanticColor } from "$/types";
+import { openModal, resolveSemanticColor } from "$/types";
 
 import { vstorage } from "..";
 import ErrorViewerModal from "../components/modals/ErrorViewerModal";
-import ChooseSettingSheet from "../components/sheets/ChooseSettingSheet";
 
 const { View } = General;
 const { FormRow, FormSwitchRow, FormDivider } = Forms;
@@ -396,12 +397,14 @@ export class Module<Settings extends Record<string, ModuleSetting>> {
                           this.storage.options[id],
                         )}
                         onPress={() =>
-                          openSheet(ChooseSettingSheet, {
-                            label: setting.label,
-                            //@ts-expect-error type string cannot be used to index type
-                            value: this.storage.options[id],
-                            choices: setting.choices,
-                            update: (val) => {
+                          ActionSheet.open(ChooseSheet, {
+                            title: setting.label,
+                            value: this.storage.options[id] as any,
+                            options: setting.choices.map((x) => ({
+                              name: x,
+                              value: x,
+                            })),
+                            callback: (val) => {
                               //@ts-expect-error type string cannot be used to index type
                               this.storage.options[id] = val;
                               this.restart();

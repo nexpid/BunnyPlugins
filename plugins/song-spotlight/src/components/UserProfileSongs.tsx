@@ -6,14 +6,10 @@ import { getAssetIDByName } from "@vendetta/ui/assets";
 import { General } from "@vendetta/ui/components";
 import { showToast } from "@vendetta/ui/toasts";
 
+import { ActionSheet } from "$/components/ActionSheet";
 import Text from "$/components/Text";
 import { Svg, WebView } from "$/deps";
-import {
-  lerp,
-  openSheet,
-  resolveCustomSemantic,
-  TextStyleSheet,
-} from "$/types";
+import { lerp, resolveCustomSemantic, TextStyleSheet } from "$/types";
 
 import next from "../../assets/card/next.svg";
 import pause from "../../assets/card/pause.svg";
@@ -412,7 +408,7 @@ const SpotifySongEmbed = ({
             <RN.Pressable
               android_ripple={styles.androidRipple}
               onPress={() =>
-                openSheet(SongInfoSheet, { song, showAdd, remove })
+                ActionSheet.open(SongInfoSheet, { song, showAdd, remove })
               }
             >
               <RN.Image source={getAssetIDByName("ic_feed_more")} />
@@ -500,7 +496,7 @@ const SpotifySongEmbed = ({
                     }
                   }}
                   more={() =>
-                    openSheet(SongInfoSheet, {
+                    ActionSheet.open(SongInfoSheet, {
                       song: {
                         service: "spotify",
                         type: "track",

@@ -1,8 +1,9 @@
 import { findByProps } from "@vendetta/metro";
 import { before } from "@vendetta/patcher";
 
+import { LazyActionSheet } from "$/components/ActionSheet";
+
 const MediaManager = findByProps("downloadMediaAsset"); // thank you rosie for this snippet
-const ActionSheet = findByProps("openLazy", "hideActionSheet");
 
 const parseURL = (url: string): string | undefined => {
   const path = url.split("/");
@@ -34,7 +35,7 @@ export default {
     );
 
     patches.push(
-      before("openLazy", ActionSheet, (ctx) => {
+      before("openLazy", LazyActionSheet, (ctx) => {
         const [_, action, args] = ctx;
 
         if (action !== "MediaShareActionSheet") return;

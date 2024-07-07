@@ -5,8 +5,8 @@ import { getAssetIDByName } from "@vendetta/ui/assets";
 import { General } from "@vendetta/ui/components";
 import { showToast } from "@vendetta/ui/toasts";
 
+import { ActionSheet } from "$/components/ActionSheet";
 import Text from "$/components/Text";
-import { openSheet } from "$/types";
 
 const { View, Pressable } = General;
 
@@ -55,11 +55,11 @@ export default ({
           marginBottom: 8,
         }}
         onPress={() =>
-          // openSheet(ColorSheet, {
+          // ActionSheet.open(ColorSheet, {
           //   title,
           //   color: color.slice(1),
           // })
-          openSheet(CustomColorPickerActionSheet, {
+          ActionSheet.open(CustomColorPickerActionSheet, {
             color: parseInt(color.slice(1), 16),
             onSelect: (clr: number) =>
               update(`#${clr.toString(16).padStart(6, "0")}`),

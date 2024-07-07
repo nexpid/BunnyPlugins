@@ -7,17 +7,13 @@ import { getAssetIDByName } from "@vendetta/ui/assets";
 import { Forms, General } from "@vendetta/ui/components";
 import { showToast } from "@vendetta/ui/toasts";
 
-import { RichText } from "$/components/RichText";
-import Text from "$/components/Text";
 import {
   ActionSheet,
-  ActionSheetCloseButton,
-  ActionSheetContentContainer,
-  ActionSheetTitleHeader,
   hideActionSheet,
   openLazy,
-  openSheet,
-} from "$/types";
+} from "$/components/ActionSheet";
+import { RichText } from "$/components/RichText";
+import Text from "$/components/Text";
 
 import { vstorage } from "..";
 import { showApplicationList } from "../components/pages/ApplicationList";
@@ -53,26 +49,18 @@ export function ImageVariableActionSheet({
   update: (v: string) => void;
 }) {
   return (
-    <ActionSheet>
-      <ActionSheetContentContainer>
-        <ActionSheetTitleHeader
-          title={`${role} Image Variable`}
-          trailing={
-            <ActionSheetCloseButton onPress={() => hideActionSheet()} />
-          }
+    <ActionSheet title={`${role} Image Variable`}>
+      {imageVariables.map((x) => (
+        <FormRow
+          label={x.title}
+          subLabel={x.description}
+          trailing={<FormRow.Arrow />}
+          onPress={() => {
+            update(x.format);
+            hideActionSheet();
+          }}
         />
-        {imageVariables.map((x) => (
-          <FormRow
-            label={x.title}
-            subLabel={x.description}
-            trailing={<FormRow.Arrow />}
-            onPress={() => {
-              update(x.format);
-              hideActionSheet();
-            }}
-          />
-        ))}
-      </ActionSheetContentContainer>
+      ))}
     </ActionSheet>
   );
 }
@@ -93,98 +81,90 @@ export function ImageActionSheet({
   update: (img: string | undefined) => void;
 }) {
   return (
-    <ActionSheet>
-      <ActionSheetContentContainer>
-        <ActionSheetTitleHeader
-          title={`Edit ${role} Image`}
-          trailing={<ActionSheetCloseButton onPress={hideActionSheet} />}
-        />
-        <FormRow
-          label="Set Image Variable"
-          leading={
-            <FormRow.Icon source={getAssetIDByName("ic_essentials_sparkle")} />
-          }
-          trailing={<FormRow.Arrow />}
-          onPress={() =>
-            openSheet(ImageVariableActionSheet, {
-              role,
-              update: (v) => update(v),
-            })
-          }
-        />
-        <FormRow
-          label="Use Custom Image"
-          subLabel="Make sure your image is in a square aspect ratio"
-          leading={<FormRow.Icon source={getAssetIDByName("ic_link")} />}
-          onPress={() => {
-            showInputAlert({
-              title: "Enter the link to your image link",
-              placeholder: "can be a discord attachment CDN link",
-              confirmText: "Proxy",
-              confirmColor: "brand" as ButtonColors,
-              onConfirm: async function (d) {
-                const url = d.match(constants.HTTP_REGEX_MULTI)?.[0];
-                if (!url)
-                  return showToast("Invalid URL", getAssetIDByName("Small"));
-                showToast("Proxying image...", getAssetIDByName("ic_clock"));
-                try {
-                  update(`mp:${await getExternalAsset(url)}`);
-                  showToast("Proxied image", getAssetIDByName("Check"));
-                } catch (p) {
-                  console.error(
-                    `[CustomRPC] ImageActionSheet->customImg proxy error!`,
-                  );
-                  logger.error(
-                    `ImageActionSheet->customImg proxy error!\n${p.stack}`,
-                  );
-                  showToast("Failed to proxy image", getAssetIDByName("Small"));
-                }
-              },
-              cancelText: "Cancel",
+    <ActionSheet title={`Edit ${role} Image`}>
+      <FormRow
+        label="Set Image Variable"
+        leading={
+          <FormRow.Icon source={getAssetIDByName("ic_essentials_sparkle")} />
+        }
+        trailing={<FormRow.Arrow />}
+        onPress={() =>
+          ActionSheet.open(ImageVariableActionSheet, {
+            role,
+            update: (v) => update(v),
+          })
+        }
+      />
+      <FormRow
+        label="Use Custom Image"
+        subLabel="Make sure your image is in a square aspect ratio"
+        leading={<FormRow.Icon source={getAssetIDByName("ic_link")} />}
+        onPress={() => {
+          showInputAlert({
+            title: "Enter the link to your image link",
+            placeholder: "can be a discord attachment CDN link",
+            confirmText: "Proxy",
+            confirmColor: "brand" as ButtonColors,
+            onConfirm: async function (d) {
+              const url = d.match(constants.HTTP_REGEX_MULTI)?.[0];
+              if (!url)
+                return showToast("Invalid URL", getAssetIDByName("Small"));
+              showToast("Proxying image...", getAssetIDByName("ic_clock"));
+              try {
+                update(`mp:${await getExternalAsset(url)}`);
+                showToast("Proxied image", getAssetIDByName("Check"));
+              } catch (p) {
+                console.error(
+                  `[CustomRPC] ImageActionSheet->customImg proxy error!`,
+                );
+                logger.error(
+                  `ImageActionSheet->customImg proxy error!\n${p.stack}`,
+                );
+                showToast("Failed to proxy image", getAssetIDByName("Small"));
+              }
+            },
+            cancelText: "Cancel",
+          });
+        }}
+      />
+      <FormRow
+        label="Select RPC Asset"
+        leading={<FormRow.Icon source={getAssetIDByName("ic_media_channel")} />}
+        trailing={<FormRow.Arrow />}
+        onPress={() => {
+          if (!appId)
+            return showConfirmationAlert({
+              title: "No App Set",
+              content: "An app must be selected in order to use RPC assets",
+              confirmText: "Dismiss",
+              confirmColor: "grey" as ButtonColors,
+              onConfirm: () => {},
             });
-          }}
-        />
-        <FormRow
-          label="Select RPC Asset"
-          leading={
-            <FormRow.Icon source={getAssetIDByName("ic_media_channel")} />
-          }
-          trailing={<FormRow.Arrow />}
-          onPress={() => {
-            if (!appId)
-              return showConfirmationAlert({
-                title: "No App Set",
-                content: "An app must be selected in order to use RPC assets",
-                confirmText: "Dismiss",
-                confirmColor: "grey" as ButtonColors,
-                onConfirm: () => {},
-              });
 
-            richAssetListAppId = appId;
-            richAssetListCallback = (x) => {
-              richAssetListCallback = undefined;
-              update(x);
-            };
-            showRichAssetList(navigation);
+          richAssetListAppId = appId;
+          richAssetListCallback = (x) => {
+            richAssetListCallback = undefined;
+            update(x);
+          };
+          showRichAssetList(navigation);
+          hideActionSheet();
+        }}
+      />
+      {image && (
+        <FormRow
+          label={<Text {...destructiveText}>Remove Image</Text>}
+          leading={
+            <FormRow.Icon
+              style={styles.destructiveIcon}
+              source={getAssetIDByName("trash")}
+            />
+          }
+          onPress={() => {
+            update(undefined);
             hideActionSheet();
           }}
         />
-        {image && (
-          <FormRow
-            label={<Text {...destructiveText}>Remove Image</Text>}
-            leading={
-              <FormRow.Icon
-                style={styles.destructiveIcon}
-                source={getAssetIDByName("trash")}
-              />
-            }
-            onPress={() => {
-              update(undefined);
-              hideActionSheet();
-            }}
-          />
-        )}
-      </ActionSheetContentContainer>
+      )}
     </ActionSheet>
   );
 }
@@ -204,69 +184,59 @@ export function ButtonActionSheet({
   }) => void;
 }) {
   return (
-    <ActionSheet>
-      <ActionSheetTitleHeader
-        title={`Edit Button ${role}`}
-        trailing={<ActionSheetCloseButton onPress={hideActionSheet} />}
+    <ActionSheet title={`Edit Button ${role}`}>
+      <FormRow
+        label="Button Text"
+        leading={<FormRow.Icon source={getAssetIDByName("ic_message_edit")} />}
+        onPress={() =>
+          simpleInput({
+            role: `Button ${role} Text`,
+            current: text,
+            update: (x) => update({ text: x, url }),
+          })
+        }
       />
-      <ActionSheetContentContainer>
+      <FormRow
+        label="Button URL"
+        leading={<FormRow.Icon source={getAssetIDByName("ic_message_edit")} />}
+        onPress={() =>
+          simpleInput({
+            role: `Button ${role} URL`,
+            current: url,
+            update: (x) => update({ text, url: x }),
+          })
+        }
+      />
+      {url && (
         <FormRow
-          label="Button Text"
+          label={<Text {...destructiveText}>Remove Button URL</Text>}
           leading={
-            <FormRow.Icon source={getAssetIDByName("ic_message_edit")} />
+            <FormRow.Icon
+              style={styles.destructiveIcon}
+              source={getAssetIDByName("trash")}
+            />
           }
-          onPress={() =>
-            simpleInput({
-              role: `Button ${role} Text`,
-              current: text,
-              update: (x) => update({ text: x, url }),
-            })
-          }
+          onPress={() => {
+            update({ text, url: undefined });
+            hideActionSheet();
+          }}
         />
+      )}
+      {text && (
         <FormRow
-          label="Button URL"
+          label={<Text {...destructiveText}>Remove Button</Text>}
           leading={
-            <FormRow.Icon source={getAssetIDByName("ic_message_edit")} />
+            <FormRow.Icon
+              style={styles.destructiveIcon}
+              source={getAssetIDByName("trash")}
+            />
           }
-          onPress={() =>
-            simpleInput({
-              role: `Button ${role} URL`,
-              current: url,
-              update: (x) => update({ text, url: x }),
-            })
-          }
+          onPress={() => {
+            update({ text: undefined, url: undefined });
+            hideActionSheet();
+          }}
         />
-        {url && (
-          <FormRow
-            label={<Text {...destructiveText}>Remove Button URL</Text>}
-            leading={
-              <FormRow.Icon
-                style={styles.destructiveIcon}
-                source={getAssetIDByName("trash")}
-              />
-            }
-            onPress={() => {
-              update({ text, url: undefined });
-              hideActionSheet();
-            }}
-          />
-        )}
-        {text && (
-          <FormRow
-            label={<Text {...destructiveText}>Remove Button</Text>}
-            leading={
-              <FormRow.Icon
-                style={styles.destructiveIcon}
-                source={getAssetIDByName("trash")}
-              />
-            }
-            onPress={() => {
-              update({ text: undefined, url: undefined });
-              hideActionSheet();
-            }}
-          />
-        )}
-      </ActionSheetContentContainer>
+      )}
     </ActionSheet>
   );
 }
@@ -289,57 +259,49 @@ export function ApplicationActionSheet({
   ) => void;
 }) {
   return (
-    <ActionSheet>
-      <ActionSheetContentContainer>
-        <ActionSheetTitleHeader
-          title={"Edit Application"}
-          trailing={<ActionSheetCloseButton onPress={hideActionSheet} />}
-        />
+    <ActionSheet title={"Edit Application"}>
+      <FormRow
+        label="Application Name"
+        leading={<FormRow.Icon source={getAssetIDByName("ic_message_edit")} />}
+        onPress={() =>
+          simpleInput({
+            role: "Application Name",
+            current: appName,
+            update: (txt) => update({ id: appId, name: txt }),
+          })
+        }
+      />
+      <FormRow
+        label="Select Application"
+        leading={<FormRow.Icon source={getAssetIDByName("ic_robot_24px")} />}
+        trailing={<FormRow.Arrow />}
+        onPress={() => {
+          applicationListCallback = (props) => {
+            applicationListCallback = undefined;
+            update({
+              id: props.id ?? appId,
+              name: props.name ?? appName,
+            });
+          };
+          showApplicationList(navigation);
+          hideActionSheet();
+        }}
+      />
+      {appId && (
         <FormRow
-          label="Application Name"
+          label={<Text {...destructiveText}>Remove Application</Text>}
           leading={
-            <FormRow.Icon source={getAssetIDByName("ic_message_edit")} />
+            <FormRow.Icon
+              style={styles.destructiveIcon}
+              source={getAssetIDByName("trash")}
+            />
           }
-          onPress={() =>
-            simpleInput({
-              role: "Application Name",
-              current: appName,
-              update: (txt) => update({ id: appId, name: txt }),
-            })
-          }
-        />
-        <FormRow
-          label="Select Application"
-          leading={<FormRow.Icon source={getAssetIDByName("ic_robot_24px")} />}
-          trailing={<FormRow.Arrow />}
           onPress={() => {
-            applicationListCallback = (props) => {
-              applicationListCallback = undefined;
-              update({
-                id: props.id ?? appId,
-                name: props.name ?? appName,
-              });
-            };
-            showApplicationList(navigation);
+            update(undefined);
             hideActionSheet();
           }}
         />
-        {appId && (
-          <FormRow
-            label={<Text {...destructiveText}>Remove Application</Text>}
-            leading={
-              <FormRow.Icon
-                style={styles.destructiveIcon}
-                source={getAssetIDByName("trash")}
-              />
-            }
-            onPress={() => {
-              update(undefined);
-              hideActionSheet();
-            }}
-          />
-        )}
-      </ActionSheetContentContainer>
+      )}
     </ActionSheet>
   );
 }
@@ -353,28 +315,20 @@ export function ActivityTypeActionSheet({
 }) {
   const [val, setVal] = React.useState(type);
   return (
-    <ActionSheet>
-      <ActionSheetContentContainer>
-        <ActionSheetTitleHeader
-          title="Edit Activity Type"
-          trailing={
-            <ActionSheetCloseButton onPress={() => hideActionSheet()} />
-          }
-        />
-        {...Object.values(ActivityType)
-          .filter((x) => typeof x === "number")
-          .map((x: number) => (
-            <FormRadioRow
-              label={activityTypePreview[x]}
-              trailing={<FormRow.Arrow />}
-              selected={x === val}
-              onPress={() => {
-                update(x);
-                setVal(x);
-              }}
-            />
-          ))}
-      </ActionSheetContentContainer>
+    <ActionSheet title="Edit Activity Type">
+      {...Object.values(ActivityType)
+        .filter((x) => typeof x === "number")
+        .map((x: number) => (
+          <FormRadioRow
+            label={activityTypePreview[x]}
+            trailing={<FormRow.Arrow />}
+            selected={x === val}
+            onPress={() => {
+              update(x);
+              setVal(x);
+            }}
+          />
+        ))}
     </ActionSheet>
   );
 }
@@ -387,26 +341,18 @@ export function TimestampVariableActionSheet({
   update: (v: string) => void;
 }) {
   return (
-    <ActionSheet>
-      <ActionSheetContentContainer>
-        <ActionSheetTitleHeader
-          title={`Set ${role} Time Variable`}
-          trailing={
-            <ActionSheetCloseButton onPress={() => hideActionSheet()} />
-          }
+    <ActionSheet title={`Set ${role} Time Variable`}>
+      {timestampVariables.map((x) => (
+        <FormRow
+          label={x.title}
+          subLabel={x.description}
+          trailing={<FormRow.Arrow />}
+          onPress={() => {
+            update(x.format);
+            hideActionSheet();
+          }}
         />
-        {timestampVariables.map((x) => (
-          <FormRow
-            label={x.title}
-            subLabel={x.description}
-            trailing={<FormRow.Arrow />}
-            onPress={() => {
-              update(x.format);
-              hideActionSheet();
-            }}
-          />
-        ))}
-      </ActionSheetContentContainer>
+      ))}
       <SheetFooter />
     </ActionSheet>
   );
@@ -447,100 +393,92 @@ export function TimestampActionSheet({
   };
 
   return (
-    <ActionSheet>
-      <ActionSheetContentContainer>
-        <ActionSheetTitleHeader
-          title="Edit Timestamp"
-          trailing={
-            <ActionSheetCloseButton onPress={() => hideActionSheet()} />
-          }
-        />
+    <ActionSheet title="Edit Timestamp">
+      <FormRow
+        label="Set Start Time Variable"
+        leading={
+          <FormRow.Icon source={getAssetIDByName("ic_essentials_sparkle")} />
+        }
+        trailing={<FormRow.Arrow />}
+        onPress={() =>
+          ActionSheet.open(TimestampVariableActionSheet, {
+            role: "Start",
+            update: (v) => update({ start: v, end }),
+          })
+        }
+      />
+      {typeof start !== "string" && (
         <FormRow
-          label="Set Start Time Variable"
+          label="Edit Start Time"
           leading={
-            <FormRow.Icon source={getAssetIDByName("ic_essentials_sparkle")} />
+            <FormRow.Icon source={getAssetIDByName("ic_message_edit")} />
           }
           trailing={<FormRow.Arrow />}
           onPress={() =>
-            openSheet(TimestampVariableActionSheet, {
+            prompt({
               role: "Start",
-              update: (v) => update({ start: v, end }),
+              onSubmit: (v) => update({ start: v, end }),
             })
           }
         />
-        {typeof start !== "string" && (
-          <FormRow
-            label="Edit Start Time"
-            leading={
-              <FormRow.Icon source={getAssetIDByName("ic_message_edit")} />
-            }
-            trailing={<FormRow.Arrow />}
-            onPress={() =>
-              prompt({
-                role: "Start",
-                onSubmit: (v) => update({ start: v, end }),
-              })
-            }
-          />
-        )}
-        {start !== undefined && (
-          <FormRow
-            label={<Text {...destructiveText}>Remove Start Time</Text>}
-            leading={
-              <FormRow.Icon
-                style={styles.destructiveIcon}
-                source={getAssetIDByName("trash")}
-              />
-            }
-            onPress={() => {
-              update({ start: undefined, end });
-              hideActionSheet();
-            }}
-          />
-        )}
+      )}
+      {start !== undefined && (
         <FormRow
-          label="Set End Time Variable"
+          label={<Text {...destructiveText}>Remove Start Time</Text>}
           leading={
-            <FormRow.Icon source={getAssetIDByName("ic_essentials_sparkle")} />
+            <FormRow.Icon
+              style={styles.destructiveIcon}
+              source={getAssetIDByName("trash")}
+            />
           }
-          trailing={<FormRow.Arrow />}
+          onPress={() => {
+            update({ start: undefined, end });
+            hideActionSheet();
+          }}
+        />
+      )}
+      <FormRow
+        label="Set End Time Variable"
+        leading={
+          <FormRow.Icon source={getAssetIDByName("ic_essentials_sparkle")} />
+        }
+        trailing={<FormRow.Arrow />}
+        onPress={() =>
+          ActionSheet.open(TimestampVariableActionSheet, {
+            role: "End",
+            update: (v) => update({ start, end: v }),
+          })
+        }
+      />
+      {typeof end !== "string" && (
+        <FormRow
+          label="Edit End Time"
+          leading={
+            <FormRow.Icon source={getAssetIDByName("ic_message_edit")} />
+          }
           onPress={() =>
-            openSheet(TimestampVariableActionSheet, {
+            prompt({
               role: "End",
-              update: (v) => update({ start, end: v }),
+              onSubmit: (v) => update({ start, end: v }),
             })
           }
         />
-        {typeof end !== "string" && (
-          <FormRow
-            label="Edit End Time"
-            leading={
-              <FormRow.Icon source={getAssetIDByName("ic_message_edit")} />
-            }
-            onPress={() =>
-              prompt({
-                role: "End",
-                onSubmit: (v) => update({ start, end: v }),
-              })
-            }
-          />
-        )}
-        {end !== undefined && (
-          <FormRow
-            label={<Text {...destructiveText}>Remove End Time</Text>}
-            leading={
-              <FormRow.Icon
-                style={styles.destructiveIcon}
-                source={getAssetIDByName("trash")}
-              />
-            }
-            onPress={() => {
-              update({ start, end: undefined });
-              hideActionSheet();
-            }}
-          />
-        )}
-      </ActionSheetContentContainer>
+      )}
+      {end !== undefined && (
+        <FormRow
+          label={<Text {...destructiveText}>Remove End Time</Text>}
+          leading={
+            <FormRow.Icon
+              style={styles.destructiveIcon}
+              source={getAssetIDByName("trash")}
+            />
+          }
+          onPress={() => {
+            update({ start, end: undefined });
+            hideActionSheet();
+          }}
+        />
+      )}
     </ActionSheet>
   );
 }

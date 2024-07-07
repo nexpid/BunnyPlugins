@@ -14,11 +14,11 @@ import { getAssetIDByName } from "@vendetta/ui/assets";
 import { Forms, General } from "@vendetta/ui/components";
 import { showToast } from "@vendetta/ui/toasts";
 
+import { ActionSheet } from "$/components/ActionSheet";
 import { BetterTableRowGroup } from "$/components/BetterTableRow";
 import Text from "$/components/Text";
 import { Reanimated } from "$/deps";
 import { Lang } from "$/lang";
-import { openSheet } from "$/types";
 import RNFS from "$/wrappers/RNFS";
 
 import { lang, vstorage } from "..";
@@ -414,7 +414,7 @@ export default function () {
                 )
               }
               onPress={() => {
-                openSheet(ImportActionSheet, {
+                ActionSheet.open(ImportActionSheet, {
                   navigation,
                 });
                 setImportCallback((x) =>
@@ -528,7 +528,7 @@ export default function () {
                 return unBusy("import_compressed");
               }
 
-              openSheet(ImportActionSheet, {
+              ActionSheet.open(ImportActionSheet, {
                 data,
                 navigation,
               });

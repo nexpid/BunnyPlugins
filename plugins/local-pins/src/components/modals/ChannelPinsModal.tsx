@@ -4,8 +4,8 @@ import { useProxy } from "@vendetta/storage";
 import { showConfirmationAlert } from "@vendetta/ui/alerts";
 import { General } from "@vendetta/ui/components";
 
+import { ActionSheet } from "$/components/ActionSheet";
 import Text from "$/components/Text";
-import { openSheet } from "$/types";
 
 import { clearPins, vstorage } from "../..";
 import useLocalPinned from "../../hooks/useLocalPinned";
@@ -21,7 +21,7 @@ export default function ChannelPinsModal({ channelId }: { channelId: string }) {
   const { data, status, clear } = useLocalPinned(channelId);
 
   pinsCallback.filters = () =>
-    openSheet(FiltersActionSheet, {
+    ActionSheet.open(FiltersActionSheet, {
       defFilters: vstorage.preferFilters,
       set: (fil) => (vstorage.preferFilters = fil),
     });

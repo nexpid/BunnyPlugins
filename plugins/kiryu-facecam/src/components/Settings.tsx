@@ -9,12 +9,12 @@ import { semanticColors } from "@vendetta/ui";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { Forms } from "@vendetta/ui/components";
 
+import { ActionSheet } from "$/components/ActionSheet";
 import { BetterTableRowGroup } from "$/components/BetterTableRow";
 import ChooseSheet from "$/components/sheets/ChooseSheet";
 import { TrailingText } from "$/components/Text";
 import { Reanimated } from "$/deps";
 import { Slider } from "$/lib/redesign";
-import { openSheet } from "$/types";
 
 import kazuma from "../../assets/kazuma.png";
 import { lang, vstorage } from "..";
@@ -210,7 +210,7 @@ const StylingPage = () => {
           </TrailingText>
         }
         onPress={() =>
-          openSheet(ChooseSheet, {
+          ActionSheet.open(ChooseSheet, {
             title: lang.format("settings.styling.pos_x", {}),
             value: vstorage.styling.xPos,
             options: [
@@ -242,7 +242,7 @@ const StylingPage = () => {
           </TrailingText>
         }
         onPress={() =>
-          openSheet(ChooseSheet, {
+          ActionSheet.open(ChooseSheet, {
             title: lang.format("settings.styling.pos_y", {}),
             value: vstorage.styling.yPos,
             options: [
@@ -283,7 +283,7 @@ const AppearPage = () => {
           </TrailingText>
         }
         onPress={() =>
-          openSheet(ChooseSheet, {
+          ActionSheet.open(ChooseSheet, {
             title: lang.format("settings.appear.style", {}),
             value: vstorage.appear.style,
             options: [

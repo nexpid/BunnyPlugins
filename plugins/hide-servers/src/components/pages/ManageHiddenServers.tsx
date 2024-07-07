@@ -5,7 +5,7 @@ import { getAssetIDByName } from "@vendetta/ui/assets";
 import { Forms, General, Search } from "@vendetta/ui/components";
 import { showToast } from "@vendetta/ui/toasts";
 
-import { hideActionSheet } from "$/types";
+import { hideActionSheet } from "$/components/ActionSheet";
 
 import { hiddenList, isHidden, removeHidden } from "../..";
 import { HiddenListEntryType } from "../../types";

@@ -10,6 +10,7 @@ import { getAssetIDByName } from "@vendetta/ui/assets";
 import { Forms, General, Search } from "@vendetta/ui/components";
 import { showToast } from "@vendetta/ui/toasts";
 
+import { hideActionSheet } from "$/components/ActionSheet";
 import SuperAwesomeIcon from "$/components/SuperAwesomeIcon";
 
 import { vstorage } from "../..";
@@ -24,7 +25,6 @@ const { View } = General;
 const { FormRadioRow, FormRow } = Forms;
 
 const { showSimpleActionSheet } = findByProps("showSimpleActionSheet");
-const LazyActionSheet = findByProps("openLazy", "hideActionSheet");
 
 const headerRightCallbacks: {
   import?: () => void;
@@ -120,7 +120,7 @@ export const ProfileList = () => {
               key: "CardOverflow",
               header: {
                 title: item,
-                onClose: () => LazyActionSheet.hideActionSheet(),
+                onClose: () => hideActionSheet(),
               },
               options: [
                 {

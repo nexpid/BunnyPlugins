@@ -15,6 +15,7 @@ import { Forms, General } from "@vendetta/ui/components";
 import { showToast } from "@vendetta/ui/toasts";
 import { safeFetch } from "@vendetta/utils";
 
+import { hideActionSheet } from "$/components/ActionSheet";
 import {
   BetterTableRowGroup,
   BetterTableRowTitle,
@@ -23,7 +24,6 @@ import { RichText } from "$/components/RichText";
 import Skeleton from "$/components/Skeleton";
 import Text from "$/components/Text";
 import { buttonVariantPolyfill } from "$/lib/redesign";
-import { LazyActionSheet } from "$/types";
 import { ThemeDataWithPlus, VendettaSysColors } from "$/typings";
 
 import RepainterIcon from "../../assets/icons/RepainterIcon.png";
@@ -315,7 +315,7 @@ export default () => {
               key: "CardOverflow",
               header: {
                 title: "Patches",
-                onClose: () => LazyActionSheet.hideActionSheet(),
+                onClose: () => hideActionSheet(),
               },
               options: [
                 {

@@ -1,17 +1,11 @@
 import { React, ReactNative as RN } from "@vendetta/metro/common";
 import { Forms } from "@vendetta/ui/components";
 
-import {
-  ActionSheet,
-  ActionSheetCloseButton,
-  ActionSheetContentContainer,
-  ActionSheetTitleHeader,
-  hideActionSheet,
-} from "$/types";
+import { ActionSheet } from "../ActionSheet";
 
 const { FormRow } = Forms;
 
-export default function ({
+export default function ChooseSheet({
   title,
   value: _value,
   options,
@@ -32,37 +26,29 @@ export default function ({
   const [value, setValue] = React.useState(_value);
 
   return (
-    <ActionSheet>
-      <ActionSheetContentContainer>
-        <ActionSheetTitleHeader
-          title={title}
+    <ActionSheet title={title}>
+      {options.map((x) => (
+        <FormRow
+          label={x.name}
+          subLabel={x.description}
           trailing={
-            <ActionSheetCloseButton onPress={() => hideActionSheet()} />
+            x.iconComponent
+              ? x.iconComponent
+              : x.icon && (
+                  <RN.Image
+                    source={x.icon}
+                    resizeMode="cover"
+                    style={{ width: 24, height: 24, tintColor: x.iconColor }}
+                  />
+                )
           }
+          leading={<FormRow.Radio selected={x.value === value} />}
+          onPress={() => {
+            setValue(x.value);
+            callback(x.value);
+          }}
         />
-        {options.map((x) => (
-          <FormRow
-            label={x.name}
-            subLabel={x.description}
-            trailing={
-              x.iconComponent
-                ? x.iconComponent
-                : x.icon && (
-                    <RN.Image
-                      source={x.icon}
-                      resizeMode="cover"
-                      style={{ width: 24, height: 24, tintColor: x.iconColor }}
-                    />
-                  )
-            }
-            leading={<FormRow.Radio selected={x.value === value} />}
-            onPress={() => {
-              setValue(x.value);
-              callback(x.value);
-            }}
-          />
-        ))}
-      </ActionSheetContentContainer>
+      ))}
     </ActionSheet>
   );
 }

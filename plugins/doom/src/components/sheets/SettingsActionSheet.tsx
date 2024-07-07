@@ -10,16 +10,10 @@ import { getAssetIDByName } from "@vendetta/ui/assets";
 import { Forms } from "@vendetta/ui/components";
 import { showToast } from "@vendetta/ui/toasts";
 
+import { ActionSheet, hideActionSheet } from "$/components/ActionSheet";
 import Text from "$/components/Text";
 import usePromise from "$/hooks/usePromise";
 import { Button } from "$/lib/redesign";
-import {
-  ActionSheet,
-  ActionSheetCloseButton,
-  ActionSheetContentContainer,
-  ActionSheetTitleHeader,
-  hideActionSheet,
-} from "$/types";
 
 import { newGameSuggestionURL, vstorage } from "../..";
 import { purgeFiles } from "../../stuff/files";
@@ -62,94 +56,78 @@ export default function SettingsActionSheet({
   const manifest = manifestP.success && manifestP.response;
   if (!manifest)
     return (
-      <ActionSheet>
-        <ActionSheetContentContainer>
-          <ActionSheetTitleHeader
-            title={"Settings"}
-            trailing={
-              <ActionSheetCloseButton onPress={() => hideActionSheet()} />
-            }
-          />
-          <Text
-            variant="text-lg/semibold"
-            color="TEXT_DANGER"
-            style={styles.wompwomp}
-          >
-            Manifest failed to load.
-          </Text>
-        </ActionSheetContentContainer>
+      <ActionSheet title={"Settings"}>
+        <Text
+          variant="text-lg/semibold"
+          color="TEXT_DANGER"
+          style={styles.wompwomp}
+        >
+          Manifest failed to load.
+        </Text>
       </ActionSheet>
     );
 
   return (
-    <ActionSheet>
-      <ActionSheetContentContainer>
-        <ActionSheetTitleHeader
-          title={"Settings"}
-          trailing={
-            <ActionSheetCloseButton onPress={() => hideActionSheet()} />
-          }
-        />
-        <FormRow
-          label="Game"
-          subLabel="What game the DOOM plugin loads"
-          leading={<FormRow.Icon source={getAssetIDByName("HubIcon")} />}
-        />
-        {manifest.games.map(({ title, id }) => (
-          <FormRadioRow
-            label={title}
-            onPress={() =>
-              setChanges({
-                ...changes,
-                game: id,
-              })
-            }
-            selected={changes.game === id}
-            style={{ marginHorizontal: 12 }}
-          />
-        ))}
-        <FormRow
-          label="Suggest new game"
-          leading={<FormRow.Icon source={getAssetIDByName("ic_add_24px")} />}
-          style={{ marginHorizontal: 12 }}
-          onPress={() => url.openURL(newGameSuggestionURL())}
-        />
-        <FormRow
-          label={<Text {...destructiveText}>Delete Files</Text>}
-          leading={
-            <FormRow.Icon
-              style={styles.destructiveIcon}
-              source={getAssetIDByName("ic_trash_24px")}
-            />
-          }
+    <ActionSheet title={"Settings"}>
+      <FormRow
+        label="Game"
+        subLabel="What game the DOOM plugin loads"
+        leading={<FormRow.Icon source={getAssetIDByName("HubIcon")} />}
+      />
+      {manifest.games.map(({ title, id }) => (
+        <FormRadioRow
+          label={title}
           onPress={() =>
-            showConfirmationAlert({
-              title: "Delete DOOM files?",
-              content: "Are you sure you want to delete DOOM files?",
-              confirmText: "Delete",
-              confirmColor: "RED" as ButtonColors,
-              cancelText: "Cancel",
-              onConfirm: async () => {
-                hideActionSheet();
-                kaboom();
-                await purgeFiles();
-                showToast("Deleted files", getAssetIDByName("Check"));
-              },
+            setChanges({
+              ...changes,
+              game: id,
             })
           }
+          selected={changes.game === id}
+          style={{ marginHorizontal: 12 }}
         />
-        <Button
-          variant="primary"
-          size="md"
-          text="Apply Changes"
-          disabled={!hasChanges}
-          onPress={() => {
-            vstorage.settings = changes;
-            hideActionSheet();
-          }}
-          style={{ paddingHorizontal: 16, paddingVertical: 8 }}
-        />
-      </ActionSheetContentContainer>
+      ))}
+      <FormRow
+        label="Suggest new game"
+        leading={<FormRow.Icon source={getAssetIDByName("ic_add_24px")} />}
+        style={{ marginHorizontal: 12 }}
+        onPress={() => url.openURL(newGameSuggestionURL())}
+      />
+      <FormRow
+        label={<Text {...destructiveText}>Delete Files</Text>}
+        leading={
+          <FormRow.Icon
+            style={styles.destructiveIcon}
+            source={getAssetIDByName("ic_trash_24px")}
+          />
+        }
+        onPress={() =>
+          showConfirmationAlert({
+            title: "Delete DOOM files?",
+            content: "Are you sure you want to delete DOOM files?",
+            confirmText: "Delete",
+            confirmColor: "RED" as ButtonColors,
+            cancelText: "Cancel",
+            onConfirm: async () => {
+              hideActionSheet();
+              kaboom();
+              await purgeFiles();
+              showToast("Deleted files", getAssetIDByName("Check"));
+            },
+          })
+        }
+      />
+      <Button
+        variant="primary"
+        size="md"
+        text="Apply Changes"
+        disabled={!hasChanges}
+        onPress={() => {
+          vstorage.settings = changes;
+          hideActionSheet();
+        }}
+        style={{ paddingHorizontal: 16, paddingVertical: 8 }}
+      />
     </ActionSheet>
   );
 }

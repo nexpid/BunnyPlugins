@@ -4,8 +4,8 @@ import { useProxy } from "@vendetta/storage";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { showToast } from "@vendetta/ui/toasts";
 
+import { hideActionSheet } from "$/components/ActionSheet";
 import { FlashList } from "$/deps";
-import { LazyActionSheet } from "$/types";
 
 import { vstorage } from "../..";
 import Commit from "../Commit";
@@ -32,7 +32,7 @@ export const CommitsPage = () => {
               key: "CardOverflow",
               header: {
                 title: item.commit.message,
-                onClose: () => LazyActionSheet.hideActionSheet(),
+                onClose: () => hideActionSheet(),
               },
               options: [
                 vstorage.patches.commit !== item.sha

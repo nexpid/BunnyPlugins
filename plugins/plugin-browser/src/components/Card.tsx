@@ -7,12 +7,12 @@ import { rawColors, semanticColors } from "@vendetta/ui";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { Forms } from "@vendetta/ui/components";
 
+import { hideActionSheet } from "$/components/ActionSheet";
 import Text from "$/components/Text";
 import { Reanimated } from "$/deps";
 import { buttonVariantPolyfill } from "$/lib/redesign";
 import { lerp } from "$/types";
 
-const { hideActionSheet } = findByProps("openLazy", "hideActionSheet");
 const { showSimpleActionSheet } = findByProps("showSimpleActionSheet");
 const IconButton = findByProps("IconButton").IconButton;
 

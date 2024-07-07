@@ -5,8 +5,9 @@ import { getAssetIDByName } from "@vendetta/ui/assets";
 import { General } from "@vendetta/ui/components";
 import { findInReactTree } from "@vendetta/utils";
 
+import { LazyActionSheet } from "$/components/ActionSheet";
 import SuperAwesomeIcon from "$/components/SuperAwesomeIcon";
-import { LazyActionSheet, SearchContext } from "$/types";
+import { SearchContext } from "$/types";
 
 import ChannelPinsRow from "../components/ChannelPinsRow";
 import PinMessageLocallyAction from "../components/MessageActionSheetButton";

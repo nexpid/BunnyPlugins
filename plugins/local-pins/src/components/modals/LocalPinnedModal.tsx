@@ -9,9 +9,10 @@ import { semanticColors } from "@vendetta/ui";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { General } from "@vendetta/ui/components";
 
+import { hideActionSheet } from "$/components/ActionSheet";
 import Modal from "$/components/Modal";
 import Text from "$/components/Text";
-import { hideActionSheet, popModal } from "$/types";
+import { popModal } from "$/types";
 
 import { hasAnyPin, removePin } from "../..";
 import useLocalPinned from "../../hooks/useLocalPinned";
