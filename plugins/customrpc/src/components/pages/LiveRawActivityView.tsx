@@ -1,13 +1,17 @@
-import { constants, React, stylesheet } from "@vendetta/metro/common";
+import {
+  constants,
+  React,
+  ReactNative as RN,
+  stylesheet,
+} from "@vendetta/metro/common";
 import { semanticColors } from "@vendetta/ui";
-import { Forms, General } from "@vendetta/ui/components";
+import { Forms } from "@vendetta/ui/components";
 
 import Text from "$/components/Text";
 
 import { debug, vstorage } from "../..";
 import { dispatchActivityIfPossible } from "../../stuff/activity";
 
-const { ScrollView, Text: DText } = General;
 const { FormSection } = Forms;
 
 export let forceUpdateLiveRawActivityView: () => void;
@@ -24,12 +28,12 @@ export const LiveRawActivityView = () => {
   });
 
   return (
-    <ScrollView style={{ flex: 1, marginBottom: 50 }}>
+    <RN.ScrollView style={{ flex: 1, marginBottom: 50 }}>
       <FormSection title="Live Raw Activity">
         {debug.lastRawActivity ? (
-          <DText style={styles.code}>
+          <RN.Text style={styles.code}>
             {JSON.stringify(debug.lastRawActivity, undefined, 3)}
-          </DText>
+          </RN.Text>
         ) : vstorage.settings.display ? (
           <Text variant="text-md/semibold">
             Display activity setting is disabled. You need to actually enable it
@@ -52,7 +56,7 @@ export const LiveRawActivityView = () => {
             : "-"}
         </Text>
       </FormSection>
-    </ScrollView>
+    </RN.ScrollView>
   );
 };
 

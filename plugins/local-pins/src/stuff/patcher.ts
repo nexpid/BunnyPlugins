@@ -1,8 +1,7 @@
 import { findByName, findByProps } from "@vendetta/metro";
-import { i18n, React } from "@vendetta/metro/common";
+import { i18n, React, ReactNative as RN } from "@vendetta/metro/common";
 import { after, before } from "@vendetta/patcher";
 import { getAssetIDByName } from "@vendetta/ui/assets";
-import { General } from "@vendetta/ui/components";
 import { findInReactTree } from "@vendetta/utils";
 
 import { LazyActionSheet } from "$/components/ActionSheet";
@@ -15,7 +14,6 @@ import ChannelPinsModal from "../components/modals/ChannelPinsModal";
 import RedesignChannelPinsRow from "../components/RedesignChannelPinsRow";
 import PinsScreen from "../components/screens/PinsScreen";
 
-const { View } = General;
 const ChannelSettingsModal = findByName("ChannelSettingsModal", false);
 const ChannelPinsConnected = findByName("ChannelPinsConnected", false);
 const screens = findByProps("MessagesScreen", "MessageContentScreen");
@@ -105,7 +103,7 @@ export default function () {
 
       screens.PINNED_MESSAGES.headerRight = () =>
         React.createElement(
-          View,
+          RN.View,
           {
             style: { flexDirection: "row-reverse" },
           },

@@ -2,7 +2,7 @@ import { findByStoreName } from "@vendetta/metro";
 import { React, ReactNative as RN } from "@vendetta/metro/common";
 import { useProxy } from "@vendetta/storage";
 import { getAssetIDByName } from "@vendetta/ui/assets";
-import { Forms, General, Search } from "@vendetta/ui/components";
+import { Forms, Search } from "@vendetta/ui/components";
 import { showToast } from "@vendetta/ui/toasts";
 
 import { showSimpleActionSheet } from "$/components/ActionSheet";
@@ -11,7 +11,6 @@ import { hideActionSheet } from "$/components/ActionSheet";
 import { hiddenList, isHidden, removeHidden } from "../..";
 import { HiddenListEntryType } from "../../types";
 
-const { View } = General;
 const { FormRow } = Forms;
 
 const SortedGuildStore = findByStoreName("SortedGuildStore");
@@ -81,12 +80,12 @@ export const ManageDataPage = () => {
                 style={{ height: 32, width: 32, borderRadius: 16 }}
               />
             ) : (
-              <View
+              <RN.View
                 style={{
                   height: 32,
                   width: 32,
                   borderRadius: 8,
-                  backgroundColor: item.color,
+                  backgroundColor: item.color as any,
                 }}
               />
             )

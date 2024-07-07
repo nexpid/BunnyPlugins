@@ -2,7 +2,6 @@ import { findByName } from "@vendetta/metro";
 import { React, ReactNative as RN } from "@vendetta/metro/common";
 import { useProxy } from "@vendetta/storage";
 import { showConfirmationAlert } from "@vendetta/ui/alerts";
-import { General } from "@vendetta/ui/components";
 
 import { ActionSheet } from "$/components/ActionSheet";
 import Text from "$/components/Text";
@@ -11,8 +10,6 @@ import { clearPins, vstorage } from "../..";
 import useLocalPinned from "../../hooks/useLocalPinned";
 import { pinsCallback } from "../../stuff/patcher";
 import FiltersActionSheet from "../sheets/FiltersActionSheet";
-
-const { View } = General;
 
 const ChannelPinsConnected = findByName("ChannelPinsConnected", false);
 
@@ -50,11 +47,13 @@ export default function ChannelPinsModal({ channelId }: { channelId: string }) {
   return Array.isArray(data) ? (
     <ChannelPinsConnected.default channelId={channelId} />
   ) : (
-    <View style={{ alignItems: "center", justifyContent: "center", flex: 1 }}>
+    <RN.View
+      style={{ alignItems: "center", justifyContent: "center", flex: 1 }}
+    >
       <RN.ActivityIndicator size="large" style={{ marginBottom: 10 }} />
       <Text variant="text-lg/semibold" color="TEXT_NORMAL" align="center">
         {Math.floor(status * 100)}%
       </Text>
-    </View>
+    </RN.View>
   );
 }

@@ -1,8 +1,6 @@
-import { General } from "@vendetta/ui/components";
+import { ReactNative as RN } from "@vendetta/metro/common";
 
 import Text from "./Text";
-
-const { Text: _Text } = General;
 
 export namespace RichText {
   export function Bold({
@@ -25,9 +23,9 @@ export namespace RichText {
     onPress?: () => void;
   }>) {
     return (
-      <_Text style={{ textDecorationLine: "underline" }} onPress={onPress}>
+      <RN.Text style={{ textDecorationLine: "underline" }} onPress={onPress}>
         {children}
-      </_Text>
+      </RN.Text>
     );
   }
 }

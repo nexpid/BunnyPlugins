@@ -1,11 +1,8 @@
 import { findByName, findByProps, findByStoreName } from "@vendetta/metro";
-import { ReactNative } from "@vendetta/metro/common";
+import { ReactNative as RN } from "@vendetta/metro/common";
 import { showConfirmationAlert } from "@vendetta/ui/alerts";
-import { General } from "@vendetta/ui/components";
 
 import { vstorage } from "..";
-
-const { ScrollView } = General;
 
 const { default: ChatItemWrapper } = findByProps(
   "DCDAutoModerationSystemMessageView",
@@ -31,10 +28,10 @@ export default function () {
       onConfirm: () => void 0,
       // @ts-expect-error -- a valid property that's unadded in typings
       children: (
-        <ScrollView
+        <RN.ScrollView
           style={{
             marginVertical: 12,
-            maxHeight: ReactNative.Dimensions.get("window").height * 0.7,
+            maxHeight: RN.Dimensions.get("window").height * 0.7,
           }}
         >
           <ChatItemWrapper
@@ -48,7 +45,7 @@ export default function () {
               })
             }
           />
-        </ScrollView>
+        </RN.ScrollView>
       ),
     });
   else {

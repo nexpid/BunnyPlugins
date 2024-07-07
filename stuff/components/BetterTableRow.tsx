@@ -1,10 +1,7 @@
 import { ReactNative as RN, stylesheet } from "@vendetta/metro/common";
 import { semanticColors } from "@vendetta/ui";
-import { General } from "@vendetta/ui/components";
 
 import Text from "./Text";
-
-const { View, Pressable } = General;
 
 export function BetterTableRowTitle({
   title,
@@ -29,7 +26,7 @@ export function BetterTableRowTitle({
       tintColor: semanticColors.TEXT_MUTED,
     },
   });
-  const UseCompontent = onPress ? Pressable : View;
+  const UseCompontent = onPress ? RN.Pressable : RN.View;
 
   return (
     <UseCompontent
@@ -80,7 +77,7 @@ export function BetterTableRowGroup({
   });
 
   return (
-    <View style={{ marginHorizontal: 16, marginTop: nearby ? 8 : 16 }}>
+    <RN.View style={{ marginHorizontal: 16, marginTop: nearby ? 8 : 16 }}>
       {title ? (
         typeof title === "string" ? (
           <BetterTableRowTitle
@@ -92,15 +89,15 @@ export function BetterTableRowGroup({
           title
         )
       ) : null}
-      <View style={styles.main}>
+      <RN.View style={styles.main}>
         {padding ? (
-          <View style={{ paddingHorizontal: 16, paddingVertical: 16 }}>
+          <RN.View style={{ paddingHorizontal: 16, paddingVertical: 16 }}>
             {children}
-          </View>
+          </RN.View>
         ) : (
           children
         )}
-      </View>
-    </View>
+      </RN.View>
+    </RN.View>
   );
 }

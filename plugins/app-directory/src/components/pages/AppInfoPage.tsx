@@ -9,7 +9,6 @@ import {
 } from "@vendetta/metro/common";
 import { rawColors, semanticColors } from "@vendetta/ui";
 import { getAssetIDByName } from "@vendetta/ui/assets";
-import { General } from "@vendetta/ui/components";
 import { showToast } from "@vendetta/ui/toasts";
 
 import Text from "$/components/Text";
@@ -24,8 +23,6 @@ import {
 import { parse } from "../../stuff/markdown";
 import { openOauth2Modal } from "../../stuff/oauth2";
 import { inServers, parseDesc } from "../../stuff/util";
-
-const { ScrollView, View } = General;
 
 const { TableRowGroup, TableRow, TableRowIcon, TableRowGroupTitle } =
   findByProps("TableRowGroup", "TableRow");
@@ -140,7 +137,7 @@ export default function AppInfoPage({
     return <RN.ActivityIndicator size="large" style={{ flex: 1 }} />;
 
   return (
-    <ScrollView
+    <RN.ScrollView
       style={{
         flex: 1,
         paddingHorizontal: 16,
@@ -148,7 +145,7 @@ export default function AppInfoPage({
       }}
     >
       {carouselIndexContent.length ? (
-        <View style={styles.carousel}>
+        <RN.View style={styles.carousel}>
           <RN.FlatList
             horizontal
             pagingEnabled
@@ -192,7 +189,7 @@ export default function AppInfoPage({
               />
             )}
           />
-          <View style={styles.carouselDots}>
+          <RN.View style={styles.carouselDots}>
             {carouselIndexContent.map((i) => (
               <RN.Animated.View
                 style={[
@@ -213,10 +210,10 @@ export default function AppInfoPage({
                 ]}
               />
             ))}
-          </View>
-        </View>
+          </RN.View>
+        </RN.View>
       ) : (
-        <View style={styles.carouselEmpty} />
+        <RN.View style={styles.carouselEmpty} />
       )}
       <RN.Image
         style={styles.appIcon}
@@ -224,7 +221,7 @@ export default function AppInfoPage({
           uri: `https://cdn.discordapp.com/app-icons/${app.id}/${app.icon}.webp?size=80`,
         }}
       />
-      <View style={styles.group}>
+      <RN.View style={styles.group}>
         <Text variant="text-lg/semibold" color="TEXT_NORMAL">
           {app.name}
         </Text>
@@ -246,10 +243,10 @@ export default function AppInfoPage({
             {app.categories.map((x) => x.name).join(", ")}
           </Text>
         )}
-        <View style={{ marginBottom: 12 }}>
+        <RN.View style={{ marginBottom: 12 }}>
           <TableRowDivider />
-        </View>
-        <View style={styles.baseAppActions}>
+        </RN.View>
+        <RN.View style={styles.baseAppActions}>
           <Button
             style={{ flex: 1 / 2 }}
             text={
@@ -291,9 +288,9 @@ export default function AppInfoPage({
                   )
             }
           />
-        </View>
-      </View>
-      <View style={styles.group}>
+        </RN.View>
+      </RN.View>
+      <RN.View style={styles.group}>
         {parseDesc(
           app.directory_entry.detailed_description,
           app.directory_entry.short_description,
@@ -311,9 +308,9 @@ export default function AppInfoPage({
             </Text>
           </>
         ))}
-      </View>
+      </RN.View>
       {detailedInfo.directory_entry.popular_application_commands && (
-        <View style={styles.group}>
+        <RN.View style={styles.group}>
           <TableRowGroupTitle
             title={
               i18n.Messages.APP_DIRECTORY_PROFILE_COMMANDS_HEADING ||
@@ -322,7 +319,7 @@ export default function AppInfoPage({
           />
           {detailedInfo.directory_entry.popular_application_commands.map(
             (x, i, a) => (
-              <View
+              <RN.View
                 style={[
                   styles.popularCommand,
                   { marginBottom: i !== a.length - 1 ? 8 : 0 },
@@ -342,17 +339,17 @@ export default function AppInfoPage({
                 >
                   {x.description}
                 </Text>
-              </View>
+              </RN.View>
             ),
           )}
-        </View>
+        </RN.View>
       )}
-      <View style={styles.sillyGroup}>
-        <View style={{ paddingHorizontal: 16 }}>
+      <RN.View style={styles.sillyGroup}>
+        <RN.View style={{ paddingHorizontal: 16 }}>
           <TableRowGroupTitle
             title={i18n.Messages.APP_DIRECTORY_PROFILE_LINKS_HEADING || "Links"}
           />
-        </View>
+        </RN.View>
         <TableRowGroup>
           {...app.directory_entry.external_urls?.map((x) => (
             <TableRow
@@ -382,9 +379,9 @@ export default function AppInfoPage({
             />
           )}
         </TableRowGroup>
-      </View>
-      <View style={{ height: 16 }} />
-    </ScrollView>
+      </RN.View>
+      <RN.View style={{ height: 16 }} />
+    </RN.ScrollView>
   );
 }
 

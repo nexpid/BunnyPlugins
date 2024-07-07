@@ -1,8 +1,12 @@
-import { NavigationNative, stylesheet } from "@vendetta/metro/common";
+import {
+  NavigationNative,
+  ReactNative as RN,
+  stylesheet,
+} from "@vendetta/metro/common";
 import { semanticColors } from "@vendetta/ui";
 import { showConfirmationAlert } from "@vendetta/ui/alerts";
 import { getAssetIDByName } from "@vendetta/ui/assets";
-import { Forms, General } from "@vendetta/ui/components";
+import { Forms } from "@vendetta/ui/components";
 
 import { BetterTableRowGroup } from "$/components/BetterTableRow";
 import Text from "$/components/Text";
@@ -10,7 +14,6 @@ import Text from "$/components/Text";
 import { hiddenList } from "..";
 import { openManageHiddenServersPage } from "./pages/ManageHiddenServers";
 
-const { ScrollView } = General;
 const { FormRow } = Forms;
 
 const styles = stylesheet.createThemedStyleSheet({
@@ -27,7 +30,7 @@ export default () => {
   const navigation = NavigationNative.useNavigation();
 
   return (
-    <ScrollView>
+    <RN.ScrollView>
       <BetterTableRowGroup title="Data" icon={getAssetIDByName("ic_cog_24px")}>
         <FormRow
           label="Manage hidden servers"
@@ -58,6 +61,6 @@ export default () => {
           }
         />
       </BetterTableRowGroup>
-    </ScrollView>
+    </RN.ScrollView>
   );
 };

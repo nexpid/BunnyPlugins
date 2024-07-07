@@ -1,16 +1,15 @@
-import { stylesheet } from "@vendetta/metro/common";
+import { ReactNative as RN, stylesheet } from "@vendetta/metro/common";
 import { useProxy } from "@vendetta/storage";
 import { semanticColors } from "@vendetta/ui";
 import { showConfirmationAlert } from "@vendetta/ui/alerts";
 import { getAssetIDByName } from "@vendetta/ui/assets";
-import { Forms, General } from "@vendetta/ui/components";
+import { Forms } from "@vendetta/ui/components";
 
 import { BetterTableRowGroup } from "$/components/BetterTableRow";
 import Text from "$/components/Text";
 
 import { vstorage } from "..";
 
-const { ScrollView } = General;
 const { FormRow } = Forms;
 
 const styles = stylesheet.createThemedStyleSheet({
@@ -27,7 +26,7 @@ export default () => {
   useProxy(vstorage);
 
   return (
-    <ScrollView>
+    <RN.ScrollView>
       <BetterTableRowGroup
         title="Settings"
         icon={getAssetIDByName("ic_cog_24px")}
@@ -70,6 +69,6 @@ export default () => {
           }
         />
       </BetterTableRowGroup>
-    </ScrollView>
+    </RN.ScrollView>
   );
 };

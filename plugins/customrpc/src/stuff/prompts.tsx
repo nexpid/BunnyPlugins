@@ -1,10 +1,10 @@
 import { constants, logger } from "@vendetta";
 import { findByProps } from "@vendetta/metro";
-import { React, stylesheet } from "@vendetta/metro/common";
+import { React, ReactNative as RN, stylesheet } from "@vendetta/metro/common";
 import { semanticColors } from "@vendetta/ui";
 import { showConfirmationAlert, showInputAlert } from "@vendetta/ui/alerts";
 import { getAssetIDByName } from "@vendetta/ui/assets";
-import { Forms, General } from "@vendetta/ui/components";
+import { Forms } from "@vendetta/ui/components";
 import { showToast } from "@vendetta/ui/toasts";
 
 import {
@@ -24,12 +24,11 @@ import { getExternalAsset } from "./api";
 import { unparseTimestamp } from "./util";
 import { imageVariables, timestampVariables } from "./variables";
 
-const { View } = General;
 const { FormRow, FormRadioRow } = Forms;
 
 const DatePicker = findByProps("DatePickerModes");
 
-const SheetFooter = () => <View style={{ marginBottom: 16 }} />;
+const SheetFooter = () => <RN.View style={{ marginBottom: 16 }} />;
 
 const styles = stylesheet.createThemedStyleSheet({
   destructiveIcon: {

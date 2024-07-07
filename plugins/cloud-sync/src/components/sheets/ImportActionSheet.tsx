@@ -5,7 +5,7 @@ import { themes } from "@vendetta/themes";
 import { semanticColors } from "@vendetta/ui";
 import { showConfirmationAlert } from "@vendetta/ui/alerts";
 import { getAssetIDByName } from "@vendetta/ui/assets";
-import { Forms, General } from "@vendetta/ui/components";
+import { Forms } from "@vendetta/ui/components";
 
 import { ActionSheet, hideActionSheet } from "$/components/ActionSheet";
 import Text from "$/components/Text";
@@ -18,7 +18,6 @@ import { importData, SyncImportOptions } from "../../stuff/syncStuff";
 import { UserData } from "../../types";
 import { openImportLogsPage } from "../pages/ImportLogsPage";
 
-const { View } = General;
 const { FormCheckboxRow } = Forms;
 
 export default function ImportActionSheet({
@@ -76,7 +75,7 @@ export default function ImportActionSheet({
     <ActionSheet title={lang.format("sheet.import_data.title", {})}>
       {!total && (
         <>
-          <View
+          <RN.View
             style={{
               flexDirection: "row",
               alignItems: "center",
@@ -92,7 +91,7 @@ export default function ImportActionSheet({
             <Text variant="text-md/semibold" color="TEXT_BRAND" align="center">
               {lang.format("sheet.import_data.already_synced", {})}
             </Text>
-          </View>
+          </RN.View>
         </>
       )}
       <FormCheckboxRow

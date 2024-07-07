@@ -10,7 +10,7 @@ import { useProxy } from "@vendetta/storage";
 import { semanticColors } from "@vendetta/ui";
 import { showInputAlert } from "@vendetta/ui/alerts";
 import { getAssetIDByName } from "@vendetta/ui/assets";
-import { Forms, General } from "@vendetta/ui/components";
+import { Forms } from "@vendetta/ui/components";
 import { showToast } from "@vendetta/ui/toasts";
 import { safeFetch } from "@vendetta/utils";
 
@@ -44,7 +44,6 @@ import Commit, { CommitObj } from "./Commit";
 import { openCommitsPage } from "./pages/CommitsPage";
 import { openConfigurePage } from "./pages/ConfigurePage";
 
-const { ScrollView, View, Pressable } = General;
 const { FormRow, FormSwitchRow } = Forms;
 
 export function setColorsFromDynamic(clr: VendettaSysColors) {
@@ -158,9 +157,9 @@ export default () => {
   const lastThemePressTime = React.useRef(0);
 
   return (
-    <ScrollView style={{ flex: 1 }}>
+    <RN.ScrollView style={{ flex: 1 }}>
       {showMessage && (
-        <View
+        <RN.View
           style={{
             flexDirection: "row",
             alignItems: "center",
@@ -175,14 +174,14 @@ export default () => {
           <Text variant="text-md/semibold" color={"TEXT_BRAND"}>
             {showMessage}
           </Text>
-        </View>
+        </RN.View>
       )}
       <BetterTableRowGroup
         title="Colors"
         icon={getAssetIDByName("PaintPaletteIcon")}
         padding
       >
-        <View
+        <RN.View
           style={{
             marginBottom: 8,
             flexDirection: "row",
@@ -192,7 +191,7 @@ export default () => {
           }}
         >
           {syscolors && (
-            <Pressable
+            <RN.Pressable
               android_ripple={styles.androidRipple}
               style={styles.pill}
               onPress={() => {
@@ -211,9 +210,9 @@ export default () => {
               <Text variant="text-sm/semibold" color="TEXT_NORMAL">
                 Autofill
               </Text>
-            </Pressable>
+            </RN.Pressable>
           )}
-          <Pressable
+          <RN.Pressable
             android_ripple={styles.androidRipple}
             style={styles.pill}
             onPress={async () => {
@@ -246,9 +245,9 @@ export default () => {
             <Text variant="text-sm/semibold" color="TEXT_NORMAL">
               Use Repainter theme
             </Text>
-          </Pressable>
-        </View>
-        <View
+          </RN.Pressable>
+        </RN.View>
+        <RN.View
           style={{
             flexDirection: "row",
             alignItems: "center",
@@ -280,7 +279,7 @@ export default () => {
             color={vstorage.colors.accent3}
             update={(c) => (vstorage.colors.accent3 = c)}
           />
-        </View>
+        </RN.View>
       </BetterTableRowGroup>
       <BetterTableRowTitle
         title="Theme"
@@ -331,7 +330,7 @@ export default () => {
           }
         />
       ) : (
-        <View
+        <RN.View
           style={{
             marginTop: 35,
             marginBottom: 20,
@@ -351,7 +350,7 @@ export default () => {
           >
             <RichText.Underline>Tap to retry</RichText.Underline>
           </Text>
-        </View>
+        </RN.View>
       )}
       {!patches ? (
         <Skeleton
@@ -416,7 +415,7 @@ export default () => {
           />
         </BetterTableRowGroup>
       )}
-      <View style={{ height: 12 }} />
-    </ScrollView>
+      <RN.View style={{ height: 12 }} />
+    </RN.ScrollView>
   );
 };

@@ -1,14 +1,15 @@
 import { findByName } from "@vendetta/metro";
-import { clipboard, stylesheet } from "@vendetta/metro/common";
+import {
+  clipboard,
+  ReactNative as RN,
+  stylesheet,
+} from "@vendetta/metro/common";
 import { semanticColors } from "@vendetta/ui";
 import { getAssetIDByName } from "@vendetta/ui/assets";
-import { General } from "@vendetta/ui/components";
 import { showToast } from "@vendetta/ui/toasts";
 
 import { ActionSheet } from "$/components/ActionSheet";
 import Text from "$/components/Text";
-
-const { View, Pressable } = General;
 
 const CustomColorPickerActionSheet = findByName("CustomColorPickerActionSheet");
 
@@ -29,7 +30,7 @@ export default ({
   });
 
   return (
-    <View
+    <RN.View
       style={{
         flexDirection: "column",
         alignItems: "center",
@@ -37,7 +38,7 @@ export default ({
         flex: 1 / 5,
       }}
     >
-      <Pressable
+      <RN.Pressable
         android_ripple={styles.androidRipple}
         disabled={false}
         accessibilityRole={"button"}
@@ -73,6 +74,6 @@ export default ({
       <Text variant="text-sm/semibold" color="TEXT_NORMAL" align="center">
         {title}
       </Text>
-    </View>
+    </RN.View>
   );
 };

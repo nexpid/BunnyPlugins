@@ -5,7 +5,7 @@ import {
 } from "@vendetta/metro/common";
 import { showInputAlert } from "@vendetta/ui/alerts";
 import { getAssetIDByName } from "@vendetta/ui/assets";
-import { General, Search } from "@vendetta/ui/components";
+import { Search } from "@vendetta/ui/components";
 import { showToast } from "@vendetta/ui/toasts";
 
 import SuperAwesomeIcon from "$/components/SuperAwesomeIcon";
@@ -14,8 +14,6 @@ import Text from "$/components/Text";
 import { getApplications, SimpleAPIApplication } from "../../stuff/api";
 import { applicationListCallback } from "../../stuff/prompts";
 import { placeholders } from "../Settings";
-
-const { View, Image } = General;
 
 let headerRightCallback: () => void;
 export const ApplicationList = () => {
@@ -75,14 +73,14 @@ export const ApplicationList = () => {
               applicationListCallback?.({ id: item.id, name: item.name });
             }}
           >
-            <View
+            <RN.View
               style={{
                 marginHorizontal: 8,
                 marginBottom: 8,
                 flexDirection: "row",
               }}
             >
-              <Image
+              <RN.Image
                 source={{
                   uri: item.icon
                     ? `https://cdn.discordapp.com/app-icons/${item.icon}/${item.icon}.png?size=64`
@@ -94,15 +92,15 @@ export const ApplicationList = () => {
                   aspectRatio: 1,
                 }}
               />
-              <View style={{ flexDirection: "column", marginLeft: 8 }}>
+              <RN.View style={{ flexDirection: "column", marginLeft: 8 }}>
                 <Text variant="text-md/semibold" color="TEXT_NORMAL">
                   {item.name}
                 </Text>
                 <Text variant="text-sm/medium" color="TEXT_MUTED" lineClamp={1}>
                   {item.description}
                 </Text>
-              </View>
-            </View>
+              </RN.View>
+            </RN.View>
           </RN.TouchableOpacity>
         );
       }}

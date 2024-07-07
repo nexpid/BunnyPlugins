@@ -1,7 +1,7 @@
-import { React } from "@vendetta/metro/common";
+import { React, ReactNative as RN } from "@vendetta/metro/common";
 import { useProxy } from "@vendetta/storage";
 import { getAssetIDByName } from "@vendetta/ui/assets";
-import { Forms, General } from "@vendetta/ui/components";
+import { Forms } from "@vendetta/ui/components";
 
 import { BetterTableRowGroup } from "$/components/BetterTableRow";
 
@@ -9,7 +9,6 @@ import { lang, vstorage } from "..";
 import { convert, emojipacks } from "../stuff/twemoji";
 import CustomTwemoji from "./CustomTwemoji";
 
-const { ScrollView } = General;
 const { FormRow } = Forms;
 
 const emojis = Array.from("😀😁😂🤣😃😄😅😆😋😊😉😎😍😘🥰😗");
@@ -24,7 +23,7 @@ export default () => {
   );
 
   return (
-    <ScrollView>
+    <RN.ScrollView>
       <BetterTableRowGroup
         title={lang.format("settings.emojipacks.title", {})}
         icon={getAssetIDByName("ic_cog_24px")}
@@ -40,6 +39,6 @@ export default () => {
           />
         ))}
       </BetterTableRowGroup>
-    </ScrollView>
+    </RN.ScrollView>
   );
 };

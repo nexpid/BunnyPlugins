@@ -6,7 +6,7 @@ import {
   stylesheet,
 } from "@vendetta/metro/common";
 import { semanticColors } from "@vendetta/ui";
-import { General, Search } from "@vendetta/ui/components";
+import { Search } from "@vendetta/ui/components";
 
 import { TextStyleSheet } from "$/types";
 
@@ -14,8 +14,6 @@ import { AppRichAsset, getApplicationAssets } from "../../stuff/api";
 import { richAssetListAppId, richAssetListCallback } from "../../stuff/prompts";
 
 const TabletManagerIdk = findByProps("isTablet");
-
-const { View, Text, Image } = General;
 
 const styles = stylesheet.createThemedStyleSheet({
   card: {
@@ -84,16 +82,16 @@ export const RichAssetList = () => {
               aspectRatio: 1,
             }}
           >
-            <View style={styles.card}>
-              <View style={styles.cardHeader}>
-                <Text style={styles.cardHeaderText}>{item.name}</Text>
-              </View>
-              <Image
+            <RN.View style={styles.card}>
+              <RN.View style={styles.cardHeader}>
+                <RN.Text style={styles.cardHeaderText}>{item.name}</RN.Text>
+              </RN.View>
+              <RN.Image
                 source={{
                   uri: `https://cdn.discordapp.com/app-assets/${richAssetListAppId}/${item.id}.png?size=128`,
                 }}
               />
-            </View>
+            </RN.View>
           </RN.TouchableOpacity>
         );
       }}

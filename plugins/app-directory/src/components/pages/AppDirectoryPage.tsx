@@ -7,7 +7,7 @@ import {
 } from "@vendetta/metro/common";
 import { semanticColors } from "@vendetta/ui";
 import { getAssetIDByName } from "@vendetta/ui/assets";
-import { General, Search } from "@vendetta/ui/components";
+import { Search } from "@vendetta/ui/components";
 
 import Text from "$/components/Text";
 import usePromise from "$/hooks/usePromise";
@@ -23,8 +23,6 @@ import {
 } from "../../stuff/api";
 import { inServers } from "../../stuff/util";
 import { getAppInfoPageRender } from "./AppInfoPage";
-
-const { ScrollView, View } = General;
 
 export default function AppDirectoryPage({
   guildId,
@@ -207,7 +205,7 @@ export default function AppDirectoryPage({
   const isLast = searchResults && searchPage === searchResults.num_pages - 1;
 
   return (
-    <ScrollView
+    <RN.ScrollView
       style={{
         flex: 1,
         paddingHorizontal: 16,
@@ -215,7 +213,7 @@ export default function AppDirectoryPage({
       }}
     >
       <Search placeholder="Search..." onChangeText={setSearch} />
-      <View style={{ height: 12 }} />
+      <RN.View style={{ height: 12 }} />
       {categories ? (
         <RN.FlatList
           horizontal
@@ -263,7 +261,7 @@ export default function AppDirectoryPage({
               </Text>
             </RN.Pressable>
           )}
-          ItemSeparatorComponent={() => <View style={{ width: 8 }} />}
+          ItemSeparatorComponent={() => <RN.View style={{ width: 8 }} />}
           style={{ paddingBottom: 16 }}
         />
       ) : (
@@ -277,22 +275,22 @@ export default function AppDirectoryPage({
           <>
             <RN.FlatList
               data={searchResults.results}
-              ItemSeparatorComponent={() => <View style={{ height: 8 }} />}
+              ItemSeparatorComponent={() => <RN.View style={{ height: 8 }} />}
               renderItem={({ item: { data: app } }) => (
                 <RN.Pressable
                   style={collectionStyles.card}
                   android_ripple={styles.androidRipple}
                   onPress={onAppPress(app)}
                 >
-                  <View style={collectionStyles.cardContent}>
-                    <View style={collectionStyles.smallProfile}>
+                  <RN.View style={collectionStyles.cardContent}>
+                    <RN.View style={collectionStyles.smallProfile}>
                       <RN.Image
                         style={collectionStyles.smallAvatar}
                         source={{
                           uri: `https://cdn.discordapp.com/app-icons/${app.id}/${app.icon}.webp?size=60`,
                         }}
                       />
-                      <View style={collectionStyles.smallProfileThing}>
+                      <RN.View style={collectionStyles.smallProfileThing}>
                         <Text variant="text-md/semibold" color="TEXT_NORMAL">
                           {app.name}
                         </Text>
@@ -301,8 +299,8 @@ export default function AppDirectoryPage({
                             {app.categories[0].name}
                           </Text>
                         )}
-                      </View>
-                    </View>
+                      </RN.View>
+                    </RN.View>
                     <Text
                       variant="text-md/medium"
                       color="TEXT_MUTED"
@@ -317,11 +315,11 @@ export default function AppDirectoryPage({
                     >
                       {app.directory_entry.short_description}
                     </Text>
-                  </View>
+                  </RN.View>
                 </RN.Pressable>
               )}
             />
-            <View style={styles.bottomNav}>
+            <RN.View style={styles.bottomNav}>
               <RN.Pressable
                 style={isFirst ? styles.bottomNavItemOff : styles.bottomNavItem}
                 onPress={() =>
@@ -417,7 +415,7 @@ export default function AppDirectoryPage({
                   &gt;
                 </Text>
               </RN.Pressable>
-            </View>
+            </RN.View>
           </>
         ) : (
           <>
@@ -435,7 +433,9 @@ export default function AppDirectoryPage({
                   data={x.application_directory_collection_items.sort(
                     (a, b) => a.position - b.position,
                   )}
-                  ItemSeparatorComponent={() => <View style={{ width: 8 }} />}
+                  ItemSeparatorComponent={() => (
+                    <RN.View style={{ width: 8 }} />
+                  )}
                   renderItem={({ item: app }) =>
                     x.type === APICollectionType.Big ? (
                       <RN.Pressable
@@ -452,7 +452,7 @@ export default function AppDirectoryPage({
                             resizeMode="cover"
                           />
                         )}
-                        <View style={collectionStyles.cardContent}>
+                        <RN.View style={collectionStyles.cardContent}>
                           <Text
                             variant="text-lg/semibold"
                             color="TEXT_NORMAL"
@@ -467,7 +467,7 @@ export default function AppDirectoryPage({
                           >
                             {app.application.directory_entry.short_description}
                           </Text>
-                        </View>
+                        </RN.View>
                       </RN.Pressable>
                     ) : x.type === APICollectionType.Medium ? (
                       <RN.Pressable
@@ -484,7 +484,7 @@ export default function AppDirectoryPage({
                             resizeMode="cover"
                           />
                         )}
-                        <View style={collectionStyles.cardContent}>
+                        <RN.View style={collectionStyles.cardContent}>
                           <Text variant="text-md/semibold" color="TEXT_NORMAL">
                             {app.application.name}
                           </Text>
@@ -516,7 +516,7 @@ export default function AppDirectoryPage({
                           >
                             {app.application.directory_entry.short_description}
                           </Text>
-                        </View>
+                        </RN.View>
                       </RN.Pressable>
                     ) : (
                       <RN.Pressable
@@ -527,15 +527,15 @@ export default function AppDirectoryPage({
                         android_ripple={styles.androidRipple}
                         onPress={onAppPress(app)}
                       >
-                        <View style={collectionStyles.cardContent}>
-                          <View style={collectionStyles.smallProfile}>
+                        <RN.View style={collectionStyles.cardContent}>
+                          <RN.View style={collectionStyles.smallProfile}>
                             <RN.Image
                               style={collectionStyles.smallAvatar}
                               source={{
                                 uri: `https://cdn.discordapp.com/app-icons/${app.application.id}/${app.application.icon}.webp?size=60`,
                               }}
                             />
-                            <View style={collectionStyles.smallProfileThing}>
+                            <RN.View style={collectionStyles.smallProfileThing}>
                               <Text
                                 variant="text-md/semibold"
                                 color="TEXT_NORMAL"
@@ -550,8 +550,8 @@ export default function AppDirectoryPage({
                                   {app.application.categories[0].name}
                                 </Text>
                               )}
-                            </View>
-                          </View>
+                            </RN.View>
+                          </RN.View>
                           <Text
                             variant="text-md/medium"
                             color="TEXT_MUTED"
@@ -568,7 +568,7 @@ export default function AppDirectoryPage({
                           >
                             {app.application.directory_entry.short_description}
                           </Text>
-                        </View>
+                        </RN.View>
                       </RN.Pressable>
                     )
                   }
@@ -580,7 +580,7 @@ export default function AppDirectoryPage({
       ) : (
         <RN.ActivityIndicator size="small" style={{ flex: 1, marginTop: 50 }} />
       )}
-      <View style={{ height: 48 }} />
-    </ScrollView>
+      <RN.View style={{ height: 48 }} />
+    </RN.ScrollView>
   );
 }

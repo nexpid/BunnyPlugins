@@ -10,7 +10,7 @@ import { useProxy } from "@vendetta/storage";
 import { semanticColors } from "@vendetta/ui";
 import { showConfirmationAlert } from "@vendetta/ui/alerts";
 import { getAssetIDByName } from "@vendetta/ui/assets";
-import { Forms, General } from "@vendetta/ui/components";
+import { Forms } from "@vendetta/ui/components";
 import { showToast } from "@vendetta/ui/toasts";
 
 import { ActionSheet } from "$/components/ActionSheet";
@@ -37,7 +37,6 @@ import DataStat from "./DataStat";
 import IgnoredPluginsPage from "./pages/IgnoredPluginsPage";
 import ImportActionSheet from "./sheets/ImportActionSheet";
 
-const { ScrollView, View } = General;
 const { FormRow, FormInput, FormSwitchRow } = Forms;
 
 export default function () {
@@ -126,13 +125,13 @@ export default function () {
   });
 
   return (
-    <ScrollView>
+    <RN.ScrollView>
       <BetterTableRowGroup
         title={lang.format("settings.your_data.title", {})}
         icon={getAssetIDByName("MobilePhoneShareIcon")}
         padding={true}
       >
-        <View
+        <RN.View
           style={{
             flexDirection: "row",
             alignItems: "center",
@@ -157,7 +156,7 @@ export default function () {
             }
             subtitle={"settings.your_data.fonts"}
           />
-        </View>
+        </RN.View>
         {at && (
           <Text variant="text-sm/medium" color="TEXT_MUTED" align="center">
             {Lang.basicFormat(
@@ -539,7 +538,7 @@ export default function () {
           />
         </BetterTableRowGroup>
       )}
-      <View style={{ height: 12 }} />
-    </ScrollView>
+      <RN.View style={{ height: 12 }} />
+    </RN.ScrollView>
   );
 }

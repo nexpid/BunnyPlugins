@@ -1,6 +1,5 @@
 import { ReactNative as RN } from "@vendetta/metro/common";
 import { getAssetByID } from "@vendetta/ui/assets";
-import { General } from "@vendetta/ui/components";
 
 import { PlusStructure } from "$/typings";
 
@@ -38,8 +37,6 @@ export function asIcon<T extends JSX.Element>(
   return img;
 }
 
-const { View } = General;
-
 export function getIconOverlay(
   plus: PlusStructure,
   icon: number,
@@ -62,7 +59,7 @@ export function getIconOverlay(
         tintColor: "#5865F2",
       },
       children: (
-        <View style={{ position: "absolute", left: 0, top: 0 }}>
+        <RN.View style={{ position: "absolute", left: 0, top: 0 }}>
           {asIcon(
             plus,
             `${ic}__overlay`,
@@ -76,7 +73,7 @@ export function getIconOverlay(
               ]}
             />,
           )}
-        </View>
+        </RN.View>
       ),
     };
   else if (
@@ -87,7 +84,7 @@ export function getIconOverlay(
         tintColor: "#3BA55C",
       },
       children: (
-        <View style={{ position: "absolute", left: 0, top: 0 }}>
+        <RN.View style={{ position: "absolute", left: 0, top: 0 }}>
           {asIcon(
             plus,
             `${ic}__overlay`,
@@ -101,7 +98,7 @@ export function getIconOverlay(
               ]}
             />,
           )}
-        </View>
+        </RN.View>
       ),
     };
 }

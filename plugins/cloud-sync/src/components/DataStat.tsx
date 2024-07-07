@@ -1,25 +1,8 @@
-import { stylesheet } from "@vendetta/metro/common";
-import { semanticColors } from "@vendetta/ui";
-import { General } from "@vendetta/ui/components";
+import { ReactNative as RN } from "@vendetta/metro/common";
 
-import { TextStyleSheet } from "$/types";
+import Text from "$/components/Text";
 
 import { lang } from "..";
-
-const { View, Text } = General;
-
-const styles = stylesheet.createThemedStyleSheet({
-  count: {
-    ...TextStyleSheet["text-lg/bold"],
-    color: semanticColors.TEXT_NORMAL,
-    textAlign: "center",
-  },
-  subtitle: {
-    ...TextStyleSheet["text-md/medium"],
-    color: semanticColors.TEXT_MUTED,
-    textAlign: "center",
-  },
-});
 
 export default function ({
   subtitle,
@@ -29,15 +12,19 @@ export default function ({
   count: string | number;
 }) {
   return (
-    <View
+    <RN.View
       style={{
         alignItems: "center",
         justifyContent: "center",
         marginHorizontal: 16,
       }}
     >
-      <Text style={styles.count}>{count}</Text>
-      <Text style={styles.subtitle}>{lang.format(subtitle, {})}</Text>
-    </View>
+      <Text variant="text-lg/bold" color="TEXT_NORMAL" align="center">
+        {count}
+      </Text>
+      <Text variant="text-md/medium" color="TEXT_MUTED" align="center">
+        {lang.format(subtitle, {})}
+      </Text>
+    </RN.View>
   );
 }

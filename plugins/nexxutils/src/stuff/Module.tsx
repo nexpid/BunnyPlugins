@@ -2,7 +2,7 @@ import { logger } from "@vendetta";
 import { React, ReactNative as RN, stylesheet } from "@vendetta/metro/common";
 import { semanticColors } from "@vendetta/ui";
 import { getAssetIDByName } from "@vendetta/ui/assets";
-import { Forms, General } from "@vendetta/ui/components";
+import { Forms } from "@vendetta/ui/components";
 import { showToast } from "@vendetta/ui/toasts";
 
 import { ActionSheet } from "$/components/ActionSheet";
@@ -15,7 +15,6 @@ import { openModal, resolveSemanticColor } from "$/types";
 import { vstorage } from "..";
 import ErrorViewerModal from "../components/modals/ErrorViewerModal";
 
-const { View } = General;
 const { FormRow, FormSwitchRow, FormDivider } = Forms;
 
 export enum ModuleCategory {
@@ -276,7 +275,7 @@ export class Module<Settings extends Record<string, ModuleSetting>> {
               >
                 {this.label}
               </RN.Text>,
-              extra[0] && <View style={{ paddingRight: 12 }} />,
+              extra[0] && <RN.View style={{ paddingRight: 12 }} />,
               extra
                 .sort(() => -1)
                 .map((x) => (
@@ -293,7 +292,7 @@ export class Module<Settings extends Record<string, ModuleSetting>> {
                       ]}
                       source={getAssetIDByName(x.icon)}
                     />
-                    <View style={{ width: 2 }} />
+                    <RN.View style={{ width: 2 }} />
                   </>
                 )),
             ]}
@@ -316,7 +315,7 @@ export class Module<Settings extends Record<string, ModuleSetting>> {
               <FormDivider />
               <RN.View style={{ paddingHorizontal: 15 }}>
                 {extra[0] && (
-                  <View>
+                  <RN.View>
                     {extra.map((x) => {
                       const children = (
                         <>
@@ -324,9 +323,9 @@ export class Module<Settings extends Record<string, ModuleSetting>> {
                             {x.content}
                           </Text>
                           {x.action && (
-                            <View style={styles.rowTailing}>
+                            <RN.View style={styles.rowTailing}>
                               <FormRow.Arrow />
-                            </View>
+                            </RN.View>
                           )}
                         </>
                       );
@@ -340,10 +339,10 @@ export class Module<Settings extends Record<string, ModuleSetting>> {
                           {children}
                         </RN.Pressable>
                       ) : (
-                        <View style={styles.row}>{children}</View>
+                        <RN.View style={styles.row}>{children}</RN.View>
                       );
                     })}
-                  </View>
+                  </RN.View>
                 )}
                 <FormSwitchRow
                   label="Enabled"
@@ -374,7 +373,7 @@ export class Module<Settings extends Record<string, ModuleSetting>> {
                       value={this.storage.options[id]}
                     />
                   ) : setting.type === "button" ? (
-                    <View style={{ marginVertical: 12 }}>
+                    <RN.View style={{ marginVertical: 12 }}>
                       <Button
                         size="md"
                         variant="primary"
@@ -387,7 +386,7 @@ export class Module<Settings extends Record<string, ModuleSetting>> {
                           />
                         }
                       />
-                    </View>
+                    </RN.View>
                   ) : (
                     setting.type === "choose" && (
                       <FormRow

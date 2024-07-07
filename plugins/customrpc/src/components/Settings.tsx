@@ -1,8 +1,13 @@
-import { clipboard, NavigationNative, React } from "@vendetta/metro/common";
+import {
+  clipboard,
+  NavigationNative,
+  React,
+  ReactNative as RN,
+} from "@vendetta/metro/common";
 import { useProxy } from "@vendetta/storage";
 import { showConfirmationAlert } from "@vendetta/ui/alerts";
 import { getAssetIDByName } from "@vendetta/ui/assets";
-import { Forms, General } from "@vendetta/ui/components";
+import { Forms } from "@vendetta/ui/components";
 import { showToast } from "@vendetta/ui/toasts";
 
 import { BetterTableRowGroup } from "$/components/BetterTableRow";
@@ -23,7 +28,6 @@ import { openLiveRawActivityView } from "./pages/LiveRawActivityView";
 import { showProfileList } from "./pages/ProfileList";
 import RPCPreview from "./RPCPreview";
 
-const { ScrollView, View } = General;
 const { FormSwitchRow, FormIcon, FormRow } = Forms;
 
 export const placeholders = {
@@ -80,7 +84,7 @@ export default () => {
 
   return (
     <>
-      <ScrollView
+      <RN.ScrollView
         style={{
           zIndex: 1,
         }}
@@ -305,8 +309,8 @@ export default () => {
             />
           </BetterTableRowGroup>
         )}
-        <View style={{ marginBottom: 20 }} />
-      </ScrollView>
+        <RN.View style={{ marginBottom: 20 }} />
+      </RN.ScrollView>
     </>
   );
 };

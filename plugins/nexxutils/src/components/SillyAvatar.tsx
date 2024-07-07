@@ -1,12 +1,9 @@
 import { findByStoreName } from "@vendetta/metro";
-import { React } from "@vendetta/metro/common";
-import { General } from "@vendetta/ui/components";
+import { React, ReactNative as RN } from "@vendetta/metro/common";
 import { showToast } from "@vendetta/ui/toasts";
 
 import { Reanimated } from "$/deps";
 import { getUserAvatar } from "$/types";
-
-const { Pressable } = General;
 
 const UserStore = findByStoreName("UserStore");
 
@@ -19,7 +16,7 @@ export default function () {
   const comboTimer = React.useRef<[any, number]>([0, 0]);
 
   return (
-    <Pressable
+    <RN.Pressable
       onPressIn={() => {
         rot.current += 540;
         spinAnim.value = Reanimated.withSpring(`${rot.current}deg`, {
@@ -57,6 +54,6 @@ export default function () {
           uri: getUserAvatar(UserStore.getCurrentUser(), true),
         }}
       />
-    </Pressable>
+    </RN.Pressable>
   );
 }
