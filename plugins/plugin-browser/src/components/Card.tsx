@@ -25,10 +25,7 @@ const Stack = findByProps("Stack")?.Stack;
 const styles = stylesheet.createThemedStyleSheet({
   card: {
     padding: 16,
-    borderTopStartRadius: 16,
-    borderTopEndRadius: 16,
-    borderBottomStartRadius: 16,
-    borderBottomEndRadius: 16,
+    borderRadius: 16,
     borderColor: semanticColors.BORDER_FAINT,
     borderWidth: 1,
     backgroundColor: semanticColors.CARD_PRIMARY_BG,
