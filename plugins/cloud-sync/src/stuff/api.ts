@@ -61,9 +61,25 @@ export async function deleteData(): Promise<true> {
     });
 }
 
-export async function getRawData(): Promise<string> {
-  return await (await authFetch(`${constants.api}api/data/raw`)).text();
+export interface RawData {
+  data: string;
+  file: string;
 }
+export async function getRawData(): Promise<RawData> {
+  return await authFetch(`${constants.api}api/data/raw`).then(async (res) => {
+    const data = await res.text();
+    return {
+      data,
+      file: JSON.parse(
+        res.headers.get("content-disposition").split("filename=")[1],
+      ),
+    };
+  });
+}
+export function rawDataURL() {
+  return `${constants.api}api/data/raw?auth=${encodeURIComponent(useAuthorizationStore.getState().token)}`;
+}
+
 export async function decompressRawData(data: string): Promise<UserData> {
   return await (
     await authFetch(`${constants.api}api/data/decompress`, {

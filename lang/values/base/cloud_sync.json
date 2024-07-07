@@ -11,10 +11,7 @@
   "toast.logout": "Successfully logged out.",
   "toast.deleted_data": "Successfully deleted data.",
   "toast.saved_data": "Successfully saved data.",
-  "toast.encrypt_fail": "Failed to encrypt!",
-  "toast.backup_saved": "Backup Saved to {file}.",
-  "toast.backup_download_prepare": "Preparing for download...",
-  "toast.decrypt_fail": "Failed to decrypt!",
+  "toast.backup_saved": "Backed up as '{file}'.",
 
   "settings.your_data.title": "Your data",
   "settings.your_data.plugins": "plugins",

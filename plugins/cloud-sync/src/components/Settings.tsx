@@ -5,6 +5,7 @@ import {
   React,
   ReactNative as RN,
   stylesheet,
+  url,
 } from "@vendetta/metro/common";
 import { useProxy } from "@vendetta/storage";
 import { semanticColors } from "@vendetta/ui";
@@ -28,6 +29,8 @@ import {
   decompressRawData,
   deleteData,
   getRawData,
+  RawData,
+  rawDataURL,
   saveData,
 } from "../stuff/api";
 import { openOauth2Modal } from "../stuff/oauth2";
@@ -303,6 +306,7 @@ export default function () {
               }
               destructive
               onPress={() =>
+                !isBusy.length &&
                 showConfirmationAlert({
                   title: lang.format("alert.log_out.title", {}),
                   content: lang.format("alert.log_out.body", {}),
@@ -323,17 +327,26 @@ export default function () {
                 "settings.auth.delete_data.description",
                 {},
               )}
-              leading={<FormRow.Icon source={getAssetIDByName("TrashIcon")} />}
+              leading={
+                isBusy.includes("delete_data") ? (
+                  <RN.ActivityIndicator size="small" />
+                ) : (
+                  <FormRow.Icon source={getAssetIDByName("TrashIcon")} />
+                )
+              }
               onPress={() =>
+                !isBusy.length &&
                 showConfirmationAlert({
                   title: lang.format("alert.delete_data.title", {}),
                   content: lang.format("alert.delete_data.body", {}),
                   confirmText: lang.format("alert.delete_data.confirm", {}),
                   confirmColor: "red" as ButtonColors,
                   onConfirm: async () => {
+                    setBusy("delete_data");
                     await deleteData();
                     useAuthorizationStore.getState().setToken(null);
 
+                    unBusy("delete_data");
                     showToast(
                       lang.format("toast.deleted_data", {}),
                       getAssetIDByName("TrashIcon"),
@@ -373,6 +386,7 @@ export default function () {
                 )
               }
               onPress={() =>
+                !isBusy.length &&
                 showConfirmationAlert({
                   title: lang.format("alert.save_data.title", {}),
                   content: lang.format("alert.save_data.body", {}),
@@ -410,6 +424,8 @@ export default function () {
                 )
               }
               onPress={() => {
+                if (isBusy.length) return;
+
                 ActionSheet.open(ImportActionSheet, {
                   navigation,
                 });
@@ -447,9 +463,11 @@ export default function () {
             }
             onPress={async () => {
               if (isBusy.length) return;
+              if (!RNFS.hasRNFS) return url.openURL(rawDataURL());
+
               setBusy("download_compressed");
 
-              let data: string;
+              let data: RawData;
               try {
                 data = await getRawData();
               } catch {
@@ -457,17 +475,13 @@ export default function () {
               }
 
               try {
-                const file = `CloudSync_${new Array(5)
-                  .fill(0)
-                  .map(() => Math.floor(Math.random() * 9) + 1)
-                  .join("")}.txt`;
                 await RNFS.writeFile(
-                  RNFS.DownloadDirectoryPath + "/" + file,
-                  data,
+                  RNFS.DownloadDirectoryPath + "/" + data.file,
+                  data.data,
                 );
 
                 showToast(
-                  `Downloaded as ${file}`,
+                  lang.format("toast.backup_saved", { file: data.file }),
                   getAssetIDByName("FileIcon"),
                 );
               } catch (e) {
