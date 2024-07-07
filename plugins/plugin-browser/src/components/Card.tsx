@@ -1,24 +1,16 @@
 // https://raw.githubusercontent.com/pyoncord/Bunny/dev/src/core/ui/settings/pages/Plugins/PluginCard.tsx
 // this is a modified version with some plugin browser specific changes
 
-import { findByProps } from "@vendetta/metro";
 import { React, ReactNative as RN, stylesheet } from "@vendetta/metro/common";
 import { rawColors, semanticColors } from "@vendetta/ui";
 import { getAssetIDByName } from "@vendetta/ui/assets";
-import { Forms } from "@vendetta/ui/components";
 
 import { hideActionSheet } from "$/components/ActionSheet";
 import { showSimpleActionSheet } from "$/components/ActionSheet";
 import Text from "$/components/Text";
 import { Reanimated } from "$/deps";
-import { buttonVariantPolyfill } from "$/lib/redesign";
+import { buttonVariantPolyfill, IconButton, Stack } from "$/lib/redesign";
 import { lerp } from "$/types";
-
-const IconButton = findByProps("IconButton").IconButton;
-
-const { FormRow } = Forms;
-
-const Stack = findByProps("Stack")?.Stack;
 
 // TODO: These styles work weirdly. iOS has cramped text, Android with low DPI probably does too. Fix?
 
@@ -144,7 +136,6 @@ export default function Card(props: CardProps) {
                   <IconButton
                     onPress={onPress}
                     disabled={disabled}
-                    destructive={isDestructive}
                     loading={loading}
                     size="sm"
                     variant={

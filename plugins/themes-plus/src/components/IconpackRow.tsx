@@ -1,4 +1,3 @@
-import { findByProps } from "@vendetta/metro";
 import { React, ReactNative as RN, stylesheet } from "@vendetta/metro/common";
 import { showConfirmationAlert } from "@vendetta/ui/alerts";
 import { getAssetIDByName } from "@vendetta/ui/assets";
@@ -8,7 +7,7 @@ import { showToast } from "@vendetta/ui/toasts";
 import InlineCheckbox from "$/components/InlineCheckbox";
 import Text from "$/components/Text";
 import { Lang } from "$/lang";
-import { buttonVariantPolyfill } from "$/lib/redesign";
+import { buttonVariantPolyfill, IconButton } from "$/lib/redesign";
 
 import { lang, vstorage } from "..";
 import { state, useState } from "../stuff/active";
@@ -20,8 +19,6 @@ import {
 import { formatBytes } from "../stuff/util";
 import { Iconpack } from "../types";
 import ProgressCircle from "./ProgressCircle";
-
-const IconButton = findByProps("IconButton").IconButton;
 
 const { FormRow } = Forms;
 

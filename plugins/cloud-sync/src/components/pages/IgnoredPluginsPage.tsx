@@ -1,18 +1,15 @@
-import { findByProps } from "@vendetta/metro";
 import { React, ReactNative as RN } from "@vendetta/metro/common";
 import { plugins } from "@vendetta/plugins";
 import { showConfirmationAlert } from "@vendetta/ui/alerts";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { Forms, Search } from "@vendetta/ui/components";
 
-import { buttonVariantPolyfill } from "$/lib/redesign";
+import { buttonVariantPolyfill, IconButton } from "$/lib/redesign";
 import { managePage } from "$/lib/ui";
 
 import { lang, vstorage } from "../..";
 
 const { FormCheckboxRow, FormRow } = Forms;
-
-const IconButton = findByProps("IconButton").IconButton;
 
 export default function IgnoredPluginsPage() {
   const [search, setSearch] = React.useState("");

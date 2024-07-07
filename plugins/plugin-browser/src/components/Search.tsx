@@ -1,13 +1,12 @@
 // https://raw.githubusercontent.com/pyoncord/Bunny/9809ef2cd4864d4f308c37016743f7d157e0ce3c/src/lib/ui/components/Search.tsx
 // this is a modified version with some plugin browser specific changes
 
-import { findByProps } from "@vendetta/metro";
 import { i18n, React, ReactNative as RN } from "@vendetta/metro/common";
 import { semanticColors } from "@vendetta/ui";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { ErrorBoundary } from "@vendetta/ui/components";
 
-import { TextInput } from "$/lib/redesign";
+import { IconButton, TextInput } from "$/lib/redesign";
 import { resolveSemanticColor } from "$/types";
 
 function SearchIcon() {
@@ -22,8 +21,6 @@ function SearchIcon() {
     />
   );
 }
-
-const IconButton = findByProps("IconButton").IconButton;
 
 export default ({
   onChangeText,

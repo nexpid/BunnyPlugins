@@ -1,5 +1,4 @@
 import { getDebugInfo } from "@vendetta/debug";
-import { findByProps } from "@vendetta/metro";
 import {
   clipboard,
   NavigationNative,
@@ -24,7 +23,7 @@ import {
 import { RichText } from "$/components/RichText";
 import Skeleton from "$/components/Skeleton";
 import Text from "$/components/Text";
-import { buttonVariantPolyfill } from "$/lib/redesign";
+import { buttonVariantPolyfill, IconButton } from "$/lib/redesign";
 import { ThemeDataWithPlus, VendettaSysColors } from "$/typings";
 
 import RepainterIcon from "../../assets/icons/RepainterIcon.png";
@@ -47,7 +46,6 @@ import { openConfigurePage } from "./pages/ConfigurePage";
 
 const { ScrollView, View, Pressable } = General;
 const { FormRow, FormSwitchRow } = Forms;
-const IconButton = findByProps("IconButton").IconButton;
 
 export function setColorsFromDynamic(clr: VendettaSysColors) {
   vstorage.colors = {

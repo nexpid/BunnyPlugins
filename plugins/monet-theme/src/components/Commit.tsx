@@ -1,10 +1,9 @@
-import { findByProps } from "@vendetta/metro";
 import { i18n, ReactNative as RN, stylesheet } from "@vendetta/metro/common";
 import { semanticColors } from "@vendetta/ui";
 
 import Text from "$/components/Text";
+import { Stack } from "$/lib/redesign";
 
-const Stack = findByProps("Stack")?.Stack;
 export interface CommitUser {
   login: string;
   id: number;
