@@ -7,7 +7,6 @@ import load, { patches } from "./stuff/loader";
 
 export enum PatchType {
   Icons = "icons",
-  UnreadBadgeColor = "unread_badge_color",
   CustomIconOverlays = "custom_icon_overlays",
   MentionLineColor = "mention_line_color",
   Iconpack = "iconpack",

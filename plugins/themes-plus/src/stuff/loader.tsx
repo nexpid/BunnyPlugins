@@ -5,7 +5,6 @@ import { PlusStructure } from "$/typings";
 import { ConfigIconpackMode, enabled, InactiveReason, vstorage } from "..";
 import patchIcons from "../patches/icons";
 import patchMentionLineColors from "../patches/mentionLineColor";
-import patchUnreadBadgeColor from "../patches/unreadBadgeColor";
 import { IconpackConfig, IconpackData } from "../types";
 import { state, updateState } from "./active";
 import constants from "./constants";
@@ -146,7 +145,6 @@ export default async function load() {
 
   patchIcons(plusData, tree, iconpackConfig);
   patchMentionLineColors(plusData);
-  patchUnreadBadgeColor(plusData);
 
   updateState();
 }
