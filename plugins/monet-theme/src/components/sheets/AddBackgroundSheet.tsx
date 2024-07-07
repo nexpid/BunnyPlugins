@@ -1,14 +1,12 @@
-import { findByProps } from "@vendetta/metro";
 import { React, ReactNative as RN } from "@vendetta/metro/common";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { Forms } from "@vendetta/ui/components";
 
 import { ActionSheet, hideActionSheet } from "$/components/ActionSheet";
+import { DocumentPicker } from "$/deps";
 import { Button, TextInput } from "$/lib/redesign";
 
 const { FormRow } = Forms;
-
-const DocumentPicker = findByProps("pickSingle", "isCancel");
 
 export default function AddBackgroundSheet({
   add,
@@ -32,7 +30,7 @@ export default function AddBackgroundSheet({
             type: DocumentPicker.types.images,
             mode: "open",
             copyTo: "documentDirectory",
-          }).then((file: any) => {
+          }).then((file) => {
             setFile({
               name: file.name,
               path: file.fileCopyUri,

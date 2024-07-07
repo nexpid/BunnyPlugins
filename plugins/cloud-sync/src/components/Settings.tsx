@@ -1,5 +1,4 @@
 import { settings } from "@vendetta";
-import { findByProps } from "@vendetta/metro";
 import {
   i18n,
   NavigationNative,
@@ -17,7 +16,7 @@ import { showToast } from "@vendetta/ui/toasts";
 import { ActionSheet } from "$/components/ActionSheet";
 import { BetterTableRowGroup } from "$/components/BetterTableRow";
 import Text from "$/components/Text";
-import { Reanimated } from "$/deps";
+import { DocumentPicker, Reanimated } from "$/deps";
 import { Lang } from "$/lang";
 import RNFS from "$/wrappers/RNFS";
 
@@ -37,8 +36,6 @@ import { UserData } from "../types";
 import DataStat from "./DataStat";
 import IgnoredPluginsPage from "./pages/IgnoredPluginsPage";
 import ImportActionSheet from "./sheets/ImportActionSheet";
-
-const DocumentPicker = findByProps("pickSingle", "isCancel");
 
 const { ScrollView, View } = General;
 const { FormRow, FormInput, FormSwitchRow } = Forms;

@@ -24,6 +24,11 @@ export const zustand = {
   create: findByName("create") as typeof import("zustand").create,
 };
 
+export const DocumentPicker = findByProps(
+  "pickSingle",
+  "isCancel",
+) as typeof import("react-native-document-picker");
+
 export const RNMMKVManager = RN.NativeModules.MMKVManager as StateStorage;
 
 //
