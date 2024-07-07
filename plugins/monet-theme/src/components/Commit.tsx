@@ -1,12 +1,10 @@
-import {
-  constants,
-  ReactNative as RN,
-  stylesheet,
-} from "@vendetta/metro/common";
+import { findByProps } from "@vendetta/metro";
+import { i18n, ReactNative as RN, stylesheet } from "@vendetta/metro/common";
 import { semanticColors } from "@vendetta/ui";
-import { General } from "@vendetta/ui/components";
 
 import Text from "$/components/Text";
+
+const Stack = findByProps("Stack")?.Stack;
 export interface CommitUser {
   login: string;
   id: number;
@@ -67,99 +65,71 @@ export interface CommitObj {
   }[];
 }
 
-const { View, Pressable } = General;
-
-export default ({
+export default function Commit({
   commit,
-  list,
-  highlight,
-  onPress,
-  onLongPress,
+  selected,
+  ...props
 }: {
   commit: CommitObj;
-  list?: boolean;
-  highlight?: boolean;
-  onPress?: () => void;
-  onLongPress?: () => void;
-}) => {
+  selected?: boolean;
+} & import("react-native").PressableProps) {
   const styles = stylesheet.createThemedStyleSheet({
     androidRipple: {
       color: semanticColors.ANDROID_RIPPLE,
-      cornerRadius: 8,
+      cornerRadius: 16,
     } as any,
-    container: {
-      backgroundColor: semanticColors.BG_MOD_FAINT,
-      flexDirection: "column",
-      borderRadius: 8,
+    card: {
+      padding: 16,
+      borderRadius: 16,
+      borderColor: semanticColors.BORDER_FAINT,
+      borderWidth: 1,
+      backgroundColor: selected
+        ? semanticColors.CARD_SECONDARY_BG
+        : semanticColors.CARD_PRIMARY_BG,
+
+      marginHorizontal: 16,
     },
-    containerHighlight: {
-      backgroundColor: semanticColors.BG_MOD_STRONG,
+    title: {
+      flexDirection: "row",
+      justifyContent: "center",
+      gap: 6,
+    },
+    avatar: {
+      width: 16,
+      height: 16,
+      borderRadius: 11,
     },
   });
 
-  const UseComponent = onPress || onLongPress ? Pressable : View;
-
   return (
-    <View
-      style={
-        list
-          ? { paddingHorizontal: 12, paddingTop: 12 }
-          : { paddingHorizontal: 16, paddingTop: 16 }
-      }
+    <RN.Pressable
+      style={styles.card}
+      android_ripple={styles.androidRipple}
+      {...props}
     >
-      <UseComponent
-        android_ripple={styles.androidRipple}
-        disabled={false}
-        accessibilityRole={"button"}
-        accessibilityState={{
-          disabled: false,
-          expanded: false,
-        }}
-        accessibilityLabel="Commit"
-        onPress={() => onPress?.()}
-        onLongPress={() => onLongPress?.()}
-        style={[styles.container, highlight && styles.containerHighlight]}
-      >
-        <View style={{ marginHorizontal: 12, marginVertical: 12 }}>
-          <View style={{ flexDirection: "row", marginBottom: 4 }}>
-            <RN.Image
-              style={{
-                width: 20,
-                height: 20,
-                borderRadius: 2147483647,
-                marginRight: 8,
-              }}
-              source={{ uri: commit.committer.avatar_url }}
-            />
-            <Text
-              style={{ marginRight: 8 }}
-              variant="text-sm/semibold"
-              color="TEXT_NORMAL"
-            >
-              {commit.committer.login}
-            </Text>
-            <Text
-              style={{ marginRight: 8 }}
-              variant="text-sm/semibold"
-              color="TEXT_NORMAL"
-            >
-              •
-            </Text>
-            <Text
-              color="TEXT_NORMAL"
-              style={{
-                fontFamily:
-                  constants.Fonts.CODE_SEMIBOLD || constants.Fonts.CODE_NORMAL,
-              }}
-            >
-              {commit.sha.slice(0, 7)}
-            </Text>
-          </View>
-          <Text variant="text-md/semibold" color="TEXT_NORMAL">
-            {commit.commit.message}
+      <Stack spacing={8}>
+        <RN.View style={styles.title}>
+          <RN.Image
+            style={styles.avatar}
+            source={{ uri: commit.committer.avatar_url, cache: "force-cache" }}
+          />
+          <Text variant="text-sm/medium" color="TEXT_NORMAL">
+            {commit.committer.login}
           </Text>
-        </View>
-      </UseComponent>
-    </View>
+          <Text
+            variant="text-sm/medium"
+            color="TEXT_MUTED"
+            style={{ marginLeft: "auto" }}
+          >
+            {new Date(commit.commit.author.date).toLocaleDateString(
+              i18n.getLocale(),
+            )}
+          </Text>
+        </RN.View>
+        <Text variant="text-md/normal" color="TEXT_NORMAL" lineClamp={1}>
+          {commit.commit.message}
+        </Text>
+      </Stack>
+    </RN.Pressable>
   );
-};
+}

@@ -15,9 +15,12 @@ import { Forms, General } from "@vendetta/ui/components";
 import { showToast } from "@vendetta/ui/toasts";
 import { safeFetch } from "@vendetta/utils";
 
-import { BetterTableRowGroup } from "$/components/BetterTableRow";
-import LineDivider from "$/components/LineDivider";
+import {
+  BetterTableRowGroup,
+  BetterTableRowTitle,
+} from "$/components/BetterTableRow";
 import { RichText } from "$/components/RichText";
+import Skeleton from "$/components/Skeleton";
 import Text from "$/components/Text";
 import { buttonVariantPolyfill } from "$/lib/redesign";
 import { LazyActionSheet } from "$/types";
@@ -103,7 +106,7 @@ export default () => {
     safeFetch(
       vstorage.patches.from === "local" ? devPatchesURL : patchesURL(),
       {
-        headers: { "cache-control": "public, max-age=120" },
+        headers: { "cache-control": "max-age=120" },
       },
     )
       .then((x) =>
@@ -125,7 +128,7 @@ export default () => {
 
   React.useEffect(() => {
     safeFetch(commitsURL, {
-      headers: { "cache-control": "public, max-age=3600" },
+      cache: "force-cache",
     })
       .then((x) =>
         x
@@ -154,7 +157,8 @@ export default () => {
     showMessage = "Dynamic colors are only available on Android 12+ (SDK 31+).";
   else if (syscolors === null) showMessage = "Dynamic colors are unavailable.";
 
-  let lastThemePressTime = 0;
+  const lastThemePressTime = React.useRef(0);
+
   return (
     <ScrollView style={{ flex: 1 }}>
       {showMessage && (
@@ -178,7 +182,7 @@ export default () => {
       <BetterTableRowGroup
         title="Colors"
         icon={getAssetIDByName("PaintPaletteIcon")}
-        padding={true}
+        padding
       >
         <View
           style={{
@@ -186,6 +190,7 @@ export default () => {
             flexDirection: "row",
             alignItems: "center",
             justifyContent: "center",
+            gap: 8,
           }}
         >
           {syscolors && (
@@ -209,15 +214,6 @@ export default () => {
                 Autofill
               </Text>
             </Pressable>
-          )}
-          {syscolors && (
-            <Text
-              variant="text-sm/semibold"
-              color="TEXT_NORMAL"
-              style={{ marginHorizontal: 6 }}
-            >
-              •
-            </Text>
           )}
           <Pressable
             android_ripple={styles.androidRipple}
@@ -288,13 +284,12 @@ export default () => {
           />
         </View>
       </BetterTableRowGroup>
-      <BetterTableRowGroup
+      <BetterTableRowTitle
         title="Theme"
         icon={getAssetIDByName("SettingsIcon")}
-        padding={!patches}
-        onTitlePress={() => {
-          if (lastThemePressTime >= Date.now()) {
-            lastThemePressTime = 0;
+        onPress={() => {
+          if (lastThemePressTime.current >= Date.now()) {
+            lastThemePressTime.current = 0;
 
             const otter = vstorage.patches.from === "local" ? "git" : "local";
             showToast(
@@ -303,136 +298,124 @@ export default () => {
             );
             vstorage.patches.from = otter;
             setPatches(undefined);
-          } else lastThemePressTime = Date.now() + 500;
+          } else lastThemePressTime.current = Date.now() + 750;
         }}
-      >
-        {!patches ? (
-          <RN.ActivityIndicator style={{ marginVertical: 166 }} size="small" />
-        ) : (
-          <>
-            {!commits ? (
-              <RN.ActivityIndicator
-                style={{ marginVertical: 35 }}
-                size="small"
-              />
-            ) : Array.isArray(commits) ? (
-              <Commit
-                commit={
-                  commits.find((x) => x.sha === vstorage.patches.commit) ??
-                  commits[0]
+        padding
+      />
+      {!commits ? (
+        <Skeleton height={79} style={{ marginHorizontal: 16 }} />
+      ) : Array.isArray(commits) ? (
+        <Commit
+          commit={
+            commits.find((x) => x.sha === vstorage.patches.commit) ?? commits[0]
+          }
+          onPress={() => openCommitsPage(navigation)}
+          onLongPress={() =>
+            showSimpleActionSheet({
+              key: "CardOverflow",
+              header: {
+                title: "Patches",
+                onClose: () => LazyActionSheet.hideActionSheet(),
+              },
+              options: [
+                {
+                  label: "Use latest commit as patches",
+                  onPress: () => {
+                    showToast(
+                      "Using latest commit",
+                      getAssetIDByName("ThreadPlusIcon"),
+                    );
+                    delete vstorage.patches.commit;
+                  },
+                },
+              ],
+            })
+          }
+        />
+      ) : (
+        <View
+          style={{
+            marginTop: 35,
+            marginBottom: 20,
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <Text variant="text-md/semibold" color="TEXT_DANGER" align="center">
+            You've been ratelimited by GitHub.
+          </Text>
+          <Text
+            variant="text-md/semibold"
+            color="TEXT_DANGER"
+            align="center"
+            onPress={() => setCommits(undefined)}
+          >
+            <RichText.Underline>Tap to retry</RichText.Underline>
+          </Text>
+        </View>
+      )}
+      {!patches ? (
+        <Skeleton
+          height={291}
+          style={{ marginHorizontal: 16, marginTop: 16 }}
+        />
+      ) : (
+        <BetterTableRowGroup nearby>
+          <FormRow
+            label="Load Theme"
+            leading={<FormRow.Icon source={getAssetIDByName("WrenchIcon")} />}
+            trailing={
+              <IconButton
+                onPress={() => apply(null) && setIsLoadedTheme(false)}
+                disabled={!isLoadedTheme}
+                size="sm"
+                variant={
+                  isLoadedTheme
+                    ? buttonVariantPolyfill().destructive
+                    : "secondary"
                 }
-                onPress={() => openCommitsPage(navigation)}
-                onLongPress={() =>
-                  showSimpleActionSheet({
-                    key: "CardOverflow",
-                    header: {
-                      title: "Patches",
-                      onClose: () => LazyActionSheet.hideActionSheet(),
-                    },
-                    options: [
-                      {
-                        label: "Use latest commit as patches",
-                        onPress: () => {
-                          showToast(
-                            "Using latest commit",
-                            getAssetIDByName("ThreadPlusIcon"),
-                          );
-                          delete vstorage.patches.commit;
-                        },
-                      },
-                    ],
-                  })
-                }
+                icon={getAssetIDByName("TrashIcon")}
               />
-            ) : (
-              <View
-                style={{
-                  marginTop: 35,
-                  marginBottom: 20,
-                  flexDirection: "column",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <Text
-                  variant="text-md/semibold"
-                  color="TEXT_DANGER"
-                  align="center"
-                >
-                  You've been ratelimited by GitHub.
-                </Text>
-                <Text
-                  variant="text-md/semibold"
-                  color="TEXT_DANGER"
-                  align="center"
-                  onPress={() => setCommits(undefined)}
-                >
-                  <RichText.Underline>Tap to retry</RichText.Underline>
-                </Text>
-              </View>
-            )}
-            <LineDivider addPadding={true} />
-            <FormRow
-              label="Load Theme"
-              leading={<FormRow.Icon source={getAssetIDByName("WrenchIcon")} />}
-              trailing={
-                <IconButton
-                  onPress={() => apply(null) && setIsLoadedTheme(false)}
-                  disabled={!isLoadedTheme}
-                  size="sm"
-                  variant={
-                    isLoadedTheme
-                      ? buttonVariantPolyfill().destructive
-                      : "secondary"
-                  }
-                  icon={getAssetIDByName("TrashIcon")}
-                />
+            }
+            onPress={async () => {
+              let theme: ThemeDataWithPlus;
+              try {
+                theme = build(patches);
+              } catch (e) {
+                return showToast(e.toString(), getAssetIDByName("Small"));
               }
-              onPress={async () => {
-                let theme: ThemeDataWithPlus;
-                try {
-                  theme = build(patches);
-                } catch (e) {
-                  return showToast(e.toString(), getAssetIDByName("Small"));
-                }
 
-                if (apply(theme)) setIsLoadedTheme(true);
-              }}
-            />
-            <FormRow
-              label="Configure Theme"
-              leading={
-                <FormRow.Icon source={getAssetIDByName("SettingsIcon")} />
-              }
-              trailing={<FormRow.Arrow />}
-              onPress={() => openConfigurePage(navigation)}
-            />
-            <FormSwitchRow
-              label="Automatically Reapply Theme"
-              subLabel="Automatically reapplies Monet Theme when you change your Discord color scheme or restart the app"
-              leading={
-                <FormRow.Icon source={getAssetIDByName("DownloadIcon")} />
-              }
-              onValueChange={() =>
-                (vstorage.autoReapply = !vstorage.autoReapply)
-              }
-              value={vstorage.autoReapply}
-            />
-            <FormRow
-              label="Reload Theme Patches"
-              subLabel={`Patch v${patches.version} (${
-                vstorage.patches.from === "local"
-                  ? "from a local source"
-                  : "from GitHub"
-              })`}
-              leading={
-                <FormRow.Icon source={getAssetIDByName("ActivitiesIcon")} />
-              }
-              onPress={() => setPatches(undefined)}
-            />
-          </>
-        )}
-      </BetterTableRowGroup>
+              if (apply(theme)) setIsLoadedTheme(true);
+            }}
+          />
+          <FormRow
+            label="Configure Theme"
+            leading={<FormRow.Icon source={getAssetIDByName("SettingsIcon")} />}
+            trailing={<FormRow.Arrow />}
+            onPress={() => openConfigurePage(navigation)}
+          />
+          <FormSwitchRow
+            label="Automatically Reapply Theme"
+            subLabel="Automatically reapplies Monet Theme when you change your Discord color scheme or restart the app"
+            leading={<FormRow.Icon source={getAssetIDByName("DownloadIcon")} />}
+            onValueChange={() => (vstorage.autoReapply = !vstorage.autoReapply)}
+            value={vstorage.autoReapply}
+          />
+          <FormRow
+            label="Reload Theme Patches"
+            subLabel={`Patch v${patches.version} (${
+              vstorage.patches.from === "local"
+                ? "from a local source"
+                : "from GitHub"
+            })`}
+            leading={
+              <FormRow.Icon source={getAssetIDByName("ActivitiesIcon")} />
+            }
+            onPress={() => setPatches(undefined)}
+          />
+        </BetterTableRowGroup>
+      )}
       <View style={{ height: 12 }} />
     </ScrollView>
   );
