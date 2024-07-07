@@ -10,17 +10,18 @@ export function BetterTableRowTitle({
   title,
   onPress,
   icon,
+  padding,
 }: {
   title: string;
   onPress?: () => void;
   icon?: number;
+  padding?: boolean;
 }) {
   const styles = stylesheet.createThemedStyleSheet({
     androidRipple: {
       color: semanticColors.ANDROID_RIPPLE,
-      //@ts-expect-error cornerRadius does not exist :nerd_face:
       cornerRadius: 4,
-    },
+    } as any,
     icon: {
       width: 16,
       height: 16,
@@ -33,11 +34,11 @@ export function BetterTableRowTitle({
   return (
     <UseCompontent
       android_ripple={styles.androidRipple}
-      disabled={false}
-      accessibilityRole={"button"}
       onPress={onPress}
       style={{
         marginBottom: 8,
+        marginHorizontal: padding ? 16 : 0,
+        marginTop: padding ? 8 : 0,
         gap: 4,
         flexDirection: "row",
         alignItems: "center",
@@ -59,11 +60,13 @@ export function BetterTableRowGroup({
   icon,
   children,
   padding,
+  nearby,
 }: React.PropsWithChildren<{
   title?: string | React.ReactNode;
   onTitlePress?: () => void;
   icon?: number;
   padding?: boolean;
+  nearby?: boolean;
 }>) {
   const styles = stylesheet.createThemedStyleSheet({
     main: {
@@ -77,7 +80,7 @@ export function BetterTableRowGroup({
   });
 
   return (
-    <View style={{ marginHorizontal: 16, marginTop: 16 }}>
+    <View style={{ marginHorizontal: 16, marginTop: nearby ? 8 : 16 }}>
       {title ? (
         typeof title === "string" ? (
           <BetterTableRowTitle
