@@ -1,4 +1,3 @@
-import { findByProps } from "@vendetta/metro";
 import { React, ReactNative as RN, stylesheet } from "@vendetta/metro/common";
 import { useProxy } from "@vendetta/storage";
 import { semanticColors } from "@vendetta/ui";
@@ -9,6 +8,7 @@ import { ActionSheet, hideActionSheet } from "$/components/ActionSheet";
 import { showSimpleActionSheet } from "$/components/ActionSheet";
 import { BetterTableRowGroup } from "$/components/BetterTableRow";
 import Text from "$/components/Text";
+import { hasPressableScale, PressableScale } from "$/lib/redesign";
 
 import { getDiscordTheme, vstorage } from "../..";
 import wallpapers, {
@@ -16,9 +16,6 @@ import wallpapers, {
   CollectionEntry,
 } from "../../stuff/wallpapers";
 import AddBackgroundSheet from "../sheets/AddBackgroundSheet";
-
-const _PressableScale = findByProps("PressableScale")?.PressableScale;
-const PressableScale = _PressableScale ?? RN.Pressable;
 
 function Wallpaper({
   label,
@@ -73,7 +70,7 @@ function Wallpaper({
           centerImage && styles.centerThing,
           selected && styles.selectedThing,
         ]}
-        android_ripple={!_PressableScale && styles.android_ripple}
+        android_ripple={hasPressableScale && styles.android_ripple}
       >
         <RN.Image
           source={image}

@@ -1,5 +1,5 @@
 import { findByProps } from "@vendetta/metro";
-import { React, ReactNative as RN } from "@vendetta/metro/common";
+import { React, ReactNative, ReactNative as RN } from "@vendetta/metro/common";
 import { semanticColors } from "@vendetta/ui";
 import { showToast } from "@vendetta/ui/toasts";
 
@@ -205,3 +205,9 @@ export const useSegmentedControlState = findThingRequired(
   }[];
   pageWidth: number;
 }) => controlState;
+
+const pressableScale = findThing("PressableScale");
+
+export const hasPressableScale = pressableScale !== undefined;
+export const PressableScale = (pressableScale ??
+  ReactNative.Pressable) as typeof ReactNative.Pressable;
