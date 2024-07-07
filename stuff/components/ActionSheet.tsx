@@ -1,4 +1,5 @@
 import { find, findByProps } from "@vendetta/metro";
+import { ReactNative as RN } from "@vendetta/metro/common";
 import { type ImageSourcePropType } from "react-native";
 
 const _ActionSheet =
@@ -23,7 +24,7 @@ export const { showSimpleActionSheet } = findByProps(
     key: "CardOverflow";
     header: {
       title: string;
-      icon?: ImageSourcePropType;
+      icon?: React.ReactNode;
       onClose?: () => void;
     };
     options: {
@@ -55,7 +56,7 @@ export const ActionSheet = (({
           />
         }
       />
-      {children}
+      <RN.View>{children}</RN.View>
     </_ActionSheet>
   );
 }) as {
