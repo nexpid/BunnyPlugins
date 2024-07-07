@@ -15,7 +15,6 @@ import { Forms, General } from "@vendetta/ui/components";
 import { showToast } from "@vendetta/ui/toasts";
 
 import { BetterTableRowGroup } from "$/components/BetterTableRow";
-import LineDivider from "$/components/LineDivider";
 import Text from "$/components/Text";
 import { Reanimated } from "$/deps";
 import { Lang } from "$/lang";
@@ -260,40 +259,39 @@ export default function () {
             })
           }
         />
-        {showDev && (
-          <>
-            <LineDivider addPadding={true} />
-            <FormRow
-              label={lang.format("settings.dev.api_url.title", {})}
-              subLabel={lang.format("settings.dev.api_url.description", {})}
-              leading={<FormRow.Icon source={getAssetIDByName("PencilIcon")} />}
-            />
-            <FormInput
-              title=""
-              placeholder={defaultHost}
-              value={vstorage.custom.host || defaultHost}
-              onChange={(x: string) =>
-                (vstorage.custom.host = x.length > 0 ? x : null)
-              }
-              style={{ marginTop: -25, marginHorizontal: 12 }}
-            />
-            <FormRow
-              label={lang.format("settings.dev.client_id.title", {})}
-              subLabel={lang.format("settings.dev.client_id.description", {})}
-              leading={<FormRow.Icon source={getAssetIDByName("PencilIcon")} />}
-            />
-            <FormInput
-              title=""
-              placeholder={defaultClientId}
-              value={constants.oauth2.clientId || defaultClientId}
-              onChange={(x: string) =>
-                (vstorage.custom.clientId = x.length > 0 ? x : null)
-              }
-              style={{ marginTop: -25, marginHorizontal: 12 }}
-            />
-          </>
-        )}
       </BetterTableRowGroup>
+      {showDev && (
+        <BetterTableRowGroup nearby>
+          <FormRow
+            label={lang.format("settings.dev.api_url.title", {})}
+            subLabel={lang.format("settings.dev.api_url.description", {})}
+            leading={<FormRow.Icon source={getAssetIDByName("PencilIcon")} />}
+          />
+          <FormInput
+            title=""
+            placeholder={defaultHost}
+            value={vstorage.custom.host || defaultHost}
+            onChange={(x: string) =>
+              (vstorage.custom.host = x.length > 0 ? x : null)
+            }
+            style={{ marginTop: -25, marginHorizontal: 12 }}
+          />
+          <FormRow
+            label={lang.format("settings.dev.client_id.title", {})}
+            subLabel={lang.format("settings.dev.client_id.description", {})}
+            leading={<FormRow.Icon source={getAssetIDByName("PencilIcon")} />}
+          />
+          <FormInput
+            title=""
+            placeholder={defaultClientId}
+            value={constants.oauth2.clientId || defaultClientId}
+            onChange={(x: string) =>
+              (vstorage.custom.clientId = x.length > 0 ? x : null)
+            }
+            style={{ marginTop: -25, marginHorizontal: 12 }}
+          />
+        </BetterTableRowGroup>
+      )}
       <BetterTableRowGroup
         title={lang.format("settings.auth.title", {})}
         icon={getAssetIDByName("LockIcon")}
@@ -424,116 +422,6 @@ export default function () {
                 );
               }}
             />
-            <LineDivider addPadding={true} />
-            <FormRow
-              label={lang.format(
-                "settings.manage_data.download_compressed.title",
-                {},
-              )}
-              subLabel={lang.format(
-                "settings.manage_data.download_compressed.description",
-                {},
-              )}
-              leading={
-                isBusy.includes("download_compressed") ? (
-                  <RN.ActivityIndicator size="small" />
-                ) : (
-                  <FormRow.Icon source={getAssetIDByName("DownloadIcon")} />
-                )
-              }
-              onPress={async () => {
-                if (isBusy.length) return;
-                setBusy("download_compressed");
-
-                let data: string;
-                try {
-                  data = await getRawData();
-                } catch {
-                  return unBusy("download_compressed");
-                }
-
-                try {
-                  const file = `CloudSync_${new Array(5)
-                    .fill(0)
-                    .map(() => Math.floor(Math.random() * 9) + 1)
-                    .join("")}.txt`;
-                  await RNFS.writeFile(
-                    RNFS.DownloadDirectoryPath + "/" + file,
-                    data,
-                  );
-
-                  showToast(
-                    `Downloaded as ${file}`,
-                    getAssetIDByName("FileIcon"),
-                  );
-                } catch (e) {
-                  showToast(e.toString(), getAssetIDByName("CircleXIcon"));
-                }
-
-                unBusy("download_compressed");
-              }}
-            />
-            <FormRow
-              label={lang.format(
-                "settings.manage_data.import_compressed.title",
-                {},
-              )}
-              subLabel={lang.format(
-                "settings.manage_data.import_compressed.description",
-                {},
-              )}
-              leading={
-                isBusy.includes("import_compressed") ? (
-                  <RN.ActivityIndicator size="small" />
-                ) : (
-                  <FormRow.Icon source={getAssetIDByName("UploadIcon")} />
-                )
-              }
-              onPress={async () => {
-                if (isBusy.length) return;
-                setBusy("import_compressed");
-
-                let text: string;
-                try {
-                  const { fileCopyUri, type } = await DocumentPicker.pickSingle(
-                    {
-                      type: DocumentPicker.types.plainText,
-                      mode: "open",
-                      copyTo: "cachesDirectory",
-                    },
-                  );
-                  if (type === "text/plain" && fileCopyUri)
-                    text = await RNFS.readFile(fileCopyUri.slice(5), "utf8");
-                } catch (e) {
-                  if (!DocumentPicker.isCancel(e))
-                    showToast(
-                      lang.format(e.toString(), {}),
-                      getAssetIDByName("CircleXIcon"),
-                    );
-                }
-
-                unBusy("import_compressed");
-                if (!text) return;
-
-                let data: UserData;
-                try {
-                  data = await decompressRawData(text);
-                } catch {
-                  return unBusy("import_compressed");
-                }
-
-                openSheet(ImportActionSheet, {
-                  data,
-                  navigation,
-                });
-                unBusy("import_compressed");
-                setImportCallback((val) =>
-                  val
-                    ? setBusy("import_compressed")
-                    : unBusy("import_compressed"),
-                );
-              }}
-            />
           </>
         ) : !isAuthorized() ? (
           <Text variant="text-md/semibold" color="TEXT_NORMAL" align="center">
@@ -543,6 +431,117 @@ export default function () {
           <RN.ActivityIndicator size="small" style={{ flex: 1 }} />
         )}
       </BetterTableRowGroup>
+      {isAuthorized() && hasData() && (
+        <BetterTableRowGroup nearby>
+          <FormRow
+            label={lang.format(
+              "settings.manage_data.download_compressed.title",
+              {},
+            )}
+            subLabel={lang.format(
+              "settings.manage_data.download_compressed.description",
+              {},
+            )}
+            leading={
+              isBusy.includes("download_compressed") ? (
+                <RN.ActivityIndicator size="small" />
+              ) : (
+                <FormRow.Icon source={getAssetIDByName("DownloadIcon")} />
+              )
+            }
+            onPress={async () => {
+              if (isBusy.length) return;
+              setBusy("download_compressed");
+
+              let data: string;
+              try {
+                data = await getRawData();
+              } catch {
+                return unBusy("download_compressed");
+              }
+
+              try {
+                const file = `CloudSync_${new Array(5)
+                  .fill(0)
+                  .map(() => Math.floor(Math.random() * 9) + 1)
+                  .join("")}.txt`;
+                await RNFS.writeFile(
+                  RNFS.DownloadDirectoryPath + "/" + file,
+                  data,
+                );
+
+                showToast(
+                  `Downloaded as ${file}`,
+                  getAssetIDByName("FileIcon"),
+                );
+              } catch (e) {
+                showToast(e.toString(), getAssetIDByName("CircleXIcon"));
+              }
+
+              unBusy("download_compressed");
+            }}
+          />
+          <FormRow
+            label={lang.format(
+              "settings.manage_data.import_compressed.title",
+              {},
+            )}
+            subLabel={lang.format(
+              "settings.manage_data.import_compressed.description",
+              {},
+            )}
+            leading={
+              isBusy.includes("import_compressed") ? (
+                <RN.ActivityIndicator size="small" />
+              ) : (
+                <FormRow.Icon source={getAssetIDByName("UploadIcon")} />
+              )
+            }
+            onPress={async () => {
+              if (isBusy.length) return;
+              setBusy("import_compressed");
+
+              let text: string;
+              try {
+                const { fileCopyUri, type } = await DocumentPicker.pickSingle({
+                  type: DocumentPicker.types.plainText,
+                  mode: "open",
+                  copyTo: "cachesDirectory",
+                });
+                if (type === "text/plain" && fileCopyUri)
+                  text = await RNFS.readFile(fileCopyUri.slice(5), "utf8");
+              } catch (e) {
+                if (!DocumentPicker.isCancel(e))
+                  showToast(
+                    lang.format(e.toString(), {}),
+                    getAssetIDByName("CircleXIcon"),
+                  );
+              }
+
+              unBusy("import_compressed");
+              if (!text) return;
+
+              let data: UserData;
+              try {
+                data = await decompressRawData(text);
+              } catch {
+                return unBusy("import_compressed");
+              }
+
+              openSheet(ImportActionSheet, {
+                data,
+                navigation,
+              });
+              unBusy("import_compressed");
+              setImportCallback((val) =>
+                val
+                  ? setBusy("import_compressed")
+                  : unBusy("import_compressed"),
+              );
+            }}
+          />
+        </BetterTableRowGroup>
+      )}
       <View style={{ height: 12 }} />
     </ScrollView>
   );
