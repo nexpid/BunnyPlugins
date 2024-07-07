@@ -16,6 +16,7 @@ import { showToast } from "@vendetta/ui/toasts";
 import { safeFetch } from "@vendetta/utils";
 
 import { hideActionSheet } from "$/components/ActionSheet";
+import { showSimpleActionSheet } from "$/components/ActionSheet";
 import {
   BetterTableRowGroup,
   BetterTableRowTitle,
@@ -46,7 +47,6 @@ import { openConfigurePage } from "./pages/ConfigurePage";
 
 const { ScrollView, View, Pressable } = General;
 const { FormRow, FormSwitchRow } = Forms;
-const { showSimpleActionSheet } = findByProps("showSimpleActionSheet");
 const IconButton = findByProps("IconButton").IconButton;
 
 export function setColorsFromDynamic(clr: VendettaSysColors) {

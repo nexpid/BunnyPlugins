@@ -8,12 +8,12 @@ import { getAssetIDByName } from "@vendetta/ui/assets";
 import { Forms } from "@vendetta/ui/components";
 
 import { hideActionSheet } from "$/components/ActionSheet";
+import { showSimpleActionSheet } from "$/components/ActionSheet";
 import Text from "$/components/Text";
 import { Reanimated } from "$/deps";
 import { buttonVariantPolyfill } from "$/lib/redesign";
 import { lerp } from "$/types";
 
-const { showSimpleActionSheet } = findByProps("showSimpleActionSheet");
 const IconButton = findByProps("IconButton").IconButton;
 
 const { FormRow } = Forms;
@@ -115,7 +115,7 @@ export default function Card(props: CardProps) {
         <RN.View style={styles.content}>
           <Stack spacing={0}>
             <RN.View style={styles.title}>
-              {props.headerIcon && (
+              {getAssetIDByName(props.headerIcon) && (
                 <RN.Image
                   style={styles.pluginIcon}
                   resizeMode="cover"
@@ -163,12 +163,7 @@ export default function Card(props: CardProps) {
                       key: "CardOverflow",
                       header: {
                         title: props.overflowTitle,
-                        icon: props.headerIcon && (
-                          <FormRow.Icon
-                            style={{ marginRight: 8 }}
-                            source={getAssetIDByName(props.headerIcon)}
-                          />
-                        ),
+                        icon: getAssetIDByName(props.headerIcon),
                         onClose: () => hideActionSheet(),
                       },
                       options: props.overflowActions?.map((i) => ({

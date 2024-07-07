@@ -10,6 +10,7 @@ import { getAssetIDByName } from "@vendetta/ui/assets";
 import { General } from "@vendetta/ui/components";
 
 import { hideActionSheet } from "$/components/ActionSheet";
+import { showSimpleActionSheet } from "$/components/ActionSheet";
 import Modal from "$/components/Modal";
 import Text from "$/components/Text";
 import { popModal } from "$/types";
@@ -25,7 +26,6 @@ const MessageRecord = findByName("MessageRecord");
 const RowManager = findByName("RowManager");
 
 const ThemeStore = findByStoreName("ThemeStore");
-const { showSimpleActionSheet } = findByProps("showSimpleActionSheet");
 
 const { ScrollView, View } = General;
 

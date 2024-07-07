@@ -6,6 +6,7 @@ import { getAssetIDByName } from "@vendetta/ui/assets";
 import { showToast } from "@vendetta/ui/toasts";
 
 import { ActionSheet, hideActionSheet } from "$/components/ActionSheet";
+import { showSimpleActionSheet } from "$/components/ActionSheet";
 import { BetterTableRowGroup } from "$/components/BetterTableRow";
 import Text from "$/components/Text";
 
@@ -15,8 +16,6 @@ import wallpapers, {
   CollectionEntry,
 } from "../../stuff/wallpapers";
 import AddBackgroundSheet from "../sheets/AddBackgroundSheet";
-
-const { showSimpleActionSheet } = findByProps("showSimpleActionSheet");
 
 const _PressableScale = findByProps("PressableScale")?.PressableScale;
 const PressableScale = _PressableScale ?? RN.Pressable;

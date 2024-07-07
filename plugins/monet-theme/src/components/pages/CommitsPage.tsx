@@ -1,17 +1,15 @@
-import { findByProps } from "@vendetta/metro";
 import { ReactNative as RN, url } from "@vendetta/metro/common";
 import { useProxy } from "@vendetta/storage";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { showToast } from "@vendetta/ui/toasts";
 
+import { showSimpleActionSheet } from "$/components/ActionSheet";
 import { hideActionSheet } from "$/components/ActionSheet";
 import { FlashList } from "$/deps";
 
 import { vstorage } from "../..";
 import Commit from "../Commit";
 import { stsCommits } from "../Settings";
-
-const { showSimpleActionSheet } = findByProps("showSimpleActionSheet");
 
 export const CommitsPage = () => {
   useProxy(vstorage);

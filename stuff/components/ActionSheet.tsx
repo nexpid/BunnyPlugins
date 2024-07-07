@@ -15,6 +15,25 @@ export const LazyActionSheet = findByProps("openLazy", "hideActionSheet") as {
 };
 export const { openLazy, hideActionSheet } = LazyActionSheet;
 
+export const { showSimpleActionSheet } = findByProps(
+  "showSimpleActionSheet",
+) as {
+  showSimpleActionSheet: (props: {
+    key: "CardOverflow";
+    header: {
+      title: string;
+      icon?: import("react-native").ImageSourcePropType;
+      onClose?: () => void;
+    };
+    options: {
+      label: string;
+      icon?: import("react-native").ImageSourcePropType;
+      isDestructive?: boolean;
+      onPress?: () => void;
+    }[];
+  }) => void;
+};
+
 type ActionSheetProps = React.PropsWithChildren<{
   title: string;
   onClose?: () => void;

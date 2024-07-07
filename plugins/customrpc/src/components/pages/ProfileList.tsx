@@ -1,4 +1,3 @@
-import { findByProps } from "@vendetta/metro";
 import {
   clipboard,
   NavigationNative,
@@ -24,7 +23,7 @@ import { forceUpdateSettings } from "../Settings";
 const { View } = General;
 const { FormRadioRow, FormRow } = Forms;
 
-const { showSimpleActionSheet } = findByProps("showSimpleActionSheet");
+import { showSimpleActionSheet } from "$/components/ActionSheet";
 
 const headerRightCallbacks: {
   import?: () => void;
