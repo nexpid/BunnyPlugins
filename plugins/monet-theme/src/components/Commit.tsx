@@ -91,12 +91,12 @@ export default function Commit({
     },
     title: {
       flexDirection: "row",
-      justifyContent: "center",
-      gap: 6,
+      alignItems: "center",
+      gap: 4,
     },
     avatar: {
-      width: 16,
-      height: 16,
+      width: 18,
+      height: 18,
       borderRadius: 11,
     },
   });
@@ -107,11 +107,12 @@ export default function Commit({
       android_ripple={styles.androidRipple}
       {...props}
     >
-      <Stack spacing={8}>
+      <Stack spacing={6}>
         <RN.View style={styles.title}>
           <RN.Image
             style={styles.avatar}
             source={{ uri: commit.committer.avatar_url, cache: "force-cache" }}
+            resizeMode="cover"
           />
           <Text variant="text-sm/medium" color="TEXT_NORMAL">
             {commit.committer.login}

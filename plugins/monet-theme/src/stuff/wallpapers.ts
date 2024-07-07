@@ -1,12 +1,14 @@
 import constants from "$/constants";
 
+export interface CollectionEntry {
+  title: string;
+  url: string;
+}
+
 export interface Collection {
   label: string;
   variant: "dark" | "light" | "any";
-  content: {
-    title: string;
-    url: string;
-  }[];
+  content: CollectionEntry[];
 }
 
 const prefix = `${constants.github.raw}plugins/monet-theme/assets/backgrounds/`;

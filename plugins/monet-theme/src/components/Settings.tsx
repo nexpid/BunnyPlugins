@@ -399,8 +399,10 @@ export default () => {
             label="Automatically Reapply Theme"
             subLabel="Automatically reapplies Monet Theme when you change your Discord color scheme or restart the app"
             leading={<FormRow.Icon source={getAssetIDByName("DownloadIcon")} />}
-            onValueChange={() => (vstorage.autoReapply = !vstorage.autoReapply)}
-            value={vstorage.autoReapply}
+            onValueChange={() =>
+              (vstorage.reapply.enabled = !vstorage.reapply.enabled)
+            }
+            value={vstorage.reapply.enabled}
           />
           <FormRow
             label="Reload Theme Patches"

@@ -48,11 +48,17 @@ export const vstorage = storage as {
   };
   config: {
     wallpaper: string | "none";
+    custom: {
+      title: string;
+      url: string;
+    }[];
   };
-  autoReapply: boolean;
-  reapplyCache: {
-    colors?: string;
-    theme?: string;
+  reapply: {
+    enabled: boolean;
+    cache: {
+      colors?: string;
+      theme?: string;
+    };
   };
   patches: {
     from: "git" | "local";
@@ -76,23 +82,30 @@ export default {
     };
     vstorage.config ??= {
       wallpaper: "none",
+      custom: [],
     };
-    vstorage.autoReapply ??= false;
     vstorage.patches ??= {
       from: "git",
     };
 
-    const oldColors = vstorage.reapplyCache?.colors;
-    const oldTheme = vstorage.reapplyCache?.theme;
-
     let lTheme = getDiscordTheme();
-    vstorage.reapplyCache = {
+    const oldColors = vstorage.reapply?.cache.colors;
+    const oldTheme = vstorage.reapply?.cache.theme;
+
+    vstorage.reapply ??= {
+      enabled: false,
+      cache: {
+        colors: JSON.stringify(syscolors),
+        theme: lTheme,
+      },
+    };
+    vstorage.reapply.cache = {
       colors: JSON.stringify(syscolors),
       theme: lTheme,
     };
 
     const reapply = async () => {
-      if (!vstorage.autoReapply || !hasTheme()) return;
+      if (!vstorage.reapply.enabled || !hasTheme()) return;
       showToast("Reapplying Monet Theme", getAssetIDByName("RetryIcon"));
 
       let cpatches: Patches;
@@ -132,8 +145,8 @@ export default {
       oldTheme &&
       oldColors &&
       syscolors &&
-      (vstorage.reapplyCache.colors !== oldColors ||
-        vstorage.reapplyCache.theme !== oldTheme)
+      (vstorage.reapply.cache.colors !== oldColors ||
+        vstorage.reapply.cache.theme !== oldTheme)
     )
       reapply();
 
