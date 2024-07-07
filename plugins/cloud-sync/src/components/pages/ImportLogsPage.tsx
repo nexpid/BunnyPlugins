@@ -5,6 +5,7 @@ import {
   stylesheet,
 } from "@vendetta/metro/common";
 import { semanticColors } from "@vendetta/ui";
+import { type ScrollView } from "react-native";
 
 import { lang } from "../..";
 
@@ -43,7 +44,7 @@ export const ImportLogsPage = () => {
   const [_, forceUpdate] = React.useReducer((x) => ~x, 0);
   logged = forceUpdate;
 
-  const scroller = React.useRef<import("react-native").ScrollView>();
+  const scroller = React.useRef<ScrollView>();
 
   React.useEffect(() => {
     isInPage = true;

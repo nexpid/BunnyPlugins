@@ -1,4 +1,5 @@
 import { find, findByProps } from "@vendetta/metro";
+import { type ImageSourcePropType } from "react-native";
 
 const _ActionSheet =
   findByProps("ActionSheet")?.ActionSheet ??
@@ -22,12 +23,12 @@ export const { showSimpleActionSheet } = findByProps(
     key: "CardOverflow";
     header: {
       title: string;
-      icon?: import("react-native").ImageSourcePropType;
+      icon?: ImageSourcePropType;
       onClose?: () => void;
     };
     options: {
       label: string;
-      icon?: import("react-native").ImageSourcePropType;
+      icon?: ImageSourcePropType;
       isDestructive?: boolean;
       onPress?: () => void;
     }[];

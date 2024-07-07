@@ -1,5 +1,6 @@
 import { React, ReactNative as RN } from "@vendetta/metro/common";
 import { semanticColors } from "@vendetta/ui";
+import { type StyleProp, type TextStyle } from "react-native";
 
 import {
   resolveSemanticColor,
@@ -30,7 +31,7 @@ export default function Text({
   lineClamp?: number;
   color?: string;
   align?: "left" | "right" | "center";
-  style?: import("react-native").StyleProp<import("react-native").TextStyle>;
+  style?: StyleProp<TextStyle>;
   onPress?: () => void;
   getChildren?: () => React.ReactNode | undefined;
   liveUpdate?: boolean;

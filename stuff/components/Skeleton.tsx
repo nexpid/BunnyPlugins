@@ -1,5 +1,6 @@
 import { React, stylesheet } from "@vendetta/metro/common";
 import { semanticColors } from "@vendetta/ui";
+import { type DimensionValue, type ViewStyle } from "react-native";
 
 import { Reanimated } from "$/deps";
 
@@ -7,8 +8,8 @@ export default function Skeleton({
   height,
   style,
 }: {
-  height: import("react-native").DimensionValue;
-  style?: import("react-native").ViewStyle;
+  height: DimensionValue;
+  style?: ViewStyle;
 }) {
   const baseStyle = stylesheet.createThemedStyleSheet({
     skeleton: {

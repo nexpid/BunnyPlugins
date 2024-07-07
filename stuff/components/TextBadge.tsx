@@ -1,5 +1,6 @@
 import { React, ReactNative as RN, stylesheet } from "@vendetta/metro/common";
 import { semanticColors } from "@vendetta/ui";
+import { type ViewStyle } from "react-native";
 
 import Text from "$/components/Text";
 import { Reanimated } from "$/deps";
@@ -10,7 +11,7 @@ export default function TextBadge({
   children,
   shiny,
 }: React.PropsWithChildren<{
-  style?: import("react-native").ViewStyle;
+  style?: ViewStyle;
   variant: "primary" | "danger";
   shiny?: boolean;
 }>) {

@@ -1,5 +1,6 @@
 import { i18n, ReactNative as RN, stylesheet } from "@vendetta/metro/common";
 import { semanticColors } from "@vendetta/ui";
+import { type PressableProps } from "react-native";
 
 import Text from "$/components/Text";
 import { Stack } from "$/lib/redesign";
@@ -71,7 +72,7 @@ export default function Commit({
 }: {
   commit: CommitObj;
   selected?: boolean;
-} & import("react-native").PressableProps) {
+} & PressableProps) {
   const styles = stylesheet.createThemedStyleSheet({
     androidRipple: {
       color: semanticColors.ANDROID_RIPPLE,

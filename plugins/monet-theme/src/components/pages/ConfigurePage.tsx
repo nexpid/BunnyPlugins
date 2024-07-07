@@ -3,6 +3,7 @@ import { useProxy } from "@vendetta/storage";
 import { semanticColors } from "@vendetta/ui";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { showToast } from "@vendetta/ui/toasts";
+import { type ImageSourcePropType } from "react-native";
 
 import { ActionSheet, hideActionSheet } from "$/components/ActionSheet";
 import { showSimpleActionSheet } from "$/components/ActionSheet";
@@ -26,7 +27,7 @@ function Wallpaper({
   onLongPress,
 }: React.PropsWithChildren<{
   label: string;
-  image: import("react-native").ImageSourcePropType;
+  image: ImageSourcePropType;
   centerImage?: boolean;
   selected: boolean;
   onPress: () => void;

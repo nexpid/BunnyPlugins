@@ -1,5 +1,6 @@
 import { React, ReactNative as RN } from "@vendetta/metro/common";
 import { Forms } from "@vendetta/ui/components";
+import { type ImageSourcePropType } from "react-native";
 
 import { ActionSheet } from "../ActionSheet";
 
@@ -17,7 +18,7 @@ export default function ChooseSheet({
     name: string;
     description?: string;
     value: typeof _value;
-    icon?: import("react-native").ImageSourcePropType;
+    icon?: ImageSourcePropType;
     iconColor?: any;
     iconComponent?: React.ReactNode;
   }[];

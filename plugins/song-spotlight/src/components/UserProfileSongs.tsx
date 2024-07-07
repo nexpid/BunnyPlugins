@@ -4,6 +4,7 @@ import { React, ReactNative as RN, stylesheet } from "@vendetta/metro/common";
 import { semanticColors } from "@vendetta/ui";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { showToast } from "@vendetta/ui/toasts";
+import { type FlatList } from "react-native";
 
 import { ActionSheet } from "$/components/ActionSheet";
 import Text from "$/components/Text";
@@ -261,7 +262,7 @@ const SpotifySongEmbed = ({
 
   const covers = songData && songData.coverArt.sources;
 
-  const tracklistRef = React.useRef<import("react-native").FlatList>();
+  const tracklistRef = React.useRef<FlatList>();
 
   React.useEffect(() => {
     tracklistRef.current?.scrollToIndex({
