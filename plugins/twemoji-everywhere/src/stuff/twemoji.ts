@@ -7,9 +7,10 @@ const emojiRegex = new RegExp(`(${rawEmojiRegex.source})`, rawEmojiRegex.flags);
 export interface EmojiPack {
   title: keyof typeof lang.Values;
   format: (src: string) => string;
+  noVariation?: boolean;
 }
 
-export const emojipacks = {
+export const normalPacks = {
   default: {
     get title() {
       return RN.Platform.select({
@@ -22,7 +23,8 @@ export const emojipacks = {
   twemoji: {
     title: "settings.emojipacks.choose.twemoji",
     format: (src) =>
-      `https://cdn.jsdelivr.net/gh/twitter/twemoji@v14.0.2/assets/72x72/${src}.png`,
+      `https://raw.githubusercontent.com/jdecked/twemoji/main/assets/72x72/${src}.png`,
+    noVariation: true,
   },
   fluentuiStatic: {
     title: "settings.emojipacks.choose.fluentui_static",
@@ -39,11 +41,24 @@ export const emojipacks = {
     format: (src) =>
       `https://raw.githubusercontent.com/googlefonts/noto-emoji/main/png/72/emoji_u${src
         .split("-")
-        .filter((x) => x !== "fe0f")
         .map((x) => x.padStart(4, "0"))
         .join("_")}.png`,
+    noVariation: true,
   },
 } satisfies Record<string, EmojiPack>;
+export const sillyPacks = {
+  discord: {
+    title: "settings.emojipacks.choose.discord",
+    format: (src) =>
+      `https://nexpid.github.io/DiscordEmojiPicker/assets/${src}.png`,
+    noVariation: true,
+  },
+} satisfies Record<string, EmojiPack>;
+
+export const emojipacks = {
+  ...normalPacks,
+  ...sillyPacks,
+} as const;
 
 export function getSrc(src: string) {
   return (
@@ -52,10 +67,13 @@ export function getSrc(src: string) {
   );
 }
 
-export function convert(emoji: string): string {
+export function convert(
+  emoji: string,
+  pack: EmojiPack = emojipacks[vstorage.emojipack],
+): string {
   return Array.from(emoji)
     .map((x) => x?.codePointAt(0)?.toString(16))
-    .filter((x) => !!x)
+    .filter((x) => !!x && (pack.noVariation ? x !== "fe0f" : true))
     .join("-");
 }
 
