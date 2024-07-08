@@ -99,7 +99,7 @@ export default async function load() {
               id: user.id,
             },
           ],
-          source: "N/A",
+          sources: ["N/A"],
         },
         config: null,
         suffix: vstorage.iconpack.custom.suffix,
@@ -107,7 +107,7 @@ export default async function load() {
       }
     : state.iconpack.list.find((x) => useIconpack === x.id);
 
-  let iconpackConfig: IconPackConfig = {
+  let iconpackConfig: IconpackConfig = {
     biggerStatus: false,
   };
   let tree = [];

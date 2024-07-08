@@ -6,7 +6,7 @@ export default async function getIconpackData(
   id: string,
   configUrl?: string,
 ): Promise<{
-  config: IconPackConfig | null;
+  config: IconpackConfig | null;
   tree: string[] | null;
 }> {
   const treeUrl = constants.iconpacks.tree(id);

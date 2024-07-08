@@ -21,9 +21,6 @@ export default (): (() => void) => {
         icon: getAssetIDByName(manifest.vendetta.icon),
         title: () => lang.format("plugin.name", {}),
         page: {
-          get title() {
-            return lang.format("plugin.name", {});
-          },
           render: Settings,
         },
       },

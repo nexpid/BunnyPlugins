@@ -2,9 +2,6 @@ import { execSync } from "child_process";
 import { existsSync } from "fs";
 import { readdir, readFile, writeFile } from "fs/promises";
 import { format } from "prettier";
-import { parse } from "smol-toml";
-
-// a proper proxy for Bunny wasn't implemented yet, so I'll link to the raw plugin
 
 const branch = execSync("git branch --show-current").toString().trim();
 const isDev = branch === "dev";
@@ -65,31 +62,31 @@ const categories = [
   ["🎫 Discontinued", "discontinued"],
 ];
 
-const makeBadge = (label, text, textColor) =>
+const makeBadge = (label, text, textColor, labelColor = shieldLabelColor) =>
   `<img alt="${label}" src="https://img.shields.io/badge/${label}${
     text ? `-${text}` : ""
   }${textColor && text ? `-${textColor}` : ""}${
-    !text ? `-${shieldLabelColor}` : ""
-  }?style=for-the-badge${text ? `&labelColor=${shieldLabelColor}` : ""}" />`;
+    !text ? `-${labelColor}` : ""
+  }?style=for-the-badge${text ? `&labelColor=${labelColor}` : ""}" />`;
 const makeHref = (href, text, spacing = 0) => `<a href="${href}">
 ${"  ".repeat(spacing + 1)}${text}
 ${"  ".repeat(spacing)}</a>`;
-const makeHrefBadge = (href, label, text, textColor, spacing = 0) =>
-  makeHref(href, makeBadge(label, text, textColor), spacing);
+const makeHrefBadge = (href, label, text, textColor, labelColor, spacing = 0) =>
+  makeHref(href, makeBadge(label, text, textColor, labelColor), spacing);
 
-const makeMDHrefBadge = (href, label, text, textColor) =>
-  `[${makeBadge(label, text, textColor)}](${href})`;
+const makeMDHrefBadge = (href, label, text, textColor, labelColor) =>
+  `[${makeBadge(label, text, textColor, labelColor)}](${href})`;
 
-for (const x of await readdir("./plugins")) {
-  const path = `./plugins/${x}/`;
+for (const x of await readdir("plugins")) {
+  const path = `plugins/${x}/`;
   if (!existsSync(`${path}manifest.json`)) {
     console.log(`Could not find ${path}manifest.json`);
-    invalidPlugins.push([x, "no manifest.json"]);
+    invalidPlugins.push(x);
     continue;
   }
-  if (!existsSync(`${path}status.toml`)) {
-    console.log(`Could not find ${path}status.toml`);
-    invalidPlugins.push([x, "no status.toml"]);
+  if (!existsSync(`${path}status.json`)) {
+    console.log(`Could not find ${path}status.json`);
+    invalidPlugins.push(x);
     continue;
   }
 
@@ -106,12 +103,12 @@ for (const x of await readdir("./plugins")) {
     const proxied = isDev ? false : _proxied;
 
     const plugin = {
+      id: x,
       name: manifest.name,
       description: manifest.description,
-      discontinuedFor,
-      id: x,
       status,
       proxied,
+      discontinuedFor,
       links: {
         copy: [
           proxied && {
@@ -129,11 +126,13 @@ for (const x of await readdir("./plugins")) {
           external?.backend && {
             title: "view_backend_code",
             link: `${links.external.backend}${external.backend}`,
+            color: shieldColors.externallink,
           },
         ].filter((x) => !!x),
         code: {
           title: "view_code",
           link: `${links.code}${x}`,
+          color: shieldColors.codelink,
         },
       },
     };
@@ -195,14 +194,11 @@ ${plugin.description}`;
 
 const stats = {
   all: plugins.length,
-  finished: plugins.filter((x) => x.status === "finished" || x.proxied).length,
-  proxied: plugins.filter((x) => x.proxied).length,
+  finished: plugins.filter((x) => x.status === "finished").length,
   unproxied: plugins.filter((x) => x.status === "finished" && !x.proxied)
     .length,
-  unfinished: plugins.filter((x) => x.status === "unfinished" && !x.proxied)
-    .length,
-  discontinued: plugins.filter((x) => x.status === "discontinued" && !x.proxied)
-    .length,
+  unfinished: plugins.filter((x) => x.status === "unfinished").length,
+  discontinued: plugins.filter((x) => x.status === "discontinued").length,
 };
 
 const plur = (x, p = "s", s = "") => (x !== 1 ? p : s);
@@ -348,13 +344,13 @@ const mreadme = `${mdNote}
 
 <div align="center">
   ${makeHref(
-    "https://github.com/nexpid/DettaPlugins/stargazers",
-    `<img alt="GitHub stars" src="https://img.shields.io/github/stars/nexpid/DettaPlugins?style=for-the-badge&color=${shieldColors.ghstars}&labelColor=${shieldLabelColor}&logo=${shieldLogos.ghstars}">`,
+    "https://github.com/nexpid/BunnyPlugins/stargazers",
+    `<img alt="GitHub stars" src="https://img.shields.io/github/stars/nexpid/BunnyPlugins?style=for-the-badge&color=${shieldColors.ghstars}&labelColor=${shieldLabelColor}&logo=${shieldLogos.ghstars}">`,
     1,
   )}
   ${makeHref(
-    "https://github.com/nexpid/DettaPlugins/issues",
-    `<img alt="GitHub issues" src="https://img.shields.io/github/issues/nexpid/DettaPlugins?style=for-the-badge&color=${shieldColors.ghissues}&labelColor=${shieldLabelColor}&logo=${shieldLogos.ghissues}">`,
+    "https://github.com/nexpid/BunnyPlugins/issues",
+    `<img alt="GitHub issues" src="https://img.shields.io/github/issues/nexpid/BunnyPlugins?style=for-the-badge&color=${shieldColors.ghissues}&labelColor=${shieldLabelColor}&logo=${shieldLogos.ghissues}">`,
     1,
   )}
   ${makeHref(
@@ -407,7 +403,7 @@ ${plist.join("\n\n")}${
         "s aren't",
         " isn't",
       )} being shown due to being formatted incorrectly:  
-${invalidPlugins.map((x) => `> - ${x[0]}  `).join("\n")}`
+${invalidPlugins.map((x) => `> - ${x}  `).join("\n")}`
     : ""
 }
 
@@ -418,10 +414,9 @@ ${invalidPlugins.map((x) => `> - ${x[0]}  `).join("\n")}`
 
   The Creative Commons Attribution 4.0 International License is an open and flexible license that grants users the ability to share, adapt, and build upon the contents of this project for any purpose, including commercial endeavors. Under this license, users are required to provide appropriate attribution to the original author(s), acknowledging their contribution to the work. This license promotes collaboration and innovation by allowing individuals and organizations to leverage and modify the project while ensuring that credit is given to the creators.
 </details>\n`;
-// TODO make use of the second parameter in invalidPlugins
 
-await writeFile("./README.md", await format(mreadme, { parser: "markdown" }));
-console.log("Wrote ./README.md");
+await writeFile("README.md", await format(mreadme, { parser: "markdown" }));
+console.log("Wrote README.md");
 
 console.log("");
 console.timeEnd("Done");

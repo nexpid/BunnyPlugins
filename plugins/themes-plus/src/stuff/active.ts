@@ -1,7 +1,7 @@
 import { React } from "@vendetta/metro/common";
 
 import { InactiveReason, PatchType } from "..";
-import { IconPack, IconPackData } from "../types";
+import { Iconpack, IconpackData } from "../types";
 
 export const state = {
   loading: true,

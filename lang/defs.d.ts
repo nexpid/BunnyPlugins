@@ -41,7 +41,6 @@ export interface LangValues {
   plugin_browser: {
     values: typeof import("./values/base/plugin_browser.json");
     fillers: {
-      "plugin.name.changes": { changes: string };
       "toast.plugin.update.success": { plugin: string };
       "toast.plugin.update.fail": { plugin: string };
       "toast.plugin.delete.success": { plugin: string };
@@ -54,6 +53,7 @@ export interface LangValues {
     values: typeof import("./values/base/themes_plus.json");
     fillers: {
       "settings.header": { active: boolean };
+      "alert.downloadpack.body": { iconpack: string; space: string };
     };
   };
   twemoji_everywhere: {

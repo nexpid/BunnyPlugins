@@ -31,11 +31,11 @@ export function patchSettingsPin(
   you?: {
     key: string;
     icon?: number;
-    title: string;
+    title: () => string;
+    trailing?: React.FC;
     page: {
       render: React.ComponentType;
       noErrorBoundary?: boolean;
-      title?: string;
       headerRight?: () => void;
     };
   },
@@ -112,7 +112,14 @@ export function patchSettingsPin(
     const Page = you.page.render;
     const component = React.memo(({ navigation }: any) => {
       managePage(
-        without(you.page, "noErrorBoundary", "render") as any,
+        without(
+          {
+            ...you.page,
+            title: you.title(),
+          },
+          "noErrorBoundary",
+          "render",
+        ) as any,
         navigation,
       );
 
@@ -129,11 +136,16 @@ export function patchSettingsPin(
       );
     });
 
+    let predicateReq = true;
+    patches.push(() => (predicateReq = false));
+
     const rendererConfig = {
       [screenKey]: {
         type: "route",
-        title: () => you.title,
-        usePredicate: shouldAppear,
+        title: () => you.title(),
+        usePredicate: () =>
+          predicateReq && (shouldAppear ? shouldAppear() : true),
+        useTrailing: you.trailing,
         icon: you.icon,
         parent: null,
         screen: {

@@ -26,12 +26,12 @@
     "rollup": "^4.17.2",
     "rollup-plugin-esbuild": "^6.1.1",
     "rollup-plugin-tsconfig-paths": "^1.5.2",
-    "smol-toml": "^1.1.4",
     "twemoji-parser": "^14.0.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.2.0",
     "@revenge-mod/vendetta-types": "github:revenge-mod/vendetta-types",
+    "@shopify/flash-list": "^1.6.4",
     "eslint": "^9.2.0",
     "eslint-plugin-simple-import-sort": "^12.0.0",
     "eslint-plugin-unused-imports": "^3.1.0",
@@ -53,7 +53,7 @@
       ]
     }
   },
-  "repository": "https://github.com/nexpid/DettaPlugins",
+  "repository": "https://github.com/nexpid/BunnyPlugins",
   "author": "nexpid (https://github.com/nexpid)",
   "license": "CC-BY-4.0"
 }

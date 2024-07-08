@@ -1,4 +1,4 @@
-export type PluginsFullJson = {
+export type FullPlugin = {
   name: string;
   description: string;
   authors: {
@@ -10,5 +10,8 @@ export type PluginsFullJson = {
     icon?: string;
     original: string;
   };
+  bunny?: {
+    disabled?: boolean;
+  };
   hash: string;
-}[];
+};

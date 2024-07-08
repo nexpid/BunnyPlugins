@@ -9,7 +9,7 @@ export enum PatchType {
   Icons = "icons",
   CustomIconOverlays = "custom_icon_overlays",
   MentionLineColor = "mention_line_color",
-  IconPack = "iconpack",
+  Iconpack = "iconpack",
 }
 
 export enum InactiveReason {
