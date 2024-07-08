@@ -9,13 +9,12 @@ import { semanticColors } from "@vendetta/ui";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { Forms } from "@vendetta/ui/components";
 
+import { ActionSheet } from "$/components/ActionSheet";
 import { BetterTableRowGroup } from "$/components/BetterTableRow";
-import LineDivider from "$/components/LineDivider";
 import ChooseSheet from "$/components/sheets/ChooseSheet";
 import { TrailingText } from "$/components/Text";
 import { Reanimated } from "$/deps";
 import { Slider } from "$/lib/redesign";
-import { openSheet } from "$/types";
 
 import kazuma from "../../assets/kazuma.png";
 import { lang, vstorage } from "..";
@@ -144,9 +143,9 @@ const SettingsKyriu = () => {
 
 type Category = "styling" | "appear" | "effects";
 const categoryIcons = {
-  styling: getAssetIDByName("ic_theme_24px"),
-  appear: getAssetIDByName("ic_show_media"),
-  effects: getAssetIDByName("ic_wand"),
+  styling: getAssetIDByName("PaintPaletteIcon"),
+  appear: getAssetIDByName("ImageIcon"),
+  effects: getAssetIDByName("MagicWandIcon"),
 } satisfies Record<Category, number>;
 
 const advance = (navigation: any, category: Category) =>
@@ -187,7 +186,7 @@ const StylingPage = () => {
     <>
       <FormRow
         label={lang.format("settings.styling.opacity", {})}
-        leading={<FormRow.Icon source={getAssetIDByName("ic_message_edit")} />}
+        leading={<FormRow.Icon source={getAssetIDByName("EyeDropperIcon")} />}
         trailing={
           <TrailingText>
             {Math.floor(vstorage.styling.opacity) / 10}
@@ -204,14 +203,14 @@ const StylingPage = () => {
       />
       <FormRow
         label={lang.format("settings.styling.pos_x", {})}
-        leading={<FormRow.Icon source={getAssetIDByName("ic_message_edit")} />}
+        leading={<FormRow.Icon source={getAssetIDByName("SignPostIcon")} />}
         trailing={
           <TrailingText>
             {lang.format(`settings.styling.pos_x.${vstorage.styling.xPos}`, {})}
           </TrailingText>
         }
         onPress={() =>
-          openSheet(ChooseSheet, {
+          ActionSheet.open(ChooseSheet, {
             title: lang.format("settings.styling.pos_x", {}),
             value: vstorage.styling.xPos,
             options: [
@@ -236,14 +235,14 @@ const StylingPage = () => {
       />
       <FormRow
         label={lang.format("settings.styling.pos_y", {})}
-        leading={<FormRow.Icon source={getAssetIDByName("ic_message_edit")} />}
+        leading={<FormRow.Icon source={getAssetIDByName("SignPostIcon")} />}
         trailing={
           <TrailingText>
             {lang.format(`settings.styling.pos_y.${vstorage.styling.yPos}`, {})}
           </TrailingText>
         }
         onPress={() =>
-          openSheet(ChooseSheet, {
+          ActionSheet.open(ChooseSheet, {
             title: lang.format("settings.styling.pos_y", {}),
             value: vstorage.styling.yPos,
             options: [
@@ -277,14 +276,14 @@ const AppearPage = () => {
     <>
       <FormRow
         label={lang.format("settings.appear.style", {})}
-        leading={<FormRow.Icon source={getAssetIDByName("ic_message_edit")} />}
+        leading={<FormRow.Icon source={getAssetIDByName("BicycleIcon")} />}
         trailing={
           <TrailingText>
             {lang.format(`settings.appear.style.${vstorage.appear.style}`, {})}
           </TrailingText>
         }
         onPress={() =>
-          openSheet(ChooseSheet, {
+          ActionSheet.open(ChooseSheet, {
             title: lang.format("settings.appear.style", {}),
             value: vstorage.appear.style,
             options: [
@@ -309,7 +308,7 @@ const AppearPage = () => {
       />
       <FormRow
         label={lang.format("settings.appear.speed", {})}
-        leading={<FormRow.Icon source={getAssetIDByName("ic_message_edit")} />}
+        leading={<FormRow.Icon source={getAssetIDByName("NitroWheelIcon")} />}
         trailing={
           <TrailingText>
             {Math.floor(vstorage.appear.speed / 100) / 10}s
@@ -333,77 +332,85 @@ const EffectsPage = () => {
 
   return (
     <>
-      <FormSwitchRow
-        label={lang.format("settings.effects.swinging.enabled", {})}
-        leading={<FormRow.Icon source={getAssetIDByName("ic_message_edit")} />}
-        onValueChange={() =>
-          (vstorage.effects.swinging.enabled =
-            !vstorage.effects.swinging.enabled)
-        }
-        value={vstorage.effects.swinging.enabled}
-      />
-      <FormRow
-        label={lang.format("settings.effects.swinging.speed", {})}
-        leading={<FormRow.Icon source={getAssetIDByName("ic_message_edit")} />}
-        trailing={
-          <TrailingText>
-            {Math.floor(vstorage.effects.swinging.speed / 100) / 10}s
-          </TrailingText>
-        }
-        onPress={() => (vstorage.effects.swinging.speed = 900)}
-      />
-      <Slider
-        value={vstorage.effects.swinging.speed}
-        step={100}
-        onValueChange={(val) => (vstorage.effects.swinging.speed = val)}
-        minimumValue={100}
-        maximumValue={1500}
-      />
-      <LineDivider addPadding />
-      <FormSwitchRow
-        label={lang.format("settings.effects.bounce.enabled", {})}
-        leading={<FormRow.Icon source={getAssetIDByName("ic_message_edit")} />}
-        onValueChange={() =>
-          (vstorage.effects.bounce.enabled = !vstorage.effects.bounce.enabled)
-        }
-        value={vstorage.effects.bounce.enabled}
-      />
-      <FormRow
-        label={lang.format("settings.effects.bounce.speed", {})}
-        leading={<FormRow.Icon source={getAssetIDByName("ic_message_edit")} />}
-        trailing={
-          <TrailingText>
-            {Math.floor(vstorage.effects.bounce.speed / 100) / 10}s
-          </TrailingText>
-        }
-        onPress={() => (vstorage.effects.bounce.speed = 100)}
-      />
-      <Slider
-        value={vstorage.effects.bounce.speed}
-        step={100}
-        onValueChange={(val) => (vstorage.effects.bounce.speed = val)}
-        minimumValue={100}
-        maximumValue={1500}
-      />
-      <FormRow
-        label={lang.format("settings.effects.bounce.multiplier", {})}
-        leading={<FormRow.Icon source={getAssetIDByName("ic_message_edit")} />}
-        trailing={
-          <TrailingText>
-            {Math.floor(vstorage.effects.bounce.multiplier * 100) / 100}x
-          </TrailingText>
-        }
-        onPress={() => (vstorage.effects.bounce.multiplier = 1.05)}
-      />
-      <Slider
-        value={vstorage.effects.bounce.multiplier * 100}
-        step={5}
-        onValueChange={(val) =>
-          (vstorage.effects.bounce.multiplier = val / 100)
-        }
-        minimumValue={90}
-        maximumValue={200}
-      />
+      <BetterTableRowGroup
+        title={lang.format("settings.effects.title", {})}
+        icon={categoryIcons.effects}
+      >
+        <FormSwitchRow
+          label={lang.format("settings.effects.swinging.enabled", {})}
+          leading={<FormRow.Icon source={getAssetIDByName("ActivitiesIcon")} />}
+          onValueChange={() =>
+            (vstorage.effects.swinging.enabled =
+              !vstorage.effects.swinging.enabled)
+          }
+          value={vstorage.effects.swinging.enabled}
+        />
+        <FormRow
+          label={lang.format("settings.effects.swinging.speed", {})}
+          leading={<FormRow.Icon source={getAssetIDByName("NitroWheelIcon")} />}
+          trailing={
+            <TrailingText>
+              {Math.floor(vstorage.effects.swinging.speed / 100) / 10}s
+            </TrailingText>
+          }
+          onPress={() => (vstorage.effects.swinging.speed = 900)}
+        />
+        <Slider
+          value={vstorage.effects.swinging.speed}
+          step={100}
+          onValueChange={(val) => (vstorage.effects.swinging.speed = val)}
+          minimumValue={100}
+          maximumValue={1500}
+        />
+      </BetterTableRowGroup>
+      <BetterTableRowGroup nearby>
+        <FormSwitchRow
+          label={lang.format("settings.effects.bounce.enabled", {})}
+          leading={<FormRow.Icon source={getAssetIDByName("ObjectIcon")} />}
+          onValueChange={() =>
+            (vstorage.effects.bounce.enabled = !vstorage.effects.bounce.enabled)
+          }
+          value={vstorage.effects.bounce.enabled}
+        />
+        <FormRow
+          label={lang.format("settings.effects.bounce.speed", {})}
+          leading={<FormRow.Icon source={getAssetIDByName("NitroWheelIcon")} />}
+          trailing={
+            <TrailingText>
+              {Math.floor(vstorage.effects.bounce.speed / 100) / 10}s
+            </TrailingText>
+          }
+          onPress={() => (vstorage.effects.bounce.speed = 100)}
+        />
+        <Slider
+          value={vstorage.effects.bounce.speed}
+          step={100}
+          onValueChange={(val) => (vstorage.effects.bounce.speed = val)}
+          minimumValue={100}
+          maximumValue={1500}
+        />
+        <FormRow
+          label={lang.format("settings.effects.bounce.multiplier", {})}
+          leading={
+            <FormRow.Icon source={getAssetIDByName("SendMessageIcon")} />
+          }
+          trailing={
+            <TrailingText>
+              {Math.floor(vstorage.effects.bounce.multiplier * 100) / 100}x
+            </TrailingText>
+          }
+          onPress={() => (vstorage.effects.bounce.multiplier = 1.05)}
+        />
+        <Slider
+          value={vstorage.effects.bounce.multiplier * 100}
+          step={5}
+          onValueChange={(val) =>
+            (vstorage.effects.bounce.multiplier = val / 100)
+          }
+          minimumValue={90}
+          maximumValue={200}
+        />
+      </BetterTableRowGroup>
     </>
   );
 };
@@ -415,62 +422,31 @@ export default function Settings(category?: Category) {
     return (
       <RN.ScrollView style={{ flex: 1 }}>
         <SettingsKyriu />
-        <BetterTableRowGroup
-          title={lang.format(
-            category ? `settings.${category}.title` : "settings.title",
-            {},
-          )}
-          icon={
-            category ? categoryIcons[category] : getAssetIDByName("ic_cog_24px")
-          }
-        >
-          {!category ? (
-            <BasePage navigation={navigation} />
-          ) : category === "styling" ? (
-            <StylingPage />
-          ) : category === "appear" ? (
-            <AppearPage />
-          ) : (
-            <EffectsPage />
-          )}
-          {/* <FormRow
-          label={lang.format("settings.appear_style.title", {})}
-          subLabel={lang.format("settings.appear_style.description", {})}
-          leading={
-            <FormRow.Icon source={getAssetIDByName("ic_message_edit")} />
-          }
-        />
-        <FormRadioRow
-          label={lang.format("settings.appear_style.fly", {})}
-          onPress={() => (vstorage.appearStyle = "fly")}
-          trailing={<FormRow.Arrow />}
-          selected={vstorage.appearStyle === "fly"}
-          style={{ marginHorizontal: 12 }}
-        />
-        <FormRadioRow
-          label={lang.format("settings.appear_style.fade", {})}
-          onPress={() => (vstorage.appearStyle = "fade")}
-          trailing={<FormRow.Arrow />}
-          selected={vstorage.appearStyle === "fade"}
-          style={{ marginHorizontal: 12 }}
-        />
-        <FormSwitchRow
-          label={lang.format("settings.facecam_swinging", {})}
-          leading={
-            <FormRow.Icon source={getAssetIDByName("ic_message_edit")} />
-          }
-          onValueChange={() => (vstorage.swinging = !vstorage.swinging)}
-          value={vstorage.swinging}
-        />
-        <FormSwitchRow
-          label={lang.format("settings.facecam_bouncing", {})}
-          leading={
-            <FormRow.Icon source={getAssetIDByName("ic_message_edit")} />
-          }
-          onValueChange={() => (vstorage.bounce = !vstorage.bounce)}
-          value={vstorage.bounce}
-        /> */}
-        </BetterTableRowGroup>
+        {category === "effects" ? (
+          <EffectsPage />
+        ) : (
+          <BetterTableRowGroup
+            title={lang.format(
+              category ? `settings.${category}.title` : "settings.title",
+              {},
+            )}
+            icon={
+              category
+                ? categoryIcons[category]
+                : getAssetIDByName("SettingsIcon")
+            }
+          >
+            {category === "styling" ? (
+              <StylingPage />
+            ) : category === "appear" ? (
+              <AppearPage />
+            ) : category === "effects" ? (
+              <EffectsPage />
+            ) : (
+              <BasePage navigation={navigation} />
+            )}
+          </BetterTableRowGroup>
+        )}
       </RN.ScrollView>
     );
   };

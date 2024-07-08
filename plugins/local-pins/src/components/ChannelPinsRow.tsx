@@ -1,15 +1,12 @@
 import { ReactNative as RN, stylesheet } from "@vendetta/metro/common";
 import { semanticColors } from "@vendetta/ui";
 import { getAssetIDByName } from "@vendetta/ui/assets";
-import { General } from "@vendetta/ui/components";
 
 import Text from "$/components/Text";
 import { openModal } from "$/types";
 
 import { hasAnyPin } from "..";
 import LocalPinnedModal from "./modals/LocalPinnedModal";
-
-const { View } = General;
 
 export default function ChannelPinsRow() {
   if (!hasAnyPin()) return null;
@@ -53,13 +50,13 @@ export default function ChannelPinsRow() {
       android_ripple={styles.androidRipple}
       onPress={() => openModal("local-pinned", LocalPinnedModal)}
     >
-      <View style={styles.icon}>
+      <RN.View style={styles.icon}>
         <RN.Image
           source={getAssetIDByName("ic_pins")}
           style={styles.iconImg}
           resizeMode="cover"
         />
-      </View>
+      </RN.View>
       <Text
         variant="text-md/medium"
         color="CHANNELS_DEFAULT"

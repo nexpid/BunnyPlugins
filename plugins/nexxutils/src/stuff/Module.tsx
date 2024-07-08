@@ -2,19 +2,19 @@ import { logger } from "@vendetta";
 import { React, ReactNative as RN, stylesheet } from "@vendetta/metro/common";
 import { semanticColors } from "@vendetta/ui";
 import { getAssetIDByName } from "@vendetta/ui/assets";
-import { Forms, General } from "@vendetta/ui/components";
+import { Forms } from "@vendetta/ui/components";
 import { showToast } from "@vendetta/ui/toasts";
 
+import { ActionSheet } from "$/components/ActionSheet";
+import ChooseSheet from "$/components/sheets/ChooseSheet";
 import SmartMention from "$/components/SmartMention";
 import Text from "$/components/Text";
 import { Button } from "$/lib/redesign";
-import { openModal, openSheet, resolveSemanticColor } from "$/types";
+import { openModal, resolveSemanticColor } from "$/types";
 
 import { vstorage } from "..";
 import ErrorViewerModal from "../components/modals/ErrorViewerModal";
-import ChooseSettingSheet from "../components/sheets/ChooseSettingSheet";
 
-const { View } = General;
 const { FormRow, FormSwitchRow, FormDivider } = Forms;
 
 export enum ModuleCategory {
@@ -275,7 +275,7 @@ export class Module<Settings extends Record<string, ModuleSetting>> {
               >
                 {this.label}
               </RN.Text>,
-              extra[0] && <View style={{ paddingRight: 12 }} />,
+              extra[0] && <RN.View style={{ paddingRight: 12 }} />,
               extra
                 .sort(() => -1)
                 .map((x) => (
@@ -292,7 +292,7 @@ export class Module<Settings extends Record<string, ModuleSetting>> {
                       ]}
                       source={getAssetIDByName(x.icon)}
                     />
-                    <View style={{ width: 2 }} />
+                    <RN.View style={{ width: 2 }} />
                   </>
                 )),
             ]}
@@ -315,7 +315,7 @@ export class Module<Settings extends Record<string, ModuleSetting>> {
               <FormDivider />
               <RN.View style={{ paddingHorizontal: 15 }}>
                 {extra[0] && (
-                  <View>
+                  <RN.View>
                     {extra.map((x) => {
                       const children = (
                         <>
@@ -323,9 +323,9 @@ export class Module<Settings extends Record<string, ModuleSetting>> {
                             {x.content}
                           </Text>
                           {x.action && (
-                            <View style={styles.rowTailing}>
+                            <RN.View style={styles.rowTailing}>
                               <FormRow.Arrow />
-                            </View>
+                            </RN.View>
                           )}
                         </>
                       );
@@ -339,10 +339,10 @@ export class Module<Settings extends Record<string, ModuleSetting>> {
                           {children}
                         </RN.Pressable>
                       ) : (
-                        <View style={styles.row}>{children}</View>
+                        <RN.View style={styles.row}>{children}</RN.View>
                       );
                     })}
-                  </View>
+                  </RN.View>
                 )}
                 <FormSwitchRow
                   label="Enabled"
@@ -373,7 +373,7 @@ export class Module<Settings extends Record<string, ModuleSetting>> {
                       value={this.storage.options[id]}
                     />
                   ) : setting.type === "button" ? (
-                    <View style={{ marginVertical: 12 }}>
+                    <RN.View style={{ marginVertical: 12 }}>
                       <Button
                         size="md"
                         variant="primary"
@@ -386,7 +386,7 @@ export class Module<Settings extends Record<string, ModuleSetting>> {
                           />
                         }
                       />
-                    </View>
+                    </RN.View>
                   ) : (
                     setting.type === "choose" && (
                       <FormRow
@@ -396,12 +396,14 @@ export class Module<Settings extends Record<string, ModuleSetting>> {
                           this.storage.options[id],
                         )}
                         onPress={() =>
-                          openSheet(ChooseSettingSheet, {
-                            label: setting.label,
-                            //@ts-expect-error type string cannot be used to index type
-                            value: this.storage.options[id],
-                            choices: setting.choices,
-                            update: (val) => {
+                          ActionSheet.open(ChooseSheet, {
+                            title: setting.label,
+                            value: this.storage.options[id] as any,
+                            options: setting.choices.map((x) => ({
+                              name: x,
+                              value: x,
+                            })),
+                            callback: (val) => {
                               //@ts-expect-error type string cannot be used to index type
                               this.storage.options[id] = val;
                               this.restart();

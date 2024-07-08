@@ -2,204 +2,241 @@ import { React, ReactNative as RN, stylesheet } from "@vendetta/metro/common";
 import { useProxy } from "@vendetta/storage";
 import { semanticColors } from "@vendetta/ui";
 import { getAssetIDByName } from "@vendetta/ui/assets";
-import { Forms, General } from "@vendetta/ui/components";
 import { showToast } from "@vendetta/ui/toasts";
+import { type ImageSourcePropType } from "react-native";
 
+import { ActionSheet, hideActionSheet } from "$/components/ActionSheet";
+import { showSimpleActionSheet } from "$/components/ActionSheet";
 import { BetterTableRowGroup } from "$/components/BetterTableRow";
-import ChooseSheet from "$/components/sheets/ChooseSheet";
-import Text, { TrailingText } from "$/components/Text";
-import { openSheet, resolveSemanticColor } from "$/types";
+import Text from "$/components/Text";
+import { hasPressableScale, PressableScale } from "$/lib/redesign";
 
-import { vstorage } from "../..";
-import wallpapers from "../../stuff/wallpapers";
-import { stsPatches } from "../Settings";
+import { getDiscordTheme, vstorage } from "../..";
+import wallpapers, {
+  Collection,
+  CollectionEntry,
+} from "../../stuff/wallpapers";
+import AddBackgroundSheet from "../sheets/AddBackgroundSheet";
 
-const { View, ScrollView } = General;
-const { FormRow } = Forms;
+function Wallpaper({
+  label,
+  image,
+  centerImage,
+  selected,
+  onPress,
+  onLongPress,
+}: React.PropsWithChildren<{
+  label: string;
+  image: ImageSourcePropType;
+  centerImage?: boolean;
+  selected: boolean;
+  onPress: () => void;
+  onLongPress?: () => void;
+}>) {
+  const dims = RN.Dimensions.get("window");
+  const styles = stylesheet.createThemedStyleSheet({
+    android_ripple: {
+      color: semanticColors.ANDROID_RIPPLE,
+      cornerRadius: 8,
+    } as any,
+    thing: {
+      backgroundColor: semanticColors.BG_MOD_FAINT,
+      borderRadius: 8,
+      width: dims.width / 4,
+      height: dims.width / 2,
+      marginRight: 8,
+    },
+    centerThing: {
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    selectedThing: {
+      borderWidth: 2,
+      borderColor: semanticColors.TEXT_BRAND,
+    },
+    centerImage: {
+      width: 24,
+      height: 24,
+      tintColor: semanticColors.INTERACTIVE_NORMAL,
+    },
+  });
 
-const readableThemeStyle = {
-  auto: "Automatic",
-  dark: "Dark",
-  light: "Light",
-};
+  return (
+    <RN.View>
+      <PressableScale
+        onPress={onPress}
+        onLongPress={onLongPress}
+        style={[
+          styles.thing,
+          centerImage && styles.centerThing,
+          selected && styles.selectedThing,
+        ]}
+        android_ripple={hasPressableScale && styles.android_ripple}
+      >
+        <RN.Image
+          source={image}
+          style={
+            centerImage
+              ? styles.centerImage
+              : { width: "100%", height: "100%", borderRadius: 8 }
+          }
+          resizeMode="cover"
+        />
+      </PressableScale>
+      <Text
+        variant="text-sm/semibold"
+        color="TEXT_NORMAL"
+        align="center"
+        style={{ marginTop: 8 }}
+      >
+        {label}
+      </Text>
+    </RN.View>
+  );
+}
+
+function WallpaperCollection({
+  collection,
+  configurable,
+  clear,
+}: {
+  collection: Collection;
+  configurable?: {
+    add: (title: string, location: string) => void;
+    remove: (entry: CollectionEntry) => void;
+  };
+  clear?: boolean;
+}) {
+  return (
+    <RN.View>
+      <Text
+        variant="text-md/medium"
+        color="TEXT_NORMAL"
+        style={{ marginBottom: 8 }}
+      >
+        {collection.label}
+      </Text>
+      <RN.ScrollView horizontal>
+        {clear && (
+          <Wallpaper
+            label="None"
+            image={getAssetIDByName("EyeSlashIcon")}
+            centerImage={true}
+            selected={vstorage.config.wallpaper === "none"}
+            onPress={() => {
+              showToast("Removed background", getAssetIDByName("TrashIcon"));
+              vstorage.config.wallpaper = "none";
+            }}
+          />
+        )}
+        {configurable && (
+          <Wallpaper
+            label="Add"
+            image={getAssetIDByName("ImagePlusIcon")}
+            centerImage
+            selected={false}
+            onPress={() =>
+              ActionSheet.open(AddBackgroundSheet, { add: configurable.add })
+            }
+          />
+        )}
+        {collection.content.map((x) => (
+          <Wallpaper
+            label={x.title}
+            image={{ uri: x.url }}
+            selected={vstorage.config.wallpaper === x.url}
+            onPress={() => {
+              showToast(
+                `Set background to ${x.title}`,
+                getAssetIDByName("ImagePlusIcon"),
+              );
+              vstorage.config.wallpaper = x.url;
+            }}
+            onLongPress={
+              configurable &&
+              (() =>
+                showSimpleActionSheet({
+                  key: "CardOverflow",
+                  header: {
+                    title: x.title,
+                    onClose: () => hideActionSheet(),
+                  },
+                  options: [
+                    {
+                      label: "Remove",
+                      icon: getAssetIDByName("TrashIcon"),
+                      isDestructive: true,
+                      onPress: () => {
+                        showToast(
+                          `Removed ${x.title}`,
+                          getAssetIDByName("TrashIcon"),
+                        );
+                        configurable.remove(x);
+                      },
+                    },
+                  ],
+                }))
+            }
+          />
+        ))}
+      </RN.ScrollView>
+    </RN.View>
+  );
+}
 
 export const ConfigurePage = () => {
   useProxy(vstorage);
 
-  const styles = stylesheet.createThemedStyleSheet({
-    thing: {
-      backgroundColor: semanticColors.BG_MOD_FAINT,
-      borderRadius: 8,
-      aspectRatio: 1 / 2,
-    },
-    thingActive: {
-      backgroundColor: semanticColors.BG_MOD_STRONG,
-    },
-    emptyThing: {
-      padding: 12,
-      alignItems: "center",
-      justifyContent: "center",
-      gap: 8,
-    },
-    androidRipple: {
-      color: semanticColors.ANDROID_RIPPLE,
-      cornerRadius: 8,
-    } as any,
-    window: {
-      height: "100%",
-      backgroundColor: semanticColors.BG_BASE_SECONDARY,
-    },
-  });
-
-  if (!stsPatches)
-    return (
-      <ScrollView style={styles.window}>
-        <RN.ActivityIndicator size={"large"} style={{ flex: 1 }} />
-      </ScrollView>
-    );
-
-  const bestVariant = vstorage.config.style;
+  const bestVariant = getDiscordTheme() !== "light" ? "dark" : "light";
   const collections = wallpapers.filter(
     (x) => x.variant === bestVariant || x.variant === "any",
   );
 
-  const dims = RN.Dimensions.get("window");
   return (
-    <ScrollView style={styles.window}>
-      <BetterTableRowGroup
-        title="Basic Config"
-        icon={getAssetIDByName("ic_cog_24px")}
-      >
-        <FormRow
-          label="Theme Style"
-          leading={
-            <FormRow.Icon source={getAssetIDByName("ic_message_edit")} />
-          }
-          trailing={
-            <TrailingText>
-              {readableThemeStyle[vstorage.config.style]}
-            </TrailingText>
-          }
-          onPress={() =>
-            openSheet(ChooseSheet, {
-              title: "Theme Style",
-              value: vstorage.config.style,
-              options: [
-                {
-                  name: readableThemeStyle.auto,
-                  value: "auto",
-                },
-                {
-                  name: readableThemeStyle.dark,
-                  value: "dark",
-                },
-                {
-                  name: readableThemeStyle.light,
-                  value: "light",
-                },
-              ],
-              callback: (v) => (vstorage.config.style = v as any),
-            })
-          }
-        />
-      </BetterTableRowGroup>
+    <RN.ScrollView style={{ flex: 1 }}>
       <BetterTableRowGroup
         title="Backgrounds"
-        icon={getAssetIDByName("ic_image")}
+        icon={getAssetIDByName("ImageIcon")}
         padding={true}
       >
-        {collections.map((x, i, a) => (
-          <View style={{ marginBottom: i !== a.length - 1 ? 8 : 0 }}>
-            <View style={{ marginBottom: 8 }}>
-              <Text variant="eyebrow" color="TEXT_NORMAL">
-                {x.label}
-              </Text>
-            </View>
-            <ScrollView horizontal={true}>
-              <View style={{ marginRight: 8, flexDirection: "column" }}>
-                <RN.TouchableOpacity
-                  onPress={() => {
-                    showToast("Removed background", getAssetIDByName("Check"));
-                    vstorage.config.wallpaper = "none";
-                  }}
-                  style={[
-                    styles.thing,
-                    vstorage.config.wallpaper === "none" && styles.thingActive,
-                    styles.emptyThing,
-                    {
-                      width: dims.width / 4,
-                    },
-                  ]}
-                >
-                  <RN.Image
-                    source={getAssetIDByName("img_none")}
-                    style={{
-                      width: "100%",
-                      aspectRatio: 1 / 1,
-                      tintColor: resolveSemanticColor(
-                        semanticColors.TEXT_NORMAL,
-                      ),
-                    }}
-                  />
-                </RN.TouchableOpacity>
-                <Text
-                  variant="text-sm/semibold"
-                  color="TEXT_NORMAL"
-                  align="center"
-                  style={{ marginTop: 8 }}
-                >
-                  None
-                </Text>
-              </View>
-              {x.content.map((x) => (
-                <View style={{ marginRight: 8, flexDirection: "column" }}>
-                  <RN.TouchableOpacity
-                    onPress={() => {
-                      showToast(
-                        `Set background to ${x.title}`,
-                        getAssetIDByName("Check"),
-                      );
-                      vstorage.config.wallpaper = x.url;
-                    }}
-                    style={[
-                      styles.thing,
-                      vstorage.config.wallpaper === x.url && styles.thingActive,
-                      {
-                        width: dims.width / 4,
-                      },
-                    ]}
-                  >
-                    <RN.Image
-                      source={{ uri: x.url }}
-                      style={{
-                        borderRadius: 8,
-                        width: "100%",
-                        height: "100%",
-                      }}
-                    />
-                  </RN.TouchableOpacity>
-                  <Text
-                    variant="text-sm/semibold"
-                    color="TEXT_NORMAL"
-                    align="center"
-                    style={{ marginTop: 8 }}
-                  >
-                    {x.title}
-                  </Text>
-                </View>
-              ))}
-            </ScrollView>
-          </View>
+        {collections.map((x, i) => (
+          <>
+            <WallpaperCollection clear={i === 0} collection={x} />
+            <RN.View style={{ height: 8 }} />
+          </>
         ))}
+        <WallpaperCollection
+          configurable={{
+            add: (title, location) => {
+              vstorage.config.custom = [
+                ...vstorage.config.custom,
+                {
+                  title,
+                  url: location,
+                },
+              ];
+            },
+            remove: (entry) => {
+              vstorage.config.custom = vstorage.config.custom.filter(
+                (x) => x.url !== entry.url,
+              );
+            },
+          }}
+          collection={{
+            label: "Custom",
+            variant: "any",
+            content: vstorage.config.custom,
+          }}
+        />
       </BetterTableRowGroup>
-      <View style={{ marginBottom: 12 }} />
-    </ScrollView>
+      <RN.View style={{ marginBottom: 12 }} />
+    </RN.ScrollView>
   );
 };
 
 export function openConfigurePage(navigation: any) {
   navigation.push("VendettaCustomPage", {
-    title: "Theme Config",
+    title: "Theme configuration",
     render: ConfigurePage,
   });
 }

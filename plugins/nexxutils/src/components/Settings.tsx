@@ -1,4 +1,5 @@
-import { ErrorBoundary, General } from "@vendetta/ui/components";
+import { ReactNative as RN } from "@vendetta/metro/common";
+import { ErrorBoundary } from "@vendetta/ui/components";
 
 import { BetterTableRowGroup } from "$/components/BetterTableRow";
 import Text from "$/components/Text";
@@ -8,12 +9,10 @@ import modules from "../modules";
 import { moduleCategoryMap } from "../stuff/Module";
 import SillyAvatar from "./SillyAvatar";
 
-const { View, ScrollView } = General;
-
 export default () => {
   return (
-    <ScrollView>
-      <View
+    <RN.ScrollView>
+      <RN.View
         style={{
           marginHorizontal: 20,
           marginTop: 20,
@@ -27,7 +26,7 @@ export default () => {
         <Text variant="text-lg/semibold" color="TEXT_NORMAL">
           NexxUtils v{version}
         </Text>
-      </View>
+      </RN.View>
       {moduleCategoryMap.map(({ category, title, icon }) => {
         const mods = modules.filter((x) => x.category === category);
         return (
@@ -54,7 +53,7 @@ export default () => {
           </BetterTableRowGroup>
         );
       })}
-      <View style={{ height: 12 }} />
-    </ScrollView>
+      <RN.View style={{ height: 12 }} />
+    </RN.ScrollView>
   );
 };

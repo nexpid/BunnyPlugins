@@ -1,19 +1,19 @@
+import { ReactNative as RN } from "@vendetta/metro/common";
 import { useProxy } from "@vendetta/storage";
 import { getAssetIDByName } from "@vendetta/ui/assets";
-import { Forms, General } from "@vendetta/ui/components";
+import { Forms } from "@vendetta/ui/components";
 
 import { BetterTableRowGroup } from "$/components/BetterTableRow";
 
 import { vstorage } from "..";
 
-const { ScrollView } = General;
 const { FormRow, FormRadioRow } = Forms;
 
 export default function () {
   useProxy(vstorage);
 
   return (
-    <ScrollView>
+    <RN.ScrollView>
       <BetterTableRowGroup title="Settings" icon={getAssetIDByName("ic_cog")}>
         <FormRow
           label="Button type"
@@ -57,6 +57,6 @@ export default function () {
           style={{ marginHorizontal: 12 }}
         />
       </BetterTableRowGroup>
-    </ScrollView>
+    </RN.ScrollView>
   );
 }

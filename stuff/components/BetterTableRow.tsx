@@ -1,24 +1,24 @@
 import { ReactNative as RN, stylesheet } from "@vendetta/metro/common";
 import { semanticColors } from "@vendetta/ui";
-import { General } from "@vendetta/ui/components";
 
 import Text from "./Text";
-
-const { View, Pressable } = General;
 
 export function BetterTableRowTitle({
   title,
   onPress,
   icon,
+  padding,
 }: {
   title: string;
   onPress?: () => void;
   icon?: number;
+  padding?: boolean;
 }) {
   const styles = stylesheet.createThemedStyleSheet({
     androidRipple: {
       color: semanticColors.ANDROID_RIPPLE,
-    },
+      cornerRadius: 4,
+    } as any,
     icon: {
       width: 16,
       height: 16,
@@ -26,16 +26,16 @@ export function BetterTableRowTitle({
       tintColor: semanticColors.TEXT_MUTED,
     },
   });
-  const UseCompontent = onPress ? Pressable : View;
+  const UseCompontent = onPress ? RN.Pressable : RN.View;
 
   return (
     <UseCompontent
       android_ripple={styles.androidRipple}
-      disabled={false}
-      accessibilityRole={"button"}
       onPress={onPress}
       style={{
         marginBottom: 8,
+        marginHorizontal: padding ? 16 : 0,
+        marginTop: padding ? 8 : 0,
         gap: 4,
         flexDirection: "row",
         alignItems: "center",
@@ -57,15 +57,19 @@ export function BetterTableRowGroup({
   icon,
   children,
   padding,
+  nearby,
 }: React.PropsWithChildren<{
-  title?: string;
+  title?: string | React.ReactNode;
   onTitlePress?: () => void;
   icon?: number;
   padding?: boolean;
+  nearby?: boolean;
 }>) {
   const styles = stylesheet.createThemedStyleSheet({
     main: {
       backgroundColor: semanticColors.CARD_PRIMARY_BG,
+      borderColor: semanticColors.BORDER_FAINT,
+      borderWidth: 1,
       borderRadius: 16,
       overflow: "hidden",
       flex: 1,
@@ -73,19 +77,27 @@ export function BetterTableRowGroup({
   });
 
   return (
-    <View style={{ marginHorizontal: 16, marginTop: 16 }}>
-      {title && (
-        <BetterTableRowTitle title={title} onPress={onTitlePress} icon={icon} />
-      )}
-      <View style={styles.main}>
+    <RN.View style={{ marginHorizontal: 16, marginTop: nearby ? 8 : 16 }}>
+      {title ? (
+        typeof title === "string" ? (
+          <BetterTableRowTitle
+            title={title}
+            onPress={onTitlePress}
+            icon={icon}
+          />
+        ) : (
+          title
+        )
+      ) : null}
+      <RN.View style={styles.main}>
         {padding ? (
-          <View style={{ paddingHorizontal: 16, paddingVertical: 16 }}>
+          <RN.View style={{ paddingHorizontal: 16, paddingVertical: 16 }}>
             {children}
-          </View>
+          </RN.View>
         ) : (
           children
         )}
-      </View>
-    </View>
+      </RN.View>
+    </RN.View>
   );
 }

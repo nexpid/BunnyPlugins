@@ -2,15 +2,12 @@ import { findByProps } from "@vendetta/metro";
 import { ReactNative as RN, stylesheet } from "@vendetta/metro/common";
 import { semanticColors } from "@vendetta/ui";
 import { getAssetIDByName } from "@vendetta/ui/assets";
-import { General } from "@vendetta/ui/components";
 
 import Text from "$/components/Text";
 import { openModal } from "$/types";
 
 import { hasAnyPin } from "..";
 import LocalPinnedModal from "./modals/LocalPinnedModal";
-
-const { View } = General;
 
 const { useChannelListLayout } = findByProps("useChannelListLayout");
 
@@ -67,21 +64,21 @@ export default function RedesignChannelPinsRow({ ret }: { ret: any }) {
         android_ripple={styles.androidRipple}
         onPress={() => openModal("local-pinned", LocalPinnedModal)}
       >
-        <View style={styles.container}>
-          <View style={styles.icon}>
+        <RN.View style={styles.container}>
+          <RN.View style={styles.icon}>
             <RN.Image
               source={getAssetIDByName("ic_pins")}
               style={styles.iconImg}
               resizeMode="cover"
             />
-          </View>
+          </RN.View>
           <Text
             variant="redesign/channel-title/semibold"
             color="REDESIGN_CHANNEL_NAME_MUTED_TEXT"
           >
             Local Pinned
           </Text>
-        </View>
+        </RN.View>
       </RN.Pressable>
     </>
   );

@@ -4,25 +4,34 @@ export interface LangValues {
     fillers: {
       plugins: { plugins: number };
       themes: { themes: number };
+      fonts: { fonts: number };
       "toast.backup_saved": { file: string };
-      "toast.errored": { error: string };
+      "settings.your_data.last_synced": { date: string };
       "sheet.import_data.unproxied_plugins": { count: string };
       "sheet.import_data.plugins": { count: string };
       "sheet.import_data.themes": { count: string };
-      "log.import.start.combo": { plugins: string; themes: string };
+      "sheet.import_data.fonts": { count: string };
+      "log.import.start.combo": {
+        plugins: string;
+        themes: string;
+        fonts: string;
+      };
       "log.import.plugin.success": { name: string };
       "log.import.plugin.fail": { name: string; error: string };
       "log.import.theme.success": { name: string };
       "log.import.theme.fail": { name: string; error: string };
-      "log.import.total": { plugins: string; themes: string };
-      "log.import.select_theme": { theme: string };
-      "log.import.result.success": { plugins: string; themes: string };
-      "log.import.result.fail": {
+      "log.import.font.success": { name: string };
+      "log.import.font.fail": { name: string; error: string };
+      "log.import.total": { plugins: string; themes: string; fonts: string };
+      "log.import.select_theme.success": { theme: string };
+      "log.import.select_theme.fail": { theme: string };
+      "log.import.result": {
         plugins: string;
         themes: string;
-        failed_plugins: string;
-        failed_themes: string;
+        fonts: string;
+        success: string;
       };
+      "log.import.reload_for_font": { name: string };
     };
   };
   kiryu_facecam: {

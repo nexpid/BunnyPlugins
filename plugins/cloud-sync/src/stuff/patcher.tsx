@@ -1,4 +1,5 @@
 import { plugin } from "@vendetta";
+import { manifest } from "@vendetta/plugin";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 
 import { patchSettingsPin } from "$/lib/pinToSettings";
@@ -6,19 +7,19 @@ import { patchSettingsPin } from "$/lib/pinToSettings";
 import { lang, vstorage } from "..";
 import Settings from "../components/Settings";
 import SettingsSection from "../components/SettingsSection";
+import { unsubAuthStore } from "../stores/AuthorizationStore";
+import { unsubCacheStore } from "../stores/CacheStore";
 
 export default (): (() => void) => {
   const patches = [];
   patches.push(
     patchSettingsPin(
-      () => vstorage.addToSettings,
+      () => vstorage.config.addToSettings,
       () => <SettingsSection />,
       {
         key: plugin.manifest.name,
-        icon: getAssetIDByName("ic_contact_sync"),
-        get title() {
-          return lang.format("plugin.name", {});
-        },
+        icon: getAssetIDByName(manifest.vendetta.icon),
+        title: () => lang.format("plugin.name", {}),
         page: {
           get title() {
             return lang.format("plugin.name", {});
@@ -28,6 +29,8 @@ export default (): (() => void) => {
       },
     ),
   );
+  patches.push(unsubAuthStore);
+  patches.push(unsubCacheStore);
 
   return () => patches.forEach((x) => x());
 };

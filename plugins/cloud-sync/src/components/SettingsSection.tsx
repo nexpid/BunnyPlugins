@@ -1,4 +1,5 @@
 import { NavigationNative } from "@vendetta/metro/common";
+import { manifest } from "@vendetta/plugin";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { ErrorBoundary, Forms } from "@vendetta/ui/components";
 
@@ -15,7 +16,9 @@ export default () => {
     <ErrorBoundary>
       <FormRow
         label={lang.format("plugin.name", {})}
-        leading={<FormRow.Icon source={getAssetIDByName("ic_contact_sync")} />}
+        leading={
+          <FormRow.Icon source={getAssetIDByName(manifest.vendetta.icon)} />
+        }
         trailing={FormRow.Arrow}
         onPress={() =>
           navigation.push("VendettaCustomPage", {

@@ -1,14 +1,12 @@
-import { React } from "@vendetta/metro/common";
+import { React, ReactNative as RN } from "@vendetta/metro/common";
 import { semanticColors } from "@vendetta/ui";
-import { General } from "@vendetta/ui/components";
+import { type StyleProp, type TextStyle } from "react-native";
 
 import {
   resolveSemanticColor,
   TextStyleSheet,
   TextStyleSheetVariant,
 } from "../types";
-
-const { Text: _Text } = General;
 
 export function TrailingText({ children }: React.PropsWithChildren<object>) {
   return (
@@ -33,7 +31,7 @@ export default function Text({
   lineClamp?: number;
   color?: string;
   align?: "left" | "right" | "center";
-  style?: import("react-native").StyleProp<import("react-native").TextStyle>;
+  style?: StyleProp<TextStyle>;
   onPress?: () => void;
   getChildren?: () => React.ReactNode | undefined;
   liveUpdate?: boolean;
@@ -57,7 +55,7 @@ export default function Text({
   }, []);
 
   return (
-    <_Text
+    <RN.Text
       style={[
         variant ? TextStyleSheet[variant] : {},
         color ? { color: resolveSemanticColor(semanticColors[color]) } : {},
@@ -68,6 +66,6 @@ export default function Text({
       onPress={onPress}
     >
       {getChildren?.() ?? children}
-    </_Text>
+    </RN.Text>
   );
 }

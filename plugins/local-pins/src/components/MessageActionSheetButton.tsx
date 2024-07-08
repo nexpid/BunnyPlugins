@@ -2,7 +2,7 @@ import { RedesignRow } from "@nexpid/vdp-shared";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { showToast } from "@vendetta/ui/toasts";
 
-import { hideActionSheet } from "$/types";
+import { hideActionSheet } from "$/components/ActionSheet";
 
 import { addPin, hasPin, removePin } from "..";
 

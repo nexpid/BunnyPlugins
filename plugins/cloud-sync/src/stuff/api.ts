@@ -1,114 +1,93 @@
-import { findByStoreName } from "@vendetta/metro";
+import { getAssetIDByName } from "@vendetta/ui/assets";
+import { showToast } from "@vendetta/ui/toasts";
 
-import { AuthRecord, lang, vstorage } from "..";
 import constants from "../constants";
-import { DBSave } from "../types/api/latest";
+import { useAuthorizationStore } from "../stores/AuthorizationStore";
+import { useCacheStore } from "../stores/CacheStore";
+import { UserData } from "../types";
 
-const UserStore = findByStoreName("UserStore");
-
-interface CloudSyncAPIErrorResponse {
-  message: string;
-  status: number;
-  error?: string;
-}
-export class CloudSyncAPIError extends Error {
-  constructor(resp: CloudSyncAPIErrorResponse) {
-    super(
-      `${resp.status}: ${resp.message}${resp.error ? ` (${resp.error})` : ""}`,
-    );
-    this.name = this.constructor.name;
-  }
-}
-
-export function currentAuthorization(): AuthRecord | undefined {
-  return vstorage.auth[UserStore.getCurrentUser()?.id];
-}
-export async function getAuthorization(): Promise<string> {
-  const e = new Error(lang.format("toast.api.unauthorized", {}));
-  let auth = currentAuthorization();
-  if (!auth) throw e;
-
-  if (Date.now() >= auth.expiresAt) {
-    const x = await fetch(
-      `${
-        constants.api
-      }api/refresh-access-token?refresh_token=${encodeURIComponent(
-        auth.refreshToken,
-      )}`,
-    );
-    if (x.status !== 200) throw new CloudSyncAPIError(await x.json());
-    auth = await x.json();
-
-    vstorage.auth[UserStore.getCurrentUser().id] = auth;
-  }
-
-  return auth.accessToken;
-}
-
-export async function getOauth2Response(code: string): Promise<AuthRecord> {
-  const res = await fetch(
-    `${constants.api}api/get-access-token?code=${encodeURIComponent(code)}`,
-  );
-
-  if (res.status === 200) return await res.json();
-  else throw new CloudSyncAPIError(await res.json());
-}
-export async function getSaveData(): Promise<DBSave.Save | undefined> {
-  if (!currentAuthorization()) return;
-
-  const res = await fetch(`${constants.api}api/get-data`, {
+export async function authFetch(url: RequestInfo, options?: RequestInit) {
+  const res = await fetch(url, {
+    ...options,
     headers: {
-      authorization: await getAuthorization(),
+      ...options?.headers,
+      authorization: useAuthorizationStore.getState().token,
     },
   });
 
-  if (res.status === 200) return await res.json();
-  else throw new CloudSyncAPIError(await res.json());
+  if (res.ok) return res;
+  else {
+    const text = await res.text();
+    showToast(text, getAssetIDByName("CircleXIcon-primary"));
+    throw new Error(text);
+  }
 }
-export async function syncSaveData(
-  data: DBSave.SaveSync,
-): Promise<DBSave.Save | undefined> {
-  if (!currentAuthorization()) return;
 
-  const res = await fetch(`${constants.api}api/sync-data`, {
-    method: "POST",
+export const redirectRoute = "api/auth/authorize";
+
+export async function getData(): Promise<UserData> {
+  return await authFetch(`${constants.api}api/data`, {
     headers: {
-      authorization: await getAuthorization(),
+      "if-modified-since": useCacheStore.getState().at,
+    },
+  }).then(async (res) => {
+    const dt = await res.json();
+    useCacheStore.getState().updateData(dt, res.headers.get("last-modified"));
+    return dt;
+  });
+}
+export async function saveData(data: UserData): Promise<true> {
+  return await authFetch(`${constants.api}api/data`, {
+    method: "PUT",
+    body: JSON.stringify(data),
+    headers: {
       "content-type": "application/json",
     },
-    body: JSON.stringify(data),
-  });
-
-  if (res.status === 200) return await res.json();
-  else throw new CloudSyncAPIError(await res.json());
+  })
+    .then((res) => res.json())
+    .then((json) => {
+      useCacheStore.getState().updateData(data, new Date().toUTCString());
+      return json;
+    });
 }
-export async function deleteSaveData(): Promise<true | undefined> {
-  if (!currentAuthorization()) return;
-
-  const res = await fetch(`${constants.api}api/delete-data`, {
+export async function deleteData(): Promise<true> {
+  return await authFetch(`${constants.api}api/data`, {
     method: "DELETE",
-    headers: {
-      authorization: await getAuthorization(),
-    },
-  });
-
-  if (res.status === 200) return await res.json();
-  else throw new CloudSyncAPIError(await res.json());
+  })
+    .then((res) => res.json())
+    .then((json) => {
+      useCacheStore.getState().updateData(null, null);
+      return json;
+    });
 }
 
-export async function uploadFile(body: string): Promise<
-  | {
-      key: string;
-    }
-  | undefined
-> {
-  if (!currentAuthorization()) return;
-
-  const res = await fetch("https://hst.sh/documents", {
-    method: "POST",
-    body,
+export interface RawData {
+  data: string;
+  file: string;
+}
+export async function getRawData(): Promise<RawData> {
+  return await authFetch(`${constants.api}api/data/raw`).then(async (res) => {
+    const data = await res.text();
+    return {
+      data,
+      file: JSON.parse(
+        res.headers.get("content-disposition").split("filename=")[1],
+      ),
+    };
   });
+}
+export function rawDataURL() {
+  return `${constants.api}api/data/raw?auth=${encodeURIComponent(useAuthorizationStore.getState().token)}`;
+}
 
-  if (res.status === 200) return await res.json();
-  else throw new CloudSyncAPIError(await res.json());
+export async function decompressRawData(data: string): Promise<UserData> {
+  return await (
+    await authFetch(`${constants.api}api/data/decompress`, {
+      method: "POST",
+      body: data,
+      headers: {
+        "content-type": "text/plain",
+      },
+    })
+  ).json();
 }

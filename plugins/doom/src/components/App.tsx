@@ -8,14 +8,13 @@ import {
 import { useProxy } from "@vendetta/storage";
 import { semanticColors } from "@vendetta/ui";
 import { getAssetIDByName } from "@vendetta/ui/assets";
-import { General } from "@vendetta/ui/components";
 
+import { ActionSheet } from "$/components/ActionSheet";
 import SuperAwesomeIcon from "$/components/SuperAwesomeIcon";
 import Text from "$/components/Text";
 import { WebView } from "$/deps";
 import usePromise from "$/hooks/usePromise";
 import { managePage } from "$/lib/ui";
-import { openSheet } from "$/types";
 
 import webviewCss from "../../assets/webview.css";
 import webviewHtml from "../../assets/webview.html";
@@ -23,7 +22,6 @@ import { vstorage } from "..";
 import { getFiles } from "../stuff/store";
 import SettingsActionSheet from "./sheets/SettingsActionSheet";
 
-const { View } = General;
 const Orientation = findByProps("OrientationType", "useOrientation");
 
 export default function App() {
@@ -42,7 +40,7 @@ export default function App() {
     headerRight: () => (
       <SuperAwesomeIcon
         onPress={() =>
-          openSheet(SettingsActionSheet, {
+          ActionSheet.open(SettingsActionSheet, {
             kaboom: () => navigation.goBack(),
           })
         }
@@ -121,8 +119,8 @@ export default function App() {
   }, [files]);
 
   return (
-    <View style={styles.container}>
-      <View
+    <RN.View style={styles.container}>
+      <RN.View
         style={[
           styles.webview,
           isLandscape ? styles.webviewLandscape : styles.webviewPortrait,
@@ -137,13 +135,13 @@ export default function App() {
             style={{ width: "100%", height: "100%", backgroundColor: "#0000" }}
           />
         ) : (
-          <View style={styles.webviewUnder}>
+          <RN.View style={styles.webviewUnder}>
             <Text variant="text-lg/semibold" color="WHITE" align="center">
               {typeof files === "string" ? files : text}
             </Text>
-          </View>
+          </RN.View>
         )}
-      </View>
-    </View>
+      </RN.View>
+    </RN.View>
   );
 }

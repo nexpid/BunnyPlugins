@@ -1,22 +1,16 @@
-import { logger } from "@vendetta";
-import { findByProps, findByStoreName } from "@vendetta/metro";
-import { React } from "@vendetta/metro/common";
-import { id, storage } from "@vendetta/plugin";
-import { createFileBackend } from "@vendetta/storage";
-import { showConfirmationAlert, showCustomAlert } from "@vendetta/ui/alerts";
+import { findByStoreName } from "@vendetta/metro";
+import { storage } from "@vendetta/plugin";
+import { showConfirmationAlert } from "@vendetta/ui/alerts";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { showToast } from "@vendetta/ui/toasts";
+import { safeFetch } from "@vendetta/utils";
 
-import { RNBundleUpdaterManager } from "$/deps";
-import { VendettaSysColors } from "$/typings";
+import { ThemeDataWithPlus, VendettaSysColors } from "$/typings";
 
-import settings, { setColorsFromDynamic } from "./components/Settings";
-import Updating from "./components/Updating";
-import { build } from "./stuff/buildTheme";
+import settings from "./components/Settings";
+import { apply, build } from "./stuff/buildTheme";
 import { parse } from "./stuff/jsoncParser";
-import { unpatch } from "./stuff/livePreview";
-
-const ThemeStore = findByStoreName("ThemeStore");
+import { Patches } from "./types";
 
 export const patchesURL = () =>
   `https://raw.githubusercontent.com/nexpid/VendettaMonetTheme/${
@@ -26,29 +20,23 @@ export const devPatchesURL = "http://192.168.2.22:8730/patches.jsonc";
 export const commitsURL =
   "https://api.github.com/repos/nexpid/VendettaMonetTheme/commits?path=patches.jsonc";
 
-export const getSysColors = () =>
-  window[window.__vendetta_loader?.features?.syscolors?.prop] as
-    | VendettaSysColors
-    | null
-    | undefined;
-const hasTheme = () => window.__vendetta_theme?.id.includes("monet-theme");
+const ThemeStore = findByStoreName("ThemeStore");
 
-export const makeApplyCache = (
-  syscolors: VendettaSysColors | null | undefined,
-) =>
-  JSON.stringify(
-    syscolors
-      ? [
-          syscolors.neutral1[7],
-          syscolors.neutral2[7],
-          syscolors.accent1[7],
-          syscolors.accent2[7],
-          syscolors.accent3[7],
-        ]
-      : null,
-  );
-export const makeThemeApplyCache = () =>
-  JSON.stringify(vstorage.config.style === "auto" ? ThemeStore.theme : null);
+export const getSysColors = () =>
+  (
+    window as any
+  ).bunny.api.native.loader.getSysColors() as VendettaSysColors | null;
+export const hasTheme = () =>
+  (window as any).bunny.managers.themes
+    .getCurrentTheme()
+    ?.id.includes("monet-theme");
+export const getDiscordTheme = () => {
+  // getDefaultFallbackTheme is not exported :(
+  const theme = ThemeStore.theme;
+
+  if (theme.startsWith("vd-theme-")) return theme.split("-")[3];
+  else return theme;
+};
 
 export const vstorage = storage as {
   colors: {
@@ -59,123 +47,127 @@ export const vstorage = storage as {
     accent3: string;
   };
   config: {
-    style: "dark" | "light" | "auto";
     wallpaper: string | "none";
+    custom: {
+      title: string;
+      url: string;
+    }[];
   };
-  autoReapply: boolean;
-  applyCache: string;
-  themeApplyCache?: string;
+  reapply: {
+    enabled: boolean;
+    cache: {
+      colors?: string;
+      theme?: string;
+    };
+  };
   patches: {
     from: "git" | "local";
     commit?: string;
   };
 };
 
-const Alerts = findByProps("openLazy", "close");
-
 export const patches = [];
 
 export default {
   settings,
   onLoad: async () => {
-    const initSyscolors = window[
-      window.__vendetta_loader?.features?.syscolors?.prop
-    ] as VendettaSysColors | null | undefined;
+    const syscolors = getSysColors();
+
     vstorage.colors ??= {
-      neutral1: initSyscolors?.neutral1[7] ?? "#747679",
-      neutral2: initSyscolors?.neutral2[7] ?? "#70777C",
-      accent1: initSyscolors?.accent1[7] ?? "#007FAC",
-      accent2: initSyscolors?.accent2[7] ?? "#657985",
-      accent3: initSyscolors?.accent3[7] ?? "#787296",
+      neutral1: syscolors?.neutral1[7] ?? "#747679",
+      neutral2: syscolors?.neutral2[7] ?? "#70777C",
+      accent1: syscolors?.accent1[7] ?? "#007FAC",
+      accent2: syscolors?.accent2[7] ?? "#657985",
+      accent3: syscolors?.accent3[7] ?? "#787296",
     };
     vstorage.config ??= {
-      style: "auto",
       wallpaper: "none",
+      custom: [],
     };
-    vstorage.autoReapply ??= false;
-    vstorage.applyCache ??= makeApplyCache(initSyscolors);
     vstorage.patches ??= {
       from: "git",
     };
 
-    const syscolors = getSysColors();
-    const made = makeApplyCache(syscolors);
-    const themeMade = makeThemeApplyCache();
+    let lTheme = getDiscordTheme();
+    const oldColors = vstorage.reapply?.cache.colors;
+    const oldTheme = vstorage.reapply?.cache.theme;
 
-    patches.push(() => unpatch?.());
+    vstorage.reapply ??= {
+      enabled: false,
+      cache: {
+        colors: JSON.stringify(syscolors),
+        theme: lTheme,
+      },
+    };
+    vstorage.reapply.cache = {
+      colors: JSON.stringify(syscolors),
+      theme: lTheme,
+    };
 
-    if (
-      (vstorage.autoReapply &&
-        hasTheme() &&
-        syscolors &&
-        vstorage.applyCache &&
-        made !== vstorage.applyCache) ||
-      (vstorage.themeApplyCache && themeMade !== vstorage.themeApplyCache)
-    ) {
-      showCustomAlert(() => React.createElement(Updating, {}), {});
-      vstorage.applyCache = made;
-      vstorage.themeApplyCache = themeMade;
-      setColorsFromDynamic(syscolors);
+    const reapply = async () => {
+      if (!vstorage.reapply.enabled || !hasTheme()) return;
+      showToast("Reapplying Monet Theme", getAssetIDByName("RetryIcon"));
 
-      let patches;
+      let cpatches: Patches;
       try {
-        patches = parse(
+        cpatches = parse(
           (
             await (
-              await fetch(
+              await safeFetch(
                 vstorage.patches.from === "local"
                   ? devPatchesURL
                   : patchesURL(),
                 {
-                  cache: "no-store",
+                  headers: { "cache-control": "public, max-age=600" },
                 },
               )
             ).text()
           ).replace(/\r/g, ""),
         );
-      } catch (e) {
-        Alerts.close();
-
-        console.error(`[MonetTheme] Failed to get patches.json`);
-        logger.error(`Failed to get patches.json!\n${e.stack}`);
+      } catch (e: any) {
         return showToast(
-          "Failed to parse patches.json",
+          "Failed to fetch color patches!",
           getAssetIDByName("Small"),
         );
       }
 
-      let theme;
+      let theme: ThemeDataWithPlus;
       try {
-        theme = build(patches);
-      } catch (e) {
-        Alerts.close();
-
-        console.error(`[MonetTheme] Failed to build theme!`);
-        logger.error(`Failed to build theme!\n${e.stack}`);
+        theme = build(cpatches);
+      } catch (e: any) {
         return showToast("Failed to build theme!", getAssetIDByName("Small"));
       }
 
-      await createFileBackend("vendetta_theme.json").set({
-        id,
-        selected: true,
-        data: theme,
-      } as Theme);
-      RNBundleUpdaterManager.reload();
-    } else {
-      vstorage.applyCache = made;
-      vstorage.themeApplyCache = themeMade;
-    }
+      apply(theme);
+    };
+
+    if (
+      oldTheme &&
+      oldColors &&
+      syscolors &&
+      (vstorage.reapply.cache.colors !== oldColors ||
+        vstorage.reapply.cache.theme !== oldTheme)
+    )
+      reapply();
+
+    const onThemeChanged = () => {
+      const newLTheme = getDiscordTheme();
+      if (lTheme !== newLTheme) reapply();
+      lTheme = newLTheme;
+    };
+
+    ThemeStore.addChangeListener(onThemeChanged);
+    patches.push(() => ThemeStore.removeChangeListener(onThemeChanged));
   },
   onUnload: () => {
     patches.forEach((x) => x());
     if (hasTheme())
       showConfirmationAlert({
-        title: "Unload Theme",
+        title: "Deselect Theme",
         content:
-          "Monet theme is currently selected, would you like to unload it?",
+          "Monet theme is currently selected, would you like to deselect it?",
         onConfirm: async () => {
-          await createFileBackend("vendetta_theme.json").set({} as Theme);
-          RNBundleUpdaterManager.reload();
+          apply(false);
         },
         confirmText: "Unload",
         confirmColor: "brand" as ButtonColors,

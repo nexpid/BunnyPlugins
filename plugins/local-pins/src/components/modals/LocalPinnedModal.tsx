@@ -7,11 +7,12 @@ import {
 } from "@vendetta/metro/common";
 import { semanticColors } from "@vendetta/ui";
 import { getAssetIDByName } from "@vendetta/ui/assets";
-import { General } from "@vendetta/ui/components";
 
+import { hideActionSheet } from "$/components/ActionSheet";
+import { showSimpleActionSheet } from "$/components/ActionSheet";
 import Modal from "$/components/Modal";
 import Text from "$/components/Text";
-import { hideActionSheet, popModal } from "$/types";
+import { popModal } from "$/types";
 
 import { hasAnyPin, removePin } from "../..";
 import useLocalPinned from "../../hooks/useLocalPinned";
@@ -24,9 +25,6 @@ const MessageRecord = findByName("MessageRecord");
 const RowManager = findByName("RowManager");
 
 const ThemeStore = findByStoreName("ThemeStore");
-const { showSimpleActionSheet } = findByProps("showSimpleActionSheet");
-
-const { ScrollView, View } = General;
 
 const Message = ({
   message,
@@ -92,7 +90,7 @@ const Message = ({
       }
       pointerEvents="box-only"
     >
-      <View style={{ flexDirection: "row", alignItems: "center", gap: 4 }}>
+      <RN.View style={{ flexDirection: "row", alignItems: "center", gap: 4 }}>
         <RN.Image
           style={styles.icon}
           source={getAssetIDByName("ic_chat_bubble_16px")}
@@ -101,7 +99,7 @@ const Message = ({
         <Text variant="text-md/medium" color="TEXT_NORMAL">
           {channel?.name ?? "unknown"}
         </Text>
-      </View>
+      </RN.View>
       <ChatItemWrapper
         rowGenerator={new RowManager()}
         message={new MessageRecord(message)}
@@ -132,7 +130,7 @@ export default function LocalPinnedModal() {
   if (!hasAnyPin())
     return (
       <Modal mkey="local-pinned" title="Local Pinned">
-        <View style={styles.bowomp}>
+        <RN.View style={styles.bowomp}>
           <RN.Image
             source={
               {
@@ -147,24 +145,24 @@ export default function LocalPinnedModal() {
             {i18n.Messages.NO_PINS_IN_CHANNEL ??
               "This channel doesn't have any\npinned messages... yet."}
           </Text>
-        </View>
+        </RN.View>
       </Modal>
     );
 
   return (
     <Modal mkey="local-pinned" title="Local Pinned">
       {!data ? (
-        <View
+        <RN.View
           style={{ alignItems: "center", justifyContent: "center", flex: 1 }}
         >
           <RN.ActivityIndicator size="large" style={{ marginBottom: 10 }} />
           <Text variant="text-lg/semibold" color="TEXT_NORMAL" align="center">
             {Math.floor(status * 100)}%
           </Text>
-        </View>
+        </RN.View>
       ) : (
-        <ScrollView style={{ flex: 1 }}>
-          <View style={styles.main}>
+        <RN.ScrollView style={{ flex: 1 }}>
+          <RN.View style={styles.main}>
             {data.map((x) => (
               <Message
                 {...x}
@@ -172,8 +170,8 @@ export default function LocalPinnedModal() {
                 key={x.message.id}
               />
             ))}
-          </View>
-        </ScrollView>
+          </RN.View>
+        </RN.ScrollView>
       )}
     </Modal>
   );

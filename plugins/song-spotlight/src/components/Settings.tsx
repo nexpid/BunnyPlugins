@@ -5,12 +5,12 @@ import { useProxy } from "@vendetta/storage";
 import { semanticColors } from "@vendetta/ui";
 import { showInputAlert } from "@vendetta/ui/alerts";
 import { getAssetIDByName } from "@vendetta/ui/assets";
-import { Forms, General } from "@vendetta/ui/components";
+import { Forms } from "@vendetta/ui/components";
 import { showToast } from "@vendetta/ui/toasts";
 
+import { ActionSheet } from "$/components/ActionSheet";
 import { BetterTableRowGroup } from "$/components/BetterTableRow";
 import Text from "$/components/Text";
-import { openSheet } from "$/types";
 
 import { cache, vstorage } from "..";
 import { currentAuthorization, deleteSaveData } from "../stuff/api";
@@ -22,7 +22,6 @@ import { API } from "../types/api";
 import PendingSongName from "./PendingSongName";
 import SongInfoSheet from "./sheets/SongInfoSheet";
 
-const { ScrollView, View } = General;
 const { FormRow } = Forms;
 
 const UserStore = findByStoreName("UserStore");
@@ -49,14 +48,14 @@ export default function () {
   const hasData = !!cache.data;
 
   return (
-    <ScrollView>
+    <RN.ScrollView>
       <BetterTableRowGroup
         title="Songs"
         icon={getAssetIDByName("abc")}
         padding={true}
       >
         {isAuthed && hasData ? (
-          <View
+          <RN.View
             style={{
               flexDirection: "column",
               gap: 8,
@@ -78,7 +77,7 @@ export default function () {
                 }
                 leading={
                   x === null ? (
-                    <View style={styles.serviceFrame} />
+                    <RN.View style={styles.serviceFrame} />
                   ) : (
                     <RN.Image
                       style={styles.serviceFrame}
@@ -90,7 +89,7 @@ export default function () {
                 }
                 onLongPress={() =>
                   x &&
-                  openSheet(SongInfoSheet, {
+                  ActionSheet.open(SongInfoSheet, {
                     song: x,
                     remove: () => (cache.data.songs[i] = null),
                   })
@@ -154,7 +153,7 @@ export default function () {
                 style={styles.song}
               />
             ))}
-          </View>
+          </RN.View>
         ) : !isAuthed ? (
           <Text variant="text-md/semibold" color="TEXT_NORMAL" align="center">
             Authenticate first to manage your songs
@@ -210,7 +209,7 @@ export default function () {
           />
         )}
       </BetterTableRowGroup>
-      <View style={{ height: 12 }} />
-    </ScrollView>
+      <RN.View style={{ height: 12 }} />
+    </RN.ScrollView>
   );
 }

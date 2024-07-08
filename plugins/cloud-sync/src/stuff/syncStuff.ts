@@ -1,13 +1,13 @@
 import { plugins } from "@vendetta/plugins";
 import { installPlugin } from "@vendetta/plugins";
-import { createFileBackend, createMMKVBackend } from "@vendetta/storage";
+import { createMMKVBackend } from "@vendetta/storage";
 import { themes } from "@vendetta/themes";
 import { installTheme } from "@vendetta/themes";
-import { showConfirmationAlert } from "@vendetta/ui/alerts";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { showToast } from "@vendetta/ui/toasts";
+import { without } from "@vendetta/utils";
 
-import { RNBundleUpdaterManager, RNMMKVManager } from "$/deps";
+import { RNMMKVManager } from "$/deps";
 
 import { canImport, isPluginProxied, lang, vstorage } from "..";
 import {
@@ -15,34 +15,54 @@ import {
   clearLogs,
   isInPage,
 } from "../components/pages/ImportLogsPage";
-import { DBSave } from "../types/api/latest";
+import { UserData } from "../types";
+import {
+  addFont,
+  FontDefinition,
+  getFonts,
+  getSelectedFont,
+  hasFontByName,
+  hasFontBySource,
+  installFont,
+} from "./fonts";
 
-export async function grabEverything(): Promise<DBSave.SaveSync> {
+export async function grabEverything(): Promise<UserData> {
   const sync = {
-    themes: [],
-    plugins: [],
-  } as DBSave.SaveSync;
+    plugins: {},
+    themes: {},
+    fonts: {
+      installed: {},
+      custom: [],
+    },
+  } as UserData;
 
-  for (const x of Object.values(plugins)) {
-    const config = vstorage.pluginSettings[x.id];
-    if (config?.syncPlugin === false) continue;
+  for (const item of Object.values(plugins)) {
+    if (vstorage.config.ignoredPlugins.includes(item.id)) continue;
 
-    const options =
-      config?.syncStorage === false
-        ? {}
-        : ((await createMMKVBackend(x.id).get()) as any);
-    sync.plugins.push({
-      id: x.id,
-      enabled: x.enabled,
-      options,
-    });
+    const storage = await createMMKVBackend(item.id).get();
+    sync.plugins[item.id] = {
+      enabled: item.enabled,
+      storage: JSON.stringify(storage),
+    };
   }
-  for (const x of Object.values(themes)) {
-    sync.themes.push({
-      id: x.id,
-      enabled: x.selected,
+
+  for (const item of Object.values(themes))
+    sync.themes[item.id] = {
+      enabled: item.selected,
+    };
+
+  const selFont = getSelectedFont();
+  const fonts = getFonts();
+
+  for (const item of Object.values(fonts).filter((item) => item.__source))
+    sync.fonts.installed[item.__source] = {
+      enabled: selFont === item.name,
+    };
+  for (const item of Object.values(fonts).filter((item) => !item.__source))
+    sync.fonts.custom.push({
+      ...item,
+      enabled: selFont === item.name,
     });
-  }
 
   return sync;
 }
@@ -53,41 +73,43 @@ export function setImportCallback(fnc: typeof importCallback) {
 }
 
 export type SyncImportOptions = Record<
-  "unproxiedPlugins" | "plugins" | "themes",
+  "unproxiedPlugins" | "plugins" | "themes" | "fonts",
   boolean
 >;
-export async function importData(
-  save: DBSave.Save,
-  options: SyncImportOptions,
-) {
-  if (!save) return;
+export async function importData(data: UserData, options: SyncImportOptions) {
+  if (!data) return;
   importCallback?.(true);
 
   const iplugins = [
-    ...save.sync.plugins.filter(
-      (x) =>
-        !plugins[x.id] &&
-        !isPluginProxied(x.id) &&
-        canImport(x.id) &&
+    ...Object.entries(data.plugins).filter(
+      ([id]) =>
+        !plugins[id] &&
+        !isPluginProxied(id) &&
+        canImport(id) &&
         options.unproxiedPlugins,
     ),
-    ...save.sync.plugins.filter(
-      (x) =>
-        !plugins[x.id] &&
-        isPluginProxied(x.id) &&
-        canImport(x.id) &&
-        options.plugins,
+    ...Object.entries(data.plugins).filter(
+      ([id]) =>
+        !plugins[id] && isPluginProxied(id) && canImport(id) && options.plugins,
     ),
   ];
-  const ithemes = save.sync.themes.filter(
-    (x) => !themes[x.id] && options.themes,
+  const ithemes = Object.entries(data.themes).filter(
+    ([id]) => !themes[id] && options.themes,
   );
 
-  if (!iplugins[0] && !ithemes[0]) {
+  const fonts = getFonts();
+  const ifonts = Object.entries(data.fonts.installed).filter(
+    ([id]) => !hasFontBySource(id, fonts) && options.fonts,
+  );
+  const icustomFonts = data.fonts.custom.filter(
+    ({ name }) => !hasFontByName(name, fonts) && options.fonts,
+  );
+
+  if (!iplugins[0] && !ithemes[0] && !ifonts[0] && !icustomFonts[0]) {
     importCallback?.(false);
     return showToast(
       lang.format("toast.sync.no_import", {}),
-      getAssetIDByName("Small"),
+      getAssetIDByName("CircleXIcon-primary"),
     );
   }
 
@@ -97,6 +119,9 @@ export async function importData(
     lang.format("log.import.start.combo", {
       plugins: lang.format("plugins", { plugins: iplugins.length }),
       themes: lang.format("themes", { themes: ithemes.length }),
+      fonts: lang.format("fonts", {
+        fonts: ifonts.length + icustomFonts.length,
+      }),
     }),
   );
 
@@ -105,50 +130,110 @@ export async function importData(
       lang.format("log.import.start.combo", {
         plugins: lang.format("plugins", { plugins: iplugins.length }),
         themes: lang.format("themes", { themes: ithemes.length }),
+        fonts: lang.format("fonts", {
+          fonts: ifonts.length + icustomFonts.length,
+        }),
       }),
-      getAssetIDByName("toast_image_saved"),
+      getAssetIDByName("DownloadIcon"),
     );
 
-  const status = { plugins: 0, themes: 0, fPlugins: 0, fThemes: 0 };
+  const status = { plugins: 0, themes: 0, fonts: 0 };
+  let failedAny = false;
+  let selFont: FontDefinition;
+
+  const bunny = (window as any).bunny;
+
+  installPlugin;
+  RNMMKVManager;
+
   await Promise.all([
     ...iplugins.map(
-      (x) =>
+      ([id, { enabled, storage }]) =>
         new Promise<void>((res) => {
-          RNMMKVManager.setItem(x.id, JSON.stringify(x.options));
-          installPlugin(x.id, x.enabled)
+          if (storage) RNMMKVManager.setItem(id, storage);
+          installPlugin(id, enabled)
             .then(() => {
               status.plugins++;
               addLog(
                 "plugins",
-                lang.format("log.import.plugin.success", { name: x.id }),
+                lang.format("log.import.plugin.success", { name: id }),
               );
             })
             .catch((e) => {
-              status.fPlugins++;
+              failedAny = true;
               addLog(
                 "plugins",
-                lang.format("log.import.plugin.fail", { name: x.id, error: e }),
+                lang.format("log.import.plugin.fail", { name: id, error: e }),
               );
             })
             .finally(res);
         }),
     ),
     ...ithemes.map(
-      (x) =>
+      ([id]) =>
         new Promise<void>((res) =>
-          installTheme(x.id)
+          installTheme(id)
             .then(() => {
               status.themes++;
               addLog(
                 "themes",
-                lang.format("log.import.theme.success", { name: x.id }),
+                lang.format("log.import.theme.success", { name: id }),
               );
             })
             .catch((e) => {
-              status.fThemes++;
+              failedAny = true;
               addLog(
                 "themes",
-                lang.format("log.import.theme.fail", { name: x.id, error: e }),
+                lang.format("log.import.theme.fail", { name: id, error: e }),
+              );
+            })
+            .finally(res),
+        ),
+    ),
+    ...ifonts.map(
+      ([id, item]) =>
+        new Promise<void>((res) =>
+          installFont(id, item.enabled)
+            .then(() => {
+              status.fonts++;
+              if (item.enabled) selFont = fonts[id];
+
+              addLog(
+                "fonts",
+                lang.format("log.import.font.success", { name: id }),
+              );
+            })
+            .catch((e) => {
+              failedAny = true;
+              addLog(
+                "fonts",
+                lang.format("log.import.font.fail", { name: id, error: e }),
+              );
+            })
+            .finally(res),
+        ),
+    ),
+    ...icustomFonts.map(
+      (item) =>
+        new Promise<void>((res) =>
+          addFont(without(item, "enabled"), item.enabled)
+            .then(() => {
+              status.fonts++;
+              if (item.enabled) selFont = fonts[item.name];
+
+              addLog(
+                "fonts",
+                lang.format("log.import.font.success", { name: item.name }),
+              );
+            })
+            .catch((e) => {
+              failedAny = true;
+              addLog(
+                "fonts",
+                lang.format("log.import.font.fail", {
+                  name: item.name,
+                  error: e,
+                }),
               );
             })
             .finally(res),
@@ -161,53 +246,50 @@ export async function importData(
       lang.format("log.import.total", {
         plugins: lang.format("plugins", { plugins: status.plugins }),
         themes: lang.format("themes", { themes: status.themes }),
+        fonts: lang.format("fonts", { fonts: status.fonts }),
       }),
-      getAssetIDByName("Check"),
+      getAssetIDByName("CircleCheckIcon-primary"),
     );
 
-  const selectTheme = themes[ithemes.find((x) => x.enabled)?.id];
+  const selectTheme = themes[ithemes.find(([_, { enabled }]) => enabled)?.[0]];
   if (selectTheme) {
-    addLog(
-      "themes",
-      lang.format("log.import.select_theme", { theme: selectTheme.id }),
-    );
-    await createFileBackend("vendetta_theme.json").set(
-      Object.assign(selectTheme, {
-        selected: true,
-      }),
-    );
+    try {
+      bunny.managers.themes.selectTheme(selectTheme);
+      bunny.managers.themes.applyTheme(selectTheme);
 
-    await (() =>
-      new Promise<void>((res) =>
-        showConfirmationAlert({
-          title: lang.format("alert.change_theme.title", {}),
-          content: lang.format("alert.change_theme.body", {}),
-          confirmText: lang.format("alert.change_theme.confirm", {}),
-          confirmColor: "red" as ButtonColors,
-          onConfirm: () => {
-            RNBundleUpdaterManager.reload();
-            res();
-          },
-          cancelText: lang.format("alert.change_theme.cancel", {}),
-          onCancel: res,
-          isDismissable: true,
+      addLog(
+        "themes",
+        lang.format("log.import.select_theme.success", {
+          theme: selectTheme.id,
         }),
-      ))();
+      );
+    } catch (e: any) {
+      addLog(
+        "themes",
+        lang.format("log.import.select_theme.fail", { theme: selectTheme.id }),
+      );
+    }
   }
 
   addLog(
     "importer",
-    status.fPlugins || status.fThemes
-      ? lang.format("log.import.result.fail", {
-          plugins: lang.format("plugins", { plugins: status.plugins }),
-          themes: lang.format("themes", { themes: status.themes }),
-          failed_plugins: lang.format("plugins", { plugins: status.fPlugins }),
-          failed_themes: lang.format("themes", { themes: status.fThemes }),
-        })
-      : lang.format("log.import.result.success", {
-          plugins: lang.format("plugins", { plugins: status.plugins }),
-          themes: lang.format("themes", { themes: status.themes }),
-        }),
+    lang.format("log.import.result", {
+      plugins: lang.format("plugins", { plugins: status.plugins }),
+      themes: lang.format("themes", { themes: status.themes }),
+      fonts: lang.format("fonts", { fonts: status.fonts }),
+      success: failedAny
+        ? lang.format("log.import.result.some_fail", {})
+        : lang.format("log.import.result.all_success", {}),
+    }),
   );
+
+  if (selFont)
+    addLog(
+      "fonts",
+      lang.format("log.import.reload_for_font", {
+        name: selFont.name,
+      }),
+    );
+
   importCallback?.(false);
 }

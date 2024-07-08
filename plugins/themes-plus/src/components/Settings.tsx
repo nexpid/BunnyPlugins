@@ -42,6 +42,7 @@ const ListItem = ({
     },
     row: {
       flexDirection: "row",
+      alignItems: "center",
       gap: 4,
     },
   });
@@ -142,7 +143,9 @@ export default function () {
       width: "100%",
       padding: 12,
       backgroundColor: semanticColors.CARD_PRIMARY_BG,
-      borderRadius: 15,
+      borderColor: semanticColors.BORDER_FAINT,
+      borderWidth: 1,
+      borderRadius: 16,
       gap: 2,
       overflow: "hidden",
     },

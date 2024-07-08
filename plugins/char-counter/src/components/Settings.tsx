@@ -1,19 +1,19 @@
+import { ReactNative as RN } from "@vendetta/metro/common";
 import { useProxy } from "@vendetta/storage";
 import { getAssetIDByName } from "@vendetta/ui/assets";
-import { Forms, General } from "@vendetta/ui/components";
+import { Forms } from "@vendetta/ui/components";
 
 import { BetterTableRowGroup } from "$/components/BetterTableRow";
 
 import { vstorage } from "..";
 
-const { ScrollView } = General;
 const { FormSwitchRow, FormRadioRow, FormRow, FormInput } = Forms;
 
 export default () => {
   useProxy(vstorage);
 
   return (
-    <ScrollView>
+    <RN.ScrollView style={{ flex: 1 }}>
       <BetterTableRowGroup
         title="Settings"
         icon={getAssetIDByName("ic_cog_24px")}
@@ -108,6 +108,6 @@ export default () => {
           value={vstorage.supportSLM}
         />
       </BetterTableRowGroup>
-    </ScrollView>
+    </RN.ScrollView>
   );
 };

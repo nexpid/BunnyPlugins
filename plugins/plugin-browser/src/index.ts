@@ -19,5 +19,5 @@ export default {
     vstorage.pluginCache ??= [];
     unpatch = patcher();
   },
-  onUnload: () => (unpatch?.(), lang.unload()),
+  onUnload: () => unpatch?.(),
 };

@@ -1,10 +1,15 @@
 import { findByName, findByStoreName } from "@vendetta/metro";
-import { NavigationNative, React, stylesheet } from "@vendetta/metro/common";
+import {
+  NavigationNative,
+  React,
+  ReactNative as RN,
+  stylesheet,
+} from "@vendetta/metro/common";
 import { semanticColors } from "@vendetta/ui";
-import { Button, General } from "@vendetta/ui/components";
+import { Button } from "@vendetta/ui/components";
 
+import { ActionSheet } from "$/components/ActionSheet";
 import Text from "$/components/Text";
-import { openSheet } from "$/types";
 
 import {
   ActivityType,
@@ -28,7 +33,6 @@ import {
 
 const UserStore = findByStoreName("UserStore");
 
-const { View, Image, Pressable } = General;
 const UserActivityContainer = findByName("UserActivityContainer");
 
 const styles = stylesheet.createThemedStyleSheet({
@@ -70,12 +74,12 @@ export default ({ edit, act }: { edit: boolean; act: SettingsActivity }) => {
   if (edit)
     return (
       <>
-        <View style={styles.actTypeCont}>
+        <RN.View style={styles.actTypeCont}>
           <Text
             variant="eyebrow"
             color="TEXT_NORMAL"
             onPress={() =>
-              openSheet(ActivityTypeActionSheet, {
+              ActionSheet.open(ActivityTypeActionSheet, {
                 type: act.type ?? ActivityType.Playing,
                 update: (x) => {
                   act.type = x;
@@ -86,14 +90,14 @@ export default ({ edit, act }: { edit: boolean; act: SettingsActivity }) => {
           >
             {activityTypePreview[act.type ?? ActivityType.Playing]} ...
           </Text>
-        </View>
-        <View style={styles.card}>
-          <View style={{ padding: 16 }}>
-            <View style={styles.card2}>
-              <View style={styles.images}>
-                <Pressable
+        </RN.View>
+        <RN.View style={styles.card}>
+          <RN.View style={{ padding: 16 }}>
+            <RN.View style={styles.card2}>
+              <RN.View style={styles.images}>
+                <RN.Pressable
                   onPress={() =>
-                    openSheet(ImageActionSheet, {
+                    ActionSheet.open(ImageActionSheet, {
                       appId: act.app.id,
                       role: "Large",
                       image: act.assets.largeImg,
@@ -105,7 +109,7 @@ export default ({ edit, act }: { edit: boolean; act: SettingsActivity }) => {
                     })
                   }
                 >
-                  <Image
+                  <RN.Image
                     source={{
                       uri:
                         displayImage(act.assets.largeImg ?? ".", act.app.id) ??
@@ -113,11 +117,11 @@ export default ({ edit, act }: { edit: boolean; act: SettingsActivity }) => {
                     }}
                     style={{ borderRadius: 3, width: 56, height: 56 }}
                   />
-                </Pressable>
-                <View style={styles.smallImageBg}>
-                  <Pressable
+                </RN.Pressable>
+                <RN.View style={styles.smallImageBg}>
+                  <RN.Pressable
                     onPress={() =>
-                      openSheet(ImageActionSheet, {
+                      ActionSheet.open(ImageActionSheet, {
                         appId: act.app.id,
                         role: "Small",
                         image: act.assets.smallImg,
@@ -129,7 +133,7 @@ export default ({ edit, act }: { edit: boolean; act: SettingsActivity }) => {
                       })
                     }
                   >
-                    <Image
+                    <RN.Image
                       source={{
                         uri:
                           displayImage(
@@ -139,15 +143,15 @@ export default ({ edit, act }: { edit: boolean; act: SettingsActivity }) => {
                       }}
                       style={{ borderRadius: 14, width: 28, height: 28 }}
                     />
-                  </Pressable>
-                </View>
-              </View>
-              <View style={{ flex: 1 }}>
+                  </RN.Pressable>
+                </RN.View>
+              </RN.View>
+              <RN.View style={{ flex: 1 }}>
                 <Text
                   variant="text-md/semibold"
                   color="TEXT_NORMAL"
                   onPress={() =>
-                    openSheet(ApplicationActionSheet, {
+                    ActionSheet.open(ApplicationActionSheet, {
                       appId: act.app.id,
                       appName: act.app.name,
                       navigation,
@@ -204,7 +208,7 @@ export default ({ edit, act }: { edit: boolean; act: SettingsActivity }) => {
                   variant="text-sm/normal"
                   color="TEXT_NORMAL"
                   onPress={() =>
-                    openSheet(TimestampActionSheet, {
+                    ActionSheet.open(TimestampActionSheet, {
                       start: act.timestamps.start,
                       end: act.timestamps.end,
                       update: (x) => {
@@ -232,15 +236,15 @@ export default ({ edit, act }: { edit: boolean; act: SettingsActivity }) => {
                             : placeholders.timestamp
                   }
                 />
-              </View>
-            </View>
-            <View style={{ marginTop: 16 }}>
+              </RN.View>
+            </RN.View>
+            <RN.View style={{ marginTop: 16 }}>
               <Button
                 text={act.buttons[0]?.text ?? placeholders.button1}
                 style={{ backgroundColor: "grey" }}
                 size={"small"}
                 onPress={() =>
-                  openSheet(ButtonActionSheet, {
+                  ActionSheet.open(ButtonActionSheet, {
                     role: "1",
                     text: act.buttons[0]?.text,
                     url: act.buttons[0]?.url,
@@ -257,14 +261,14 @@ export default ({ edit, act }: { edit: boolean; act: SettingsActivity }) => {
                   })
                 }
               />
-            </View>
-            <View style={{ marginTop: 10 }}>
+            </RN.View>
+            <RN.View style={{ marginTop: 10 }}>
               <Button
                 text={act.buttons[1]?.text ?? placeholders.button2}
                 style={{ backgroundColor: "grey" }}
                 size={"small"}
                 onPress={() =>
-                  openSheet(ButtonActionSheet, {
+                  ActionSheet.open(ButtonActionSheet, {
                     role: "2",
                     text: act.buttons[1]?.text,
                     url: act.buttons[1]?.url,
@@ -281,9 +285,9 @@ export default ({ edit, act }: { edit: boolean; act: SettingsActivity }) => {
                   })
                 }
               />
-            </View>
-          </View>
-        </View>
+            </RN.View>
+          </RN.View>
+        </RN.View>
       </>
     );
   else

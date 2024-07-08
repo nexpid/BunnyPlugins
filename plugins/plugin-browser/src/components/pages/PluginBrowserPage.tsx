@@ -4,10 +4,10 @@ import { General, Search } from "@vendetta/ui/components";
 import { showToast } from "@vendetta/ui/toasts";
 import { safeFetch } from "@vendetta/utils";
 
+import { ActionSheet } from "$/components/ActionSheet";
 import ChooseSheet from "$/components/sheets/ChooseSheet";
 import SuperAwesomeIcon from "$/components/SuperAwesomeIcon";
 import { managePage } from "$/lib/ui";
-import { openSheet } from "$/types";
 
 import { lang, pluginsURL } from "../..";
 import { getChanges, updateChanges } from "../../stuff/pluginChecker";
@@ -120,9 +120,20 @@ export default () => {
   return (
     <RN.FlatList
       ListHeaderComponent={
-        <View style={{ marginBottom: 10 }}>
-          <Search onChangeText={setSearch} />
-        </View>
+        <Search
+          onChangeText={setSearch}
+          onPressFilters={() =>
+            ActionSheet.open(ChooseSheet, {
+              title: lang.format("sheet.sort.title", {}),
+              value: sort,
+              options: Object.values(Sort).map((value) => ({
+                name: lang.format(value, {}),
+                value,
+              })),
+              callback: (val) => currentSetSort.current(val as Sort),
+            })
+          }
+        />
       }
       style={{ paddingHorizontal: 10 }}
       contentContainerStyle={{ paddingBottom: 20 }}

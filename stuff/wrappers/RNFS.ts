@@ -46,8 +46,6 @@ const readFileGeneric = (
 };
 
 const resolveWrite = (filepath: string) => {
-  //REVIEW DOES THE FILE PATH END WITH A /
-  //it does not
   let write = {
     style: null as "cache" | "documents" | null,
     path: null as string | null,

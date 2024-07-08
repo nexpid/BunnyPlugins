@@ -1,15 +1,13 @@
 import { findByProps, findByStoreName } from "@vendetta/metro";
-import { React } from "@vendetta/metro/common";
+import { React, ReactNative as RN } from "@vendetta/metro/common";
 import { getAssetIDByName } from "@vendetta/ui/assets";
-import { Button, General } from "@vendetta/ui/components";
+import { Button } from "@vendetta/ui/components";
 import { showToast } from "@vendetta/ui/toasts";
 
 import { Svg } from "$/deps";
 
 import listenAlong from "../../../../assets/SpotifyListenAlong/listenAlong.svg";
 import listenAlong2 from "../../../../assets/SpotifyListenAlong/listenAlong2.svg";
-
-const { View } = General;
 
 const UserStore = findByStoreName("UserStore");
 const SpotifyStore = findByStoreName("SpotifyStore");
@@ -44,8 +42,8 @@ export default function ({
 
   return (
     <>
-      <View style={{ width: "100%", paddingRight: 32 + 8 }}>{def}</View>
-      <View style={{ position: "absolute", right: 0 }}>
+      <RN.View style={{ width: "100%", paddingRight: 32 + 8 }}>{def}</RN.View>
+      <RN.View style={{ position: "absolute", right: 0 }}>
         <Button
           size="small"
           text=""
@@ -71,7 +69,7 @@ export default function ({
             } else sync(activity, user.id);
           }}
         />
-      </View>
+      </RN.View>
     </>
   );
 }

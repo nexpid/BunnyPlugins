@@ -1,12 +1,16 @@
-import { clipboard, NavigationNative, React } from "@vendetta/metro/common";
+import {
+  clipboard,
+  NavigationNative,
+  React,
+  ReactNative as RN,
+} from "@vendetta/metro/common";
 import { useProxy } from "@vendetta/storage";
 import { showConfirmationAlert } from "@vendetta/ui/alerts";
 import { getAssetIDByName } from "@vendetta/ui/assets";
-import { Forms, General } from "@vendetta/ui/components";
+import { Forms } from "@vendetta/ui/components";
 import { showToast } from "@vendetta/ui/toasts";
 
 import { BetterTableRowGroup } from "$/components/BetterTableRow";
-import LineDivider from "$/components/LineDivider";
 import SuperAwesomeIcon from "$/components/SuperAwesomeIcon";
 import { managePage } from "$/lib/ui";
 
@@ -24,7 +28,6 @@ import { openLiveRawActivityView } from "./pages/LiveRawActivityView";
 import { showProfileList } from "./pages/ProfileList";
 import RPCPreview from "./RPCPreview";
 
-const { ScrollView, View } = General;
 const { FormSwitchRow, FormIcon, FormRow } = Forms;
 
 export const placeholders = {
@@ -81,7 +84,7 @@ export default () => {
 
   return (
     <>
-      <ScrollView
+      <RN.ScrollView
         style={{
           zIndex: 1,
         }}
@@ -197,70 +200,69 @@ export default () => {
               })
             }
           />
-          <LineDivider addPadding={true} />
+        </BetterTableRowGroup>
+        <BetterTableRowGroup nearby>
           {vstorage.activity.profile && (
-            <FormRow
-              label={`Save Profile${!isActivitySaved() ? " 🔴" : ""}`}
-              leading={
-                <FormRow.Icon source={getAssetIDByName("ic_message_edit")} />
-              }
-              onPress={() => {
-                vstorage.profiles[vstorage.activity.profile] = JSON.parse(
-                  JSON.stringify(vstorage.activity.editing),
-                );
-                showToast("Saved", getAssetIDByName("Check"));
-                forceUpdate();
-              }}
-            />
-          )}
-          {vstorage.activity.profile && (
-            <FormRow
-              label="Revert Profile"
-              leading={
-                <FormRow.Icon source={getAssetIDByName("ic_message_edit")} />
-              }
-              onPress={() =>
-                activitySavedPrompt({
-                  role: "revert",
-                  button: "Revert",
-                  run: () => {
-                    vstorage.activity.editing = JSON.parse(
-                      JSON.stringify(
-                        vstorage.profiles[vstorage.activity.profile],
-                      ),
-                    );
-                    showToast("Reverted", getAssetIDByName("Check"));
-                    forceUpdate();
-                  },
-                })
-              }
-            />
-          )}
-          {vstorage.activity.profile && (
-            <FormRow
-              label="Close Profile"
-              leading={
-                <FormRow.Icon source={getAssetIDByName("ic_message_edit")} />
-              }
-              onPress={() =>
-                activitySavedPrompt({
-                  role: "discard your changes",
-                  button: "Discard",
-                  run: () => {
-                    vstorage.activity.editing = makeEmptySettingsActivity();
-                    delete vstorage.activity.profile;
-                    showToast("Closed", getAssetIDByName("Check"));
-                    forceUpdate();
-                  },
-                  secondaryButton: "Save profile",
-                  secondaryRun: () => {
-                    vstorage.profiles[vstorage.activity.profile] = JSON.parse(
-                      JSON.stringify(vstorage.activity.editing),
-                    );
-                  },
-                })
-              }
-            />
+            <>
+              <FormRow
+                label={`Save Profile${!isActivitySaved() ? " 🔴" : ""}`}
+                leading={
+                  <FormRow.Icon source={getAssetIDByName("ic_message_edit")} />
+                }
+                onPress={() => {
+                  vstorage.profiles[vstorage.activity.profile] = JSON.parse(
+                    JSON.stringify(vstorage.activity.editing),
+                  );
+                  showToast("Saved", getAssetIDByName("Check"));
+                  forceUpdate();
+                }}
+              />
+              <FormRow
+                label="Revert Profile"
+                leading={
+                  <FormRow.Icon source={getAssetIDByName("ic_message_edit")} />
+                }
+                onPress={() =>
+                  activitySavedPrompt({
+                    role: "revert",
+                    button: "Revert",
+                    run: () => {
+                      vstorage.activity.editing = JSON.parse(
+                        JSON.stringify(
+                          vstorage.profiles[vstorage.activity.profile],
+                        ),
+                      );
+                      showToast("Reverted", getAssetIDByName("Check"));
+                      forceUpdate();
+                    },
+                  })
+                }
+              />
+              <FormRow
+                label="Close Profile"
+                leading={
+                  <FormRow.Icon source={getAssetIDByName("ic_message_edit")} />
+                }
+                onPress={() =>
+                  activitySavedPrompt({
+                    role: "discard your changes",
+                    button: "Discard",
+                    run: () => {
+                      vstorage.activity.editing = makeEmptySettingsActivity();
+                      delete vstorage.activity.profile;
+                      showToast("Closed", getAssetIDByName("Check"));
+                      forceUpdate();
+                    },
+                    secondaryButton: "Save profile",
+                    secondaryRun: () => {
+                      vstorage.profiles[vstorage.activity.profile] = JSON.parse(
+                        JSON.stringify(vstorage.activity.editing),
+                      );
+                    },
+                  })
+                }
+              />
+            </>
           )}
           <FormRow
             label="Browse Profiles"
@@ -307,8 +309,8 @@ export default () => {
             />
           </BetterTableRowGroup>
         )}
-        <View style={{ marginBottom: 20 }} />
-      </ScrollView>
+        <RN.View style={{ marginBottom: 20 }} />
+      </RN.ScrollView>
     </>
   );
 };

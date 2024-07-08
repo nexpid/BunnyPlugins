@@ -2,14 +2,11 @@ import { React, ReactNative as RN, stylesheet } from "@vendetta/metro/common";
 import { after } from "@vendetta/patcher";
 import { semanticColors } from "@vendetta/ui";
 import { getAssetIDByName } from "@vendetta/ui/assets";
-import { General } from "@vendetta/ui/components";
 
 import { Reanimated } from "$/deps";
 
 import openPreview from "../stuff/openPreview";
 import { patches } from "../stuff/patcher";
-
-const { Pressable, View } = General;
 
 const ACTION_ICON_SIZE = 40;
 const styles = stylesheet.createThemedStyleSheet({
@@ -47,7 +44,7 @@ export default ({ inputProps }): JSX.Element => {
   );
 
   const shouldAppear = text.length > 0;
-  const UseComponent = shouldAppear ? Pressable : View;
+  const UseComponent = shouldAppear ? RN.Pressable : RN.View;
 
   React.useEffect(() => {
     fade.value = Reanimated.withTiming(shouldAppear ? 1 : 0, { duration: 100 });

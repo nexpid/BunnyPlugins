@@ -1,6 +1,6 @@
 {
   "name": "Clean URLs",
-  "description": "Removes tracking data garbage from links (Vencord port)",
+  "description": "Removes tracking garbage from links you send and receive",
   "authors": [
     {
       "name": "nexpid",
@@ -9,6 +9,6 @@
   ],
   "main": "src/index.ts",
   "vendetta": {
-    "icon": "ic_link"
+    "icon": "LinkIcon"
   }
 }

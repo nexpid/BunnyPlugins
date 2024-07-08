@@ -167,6 +167,7 @@ export default function () {
       },
     },
   };
+
   return () => {
     window.nx?.p.wipe();
     delete window.nx;

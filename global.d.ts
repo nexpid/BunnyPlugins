@@ -57,14 +57,4 @@ interface Window {
       };
     };
   };
-
-  __vendetta_loader: {
-    features?: {
-      themes?: { prop: string };
-      syscolors?: { prop: string };
-    };
-  };
-  __vendetta_theme: Theme | undefined;
-
-  TPfirstLoad: boolean | undefined;
 }

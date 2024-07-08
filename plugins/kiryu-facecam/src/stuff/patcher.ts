@@ -3,6 +3,7 @@ import { React, ReactNative as RN } from "@vendetta/metro/common";
 import { after, before } from "@vendetta/patcher";
 import { findInReactTree } from "@vendetta/utils";
 
+import { lang } from "..";
 import Kiryu, { openSet } from "../components/Kiryu";
 import { sendAction } from "./frames";
 
@@ -68,6 +69,8 @@ export default function () {
       );
     }),
   );
+
+  patches.push(lang.unload);
 
   const nod = () => sendAction("nod", 1000 / 10);
   patches.push(before("sendMessage", messaging, nod));

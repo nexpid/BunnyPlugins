@@ -13,6 +13,6 @@
   ],
   "main": "src/index.ts",
   "vendetta": {
-    "icon": "ic_theme_24px"
+    "icon": "PaintPaletteIcon"
   }
 }

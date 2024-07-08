@@ -12,20 +12,9 @@ import { state } from "../stuff/active";
 import constants from "../stuff/constants";
 import { getIconOverlay, getIconTint } from "../stuff/iconOverlays";
 import { patches } from "../stuff/loader";
-import { IconPackConfig } from "../types";
-
-enum FillColor {
-  ButtonIcon = "BUTTON_SECONDARY_BACKGROUND_ACTIVE",
-}
-
-const iconFixes = [
-  ["ic_mic_neutral", FillColor.ButtonIcon],
-  ["ic_mic_muted_neutral", FillColor.ButtonIcon],
-  ["ic_soundboard", FillColor.ButtonIcon],
-  ["ic_soundboard_muted", FillColor.ButtonIcon],
-  ["ic_video", FillColor.ButtonIcon],
-  ["ic_video_disabled", FillColor.ButtonIcon],
-] as [string, FillColor][];
+import { iconsPath, isPackInstalled } from "../stuff/packInstaller";
+import { flattenFilePath } from "../stuff/util";
+import { CoolAsset, IconpackConfig } from "../types";
 
 const Status = findByName("Status", false);
 
@@ -47,6 +36,9 @@ export default function patchIcons(
         return c;
       }),
     );
+
+  let isInstalled = false;
+  isPackInstalled(iconpack).then((x) => (isInstalled = !!x));
 
   if (plus.icons || plus.customOverlays || iconpack) {
     if (plus.icons) state.patches.push(PatchType.Icons);
@@ -71,6 +63,8 @@ export default function patchIcons(
 
         // @ts-expect-error these properties are missing from the Asset type
         const asset: CoolAsset = getAssetByID(source);
+        if (!asset?.httpServerLocation) return orig(...args);
+
         const assetIconpackLocation =
           iconpack &&
           [
@@ -107,7 +101,9 @@ export default function patchIcons(
 
         if (useIconpack) {
           x.source = {
-            uri: `${iconpackURL}${assetIconpackLocation}`,
+            uri: isInstalled
+              ? `file://${iconsPath}${iconpack.id}/${flattenFilePath(assetIconpackLocation)}`
+              : iconpack.load + assetIconpackLocation,
             headers: {
               "cache-contorl": "public, max-age=60",
             },

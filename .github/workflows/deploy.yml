@@ -2,7 +2,7 @@ name: CI, Build and deploy
 
 on:
   push:
-    branches: [main]
+    branches: [main, dev]
     paths:
       - .github/workflows/deploy.yml
       - scripts/build.mjs
@@ -23,25 +23,36 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v2
+        with:
+          path: base
+
+      - uses: pnpm/action-setup@v4
+        with:
+          package_json_file: base/package.json
 
       - uses: actions/setup-node@v4
         with:
           node-version: "21"
           cache: "pnpm"
+          cache-dependency-path: base/pnpm-lock.yaml
 
       - run: pnpm install --frozen-lockfile
+        working-directory: base
 
       - name: Test types
+        working-directory: base
         run: pnpm testTsc
 
       - name: Lint
+        working-directory: base
         run: pnpm lint:fix
 
       - name: Styles
+        working-directory: base
         run: pnpm styles:fix
 
       - name: Publish changes
+        working-directory: base
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -61,33 +72,45 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v3
+        with:
+          path: base
+
+      - uses: pnpm/action-setup@v4
+        with:
+          package_json_file: base/package.json
 
       - uses: actions/setup-node@v4
         with:
-          node-version: "18"
+          node-version: "21"
           cache: "pnpm"
+          cache-dependency-path: base/pnpm-lock.yaml
 
       - run: pnpm install --frozen-lockfile
+        working-directory: base
 
       - name: Build plugins
+        working-directory: base
         run: pnpm build
 
       - name: Copy README
-        run: cp README.md dist/index.md
+        working-directory: base
+        run: |
+          cp README.md dist/index.md
+          cp -r assets dist/assets
 
       - uses: actions/jekyll-build-pages@v1
         with:
-          source: dist
-          destination: dist/_html
+          source: base/dist
+          destination: built
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: dist/_html
+          path: built
 
   deploy:
     needs: build
+    if: github.ref_name == 'main'
     permissions:
       pages: write
       id-token: write
@@ -101,3 +124,49 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
+  deploy-dev:
+    needs: build
+    if: github.ref_name == 'dev'
+
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout pages repository
+        uses: actions/checkout@v4
+        with:
+          repository: nexpid/BunnyPlugins-dev-pages
+          path: devpages
+          token: ${{ secrets.DEV_PAGES_TOKEN }}
+
+      - name: Download GitHub pages artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: github-pages
+
+      - name: Copy files
+        run: |
+          mkdir devpages-tmp
+          mv devpages/CNAME devpages-tmp/CNAME
+          mv devpages/.git devpages-tmp/.git
+
+          rm -rf devpages/*
+          tar -xvf artifact.tar -C devpages
+
+          mv devpages-tmp/CNAME devpages/CNAME
+          mv devpages-tmp/.git devpages/.git
+          rm -rf devpages-tmp
+
+          grep -rl 'https://bunny.nexpid.xyz' devpages/. | xargs -I '{}' sed -i -e 's/https:\/\/bunny.nexpid.xyz/https:\/\/dev.bunny.nexpid.xyz/g' {}
+
+      - name: Deploy to GitHub pages
+        working-directory: devpages
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add .
+
+          git commit -m "chore: ${{ github.sha || 'deploy' }}" || true 
+
+          git pull --ff-only
+          git push

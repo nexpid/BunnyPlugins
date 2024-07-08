@@ -1,7 +1,6 @@
-import { safeFetch } from "@vendetta/utils";
-
-import { IconPackConfig } from "../types";
+import { IconpackConfig } from "../types";
 import constants from "./constants";
+import { cFetch } from "./util";
 
 export default async function getIconpackData(
   id: string,
@@ -10,25 +9,18 @@ export default async function getIconpackData(
   config: IconPackConfig | null;
   tree: string[] | null;
 }> {
-  const ignore = Symbol();
+  const treeUrl = constants.iconpacks.tree(id);
   const [config, tree] = await Promise.allSettled([
     configUrl
-      ? safeFetch(configUrl, {
-          headers: { "cache-control": "public, max-age=60" },
-        }).then((x) => x.json())
-      : async () => ignore,
-    safeFetch(constants.iconpacks.tree(id), {
-      headers: { "cache-control": "public, max-age=60" },
-    })
-      .then((x) => x.text())
-      .then((x) => x.replaceAll("\r", "").split("\n")),
+      ? cFetch<IconpackConfig>(configUrl, null, "json")
+      : (async () => Symbol())(),
+    cFetch(treeUrl).then((x) => x.replaceAll("\r", "").split("\n")),
   ]);
+
   return {
     config:
-      config.status === "fulfilled"
-        ? config.value === ignore
-          ? false
-          : config.value
+      config.status === "fulfilled" && typeof config.value !== "symbol"
+        ? config.value
         : null,
     tree: tree.status === "fulfilled" ? tree.value : null,
   };

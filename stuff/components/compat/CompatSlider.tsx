@@ -1,4 +1,5 @@
 import { React, ReactNative as RN, stylesheet } from "@vendetta/metro/common";
+import { type View } from "react-native";
 
 import { Reanimated } from "$/deps";
 import { resolveCustomSemantic } from "$/types";
@@ -19,7 +20,7 @@ export default function CompatSlider({
   maximumValue: number;
 }) {
   const [pressing, setPressing] = React.useState(false);
-  const theBar = React.useRef<import("react-native").View>(null);
+  const theBar = React.useRef<View>(null);
 
   const dotScale = Reanimated.useSharedValue(14);
   const shadowClr = Reanimated.useSharedValue("#00000000");

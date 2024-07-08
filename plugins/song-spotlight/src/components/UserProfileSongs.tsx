@@ -3,17 +3,13 @@ import { findByName, findByProps, findByStoreName } from "@vendetta/metro";
 import { React, ReactNative as RN, stylesheet } from "@vendetta/metro/common";
 import { semanticColors } from "@vendetta/ui";
 import { getAssetIDByName } from "@vendetta/ui/assets";
-import { General } from "@vendetta/ui/components";
 import { showToast } from "@vendetta/ui/toasts";
+import { type FlatList } from "react-native";
 
+import { ActionSheet } from "$/components/ActionSheet";
 import Text from "$/components/Text";
 import { Svg, WebView } from "$/deps";
-import {
-  lerp,
-  openSheet,
-  resolveCustomSemantic,
-  TextStyleSheet,
-} from "$/types";
+import { lerp, resolveCustomSemantic, TextStyleSheet } from "$/types";
 
 import next from "../../assets/card/next.svg";
 import pause from "../../assets/card/pause.svg";
@@ -30,7 +26,6 @@ import {
 import { API } from "../types/api";
 import SongInfoSheet from "./sheets/SongInfoSheet";
 
-const { View } = General;
 const AnimatedPressable = RN.Animated.createAnimatedComponent(RN.Pressable);
 
 const UserProfileSection = findByName("UserProfileSection");
@@ -267,7 +262,7 @@ const SpotifySongEmbed = ({
 
   const covers = songData && songData.coverArt.sources;
 
-  const tracklistRef = React.useRef<import("react-native").FlatList>();
+  const tracklistRef = React.useRef<FlatList>();
 
   React.useEffect(() => {
     tracklistRef.current?.scrollToIndex({
@@ -311,7 +306,7 @@ const SpotifySongEmbed = ({
         >
           {item.title}
         </Text>
-        <View style={styles.cardContentArtist}>
+        <RN.View style={styles.cardContentArtist}>
           {item.isExplicit && (
             <Text
               variant="text-xs/semibold"
@@ -330,12 +325,12 @@ const SpotifySongEmbed = ({
           >
             {item.subtitle}
           </Text>
-        </View>
-        <View style={styles.cardTracklistEntryOther}>
+        </RN.View>
+        <RN.View style={styles.cardTracklistEntryOther}>
           <RN.Pressable android_ripple={styles.androidRipple} onPress={more}>
             <RN.Image source={getAssetIDByName("ic_feed_more")} />
           </RN.Pressable>
-        </View>
+        </RN.View>
       </AnimatedPressable>
     );
   };
@@ -353,14 +348,14 @@ const SpotifySongEmbed = ({
 
   return songData ? (
     <>
-      <View style={styles.card} pointerEvents="box-none">
-        <View
+      <RN.View style={styles.card} pointerEvents="box-none">
+        <RN.View
           style={[
             styles.cardFirst,
             songData.type !== "track" && { height: "40%" },
           ]}
         >
-          <View style={styles.cardFirstContent}>
+          <RN.View style={styles.cardFirstContent}>
             <RN.Image
               style={styles.cardImage}
               source={covers
@@ -371,7 +366,7 @@ const SpotifySongEmbed = ({
                   height: x.height,
                 }))}
             />
-            <View style={styles.cardContent}>
+            <RN.View style={styles.cardContent}>
               <Text
                 variant="text-sm/bold"
                 style={{ color: "#ffffff" }}
@@ -380,7 +375,7 @@ const SpotifySongEmbed = ({
                 {songData.title}
               </Text>
               {songData.type === "track" ? (
-                <View style={styles.cardContentArtist}>
+                <RN.View style={styles.cardContentArtist}>
                   {songData.isExplicit && (
                     <Text
                       variant="text-xs/semibold"
@@ -396,7 +391,7 @@ const SpotifySongEmbed = ({
                   >
                     {songData.artists.map((x) => x.name).join(", ")}
                   </Text>
-                </View>
+                </RN.View>
               ) : (
                 <Text
                   variant="text-xs/semibold"
@@ -406,18 +401,18 @@ const SpotifySongEmbed = ({
                   {songData.subtitle}
                 </Text>
               )}
-            </View>
-          </View>
-          <View style={styles.cardOther}>
+            </RN.View>
+          </RN.View>
+          <RN.View style={styles.cardOther}>
             <RN.Pressable
               android_ripple={styles.androidRipple}
               onPress={() =>
-                openSheet(SongInfoSheet, { song, showAdd, remove })
+                ActionSheet.open(SongInfoSheet, { song, showAdd, remove })
               }
             >
               <RN.Image source={getAssetIDByName("ic_feed_more")} />
             </RN.Pressable>
-            <View style={styles.cardOtherBottom}>
+            <RN.View style={styles.cardOtherBottom}>
               <RN.Pressable
                 android_ripple={styles.androidRipple}
                 onPress={() => setPlaying(!playing)}
@@ -459,9 +454,9 @@ const SpotifySongEmbed = ({
                   <Svg.SvgXml width={20} height={20} xml={next} />
                 </RN.Pressable>
               )}
-            </View>
-          </View>
-        </View>
+            </RN.View>
+          </RN.View>
+        </RN.View>
         {songData.type !== "track" && (
           <RN.FlatList
             nestedScrollEnabled
@@ -473,9 +468,9 @@ const SpotifySongEmbed = ({
             })}
             style={styles.cardTracklist}
             data={songData.trackList}
-            ListHeaderComponent={() => <View style={{ height: 8 }} />}
-            ListFooterComponent={() => <View style={{ height: 8 }} />}
-            ItemSeparatorComponent={() => <View style={{ height: 8 }} />}
+            ListHeaderComponent={() => <RN.View style={{ height: 8 }} />}
+            ListFooterComponent={() => <RN.View style={{ height: 8 }} />}
+            ItemSeparatorComponent={() => <RN.View style={{ height: 8 }} />}
             renderItem={({ item, index }) => {
               const playable = item.isPlayable && !!item.audioPreview?.url;
               return (
@@ -500,7 +495,7 @@ const SpotifySongEmbed = ({
                     }
                   }}
                   more={() =>
-                    openSheet(SongInfoSheet, {
+                    ActionSheet.open(SongInfoSheet, {
                       song: {
                         service: "spotify",
                         type: "track",
@@ -514,7 +509,7 @@ const SpotifySongEmbed = ({
             }}
           />
         )}
-      </View>
+      </RN.View>
       {songData.isPlayable && (
         <WebView
           source={{
@@ -548,7 +543,7 @@ const SpotifySongEmbed = ({
       )}
     </>
   ) : songData === false ? (
-    <View style={styles.emptyCard}>
+    <RN.View style={styles.emptyCard}>
       <RN.Pressable android_ripple={styles.androidRipple} onPress={trigger}>
         <RN.Image
           style={styles.noImage}
@@ -556,11 +551,11 @@ const SpotifySongEmbed = ({
           resizeMode="contain"
         />
       </RN.Pressable>
-    </View>
+    </RN.View>
   ) : (
-    <View style={styles.emptyCard}>
+    <RN.View style={styles.emptyCard}>
       <RN.ActivityIndicator size="large" />
-    </View>
+    </RN.View>
   );
 };
 
@@ -616,13 +611,13 @@ export default function ({ userId, you }: { userId: string; you: boolean }) {
     (you ? (
       <YouScreenProfileCard>
         <TableRowGroupTitle title="Song Spotlight" />
-        <View style={{ flexDirection: "column", gap: 8, marginTop: 4 }}>
+        <RN.View style={{ flexDirection: "column", gap: 8, marginTop: 4 }}>
           {content}
-        </View>
+        </RN.View>
       </YouScreenProfileCard>
     ) : (
       <UserProfileSection title="Song Spotlight" showContainer={true}>
-        <View
+        <RN.View
           style={{
             flexDirection: "column",
             gap: 8,
@@ -631,7 +626,7 @@ export default function ({ userId, you }: { userId: string; you: boolean }) {
           }}
         >
           {content}
-        </View>
+        </RN.View>
       </UserProfileSection>
     ))
   );

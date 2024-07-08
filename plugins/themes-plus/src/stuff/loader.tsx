@@ -1,17 +1,15 @@
 import { findByStoreName } from "@vendetta/metro";
-import { safeFetch } from "@vendetta/utils";
 
 import { PlusStructure } from "$/typings";
 
 import { ConfigIconpackMode, enabled, InactiveReason, vstorage } from "..";
 import patchIcons from "../patches/icons";
 import patchMentionLineColors from "../patches/mentionLineColor";
-import patchUnreadBadgeColor from "../patches/unreadBadgeColor";
-import { IconPackConfig } from "../types";
+import { IconpackConfig, IconpackData } from "../types";
 import { state, updateState } from "./active";
 import constants from "./constants";
 import getIconpackData from "./iconpackDataGetter";
-import { customUrl } from "./util";
+import { cFetch, customUrl } from "./util";
 
 const UserStore = findByStoreName("UserStore");
 
@@ -26,7 +24,11 @@ export default async function load() {
 
   state.loading = true;
   state.active = false;
-  state.iconpack = null;
+  state.iconpack = {
+    iconpack: null,
+    list: [],
+    hashes: {},
+  };
   state.patches = [];
   state.inactive = [];
   updateState();
@@ -34,18 +36,22 @@ export default async function load() {
   try {
     state.iconpack = {
       iconpack: null,
-      list: (
-        await (
-          await safeFetch(constants.iconpacks.list, {
-            headers: { "cache-control": "public, max-age=60" },
-          })
-        ).json()
-      ).list,
+      list: await cFetch<IconpackData>(
+        constants.iconpacks.list,
+        null,
+        "json",
+      ).then((res) => res.list),
+      hashes: await cFetch(constants.iconpacks.hashes, null, "json"),
     };
   } catch {
-    state.loading = false;
-    state.inactive.push(InactiveReason.NoIconpacksList);
-    return updateState();
+    if (
+      !state.iconpack.list.length ||
+      !Object.keys(state.iconpack.hashes).length
+    ) {
+      state.loading = false;
+      state.inactive.push(InactiveReason.NoIconpacksList);
+      return updateState();
+    }
   }
 
   let selectedTheme = Object.values(bunny.managers.themes.themes).find(
@@ -118,7 +124,7 @@ export default async function load() {
       dt = { config: null, tree: null };
     }
 
-    if (dt.config === null || dt.tree === null) {
+    if (dt.tree === null) {
       state.loading = false;
       if (dt.config === null)
         state.inactive.push(InactiveReason.NoIconpackConfig);
@@ -139,7 +145,6 @@ export default async function load() {
 
   patchIcons(plusData, tree, iconpackConfig);
   patchMentionLineColors(plusData);
-  patchUnreadBadgeColor(plusData);
 
   updateState();
 }

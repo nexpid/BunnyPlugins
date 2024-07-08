@@ -6,13 +6,11 @@ import {
 } from "@vendetta/metro/common";
 import { semanticColors } from "@vendetta/ui";
 import { getAssetIDByName } from "@vendetta/ui/assets";
-import { Codeblock, General } from "@vendetta/ui/components";
+import { Codeblock } from "@vendetta/ui/components";
 import { showToast } from "@vendetta/ui/toasts";
 
 import Modal from "$/components/Modal";
 import Text from "$/components/Text";
-
-const { ScrollView, View } = General;
 
 const Card = ({
   label,
@@ -83,14 +81,14 @@ const Card = ({
         );
       }}
     >
-      <View
+      <RN.View
         style={{
           flexDirection: "row",
           justifyContent: "center",
           alignItems: "center",
         }}
       >
-        <View style={styles.leading}>
+        <RN.View style={styles.leading}>
           <RN.Pressable
             android_ripple={styles.androidRippleRound}
             onPress={() => {
@@ -105,13 +103,13 @@ const Card = ({
               style={styles.upIcon}
             />
           </RN.Pressable>
-        </View>
-        <View style={styles.middle}>
+        </RN.View>
+        <RN.View style={styles.middle}>
           <Text variant="text-lg/bold" color="TEXT_NORMAL" align="center">
             {label}
           </Text>
-        </View>
-        <View style={styles.trailing}>
+        </RN.View>
+        <RN.View style={styles.trailing}>
           <RN.Pressable
             android_ripple={styles.androidRippleRound}
             onPress={() => {
@@ -127,8 +125,8 @@ const Card = ({
               style={styles.upIcon}
             />
           </RN.Pressable>
-        </View>
-      </View>
+        </RN.View>
+      </RN.View>
       <RN.Pressable pointerEvents="box-none">
         <Codeblock selectable={true}>{expanded ? error : short}</Codeblock>
       </RN.Pressable>
@@ -148,13 +146,13 @@ export default function ErrorViewerModal({
   return () => {
     return (
       <Modal mkey="error-viewer" title={`${module} Errors`}>
-        <ScrollView style={{ flex: 1, padding: 12 }}>
-          <View style={{ gap: 12, flexDirection: "column" }}>
+        <RN.ScrollView style={{ flex: 1, padding: 12 }}>
+          <RN.View style={{ gap: 12, flexDirection: "column" }}>
             {Object.entries(errors).map(([label, err]) => (
               <Card label={label} error={err} clear={() => clearEntry(label)} />
             ))}
-          </View>
-        </ScrollView>
+          </RN.View>
+        </RN.ScrollView>
       </Modal>
     );
   };

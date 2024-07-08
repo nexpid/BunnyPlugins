@@ -1,4 +1,3 @@
-import { findByProps } from "@vendetta/metro";
 import {
   clipboard,
   NavigationNative,
@@ -7,9 +6,10 @@ import {
 } from "@vendetta/metro/common";
 import { showConfirmationAlert, showInputAlert } from "@vendetta/ui/alerts";
 import { getAssetIDByName } from "@vendetta/ui/assets";
-import { Forms, General, Search } from "@vendetta/ui/components";
+import { Forms, Search } from "@vendetta/ui/components";
 import { showToast } from "@vendetta/ui/toasts";
 
+import { hideActionSheet } from "$/components/ActionSheet";
 import SuperAwesomeIcon from "$/components/SuperAwesomeIcon";
 
 import { vstorage } from "../..";
@@ -20,11 +20,9 @@ import {
 import { activitySavedPrompt } from "../../stuff/prompts";
 import { forceUpdateSettings } from "../Settings";
 
-const { View } = General;
 const { FormRadioRow, FormRow } = Forms;
 
-const { showSimpleActionSheet } = findByProps("showSimpleActionSheet");
-const LazyActionSheet = findByProps("openLazy", "hideActionSheet");
+import { showSimpleActionSheet } from "$/components/ActionSheet";
 
 const headerRightCallbacks: {
   import?: () => void;
@@ -120,7 +118,7 @@ export const ProfileList = () => {
               key: "CardOverflow",
               header: {
                 title: item,
-                onClose: () => LazyActionSheet.hideActionSheet(),
+                onClose: () => hideActionSheet(),
               },
               options: [
                 {
@@ -239,7 +237,7 @@ export function showProfileList(navigation: any) {
     render: ProfileList,
     title: "Profiles",
     headerRight: () => (
-      <View style={{ flexDirection: "row-reverse" }}>
+      <RN.View style={{ flexDirection: "row-reverse" }}>
         <SuperAwesomeIcon
           style="header"
           icon={getAssetIDByName("ic_add_24px")}
@@ -250,7 +248,7 @@ export function showProfileList(navigation: any) {
           icon={getAssetIDByName("ic_file_upload_24px")}
           onPress={() => headerRightCallbacks.import?.()}
         />
-      </View>
+      </RN.View>
     ),
   });
 }

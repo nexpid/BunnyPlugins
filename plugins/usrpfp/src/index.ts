@@ -42,7 +42,7 @@ export default {
   },
   onUnload: () => {
     enabled = false;
-    unpatch?.();
     lang.unload();
+    unpatch?.();
   },
 };

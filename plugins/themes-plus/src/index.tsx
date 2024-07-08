@@ -7,7 +7,6 @@ import load, { patches } from "./stuff/loader";
 
 export enum PatchType {
   Icons = "icons",
-  UnreadBadgeColor = "unread_badge_color",
   CustomIconOverlays = "custom_icon_overlays",
   MentionLineColor = "mention_line_color",
   IconPack = "iconpack",
@@ -40,6 +39,8 @@ export const vstorage = storage as {
     };
     isCustom: boolean;
   };
+  downloadIconpackModalDismissed?: boolean;
+  iconpackDownloading?: boolean;
 };
 
 export let enabled = false;
@@ -69,6 +70,7 @@ export default {
   },
   onUnload: () => {
     enabled = false;
+    lang.unload();
     patches.forEach((x) => x());
   },
   settings,

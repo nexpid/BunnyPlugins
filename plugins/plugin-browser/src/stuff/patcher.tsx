@@ -39,6 +39,7 @@ export default (): (() => void) => {
     ),
   );
   patches.push(initThing());
+  patches.push(lang.unload);
 
   return () => patches.forEach((x) => x());
 };

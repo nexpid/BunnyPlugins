@@ -5,6 +5,7 @@ import {
   stylesheet,
 } from "@vendetta/metro/common";
 import { semanticColors } from "@vendetta/ui";
+import { type ScrollView } from "react-native";
 
 import { lang } from "../..";
 
@@ -22,9 +23,10 @@ export function addLog(scope: keyof typeof logScopes, message: string) {
 }
 
 const logScopes = {
-  themes: "#42f5a4",
-  plugins: "#4290f5",
-  importer: "#e6f542",
+  plugins: "#70d6ff",
+  themes: "#ff70a6",
+  fonts: "#ff9770",
+  importer: "#ffd670",
 };
 
 const styles = stylesheet.createThemedStyleSheet({
@@ -42,7 +44,7 @@ export const ImportLogsPage = () => {
   const [_, forceUpdate] = React.useReducer((x) => ~x, 0);
   logged = forceUpdate;
 
-  const scroller = React.useRef<import("react-native").ScrollView>();
+  const scroller = React.useRef<ScrollView>();
 
   React.useEffect(() => {
     isInPage = true;

@@ -1,6 +1,6 @@
 {
   "name": "Cloud Sync",
-  "description": "Syncs your plugins and themes to the cloud",
+  "description": "Syncs your plugins, themes and fonts to the cloud",
   "authors": [
     {
       "name": "nexpid",
@@ -9,6 +9,6 @@
   ],
   "main": "src/index.ts",
   "vendetta": {
-    "icon": "ic_contact_sync"
+    "icon": "MobilePhoneShareIcon"
   }
 }
