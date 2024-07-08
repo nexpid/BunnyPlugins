@@ -1,0 +1,14 @@
+{
+  "name": "Wario",
+  "description": "Mamma mia (hold on the bottom Guilds/Chat button to disable the plugin)",
+  "authors": [
+    {
+      "name": "nexpid",
+      "id": "853550207039832084"
+    }
+  ],
+  "main": "src/index.ts",
+  "vendetta": {
+    "icon": "wumpus-mario"
+  }
+}
