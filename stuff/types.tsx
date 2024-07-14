@@ -117,7 +117,7 @@ export function androidifyColor(color: string, alpha = 255): number {
   );
 }
 
-export function fluxSubscribe(topic: string, callback: () => void) {
+export function fluxSubscribe(topic: string, callback: (data: any) => void) {
   FluxDispatcher.subscribe(topic, callback);
   return () => FluxDispatcher.unsubscribe(topic, callback);
 }
