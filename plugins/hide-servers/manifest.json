@@ -1,0 +1,14 @@
+{
+  "name": "Hide Servers",
+  "description": "Lets you hide servers and folders from your server list",
+  "authors": [
+    {
+      "name": "nexpid",
+      "id": "853550207039832084"
+    }
+  ],
+  "main": "src/index.ts",
+  "vendetta": {
+    "icon": "EyeSlashIcon"
+  }
+}

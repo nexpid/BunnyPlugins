@@ -1,0 +1,14 @@
+{
+    "sheet.hidden_servers.title": "Hidden servers",
+
+    "context.server.hide": "Hide Server",
+    "context.folder.hide": "Hide Folder",
+
+    "settings.title": "Settings",
+    "settings.hidden_servers.clear": "Clear hidden servers",
+    "settings.hidden_servers.clear.description": "You currently have {servers, plural,\none {# hidden server}\nother {# hidden servers}\n} and {folders, plural,\none {# hidden folder}\nother {# hidden folders}\n}.",
+
+    "toast.cleared_servers": "Cleared hidden servers",
+    "toast.hid": "Hid {name}",
+    "toast.unhid": "Unhid {name}"
+}
