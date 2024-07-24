@@ -24,7 +24,7 @@ jobs:
         run: git checkout dev
 
       - name: Merge main to dev
-        run: git merge origin/main --ff-only
+        run: git merge origin/main --ff-only --allow-unrelated-histories
       
       - name: Push changes to dev
         run: git push origin dev
