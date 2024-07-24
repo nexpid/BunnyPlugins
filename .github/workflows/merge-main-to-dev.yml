@@ -23,8 +23,8 @@ jobs:
       - name: Checkout dev branch
         run: git checkout dev
 
-      - name: Rebase dev onto branch
-        run: git rebase origin/main
+      - name: Merge main to dev
+        run: git merge origin/main --ff-only
       
       - name: Push changes to dev
-        run: git push origin dev --force
+        run: git push origin dev
