@@ -17,11 +17,14 @@ jobs:
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
 
-      - name: Fetch dev branch
+      - name: Fetch all branches
         run: git fetch --all
 
-      - name: Rebase main branch
-        run: git rebase dev
+      - name: Checkout dev branch
+        run: git checkout dev
+
+      - name: Rebase dev onto branch
+        run: git rebase origin/main
       
       - name: Push changes to dev
-        run: git push dev
+        run: git push origin dev --force
