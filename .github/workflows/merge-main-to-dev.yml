@@ -20,14 +20,8 @@ jobs:
       - name: Fetch dev branch
         run: git fetch origin dev
 
-      - name: Checkout dev branch
-        run: git checkout dev
-
-      - name: Merge main into dev
-        id: merge
-        run: git merge main --allow-unrelated-histories
-
-      - name: Push changes
+      - name: Rebase main branch
+        run: git rebase origin/dev
+      
+      - name: Push changes to dev
         run: git push origin dev
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
