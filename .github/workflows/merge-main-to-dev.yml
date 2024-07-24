@@ -1,0 +1,40 @@
+name: Sync main to dev
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Git
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+
+      - name: Fetch all branches
+        run: git fetch --all
+
+      - name: Checkout dev branch
+        run: git checkout dev
+
+      - name: Merge main into dev
+        id: merge
+        run: git merge main || echo "Merge failed" > merge_status
+
+      - name: Check merge status
+        run: |
+          if [ -f merge_status ]; then
+            echo "Got merge conflict."
+            exit 0
+          fi
+
+      - name: Push changes
+        run: git push origin dev
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
