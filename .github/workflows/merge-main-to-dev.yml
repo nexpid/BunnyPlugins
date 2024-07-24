@@ -17,22 +17,12 @@ jobs:
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
 
-      - name: Fetch all branches
-        run: git fetch --all
-
       - name: Checkout dev branch
         run: git checkout dev
 
       - name: Merge main into dev
         id: merge
-        run: git merge main || echo "Merge failed" > merge_status
-
-      - name: Check merge status
-        run: |
-          if [ -f merge_status ]; then
-            echo "Got merge conflict."
-            exit 0
-          fi
+        run: git merge main --allow-unrelated-histories
 
       - name: Push changes
         run: git push origin dev
