@@ -1,4 +1,2 @@
 dist
-archive
-pnpm-lock.yaml
-lang/values/*
+lang/values/*.json

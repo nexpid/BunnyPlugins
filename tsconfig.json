@@ -1,24 +1,24 @@
 {
   "compilerOptions": {
-    "outDir": "dist",
-    "target": "ESNext",
-    "module": "ESNext",
-    "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true,
+    "baseUrl": "./src/",
     "esModuleInterop": true,
     "jsx": "react-native",
-    "allowJs": true,
-    "skipLibCheck": true,
-    "resolveJsonModule": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "noImplicitAny": false,
     "paths": {
       "$/*": ["./stuff/*"]
-    }
+    },
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "target": "esnext"
   },
   "include": [
-    "plugins",
-    "stuff",
-    "lang",
-    "node_modules/@revenge-mod/vendetta-types",
-    "global.d.ts"
-  ],
-  "exclude": ["dist", "scripts"]
+    "src/**/*",
+    "scripts/**/*",
+    "lang/**/*",
+    "node_modules/@revenge-mod/vendetta-types/**/*"
+  ]
 }
