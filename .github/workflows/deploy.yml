@@ -4,11 +4,7 @@ on:
   push:
     branches: [main, dev]
     paths:
-      - .github/workflows/deploy.yml
-      - scripts/build.mjs
-      - plugins/*/manifest.json
-      - plugins/*/src/**/*.*
-      - stuff/**/*.*
+      - src/**/*.*
   workflow_dispatch:
 
 concurrency:
