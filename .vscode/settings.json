@@ -1,20 +1,20 @@
 {
-    "commentAnchors.tags.anchors": {
-        "STUB": {
-            "iconColor": "purple",
-            "highlightColor": "#BA68C8",
-            "scope": "workspace",
-            "behavior": "anchor"
-        }
-    },
-    "editor.formatOnSave": true,
-    "editor.codeActionsOnSave": {
-        "source.fixAll.eslint": "always"
-    },
-    "[typescript]": {
-        "editor.defaultFormatter": "vscode.typescript-language-features"
-    },
-    "[typescriptreact]": {
-        "editor.defaultFormatter": "vscode.typescript-language-features"
+  "commentAnchors.tags.anchors": {
+    "STUB": {
+      "iconColor": "purple",
+      "highlightColor": "#BA68C8",
+      "scope": "workspace",
+      "behavior": "anchor"
     }
+  },
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "always"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  }
 }
