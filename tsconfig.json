@@ -19,6 +19,7 @@
     "src/**/*",
     "scripts/**/*",
     "lang/**/*",
-    "node_modules/@revenge-mod/vendetta-types/**/*"
+    "node_modules/@revenge-mod/vendetta-types/**/*",
+    "declarations"
   ]
 }
