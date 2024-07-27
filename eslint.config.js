@@ -15,6 +15,11 @@ export default tseslint.config(
                 project: true,
                 tsconfigRootDir: import.meta.dirname,
             },
+            globals: {
+                performance: false,
+                console: false,
+                process: false,
+            },
         },
         plugins: {
             "unused-imports": unusedImports,
@@ -80,7 +85,6 @@ export default tseslint.config(
     {
         ignores: [
             "dist/**/*.*",
-            "scripts/**/*.mjs",
             "eslint.config.js", // no clue why this is needed but im not gonna complain
         ],
     },
