@@ -14,11 +14,15 @@ export default function () {
 
     return (
         <RN.ScrollView>
-            <BetterTableRowGroup title="Settings" icon={getAssetIDByName("ic_cog")}>
+            <BetterTableRowGroup
+                title="Settings"
+                icon={getAssetIDByName("ic_cog")}>
                 <FormRow
                     label="Button type"
                     leading={
-                        <FormRow.Icon source={getAssetIDByName("ic_message_edit")} />
+                        <FormRow.Icon
+                            source={getAssetIDByName("ic_message_edit")}
+                        />
                     }
                 />
                 <FormRadioRow
@@ -39,7 +43,9 @@ export default function () {
                 <FormRow
                     label="Preview type"
                     leading={
-                        <FormRow.Icon source={getAssetIDByName("ic_message_edit")} />
+                        <FormRow.Icon
+                            source={getAssetIDByName("ic_message_edit")}
+                        />
                     }
                 />
                 <FormRadioRow

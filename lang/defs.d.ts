@@ -1,4 +1,4 @@
-export interface LangValues {
+export default interface LangValues {
     cloud_sync: {
         values: typeof import("./values/base/cloud_sync.json");
         fillers: {
@@ -22,7 +22,11 @@ export interface LangValues {
             "log.import.theme.fail": { name: string; error: string };
             "log.import.font.success": { name: string };
             "log.import.font.fail": { name: string; error: string };
-            "log.import.total": { plugins: string; themes: string; fonts: string };
+            "log.import.total": {
+                plugins: string;
+                themes: string;
+                fonts: string;
+            };
             "log.import.select_theme.success": { theme: string };
             "log.import.select_theme.fail": { theme: string };
             "log.import.result": {
@@ -52,7 +56,7 @@ export interface LangValues {
     themes_plus: {
         values: typeof import("./values/base/themes_plus.json");
         fillers: {
-            "settings.header": { active: boolean };
+            "settings.header": { active: string };
             "alert.downloadpack.body": { iconpack: string; space: string };
         };
     };

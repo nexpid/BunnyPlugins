@@ -2,7 +2,7 @@
 
 import { without } from "@vendetta/utils";
 
-const { bunny } = (window as any);
+const { bunny } = window as any;
 export const rawFonts = bunny.managers.fonts.fonts;
 
 type FontMap = Record<string, string>;

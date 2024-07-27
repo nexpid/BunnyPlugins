@@ -49,23 +49,28 @@ export default function AppDirectoryPage({
     const searchResultsPromise = usePromise(
         () =>
             search || selCategory !== undefined
-                ? searchAppDirectory(search, searchPage + 1, selCategory ?? 0, guildId)
+                ? searchAppDirectory(
+                      search,
+                      searchPage + 1,
+                      selCategory ?? 0,
+                      guildId,
+                  )
                 : null,
         [search, searchPage, selCategory, locale],
     );
 
     const categories =
-    categoriesPromise.fulfilled &&
-    categoriesPromise.success &&
-    categoriesPromise.response;
+        categoriesPromise.fulfilled &&
+        categoriesPromise.success &&
+        categoriesPromise.response;
     const collections =
-    collectionsPromise.fulfilled &&
-    collectionsPromise.success &&
-    collectionsPromise.response.sort((a, b) => a.position - b.position);
+        collectionsPromise.fulfilled &&
+        collectionsPromise.success &&
+        collectionsPromise.response.sort((a, b) => a.position - b.position);
     const searchResults =
-    searchResultsPromise.fulfilled &&
-    searchResultsPromise.success &&
-    searchResultsPromise.response;
+        searchResultsPromise.fulfilled &&
+        searchResultsPromise.success &&
+        searchResultsPromise.response;
 
     React.useEffect(() => {
         if (!search) setSelCategory(undefined);
@@ -114,7 +119,8 @@ export default function AppDirectoryPage({
             paddingHorizontal: 11,
         },
         bottomNavItemSelected: {
-            backgroundColor: semanticColors.BUTTON_OUTLINE_BRAND_BACKGROUND_HOVER,
+            backgroundColor:
+                semanticColors.BUTTON_OUTLINE_BRAND_BACKGROUND_HOVER,
             borderRadius: 6969,
             paddingVertical: 6,
             paddingHorizontal: 11,
@@ -169,33 +175,36 @@ export default function AppDirectoryPage({
     });
 
     const onAppPress =
-    (app: APICollectionItem | APICollectionApplication) => () =>
-        pushScreen
-            ? pushScreen("APP_INFO", {
-                app: "application" in app ? app.application : app,
-                guildId,
-            })
-            : navigation.push("VendettaCustomPage", {
-                title: "application" in app ? app.application.name : app.name,
-                render: getAppInfoPageRender(
-                    "application" in app ? app.application : app,
-                    guildId,
-                ),
-            });
+        (app: APICollectionItem | APICollectionApplication) => () =>
+            pushScreen
+                ? pushScreen("APP_INFO", {
+                      app: "application" in app ? app.application : app,
+                      guildId,
+                  })
+                : navigation.push("VendettaCustomPage", {
+                      title:
+                          "application" in app
+                              ? app.application.name
+                              : app.name,
+                      render: getAppInfoPageRender(
+                          "application" in app ? app.application : app,
+                          guildId,
+                      ),
+                  });
 
     const pushPageI = searchResults
         ? Math.max(Math.min(searchPage - 3, searchResults.num_pages - 7), 0)
         : 0;
     const pushPages = searchResults
         ? new Array(searchResults.num_pages)
-            .fill(0)
-            .map((_, i) => ({ num: i + 1, selected: i === searchPage }))
-            .slice(pushPageI, pushPageI + 7)
+              .fill(0)
+              .map((_, i) => ({ num: i + 1, selected: i === searchPage }))
+              .slice(pushPageI, pushPageI + 7)
         : [];
 
     const pageFirst = pushPages[0]?.num === 1;
     const pageLast =
-    pushPages[pushPages.length - 1]?.num === searchResults.num_pages;
+        pushPages[pushPages.length - 1]?.num === searchResults.num_pages;
     const renderPushPages = pushPages.slice(
         pageFirst ? 0 : 2,
         pageLast ? pushPages.length : pushPages.length - 2,
@@ -210,21 +219,21 @@ export default function AppDirectoryPage({
                 flex: 1,
                 paddingHorizontal: 16,
                 paddingTop: 12,
-            }}
-        >
+            }}>
             <Search placeholder="Search..." onChangeText={setSearch} />
             <RN.View style={{ height: 12 }} />
             {categories ? (
                 <RN.FlatList
                     horizontal
-                    data={[{ id: 0, name: "All" }, ...categories].sort((a, b) =>
-                        selCategory
-                            ? a.id === selCategory
-                                ? -1
-                                : b.id === selCategory
-                                    ? 1
-                                    : 0
-                            : 0,
+                    data={[{ id: 0, name: "All" }, ...categories].sort(
+                        (a, b) =>
+                            selCategory
+                                ? a.id === selCategory
+                                    ? -1
+                                    : b.id === selCategory
+                                      ? 1
+                                      : 0
+                                : 0,
                     )}
                     keyExtractor={d => d.id.toString()}
                     renderItem={({ item }) => (
@@ -241,8 +250,7 @@ export default function AppDirectoryPage({
                                 RN.LayoutAnimation.configureNext(
                                     RN.LayoutAnimation.Presets.easeInEaseOut,
                                 );
-                            }}
-                        >
+                            }}>
                             <RN.Image
                                 style={styles.categoryIcon}
                                 source={getAssetIDByName(
@@ -256,12 +264,16 @@ export default function AppDirectoryPage({
                                     }[item.id] ?? "",
                                 )}
                             />
-                            <Text variant="text-md/semibold" color="TEXT_NORMAL">
+                            <Text
+                                variant="text-md/semibold"
+                                color="TEXT_NORMAL">
                                 {item.name}
                             </Text>
                         </RN.Pressable>
                     )}
-                    ItemSeparatorComponent={() => <RN.View style={{ width: 8 }} />}
+                    ItemSeparatorComponent={() => (
+                        <RN.View style={{ width: 8 }} />
+                    )}
                     style={{ paddingBottom: 16 }}
                 />
             ) : (
@@ -275,27 +287,41 @@ export default function AppDirectoryPage({
                     <>
                         <RN.FlatList
                             data={searchResults.results}
-                            ItemSeparatorComponent={() => <RN.View style={{ height: 8 }} />}
+                            ItemSeparatorComponent={() => (
+                                <RN.View style={{ height: 8 }} />
+                            )}
                             renderItem={({ item: { data: app } }) => (
                                 <RN.Pressable
                                     style={collectionStyles.card}
                                     android_ripple={styles.androidRipple}
-                                    onPress={onAppPress(app)}
-                                >
-                                    <RN.View style={collectionStyles.cardContent}>
-                                        <RN.View style={collectionStyles.smallProfile}>
+                                    onPress={onAppPress(app)}>
+                                    <RN.View
+                                        style={collectionStyles.cardContent}>
+                                        <RN.View
+                                            style={
+                                                collectionStyles.smallProfile
+                                            }>
                                             <RN.Image
-                                                style={collectionStyles.smallAvatar}
+                                                style={
+                                                    collectionStyles.smallAvatar
+                                                }
                                                 source={{
                                                     uri: `https://cdn.discordapp.com/app-icons/${app.id}/${app.icon}.webp?size=60`,
                                                 }}
                                             />
-                                            <RN.View style={collectionStyles.smallProfileThing}>
-                                                <Text variant="text-md/semibold" color="TEXT_NORMAL">
+                                            <RN.View
+                                                style={
+                                                    collectionStyles.smallProfileThing
+                                                }>
+                                                <Text
+                                                    variant="text-md/semibold"
+                                                    color="TEXT_NORMAL">
                                                     {app.name}
                                                 </Text>
                                                 {app.categories[0] && (
-                                                    <Text variant="text-md/medium" color="TEXT_MUTED">
+                                                    <Text
+                                                        variant="text-md/medium"
+                                                        color="TEXT_MUTED">
                                                         {app.categories[0].name}
                                                     </Text>
                                                 )}
@@ -304,16 +330,19 @@ export default function AppDirectoryPage({
                                         <Text
                                             variant="text-md/medium"
                                             color="TEXT_MUTED"
-                                            style={{ paddingBottom: 8 }}
-                                        >
-                                            {inServers(app.directory_entry.guild_count)}
+                                            style={{ paddingBottom: 8 }}>
+                                            {inServers(
+                                                app.directory_entry.guild_count,
+                                            )}
                                         </Text>
                                         <Text
                                             variant="text-md/semibold"
                                             color="TEXT_NORMAL"
-                                            lineClamp={2}
-                                        >
-                                            {app.directory_entry.short_description}
+                                            lineClamp={2}>
+                                            {
+                                                app.directory_entry
+                                                    .short_description
+                                            }
                                         </Text>
                                     </RN.View>
                                 </RN.Pressable>
@@ -321,22 +350,29 @@ export default function AppDirectoryPage({
                         />
                         <RN.View style={styles.bottomNav}>
                             <RN.Pressable
-                                style={isFirst ? styles.bottomNavItemOff : styles.bottomNavItem}
-                                onPress={() =>
-                                { setSearchPage(
-                                    Math.max(
-                                        Math.min(searchPage - 1, searchResults.num_pages - 1),
-                                        0,
-                                    ),
-                                ); }
+                                style={
+                                    isFirst
+                                        ? styles.bottomNavItemOff
+                                        : styles.bottomNavItem
                                 }
+                                onPress={() => {
+                                    setSearchPage(
+                                        Math.max(
+                                            Math.min(
+                                                searchPage - 1,
+                                                searchResults.num_pages - 1,
+                                            ),
+                                            0,
+                                        ),
+                                    );
+                                }}
                                 disabled={isFirst}
-                                key={"page-back"}
-                            >
+                                key={"page-back"}>
                                 <Text
                                     variant="text-sm/bold"
-                                    color={isFirst ? "TEXT_MUTED" : "TEXT_NORMAL"}
-                                >
+                                    color={
+                                        isFirst ? "TEXT_MUTED" : "TEXT_NORMAL"
+                                    }>
                                     &lt;
                                 </Text>
                             </RN.Pressable>
@@ -344,18 +380,20 @@ export default function AppDirectoryPage({
                                 <>
                                     <RN.Pressable
                                         style={styles.bottomNavItem}
-                                        onPress={() => { setSearchPage(0); }}
-                                        key={"page-1"}
-                                    >
-                                        <Text variant="text-sm/semibold" color="TEXT_NORMAL">
+                                        onPress={() => {
+                                            setSearchPage(0);
+                                        }}
+                                        key={"page-1"}>
+                                        <Text
+                                            variant="text-sm/semibold"
+                                            color="TEXT_NORMAL">
                                             1
                                         </Text>
                                     </RN.Pressable>
                                     <Text
                                         variant="text-md/semibold"
                                         color="TEXT_MUTED"
-                                        key={"page-sep-left"}
-                                    >
+                                        key={"page-sep-left"}>
                                         ...
                                     </Text>
                                 </>
@@ -367,10 +405,13 @@ export default function AppDirectoryPage({
                                             ? styles.bottomNavItemSelected
                                             : styles.bottomNavItem
                                     }
-                                    onPress={() => { setSearchPage(x.num - 1); }}
-                                    key={`page-${x.num}`}
-                                >
-                                    <Text variant="text-sm/semibold" color="TEXT_NORMAL">
+                                    onPress={() => {
+                                        setSearchPage(x.num - 1);
+                                    }}
+                                    key={`page-${x.num}`}>
+                                    <Text
+                                        variant="text-sm/semibold"
+                                        color="TEXT_NORMAL">
                                         {x.num}
                                     </Text>
                                 </RN.Pressable>
@@ -380,38 +421,49 @@ export default function AppDirectoryPage({
                                     <Text
                                         variant="text-md/semibold"
                                         color="TEXT_MUTED"
-                                        key={"page-sep-right"}
-                                    >
+                                        key={"page-sep-right"}>
                                         ...
                                     </Text>
                                     <RN.Pressable
                                         style={styles.bottomNavItem}
-                                        onPress={() => { setSearchPage(searchResults.num_pages - 1); }}
-                                        key={`page-${searchResults.num_pages}`}
-                                    >
-                                        <Text variant="text-sm/semibold" color="TEXT_NORMAL">
+                                        onPress={() => {
+                                            setSearchPage(
+                                                searchResults.num_pages - 1,
+                                            );
+                                        }}
+                                        key={`page-${searchResults.num_pages}`}>
+                                        <Text
+                                            variant="text-sm/semibold"
+                                            color="TEXT_NORMAL">
                                             {searchResults.num_pages}
                                         </Text>
                                     </RN.Pressable>
                                 </>
                             )}
                             <RN.Pressable
-                                style={isLast ? styles.bottomNavItemOff : styles.bottomNavItem}
-                                onPress={() =>
-                                { setSearchPage(
-                                    Math.max(
-                                        Math.min(searchPage + 1, searchResults.num_pages - 1),
-                                        0,
-                                    ),
-                                ); }
+                                style={
+                                    isLast
+                                        ? styles.bottomNavItemOff
+                                        : styles.bottomNavItem
                                 }
+                                onPress={() => {
+                                    setSearchPage(
+                                        Math.max(
+                                            Math.min(
+                                                searchPage + 1,
+                                                searchResults.num_pages - 1,
+                                            ),
+                                            0,
+                                        ),
+                                    );
+                                }}
                                 disabled={isLast}
-                                key={"page-next"}
-                            >
+                                key={"page-next"}>
                                 <Text
                                     variant="text-sm/bold"
-                                    color={isLast ? "TEXT_MUTED" : "TEXT_NORMAL"}
-                                >
+                                    color={
+                                        isLast ? "TEXT_MUTED" : "TEXT_NORMAL"
+                                    }>
                                     &gt;
                                 </Text>
                             </RN.Pressable>
@@ -424,8 +476,10 @@ export default function AppDirectoryPage({
                                 <Text
                                     variant="text-lg/bold"
                                     color="TEXT_NORMAL"
-                                    style={{ paddingBottom: 24, paddingTop: i !== 0 ? 30 : 0 }}
-                                >
+                                    style={{
+                                        paddingBottom: 24,
+                                        paddingTop: i !== 0 ? 30 : 0,
+                                    }}>
                                     {x.title}
                                 </Text>
                                 <RN.FlatList
@@ -440,81 +494,117 @@ export default function AppDirectoryPage({
                                         x.type === APICollectionType.Big ? (
                                             <RN.Pressable
                                                 style={[collectionStyles.card]}
-                                                android_ripple={styles.androidRipple}
-                                                onPress={onAppPress(app)}
-                                            >
+                                                android_ripple={
+                                                    styles.androidRipple
+                                                }
+                                                onPress={onAppPress(app)}>
                                                 {app.image_hash && (
                                                     <RN.Image
-                                                        style={collectionStyles.cardImage}
+                                                        style={
+                                                            collectionStyles.cardImage
+                                                        }
                                                         source={{
                                                             uri: `https://cdn.discordapp.com/app-assets/application-directory/collection-items/${app.id}/${app.image_hash}.webp?size=512`,
                                                         }}
                                                         resizeMode="cover"
                                                     />
                                                 )}
-                                                <RN.View style={collectionStyles.cardContent}>
+                                                <RN.View
+                                                    style={
+                                                        collectionStyles.cardContent
+                                                    }>
                                                     <Text
                                                         variant="text-lg/semibold"
                                                         color="TEXT_NORMAL"
-                                                        style={{ paddingBottom: 4 }}
-                                                    >
+                                                        style={{
+                                                            paddingBottom: 4,
+                                                        }}>
                                                         {app.application.name}
                                                     </Text>
                                                     <Text
                                                         variant="text-md/semibold"
                                                         color="TEXT_NORMAL"
-                                                        lineClamp={2}
-                                                    >
-                                                        {app.application.directory_entry.short_description}
+                                                        lineClamp={2}>
+                                                        {
+                                                            app.application
+                                                                .directory_entry
+                                                                .short_description
+                                                        }
                                                     </Text>
                                                 </RN.View>
                                             </RN.Pressable>
-                                        ) : x.type === APICollectionType.Medium ? (
+                                        ) : x.type ===
+                                          APICollectionType.Medium ? (
                                             <RN.Pressable
-                                                style={[collectionStyles.card, { width: jwidth / 1.5 }]}
-                                                android_ripple={styles.androidRipple}
-                                                onPress={onAppPress(app)}
-                                            >
+                                                style={[
+                                                    collectionStyles.card,
+                                                    { width: jwidth / 1.5 },
+                                                ]}
+                                                android_ripple={
+                                                    styles.androidRipple
+                                                }
+                                                onPress={onAppPress(app)}>
                                                 {app.image_hash && (
                                                     <RN.Image
-                                                        style={collectionStyles.cardImage}
+                                                        style={
+                                                            collectionStyles.cardImage
+                                                        }
                                                         source={{
                                                             uri: `https://cdn.discordapp.com/app-assets/application-directory/collection-items/${app.id}/${app.image_hash}.webp?size=256`,
                                                         }}
                                                         resizeMode="cover"
                                                     />
                                                 )}
-                                                <RN.View style={collectionStyles.cardContent}>
-                                                    <Text variant="text-md/semibold" color="TEXT_NORMAL">
+                                                <RN.View
+                                                    style={
+                                                        collectionStyles.cardContent
+                                                    }>
+                                                    <Text
+                                                        variant="text-md/semibold"
+                                                        color="TEXT_NORMAL">
                                                         {app.application.name}
                                                     </Text>
                                                     <Text
                                                         variant="text-md/medium"
                                                         color="TEXT_MUTED"
-                                                        style={{ paddingBottom: 8 }}
-                                                    >
-                                                        {app.application.categories[0] && (
+                                                        style={{
+                                                            paddingBottom: 8,
+                                                        }}>
+                                                        {app.application
+                                                            .categories[0] && (
                                                             <>
-                                                                {app.application.categories[0].name}
+                                                                {
+                                                                    app
+                                                                        .application
+                                                                        .categories[0]
+                                                                        .name
+                                                                }
                                                                 <Text
                                                                     variant="text-md/bold"
                                                                     color="TEXT_MUTED"
-                                                                    style={{ opacity: 0.5 }}
-                                                                >
-                                                                    {"  "}·{"  "}
+                                                                    style={{
+                                                                        opacity: 0.5,
+                                                                    }}>
+                                                                    {"  "}·
+                                                                    {"  "}
                                                                 </Text>
                                                             </>
                                                         )}
                                                         {inServers(
-                                                            app.application.directory_entry.guild_count,
+                                                            app.application
+                                                                .directory_entry
+                                                                .guild_count,
                                                         )}
                                                     </Text>
                                                     <Text
                                                         variant="text-md/semibold"
                                                         color="TEXT_NORMAL"
-                                                        lineClamp={2}
-                                                    >
-                                                        {app.application.directory_entry.short_description}
+                                                        lineClamp={2}>
+                                                        {
+                                                            app.application
+                                                                .directory_entry
+                                                                .short_description
+                                                        }
                                                     </Text>
                                                 </RN.View>
                                             </RN.Pressable>
@@ -524,30 +614,50 @@ export default function AppDirectoryPage({
                                                     collectionStyles.card,
                                                     { width: jwidth / 1.55 },
                                                 ]}
-                                                android_ripple={styles.androidRipple}
-                                                onPress={onAppPress(app)}
-                                            >
-                                                <RN.View style={collectionStyles.cardContent}>
-                                                    <RN.View style={collectionStyles.smallProfile}>
+                                                android_ripple={
+                                                    styles.androidRipple
+                                                }
+                                                onPress={onAppPress(app)}>
+                                                <RN.View
+                                                    style={
+                                                        collectionStyles.cardContent
+                                                    }>
+                                                    <RN.View
+                                                        style={
+                                                            collectionStyles.smallProfile
+                                                        }>
                                                         <RN.Image
-                                                            style={collectionStyles.smallAvatar}
+                                                            style={
+                                                                collectionStyles.smallAvatar
+                                                            }
                                                             source={{
                                                                 uri: `https://cdn.discordapp.com/app-icons/${app.application.id}/${app.application.icon}.webp?size=60`,
                                                             }}
                                                         />
-                                                        <RN.View style={collectionStyles.smallProfileThing}>
+                                                        <RN.View
+                                                            style={
+                                                                collectionStyles.smallProfileThing
+                                                            }>
                                                             <Text
                                                                 variant="text-md/semibold"
-                                                                color="TEXT_NORMAL"
-                                                            >
-                                                                {app.application.name}
+                                                                color="TEXT_NORMAL">
+                                                                {
+                                                                    app
+                                                                        .application
+                                                                        .name
+                                                                }
                                                             </Text>
-                                                            {app.application.categories[0] && (
+                                                            {app.application
+                                                                .categories[0] && (
                                                                 <Text
                                                                     variant="text-md/medium"
-                                                                    color="TEXT_MUTED"
-                                                                >
-                                                                    {app.application.categories[0].name}
+                                                                    color="TEXT_MUTED">
+                                                                    {
+                                                                        app
+                                                                            .application
+                                                                            .categories[0]
+                                                                            .name
+                                                                    }
                                                                 </Text>
                                                             )}
                                                         </RN.View>
@@ -555,18 +665,24 @@ export default function AppDirectoryPage({
                                                     <Text
                                                         variant="text-md/medium"
                                                         color="TEXT_MUTED"
-                                                        style={{ paddingBottom: 8 }}
-                                                    >
+                                                        style={{
+                                                            paddingBottom: 8,
+                                                        }}>
                                                         {inServers(
-                                                            app.application.directory_entry.guild_count,
+                                                            app.application
+                                                                .directory_entry
+                                                                .guild_count,
                                                         )}
                                                     </Text>
                                                     <Text
                                                         variant="text-md/semibold"
                                                         color="TEXT_NORMAL"
-                                                        lineClamp={2}
-                                                    >
-                                                        {app.application.directory_entry.short_description}
+                                                        lineClamp={2}>
+                                                        {
+                                                            app.application
+                                                                .directory_entry
+                                                                .short_description
+                                                        }
                                                     </Text>
                                                 </RN.View>
                                             </RN.Pressable>
@@ -578,7 +694,10 @@ export default function AppDirectoryPage({
                     </>
                 )
             ) : (
-                <RN.ActivityIndicator size="small" style={{ flex: 1, marginTop: 50 }} />
+                <RN.ActivityIndicator
+                    size="small"
+                    style={{ flex: 1, marginTop: 50 }}
+                />
             )}
             <RN.View style={{ height: 48 }} />
         </RN.ScrollView>

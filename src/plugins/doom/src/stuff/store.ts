@@ -15,14 +15,16 @@ const getFile = async (
         encoding?: "utf8" | "base64";
     } = {},
 ): Promise<
-  typeof extra.parse extends undefined ? string : ReturnType<typeof extra.parse>
+    typeof extra.parse extends undefined
+        ? string
+        : ReturnType<typeof extra.parse>
 > => {
     let content: string;
 
     const oldEtag =
-    !extra.disable &&
-    (await existsFile(`${file}.etag`)) &&
-    (await readFile(`${file}.etag`));
+        !extra.disable &&
+        (await existsFile(`${file}.etag`)) &&
+        (await readFile(`${file}.etag`));
 
     if (!extra.disable) {
         const res = await fetch(assetsURL + file, {
@@ -43,17 +45,23 @@ const getFile = async (
                     !(() =>
                         new Promise(res => {
                             const reader = new FileReader();
-                            reader.addEventListener("error", () => { res(false); });
+                            reader.addEventListener("error", () => {
+                                res(false);
+                            });
                             reader.addEventListener("load", () => {
                                 const splitter = ";base64,";
-                                const aResult = reader.result.toString().split(splitter);
+                                const aResult = reader.result
+                                    .toString()
+                                    .split(splitter);
                                 const text = aResult.slice(1).join(splitter);
 
                                 saveFile(file, text, "base64");
                                 content =
-                  extra.encoding === "base64"
-                      ? text
-                      : Buffer.from(text, "base64").toString("utf8");
+                                    extra.encoding === "base64"
+                                        ? text
+                                        : Buffer.from(text, "base64").toString(
+                                              "utf8",
+                                          );
                             });
                             reader.readAsDataURL(blob);
                         }))()
@@ -134,8 +142,8 @@ export async function getFiles(
         update(`Checking hash for asset:\n${file}`);
 
         const lastHash =
-      (await existsFile(`assets/${file}.hash`)) &&
-      (await readFile(`assets/${file}.hash`));
+            (await existsFile(`assets/${file}.hash`)) &&
+            (await readFile(`assets/${file}.hash`));
         const hash = hashes[file];
         if (!hash) return `Required file: ${file} doesn't have a hash :3`;
         if (hash !== lastHash) saveFile(`assets/${file}.hash`, hash);

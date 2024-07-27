@@ -56,7 +56,9 @@ export default function ({
                 label="Copy link"
                 leading={<FormRow.Icon source={getAssetIDByName("copy")} />}
                 onPress={() => {
-                    clipboard.setString(rebuildLink(song.service, song.type, song.id));
+                    clipboard.setString(
+                        rebuildLink(song.service, song.type, song.id),
+                    );
                     showToast(
                         "Copied to clipboard.",
                         getAssetIDByName("toast_copy_link"),
@@ -67,7 +69,9 @@ export default function ({
             {showAdd && (
                 <FormRow
                     label="Add to your profile"
-                    leading={<FormRow.Icon source={getAssetIDByName("ic_pin")} />}
+                    leading={
+                        <FormRow.Icon source={getAssetIDByName("ic_pin")} />
+                    }
                     onPress={() => {
                         hideActionSheet();
 
@@ -75,13 +79,21 @@ export default function ({
                         if (!songs) return;
 
                         const available = songs.findIndex(x => x === null);
-                        if (available === -1)
-                        { showToast("No space left!", getAssetIDByName("Small")); return; }
+                        if (available === -1) {
+                            showToast(
+                                "No space left!",
+                                getAssetIDByName("Small"),
+                            );
+                            return;
+                        }
 
                         songs[available] = song;
                         check();
 
-                        showToast("Added to your profile", getAssetIDByName("Check"));
+                        showToast(
+                            "Added to your profile",
+                            getAssetIDByName("Check"),
+                        );
                     }}
                 />
             )}

@@ -14,10 +14,15 @@ export default function Modal(
         <Navigator
             initialRouteName={props.mkey}
             screens={{
-                [props.mkey]: Object.assign(without(props, "mkey", "children"), {
-                    headerLeft: modalCloseButton?.(() => popModal(props.mkey)),
-                    render: () => props.children,
-                }),
+                [props.mkey]: Object.assign(
+                    without(props, "mkey", "children"),
+                    {
+                        headerLeft: modalCloseButton?.(() =>
+                            popModal(props.mkey),
+                        ),
+                        render: () => props.children,
+                    },
+                ),
             }}
         />
     );

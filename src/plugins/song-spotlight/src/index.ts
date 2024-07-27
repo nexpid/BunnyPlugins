@@ -45,6 +45,8 @@ export default {
         if (currentAuthorization()) fillCache();
         unpatch = patcher();
     },
-    onUnload: () => { unpatch(); },
+    onUnload: () => {
+        unpatch();
+    },
     settings,
 };

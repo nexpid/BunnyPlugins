@@ -13,15 +13,19 @@ const RowGeneratorUtils = findByProps("createBackgroundHighlight");
 
 export default function patchMentionLineColors(plus: PlusStructure) {
     if (plus.mentionLineColor) {
-    // ty to cynthia
+        // ty to cynthia
         state.patches.push(PatchType.MentionLineColor);
 
         patches.push(
-            after("createBackgroundHighlight", RowGeneratorUtils, ([x], ret) => {
-                const clr = resolveColor(plus.mentionLineColor);
-                if (x?.message?.mentioned && clr)
-                    ret.gutterColor = androidifyColor(clr, 200);
-            }),
+            after(
+                "createBackgroundHighlight",
+                RowGeneratorUtils,
+                ([x], ret) => {
+                    const clr = resolveColor(plus.mentionLineColor);
+                    if (x?.message?.mentioned && clr)
+                        ret.gutterColor = androidifyColor(clr, 200);
+                },
+            ),
         );
     }
 }

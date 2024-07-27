@@ -20,7 +20,9 @@ export function useState() {
     const [_, forceUpdate] = React.useReducer(x => ~x, 0);
 
     React.useEffect(() => {
-        const func = () => { forceUpdate(); };
+        const func = () => {
+            forceUpdate();
+        };
 
         stateUsers.push(func);
         return () => {
@@ -29,5 +31,7 @@ export function useState() {
     }, []);
 }
 export function updateState() {
-    stateUsers.forEach(x => { x(); });
+    stateUsers.forEach(x => {
+        x();
+    });
 }

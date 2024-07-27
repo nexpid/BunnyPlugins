@@ -23,7 +23,8 @@ export default () => {
             const children = findInReactTree(
                 ret.props.children,
                 x =>
-                    x.type?.displayName === "View" && Array.isArray(x.props?.children),
+                    x.type?.displayName === "View" &&
+                    Array.isArray(x.props?.children),
             )?.props?.children;
             if (!children) return;
 
@@ -34,12 +35,15 @@ export default () => {
 
     // thank you rosie
     patches.push(
-    // @ts-expect-error not in RN typings
+        // @ts-expect-error not in RN typings
         before("render", RN.Pressable.type, ([a]) => {
             if (a?.accessibilityLabel === i18n.Messages.SEND)
-                a.onLongPress = () => vstorage.buttonType === "send" && openPreview();
+                a.onLongPress = () =>
+                    vstorage.buttonType === "send" && openPreview();
         }),
     );
 
-    return () => { patches.forEach(x => x()); };
+    return () => {
+        patches.forEach(x => x());
+    };
 };

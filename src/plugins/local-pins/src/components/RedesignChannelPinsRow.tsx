@@ -62,8 +62,9 @@ export default function RedesignChannelPinsRow({ ret }: { ret: any }) {
             <RN.Pressable
                 style={styles.main}
                 android_ripple={styles.androidRipple}
-                onPress={() => { openModal("local-pinned", LocalPinnedModal); }}
-            >
+                onPress={() => {
+                    openModal("local-pinned", LocalPinnedModal);
+                }}>
                 <RN.View style={styles.container}>
                     <RN.View style={styles.icon}>
                         <RN.Image
@@ -74,8 +75,7 @@ export default function RedesignChannelPinsRow({ ret }: { ret: any }) {
                     </RN.View>
                     <Text
                         variant="redesign/channel-title/semibold"
-                        color="REDESIGN_CHANNEL_NAME_MUTED_TEXT"
-                    >
+                        color="REDESIGN_CHANNEL_NAME_MUTED_TEXT">
                         Local Pinned
                     </Text>
                 </RN.View>

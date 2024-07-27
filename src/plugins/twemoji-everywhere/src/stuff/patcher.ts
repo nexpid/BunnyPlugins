@@ -36,12 +36,14 @@ export default function () {
 
             if (Array.isArray(x.children))
                 for (const c of x.children)
-                    children.push(...(typeof c === "string" ? parse(c, twemoji) : [c]));
+                    children.push(
+                        ...(typeof c === "string" ? parse(c, twemoji) : [c]),
+                    );
             else
                 children =
-          typeof x.children === "string"
-              ? parse(x.children, twemoji)
-              : [x.children];
+                    typeof x.children === "string"
+                        ? parse(x.children, twemoji)
+                        : [x.children];
 
             x.children = children;
         }),
@@ -49,5 +51,9 @@ export default function () {
 
     patches.push(lang.unload);
 
-    return () => { patches.forEach(x => { x(); }); };
+    return () => {
+        patches.forEach(x => {
+            x();
+        });
+    };
 }

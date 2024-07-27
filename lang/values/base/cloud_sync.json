@@ -29,7 +29,7 @@
   "settings.dev.client_id.description": "Custom client ID for OAuth2",
   "settings.auth.title": "Authorization",
   "settings.auth.log_out.title": "Log out",
-  "settings.auth.log_out.description": "Log out of Cloud Sync", 
+  "settings.auth.log_out.description": "Log out of Cloud Sync",
   "settings.auth.delete_data.title": "Delete data",
   "settings.auth.delete_data.description": "Permanently delete your cloud data",
   "settings.auth.authorize": "Authorize",

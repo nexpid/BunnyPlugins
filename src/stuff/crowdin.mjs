@@ -22,7 +22,7 @@ export function parseVariableRules(text) {
         const matches = text.matchAll(regex);
         for (const rawMatch of Array.from(matches)) {
             const [match, variable, kind, rawReplacers, _suffix1, _suffix2] =
-        rawMatch;
+                rawMatch;
             const { index } = rawMatch;
 
             const suffix = _suffix1 ?? _suffix2 ?? "";
@@ -41,10 +41,9 @@ export function parseVariableRules(text) {
             } else {
                 // map replacers insto a [key, value] array
                 const replacers = Object.fromEntries(
-                    Array.from((rawReplacers + "}").matchAll(replacerRegExp)).map(x => [
-                        x[1],
-                        x[2],
-                    ]),
+                    Array.from(
+                        (rawReplacers + "}").matchAll(replacerRegExp),
+                    ).map(x => [x[1], x[2]]),
                 );
                 rules.push({
                     type: "choose",

@@ -97,7 +97,11 @@ export function patchSettingsPin(
                         );
 
                         if (shouldAppear())
-                            children.splice(index === -1 ? 4 : index, 0, render({}));
+                            children.splice(
+                                index === -1 ? 4 : index,
+                                0,
+                                render({}),
+                            );
                     },
                 ),
             );
@@ -208,15 +212,16 @@ export function patchSettingsPin(
                 after(getterFunctionName, getters, ([settings], ret) => [
                     ...(settings.includes(screenKey)
                         ? [
-                            {
-                                type: "setting_search_result",
-                                ancestorRendererData: rendererConfig[screenKey],
-                                setting: screenKey,
-                                title: () => you.title,
-                                breadcrumbs: ["Bunny", "Nexpid"],
-                                icon: rendererConfig[screenKey].icon,
-                            },
-                        ]
+                              {
+                                  type: "setting_search_result",
+                                  ancestorRendererData:
+                                      rendererConfig[screenKey],
+                                  setting: screenKey,
+                                  title: () => you.title,
+                                  breadcrumbs: ["Bunny", "Nexpid"],
+                                  icon: rendererConfig[screenKey].icon,
+                              },
+                          ]
                         : []),
                     ...ret,
                 ]),
@@ -243,34 +248,51 @@ export function patchSettingsPin(
         };
 
         const newYouPatch = () => {
-            const settingsListComponents = findByProps("SearchableSettingsList");
-            const settingConstantsModule = findByProps("SETTING_RENDERER_CONFIG");
+            const settingsListComponents = findByProps(
+                "SearchableSettingsList",
+            );
+            const settingConstantsModule = findByProps(
+                "SETTING_RENDERER_CONFIG",
+            );
             const gettersModule = findByProps("getSettingListItems");
 
-            if (!gettersModule || !settingsListComponents || !settingConstantsModule)
+            if (
+                !gettersModule ||
+                !settingsListComponents ||
+                !settingConstantsModule
+            )
                 return false;
 
             patches.push(
-                before("type", settingsListComponents.SearchableSettingsList, ret =>
-                    manipulateSections(ret, true),
+                before(
+                    "type",
+                    settingsListComponents.SearchableSettingsList,
+                    ret => manipulateSections(ret, true),
                 ),
             );
 
             patches.push(
-                after("getSettingListSearchResultItems", gettersModule, (_, ret) => {
-                    for (const s of ret)
-                        if (s.setting === screenKey) s.breadcrumbs = ["Bunny", "Nexpid"];
-                }),
+                after(
+                    "getSettingListSearchResultItems",
+                    gettersModule,
+                    (_, ret) => {
+                        for (const s of ret)
+                            if (s.setting === screenKey)
+                                s.breadcrumbs = ["Bunny", "Nexpid"];
+                    },
+                ),
             );
 
-            const oldRendererConfig = settingConstantsModule.SETTING_RENDERER_CONFIG;
+            const oldRendererConfig =
+                settingConstantsModule.SETTING_RENDERER_CONFIG;
             settingConstantsModule.SETTING_RENDERER_CONFIG = {
                 ...oldRendererConfig,
                 ...rendererConfig,
             };
 
             patches.push(() => {
-                settingConstantsModule.SETTING_RENDERER_CONFIG = oldRendererConfig;
+                settingConstantsModule.SETTING_RENDERER_CONFIG =
+                    oldRendererConfig;
             });
 
             return true;
@@ -279,5 +301,7 @@ export function patchSettingsPin(
         if (!newYouPatch()) oldYouPatch();
     }
 
-    return () => { patches.forEach(x => x()); };
+    return () => {
+        patches.forEach(x => x());
+    };
 }

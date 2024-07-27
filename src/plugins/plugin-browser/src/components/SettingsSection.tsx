@@ -21,11 +21,15 @@ export default ({ changes }: { changes: number }) => {
                         <Text variant="text-md/semibold" color="HEADER_PRIMARY">
                             {lang.format("plugin.name", {})}
                         </Text>
-                        {changes && <TextBadge variant="danger">{changes}</TextBadge>}
+                        {changes && (
+                            <TextBadge variant="danger">{changes}</TextBadge>
+                        )}
                     </>
                 }
                 leading={
-                    <FormRow.Icon source={getAssetIDByName("ic_search_items_24px")} />
+                    <FormRow.Icon
+                        source={getAssetIDByName("ic_search_items_24px")}
+                    />
                 }
                 trailing={FormRow.Arrow}
                 onPress={() =>

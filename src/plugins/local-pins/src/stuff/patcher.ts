@@ -17,9 +17,7 @@ import PinsScreen from "../components/screens/PinsScreen";
 const ChannelSettingsModal = findByName("ChannelSettingsModal", false);
 const ChannelPinsConnected = findByName("ChannelPinsConnected", false);
 const screens = findByProps("MessagesScreen", "MessageContentScreen");
-const { useOnPressSearchItem } = findByProps(
-    "useOnPressSearchItem",
-);
+const { useOnPressSearchItem } = findByProps("useOnPressSearchItem");
 const { FlashList } = findByProps("FlashList");
 
 const PrivateChannels = findByName("ConnectedPrivateChannels", false);
@@ -50,9 +48,11 @@ export default function () {
                 props: {
                     ...pins.props,
                     messages:
-            loaded && messages
-                ? pinsCallback.overrides[channelId]({ messages }) ?? messages
-                : messages,
+                        loaded && messages
+                            ? (pinsCallback.overrides[channelId]({
+                                  messages,
+                              }) ?? messages)
+                            : messages,
                 },
             };
         }),
@@ -82,11 +82,11 @@ export default function () {
                         const unpatch = before("type", ret, ([x]) => {
                             if (x?.data)
                                 x.data =
-                  pinsCallback.overrides[channelId]({
-                      messages: x.data,
-                      searchContext,
-                      press,
-                  }) ?? x.data;
+                                    pinsCallback.overrides[channelId]({
+                                        messages: x.data,
+                                        searchContext,
+                                        press,
+                                    }) ?? x.data;
                         });
 
                         return React.createElement(PinsScreen, {
@@ -196,11 +196,19 @@ export default function () {
                     );
                     if (!children) return;
 
-                    children.splice(1, 0, React.createElement(ChannelPinsRow, {}));
+                    children.splice(
+                        1,
+                        0,
+                        React.createElement(ChannelPinsRow, {}),
+                    );
                 }),
             );
         }),
     );
 
-    return () => { patches.forEach(x => { x(); }); };
+    return () => {
+        patches.forEach(x => {
+            x();
+        });
+    };
 }

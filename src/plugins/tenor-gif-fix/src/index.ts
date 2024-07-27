@@ -20,7 +20,7 @@ let patches = [];
 
 export default {
     onLoad: () => {
-    // keep this here just in case
+        // keep this here just in case
         patches.push(
             before("downloadMediaAsset", MediaManager, args => {
                 const url = args[0];

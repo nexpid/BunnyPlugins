@@ -17,16 +17,20 @@ export default function () {
         after("render", RN.View, ([{ children, style }], ret) => {
             if (style && Array.isArray(children)) {
                 const oldUI =
-          Object.keys(style).length === 1 &&
-          style.flex === 1 &&
-          children.find((y: any) => y?.type?.name === "ChannelRoutes");
+                    Object.keys(style).length === 1 &&
+                    style.flex === 1 &&
+                    children.find(
+                        (y: any) => y?.type?.name === "ChannelRoutes",
+                    );
 
                 if (
                     oldUI ||
-          (Object.keys(style).length === 2 &&
-            style.flex === 1 &&
-            style.overflow === "hidden" &&
-            children.find((y: any) => y?.type?.name === "ChatViewConnected"))
+                    (Object.keys(style).length === 2 &&
+                        style.flex === 1 &&
+                        style.overflow === "hidden" &&
+                        children.find(
+                            (y: any) => y?.type?.name === "ChatViewConnected",
+                        ))
                 ) {
                     return React.createElement(
                         React.Fragment,
@@ -39,12 +43,12 @@ export default function () {
         }),
     );
 
-    const kbHide = RN.Keyboard.addListener("keyboardDidHide", () =>
-    { openSet(false); },
-    );
-    const kbShow = RN.Keyboard.addListener("keyboardDidShow", () =>
-    { openSet(true); },
-    );
+    const kbHide = RN.Keyboard.addListener("keyboardDidHide", () => {
+        openSet(false);
+    });
+    const kbShow = RN.Keyboard.addListener("keyboardDidShow", () => {
+        openSet(true);
+    });
     patches.push(() => {
         kbHide.remove();
         kbShow.remove();
@@ -64,7 +68,8 @@ export default function () {
                     "onChangeText",
                     props,
                     ([txt]) =>
-                        txt !== "" && sendAction(Math.random() < 0.5 ? "left" : "right"),
+                        txt !== "" &&
+                        sendAction(Math.random() < 0.5 ? "left" : "right"),
                 ),
             );
         }),
@@ -72,9 +77,15 @@ export default function () {
 
     patches.push(lang.unload);
 
-    const nod = () => { sendAction("nod", 1000 / 10); };
+    const nod = () => {
+        sendAction("nod", 1000 / 10);
+    };
     patches.push(before("sendMessage", messaging, nod));
     patches.push(before("editMessage", messaging, nod));
 
-    return () => { patches.forEach(x => { x(); }); };
+    return () => {
+        patches.forEach(x => {
+            x();
+        });
+    };
 }

@@ -39,14 +39,16 @@ export default function patchIcons(
 
     if (plus.icons || plus.customOverlays || iconpack) {
         if (plus.icons) state.patches.push(PatchType.Icons);
-        if (plus.customOverlays) state.patches.push(PatchType.CustomIconOverlays);
+        if (plus.customOverlays)
+            state.patches.push(PatchType.CustomIconOverlays);
         if (iconpack) state.patches.push(PatchType.Iconpack);
 
         patches.push(
             instead("render", RN.Image, (_args, orig) => {
                 const args = _args.slice();
                 const [x] = args;
-                if (typeof x.source !== "number" || x.ignore) return orig(...args);
+                if (typeof x.source !== "number" || x.ignore)
+                    return orig(...args);
                 const { source } = x;
 
                 // @ts-expect-error these properties are missing from the Asset type
@@ -54,20 +56,21 @@ export default function patchIcons(
                 if (!asset.httpServerLocation) return orig(...args);
 
                 const assetIconpackLocation =
-          iconpack &&
-          [
-              ...asset.httpServerLocation.split("/").slice(2),
-              `${asset.name}${iconpack.suffix}.${asset.type}`,
-          ].join("/");
+                    iconpack &&
+                    [
+                        ...asset.httpServerLocation.split("/").slice(2),
+                        `${asset.name}${iconpack.suffix}.${asset.type}`,
+                    ].join("/");
                 const useIconpack =
-          iconpack &&
-          (tree.length ? tree.includes(assetIconpackLocation) : true);
+                    iconpack &&
+                    (tree.length ? tree.includes(assetIconpackLocation) : true);
 
                 let overlay: any;
                 if (plus.customOverlays && !useIconpack) {
                     overlay = getIconOverlay(plus, source, x.style);
                     if (overlay) {
-                        if (overlay.replace) x.source = getAssetIDByName(overlay.replace);
+                        if (overlay.replace)
+                            x.source = getAssetIDByName(overlay.replace);
                         if (overlay.style) x.style = [x.style, overlay.style];
                     }
                 }

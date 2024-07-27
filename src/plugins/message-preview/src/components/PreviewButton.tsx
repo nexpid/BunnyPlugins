@@ -40,14 +40,23 @@ export default ({ inputProps }): JSX.Element => {
     const fade = Reanimated.useSharedValue(0);
 
     patches.push(
-        after("onChangeText", inputProps, ([txt]: [string]) => { setText(txt); }, true),
+        after(
+            "onChangeText",
+            inputProps,
+            ([txt]: [string]) => {
+                setText(txt);
+            },
+            true,
+        ),
     );
 
     const shouldAppear = text.length > 0;
     const UseComponent = shouldAppear ? RN.Pressable : RN.View;
 
     React.useEffect(() => {
-        fade.value = Reanimated.withTiming(shouldAppear ? 1 : 0, { duration: 100 });
+        fade.value = Reanimated.withTiming(shouldAppear ? 1 : 0, {
+            duration: 100,
+        });
     }, [shouldAppear]);
 
     return (
@@ -61,13 +70,11 @@ export default ({ inputProps }): JSX.Element => {
                     zIndex: 3,
                 },
                 { opacity: fade },
-            ]}
-        >
+            ]}>
             <UseComponent
                 android_ripple={styles.androidRipple}
                 onPress={shouldAppear ? () => openPreview() : undefined}
-                style={styles.actionButton}
-            >
+                style={styles.actionButton}>
                 <RN.Image
                     style={styles.actionIcon}
                     source={getAssetIDByName("ic_eye")}

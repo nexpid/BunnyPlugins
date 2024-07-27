@@ -84,15 +84,19 @@ export function ImageActionSheet({
             <FormRow
                 label="Set Image Variable"
                 leading={
-                    <FormRow.Icon source={getAssetIDByName("ic_essentials_sparkle")} />
+                    <FormRow.Icon
+                        source={getAssetIDByName("ic_essentials_sparkle")}
+                    />
                 }
                 trailing={<FormRow.Arrow />}
-                onPress={() =>
-                { ActionSheet.open(ImageVariableActionSheet, {
-                    role,
-                    update: v => { update(v); },
-                }); }
-                }
+                onPress={() => {
+                    ActionSheet.open(ImageVariableActionSheet, {
+                        role,
+                        update: v => {
+                            update(v);
+                        },
+                    });
+                }}
             />
             <FormRow
                 label="Use Custom Image"
@@ -105,13 +109,26 @@ export function ImageActionSheet({
                         confirmText: "Proxy",
                         confirmColor: "brand" as ButtonColors,
                         onConfirm: async function (d) {
-                            const url = d.match(constants.HTTP_REGEX_MULTI)?.[0];
-                            if (!url)
-                            { showToast("Invalid URL", getAssetIDByName("Small")); return; }
-                            showToast("Proxying image...", getAssetIDByName("ic_clock"));
+                            const url = d.match(
+                                constants.HTTP_REGEX_MULTI,
+                            )?.[0];
+                            if (!url) {
+                                showToast(
+                                    "Invalid URL",
+                                    getAssetIDByName("Small"),
+                                );
+                                return;
+                            }
+                            showToast(
+                                "Proxying image...",
+                                getAssetIDByName("ic_clock"),
+                            );
                             try {
                                 update(`mp:${await getExternalAsset(url)}`);
-                                showToast("Proxied image", getAssetIDByName("Check"));
+                                showToast(
+                                    "Proxied image",
+                                    getAssetIDByName("Check"),
+                                );
                             } catch (p) {
                                 console.error(
                                     "[CustomRPC] ImageActionSheet->customImg proxy error!",
@@ -119,7 +136,10 @@ export function ImageActionSheet({
                                 logger.error(
                                     `ImageActionSheet->customImg proxy error!\n${p.stack}`,
                                 );
-                                showToast("Failed to proxy image", getAssetIDByName("Small"));
+                                showToast(
+                                    "Failed to proxy image",
+                                    getAssetIDByName("Small"),
+                                );
                             }
                         },
                         cancelText: "Cancel",
@@ -128,17 +148,24 @@ export function ImageActionSheet({
             />
             <FormRow
                 label="Select RPC Asset"
-                leading={<FormRow.Icon source={getAssetIDByName("ic_media_channel")} />}
+                leading={
+                    <FormRow.Icon
+                        source={getAssetIDByName("ic_media_channel")}
+                    />
+                }
                 trailing={<FormRow.Arrow />}
                 onPress={() => {
-                    if (!appId)
-                    { showConfirmationAlert({
-                        title: "No App Set",
-                        content: "An app must be selected in order to use RPC assets",
-                        confirmText: "Dismiss",
-                        confirmColor: "grey" as ButtonColors,
-                        onConfirm: () => {},
-                    }); return; }
+                    if (!appId) {
+                        showConfirmationAlert({
+                            title: "No App Set",
+                            content:
+                                "An app must be selected in order to use RPC assets",
+                            confirmText: "Dismiss",
+                            confirmColor: "grey" as ButtonColors,
+                            onConfirm: () => {},
+                        });
+                        return;
+                    }
 
                     richAssetListAppId = appId;
                     richAssetListCallback = x => {
@@ -186,25 +213,37 @@ export function ButtonActionSheet({
         <ActionSheet title={`Edit Button ${role}`}>
             <FormRow
                 label="Button Text"
-                leading={<FormRow.Icon source={getAssetIDByName("ic_message_edit")} />}
-                onPress={() =>
-                { simpleInput({
-                    role: `Button ${role} Text`,
-                    current: text,
-                    update: x => { update({ text: x, url }); },
-                }); }
+                leading={
+                    <FormRow.Icon
+                        source={getAssetIDByName("ic_message_edit")}
+                    />
                 }
+                onPress={() => {
+                    simpleInput({
+                        role: `Button ${role} Text`,
+                        current: text,
+                        update: x => {
+                            update({ text: x, url });
+                        },
+                    });
+                }}
             />
             <FormRow
                 label="Button URL"
-                leading={<FormRow.Icon source={getAssetIDByName("ic_message_edit")} />}
-                onPress={() =>
-                { simpleInput({
-                    role: `Button ${role} URL`,
-                    current: url,
-                    update: x => { update({ text, url: x }); },
-                }); }
+                leading={
+                    <FormRow.Icon
+                        source={getAssetIDByName("ic_message_edit")}
+                    />
                 }
+                onPress={() => {
+                    simpleInput({
+                        role: `Button ${role} URL`,
+                        current: url,
+                        update: x => {
+                            update({ text, url: x });
+                        },
+                    });
+                }}
             />
             {url && (
                 <FormRow
@@ -261,18 +300,26 @@ export function ApplicationActionSheet({
         <ActionSheet title={"Edit Application"}>
             <FormRow
                 label="Application Name"
-                leading={<FormRow.Icon source={getAssetIDByName("ic_message_edit")} />}
-                onPress={() =>
-                { simpleInput({
-                    role: "Application Name",
-                    current: appName,
-                    update: txt => { update({ id: appId, name: txt }); },
-                }); }
+                leading={
+                    <FormRow.Icon
+                        source={getAssetIDByName("ic_message_edit")}
+                    />
                 }
+                onPress={() => {
+                    simpleInput({
+                        role: "Application Name",
+                        current: appName,
+                        update: txt => {
+                            update({ id: appId, name: txt });
+                        },
+                    });
+                }}
             />
             <FormRow
                 label="Select Application"
-                leading={<FormRow.Icon source={getAssetIDByName("ic_robot_24px")} />}
+                leading={
+                    <FormRow.Icon source={getAssetIDByName("ic_robot_24px")} />
+                }
                 trailing={<FormRow.Arrow />}
                 onPress={() => {
                     applicationListCallback = props => {
@@ -315,19 +362,19 @@ export function ActivityTypeActionSheet({
     const [val, setVal] = React.useState(type);
     return (
         <ActionSheet title="Edit Activity Type">
-      {...Object.values(ActivityType)
-          .filter(x => typeof x === "number")
-          .map((x: number) => (
-              <FormRadioRow
-                  label={activityTypePreview[x]}
-                  trailing={<FormRow.Arrow />}
-                  selected={x === val}
-                  onPress={() => {
-                      update(x);
-                      setVal(x);
-                  }}
-              />
-          ))}
+            {...Object.values(ActivityType)
+                .filter(x => typeof x === "number")
+                .map((x: number) => (
+                    <FormRadioRow
+                        label={activityTypePreview[x]}
+                        trailing={<FormRow.Arrow />}
+                        selected={x === val}
+                        onPress={() => {
+                            update(x);
+                            setVal(x);
+                        }}
+                    />
+                ))}
         </ActionSheet>
     );
 }
@@ -396,29 +443,37 @@ export function TimestampActionSheet({
             <FormRow
                 label="Set Start Time Variable"
                 leading={
-                    <FormRow.Icon source={getAssetIDByName("ic_essentials_sparkle")} />
+                    <FormRow.Icon
+                        source={getAssetIDByName("ic_essentials_sparkle")}
+                    />
                 }
                 trailing={<FormRow.Arrow />}
-                onPress={() =>
-                { ActionSheet.open(TimestampVariableActionSheet, {
-                    role: "Start",
-                    update: v => { update({ start: v, end }); },
-                }); }
-                }
+                onPress={() => {
+                    ActionSheet.open(TimestampVariableActionSheet, {
+                        role: "Start",
+                        update: v => {
+                            update({ start: v, end });
+                        },
+                    });
+                }}
             />
             {typeof start !== "string" && (
                 <FormRow
                     label="Edit Start Time"
                     leading={
-                        <FormRow.Icon source={getAssetIDByName("ic_message_edit")} />
+                        <FormRow.Icon
+                            source={getAssetIDByName("ic_message_edit")}
+                        />
                     }
                     trailing={<FormRow.Arrow />}
-                    onPress={() =>
-                    { prompt({
-                        role: "Start",
-                        onSubmit: v => { update({ start: v, end }); },
-                    }); }
-                    }
+                    onPress={() => {
+                        prompt({
+                            role: "Start",
+                            onSubmit: v => {
+                                update({ start: v, end });
+                            },
+                        });
+                    }}
                 />
             )}
             {start !== undefined && (
@@ -439,28 +494,36 @@ export function TimestampActionSheet({
             <FormRow
                 label="Set End Time Variable"
                 leading={
-                    <FormRow.Icon source={getAssetIDByName("ic_essentials_sparkle")} />
+                    <FormRow.Icon
+                        source={getAssetIDByName("ic_essentials_sparkle")}
+                    />
                 }
                 trailing={<FormRow.Arrow />}
-                onPress={() =>
-                { ActionSheet.open(TimestampVariableActionSheet, {
-                    role: "End",
-                    update: v => { update({ start, end: v }); },
-                }); }
-                }
+                onPress={() => {
+                    ActionSheet.open(TimestampVariableActionSheet, {
+                        role: "End",
+                        update: v => {
+                            update({ start, end: v });
+                        },
+                    });
+                }}
             />
             {typeof end !== "string" && (
                 <FormRow
                     label="Edit End Time"
                     leading={
-                        <FormRow.Icon source={getAssetIDByName("ic_message_edit")} />
+                        <FormRow.Icon
+                            source={getAssetIDByName("ic_message_edit")}
+                        />
                     }
-                    onPress={() =>
-                    { prompt({
-                        role: "End",
-                        onSubmit: v => { update({ start, end: v }); },
-                    }); }
-                    }
+                    onPress={() => {
+                        prompt({
+                            role: "End",
+                            onSubmit: v => {
+                                update({ start, end: v });
+                            },
+                        });
+                    }}
                 />
             )}
             {end !== undefined && (
@@ -495,8 +558,10 @@ export const activitySavedPrompt = ({
     run: () => void;
     secondaryRun?: () => void;
 }) => {
-    if (isActivitySaved()) { run(); return; }
-    else
+    if (isActivitySaved()) {
+        run();
+        return;
+    } else
         showConfirmationAlert({
             title: "Unsaved Changes",
             content: [
@@ -524,13 +589,14 @@ export const simpleInput = ({
     role: string;
     current: string | undefined;
     update: (txt: string) => void;
-}) =>
-{ showInputAlert({
-    title: `Enter New ${role}`,
-    initialValue: current,
-    placeholder: `really cool ${role.toLowerCase()}`,
-    confirmText: "Change",
-    confirmColor: "brand" as ButtonColors,
-    onConfirm: update,
-    cancelText: "Cancel",
-}); };
+}) => {
+    showInputAlert({
+        title: `Enter New ${role}`,
+        initialValue: current,
+        placeholder: `really cool ${role.toLowerCase()}`,
+        confirmText: "Change",
+        confirmColor: "brand" as ButtonColors,
+        onConfirm: update,
+        cancelText: "Cancel",
+    });
+};

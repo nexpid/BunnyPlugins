@@ -5,7 +5,11 @@ import { getAssetIDByName } from "@vendetta/ui/assets";
 import { showToast } from "@vendetta/ui/toasts";
 import { type ImageSourcePropType } from "react-native";
 
-import { ActionSheet, hideActionSheet, showSimpleActionSheet } from "$/components/ActionSheet";
+import {
+    ActionSheet,
+    hideActionSheet,
+    showSimpleActionSheet,
+} from "$/components/ActionSheet";
 import { BetterTableRowGroup } from "$/components/BetterTableRow";
 import Text from "$/components/Text";
 import { hasPressableScale, PressableScale } from "$/lib/redesign";
@@ -70,8 +74,7 @@ function Wallpaper({
                     centerImage && styles.centerThing,
                     selected && styles.selectedThing,
                 ]}
-                android_ripple={hasPressableScale && styles.android_ripple}
-            >
+                android_ripple={hasPressableScale && styles.android_ripple}>
                 <RN.Image
                     source={image}
                     style={
@@ -86,8 +89,7 @@ function Wallpaper({
                 variant="text-sm/semibold"
                 color="TEXT_NORMAL"
                 align="center"
-                style={{ marginTop: 8 }}
-            >
+                style={{ marginTop: 8 }}>
                 {label}
             </Text>
         </RN.View>
@@ -111,8 +113,7 @@ function WallpaperCollection({
             <Text
                 variant="text-md/medium"
                 color="TEXT_NORMAL"
-                style={{ marginBottom: 8 }}
-            >
+                style={{ marginBottom: 8 }}>
                 {collection.label}
             </Text>
             <RN.ScrollView horizontal>
@@ -123,7 +124,10 @@ function WallpaperCollection({
                         centerImage={true}
                         selected={vstorage.config.wallpaper === "none"}
                         onPress={() => {
-                            showToast("Removed background", getAssetIDByName("TrashIcon"));
+                            showToast(
+                                "Removed background",
+                                getAssetIDByName("TrashIcon"),
+                            );
                             vstorage.config.wallpaper = "none";
                         }}
                     />
@@ -134,8 +138,11 @@ function WallpaperCollection({
                         image={getAssetIDByName("ImagePlusIcon")}
                         centerImage
                         selected={false}
-                        onPress={() => { ActionSheet.open(AddBackgroundSheet, { add: configurable.add }); }
-                        }
+                        onPress={() => {
+                            ActionSheet.open(AddBackgroundSheet, {
+                                add: configurable.add,
+                            });
+                        }}
                     />
                 )}
                 {collection.content.map(x => (
@@ -157,7 +164,9 @@ function WallpaperCollection({
                                     key: "CardOverflow",
                                     header: {
                                         title: x.title,
-                                        onClose: () => { hideActionSheet(); },
+                                        onClose: () => {
+                                            hideActionSheet();
+                                        },
                                     },
                                     options: [
                                         {
@@ -167,7 +176,9 @@ function WallpaperCollection({
                                             onPress: () => {
                                                 showToast(
                                                     `Removed ${x.title}`,
-                                                    getAssetIDByName("TrashIcon"),
+                                                    getAssetIDByName(
+                                                        "TrashIcon",
+                                                    ),
                                                 );
                                                 configurable.remove(x);
                                             },
@@ -196,8 +207,7 @@ export const ConfigurePage = () => {
             <BetterTableRowGroup
                 title="Backgrounds"
                 icon={getAssetIDByName("ImageIcon")}
-                padding={true}
-            >
+                padding={true}>
                 {collections.map((x, i) => (
                     <>
                         <WallpaperCollection clear={i === 0} collection={x} />
@@ -216,9 +226,10 @@ export const ConfigurePage = () => {
                             ];
                         },
                         remove: entry => {
-                            vstorage.config.custom = vstorage.config.custom.filter(
-                                x => x.url !== entry.url,
-                            );
+                            vstorage.config.custom =
+                                vstorage.config.custom.filter(
+                                    x => x.url !== entry.url,
+                                );
                         },
                     }}
                     collection={{

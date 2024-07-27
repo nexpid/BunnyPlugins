@@ -4,10 +4,10 @@ import { RNFileManager, RNFSManager } from "../deps";
 
 type Encoding = "utf8" | "ascii" | "base64";
 type EncodingOrOptions =
-  | Encoding
-  | {
-      encoding: Encoding;
-  };
+    | Encoding
+    | {
+          encoding: Encoding;
+      };
 
 const normalizeFilePath = (path: string) =>
     path.startsWith("file://") ? path.slice(7) : path;
@@ -74,10 +74,14 @@ const resolveWrite = (filepath: string) => {
 const RNFS = {
     unlink(filepath: string): Promise<void> {
         if (RNFSManager)
-            return RNFSManager.unlink(normalizeFilePath(filepath)).then(() => void 0);
+            return RNFSManager.unlink(normalizeFilePath(filepath)).then(
+                () => void 0,
+            );
 
         const write = resolveWrite(filepath);
-        return RNFileManager.removeFile(write.style, write.path).then(() => void 0);
+        return RNFileManager.removeFile(write.style, write.path).then(
+            () => void 0,
+        );
     },
     exists(filepath: string): Promise<boolean> {
         if (RNFSManager) return RNFSManager.exists(normalizeFilePath(filepath));
@@ -141,14 +145,14 @@ const RNFS = {
     get CachesDirectoryPath() {
         return (
             RNFSManager?.RNFSCachesDirectoryPath ??
-      RNFileManager.getConstants().CacheDirPath
+            RNFileManager.getConstants().CacheDirPath
         );
     },
     ExternalCachesDirectoryPath: RNFSManager?.RNFSExternalCachesDirectoryPath,
     get DocumentDirectoryPath() {
         return (
             RNFSManager?.RNFSDocumentDirectoryPath ??
-      RNFileManager.getConstants().DocumentsDirPath
+            RNFileManager.getConstants().DocumentsDirPath
         );
     },
     DownloadDirectoryPath: RNFSManager?.RNFSDownloadDirectoryPath,

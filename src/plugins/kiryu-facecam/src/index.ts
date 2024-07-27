@@ -56,6 +56,8 @@ export default {
         };
         unpatch = patcher();
     },
-    onUnload: () => { unpatch(); },
+    onUnload: () => {
+        unpatch();
+    },
     settings: Settings(),
 };

@@ -75,8 +75,12 @@ export default ({
                     }),
                 },
             ]}
-            onPressIn={() => { setIsPressing(true); }}
-            onPressOut={() => { setIsPressing(false); }}
+            onPressIn={() => {
+                setIsPressing(true);
+            }}
+            onPressOut={() => {
+                setIsPressing(false);
+            }}
             onPress={() => enabled && onPress?.()}
             accessibilityRole="button"
             accessibilityState={{
@@ -85,18 +89,18 @@ export default ({
             accessible={enabled}
             collapsable={false}
             disabled={!enabled}
-            pointerEvents={enabled ? "box-only" : "none"}
-        >
+            pointerEvents={enabled ? "box-only" : "none"}>
             {loading ? (
                 <RN.ActivityIndicator
                     size="small"
-                    color={resolveSemanticColor(semanticColors[`TEXT_${color}`])}
+                    color={resolveSemanticColor(
+                        semanticColors[`TEXT_${color}`],
+                    )}
                 />
             ) : (
                 <Text
                     variant="text-md/semibold"
-                    color={enabled ? `TEXT_${color}` : "TEXT_MUTED"}
-                >
+                    color={enabled ? `TEXT_${color}` : "TEXT_MUTED"}>
                     {label}
                 </Text>
             )}

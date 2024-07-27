@@ -18,7 +18,7 @@ export const patchesURL = () =>
     }/patches.jsonc`;
 export const devPatchesURL = "http://192.168.2.22:8730/patches.jsonc";
 export const commitsURL =
-  "https://api.github.com/repos/nexpid/VendettaMonetTheme/commits?path=patches.jsonc";
+    "https://api.github.com/repos/nexpid/VendettaMonetTheme/commits?path=patches.jsonc";
 
 const ThemeStore = findByStoreName("ThemeStore");
 
@@ -118,7 +118,9 @@ export default {
                                     ? devPatchesURL
                                     : patchesURL(),
                                 {
-                                    headers: { "cache-control": "public, max-age=600" },
+                                    headers: {
+                                        "cache-control": "public, max-age=600",
+                                    },
                                 },
                             )
                         ).text()
@@ -128,14 +130,16 @@ export default {
                 showToast(
                     "Failed to fetch color patches!",
                     getAssetIDByName("Small"),
-                ); return;
+                );
+                return;
             }
 
             let theme: ThemeDataWithPlus;
             try {
                 theme = build(cpatches);
             } catch (e: any) {
-                showToast("Failed to build theme!", getAssetIDByName("Small")); return;
+                showToast("Failed to build theme!", getAssetIDByName("Small"));
+                return;
             }
 
             apply(theme);
@@ -143,10 +147,10 @@ export default {
 
         if (
             oldTheme &&
-      oldColors &&
-      syscolors &&
-      (vstorage.reapply.cache.colors !== oldColors ||
-        vstorage.reapply.cache.theme !== oldTheme)
+            oldColors &&
+            syscolors &&
+            (vstorage.reapply.cache.colors !== oldColors ||
+                vstorage.reapply.cache.theme !== oldTheme)
         )
             reapply();
 
@@ -165,7 +169,7 @@ export default {
             showConfirmationAlert({
                 title: "Deselect Theme",
                 content:
-          "Monet theme is currently selected, would you like to deselect it?",
+                    "Monet theme is currently selected, would you like to deselect it?",
                 onConfirm: async () => {
                     apply(false);
                 },

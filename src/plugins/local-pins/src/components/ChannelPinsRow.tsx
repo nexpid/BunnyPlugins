@@ -48,8 +48,9 @@ export default function ChannelPinsRow() {
         <RN.Pressable
             style={styles.container}
             android_ripple={styles.androidRipple}
-            onPress={() => { openModal("local-pinned", LocalPinnedModal); }}
-        >
+            onPress={() => {
+                openModal("local-pinned", LocalPinnedModal);
+            }}>
             <RN.View style={styles.icon}>
                 <RN.Image
                     source={getAssetIDByName("ic_pins")}
@@ -60,8 +61,7 @@ export default function ChannelPinsRow() {
             <Text
                 variant="text-md/medium"
                 color="CHANNELS_DEFAULT"
-                style={styles.text}
-            >
+                style={styles.text}>
                 Local Pinned
             </Text>
         </RN.Pressable>

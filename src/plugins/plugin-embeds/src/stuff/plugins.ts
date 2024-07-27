@@ -84,8 +84,8 @@ export const getCodedLink = (plugin: string) => {
         obj.acceptLabelText = installing
             ? "..."
             : has
-                ? "Uninstall Plugin"
-                : "Install Plugin";
+              ? "Uninstall Plugin"
+              : "Install Plugin";
     }
 
     return obj;

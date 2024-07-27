@@ -122,12 +122,12 @@ export default function CompatSlider({
                     const perc = (gesture.moveX - x) / (endX - x);
 
                     const val =
-            Math.round(
-                Math.min(
-                    Math.max(perc * maximumValue, minimumValue),
-                    maximumValue,
-                ) / step,
-            ) * step;
+                        Math.round(
+                            Math.min(
+                                Math.max(perc * maximumValue, minimumValue),
+                                maximumValue,
+                            ) / step,
+                        ) * step;
 
                     if (val !== liveValue.current && gesture.moveX !== 0) {
                         setPressing(true);
@@ -161,25 +161,24 @@ export default function CompatSlider({
                             styles.fullBar,
                             {
                                 width:
-                  Math.min(
-                      Math.max(
-                          ((value - minimumValue) / (maximumValue - minimumValue)) *
-                        100,
-                          0,
-                      ),
-                      100,
-                  ) + "%",
+                                    Math.min(
+                                        Math.max(
+                                            ((value - minimumValue) /
+                                                (maximumValue - minimumValue)) *
+                                                100,
+                                            0,
+                                        ),
+                                        100,
+                                    ) + "%",
                             } as any,
-                        ]}
-                    >
+                        ]}>
                         <Reanimated.default.View
                             style={[
                                 styles.dotShadow,
                                 {
                                     backgroundColor: shadowClr,
                                 },
-                            ]}
-                        >
+                            ]}>
                             <Reanimated.default.View
                                 style={[
                                     styles.dot,
@@ -187,8 +186,7 @@ export default function CompatSlider({
                                         width: dotScale,
                                         height: dotScale,
                                     },
-                                ]}
-                            ></Reanimated.default.View>
+                                ]}></Reanimated.default.View>
                         </Reanimated.default.View>
                     </Reanimated.default.View>
                 </RN.View>

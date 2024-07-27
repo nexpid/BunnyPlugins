@@ -30,7 +30,10 @@ export const useRulesStore = zustand.create<
     [
         [
             "zustand/persist",
-            { rules: RulesState["rules"]; lastModified: RulesState["lastModified"] },
+            {
+                rules: RulesState["rules"];
+                lastModified: RulesState["lastModified"];
+            },
         ],
     ]
 >(

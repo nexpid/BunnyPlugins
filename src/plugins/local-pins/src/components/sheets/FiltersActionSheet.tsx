@@ -21,24 +21,24 @@ export default function ({
         <ActionSheet title="Filters">
             <FormCheckboxRow
                 label="Server pinned"
-                onPress={() =>
-                { setFilters(
-                    filters.includes("server")
-                        ? filters.filter(x => x !== "server")
-                        : filters.concat("server"),
-                ); }
-                }
+                onPress={() => {
+                    setFilters(
+                        filters.includes("server")
+                            ? filters.filter(x => x !== "server")
+                            : filters.concat("server"),
+                    );
+                }}
                 selected={filters.includes("server")}
             />
             <FormCheckboxRow
                 label="Locally pinned"
-                onPress={() =>
-                { setFilters(
-                    filters.includes("local")
-                        ? filters.filter(x => x !== "local")
-                        : filters.concat("local"),
-                ); }
-                }
+                onPress={() => {
+                    setFilters(
+                        filters.includes("local")
+                            ? filters.filter(x => x !== "local")
+                            : filters.concat("local"),
+                    );
+                }}
                 selected={filters.includes("local")}
             />
         </ActionSheet>

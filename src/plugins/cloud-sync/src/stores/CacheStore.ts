@@ -24,15 +24,19 @@ export const useCacheStore = zustand.create<CacheState>((set, get) => ({
         const dt = get().dir[UserStore.getCurrentUser()?.id];
         set({ data: dt.data, at: dt.at });
     },
-    updateData: (data: UserData | null, at: string | null) =>
-    { set({
-        data,
-        at,
-        dir: { ...get().dir, [UserStore.getCurrentUser()?.id]: { data, at } },
-    }); },
+    updateData: (data: UserData | null, at: string | null) => {
+        set({
+            data,
+            at,
+            dir: {
+                ...get().dir,
+                [UserStore.getCurrentUser()?.id]: { data, at },
+            },
+        });
+    },
     hasData: () => !!get().data && !!get().at,
 }));
 
-export const unsubCacheStore = fluxSubscribe("CONNECTION_OPEN", () =>
-{ useCacheStore.getState().init(); },
-);
+export const unsubCacheStore = fluxSubscribe("CONNECTION_OPEN", () => {
+    useCacheStore.getState().init();
+});

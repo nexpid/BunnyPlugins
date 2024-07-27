@@ -36,10 +36,14 @@ export default function () {
                     query.startsWith("^") && query.endsWith("$")
                         ? x.toLowerCase() === query.toLowerCase().slice(1, -1)
                         : query.startsWith("^")
-                            ? x.toLowerCase().startsWith(query.toLowerCase().slice(1))
-                            : query.endsWith("$")
-                                ? x.toLowerCase().endsWith(query.toLowerCase().slice(0, -1))
-                                : x.toLowerCase().includes(query.toLowerCase()),
+                          ? x
+                                .toLowerCase()
+                                .startsWith(query.toLowerCase().slice(1))
+                          : query.endsWith("$")
+                            ? x
+                                  .toLowerCase()
+                                  .endsWith(query.toLowerCase().slice(0, -1))
+                            : x.toLowerCase().includes(query.toLowerCase()),
                 ),
             );
         },
@@ -52,7 +56,9 @@ export default function () {
                     .map(([x, y]) => [
                         x,
                         Object.fromEntries(
-                            Object.entries(y).filter(([k, z]) => k === theme && z === hex),
+                            Object.entries(y).filter(
+                                ([k, z]) => k === theme && z === hex,
+                            ),
                         ),
                     ])
                     .filter(([_, z]) => Object.entries(z)[0]),
@@ -61,7 +67,9 @@ export default function () {
 
         p: {
             wipe: () => {
-                patches.forEach(x => { x(); });
+                patches.forEach(x => {
+                    x();
+                });
                 patches.length = 0;
             },
             snipe: (
@@ -73,7 +81,10 @@ export default function () {
                 const patch = after(
                     prop,
                     parent,
-                    callback ?? ((a, b) => { console.log("[NX]:", a, b); }),
+                    callback ??
+                        ((a, b) => {
+                            console.log("[NX]:", a, b);
+                        }),
                     oneTime ?? false,
                 );
                 patches.push(patch);
@@ -90,7 +101,11 @@ export default function () {
                     const ran = new Array<string>();
                     const unpatch = before(prop, parent, args => {
                         const props = parser?.(args) ?? args[0];
-                        const runFor = (propper: any, assign: any, tree = ".") => {
+                        const runFor = (
+                            propper: any,
+                            assign: any,
+                            tree = ".",
+                        ) => {
                             if ("_value" in propper) return;
                             for (const p of Object.keys(propper)) {
                                 if (!assign[p] && ran.includes(tree))
@@ -115,15 +130,22 @@ export default function () {
 
                                     if (typeof x === "object" && x !== null) {
                                         let set = assign[p].stuff.find(
-                                            (y: any) => typeof y === "object" && y !== null,
+                                            (y: any) =>
+                                                typeof y === "object" &&
+                                                y !== null,
                                         );
                                         if (!set)
-                                            set = assign[p].stuff[assign[p].stuff.push({}) - 1];
+                                            set =
+                                                assign[p].stuff[
+                                                    assign[p].stuff.push({}) - 1
+                                                ];
 
                                         runFor(x, set, `${tree}${p}.`);
                                     } else if (
                                         !assign[p].stuff.find(
-                                            (y: any) => JSON.stringify(y) === JSON.stringify(x),
+                                            (y: any) =>
+                                                JSON.stringify(y) ===
+                                                JSON.stringify(x),
                                         )
                                     )
                                         assign[p].stuff.push(x);

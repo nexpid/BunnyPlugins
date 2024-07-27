@@ -85,13 +85,13 @@ type VendettaSysColor = [
     string,
 ];
 export type VendettaSysColors = Record<
-  "neutral1" | "neutral2" | "accent1" | "accent2" | "accent3",
+    "neutral1" | "neutral2" | "accent1" | "accent2" | "accent3",
     VendettaSysColor
 >;
 
 type PlusColorResolvable =
-  | string
-  | [string, string | undefined, string | undefined, string | undefined];
+    | string
+    | [string, string | undefined, string | undefined, string | undefined];
 export interface PlusStructureV0 {
     icons?: Record<string, PlusColorResolvable>;
     mentionLineColor?: PlusColorResolvable;

@@ -15,7 +15,9 @@ function SearchIcon() {
             style={{
                 width: 16,
                 height: 16,
-                tintColor: resolveSemanticColor(semanticColors.INTERACTIVE_NORMAL),
+                tintColor: resolveSemanticColor(
+                    semanticColors.INTERACTIVE_NORMAL,
+                ),
             }}
             source={getAssetIDByName("search")}
         />
@@ -44,13 +46,11 @@ export default ({
                     justifyContent: "center",
                     gap: 8,
                     marginBottom: 5,
-                }}
-            >
+                }}>
                 <RN.View
                     style={{
                         flexGrow: 1,
-                    }}
-                >
+                    }}>
                     <TextInput
                         grow
                         isClearable

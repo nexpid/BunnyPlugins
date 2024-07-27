@@ -17,8 +17,7 @@ export default () => {
         <RN.ScrollView style={{ flex: 1 }}>
             <BetterTableRowGroup
                 title="Settings"
-                icon={getAssetIDByName("SettingsIcon")}
-            >
+                icon={getAssetIDByName("SettingsIcon")}>
                 <FormSwitchRow
                     label="Remove link wrapping"
                     subLabel={
@@ -27,7 +26,9 @@ export default () => {
                             : "https://www.google.com/url?q=https://example.com/"
                     }
                     leading={
-                        <FormRow.Icon source={getAssetIDByName("MagnifyingGlassIcon")} />
+                        <FormRow.Icon
+                            source={getAssetIDByName("MagnifyingGlassIcon")}
+                        />
                     }
                     onValueChange={() =>
                         (vstorage.config.redirect = !vstorage.config.redirect)
@@ -38,7 +39,9 @@ export default () => {
                     label="Remove referral parameters"
                     subLabel={`https://amazon.com/product${vstorage.config.referrals ? "/" : "?tag=nexpid-50"}`}
                     // STUB[epic=icon] QuestsIcon
-                    leading={<FormRow.Icon source={getAssetIDByName("QuestsIcon")} />}
+                    leading={
+                        <FormRow.Icon source={getAssetIDByName("QuestsIcon")} />
+                    }
                     onValueChange={() =>
                         (vstorage.config.referrals = !vstorage.config.referrals)
                     }
@@ -48,7 +51,9 @@ export default () => {
             <RN.View style={{ marginHorizontal: 16, marginTop: 12 }}>
                 <RowButton
                     label={"Visit source"}
-                    onPress={() => url.openURL("https://gitlab.com/ClearURLs/Rules")}
+                    onPress={() =>
+                        url.openURL("https://gitlab.com/ClearURLs/Rules")
+                    }
                 />
             </RN.View>
         </RN.ScrollView>

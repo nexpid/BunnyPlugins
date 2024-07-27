@@ -40,5 +40,5 @@ export const statusLinks = {
     idle: "mp:attachments/919655852724604978/1125529509467279451/s_idle.png",
     dnd: "mp:attachments/919655852724604978/1125529509236572301/s_dnd.png",
     offline:
-    "mp:attachments/919655852724604978/1125529508980731954/s_offline.png",
+        "mp:attachments/919655852724604978/1125529508980731954/s_offline.png",
 };

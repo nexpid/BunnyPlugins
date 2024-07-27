@@ -53,9 +53,9 @@ const SpotifySongEmbed = ({
         undefined,
     );
     const ratio =
-    (songData && songData.type === "track") || song.type === "track"
-        ? 600 / 152
-        : 600 / 352;
+        (songData && songData.type === "track") || song.type === "track"
+            ? 600 / 152
+            : 600 / 352;
     const audioWebviewRef = React.useRef<any>(null);
 
     const skey = React.useRef(Math.random().toString()).current;
@@ -70,7 +70,9 @@ const SpotifySongEmbed = ({
         );
     }, [playing, position]);
 
-    playingRn.set(skey, () => { setPlaying(false); });
+    playingRn.set(skey, () => {
+        setPlaying(false);
+    });
     React.useEffect(
         () => () => {
             playingRn.delete(skey);
@@ -79,13 +81,13 @@ const SpotifySongEmbed = ({
     );
 
     const background =
-    songData &&
-    (songData.coverArt.extractedColors.colorLight
-        ? resolveCustomSemantic(
-            songData.coverArt.extractedColors.colorDark.hex,
-            songData.coverArt.extractedColors.colorLight.hex,
-        )
-        : songData.coverArt.extractedColors.colorDark.hex);
+        songData &&
+        (songData.coverArt.extractedColors.colorLight
+            ? resolveCustomSemantic(
+                  songData.coverArt.extractedColors.colorDark.hex,
+                  songData.coverArt.extractedColors.colorLight.hex,
+              )
+            : songData.coverArt.extractedColors.colorDark.hex);
 
     const styles = stylesheet.createThemedStyleSheet({
         emptyCard: {
@@ -249,10 +251,13 @@ const SpotifySongEmbed = ({
             .catch(
                 e =>
                     e?.name !== "AbortError" &&
-          (console.error("[SongSpotlight] Failed to get song data!"),
-          logger.error(`Failed to get song data!\n${e.stack}`),
-          showToast("Failed to get song data!", getAssetIDByName("Small")),
-          setSongData(false)),
+                    (console.error("[SongSpotlight] Failed to get song data!"),
+                    logger.error(`Failed to get song data!\n${e.stack}`),
+                    showToast(
+                        "Failed to get song data!",
+                        getAssetIDByName("Small"),
+                    ),
+                    setSongData(false)),
             );
     };
     React.useEffect(() => {
@@ -294,16 +299,14 @@ const SpotifySongEmbed = ({
                     selected && styles.cardTracklistEntryPlaying,
                 ]}
                 onPress={jump}
-                onLongPress={more}
-            >
+                onLongPress={more}>
                 <Text
                     style={[
                         styles.cardTracklistEntryTitle,
                         !playable && styles.unplayableItem,
                     ]}
                     variant={selected ? "text-sm/bold" : "text-sm/semibold"}
-                    lineClamp={1}
-                >
+                    lineClamp={1}>
                     {item.title}
                 </Text>
                 <RN.View style={styles.cardContentArtist}>
@@ -313,21 +316,24 @@ const SpotifySongEmbed = ({
                             style={[
                                 styles.cardContentTag,
                                 !playable && styles.unplayableItem,
-                            ]}
-                        >
+                            ]}>
                             E
                         </Text>
                     )}
                     <Text
                         variant={selected ? "text-xs/bold" : "text-xs/semibold"}
-                        style={[styles.secondaryText, !playable && styles.unplayableItem]}
-                        lineClamp={1}
-                    >
+                        style={[
+                            styles.secondaryText,
+                            !playable && styles.unplayableItem,
+                        ]}
+                        lineClamp={1}>
                         {item.subtitle}
                     </Text>
                 </RN.View>
                 <RN.View style={styles.cardTracklistEntryOther}>
-                    <RN.Pressable android_ripple={styles.androidRipple} onPress={more}>
+                    <RN.Pressable
+                        android_ripple={styles.androidRipple}
+                        onPress={more}>
                         <RN.Image source={getAssetIDByName("ic_feed_more")} />
                     </RN.Pressable>
                 </RN.View>
@@ -336,15 +342,15 @@ const SpotifySongEmbed = ({
     };
 
     const trackPlayable =
-    songData && songData.type === "track"
-        ? songData.isPlayable && !!songData.audioPreview.url
-        : true;
+        songData && songData.type === "track"
+            ? songData.isPlayable && !!songData.audioPreview.url
+            : true;
 
     const entryHeight =
-    8 * 2 +
-    TextStyleSheet["text-sm/normal"].lineHeight +
-    TextStyleSheet["text-xs/normal"].lineHeight +
-    1.4;
+        8 * 2 +
+        TextStyleSheet["text-sm/normal"].lineHeight +
+        TextStyleSheet["text-xs/normal"].lineHeight +
+        1.4;
 
     return songData ? (
         <>
@@ -353,8 +359,7 @@ const SpotifySongEmbed = ({
                     style={[
                         styles.cardFirst,
                         songData.type !== "track" && { height: "40%" },
-                    ]}
-                >
+                    ]}>
                     <RN.View style={styles.cardFirstContent}>
                         <RN.Image
                             style={styles.cardImage}
@@ -370,8 +375,7 @@ const SpotifySongEmbed = ({
                             <Text
                                 variant="text-sm/bold"
                                 style={{ color: "#ffffff" }}
-                                lineClamp={1}
-                            >
+                                lineClamp={1}>
                                 {songData.title}
                             </Text>
                             {songData.type === "track" ? (
@@ -379,25 +383,27 @@ const SpotifySongEmbed = ({
                                     {songData.isExplicit && (
                                         <Text
                                             variant="text-xs/semibold"
-                                            style={styles.cardContentTag}
-                                        >
+                                            style={styles.cardContentTag}>
                                             E
                                         </Text>
                                     )}
                                     <Text
                                         variant="text-xs/semibold"
                                         style={styles.secondaryText}
-                                        lineClamp={1}
-                                    >
-                                        {songData.artists.map(x => x.name).join(", ")}
+                                        lineClamp={1}>
+                                        {songData.artists
+                                            .map(x => x.name)
+                                            .join(", ")}
                                     </Text>
                                 </RN.View>
                             ) : (
                                 <Text
                                     variant="text-xs/semibold"
-                                    style={[styles.secondaryText, { color: "#ffffff" }]}
-                                    lineClamp={1}
-                                >
+                                    style={[
+                                        styles.secondaryText,
+                                        { color: "#ffffff" },
+                                    ]}
+                                    lineClamp={1}>
                                     {songData.subtitle}
                                 </Text>
                             )}
@@ -406,18 +412,24 @@ const SpotifySongEmbed = ({
                     <RN.View style={styles.cardOther}>
                         <RN.Pressable
                             android_ripple={styles.androidRipple}
-                            onPress={() =>
-                            { ActionSheet.open(SongInfoSheet, { song, showAdd, remove }); }
-                            }
-                        >
-                            <RN.Image source={getAssetIDByName("ic_feed_more")} />
+                            onPress={() => {
+                                ActionSheet.open(SongInfoSheet, {
+                                    song,
+                                    showAdd,
+                                    remove,
+                                });
+                            }}>
+                            <RN.Image
+                                source={getAssetIDByName("ic_feed_more")}
+                            />
                         </RN.Pressable>
                         <RN.View style={styles.cardOtherBottom}>
                             <RN.Pressable
                                 android_ripple={styles.androidRipple}
-                                onPress={() => { setPlaying(!playing); }}
-                                style={!trackPlayable && styles.unplayableItem}
-                            >
+                                onPress={() => {
+                                    setPlaying(!playing);
+                                }}
+                                style={!trackPlayable && styles.unplayableItem}>
                                 <Svg.SvgXml
                                     width={30}
                                     height={30}
@@ -430,28 +442,41 @@ const SpotifySongEmbed = ({
                                     onPress={() => {
                                         setPlaying(false);
                                         const nextPos = position + 1;
-                                        if (nextPos < songData.trackList.length) {
-                                            const item = songData.trackList[nextPos];
-                                            if (item.isPlayable && !!item.audioPreview?.url) {
+                                        if (
+                                            nextPos < songData.trackList.length
+                                        ) {
+                                            const item =
+                                                songData.trackList[nextPos];
+                                            if (
+                                                item.isPlayable &&
+                                                !!item.audioPreview?.url
+                                            ) {
                                                 setPosition(nextPos);
                                                 setPlaying(true);
                                             } else {
-                                                const nextIndex = songData.trackList.findIndex(
-                                                    (x, i) =>
-                                                        i > nextPos &&
-                            x.isPlayable &&
-                            !!x.audioPreview?.url,
-                                                );
+                                                const nextIndex =
+                                                    songData.trackList.findIndex(
+                                                        (x, i) =>
+                                                            i > nextPos &&
+                                                            x.isPlayable &&
+                                                            !!x.audioPreview
+                                                                ?.url,
+                                                    );
                                                 if (nextIndex !== -1) {
                                                     setPosition(nextIndex);
                                                     setPlaying(true);
                                                 }
-                                                showToast("The next song cannot be played");
+                                                showToast(
+                                                    "The next song cannot be played",
+                                                );
                                             }
                                         } else setPosition(0);
-                                    }}
-                                >
-                                    <Svg.SvgXml width={20} height={20} xml={next} />
+                                    }}>
+                                    <Svg.SvgXml
+                                        width={20}
+                                        height={20}
+                                        xml={next}
+                                    />
                                 </RN.Pressable>
                             )}
                         </RN.View>
@@ -468,11 +493,18 @@ const SpotifySongEmbed = ({
                         })}
                         style={styles.cardTracklist}
                         data={songData.trackList}
-                        ListHeaderComponent={() => <RN.View style={{ height: 8 }} />}
-                        ListFooterComponent={() => <RN.View style={{ height: 8 }} />}
-                        ItemSeparatorComponent={() => <RN.View style={{ height: 8 }} />}
+                        ListHeaderComponent={() => (
+                            <RN.View style={{ height: 8 }} />
+                        )}
+                        ListFooterComponent={() => (
+                            <RN.View style={{ height: 8 }} />
+                        )}
+                        ItemSeparatorComponent={() => (
+                            <RN.View style={{ height: 8 }} />
+                        )}
                         renderItem={({ item, index }) => {
-                            const playable = item.isPlayable && !!item.audioPreview?.url;
+                            const playable =
+                                item.isPlayable && !!item.audioPreview?.url;
                             return (
                                 <TracklistEntry
                                     item={item}
@@ -483,27 +515,33 @@ const SpotifySongEmbed = ({
                                             setPosition(index);
                                             setPlaying(true);
                                         } else {
-                                            const nextIndex = songData.trackList.findIndex(
-                                                (x, i) =>
-                                                    i > index && x.isPlayable && !!x.audioPreview?.url,
-                                            );
+                                            const nextIndex =
+                                                songData.trackList.findIndex(
+                                                    (x, i) =>
+                                                        i > index &&
+                                                        x.isPlayable &&
+                                                        !!x.audioPreview?.url,
+                                                );
                                             if (nextIndex !== -1) {
                                                 setPosition(nextIndex);
                                                 setPlaying(true);
                                             }
-                                            showToast("This song cannot be played"); return;
+                                            showToast(
+                                                "This song cannot be played",
+                                            );
+                                            return;
                                         }
                                     }}
-                                    more={() =>
-                                    { ActionSheet.open(SongInfoSheet, {
-                                        song: {
-                                            service: "spotify",
-                                            type: "track",
-                                            id: item.uid,
-                                        },
-                                        showAdd,
-                                    }); }
-                                    }
+                                    more={() => {
+                                        ActionSheet.open(SongInfoSheet, {
+                                            song: {
+                                                service: "spotify",
+                                                type: "track",
+                                                id: item.uid,
+                                            },
+                                            showAdd,
+                                        });
+                                    }}
                                 />
                             );
                         }}
@@ -518,7 +556,9 @@ const SpotifySongEmbed = ({
                             JSON.stringify(
                                 songData.type === "track"
                                     ? [songData.audioPreview.url ?? null]
-                                    : songData.trackList.map(x => x.audioPreview?.url ?? null),
+                                    : songData.trackList.map(
+                                          x => x.audioPreview?.url ?? null,
+                                      ),
                             ),
                         ),
                     }}
@@ -544,7 +584,9 @@ const SpotifySongEmbed = ({
         </>
     ) : !songData ? (
         <RN.View style={styles.emptyCard}>
-            <RN.Pressable android_ripple={styles.androidRipple} onPress={trigger}>
+            <RN.Pressable
+                android_ripple={styles.androidRipple}
+                onPress={trigger}>
                 <RN.Image
                     style={styles.noImage}
                     source={getAssetIDByName("ic_message_retry")}
@@ -568,14 +610,21 @@ export default function ({ userId, you }: { userId: string; you: boolean }) {
         if (youId === userId && cache.data) setSongs(cache.data.songs);
         else
             getProfileData(userId)
-                .then(x => { setSongs(x.songs ?? []); })
+                .then(x => {
+                    setSongs(x.songs ?? []);
+                })
                 .catch(
                     e =>
                         e?.name !== "AbortError" &&
-            (console.error("[SongSpotlight] Failed to get profile data!"),
-            logger.error(`Failed to get profile data!\n${e.stack}`),
-            showToast("Failed to get profile data!", getAssetIDByName("Small")),
-            setSongs([])),
+                        (console.error(
+                            "[SongSpotlight] Failed to get profile data!",
+                        ),
+                        logger.error(`Failed to get profile data!\n${e.stack}`),
+                        showToast(
+                            "Failed to get profile data!",
+                            getAssetIDByName("Small"),
+                        ),
+                        setSongs([])),
                 );
     }, []);
 
@@ -585,21 +634,21 @@ export default function ({ userId, you }: { userId: string; you: boolean }) {
         songs.map((x, i) =>
             x
                 ? x.service === "spotify" && (
-                    <SpotifySongEmbed
-                        song={x}
-                        showAdd={userId !== youId && !!currentAuthorization()}
-                        remove={
-                            userId === youId &&
-                (() => {
-                    const songs = cache.data?.songs;
-                    if (!songs) return;
+                      <SpotifySongEmbed
+                          song={x}
+                          showAdd={userId !== youId && !!currentAuthorization()}
+                          remove={
+                              userId === youId &&
+                              (() => {
+                                  const songs = cache.data?.songs;
+                                  if (!songs) return;
 
-                    songs[i] = null;
-                    check();
-                })
-                        }
-                    />
-                )
+                                  songs[i] = null;
+                                  check();
+                              })
+                          }
+                      />
+                  )
                 : null,
         )
     ) : (
@@ -608,26 +657,26 @@ export default function ({ userId, you }: { userId: string; you: boolean }) {
 
     return (
         !hide &&
-    (you ? (
-        <YouScreenProfileCard>
-            <TableRowGroupTitle title="Song Spotlight" />
-            <RN.View style={{ flexDirection: "column", gap: 8, marginTop: 4 }}>
-                {content}
-            </RN.View>
-        </YouScreenProfileCard>
-    ) : (
-        <UserProfileSection title="Song Spotlight" showContainer={true}>
-            <RN.View
-                style={{
-                    flexDirection: "column",
-                    gap: 8,
-                    paddingHorizontal: 8,
-                    paddingVertical: 8,
-                }}
-            >
-                {content}
-            </RN.View>
-        </UserProfileSection>
-    ))
+        (you ? (
+            <YouScreenProfileCard>
+                <TableRowGroupTitle title="Song Spotlight" />
+                <RN.View
+                    style={{ flexDirection: "column", gap: 8, marginTop: 4 }}>
+                    {content}
+                </RN.View>
+            </YouScreenProfileCard>
+        ) : (
+            <UserProfileSection title="Song Spotlight" showContainer={true}>
+                <RN.View
+                    style={{
+                        flexDirection: "column",
+                        gap: 8,
+                        paddingHorizontal: 8,
+                        paddingVertical: 8,
+                    }}>
+                    {content}
+                </RN.View>
+            </UserProfileSection>
+        ))
     );
 }

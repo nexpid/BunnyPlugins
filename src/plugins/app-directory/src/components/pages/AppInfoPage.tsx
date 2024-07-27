@@ -25,7 +25,7 @@ import { openOauth2Modal } from "../../stuff/oauth2";
 import { inServers, parseDesc } from "../../stuff/util";
 
 const { TableRowGroup, TableRow, TableRowIcon, TableRowGroupTitle } =
-  findByProps("TableRowGroup", "TableRow");
+    findByProps("TableRowGroup", "TableRow");
 const { TableRowDivider } = findByProps("TableRowDivider");
 
 export default function AppInfoPage({
@@ -122,7 +122,7 @@ export default function AppInfoPage({
     const carouselProgress = React.useRef(new RN.Animated.Value(0)).current;
     const carouselWidth = RN.Dimensions.get("window").width - 32;
     const carouselIndexContent =
-    app.directory_entry.carousel_items?.map((_, i) => i) ?? [];
+        app.directory_entry.carousel_items?.map((_, i) => i) ?? [];
 
     const detailedInfoPromise = usePromise(
         () => getAppDirectoryApplication(app.id),
@@ -130,9 +130,9 @@ export default function AppInfoPage({
     );
 
     const detailedInfo =
-    detailedInfoPromise.fulfilled &&
-    detailedInfoPromise.success &&
-    detailedInfoPromise.response;
+        detailedInfoPromise.fulfilled &&
+        detailedInfoPromise.success &&
+        detailedInfoPromise.response;
     if (!detailedInfo)
         return <RN.ActivityIndicator size="large" style={{ flex: 1 }} />;
 
@@ -142,8 +142,7 @@ export default function AppInfoPage({
                 flex: 1,
                 paddingHorizontal: 16,
                 paddingTop: 16,
-            }}
-        >
+            }}>
             {carouselIndexContent.length ? (
                 <RN.View style={styles.carousel}>
                     <RN.FlatList
@@ -154,23 +153,27 @@ export default function AppInfoPage({
                         data={app.directory_entry.carousel_items.filter(
                             x => x.type === 1,
                         )}
-                        style={{ width: "100%", height: "100%", position: "relative" }}
+                        style={{
+                            width: "100%",
+                            height: "100%",
+                            position: "relative",
+                        }}
                         scrollEventThrottle={16}
-                        onScroll={({ nativeEvent }) =>
-                        { RN.Animated.timing(carouselProgress, {
-                            toValue: Math.max(
-                                Math.min(
-                                    nativeEvent.contentOffset.x /
-                      nativeEvent.layoutMeasurement.width,
-                                    carouselIndexContent.length,
+                        onScroll={({ nativeEvent }) => {
+                            RN.Animated.timing(carouselProgress, {
+                                toValue: Math.max(
+                                    Math.min(
+                                        nativeEvent.contentOffset.x /
+                                            nativeEvent.layoutMeasurement.width,
+                                        carouselIndexContent.length,
+                                    ),
+                                    0,
                                 ),
-                                0,
-                            ),
-                            duration: 100,
-                            easing: RN.Easing.linear,
-                            useNativeDriver: true,
-                        }).start(); }
-                        }
+                                duration: 100,
+                                easing: RN.Easing.linear,
+                                useNativeDriver: true,
+                            }).start();
+                        }}
                         renderItem={({ item: img }) => (
                             <RN.Image
                                 style={{
@@ -182,7 +185,8 @@ export default function AppInfoPage({
                                     uri: `${img.proxy_url}?width=${Math.floor(
                                         carouselWidth,
                                     )}&height=${Math.floor(
-                                        carouselWidth / styles.carousel.aspectRatio,
+                                        carouselWidth /
+                                            styles.carousel.aspectRatio,
                                     )}`,
                                 }}
                                 resizeMode="contain"
@@ -196,16 +200,24 @@ export default function AppInfoPage({
                                     styles.carouselDot,
                                     {
                                         backgroundColor:
-                      carouselIndexContent.length === 1
-                          ? styles.carouselDotActive.backgroundColor
-                          : carouselProgress.interpolate({
-                              inputRange: carouselIndexContent,
-                              outputRange: carouselIndexContent.map(j =>
-                                  i === j
-                                      ? styles.carouselDotActive.backgroundColor
-                                      : styles.carouselDotInactive.backgroundColor,
-                              ),
-                          }),
+                                            carouselIndexContent.length === 1
+                                                ? styles.carouselDotActive
+                                                      .backgroundColor
+                                                : carouselProgress.interpolate({
+                                                      inputRange:
+                                                          carouselIndexContent,
+                                                      outputRange:
+                                                          carouselIndexContent.map(
+                                                              j =>
+                                                                  i === j
+                                                                      ? styles
+                                                                            .carouselDotActive
+                                                                            .backgroundColor
+                                                                      : styles
+                                                                            .carouselDotInactive
+                                                                            .backgroundColor,
+                                                          ),
+                                                  }),
                                     },
                                 ]}
                             />
@@ -229,8 +241,7 @@ export default function AppInfoPage({
                     variant="text-md/normal"
                     color="TEXT_MUTED"
                     style={{ paddingBottom: 8 }}
-                    lineClamp={1}
-                >
+                    lineClamp={1}>
                     {inServers(app.directory_entry.guild_count)}
                 </Text>
                 {app.categories.length > 0 && (
@@ -238,8 +249,7 @@ export default function AppInfoPage({
                         variant="text-md/normal"
                         color="TEXT_MUTED"
                         style={{ paddingBottom: 8 }}
-                        lineClamp={1}
-                    >
+                        lineClamp={1}>
                         {app.categories.map(x => x.name).join(", ")}
                     </Text>
                 )}
@@ -250,7 +260,8 @@ export default function AppInfoPage({
                     <Button
                         style={{ flex: 1 / 2 }}
                         text={
-                            i18n.Messages.APP_DIRECTORY_PROFILE_SHARE_BUTTON || "Copy Link"
+                            i18n.Messages.APP_DIRECTORY_PROFILE_SHARE_BUTTON ||
+                            "Copy Link"
                         }
                         variant="secondary"
                         size="md"
@@ -260,7 +271,8 @@ export default function AppInfoPage({
                                 `https://discord.com/application-directory/${app.id}`,
                             );
                             showToast(
-                                i18n.Messages.COPIED_LINK || "Copied to clipboard.",
+                                i18n.Messages.COPIED_LINK ||
+                                    "Copied to clipboard.",
                                 getAssetIDByName("toast_copy_link"),
                             );
                         }}
@@ -268,7 +280,8 @@ export default function AppInfoPage({
                     <Button
                         style={{ flex: 1 / 2 }}
                         text={
-                            i18n.Messages.APP_DIRECTORY_PROFILE_ADD_BUTTON || "Add to Server"
+                            i18n.Messages.APP_DIRECTORY_PROFILE_ADD_BUTTON ||
+                            "Add to Server"
                         }
                         variant="primary"
                         size="md"
@@ -277,15 +290,15 @@ export default function AppInfoPage({
                             app.custom_install_url
                                 ? url.openURL(app.custom_install_url)
                                 : openOauth2Modal(
-                                    app.id,
-                                    Object.assign(
-                                        app.install_params ?? {},
-                                        guildId && {
-                                            guild_id: guildId,
-                                            disable_guild_select: true,
-                                        },
-                                    ),
-                                )
+                                      app.id,
+                                      Object.assign(
+                                          app.install_params ?? {},
+                                          guildId && {
+                                              guild_id: guildId,
+                                              disable_guild_select: true,
+                                          },
+                                      ),
+                                  )
                         }
                     />
                 </RN.View>
@@ -302,8 +315,7 @@ export default function AppInfoPage({
                             color="TEXT_NORMAL"
                             style={{
                                 marginBottom: i !== a.length - 1 ? 24 : 0,
-                            }}
-                        >
+                            }}>
                             {parse(content.join("\n"))}
                         </Text>
                     </>
@@ -313,8 +325,9 @@ export default function AppInfoPage({
                 <RN.View style={styles.group}>
                     <TableRowGroupTitle
                         title={
-                            i18n.Messages.APP_DIRECTORY_PROFILE_COMMANDS_HEADING ||
-              "Popular Slash Commands"
+                            i18n.Messages
+                                .APP_DIRECTORY_PROFILE_COMMANDS_HEADING ||
+                            "Popular Slash Commands"
                         }
                     />
                     {detailedInfo.directory_entry.popular_application_commands.map(
@@ -322,21 +335,21 @@ export default function AppInfoPage({
                             <RN.View
                                 style={[
                                     styles.popularCommand,
-                                    { marginBottom: i !== a.length - 1 ? 8 : 0 },
-                                ]}
-                            >
+                                    {
+                                        marginBottom:
+                                            i !== a.length - 1 ? 8 : 0,
+                                    },
+                                ]}>
                                 <Text
                                     variant="text-md/semibold"
                                     color="TEXT_NORMAL"
-                                    style={styles.popularCommandCmd}
-                                >
+                                    style={styles.popularCommandCmd}>
                                     /{x.name}
                                 </Text>
                                 <Text
                                     variant="text-md/normal"
                                     color="HEADER_SECONDARY"
-                                    lineClamp={1}
-                                >
+                                    lineClamp={1}>
                                     {x.description}
                                 </Text>
                             </RN.View>
@@ -347,37 +360,56 @@ export default function AppInfoPage({
             <RN.View style={styles.sillyGroup}>
                 <RN.View style={{ paddingHorizontal: 16 }}>
                     <TableRowGroupTitle
-                        title={i18n.Messages.APP_DIRECTORY_PROFILE_LINKS_HEADING || "Links"}
+                        title={
+                            i18n.Messages.APP_DIRECTORY_PROFILE_LINKS_HEADING ||
+                            "Links"
+                        }
                     />
                 </RN.View>
                 <TableRowGroup>
-          {...app.directory_entry.external_urls.map(x => (
-              <TableRow
-                  label={x.name}
-                  icon={<TableRowIcon source={getAssetIDByName("ic_link")} />}
-                  onPress={() => url.openURL(x.url)}
-              />
-          )) ?? []}
-          {app.terms_of_service_url && (
-              <TableRow
-                  label={
-                      i18n.Messages.APP_DIRECTORY_PROFILE_TERMS_LINK ||
-                "Terms of Service"
-                  }
-                  icon={<TableRowIcon source={getAssetIDByName("ic_link")} />}
-                  onPress={() => url.openURL(app.terms_of_service_url)}
-              />
-          )}
-          {app.privacy_policy_url && (
-              <TableRow
-                  label={
-                      i18n.Messages.APP_DIRECTORY_PROFILE_PRIVACY_LINK ||
-                "Privacy Policy"
-                  }
-                  icon={<TableRowIcon source={getAssetIDByName("ic_lock")} />}
-                  onPress={() => url.openURL(app.privacy_policy_url)}
-              />
-          )}
+                    {...app.directory_entry.external_urls.map(x => (
+                        <TableRow
+                            label={x.name}
+                            icon={
+                                <TableRowIcon
+                                    source={getAssetIDByName("ic_link")}
+                                />
+                            }
+                            onPress={() => url.openURL(x.url)}
+                        />
+                    )) ?? []}
+                    {app.terms_of_service_url && (
+                        <TableRow
+                            label={
+                                i18n.Messages
+                                    .APP_DIRECTORY_PROFILE_TERMS_LINK ||
+                                "Terms of Service"
+                            }
+                            icon={
+                                <TableRowIcon
+                                    source={getAssetIDByName("ic_link")}
+                                />
+                            }
+                            onPress={() =>
+                                url.openURL(app.terms_of_service_url)
+                            }
+                        />
+                    )}
+                    {app.privacy_policy_url && (
+                        <TableRow
+                            label={
+                                i18n.Messages
+                                    .APP_DIRECTORY_PROFILE_PRIVACY_LINK ||
+                                "Privacy Policy"
+                            }
+                            icon={
+                                <TableRowIcon
+                                    source={getAssetIDByName("ic_lock")}
+                                />
+                            }
+                            onPress={() => url.openURL(app.privacy_policy_url)}
+                        />
+                    )}
                 </TableRowGroup>
             </RN.View>
             <RN.View style={{ height: 16 }} />

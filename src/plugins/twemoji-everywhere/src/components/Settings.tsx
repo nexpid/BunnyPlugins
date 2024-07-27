@@ -32,7 +32,9 @@ function Pack({
     return (
         <FormRow
             label={lang.format(pack.title, {})}
-            leading={<CustomTwemoji emoji={em} src={pack.format(em)} size={20} />}
+            leading={
+                <CustomTwemoji emoji={em} src={pack.format(em)} size={20} />
+            }
             trailing={<FormRow.Radio selected={vstorage.emojipack === id} />}
             onPress={() => (vstorage.emojipack = id)}
         />
@@ -53,15 +55,15 @@ export default () => {
                 <RN.RefreshControl
                     refreshing={false}
                     onRefresh={() => {
-                        setEmoji(emojis[emojis.indexOf(emoji) + 1] ?? emojis[0]);
+                        setEmoji(
+                            emojis[emojis.indexOf(emoji) + 1] ?? emojis[0],
+                        );
                     }}
                 />
-            }
-        >
+            }>
             <BetterTableRowGroup
                 title={lang.format("settings.emojipacks.title", {})}
-                icon={getAssetIDByName("SettingsIcon")}
-            >
+                icon={getAssetIDByName("SettingsIcon")}>
                 {Object.entries(normalPacks).map(([id, pack]) => (
                     <Pack emoji={emoji} pack={pack} id={id as any} />
                 ))}

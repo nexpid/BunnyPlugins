@@ -60,8 +60,7 @@ export default function SettingsActionSheet({
                 <Text
                     variant="text-lg/semibold"
                     color="TEXT_DANGER"
-                    style={styles.wompwomp}
-                >
+                    style={styles.wompwomp}>
                     Manifest failed to load.
                 </Text>
             </ActionSheet>
@@ -77,19 +76,21 @@ export default function SettingsActionSheet({
             {manifest.games.map(({ title, id }) => (
                 <FormRadioRow
                     label={title}
-                    onPress={() =>
-                    { setChanges({
-                        ...changes,
-                        game: id,
-                    }); }
-                    }
+                    onPress={() => {
+                        setChanges({
+                            ...changes,
+                            game: id,
+                        });
+                    }}
                     selected={changes.game === id}
                     style={{ marginHorizontal: 12 }}
                 />
             ))}
             <FormRow
                 label="Suggest new game"
-                leading={<FormRow.Icon source={getAssetIDByName("ic_add_24px")} />}
+                leading={
+                    <FormRow.Icon source={getAssetIDByName("ic_add_24px")} />
+                }
                 style={{ marginHorizontal: 12 }}
                 onPress={() => url.openURL(newGameSuggestionURL())}
             />
@@ -101,21 +102,24 @@ export default function SettingsActionSheet({
                         source={getAssetIDByName("ic_trash_24px")}
                     />
                 }
-                onPress={() =>
-                { showConfirmationAlert({
-                    title: "Delete DOOM files?",
-                    content: "Are you sure you want to delete DOOM files?",
-                    confirmText: "Delete",
-                    confirmColor: "RED" as ButtonColors,
-                    cancelText: "Cancel",
-                    onConfirm: async () => {
-                        hideActionSheet();
-                        kaboom();
-                        await purgeFiles();
-                        showToast("Deleted files", getAssetIDByName("Check"));
-                    },
-                }); }
-                }
+                onPress={() => {
+                    showConfirmationAlert({
+                        title: "Delete DOOM files?",
+                        content: "Are you sure you want to delete DOOM files?",
+                        confirmText: "Delete",
+                        confirmColor: "RED" as ButtonColors,
+                        cancelText: "Cancel",
+                        onConfirm: async () => {
+                            hideActionSheet();
+                            kaboom();
+                            await purgeFiles();
+                            showToast(
+                                "Deleted files",
+                                getAssetIDByName("Check"),
+                            );
+                        },
+                    });
+                }}
             />
             <Button
                 variant="primary"

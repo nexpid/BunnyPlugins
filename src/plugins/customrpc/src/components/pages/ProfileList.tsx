@@ -9,7 +9,10 @@ import { getAssetIDByName } from "@vendetta/ui/assets";
 import { Forms, Search } from "@vendetta/ui/components";
 import { showToast } from "@vendetta/ui/toasts";
 
-import { hideActionSheet, showSimpleActionSheet } from "$/components/ActionSheet";
+import {
+    hideActionSheet,
+    showSimpleActionSheet,
+} from "$/components/ActionSheet";
 import SuperAwesomeIcon from "$/components/SuperAwesomeIcon";
 
 import { vstorage } from "../..";
@@ -50,7 +53,8 @@ export const ProfileList = () => {
                     showToast(
                         "Profile name cannot be empty",
                         getAssetIDByName("Small"),
-                    ); return;
+                    );
+                    return;
                 }
                 txt = txt.trim();
 
@@ -58,7 +62,8 @@ export const ProfileList = () => {
                     showToast(
                         "A profile with that name already exists",
                         getAssetIDByName("Small"),
-                    ); return;
+                    );
+                    return;
                 }
 
                 vstorage.profiles[txt] = JSON.parse(
@@ -76,11 +81,15 @@ export const ProfileList = () => {
         try {
             activity = JSON.parse(await clipboard.getString());
         } catch {
-            showToast("Failed to parse JSON"); return;
+            showToast("Failed to parse JSON");
+            return;
         }
 
         const data = SettingsActivity.validate(activity);
-        if (data.error) { showToast("Invalid profile data", getAssetIDByName("Small")); return; }
+        if (data.error) {
+            showToast("Invalid profile data", getAssetIDByName("Small"));
+            return;
+        }
 
         let counter = 0,
             name = "Imported Profile";
@@ -102,7 +111,9 @@ export const ProfileList = () => {
             ListHeaderComponent={
                 <Search
                     style={{ marginBottom: 10 }}
-                    onChangeText={(txt: string) => { setSearch(txt.toLowerCase()); }}
+                    onChangeText={(txt: string) => {
+                        setSearch(txt.toLowerCase());
+                    }}
                 />
             }
             style={{ paddingHorizontal: 10, paddingTop: 10 }}
@@ -118,7 +129,9 @@ export const ProfileList = () => {
                             key: "CardOverflow",
                             header: {
                                 title: item,
-                                onClose: () => { hideActionSheet(); },
+                                onClose: () => {
+                                    hideActionSheet();
+                                },
                             },
                             options: [
                                 {
@@ -126,9 +139,16 @@ export const ProfileList = () => {
                                     icon: getAssetIDByName("copy"),
                                     onPress: () => {
                                         clipboard.setString(
-                                            JSON.stringify(vstorage.profiles[item], undefined, 3),
+                                            JSON.stringify(
+                                                vstorage.profiles[item],
+                                                undefined,
+                                                3,
+                                            ),
                                         );
-                                        showToast("Copied", getAssetIDByName("toast_copy_link"));
+                                        showToast(
+                                            "Copied",
+                                            getAssetIDByName("toast_copy_link"),
+                                        );
                                     },
                                 },
                                 {
@@ -137,33 +157,49 @@ export const ProfileList = () => {
                                     onPress: () => {
                                         showInputAlert({
                                             title: "Enter new profile name",
-                                            placeholder: "Super Awesome RPC 2.0",
+                                            placeholder:
+                                                "Super Awesome RPC 2.0",
                                             initialValue: item,
                                             confirmText: "Rename",
-                                            confirmColor: "brand" as ButtonColors,
+                                            confirmColor:
+                                                "brand" as ButtonColors,
                                             onConfirm: function (txt) {
                                                 if (txt.match(/^\s*$/)) {
                                                     showToast(
                                                         "Profile name cannot be empty",
-                                                        getAssetIDByName("Small"),
-                                                    ); return;
+                                                        getAssetIDByName(
+                                                            "Small",
+                                                        ),
+                                                    );
+                                                    return;
                                                 }
                                                 txt = txt.trim();
 
                                                 if (vstorage.profiles[txt]) {
                                                     showToast(
                                                         "A profile with that name already exists",
-                                                        getAssetIDByName("Small"),
-                                                    ); return;
+                                                        getAssetIDByName(
+                                                            "Small",
+                                                        ),
+                                                    );
+                                                    return;
                                                 }
 
-                                                vstorage.profiles[txt] = vstorage.profiles[item];
-                                                if (vstorage.activity.profile === item)
-                                                    vstorage.activity.profile = txt;
+                                                vstorage.profiles[txt] =
+                                                    vstorage.profiles[item];
+                                                if (
+                                                    vstorage.activity
+                                                        .profile === item
+                                                )
+                                                    vstorage.activity.profile =
+                                                        txt;
                                                 delete vstorage.profiles[item];
                                                 forceUpdate();
 
-                                                showToast("Renamed profile", getAssetIDByName("Check"));
+                                                showToast(
+                                                    "Renamed profile",
+                                                    getAssetIDByName("Check"),
+                                                );
                                             },
                                             cancelText: "Cancel",
                                         });
@@ -181,8 +217,12 @@ export const ProfileList = () => {
                                             confirmText: "Delete",
                                             confirmColor: "red" as ButtonColors,
                                             onConfirm: function () {
-                                                if (vstorage.activity.profile === item) {
-                                                    delete vstorage.activity.profile;
+                                                if (
+                                                    vstorage.activity
+                                                        .profile === item
+                                                ) {
+                                                    delete vstorage.activity
+                                                        .profile;
                                                     vstorage.activity.editing =
                                                         makeEmptySettingsActivity();
                                                 }
@@ -190,7 +230,10 @@ export const ProfileList = () => {
                                                 delete vstorage.profiles[item];
                                                 forceUpdate();
                                                 forceUpdateSettings();
-                                                showToast("Deleted", getAssetIDByName("Check"));
+                                                showToast(
+                                                    "Deleted",
+                                                    getAssetIDByName("Check"),
+                                                );
                                             },
                                             cancelText: "Cancel",
                                         });
@@ -198,15 +241,15 @@ export const ProfileList = () => {
                                 },
                             ],
                         });
-                    }
-                    }
+                    }}
                     onPress={() => {
                         if (wentBack) return;
                         if (vstorage.activity.profile === item) {
                             showToast(
                                 `${item} is already loaded`,
                                 getAssetIDByName("Small"),
-                            ); return;
+                            );
+                            return;
                         }
                         activitySavedPrompt({
                             role: "discard your changes",
@@ -224,9 +267,12 @@ export const ProfileList = () => {
                             },
                             secondaryButton: "Save profile",
                             secondaryRun: () => {
-                                vstorage.profiles[vstorage.activity.profile] = JSON.parse(
-                                    JSON.stringify(vstorage.activity.editing),
-                                );
+                                vstorage.profiles[vstorage.activity.profile] =
+                                    JSON.parse(
+                                        JSON.stringify(
+                                            vstorage.activity.editing,
+                                        ),
+                                    );
                             },
                         });
                     }}

@@ -71,7 +71,9 @@ export default {
     onUnload: () => {
         enabled = false;
         lang.unload();
-        patches.forEach(x => { x(); });
+        patches.forEach(x => {
+            x();
+        });
     },
     settings,
 };

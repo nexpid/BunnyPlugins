@@ -36,7 +36,10 @@ export function openOauth2Modal() {
                         vstorage.auth[UserStore.getCurrentUser().id] = token;
                         fillCache();
 
-                        showToast("Successfully authenticated", getAssetIDByName("Check"));
+                        showToast(
+                            "Successfully authenticated",
+                            getAssetIDByName("Check"),
+                        );
                     } catch (e: any) {
                         showToast(String(e), getAssetIDByName("Small"));
                     }

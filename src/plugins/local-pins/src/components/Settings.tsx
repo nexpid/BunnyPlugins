@@ -29,21 +29,24 @@ export default () => {
         <RN.ScrollView>
             <BetterTableRowGroup
                 title="Settings"
-                icon={getAssetIDByName("ic_cog_24px")}
-            >
+                icon={getAssetIDByName("ic_cog_24px")}>
                 <FormRow
                     label="Data size"
                     subLabel={
                         vstorage.pinned
                             ? `${
-                                Math.floor(
-                                    (JSON.stringify(vstorage.pinned).length / 1000) * 100,
-                                ) / 100
-                            } kilobytes`
+                                  Math.floor(
+                                      (JSON.stringify(vstorage.pinned).length /
+                                          1000) *
+                                          100,
+                                  ) / 100
+                              } kilobytes`
                             : "N/A"
                     }
                     leading={
-                        <FormRow.Icon source={getAssetIDByName("ic_message_edit")} />
+                        <FormRow.Icon
+                            source={getAssetIDByName("ic_message_edit")}
+                        />
                     }
                 />
                 <FormRow
@@ -55,18 +58,19 @@ export default () => {
                         />
                     }
                     trailing={<FormRow.Arrow />}
-                    onPress={() =>
-                    { showConfirmationAlert({
-                        title: "Clear data",
-                        content: "Are you sure you want to clear all local pin data?",
-                        confirmText: "Clear",
-                        confirmColor: "red" as ButtonColors,
-                        onConfirm: () => {
-                            delete vstorage.pinned;
-                        },
-                        isDismissable: true,
-                    }); }
-                    }
+                    onPress={() => {
+                        showConfirmationAlert({
+                            title: "Clear data",
+                            content:
+                                "Are you sure you want to clear all local pin data?",
+                            confirmText: "Clear",
+                            confirmColor: "red" as ButtonColors,
+                            onConfirm: () => {
+                                delete vstorage.pinned;
+                            },
+                            isDismissable: true,
+                        });
+                    }}
                 />
             </BetterTableRowGroup>
         </RN.ScrollView>

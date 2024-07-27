@@ -8,7 +8,10 @@ import {
 import { semanticColors } from "@vendetta/ui";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 
-import { hideActionSheet, showSimpleActionSheet } from "$/components/ActionSheet";
+import {
+    hideActionSheet,
+    showSimpleActionSheet,
+} from "$/components/ActionSheet";
 import Modal from "$/components/Modal";
 import Text from "$/components/Text";
 import { popModal } from "$/types";
@@ -63,7 +66,8 @@ const Message = ({
             onPress={() => {
                 popModal();
                 url.openDeeplink(
-                    `https://discord.com/channels/${channel?.guild_id ?? "@me"
+                    `https://discord.com/channels/${
+                        channel?.guild_id ?? "@me"
                     }/${channelId}/${message.id}`,
                 );
             }}
@@ -85,11 +89,10 @@ const Message = ({
                         },
                     ],
                 });
-            }
-            }
-            pointerEvents="box-only"
-        >
-            <RN.View style={{ flexDirection: "row", alignItems: "center", gap: 4 }}>
+            }}
+            pointerEvents="box-only">
+            <RN.View
+                style={{ flexDirection: "row", alignItems: "center", gap: 4 }}>
                 <RN.Image
                     style={styles.icon}
                     source={getAssetIDByName("ic_chat_bubble_16px")}
@@ -135,12 +138,16 @@ export default function LocalPinnedModal() {
                             {
                                 dark: getAssetIDByName("img_pins_empty_dark"),
                                 light: getAssetIDByName("img_pins_empty_light"),
-                            }[ThemeStore.theme] ?? getAssetIDByName("img_pins_empty_darker")
+                            }[ThemeStore.theme] ??
+                            getAssetIDByName("img_pins_empty_darker")
                         }
                         resizeMode="contain"
                         style={{ marginLeft: 35 }}
                     />
-                    <Text variant="text-md/medium" color="TEXT_MUTED" align="center">
+                    <Text
+                        variant="text-md/medium"
+                        color="TEXT_MUTED"
+                        align="center">
                         {i18n.Messages.NO_PINS_IN_CHANNEL ??
                             "This channel doesn't have any\npinned messages... yet."}
                     </Text>
@@ -152,10 +159,19 @@ export default function LocalPinnedModal() {
         <Modal mkey="local-pinned" title="Local Pinned">
             {!data ? (
                 <RN.View
-                    style={{ alignItems: "center", justifyContent: "center", flex: 1 }}
-                >
-                    <RN.ActivityIndicator size="large" style={{ marginBottom: 10 }} />
-                    <Text variant="text-lg/semibold" color="TEXT_NORMAL" align="center">
+                    style={{
+                        alignItems: "center",
+                        justifyContent: "center",
+                        flex: 1,
+                    }}>
+                    <RN.ActivityIndicator
+                        size="large"
+                        style={{ marginBottom: 10 }}
+                    />
+                    <Text
+                        variant="text-lg/semibold"
+                        color="TEXT_NORMAL"
+                        align="center">
                         {Math.floor(status * 100)}%
                     </Text>
                 </RN.View>
@@ -165,7 +181,9 @@ export default function LocalPinnedModal() {
                         {data.map(x => (
                             <Message
                                 {...x}
-                                remove={() => { remove(x.message.id); }}
+                                remove={() => {
+                                    remove(x.message.id);
+                                }}
                                 key={x.message.id}
                             />
                         ))}

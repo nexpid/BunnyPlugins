@@ -54,13 +54,13 @@ export default function IconpackRow({
     const [progressCnt, setProgressCnt] = React.useState(null);
 
     React.useEffect(() => {
-        isPackInstalled(pack).then(x =>
-        { setPackStatus({
-            installed: !!x,
-            outdated: x === "outdated",
-            loading: false,
-        }); },
-        );
+        isPackInstalled(pack).then(x => {
+            setPackStatus({
+                installed: !!x,
+                outdated: x === "outdated",
+                loading: false,
+            });
+        });
     }, []);
 
     const { size } = state.iconpack.hashes[pack.id];
@@ -73,11 +73,14 @@ export default function IconpackRow({
                 installed: packStatus.installed,
                 outdated: packStatus.outdated,
                 loading: false,
-            }); return;
+            });
+            return;
         }
         if (!size || packStatus.loading) return;
 
-        const willUninstall = packStatus.outdated ? false : packStatus.installed;
+        const willUninstall = packStatus.outdated
+            ? false
+            : packStatus.installed;
         const cont = async () => {
             setPackStatus({
                 installed: willUninstall,
@@ -94,7 +97,12 @@ export default function IconpackRow({
 
             try {
                 if (willUninstall) await uninstallIconpack(pack);
-                else await installIconpack(pack, controller.signal, setProgressCnt);
+                else
+                    await installIconpack(
+                        pack,
+                        controller.signal,
+                        setProgressCnt,
+                    );
             } catch (e) {
                 cancelRef.current = null;
                 setProgressCnt(0);
@@ -105,7 +113,8 @@ export default function IconpackRow({
                     installed: willUninstall,
                     outdated: packStatus.outdated,
                     loading: false,
-                }); return;
+                });
+                return;
             }
 
             cancelRef.current = null;
@@ -128,8 +137,7 @@ export default function IconpackRow({
                         <Text
                             variant="text-md/normal"
                             color="TEXT_NORMAL"
-                            style={{ marginTop: 8 }}
-                        >
+                            style={{ marginTop: 8 }}>
                             {Lang.basicFormat(
                                 lang.format("alert.downloadpack.body", {
                                     iconpack: pack.name,
@@ -138,9 +146,14 @@ export default function IconpackRow({
                             )}
                         </Text>
                         <InlineCheckbox
-                            initialValue={vstorage.downloadIconpackModalDismissed}
+                            initialValue={
+                                vstorage.downloadIconpackModalDismissed
+                            }
                             update={v => (balls = v)}
-                            label={lang.format("alert.downloadpack.dontshowagain_toggle", {})}
+                            label={lang.format(
+                                "alert.downloadpack.dontshowagain_toggle",
+                                {},
+                            )}
                         />
                     </>
                 ),
@@ -192,28 +205,31 @@ export default function IconpackRow({
                                     packStatus && packStatus.installed
                                         ? packStatus.outdated
                                             ? "primary"
-                                            : buttonVariantPolyfill().destructive
+                                            : buttonVariantPolyfill()
+                                                  .destructive
                                         : "secondary"
                                 }
                                 disabled={
                                     !packStatus ||
-                  !size ||
-                  (packStatus.loading && !cancelRef.current)
+                                    !size ||
+                                    (packStatus.loading && !cancelRef.current)
                                 }
                                 icon={
                                     packStatus &&
-                  getAssetIDByName(
-                      packStatus.installed
-                          ? packStatus.outdated
-                              ? "GlobeEarthIcon"
-                              : "TrashIcon"
-                          : "DownloadIcon",
-                  )
+                                    getAssetIDByName(
+                                        packStatus.installed
+                                            ? packStatus.outdated
+                                                ? "GlobeEarthIcon"
+                                                : "TrashIcon"
+                                            : "DownloadIcon",
+                                    )
                                 }
                             />
                         </RN.View>
                     )}
-                    <FormRow.Radio selected={vstorage.iconpack.pack === pack.id} />
+                    <FormRow.Radio
+                        selected={vstorage.iconpack.pack === pack.id}
+                    />
                 </RN.View>
             }
         />

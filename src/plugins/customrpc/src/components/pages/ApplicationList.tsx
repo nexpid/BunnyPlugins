@@ -23,23 +23,30 @@ export const ApplicationList = () => {
 
     headerRightCallback = () =>
         !wentBack &&
-    showInputAlert({
-        title: "Custom App ID",
-        placeholder: "123",
-        confirmText: "Use",
-        confirmColor: "blue" as ButtonColors,
-        onConfirm: txt => {
-            if (txt.match(/^\s*$/))
-            { showToast("App ID cannot be empty", getAssetIDByName("Small")); return; }
-            if (Number.isNaN(Number(txt)))
-            { showToast("Invalid app ID", getAssetIDByName("Small")); return; }
+        showInputAlert({
+            title: "Custom App ID",
+            placeholder: "123",
+            confirmText: "Use",
+            confirmColor: "blue" as ButtonColors,
+            onConfirm: txt => {
+                if (txt.match(/^\s*$/)) {
+                    showToast(
+                        "App ID cannot be empty",
+                        getAssetIDByName("Small"),
+                    );
+                    return;
+                }
+                if (Number.isNaN(Number(txt))) {
+                    showToast("Invalid app ID", getAssetIDByName("Small"));
+                    return;
+                }
 
-            applicationListCallback({
-                id: txt,
-            });
-        },
-        cancelText: "Cancel",
-    });
+                applicationListCallback({
+                    id: txt,
+                });
+            },
+            cancelText: "Cancel",
+        });
 
     React.useEffect(() => {
         setSearch("");
@@ -53,7 +60,9 @@ export const ApplicationList = () => {
             ListHeaderComponent={
                 <Search
                     style={{ marginBottom: 10 }}
-                    onChangeText={(x: string) => { setSearch(x.toLowerCase()); }}
+                    onChangeText={(x: string) => {
+                        setSearch(x.toLowerCase());
+                    }}
                 />
             }
             style={{ paddingHorizontal: 10, paddingTop: 10 }}
@@ -70,16 +79,17 @@ export const ApplicationList = () => {
                             if (wentBack) return;
                             wentBack = true;
                             navigation.goBack();
-                            applicationListCallback({ id: item.id, name: item.name });
-                        }}
-                    >
+                            applicationListCallback({
+                                id: item.id,
+                                name: item.name,
+                            });
+                        }}>
                         <RN.View
                             style={{
                                 marginHorizontal: 8,
                                 marginBottom: 8,
                                 flexDirection: "row",
-                            }}
-                        >
+                            }}>
                             <RN.Image
                                 source={{
                                     uri: item.icon
@@ -92,11 +102,20 @@ export const ApplicationList = () => {
                                     aspectRatio: 1,
                                 }}
                             />
-                            <RN.View style={{ flexDirection: "column", marginLeft: 8 }}>
-                                <Text variant="text-md/semibold" color="TEXT_NORMAL">
+                            <RN.View
+                                style={{
+                                    flexDirection: "column",
+                                    marginLeft: 8,
+                                }}>
+                                <Text
+                                    variant="text-md/semibold"
+                                    color="TEXT_NORMAL">
                                     {item.name}
                                 </Text>
-                                <Text variant="text-sm/medium" color="TEXT_MUTED" lineClamp={1}>
+                                <Text
+                                    variant="text-sm/medium"
+                                    color="TEXT_MUTED"
+                                    lineClamp={1}>
                                     {item.description}
                                 </Text>
                             </RN.View>
@@ -118,7 +137,9 @@ export function showApplicationList(navigation) {
             <SuperAwesomeIcon
                 style="header"
                 icon={getAssetIDByName("ic_custom_color")}
-                onPress={() => { headerRightCallback(); }}
+                onPress={() => {
+                    headerRightCallback();
+                }}
             />
         ),
     });

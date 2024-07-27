@@ -17,8 +17,11 @@ export const useCacheStore = zustand.create<
         (set, get) => ({
             cache: {},
             isCached: link => !!get().cache[link],
-            writeCache: (link, data) =>
-            { set({ cache: { ...get().cache, [link]: JSON.stringify(data) } }); },
+            writeCache: (link, data) => {
+                set({
+                    cache: { ...get().cache, [link]: JSON.stringify(data) },
+                });
+            },
             readCache: link =>
                 get().cache[link] ? JSON.parse(get().cache[link]) : null,
         }),

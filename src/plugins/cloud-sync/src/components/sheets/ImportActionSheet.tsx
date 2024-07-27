@@ -39,11 +39,11 @@ export default function ImportActionSheet({
         ).length,
         themes: Object.keys(data.themes).filter(id => !themes[id]).length,
         fonts:
-      Object.keys(data.fonts.installed).filter(
-          id => !hasFontBySource(id, fonts),
-      ).length +
-      data.fonts.custom.filter(({ name }) => !hasFontByName(name, fonts))
-          .length,
+            Object.keys(data.fonts.installed).filter(
+                id => !hasFontBySource(id, fonts),
+            ).length +
+            data.fonts.custom.filter(({ name }) => !hasFontByName(name, fonts))
+                .length,
     };
     const total = [has.unproxiedPlugins, has.plugins, has.themes].reduce(
         (x, a) => x + a,
@@ -81,15 +81,20 @@ export default function ImportActionSheet({
                             alignItems: "center",
                             justifyContent: "center",
                             marginTop: 8,
-                        }}
-                    >
+                        }}>
                         <RN.Image
                             source={getAssetIDByName("CircleInformationIcon")}
                             style={styles.icon}
                             resizeMode="cover"
                         />
-                        <Text variant="text-md/semibold" color="TEXT_BRAND" align="center">
-                            {lang.format("sheet.import_data.already_synced", {})}
+                        <Text
+                            variant="text-md/semibold"
+                            color="TEXT_BRAND"
+                            align="center">
+                            {lang.format(
+                                "sheet.import_data.already_synced",
+                                {},
+                            )}
                         </Text>
                     </RN.View>
                 </>
@@ -101,31 +106,38 @@ export default function ImportActionSheet({
                 disabled={!has.unproxiedPlugins}
                 onPress={() =>
                     has.unproxiedPlugins &&
-          (!options.unproxiedPlugins &&
-          !defOptions &&
-          !settings.developerSettings
-              ? showConfirmationAlert({
-                  title: lang.format("alert.unproxied_plugin_warn.title", {}),
-                  content: lang.format("alert.unproxied_plugin_warn.body", {}),
-                  isDismissable: true,
-                  confirmText: lang.format(
-                      "alert.unproxied_plugin_warn.confirm",
-                      {},
-                  ),
-                  onConfirm: () =>
-                  { ActionSheet.open(ImportActionSheet, {
-                      data,
-                      navigation,
-                      defOptions: {
-                          ...options,
-                          unproxiedPlugins: true,
-                      },
-                  }); },
-              })
-              : setOptions({
-                  ...options,
-                  unproxiedPlugins: !options.unproxiedPlugins,
-              }))
+                    (!options.unproxiedPlugins &&
+                    !defOptions &&
+                    !settings.developerSettings
+                        ? showConfirmationAlert({
+                              title: lang.format(
+                                  "alert.unproxied_plugin_warn.title",
+                                  {},
+                              ),
+                              content: lang.format(
+                                  "alert.unproxied_plugin_warn.body",
+                                  {},
+                              ),
+                              isDismissable: true,
+                              confirmText: lang.format(
+                                  "alert.unproxied_plugin_warn.confirm",
+                                  {},
+                              ),
+                              onConfirm: () => {
+                                  ActionSheet.open(ImportActionSheet, {
+                                      data,
+                                      navigation,
+                                      defOptions: {
+                                          ...options,
+                                          unproxiedPlugins: true,
+                                      },
+                                  });
+                              },
+                          })
+                        : setOptions({
+                              ...options,
+                              unproxiedPlugins: !options.unproxiedPlugins,
+                          }))
                 }
                 selected={options.unproxiedPlugins}
             />
@@ -136,10 +148,10 @@ export default function ImportActionSheet({
                 disabled={!has.plugins}
                 onPress={() =>
                     has.plugins &&
-          setOptions({
-              ...options,
-              plugins: !options.plugins,
-          })
+                    setOptions({
+                        ...options,
+                        plugins: !options.plugins,
+                    })
                 }
                 selected={options.plugins}
             />
@@ -150,10 +162,10 @@ export default function ImportActionSheet({
                 disabled={!has.themes}
                 onPress={() =>
                     has.themes &&
-          setOptions({
-              ...options,
-              themes: !options.themes,
-          })
+                    setOptions({
+                        ...options,
+                        themes: !options.themes,
+                    })
                 }
                 selected={options.themes}
             />
@@ -164,10 +176,10 @@ export default function ImportActionSheet({
                 disabled={!has.fonts}
                 onPress={() =>
                     has.fonts &&
-          setOptions({
-              ...options,
-              fonts: !options.fonts,
-          })
+                    setOptions({
+                        ...options,
+                        fonts: !options.fonts,
+                    })
                 }
                 selected={options.fonts}
             />
@@ -188,9 +200,9 @@ export default function ImportActionSheet({
                 }}
                 disabled={
                     !options.unproxiedPlugins &&
-          !options.plugins &&
-          !options.themes &&
-          !options.fonts
+                    !options.plugins &&
+                    !options.themes &&
+                    !options.fonts
                 }
             />
         </ActionSheet>

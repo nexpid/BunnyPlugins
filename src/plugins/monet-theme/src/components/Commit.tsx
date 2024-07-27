@@ -105,13 +105,15 @@ export default function Commit({
         <RN.Pressable
             style={styles.card}
             android_ripple={styles.androidRipple}
-            {...props}
-        >
+            {...props}>
             <Stack spacing={6}>
                 <RN.View style={styles.title}>
                     <RN.Image
                         style={styles.avatar}
-                        source={{ uri: commit.committer.avatar_url, cache: "force-cache" }}
+                        source={{
+                            uri: commit.committer.avatar_url,
+                            cache: "force-cache",
+                        }}
                         resizeMode="cover"
                     />
                     <Text variant="text-sm/medium" color="TEXT_NORMAL">
@@ -120,14 +122,16 @@ export default function Commit({
                     <Text
                         variant="text-sm/medium"
                         color="TEXT_MUTED"
-                        style={{ marginLeft: "auto" }}
-                    >
+                        style={{ marginLeft: "auto" }}>
                         {new Date(commit.commit.author.date).toLocaleDateString(
                             i18n.getLocale(),
                         )}
                     </Text>
                 </RN.View>
-                <Text variant="text-md/normal" color="TEXT_NORMAL" lineClamp={1}>
+                <Text
+                    variant="text-md/normal"
+                    color="TEXT_NORMAL"
+                    lineClamp={1}>
                     {commit.commit.message}
                 </Text>
             </Stack>

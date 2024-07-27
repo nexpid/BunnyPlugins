@@ -3,8 +3,8 @@ import { ReactNative as RN } from "@vendetta/metro/common";
 import { type ImageSourcePropType } from "react-native";
 
 const _ActionSheet =
-  findByProps("ActionSheet").ActionSheet ??
-  find(x => x.render?.name === "ActionSheet"); // thank you to @pylixonly for fixing this
+    findByProps("ActionSheet").ActionSheet ??
+    find(x => x.render?.name === "ActionSheet"); // thank you to @pylixonly for fixing this
 
 const { ActionSheetTitleHeader, ActionSheetCloseButton } = findByProps(
     "ActionSheetTitleHeader",
@@ -52,7 +52,12 @@ export const ActionSheet = (({
                 title={title}
                 trailing={
                     <ActionSheetCloseButton
-                        onPress={onClose ?? (() => { hideActionSheet(); })}
+                        onPress={
+                            onClose ??
+                            (() => {
+                                hideActionSheet();
+                            })
+                        }
                     />
                 }
             />
@@ -68,11 +73,11 @@ export const ActionSheet = (({
 };
 ActionSheet.open = (sheet, props) => {
     openLazy(
-        new Promise(res =>
-        { res({
-            default: sheet,
-        }); },
-        ) as any,
+        new Promise(res => {
+            res({
+                default: sheet,
+            });
+        }) as any,
         "ActionSheet",
         props,
     );

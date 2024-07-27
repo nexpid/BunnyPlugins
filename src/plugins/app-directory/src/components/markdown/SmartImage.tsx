@@ -10,7 +10,9 @@ export default function ({ url }: { alt?: string; url: string }) {
         () =>
             RN.Image.getSize(
                 url,
-                (width, height) => { setDims([width, height]); },
+                (width, height) => {
+                    setDims([width, height]);
+                },
                 err => {
                     showToast(`${err}`, getAssetIDByName("Small"));
                     console.log(err);
@@ -31,6 +33,10 @@ export default function ({ url }: { alt?: string; url: string }) {
     });
 
     return (
-        <RN.Image style={styles.main} source={{ uri: url }} resizeMode="contain" />
+        <RN.Image
+            style={styles.main}
+            source={{ uri: url }}
+            resizeMode="contain"
+        />
     );
 }

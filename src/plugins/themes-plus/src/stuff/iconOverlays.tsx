@@ -42,8 +42,8 @@ export function getIconOverlay(
     icon: number,
     style?: any,
 ):
-  | React.PropsWithChildren<{ style?: Record<string, any>; replace?: string }>
-  | undefined {
+    | React.PropsWithChildren<{ style?: Record<string, any>; replace?: string }>
+    | undefined {
     const ic = getAssetByID(icon).name;
     if (!ic) return;
 

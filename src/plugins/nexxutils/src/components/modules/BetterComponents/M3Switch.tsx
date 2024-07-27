@@ -105,7 +105,9 @@ export default function ({
 
     const [isPressing, setPressing] = React.useState(false);
 
-    const ballPosVal = React.useRef(new RN.Animated.Value(value ? 1 : 0)).current;
+    const ballPosVal = React.useRef(
+        new RN.Animated.Value(value ? 1 : 0),
+    ).current;
 
     const pressScales = {
         inactive: 16 / 24,
@@ -136,7 +138,9 @@ export default function ({
         }).start();
         updatePressVal();
     }, [value]);
-    React.useEffect(() => { updatePressVal(); }, [isPressing]);
+    React.useEffect(() => {
+        updatePressVal();
+    }, [isPressing]);
 
     return (
         <AnimatedPressable
@@ -147,25 +151,32 @@ export default function ({
                         inputRange: [0, 1],
                         outputRange: disabled
                             ? [
-                                styles.disabled.containerInactiveDisabled.backgroundColor,
-                                styles.disabled.containerActiveDisabled.backgroundColor,
-                            ]
+                                  styles.disabled.containerInactiveDisabled
+                                      .backgroundColor,
+                                  styles.disabled.containerActiveDisabled
+                                      .backgroundColor,
+                              ]
                             : [
-                                styles.activity.containerInactive.backgroundColor,
-                                styles.activity.containerActive.backgroundColor,
-                            ],
+                                  styles.activity.containerInactive
+                                      .backgroundColor,
+                                  styles.activity.containerActive
+                                      .backgroundColor,
+                              ],
                     }),
                     borderColor: ballPosVal.interpolate({
                         inputRange: [0, 1],
                         outputRange: disabled
                             ? [
-                                styles.disabled.containerInactiveDisabled.borderColor,
-                                styles.disabled.containerActiveDisabled.backgroundColor,
-                            ]
+                                  styles.disabled.containerInactiveDisabled
+                                      .borderColor,
+                                  styles.disabled.containerActiveDisabled
+                                      .backgroundColor,
+                              ]
                             : [
-                                styles.activity.containerInactive.borderColor,
-                                styles.activity.containerActive.backgroundColor,
-                            ],
+                                  styles.activity.containerInactive.borderColor,
+                                  styles.activity.containerActive
+                                      .backgroundColor,
+                              ],
                     }),
                 },
                 RN.StyleSheet.flatten(style) ?? {},
@@ -181,8 +192,7 @@ export default function ({
             }}
             accessible={!disabled}
             collapsable={false}
-            disabled={false}
-        >
+            disabled={false}>
             <RN.Animated.View
                 style={[
                     styles.all.ballBox,
@@ -191,13 +201,16 @@ export default function ({
                             {
                                 translateX: ballPosVal.interpolate({
                                     inputRange: [0, 1],
-                                    outputRange: [0, containerSize.width - containerSize.height],
+                                    outputRange: [
+                                        0,
+                                        containerSize.width -
+                                            containerSize.height,
+                                    ],
                                 }),
                             },
                         ],
                     },
-                ]}
-            >
+                ]}>
                 <RN.Animated.View
                     style={[
                         styles.all.ball,
@@ -206,17 +219,23 @@ export default function ({
                                 inputRange: [0, 1],
                                 outputRange: disabled
                                     ? [
-                                        styles.disabled.ballInactiveDisabled.backgroundColor,
-                                        styles.disabled.ballActiveDisabled.backgroundColor,
-                                    ]
+                                          styles.disabled.ballInactiveDisabled
+                                              .backgroundColor,
+                                          styles.disabled.ballActiveDisabled
+                                              .backgroundColor,
+                                      ]
                                     : [
-                                        styles.activity.ballInactive.backgroundColor,
-                                        styles.activity.ballActive.backgroundColor,
-                                    ],
+                                          styles.activity.ballInactive
+                                              .backgroundColor,
+                                          styles.activity.ballActive
+                                              .backgroundColor,
+                                      ],
                             }),
                             transform: [
                                 {
-                                    scale: isPressing ? pressScales.pressed : pressVal,
+                                    scale: isPressing
+                                        ? pressScales.pressed
+                                        : pressVal,
                                 },
                             ],
                         },

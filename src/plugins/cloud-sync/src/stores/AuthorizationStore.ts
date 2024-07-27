@@ -23,20 +23,29 @@ export const useAuthorizationStore = zustand.create<
         (set, get) => ({
             token: null,
             tokens: {},
-            init: () =>
-            { set({ token: get().tokens[UserStore.getCurrentUser()?.id] ?? null }); },
-            setToken: (token: string | null) =>
-            { set({
-                token,
-                tokens: { ...get().tokens, [UserStore.getCurrentUser()?.id]: token },
-            }); },
+            init: () => {
+                set({
+                    token: get().tokens[UserStore.getCurrentUser()?.id] ?? null,
+                });
+            },
+            setToken: (token: string | null) => {
+                set({
+                    token,
+                    tokens: {
+                        ...get().tokens,
+                        [UserStore.getCurrentUser()?.id]: token,
+                    },
+                });
+            },
             isAuthorized: () => !!get().token,
         }),
         {
             name: "cloudsync-auth",
             storage: createJSONStorage(() => RNMMKVManager),
             partialize: state => ({ tokens: state.tokens }),
-            onRehydrateStorage: () => state => { state.init(); },
+            onRehydrateStorage: () => state => {
+                state.init();
+            },
         },
     ),
 );

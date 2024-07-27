@@ -24,21 +24,27 @@ export default function IgnoredPluginsPage() {
             title: lang.format("page.ignored_plugins.title", {}),
             headerRight: () => (
                 <IconButton
-                    onPress={() =>
-                    { showConfirmationAlert({
-                        title: lang.format("alert.clear_ignored_plugins.title", {}),
-                        content: lang.format("alert.clear_ignored_plugins.body", {}),
-                        confirmText: lang.format(
-                            "alert.clear_ignored_plugins.confirm",
-                            {},
-                        ),
-                        confirmColor: "red" as ButtonColors,
-                        onConfirm: () => {
-                            vstorage.config.ignoredPlugins = [];
-                            forceUpdate();
-                        },
-                    }); }
-                    }
+                    onPress={() => {
+                        showConfirmationAlert({
+                            title: lang.format(
+                                "alert.clear_ignored_plugins.title",
+                                {},
+                            ),
+                            content: lang.format(
+                                "alert.clear_ignored_plugins.body",
+                                {},
+                            ),
+                            confirmText: lang.format(
+                                "alert.clear_ignored_plugins.confirm",
+                                {},
+                            ),
+                            confirmColor: "red" as ButtonColors,
+                            onConfirm: () => {
+                                vstorage.config.ignoredPlugins = [];
+                                forceUpdate();
+                            },
+                        });
+                    }}
                     disabled={vstorage.config.ignoredPlugins.length === 0}
                     icon={getAssetIDByName("TrashIcon")}
                     size="sm"
@@ -59,7 +65,9 @@ export default function IgnoredPluginsPage() {
             ListHeaderComponent={
                 <Search
                     style={{ marginBottom: 10 }}
-                    onChangeText={x => { setSearch(x.toLowerCase()); }}
+                    onChangeText={x => {
+                        setSearch(x.toLowerCase());
+                    }}
                 />
             }
             style={{ paddingHorizontal: 10, paddingTop: 10 }}
@@ -73,7 +81,9 @@ export default function IgnoredPluginsPage() {
                         label={item.manifest.name}
                         leading={
                             <FormRow.Icon
-                                source={getAssetIDByName(item.manifest.vendetta.icon)}
+                                source={getAssetIDByName(
+                                    item.manifest.vendetta.icon,
+                                )}
                             />
                         }
                         onPress={() => {

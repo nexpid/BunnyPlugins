@@ -3,11 +3,11 @@ import { i18n } from "@vendetta/metro/common";
 export function inServers(x: number) {
     return i18n.Messages.APP_DIRECTORY_PROFILE_EMBED_GUILD_COUNT.format({
         guildCount:
-      x < 1_000
-          ? x.toString()
-          : x < 1_000_000
-              ? `${Math.round(x / 1_00) / 10}K`
-              : `${Math.round(x / 1_00_000) / 10}M`,
+            x < 1_000
+                ? x.toString()
+                : x < 1_000_000
+                  ? `${Math.round(x / 1_00) / 10}K`
+                  : `${Math.round(x / 1_00_000) / 10}M`,
     });
 }
 
@@ -36,7 +36,8 @@ export const parseDesc = (
     } else {
         parsed.push({
             title:
-        i18n.Messages.APP_DIRECTORY_PROFILE_DESCRIPTION_HEADING || "Overview",
+                i18n.Messages.APP_DIRECTORY_PROFILE_DESCRIPTION_HEADING ||
+                "Overview",
             content: l.length ? l : [short],
         });
     }

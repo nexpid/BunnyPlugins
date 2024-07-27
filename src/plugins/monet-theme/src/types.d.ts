@@ -28,10 +28,10 @@ export interface PatchThing<value> {
     both: Record<string, value>;
 }
 export type PatchThingSingle<value> =
-  | {
-      dark: value;
-      light: value;
-  }
-  | {
-      both: value;
-  };
+    | {
+          dark: value;
+          light: value;
+      }
+    | {
+          both: value;
+      };

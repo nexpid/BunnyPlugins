@@ -14,7 +14,10 @@ import { Forms } from "@vendetta/ui/components";
 import { showToast } from "@vendetta/ui/toasts";
 import { safeFetch } from "@vendetta/utils";
 
-import { hideActionSheet, showSimpleActionSheet } from "$/components/ActionSheet";
+import {
+    hideActionSheet,
+    showSimpleActionSheet,
+} from "$/components/ActionSheet";
 import {
     BetterTableRowGroup,
     BetterTableRowTitle,
@@ -63,7 +66,9 @@ export default () => {
     const [commits, setCommits] = React.useState<CommitObj[] | undefined>(
         undefined,
     );
-    const [patches, setPatches] = React.useState<Patches | undefined>(undefined);
+    const [patches, setPatches] = React.useState<Patches | undefined>(
+        undefined,
+    );
     stsCommits = commits;
     stsPatches = patches;
 
@@ -113,12 +118,17 @@ export default () => {
                         showToast(
                             "Failed to parse color patches!",
                             getAssetIDByName("Small"),
-                        ); return;
+                        );
+                        return;
                     }
                 }),
             )
-            .catch(() => { showToast("Failed to fetch color patches!", getAssetIDByName("Small")); },
-            );
+            .catch(() => {
+                showToast(
+                    "Failed to fetch color patches!",
+                    getAssetIDByName("Small"),
+                );
+            });
     }, [patches]);
 
     React.useEffect(() => {
@@ -128,17 +138,22 @@ export default () => {
             .then(x =>
                 x
                     .json()
-                    .then(x => { setCommits(x); })
+                    .then(x => {
+                        setCommits(x);
+                    })
                     .catch(() => {
                         showToast(
                             "Failed to parse GitHub commits!",
                             getAssetIDByName("Small"),
                         );
-                    },
-                    ),
+                    }),
             )
-            .catch(() => { showToast("Failed to fetch GitHub commits!", getAssetIDByName("Small")); },
-            );
+            .catch(() => {
+                showToast(
+                    "Failed to fetch GitHub commits!",
+                    getAssetIDByName("Small"),
+                );
+            });
     }, [commits]);
 
     let showMessage: string;
@@ -149,8 +164,10 @@ export default () => {
     if (debug.os.name !== "Android")
         showMessage = "Dynamic colors are only available on Android.";
     else if (debug.os.sdk < 31)
-        showMessage = "Dynamic colors are only available on Android 12+ (SDK 31+).";
-    else if (syscolors === null) showMessage = "Dynamic colors are unavailable.";
+        showMessage =
+            "Dynamic colors are only available on Android 12+ (SDK 31+).";
+    else if (syscolors === null)
+        showMessage = "Dynamic colors are unavailable.";
 
     const lastThemePressTime = React.useRef(0);
 
@@ -163,8 +180,7 @@ export default () => {
                         alignItems: "center",
                         justifyContent: "center",
                         marginTop: 8,
-                    }}
-                >
+                    }}>
                     <RN.Image
                         source={getAssetIDByName("CircleInformationIcon")}
                         style={styles.help}
@@ -177,8 +193,7 @@ export default () => {
             <BetterTableRowGroup
                 title="Colors"
                 icon={getAssetIDByName("PaintPaletteIcon")}
-                padding
-            >
+                padding>
                 <RN.View
                     style={{
                         marginBottom: 8,
@@ -186,8 +201,7 @@ export default () => {
                         alignItems: "center",
                         justifyContent: "center",
                         gap: 8,
-                    }}
-                >
+                    }}>
                     {syscolors && (
                         <RN.Pressable
                             android_ripple={styles.androidRipple}
@@ -198,14 +212,15 @@ export default () => {
                                     "Autofilled colors",
                                     getAssetIDByName("PencilSparkleIcon"),
                                 );
-                            }}
-                        >
+                            }}>
                             <RN.Image
                                 source={getAssetIDByName("PencilSparkleIcon")}
                                 style={styles.labelIcon}
                                 resizeMode="cover"
                             />
-                            <Text variant="text-sm/semibold" color="TEXT_NORMAL">
+                            <Text
+                                variant="text-sm/semibold"
+                                color="TEXT_NORMAL">
                                 Autofill
                             </Text>
                         </RN.Pressable>
@@ -214,27 +229,36 @@ export default () => {
                         android_ripple={styles.androidRipple}
                         style={styles.pill}
                         onPress={async () => {
-                            const link = checkForURL((await clipboard.getString()) ?? "");
+                            const link = checkForURL(
+                                (await clipboard.getString()) ?? "",
+                            );
                             showInputAlert({
                                 title: "Enter Repainter link",
-                                placeholder: "https://repainter.app/themes/123ABC",
+                                placeholder:
+                                    "https://repainter.app/themes/123ABC",
                                 initialValue: link,
                                 confirmText: "Use",
                                 onConfirm: async i => {
                                     const link = checkForURL(i);
-                                    if (!link) throw new Error("No Repainter link found!");
+                                    if (!link)
+                                        throw new Error(
+                                            "No Repainter link found!",
+                                        );
 
-                                    const theme = parseTheme(await fetchRawTheme(link));
+                                    const theme = parseTheme(
+                                        await fetchRawTheme(link),
+                                    );
                                     vstorage.colors = theme.colors;
 
                                     // @ts-expect-error Invalid type!!
-                                    showToast("Imported Repainter theme", { uri: RepainterIcon });
+                                    showToast("Imported Repainter theme", {
+                                        uri: RepainterIcon,
+                                    });
                                 },
                                 confirmColor: "brand" as ButtonColors,
                                 cancelText: "Cancel",
                             });
-                        }}
-                    >
+                        }}>
                         <RN.Image
                             source={{ uri: RepainterIcon }}
                             style={styles.labelIcon}
@@ -250,8 +274,7 @@ export default () => {
                         flexDirection: "row",
                         alignItems: "center",
                         justifyContent: "center",
-                    }}
-                >
+                    }}>
                     <Color
                         title={"Neutral\n"}
                         color={vstorage.colors.neutral1}
@@ -286,7 +309,8 @@ export default () => {
                     if (lastThemePressTime.current >= Date.now()) {
                         lastThemePressTime.current = 0;
 
-                        const otter = vstorage.patches.from === "local" ? "git" : "local";
+                        const otter =
+                            vstorage.patches.from === "local" ? "git" : "local";
                         showToast(
                             `Switched to ${otter === "git" ? "GitHub" : "local"} patches`,
                             getAssetIDByName("RetryIcon"),
@@ -302,15 +326,20 @@ export default () => {
             ) : Array.isArray(commits) ? (
                 <Commit
                     commit={
-                        commits.find(x => x.sha === vstorage.patches.commit) ?? commits[0]
+                        commits.find(x => x.sha === vstorage.patches.commit) ??
+                        commits[0]
                     }
-                    onPress={() => { openCommitsPage(navigation); }}
+                    onPress={() => {
+                        openCommitsPage(navigation);
+                    }}
                     onLongPress={() => {
                         showSimpleActionSheet({
                             key: "CardOverflow",
                             header: {
                                 title: "Patches",
-                                onClose: () => { hideActionSheet(); },
+                                onClose: () => {
+                                    hideActionSheet();
+                                },
                             },
                             options: [
                                 {
@@ -325,8 +354,7 @@ export default () => {
                                 },
                             ],
                         });
-                    }
-                    }
+                    }}
                 />
             ) : (
                 <RN.View
@@ -336,17 +364,20 @@ export default () => {
                         flexDirection: "column",
                         justifyContent: "center",
                         alignItems: "center",
-                    }}
-                >
-                    <Text variant="text-md/semibold" color="TEXT_DANGER" align="center">
+                    }}>
+                    <Text
+                        variant="text-md/semibold"
+                        color="TEXT_DANGER"
+                        align="center">
                         You've been ratelimited by GitHub.
                     </Text>
                     <Text
                         variant="text-md/semibold"
                         color="TEXT_DANGER"
                         align="center"
-                        onPress={() => { setCommits(undefined); }}
-                    >
+                        onPress={() => {
+                            setCommits(undefined);
+                        }}>
                         <RichText.Underline>Tap to retry</RichText.Underline>
                     </Text>
                 </RN.View>
@@ -360,10 +391,16 @@ export default () => {
                 <BetterTableRowGroup nearby>
                     <FormRow
                         label="Load Theme"
-                        leading={<FormRow.Icon source={getAssetIDByName("WrenchIcon")} />}
+                        leading={
+                            <FormRow.Icon
+                                source={getAssetIDByName("WrenchIcon")}
+                            />
+                        }
                         trailing={
                             <IconButton
-                                onPress={() => apply(null) && setIsLoadedTheme(false)}
+                                onPress={() =>
+                                    apply(null) && setIsLoadedTheme(false)
+                                }
                                 disabled={!isLoadedTheme}
                                 size="sm"
                                 variant={
@@ -379,7 +416,11 @@ export default () => {
                             try {
                                 theme = build(patches);
                             } catch (e) {
-                                showToast(e.toString(), getAssetIDByName("Small")); return;
+                                showToast(
+                                    e.toString(),
+                                    getAssetIDByName("Small"),
+                                );
+                                return;
                             }
 
                             if (apply(theme)) setIsLoadedTheme(true);
@@ -387,29 +428,45 @@ export default () => {
                     />
                     <FormRow
                         label="Configure Theme"
-                        leading={<FormRow.Icon source={getAssetIDByName("SettingsIcon")} />}
+                        leading={
+                            <FormRow.Icon
+                                source={getAssetIDByName("SettingsIcon")}
+                            />
+                        }
                         trailing={<FormRow.Arrow />}
-                        onPress={() => { openConfigurePage(navigation); }}
+                        onPress={() => {
+                            openConfigurePage(navigation);
+                        }}
                     />
                     <FormSwitchRow
                         label="Automatically Reapply Theme"
                         subLabel="Automatically reapplies Monet Theme when you change your Discord color scheme or restart the app"
-                        leading={<FormRow.Icon source={getAssetIDByName("DownloadIcon")} />}
+                        leading={
+                            <FormRow.Icon
+                                source={getAssetIDByName("DownloadIcon")}
+                            />
+                        }
                         onValueChange={() =>
-                            (vstorage.reapply.enabled = !vstorage.reapply.enabled)
+                            (vstorage.reapply.enabled =
+                                !vstorage.reapply.enabled)
                         }
                         value={vstorage.reapply.enabled}
                     />
                     <FormRow
                         label="Reload Theme Patches"
-                        subLabel={`Patch v${patches.version} (${vstorage.patches.from === "local"
-                            ? "from a local source"
-                            : "from GitHub"
-                            })`}
+                        subLabel={`Patch v${patches.version} (${
+                            vstorage.patches.from === "local"
+                                ? "from a local source"
+                                : "from GitHub"
+                        })`}
                         leading={
-                            <FormRow.Icon source={getAssetIDByName("ActivitiesIcon")} />
+                            <FormRow.Icon
+                                source={getAssetIDByName("ActivitiesIcon")}
+                            />
                         }
-                        onPress={() => { setPatches(undefined); }}
+                        onPress={() => {
+                            setPatches(undefined);
+                        }}
                     />
                 </BetterTableRowGroup>
             )}

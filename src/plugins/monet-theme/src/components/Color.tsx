@@ -36,8 +36,7 @@ export default ({
                 alignItems: "center",
                 justifyContent: "center",
                 flex: 1 / 5,
-            }}
-        >
+            }}>
             <RN.Pressable
                 android_ripple={styles.androidRipple}
                 disabled={false}
@@ -56,15 +55,18 @@ export default ({
                     marginBottom: 8,
                 }}
                 onPress={() =>
-                // ActionSheet.open(ColorSheet, {
-                //   title,
-                //   color: color.slice(1),
-                // })
-                { ActionSheet.open(CustomColorPickerActionSheet, {
-                    color: parseInt(color.slice(1), 16),
-                    onSelect: (clr: number) =>
-                    { update(`#${clr.toString(16).padStart(6, "0")}`); },
-                }); }
+                    // ActionSheet.open(ColorSheet, {
+                    //   title,
+                    //   color: color.slice(1),
+                    // })
+                    {
+                        ActionSheet.open(CustomColorPickerActionSheet, {
+                            color: parseInt(color.slice(1), 16),
+                            onSelect: (clr: number) => {
+                                update(`#${clr.toString(16).padStart(6, "0")}`);
+                            },
+                        });
+                    }
                 }
                 onLongPress={() => {
                     clipboard.setString(color);

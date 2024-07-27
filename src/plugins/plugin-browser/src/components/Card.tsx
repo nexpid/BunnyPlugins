@@ -6,7 +6,10 @@ import { rawColors, semanticColors } from "@vendetta/ui";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { Forms } from "@vendetta/ui/components";
 
-import { hideActionSheet, showSimpleActionSheet } from "$/components/ActionSheet";
+import {
+    hideActionSheet,
+    showSimpleActionSheet,
+} from "$/components/ActionSheet";
 import Text from "$/components/Text";
 import { Reanimated } from "$/deps";
 import { buttonVariantPolyfill, IconButton, Stack } from "$/lib/redesign";
@@ -103,24 +106,25 @@ export default function Card(props: CardProps) {
                     backgroundColor: color,
                 },
                 props.disabled && { opacity: 0.5 },
-            ]}
-        >
+            ]}>
             <Stack spacing={16}>
                 <RN.View style={styles.content}>
                     <Stack spacing={0}>
                         <RN.View style={styles.title}>
-                            {(props.headerIcon && getAssetIDByName(props.headerIcon)) && (
-                                <RN.Image
-                                    style={styles.pluginIcon}
-                                    resizeMode="cover"
-                                    source={getAssetIDByName(props.headerIcon)}
-                                />
-                            )}
+                            {props.headerIcon &&
+                                getAssetIDByName(props.headerIcon) && (
+                                    <RN.Image
+                                        style={styles.pluginIcon}
+                                        resizeMode="cover"
+                                        source={getAssetIDByName(
+                                            props.headerIcon,
+                                        )}
+                                    />
+                                )}
                             <Text
                                 variant="heading-md/semibold"
                                 color="TEXT_NORMAL"
-                                lineClamp={1}
-                            >
+                                lineClamp={1}>
                                 {props.headerLabel}
                             </Text>
                             {props.headerSuffix}
@@ -134,7 +138,13 @@ export default function Card(props: CardProps) {
                     <RN.View style={{ marginLeft: "auto" }}>
                         <Stack spacing={12} direction="horizontal">
                             {props.actions?.map(
-                                ({ icon, onPress, isDestructive, loading, disabled }) => (
+                                ({
+                                    icon,
+                                    onPress,
+                                    isDestructive,
+                                    loading,
+                                    disabled,
+                                }) => (
                                     <IconButton
                                         onPress={onPress}
                                         disabled={disabled}
@@ -142,7 +152,8 @@ export default function Card(props: CardProps) {
                                         size="sm"
                                         variant={
                                             isDestructive
-                                                ? buttonVariantPolyfill().destructive
+                                                ? buttonVariantPolyfill()
+                                                      .destructive
                                                 : "secondary"
                                         }
                                         icon={getAssetIDByName(icon)}
@@ -156,23 +167,35 @@ export default function Card(props: CardProps) {
                                             key: "CardOverflow",
                                             header: {
                                                 title: props.overflowTitle,
-                                                icon: props.headerIcon && getAssetIDByName(props.headerIcon) && (
-                                                    <FormRow.Icon
-                                                        source={getAssetIDByName(props.headerIcon)}
-                                                    />
-                                                ),
-                                                onClose: () => { hideActionSheet(); },
+                                                icon: props.headerIcon &&
+                                                    getAssetIDByName(
+                                                        props.headerIcon,
+                                                    ) && (
+                                                        <FormRow.Icon
+                                                            source={getAssetIDByName(
+                                                                props.headerIcon,
+                                                            )}
+                                                        />
+                                                    ),
+                                                onClose: () => {
+                                                    hideActionSheet();
+                                                },
                                             },
-                                            options: props.overflowActions?.map(i => ({
-                                                ...i,
-                                                icon: getAssetIDByName(i.icon),
-                                            })),
+                                            options: props.overflowActions?.map(
+                                                i => ({
+                                                    ...i,
+                                                    icon: getAssetIDByName(
+                                                        i.icon,
+                                                    ),
+                                                }),
+                                            ),
                                         });
-                                    }
-                                    }
+                                    }}
                                     size="sm"
                                     variant="secondary"
-                                    icon={getAssetIDByName("CircleInformationIcon-primary")}
+                                    icon={getAssetIDByName(
+                                        "CircleInformationIcon-primary",
+                                    )}
                                 />
                             )}
                         </Stack>

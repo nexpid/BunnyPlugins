@@ -136,21 +136,20 @@ export default function Kiryu({ oldUI }: { oldUI: boolean }) {
                 kyriuStyles.base,
                 {
                     justifyContent:
-            vstorage.styling.xPos === "left"
-                ? "flex-start"
-                : vstorage.styling.xPos === "right"
-                    ? "flex-end"
-                    : "center",
+                        vstorage.styling.xPos === "left"
+                            ? "flex-start"
+                            : vstorage.styling.xPos === "right"
+                              ? "flex-end"
+                              : "center",
                     alignItems:
-            vstorage.styling.yPos === "top"
-                ? "flex-start"
-                : vstorage.styling.yPos === "bottom"
-                    ? "flex-end"
-                    : "center",
+                        vstorage.styling.yPos === "top"
+                            ? "flex-start"
+                            : vstorage.styling.yPos === "bottom"
+                              ? "flex-end"
+                              : "center",
                 },
             ]}
-            pointerEvents="none"
-        >
+            pointerEvents="none">
             <Reanimated.default.View
                 style={[
                     kyriuStyles.frame,
@@ -159,8 +158,7 @@ export default function Kiryu({ oldUI }: { oldUI: boolean }) {
                         opacity: opVal,
                         transform: [{ rotate: rotVal }, { scale: scaleVal }],
                     },
-                ]}
-            >
+                ]}>
                 <RN.Image
                     source={{ uri: kazuma }}
                     style={[

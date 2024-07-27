@@ -38,7 +38,8 @@ export default () => {
             const children = findInReactTree(
                 ret.props.children,
                 x =>
-                    x.type?.displayName === "View" && Array.isArray(x.props?.children),
+                    x.type?.displayName === "View" &&
+                    Array.isArray(x.props?.children),
             )?.props?.children;
             if (!children) return;
 
@@ -82,10 +83,13 @@ export default () => {
 
             if (
                 x.children?.[0]?.type?.name === "TextInputWrapper" &&
-        vstorage.position === "inside"
+                vstorage.position === "inside"
             ) {
                 const inside = x.children[1].props.children;
-                inside[1].props.children = React.createElement(React.Fragment, {});
+                inside[1].props.children = React.createElement(
+                    React.Fragment,
+                    {},
+                );
                 inside.splice(1, 0, React.createElement(SimpleCharCounter, {}));
             }
 

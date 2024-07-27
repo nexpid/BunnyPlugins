@@ -29,6 +29,8 @@ export default function Skeleton({
     }, []);
 
     return (
-        <Reanimated.default.View style={[baseStyle.skeleton, style, { opacity }]} />
+        <Reanimated.default.View
+            style={[baseStyle.skeleton, style, { opacity }]}
+        />
     );
 }

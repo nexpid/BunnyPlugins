@@ -64,17 +64,17 @@ export default () => {
             <SuperAwesomeIcon
                 style="header"
                 icon={getAssetIDByName("SparklesIcon")}
-                onPress={() =>
-                { showConfirmationAlert({
-                    title: "String Variables",
-                    content: `String variables can be used in any text component\nHere's the entire list:\n\n${stringVariables
-                        .map(x => `**\`${x.match}\`**\n — ${x.description}`)
-                        .join("\n")}`,
-                    confirmText: "Dismiss",
-                    confirmColor: "brand" as ButtonColors,
-                    onConfirm: () => undefined,
-                }); }
-                }
+                onPress={() => {
+                    showConfirmationAlert({
+                        title: "String Variables",
+                        content: `String variables can be used in any text component\nHere's the entire list:\n\n${stringVariables
+                            .map(x => `**\`${x.match}\`**\n — ${x.description}`)
+                            .join("\n")}`,
+                        confirmText: "Dismiss",
+                        confirmColor: "brand" as ButtonColors,
+                        onConfirm: () => undefined,
+                    });
+                }}
             />
         ),
     });
@@ -87,21 +87,23 @@ export default () => {
             <RN.ScrollView
                 style={{
                     zIndex: 1,
-                }}
-            >
+                }}>
                 <BetterTableRowGroup
                     title="Preview"
                     onTitlePress={() => {
                         if (vstorage.settings.debug.enabled) {
                             vstorage.settings.debug.visible =
-                !vstorage.settings.debug.visible;
+                                !vstorage.settings.debug.visible;
                             showToast(
                                 `Debug tab ${
-                                    vstorage.settings.debug.visible ? "visible" : "hidden"
+                                    vstorage.settings.debug.visible
+                                        ? "visible"
+                                        : "hidden"
                                 }`,
                             );
                         } else {
-                            if (dbgCounterTimeout) clearTimeout(dbgCounterTimeout);
+                            if (dbgCounterTimeout)
+                                clearTimeout(dbgCounterTimeout);
                             dbgCounterTimeout = setTimeout(() => {
                                 dbgCounter = 0;
                             }, 500);
@@ -111,7 +113,8 @@ export default () => {
 
                             if (dbgCounter < 7) {
                                 const more = 7 - dbgCounter;
-                                showToast(`${more} more taps`); return;
+                                showToast(`${more} more taps`);
+                                return;
                             } else {
                                 showToast("Behold! You can now debug!");
                                 vstorage.settings.debug.visible = true;
@@ -121,8 +124,7 @@ export default () => {
                         }
                     }}
                     icon={getAssetIDByName("ic_eye")}
-                    padding={vstorage.settings.edit}
-                >
+                    padding={vstorage.settings.edit}>
                     <RPCPreview
                         edit={vstorage.settings.edit}
                         act={vstorage.activity.editing}
@@ -130,12 +132,15 @@ export default () => {
                 </BetterTableRowGroup>
                 <BetterTableRowGroup
                     title="Settings"
-                    icon={getAssetIDByName("ic_cog_24px")}
-                >
+                    icon={getAssetIDByName("ic_cog_24px")}>
                     <FormSwitchRow
                         label="Edit Mode"
                         subLabel="Be able to edit your activity"
-                        leading={<FormIcon source={getAssetIDByName("ic_badge_staff")} />}
+                        leading={
+                            <FormIcon
+                                source={getAssetIDByName("ic_badge_staff")}
+                            />
+                        }
                         onValueChange={() =>
                             (vstorage.settings.edit = !vstorage.settings.edit)
                         }
@@ -144,61 +149,86 @@ export default () => {
                     <FormSwitchRow
                         label="Display Activity"
                         subLabel="Show off your super awesome poggers activity to the world"
-                        leading={<FormIcon source={getAssetIDByName("ic_show_password")} />}
+                        leading={
+                            <FormIcon
+                                source={getAssetIDByName("ic_show_password")}
+                            />
+                        }
                         onValueChange={() =>
-                            (vstorage.settings.display = !vstorage.settings.display)
+                            (vstorage.settings.display =
+                                !vstorage.settings.display)
                         }
                         value={vstorage.settings.display}
                     />
                 </BetterTableRowGroup>
                 <BetterTableRowGroup
                     title="Data"
-                    icon={getAssetIDByName("ic_feedback")}
-                >
+                    icon={getAssetIDByName("ic_feedback")}>
                     <FormRow
                         label="Copy as JSON"
-                        leading={<FormRow.Icon source={getAssetIDByName("copy")} />}
+                        leading={
+                            <FormRow.Icon source={getAssetIDByName("copy")} />
+                        }
                         onPress={() => {
                             clipboard.setString(
-                                JSON.stringify(vstorage.activity.editing, undefined, 3),
+                                JSON.stringify(
+                                    vstorage.activity.editing,
+                                    undefined,
+                                    3,
+                                ),
                             );
-                            showToast("Copied", getAssetIDByName("toast_copy_link"));
+                            showToast(
+                                "Copied",
+                                getAssetIDByName("toast_copy_link"),
+                            );
                         }}
                     />
                     <FormRow
                         label="Load from Clipboard"
                         leading={
-                            <FormRow.Icon source={getAssetIDByName("ic_download_24px")} />
+                            <FormRow.Icon
+                                source={getAssetIDByName("ic_download_24px")}
+                            />
                         }
-                        onPress={() =>
-                        { activitySavedPrompt({
-                            role: "overwrite the activity data",
-                            button: "Overwrite",
-                            run: async () => {
-                                let rawData: SettingsActivity;
-                                try {
-                                    rawData = JSON.parse(await clipboard.getString());
-                                } catch {
+                        onPress={() => {
+                            activitySavedPrompt({
+                                role: "overwrite the activity data",
+                                button: "Overwrite",
+                                run: async () => {
+                                    let rawData: SettingsActivity;
+                                    try {
+                                        rawData = JSON.parse(
+                                            await clipboard.getString(),
+                                        );
+                                    } catch {
+                                        showToast(
+                                            "Failed to parse JSON",
+                                            getAssetIDByName("Small"),
+                                        );
+                                        return;
+                                    }
+
+                                    const data =
+                                        SettingsActivity.validate(rawData);
+                                    if (!data.error) {
+                                        showToast(
+                                            "Invalid activity data",
+                                            getAssetIDByName("Small"),
+                                        );
+                                        return;
+                                    }
+
+                                    vstorage.activity.editing =
+                                        data.value as SettingsActivity;
+                                    delete vstorage.activity.profile;
+                                    forceUpdate();
                                     showToast(
-                                        "Failed to parse JSON",
-                                        getAssetIDByName("Small"),
-                                    ); return;
-                                }
-
-                                const data = SettingsActivity.validate(rawData);
-                                if (!data.error)
-                                { showToast(
-                                    "Invalid activity data",
-                                    getAssetIDByName("Small"),
-                                ); return; }
-
-                                vstorage.activity.editing = data.value as SettingsActivity;
-                                delete vstorage.activity.profile;
-                                forceUpdate();
-                                showToast("Loaded", getAssetIDByName("Check"));
-                            },
-                        }); }
-                        }
+                                        "Loaded",
+                                        getAssetIDByName("Check"),
+                                    );
+                                },
+                            });
+                        }}
                     />
                 </BetterTableRowGroup>
                 <BetterTableRowGroup nearby>
@@ -207,89 +237,132 @@ export default () => {
                             <FormRow
                                 label={`Save Profile${!isActivitySaved() ? " 🔴" : ""}`}
                                 leading={
-                                    <FormRow.Icon source={getAssetIDByName("ic_message_edit")} />
+                                    <FormRow.Icon
+                                        source={getAssetIDByName(
+                                            "ic_message_edit",
+                                        )}
+                                    />
                                 }
                                 onPress={() => {
-                                    vstorage.profiles[vstorage.activity.profile] = JSON.parse(
-                                        JSON.stringify(vstorage.activity.editing),
+                                    vstorage.profiles[
+                                        vstorage.activity.profile
+                                    ] = JSON.parse(
+                                        JSON.stringify(
+                                            vstorage.activity.editing,
+                                        ),
                                     );
-                                    showToast("Saved", getAssetIDByName("Check"));
+                                    showToast(
+                                        "Saved",
+                                        getAssetIDByName("Check"),
+                                    );
                                     forceUpdate();
                                 }}
                             />
                             <FormRow
                                 label="Revert Profile"
                                 leading={
-                                    <FormRow.Icon source={getAssetIDByName("ic_message_edit")} />
+                                    <FormRow.Icon
+                                        source={getAssetIDByName(
+                                            "ic_message_edit",
+                                        )}
+                                    />
                                 }
-                                onPress={() =>
-                                { activitySavedPrompt({
-                                    role: "revert",
-                                    button: "Revert",
-                                    run: () => {
-                                        vstorage.activity.editing = JSON.parse(
-                                            JSON.stringify(
-                                                vstorage.profiles[vstorage.activity.profile],
-                                            ),
-                                        );
-                                        showToast("Reverted", getAssetIDByName("Check"));
-                                        forceUpdate();
-                                    },
-                                }); }
-                                }
+                                onPress={() => {
+                                    activitySavedPrompt({
+                                        role: "revert",
+                                        button: "Revert",
+                                        run: () => {
+                                            vstorage.activity.editing =
+                                                JSON.parse(
+                                                    JSON.stringify(
+                                                        vstorage.profiles[
+                                                            vstorage.activity
+                                                                .profile
+                                                        ],
+                                                    ),
+                                                );
+                                            showToast(
+                                                "Reverted",
+                                                getAssetIDByName("Check"),
+                                            );
+                                            forceUpdate();
+                                        },
+                                    });
+                                }}
                             />
                             <FormRow
                                 label="Close Profile"
                                 leading={
-                                    <FormRow.Icon source={getAssetIDByName("ic_message_edit")} />
+                                    <FormRow.Icon
+                                        source={getAssetIDByName(
+                                            "ic_message_edit",
+                                        )}
+                                    />
                                 }
-                                onPress={() =>
-                                { activitySavedPrompt({
-                                    role: "discard your changes",
-                                    button: "Discard",
-                                    run: () => {
-                                        vstorage.activity.editing = makeEmptySettingsActivity();
-                                        delete vstorage.activity.profile;
-                                        showToast("Closed", getAssetIDByName("Check"));
-                                        forceUpdate();
-                                    },
-                                    secondaryButton: "Save profile",
-                                    secondaryRun: () => {
-                                        vstorage.profiles[vstorage.activity.profile] = JSON.parse(
-                                            JSON.stringify(vstorage.activity.editing),
-                                        );
-                                    },
-                                }); }
-                                }
+                                onPress={() => {
+                                    activitySavedPrompt({
+                                        role: "discard your changes",
+                                        button: "Discard",
+                                        run: () => {
+                                            vstorage.activity.editing =
+                                                makeEmptySettingsActivity();
+                                            delete vstorage.activity.profile;
+                                            showToast(
+                                                "Closed",
+                                                getAssetIDByName("Check"),
+                                            );
+                                            forceUpdate();
+                                        },
+                                        secondaryButton: "Save profile",
+                                        secondaryRun: () => {
+                                            vstorage.profiles[
+                                                vstorage.activity.profile
+                                            ] = JSON.parse(
+                                                JSON.stringify(
+                                                    vstorage.activity.editing,
+                                                ),
+                                            );
+                                        },
+                                    });
+                                }}
                             />
                         </>
                     )}
                     <FormRow
                         label="Browse Profiles"
                         leading={
-                            <FormRow.Icon source={getAssetIDByName("ic_message_edit")} />
+                            <FormRow.Icon
+                                source={getAssetIDByName("ic_message_edit")}
+                            />
                         }
                         trailing={<FormRow.Arrow />}
-                        onPress={() => { showProfileList(navigation); }}
+                        onPress={() => {
+                            showProfileList(navigation);
+                        }}
                     />
                 </BetterTableRowGroup>
                 {vstorage.settings.debug.visible && (
                     <BetterTableRowGroup
                         title="Debug"
-                        icon={getAssetIDByName("ic_progress_wrench_24px")}
-                    >
+                        icon={getAssetIDByName("ic_progress_wrench_24px")}>
                         <FormRow
                             label="Live RawActivity View"
                             trailing={<FormRow.Arrow />}
                             leading={
-                                <FormRow.Icon source={getAssetIDByName("ic_badge_staff")} />
+                                <FormRow.Icon
+                                    source={getAssetIDByName("ic_badge_staff")}
+                                />
                             }
-                            onPress={() => { openLiveRawActivityView(navigation); }}
+                            onPress={() => {
+                                openLiveRawActivityView(navigation);
+                            }}
                         />
                         <FormRow
                             label="Flush MP Cache"
                             leading={
-                                <FormRow.Icon source={getAssetIDByName("ic_badge_staff")} />
+                                <FormRow.Icon
+                                    source={getAssetIDByName("ic_badge_staff")}
+                                />
                             }
                             onPress={() => {
                                 let changes = 0;
@@ -298,10 +371,17 @@ export default () => {
                                     delete proxyAssetCache[x];
                                 }
 
-                                const faces = ":P,:3,:D,:-D,:>,x3,xD,:x,:^),:v".split(",");
+                                const faces =
+                                    ":P,:3,:D,:-D,:>,x3,xD,:x,:^),:v".split(
+                                        ",",
+                                    );
                                 showToast(
                                     `Flushed MP cache ${
-                                        faces[Math.floor(Math.random() * faces.length)]
+                                        faces[
+                                            Math.floor(
+                                                Math.random() * faces.length,
+                                            )
+                                        ]
                                     }`,
                                 );
                                 if (changes > 0) dispatchActivityIfPossible();

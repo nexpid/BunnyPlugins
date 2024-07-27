@@ -27,10 +27,13 @@ export async function getApplicationAssets(
     applicationId: string,
 ): Promise<AppRichAsset[]> {
     return await (
-        await safeFetch(`${apiUrl}oauth2/applications/${applicationId}/assets`, {
-            cache: "no-store",
-            headers: { authorization: getToken() },
-        })
+        await safeFetch(
+            `${apiUrl}oauth2/applications/${applicationId}/assets`,
+            {
+                cache: "no-store",
+                headers: { authorization: getToken() },
+            },
+        )
     ).json();
 }
 

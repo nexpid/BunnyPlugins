@@ -88,7 +88,10 @@ export async function importData(data: UserData, options: SyncImportOptions) {
         ),
         ...Object.entries(data.plugins).filter(
             ([id]) =>
-                !plugins[id] && isPluginProxied(id) && canImport(id) && options.plugins,
+                !plugins[id] &&
+                isPluginProxied(id) &&
+                canImport(id) &&
+                options.plugins,
         ),
     ];
     const ithemes = Object.entries(data.themes).filter(
@@ -108,7 +111,8 @@ export async function importData(data: UserData, options: SyncImportOptions) {
         showToast(
             lang.format("toast.sync.no_import", {}),
             getAssetIDByName("CircleXIcon-primary"),
-        ); return;
+        );
+        return;
     }
 
     clearLogs();
@@ -139,7 +143,7 @@ export async function importData(data: UserData, options: SyncImportOptions) {
     let failedAny = false;
     let selFont: FontDefinition;
 
-    const { bunny } = (window as any);
+    const { bunny } = window as any;
 
     await Promise.all([
         ...iplugins.map(
@@ -151,14 +155,19 @@ export async function importData(data: UserData, options: SyncImportOptions) {
                             status.plugins++;
                             addLog(
                                 "plugins",
-                                lang.format("log.import.plugin.success", { name: id }),
+                                lang.format("log.import.plugin.success", {
+                                    name: id,
+                                }),
                             );
                         })
                         .catch(e => {
                             failedAny = true;
                             addLog(
                                 "plugins",
-                                lang.format("log.import.plugin.fail", { name: id, error: e }),
+                                lang.format("log.import.plugin.fail", {
+                                    name: id,
+                                    error: e,
+                                }),
                             );
                         })
                         .finally(res);
@@ -172,14 +181,19 @@ export async function importData(data: UserData, options: SyncImportOptions) {
                             status.themes++;
                             addLog(
                                 "themes",
-                                lang.format("log.import.theme.success", { name: id }),
+                                lang.format("log.import.theme.success", {
+                                    name: id,
+                                }),
                             );
                         })
                         .catch(e => {
                             failedAny = true;
                             addLog(
                                 "themes",
-                                lang.format("log.import.theme.fail", { name: id, error: e }),
+                                lang.format("log.import.theme.fail", {
+                                    name: id,
+                                    error: e,
+                                }),
                             );
                         })
                         .finally(res),
@@ -195,14 +209,19 @@ export async function importData(data: UserData, options: SyncImportOptions) {
 
                             addLog(
                                 "fonts",
-                                lang.format("log.import.font.success", { name: id }),
+                                lang.format("log.import.font.success", {
+                                    name: id,
+                                }),
                             );
                         })
                         .catch(e => {
                             failedAny = true;
                             addLog(
                                 "fonts",
-                                lang.format("log.import.font.fail", { name: id, error: e }),
+                                lang.format("log.import.font.fail", {
+                                    name: id,
+                                    error: e,
+                                }),
                             );
                         })
                         .finally(res),
@@ -218,7 +237,9 @@ export async function importData(data: UserData, options: SyncImportOptions) {
 
                             addLog(
                                 "fonts",
-                                lang.format("log.import.font.success", { name: item.name }),
+                                lang.format("log.import.font.success", {
+                                    name: item.name,
+                                }),
                             );
                         })
                         .catch(e => {
@@ -246,7 +267,8 @@ export async function importData(data: UserData, options: SyncImportOptions) {
             getAssetIDByName("CircleCheckIcon-primary"),
         );
 
-    const selectTheme = themes[ithemes.find(([_, { enabled }]) => enabled)?.[0]];
+    const selectTheme =
+        themes[ithemes.find(([_, { enabled }]) => enabled)?.[0]];
     if (selectTheme) {
         try {
             bunny.managers.themes.selectTheme(selectTheme);
@@ -261,7 +283,9 @@ export async function importData(data: UserData, options: SyncImportOptions) {
         } catch (e: any) {
             addLog(
                 "themes",
-                lang.format("log.import.select_theme.fail", { theme: selectTheme.id }),
+                lang.format("log.import.select_theme.fail", {
+                    theme: selectTheme.id,
+                }),
             );
         }
     }

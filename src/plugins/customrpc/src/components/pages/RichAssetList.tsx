@@ -59,7 +59,9 @@ export const RichAssetList = () => {
             ListEmptyComponent={
                 <Search
                     style={{ marginBottom: 10 }}
-                    onChangeText={(x: string) => { setSearch(x.toLowerCase()); }}
+                    onChangeText={(x: string) => {
+                        setSearch(x.toLowerCase());
+                    }}
                 />
             }
             style={{ paddingHorizontal: 10, paddingTop: 10 }}
@@ -80,11 +82,12 @@ export const RichAssetList = () => {
                         style={{
                             width: `${TabletManagerIdk.isTablet ? 1 / 0.03 : 1 / 0.02}%`,
                             aspectRatio: 1,
-                        }}
-                    >
+                        }}>
                         <RN.View style={styles.card}>
                             <RN.View style={styles.cardHeader}>
-                                <RN.Text style={styles.cardHeaderText}>{item.name}</RN.Text>
+                                <RN.Text style={styles.cardHeaderText}>
+                                    {item.name}
+                                </RN.Text>
                             </RN.View>
                             <RN.Image
                                 source={{

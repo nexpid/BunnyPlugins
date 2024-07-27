@@ -41,11 +41,11 @@ const SettingsKyriu = () => {
 
             flexDirection: "row",
             justifyContent:
-        vstorage.styling.xPos === "left"
-            ? "flex-start"
-            : vstorage.styling.xPos === "right"
-                ? "flex-end"
-                : "center",
+                vstorage.styling.xPos === "left"
+                    ? "flex-start"
+                    : vstorage.styling.xPos === "right"
+                      ? "flex-end"
+                      : "center",
             alignItems: "flex-start",
 
             overflow: "hidden",
@@ -80,7 +80,9 @@ const SettingsKyriu = () => {
     React.useEffect(() => {
         posVal.value = vstorage.appear.style === "fly" ? yPosOff : yPos;
         opVal.value =
-      vstorage.appear.style !== "fade" ? vstorage.styling.opacity / 10 : 0;
+            vstorage.appear.style !== "fade"
+                ? vstorage.styling.opacity / 10
+                : 0;
         rotVal.value = vstorage.effects.swinging.enabled ? "-5deg" : "0deg";
 
         if (vstorage.appear.style === "fly")
@@ -129,8 +131,7 @@ const SettingsKyriu = () => {
                         opacity: opVal,
                         transform: [{ rotate: rotVal }, { scale: scaleVal }],
                     },
-                ]}
-            >
+                ]}>
                 <RN.Image
                     source={{ uri: kazuma }}
                     style={kyriuStyles.empty}
@@ -186,7 +187,9 @@ const StylingPage = () => {
         <>
             <FormRow
                 label={lang.format("settings.styling.opacity", {})}
-                leading={<FormRow.Icon source={getAssetIDByName("EyeDropperIcon")} />}
+                leading={
+                    <FormRow.Icon source={getAssetIDByName("EyeDropperIcon")} />
+                }
                 trailing={
                     <TrailingText>
                         {Math.floor(vstorage.styling.opacity) / 10}
@@ -203,67 +206,95 @@ const StylingPage = () => {
             />
             <FormRow
                 label={lang.format("settings.styling.pos_x", {})}
-                leading={<FormRow.Icon source={getAssetIDByName("SignPostIcon")} />}
+                leading={
+                    <FormRow.Icon source={getAssetIDByName("SignPostIcon")} />
+                }
                 trailing={
                     <TrailingText>
-                        {lang.format(`settings.styling.pos_x.${vstorage.styling.xPos}`, {})}
+                        {lang.format(
+                            `settings.styling.pos_x.${vstorage.styling.xPos}`,
+                            {},
+                        )}
                     </TrailingText>
                 }
-                onPress={() =>
-                { ActionSheet.open(ChooseSheet, {
-                    title: lang.format("settings.styling.pos_x", {}),
-                    value: vstorage.styling.xPos,
-                    options: [
-                        {
-                            name: lang.format("settings.styling.pos_x.left", {}),
-                            value: "left",
+                onPress={() => {
+                    ActionSheet.open(ChooseSheet, {
+                        title: lang.format("settings.styling.pos_x", {}),
+                        value: vstorage.styling.xPos,
+                        options: [
+                            {
+                                name: lang.format(
+                                    "settings.styling.pos_x.left",
+                                    {},
+                                ),
+                                value: "left",
+                            },
+                            {
+                                name: lang.format(
+                                    "settings.styling.pos_x.center",
+                                    {},
+                                ),
+                                value: "center",
+                            },
+                            {
+                                name: lang.format(
+                                    "settings.styling.pos_x.right",
+                                    {},
+                                ),
+                                value: "right",
+                            },
+                        ],
+                        callback(v) {
+                            vstorage.styling.xPos = v;
                         },
-                        {
-                            name: lang.format("settings.styling.pos_x.center", {}),
-                            value: "center",
-                        },
-                        {
-                            name: lang.format("settings.styling.pos_x.right", {}),
-                            value: "right",
-                        },
-                    ],
-                    callback(v) {
-                        vstorage.styling.xPos = v;
-                    },
-                }); }
-                }
+                    });
+                }}
             />
             <FormRow
                 label={lang.format("settings.styling.pos_y", {})}
-                leading={<FormRow.Icon source={getAssetIDByName("SignPostIcon")} />}
+                leading={
+                    <FormRow.Icon source={getAssetIDByName("SignPostIcon")} />
+                }
                 trailing={
                     <TrailingText>
-                        {lang.format(`settings.styling.pos_y.${vstorage.styling.yPos}`, {})}
+                        {lang.format(
+                            `settings.styling.pos_y.${vstorage.styling.yPos}`,
+                            {},
+                        )}
                     </TrailingText>
                 }
-                onPress={() =>
-                { ActionSheet.open(ChooseSheet, {
-                    title: lang.format("settings.styling.pos_y", {}),
-                    value: vstorage.styling.yPos,
-                    options: [
-                        {
-                            name: lang.format("settings.styling.pos_y.top", {}),
-                            value: "top",
+                onPress={() => {
+                    ActionSheet.open(ChooseSheet, {
+                        title: lang.format("settings.styling.pos_y", {}),
+                        value: vstorage.styling.yPos,
+                        options: [
+                            {
+                                name: lang.format(
+                                    "settings.styling.pos_y.top",
+                                    {},
+                                ),
+                                value: "top",
+                            },
+                            {
+                                name: lang.format(
+                                    "settings.styling.pos_y.middle",
+                                    {},
+                                ),
+                                value: "middle",
+                            },
+                            {
+                                name: lang.format(
+                                    "settings.styling.pos_y.bottom",
+                                    {},
+                                ),
+                                value: "bottom",
+                            },
+                        ],
+                        callback(v) {
+                            vstorage.styling.yPos = v;
                         },
-                        {
-                            name: lang.format("settings.styling.pos_y.middle", {}),
-                            value: "middle",
-                        },
-                        {
-                            name: lang.format("settings.styling.pos_y.bottom", {}),
-                            value: "bottom",
-                        },
-                    ],
-                    callback(v) {
-                        vstorage.styling.yPos = v;
-                    },
-                }); }
-                }
+                    });
+                }}
             />
         </>
     );
@@ -276,39 +307,55 @@ const AppearPage = () => {
         <>
             <FormRow
                 label={lang.format("settings.appear.style", {})}
-                leading={<FormRow.Icon source={getAssetIDByName("BicycleIcon")} />}
+                leading={
+                    <FormRow.Icon source={getAssetIDByName("BicycleIcon")} />
+                }
                 trailing={
                     <TrailingText>
-                        {lang.format(`settings.appear.style.${vstorage.appear.style}`, {})}
+                        {lang.format(
+                            `settings.appear.style.${vstorage.appear.style}`,
+                            {},
+                        )}
                     </TrailingText>
                 }
-                onPress={() =>
-                { ActionSheet.open(ChooseSheet, {
-                    title: lang.format("settings.appear.style", {}),
-                    value: vstorage.appear.style,
-                    options: [
-                        {
-                            name: lang.format("settings.appear.style.fly", {}),
-                            value: "fly",
+                onPress={() => {
+                    ActionSheet.open(ChooseSheet, {
+                        title: lang.format("settings.appear.style", {}),
+                        value: vstorage.appear.style,
+                        options: [
+                            {
+                                name: lang.format(
+                                    "settings.appear.style.fly",
+                                    {},
+                                ),
+                                value: "fly",
+                            },
+                            {
+                                name: lang.format(
+                                    "settings.appear.style.fade",
+                                    {},
+                                ),
+                                value: "fade",
+                            },
+                            {
+                                name: lang.format(
+                                    "settings.appear.style.always",
+                                    {},
+                                ),
+                                value: "always",
+                            },
+                        ],
+                        callback(v) {
+                            vstorage.appear.style = v;
                         },
-                        {
-                            name: lang.format("settings.appear.style.fade", {}),
-                            value: "fade",
-                        },
-                        {
-                            name: lang.format("settings.appear.style.always", {}),
-                            value: "always",
-                        },
-                    ],
-                    callback(v) {
-                        vstorage.appear.style = v;
-                    },
-                }); }
-                }
+                    });
+                }}
             />
             <FormRow
                 label={lang.format("settings.appear.speed", {})}
-                leading={<FormRow.Icon source={getAssetIDByName("NitroWheelIcon")} />}
+                leading={
+                    <FormRow.Icon source={getAssetIDByName("NitroWheelIcon")} />
+                }
                 trailing={
                     <TrailingText>
                         {Math.floor(vstorage.appear.speed / 100) / 10}s
@@ -334,23 +381,32 @@ const EffectsPage = () => {
         <>
             <BetterTableRowGroup
                 title={lang.format("settings.effects.title", {})}
-                icon={categoryIcons.effects}
-            >
+                icon={categoryIcons.effects}>
                 <FormSwitchRow
                     label={lang.format("settings.effects.swinging.enabled", {})}
-                    leading={<FormRow.Icon source={getAssetIDByName("ActivitiesIcon")} />}
+                    leading={
+                        <FormRow.Icon
+                            source={getAssetIDByName("ActivitiesIcon")}
+                        />
+                    }
                     onValueChange={() =>
                         (vstorage.effects.swinging.enabled =
-              !vstorage.effects.swinging.enabled)
+                            !vstorage.effects.swinging.enabled)
                     }
                     value={vstorage.effects.swinging.enabled}
                 />
                 <FormRow
                     label={lang.format("settings.effects.swinging.speed", {})}
-                    leading={<FormRow.Icon source={getAssetIDByName("NitroWheelIcon")} />}
+                    leading={
+                        <FormRow.Icon
+                            source={getAssetIDByName("NitroWheelIcon")}
+                        />
+                    }
                     trailing={
                         <TrailingText>
-                            {Math.floor(vstorage.effects.swinging.speed / 100) / 10}s
+                            {Math.floor(vstorage.effects.swinging.speed / 100) /
+                                10}
+                            s
                         </TrailingText>
                     }
                     onPress={() => (vstorage.effects.swinging.speed = 900)}
@@ -358,7 +414,9 @@ const EffectsPage = () => {
                 <Slider
                     value={vstorage.effects.swinging.speed}
                     step={100}
-                    onValueChange={val => (vstorage.effects.swinging.speed = val)}
+                    onValueChange={val =>
+                        (vstorage.effects.swinging.speed = val)
+                    }
                     minimumValue={100}
                     maximumValue={1500}
                 />
@@ -366,18 +424,27 @@ const EffectsPage = () => {
             <BetterTableRowGroup nearby>
                 <FormSwitchRow
                     label={lang.format("settings.effects.bounce.enabled", {})}
-                    leading={<FormRow.Icon source={getAssetIDByName("ObjectIcon")} />}
+                    leading={
+                        <FormRow.Icon source={getAssetIDByName("ObjectIcon")} />
+                    }
                     onValueChange={() =>
-                        (vstorage.effects.bounce.enabled = !vstorage.effects.bounce.enabled)
+                        (vstorage.effects.bounce.enabled =
+                            !vstorage.effects.bounce.enabled)
                     }
                     value={vstorage.effects.bounce.enabled}
                 />
                 <FormRow
                     label={lang.format("settings.effects.bounce.speed", {})}
-                    leading={<FormRow.Icon source={getAssetIDByName("NitroWheelIcon")} />}
+                    leading={
+                        <FormRow.Icon
+                            source={getAssetIDByName("NitroWheelIcon")}
+                        />
+                    }
                     trailing={
                         <TrailingText>
-                            {Math.floor(vstorage.effects.bounce.speed / 100) / 10}s
+                            {Math.floor(vstorage.effects.bounce.speed / 100) /
+                                10}
+                            s
                         </TrailingText>
                     }
                     onPress={() => (vstorage.effects.bounce.speed = 100)}
@@ -390,13 +457,21 @@ const EffectsPage = () => {
                     maximumValue={1500}
                 />
                 <FormRow
-                    label={lang.format("settings.effects.bounce.multiplier", {})}
+                    label={lang.format(
+                        "settings.effects.bounce.multiplier",
+                        {},
+                    )}
                     leading={
-                        <FormRow.Icon source={getAssetIDByName("SendMessageIcon")} />
+                        <FormRow.Icon
+                            source={getAssetIDByName("SendMessageIcon")}
+                        />
                     }
                     trailing={
                         <TrailingText>
-                            {Math.floor(vstorage.effects.bounce.multiplier * 100) / 100}x
+                            {Math.floor(
+                                vstorage.effects.bounce.multiplier * 100,
+                            ) / 100}
+                            x
                         </TrailingText>
                     }
                     onPress={() => (vstorage.effects.bounce.multiplier = 1.05)}
@@ -427,15 +502,16 @@ export default function Settings(category?: Category) {
                 ) : (
                     <BetterTableRowGroup
                         title={lang.format(
-                            category ? `settings.${category}.title` : "settings.title",
+                            category
+                                ? `settings.${category}.title`
+                                : "settings.title",
                             {},
                         )}
                         icon={
                             category
                                 ? categoryIcons[category]
                                 : getAssetIDByName("SettingsIcon")
-                        }
-                    >
+                        }>
                         {category === "styling" ? (
                             <StylingPage />
                         ) : category === "appear" ? (

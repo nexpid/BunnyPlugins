@@ -3,7 +3,10 @@ import { useProxy } from "@vendetta/storage";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { showToast } from "@vendetta/ui/toasts";
 
-import { hideActionSheet, showSimpleActionSheet } from "$/components/ActionSheet";
+import {
+    hideActionSheet,
+    showSimpleActionSheet,
+} from "$/components/ActionSheet";
 import { FlashList } from "$/deps";
 
 import { vstorage } from "../..";
@@ -29,35 +32,41 @@ export const CommitsPage = () => {
                             key: "CardOverflow",
                             header: {
                                 title: item.commit.message,
-                                onClose: () => { hideActionSheet(); },
+                                onClose: () => {
+                                    hideActionSheet();
+                                },
                             },
                             options: [
                                 vstorage.patches.commit !== item.sha
                                     ? {
-                                        label: "Use commit as patches",
-                                        onPress: () => {
-                                            showToast(
-                                                `Using commit ${item.sha.slice(0, 7)}`,
-                                                getAssetIDByName("ThreadIcon"),
-                                            );
-                                            vstorage.patches.commit = item.sha;
-                                        },
-                                    }
+                                          label: "Use commit as patches",
+                                          onPress: () => {
+                                              showToast(
+                                                  `Using commit ${item.sha.slice(0, 7)}`,
+                                                  getAssetIDByName(
+                                                      "ThreadIcon",
+                                                  ),
+                                              );
+                                              vstorage.patches.commit =
+                                                  item.sha;
+                                          },
+                                      }
                                     : {
-                                        label: "Don't use commit as patches",
-                                        isDestructive: true,
-                                        onPress: () => {
-                                            showToast(
-                                                "Using latest commit",
-                                                getAssetIDByName("ThreadPlusIcon"),
-                                            );
-                                            delete vstorage.patches.commit;
-                                        },
-                                    },
+                                          label: "Don't use commit as patches",
+                                          isDestructive: true,
+                                          onPress: () => {
+                                              showToast(
+                                                  "Using latest commit",
+                                                  getAssetIDByName(
+                                                      "ThreadPlusIcon",
+                                                  ),
+                                              );
+                                              delete vstorage.patches.commit;
+                                          },
+                                      },
                             ],
                         });
-                    }
-                    }
+                    }}
                 />
             )}
             removeClippedSubviews

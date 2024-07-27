@@ -10,10 +10,15 @@ import { useLangStore } from "./LangStore";
 // from Pyoncord
 const IntlMessageFormat = findByName("MessageFormat");
 
-RNFS.exists(`${RNFS.DocumentDirectoryPath}/vendetta/NexpidLang`).then(
-    yes =>
-        yes && (void RNFS.unlink(`${RNFS.DocumentDirectoryPath}/vendetta/NexpidLang`)),
-).catch(() => void 0);
+RNFS.exists(`${RNFS.DocumentDirectoryPath}/vendetta/NexpidLang`)
+    .then(
+        yes =>
+            yes &&
+            void RNFS.unlink(
+                `${RNFS.DocumentDirectoryPath}/vendetta/NexpidLang`,
+            ),
+    )
+    .catch(() => void 0);
 
 export class Lang<Plugin extends keyof LangValues> {
     private _unload: () => void;
@@ -27,8 +32,9 @@ export class Lang<Plugin extends keyof LangValues> {
         });
         void useLangStore.persist.rehydrate();
 
-        this._unload = fluxSubscribe("I18N_LOAD_SUCCESS", () =>
-            void useLangStore.persist.rehydrate(),
+        this._unload = fluxSubscribe(
+            "I18N_LOAD_SUCCESS",
+            () => void useLangStore.persist.rehydrate(),
         );
     }
 
@@ -59,7 +65,11 @@ export class Lang<Plugin extends keyof LangValues> {
             const matches = Array.from(text.matchAll(rule.regex));
             for (const match of matches)
                 if (match[1]) {
-                    txt.splice(match.index - off, match[0].length, rule.react(match[1]));
+                    txt.splice(
+                        match.index - off,
+                        match[0].length,
+                        rule.react(match[1]),
+                    );
                     off += match[0].length - 1;
                 }
         }

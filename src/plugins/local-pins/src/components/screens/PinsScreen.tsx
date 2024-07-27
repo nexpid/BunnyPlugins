@@ -20,29 +20,35 @@ export default function PinsScreen({
     useProxy(vstorage);
     const { status, data } = useLocalPinned(channelId);
 
-    pinsCallback.overrides[channelId] = ({ messages, searchContext, press }) => {
+    pinsCallback.overrides[channelId] = ({
+        messages,
+        searchContext,
+        press,
+    }) => {
         const query = useSearchResultsQuery(searchContext);
         return [
             ...(data
                 ? data
-                    .filter(x =>
-                        x.message.content.match(
-                            new RegExp(
-                                `\\B${query.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\B`,
-                                "u",
-                            ),
-                        ),
-                    )
-                    .map(({ message, channelId }) => ({
-                        type: "message",
-                        props: {
-                            searchContext,
-                            message,
-                            onPress: () => { press(channelId, message.id); },
-                            highlighter: (something: any) => something,
-                            lineClamp: 10,
-                        },
-                    }))
+                      .filter(x =>
+                          x.message.content.match(
+                              new RegExp(
+                                  `\\B${query.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\B`,
+                                  "u",
+                              ),
+                          ),
+                      )
+                      .map(({ message, channelId }) => ({
+                          type: "message",
+                          props: {
+                              searchContext,
+                              message,
+                              onPress: () => {
+                                  press(channelId, message.id);
+                              },
+                              highlighter: (something: any) => something,
+                              lineClamp: 10,
+                          },
+                      }))
                 : []),
             ...messages,
         ];
@@ -52,8 +58,7 @@ export default function PinsScreen({
         ret
     ) : (
         <RN.View
-            style={{ alignItems: "center", justifyContent: "center", flex: 1 }}
-        >
+            style={{ alignItems: "center", justifyContent: "center", flex: 1 }}>
             <RN.ActivityIndicator size="large" style={{ marginBottom: 10 }} />
             <Text variant="text-lg/semibold" color="TEXT_NORMAL" align="center">
                 {Math.floor(status * 100)}%

@@ -20,7 +20,9 @@ export function prettify(x: number): string {
             .toString()
             .split("")
             .reverse()
-            .map((x, i, a) => (i % 3 === 0 && a.length > 3 && i !== 0 ? `${x},` : x))
+            .map((x, i, a) =>
+                i % 3 === 0 && a.length > 3 && i !== 0 ? `${x},` : x,
+            )
             .reverse()
             .join("");
 }
@@ -28,8 +30,9 @@ export function prettify(x: number): string {
 export function hasSLM() {
     return !!(
         vstorage.supportSLM &&
-    Object.values(plugins).find(x => x.manifest.name === "SplitLargeMessages")
-        ?.enabled
+        Object.values(plugins).find(
+            x => x.manifest.name === "SplitLargeMessages",
+        )?.enabled
     );
 }
 

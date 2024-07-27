@@ -24,14 +24,15 @@ export default function InlineCheckbox({
             accessibilityState={{
                 selected: value,
             }}
-            onPress={() => { setValue(!value); }}
+            onPress={() => {
+                setValue(!value);
+            }}
             style={{
                 flexDirection: "row",
                 alignItems: "center",
                 gap: 8,
                 marginTop: 12,
-            }}
-        >
+            }}>
             <FormCheckbox checked={value} />
             <Text variant="text-md/normal" color="TEXT_NORMAL">
                 {label}

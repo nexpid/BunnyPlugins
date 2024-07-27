@@ -58,7 +58,14 @@ export default ({ inputProps }: { inputProps: any }) => {
     const fadeExtra = Reanimated.useSharedValue(0);
 
     lastText.value = text;
-    after("onChangeText", inputProps, ([txt]: [string]) => { setText(txt); }, true);
+    after(
+        "onChangeText",
+        inputProps,
+        ([txt]: [string]) => {
+            setText(txt);
+        },
+        true,
+    );
 
     const curLength = text.length,
         maxLength = getMessageLength();
@@ -66,7 +73,8 @@ export default ({ inputProps }: { inputProps: any }) => {
     const dspLength = curLength - extraMessages * maxLength;
 
     const elY =
-    (styles.text as any).fontSize * 2 + (styles.text as any).paddingVertical;
+        (styles.text as any).fontSize * 2 +
+        (styles.text as any).paddingVertical;
 
     const shouldAppear = curLength >= (vstorage.minChars ?? 1);
     React.useEffect(() => {
@@ -95,33 +103,39 @@ export default ({ inputProps }: { inputProps: any }) => {
                 {
                     opacity: fade,
                 },
-            ]}
-        >
+            ]}>
             <RN.Pressable
                 android_ripple={styles.androidRipple}
                 style={styles.container}
                 pointerEvents={shouldAppear ? "box-only" : "none"}
-                onPress={shouldAppear ? () => { setIsToggled(!isToggled); } : undefined}
-            >
+                onPress={
+                    shouldAppear
+                        ? () => {
+                              setIsToggled(!isToggled);
+                          }
+                        : undefined
+                }>
                 <Reanimated.default.View
-                    style={[styles.extraMessagesCircle, { opacity: fadeExtra }]}
-                >
+                    style={[
+                        styles.extraMessagesCircle,
+                        { opacity: fadeExtra },
+                    ]}>
                     <Text
                         variant="text-xs/semibold"
                         color="TEXT_NORMAL"
-                        style={{ paddingHorizontal: xsFontSize / 2 }}
-                    >
+                        style={{ paddingHorizontal: xsFontSize / 2 }}>
                         {extraMessages}
                     </Text>
                 </Reanimated.default.View>
                 <Text
                     variant="text-xs/semibold"
-                    color={dspLength <= maxLength ? "TEXT_NORMAL" : "TEXT_DANGER"}
+                    color={
+                        dspLength <= maxLength ? "TEXT_NORMAL" : "TEXT_DANGER"
+                    }
                     style={{
                         paddingHorizontal: 8,
                         paddingVertical: 8,
-                    }}
-                >
+                    }}>
                     {display(dspLength)}
                 </Text>
             </RN.Pressable>

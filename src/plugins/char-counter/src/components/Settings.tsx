@@ -16,13 +16,14 @@ export default () => {
         <RN.ScrollView style={{ flex: 1 }}>
             <BetterTableRowGroup
                 title="Settings"
-                icon={getAssetIDByName("ic_cog_24px")}
-            >
+                icon={getAssetIDByName("ic_cog_24px")}>
                 <FormRow
                     label="Position"
                     subLabel="Choose where Char Counter will appear"
                     leading={
-                        <FormRow.Icon source={getAssetIDByName("ic_message_edit")} />
+                        <FormRow.Icon
+                            source={getAssetIDByName("ic_message_edit")}
+                        />
                     }
                 />
                 <FormRadioRow
@@ -43,7 +44,9 @@ export default () => {
                     label="Display Type"
                     subLabel="Choose how the char counter text appears"
                     leading={
-                        <FormRow.Icon source={getAssetIDByName("ic_message_edit")} />
+                        <FormRow.Icon
+                            source={getAssetIDByName("ic_message_edit")}
+                        />
                     }
                 />
                 <FormRadioRow
@@ -74,7 +77,9 @@ export default () => {
                     label="Minimum Characters"
                     subLabel="The minimum amount of characters for Char Counter to show up"
                     leading={
-                        <FormRow.Icon source={getAssetIDByName("ic_message_edit")} />
+                        <FormRow.Icon
+                            source={getAssetIDByName("ic_message_edit")}
+                        />
                     }
                 />
                 <FormInput
@@ -94,7 +99,9 @@ export default () => {
                     label="Add Thousand Seperators"
                     subLabel="Adds thousand seperators (1,234,567) to numbers"
                     leading={
-                        <FormRow.Icon source={getAssetIDByName("ic_message_edit")} />
+                        <FormRow.Icon
+                            source={getAssetIDByName("ic_message_edit")}
+                        />
                     }
                     onValueChange={() => (vstorage.commas = !vstorage.commas)}
                     value={vstorage.commas}
@@ -102,9 +109,13 @@ export default () => {
                 <FormSwitchRow
                     label="Support SplitLargeMessages"
                     leading={
-                        <FormRow.Icon source={getAssetIDByName("ic_message_edit")} />
+                        <FormRow.Icon
+                            source={getAssetIDByName("ic_message_edit")}
+                        />
                     }
-                    onValueChange={() => (vstorage.supportSLM = !vstorage.supportSLM)}
+                    onValueChange={() =>
+                        (vstorage.supportSLM = !vstorage.supportSLM)
+                    }
                     value={vstorage.supportSLM}
                 />
             </BetterTableRowGroup>

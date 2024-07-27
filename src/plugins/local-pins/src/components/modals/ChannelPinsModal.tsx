@@ -17,26 +17,28 @@ export default function ChannelPinsModal({ channelId }: { channelId: string }) {
     useProxy(vstorage);
     const { data, status, clear } = useLocalPinned(channelId);
 
-    pinsCallback.filters = () =>
-    { ActionSheet.open(FiltersActionSheet, {
-        defFilters: vstorage.preferFilters,
-        set: fil => (vstorage.preferFilters = fil),
-    }); };
-    pinsCallback.clear = () =>
-    { data &&
-    showConfirmationAlert({
-        title: "Clear local pins",
-        content: `Are you sure you want to clear **${data.length}** pin${
-            data.length !== 1 ? "s" : ""
-        } in this channel?`,
-        confirmText: "Clear",
-        confirmColor: "red" as ButtonColors,
-        onConfirm: () => {
-            clearPins(channelId);
-            clear();
-        },
-        isDismissable: true,
-    }); };
+    pinsCallback.filters = () => {
+        ActionSheet.open(FiltersActionSheet, {
+            defFilters: vstorage.preferFilters,
+            set: fil => (vstorage.preferFilters = fil),
+        });
+    };
+    pinsCallback.clear = () => {
+        data &&
+            showConfirmationAlert({
+                title: "Clear local pins",
+                content: `Are you sure you want to clear **${data.length}** pin${
+                    data.length !== 1 ? "s" : ""
+                } in this channel?`,
+                confirmText: "Clear",
+                confirmColor: "red" as ButtonColors,
+                onConfirm: () => {
+                    clearPins(channelId);
+                    clear();
+                },
+                isDismissable: true,
+            });
+    };
     pinsCallback.overrides[channelId] = ({ messages }) => [
         ...(vstorage.preferFilters.includes("local") && data
             ? data.map(x => x.message)
@@ -48,8 +50,7 @@ export default function ChannelPinsModal({ channelId }: { channelId: string }) {
         <ChannelPinsConnected.default channelId={channelId} />
     ) : (
         <RN.View
-            style={{ alignItems: "center", justifyContent: "center", flex: 1 }}
-        >
+            style={{ alignItems: "center", justifyContent: "center", flex: 1 }}>
             <RN.ActivityIndicator size="large" style={{ marginBottom: 10 }} />
             <Text variant="text-lg/semibold" color="TEXT_NORMAL" align="center">
                 {Math.floor(status * 100)}%

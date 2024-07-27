@@ -70,7 +70,8 @@ export const stringVariables: {
         match: "{spotify.track}",
         description: "Your playing Spotify track",
         types: [VariableType.CurrentUserPresence],
-        replace: () => SpotifyStore.getActivity()?.details ?? "No Spotify Track",
+        replace: () =>
+            SpotifyStore.getActivity()?.details ?? "No Spotify Track",
     },
     {
         match: "{spotify.track.url}",
@@ -87,7 +88,7 @@ export const stringVariables: {
         types: [VariableType.CurrentUserPresence],
         replace: () =>
             (varCache.presence.spotify = SpotifyStore.getActivity())?.state ??
-      "No Spotify Track",
+            "No Spotify Track",
     },
     {
         match: "{spotify.album}",
@@ -112,7 +113,8 @@ export function parseVariableString(str: string): ParsedVariableString {
     for (const x of stringVariables) {
         let rep: string | undefined;
         data.content = data.content.replaceAll(x.match, () => {
-            for (const y of x.types) if (!data.types.includes(y)) data.types.push(y);
+            for (const y of x.types)
+                if (!data.types.includes(y)) data.types.push(y);
             return rep ?? (rep = x.replace());
         });
     }
@@ -142,7 +144,8 @@ export const timestampVariables: {
         format: "spotify.track.end",
         type: VariableType.CurrentUserPresence,
         replace: () =>
-            (varCache.presence.spotify = SpotifyStore.getActivity())?.timestamps?.end,
+            (varCache.presence.spotify = SpotifyStore.getActivity())?.timestamps
+                ?.end,
     },
 ];
 
@@ -159,7 +162,8 @@ export function parseVariableTimestamp(
 
         if (varib)
             return {
-                timestamp: rep !== undefined ? unparseTimestamp(rep) : undefined,
+                timestamp:
+                    rep !== undefined ? unparseTimestamp(rep) : undefined,
                 type: varib.type,
             };
         else return { timestamp: 0 };
@@ -198,8 +202,9 @@ export const imageVariables: {
         format: "user.presence",
         type: VariableType.CurrentUserPresence,
         replace: () =>
-            statusLinks[PresenceStore.getStatus(UserStore.getCurrentUser().id)] ??
-      statusLinks.online,
+            statusLinks[
+                PresenceStore.getStatus(UserStore.getCurrentUser().id)
+            ] ?? statusLinks.online,
     },
     {
         title: "Spotify Album Cover",
@@ -235,10 +240,10 @@ export function registerVariableEvents(types: VariableType[]) {
                 x => {
                     if (
                         varCache.presence.status !== x.status ||
-            JSON.stringify(varCache.presence.custom) !==
-              JSON.stringify(getCustomActivity(x.activities)) ||
-            JSON.stringify(varCache.presence.spotify) !==
-              JSON.stringify(SpotifyStore.getActivity())
+                        JSON.stringify(varCache.presence.custom) !==
+                            JSON.stringify(getCustomActivity(x.activities)) ||
+                        JSON.stringify(varCache.presence.spotify) !==
+                            JSON.stringify(SpotifyStore.getActivity())
                     )
                         forceUpdateActivity();
                     varCache.presence = {

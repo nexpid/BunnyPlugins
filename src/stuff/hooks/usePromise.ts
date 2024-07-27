@@ -1,19 +1,19 @@
 import { React } from "@vendetta/metro/common";
 
 type PromiseRet<Res> =
-  | {
-      fulfilled: false;
-  }
-  | {
-      fulfilled: true;
-      success: false;
-      error: any;
-  }
-  | {
-      fulfilled: true;
-      success: true;
-      response: Res;
-  };
+    | {
+          fulfilled: false;
+      }
+    | {
+          fulfilled: true;
+          success: false;
+          error: any;
+      }
+    | {
+          fulfilled: true;
+          success: true;
+          response: Res;
+      };
 
 export default function usePromise<Res>(
     promise: (signal: AbortSignal) => Promise<Res>,
@@ -37,23 +37,25 @@ export default function usePromise<Res>(
             .then(
                 response =>
                     tracker.current === id &&
-          setRes({
-              fulfilled: true,
-              success: true,
-              response,
-          }),
+                    setRes({
+                        fulfilled: true,
+                        success: true,
+                        response,
+                    }),
             )
             .catch(
                 error =>
                     tracker.current === id &&
-          setRes({
-              fulfilled: true,
-              success: false,
-              error,
-          }),
+                    setRes({
+                        fulfilled: true,
+                        success: false,
+                        error,
+                    }),
             );
 
-        return () => { controller.abort(); };
+        return () => {
+            controller.abort();
+        };
     }, deps);
 
     return res;

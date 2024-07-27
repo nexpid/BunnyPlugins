@@ -43,66 +43,66 @@ export interface SpotifyEmbedEntityTracklistEntry {
     };
 }
 export type SpotifyEmbedEntity =
-  | {
-      type: "track";
-      name: string;
-      uri: string;
-      id: string;
-      title: string;
-      artists: {
+    | {
+          type: "track";
           name: string;
           uri: string;
-      }[];
-      coverArt: {
-          extractedColors: {
-              colorDark: { hex: string };
-              colorLight?: { hex: string };
-          };
-          sources: {
-              url: string;
-              width: number;
-              height: number;
+          id: string;
+          title: string;
+          artists: {
+              name: string;
+              uri: string;
           }[];
-      };
-      releaseDate: { isoString: string } | null;
-      duration: number;
-      maxDuration: number;
-      isPlayable: boolean;
-      isExplicit: boolean;
-      audioPreview: {
-          url: string;
-          format: string;
-      };
-      hasVideo: boolean;
-      relatedEntityUri: string;
-  }
-  | {
-      type: "album" | "playlist";
-      name: string;
-      uri: string;
-      id: string;
-      title: string;
-      subtitle: string;
-      coverArt: {
-          extractedColors: {
-              colorDark: { hex: string };
-              colorLight?: { hex: string };
+          coverArt: {
+              extractedColors: {
+                  colorDark: { hex: string };
+                  colorLight?: { hex: string };
+              };
+              sources: {
+                  url: string;
+                  width: number;
+                  height: number;
+              }[];
           };
-          sources: {
+          releaseDate: { isoString: string } | null;
+          duration: number;
+          maxDuration: number;
+          isPlayable: boolean;
+          isExplicit: boolean;
+          audioPreview: {
               url: string;
-              width: number;
-              height: number;
-          }[];
+              format: string;
+          };
+          hasVideo: boolean;
+          relatedEntityUri: string;
+      }
+    | {
+          type: "album" | "playlist";
+          name: string;
+          uri: string;
+          id: string;
+          title: string;
+          subtitle: string;
+          coverArt: {
+              extractedColors: {
+                  colorDark: { hex: string };
+                  colorLight?: { hex: string };
+              };
+              sources: {
+                  url: string;
+                  width: number;
+                  height: number;
+              }[];
+          };
+          releaseDate: { isoString: string } | null;
+          duration: number;
+          maxDuration: number;
+          isPlayable: boolean;
+          isExplicit: boolean;
+          hasVideo: boolean;
+          relatedEntityUri: string;
+          trackList: SpotifyEmbedEntityTracklistEntry[];
       };
-      releaseDate: { isoString: string } | null;
-      duration: number;
-      maxDuration: number;
-      isPlayable: boolean;
-      isExplicit: boolean;
-      hasVideo: boolean;
-      relatedEntityUri: string;
-      trackList: SpotifyEmbedEntityTracklistEntry[];
-  };
 
 export async function getSongData(
     service: API.Song["service"],
@@ -137,7 +137,8 @@ export async function validateSong(
 ): Promise<boolean> {
     if (service === "spotify") {
         return (
-            (await getInfo(service, type, id, signal)).page?.props?.status !== 404
+            (await getInfo(service, type, id, signal)).page?.props?.status !==
+            404
         );
     } else return false;
 }

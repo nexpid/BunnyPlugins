@@ -8,17 +8,17 @@ import {
 import { type SharedValue } from "react-native-reanimated";
 
 export type ButtonVariant =
-  | "primary"
-  | "secondary"
-  | "tertiary"
-  | "primary-overlay"
-  | "secondary-overlay"
-  | "destructive"
-  | "active"
-  /** @deprecated use destructive */
-  | "danger"
-  /** @deprecated use active */
-  | "positive";
+    | "primary"
+    | "secondary"
+    | "tertiary"
+    | "primary-overlay"
+    | "secondary-overlay"
+    | "destructive"
+    | "active"
+    /** @deprecated use destructive */
+    | "danger"
+    /** @deprecated use active */
+    | "positive";
 
 export interface PrimitiveButton {
     onPress?: () => void;
@@ -31,38 +31,38 @@ export interface PrimitiveButtonIcon {
 }
 
 export type Button = React.FC<
-  PrimitiveButton & {
-      variant?: ButtonVariant;
-      size?: "sm" | "md" | "lg";
-      text: string;
-      iconPosition?: "start" | "end";
-      grow?: boolean;
-      loading?: boolean;
-      onPressIn?: () => void;
-      onPressOut?: () => void;
-  }
+    PrimitiveButton & {
+        variant?: ButtonVariant;
+        size?: "sm" | "md" | "lg";
+        text: string;
+        iconPosition?: "start" | "end";
+        grow?: boolean;
+        loading?: boolean;
+        onPressIn?: () => void;
+        onPressOut?: () => void;
+    }
 > & {
     Icon: React.FC<PrimitiveButtonIcon>;
 };
 
 export type RowButton = React.FC<
-  PrimitiveButton & {
-      label: string;
-      subLabel?: string;
-      variant?: "primary" | "secondary";
-      trailing?: React.ReactNode;
-      draggable?: boolean;
-      arrow?: boolean;
-      /** Requires onPress to bet set */
-      onPressIn?: () => void;
-      /** Requires onPress to bet set */
-      onPressOut?: () => void;
-  }
+    PrimitiveButton & {
+        label: string;
+        subLabel?: string;
+        variant?: "primary" | "secondary";
+        trailing?: React.ReactNode;
+        draggable?: boolean;
+        arrow?: boolean;
+        /** Requires onPress to bet set */
+        onPressIn?: () => void;
+        /** Requires onPress to bet set */
+        onPressOut?: () => void;
+    }
 > & {
     Icon: React.FC<
-    PrimitiveButtonIcon & {
-        variant?: "secondary" | "danger" | "blurple" | "boosting-pink";
-    }
+        PrimitiveButtonIcon & {
+            variant?: "secondary" | "danger" | "blurple" | "boosting-pink";
+        }
     >;
 };
 
@@ -142,10 +142,10 @@ export type Card = View;
 
 export type Stack = React.FC<
     React.PropsWithChildren<
-    ViewProps & {
-        direction?: "horizontal" | "vertical";
-        spacing?: number;
-    }
+        ViewProps & {
+            direction?: "horizontal" | "vertical";
+            spacing?: number;
+        }
     >
 >;
 

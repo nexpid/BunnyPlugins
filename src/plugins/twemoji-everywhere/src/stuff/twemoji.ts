@@ -63,7 +63,7 @@ export const emojipacks = {
 export function getSrc(src: string) {
     return (
         emojipacks[vstorage.emojipack].format(src) ??
-    emojipacks.default.format(src)
+        emojipacks.default.format(src)
     );
 }
 

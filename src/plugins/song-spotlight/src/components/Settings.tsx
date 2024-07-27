@@ -52,15 +52,13 @@ export default function () {
             <BetterTableRowGroup
                 title="Songs"
                 icon={getAssetIDByName("abc")}
-                padding={true}
-            >
+                padding={true}>
                 {isAuthed && hasData ? (
                     <RN.View
                         style={{
                             flexDirection: "column",
                             gap: 8,
-                        }}
-                    >
+                        }}>
                         {cache.data.songs.map((x, i) => (
                             <FormRow
                                 label={
@@ -89,73 +87,108 @@ export default function () {
                                 }
                                 onLongPress={() =>
                                     x &&
-                  ActionSheet.open(SongInfoSheet, {
-                      song: x,
-                      remove: () => (cache.data.songs[i] = null),
-                  })
+                                    ActionSheet.open(SongInfoSheet, {
+                                        song: x,
+                                        remove: () =>
+                                            (cache.data.songs[i] = null),
+                                    })
                                 }
-                                onPress={() =>
-                                { showInputAlert({
-                                    title: "Add song",
-                                    placeholder: [
-                                        "https://open.spotify.com/track/ABC",
-                                        "https://open.spotify.com/album/ABC",
-                                        "https://open.spotify.com/playlist/ABC",
-                                        "https://spotify.link/ABC",
-                                    ].sort(() => (Math.random() > 0.5 ? 1 : -1))[0],
-                                    initialValue: x && rebuildLink(x.service, x.type, x.id),
-                                    cancelText: "Cancel",
-                                    confirmText: "Save",
-                                    onConfirm: async val => {
-                                        const url = val.match(HTTP_REGEX_MULTI)?.[0];
-                                        if (!url) throw new Error("Invalid link!");
+                                onPress={() => {
+                                    showInputAlert({
+                                        title: "Add song",
+                                        placeholder: [
+                                            "https://open.spotify.com/track/ABC",
+                                            "https://open.spotify.com/album/ABC",
+                                            "https://open.spotify.com/playlist/ABC",
+                                            "https://spotify.link/ABC",
+                                        ].sort(() =>
+                                            Math.random() > 0.5 ? 1 : -1,
+                                        )[0],
+                                        initialValue:
+                                            x &&
+                                            rebuildLink(
+                                                x.service,
+                                                x.type,
+                                                x.id,
+                                            ),
+                                        cancelText: "Cancel",
+                                        confirmText: "Save",
+                                        onConfirm: async val => {
+                                            const url =
+                                                val.match(
+                                                    HTTP_REGEX_MULTI,
+                                                )?.[0];
+                                            if (!url)
+                                                throw new Error(
+                                                    "Invalid link!",
+                                                );
 
-                                        let base = new URL(url);
-                                        let host = base.hostname;
+                                            let base = new URL(url);
+                                            let host = base.hostname;
 
-                                        let service: API.Song["service"],
-                                            type: API.Song["type"],
-                                            id: string;
+                                            let service: API.Song["service"],
+                                                type: API.Song["type"],
+                                                id: string;
 
-                                        if (host === "spotify.link") {
-                                            service = "spotify";
+                                            if (host === "spotify.link") {
+                                                service = "spotify";
 
-                                            base = new URL((await fetch(url)).url);
-                                            host = base.hostname;
-                                        }
-                                        if (host === "open.spotify.com") {
-                                            service = "spotify";
-
-                                            const [_, _type, _id] = base.pathname.split("/");
-                                            if (
-                                                ["album", "track", "playlist"].includes(_type) &&
-                          _id
-                                            ) {
-                                                type = _type as typeof type;
-                                                id = _id;
+                                                base = new URL(
+                                                    (await fetch(url)).url,
+                                                );
+                                                host = base.hostname;
                                             }
-                                        }
+                                            if (host === "open.spotify.com") {
+                                                service = "spotify";
 
-                                        if (!service || !type || !id)
-                                            throw new Error("Missing service, type or id!");
+                                                const [_, _type, _id] =
+                                                    base.pathname.split("/");
+                                                if (
+                                                    [
+                                                        "album",
+                                                        "track",
+                                                        "playlist",
+                                                    ].includes(_type) &&
+                                                    _id
+                                                ) {
+                                                    type = _type as typeof type;
+                                                    id = _id;
+                                                }
+                                            }
 
-                                        if (!(await validateSong(service, type, id)))
-                                            throw new Error("Invalid song!");
+                                            if (!service || !type || !id)
+                                                throw new Error(
+                                                    "Missing service, type or id!",
+                                                );
 
-                                        cache.data.songs[i] = {
-                                            service,
-                                            type,
-                                            id,
-                                        };
-                                    },
-                                }); }
-                                }
+                                            if (
+                                                !(await validateSong(
+                                                    service,
+                                                    type,
+                                                    id,
+                                                ))
+                                            )
+                                                throw new Error(
+                                                    "Invalid song!",
+                                                );
+
+                                            cache.data.songs[i] = {
+                                                service,
+                                                type,
+                                                id,
+                                            };
+                                        },
+                                    });
+                                }}
                                 style={styles.song}
                             />
                         ))}
                     </RN.View>
                 ) : !isAuthed ? (
-                    <Text variant="text-md/semibold" color="TEXT_NORMAL" align="center">
+                    <Text
+                        variant="text-md/semibold"
+                        color="TEXT_NORMAL"
+                        align="center">
                         Authenticate first to manage your songs
                     </Text>
                 ) : (
@@ -164,18 +197,21 @@ export default function () {
             </BetterTableRowGroup>
             <BetterTableRowGroup
                 title="Authentication"
-                icon={getAssetIDByName("lock")}
-            >
+                icon={getAssetIDByName("lock")}>
                 {currentAuthorization() ? (
                     <>
                         <FormRow
                             label="Log out"
                             subLabel="Logs you out of SongSpotlight"
                             leading={
-                                <FormRow.Icon source={getAssetIDByName("ic_logout_24px")} />
+                                <FormRow.Icon
+                                    source={getAssetIDByName("ic_logout_24px")}
+                                />
                             }
                             onPress={() => {
-                                delete vstorage.auth[UserStore.getCurrentUser().id];
+                                delete vstorage.auth[
+                                    UserStore.getCurrentUser().id
+                                ];
                                 delete cache.data;
 
                                 showToast(
@@ -187,10 +223,16 @@ export default function () {
                         <FormRow
                             label="Delete data"
                             subLabel="Deletes your SongSpotlight data"
-                            leading={<FormRow.Icon source={getAssetIDByName("trash")} />}
+                            leading={
+                                <FormRow.Icon
+                                    source={getAssetIDByName("trash")}
+                                />
+                            }
                             onPress={async () => {
                                 await deleteSaveData();
-                                delete vstorage.auth[UserStore.getCurrentUser().id];
+                                delete vstorage.auth[
+                                    UserStore.getCurrentUser().id
+                                ];
                                 delete cache.data;
 
                                 showToast(
@@ -203,7 +245,9 @@ export default function () {
                 ) : (
                     <FormRow
                         label="Authenticate"
-                        leading={<FormRow.Icon source={getAssetIDByName("copy")} />}
+                        leading={
+                            <FormRow.Icon source={getAssetIDByName("copy")} />
+                        }
                         trailing={FormRow.Arrow}
                         onPress={openOauth2Modal}
                     />

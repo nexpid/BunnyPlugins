@@ -14,8 +14,10 @@ export async function getAppDirectoryCategories(): Promise<APICategory[]> {
 
     const cacheKey = `app_directory_categories|${locale}`;
     const res =
-    cache.get(cacheKey) ??
-    (await get(`/application-directory-static/categories?locale=${locale}`));
+        cache.get(cacheKey) ??
+        (await get(
+            `/application-directory-static/categories?locale=${locale}`,
+        ));
     cache.set(cacheKey, res);
 
     return res.body;
@@ -82,12 +84,12 @@ export type APICollectionApplication = APIApplication & {
         guild_count: number;
         detailed_description: string | null;
         carousel_items:
-      | {
-          type: unknown;
-          url: string;
-          proxy_url: string;
-      }[]
-      | null;
+            | {
+                  type: unknown;
+                  url: string;
+                  proxy_url: string;
+              }[]
+            | null;
         supported_locales: string[];
         external_urls: {
             name: string;
@@ -127,10 +129,10 @@ export async function getAppDirectoryCollections(): Promise<APICollection[]> {
 
     const cacheKey = `app_directory_collections|${locale}`;
     const res =
-    cache.get(cacheKey) ??
-    (await get(
-        `/application-directory-static/collections?include_inactive=false&locale=${locale}`,
-    ));
+        cache.get(cacheKey) ??
+        (await get(
+            `/application-directory-static/collections?include_inactive=false&locale=${locale}`,
+        ));
     cache.set(cacheKey, res);
 
     return res.body;
@@ -149,10 +151,10 @@ export async function getAppDirectoryApplication(
 
     const cacheKey = `app_directory_application|${appId},${locale}`;
     const res =
-    cache.get(cacheKey) ??
-    (await get(
-        `/application-directory-static/applications/${appId}?locale=${locale}`,
-    ));
+        cache.get(cacheKey) ??
+        (await get(
+            `/application-directory-static/applications/${appId}?locale=${locale}`,
+        ));
     cache.set(cacheKey, res);
 
     return res.body;
@@ -190,8 +192,10 @@ export async function searchAppDirectory(
     params.append("locale", locale);
 
     const res =
-    cache.get(cacheKey) ??
-    (await get(`/application-directory-static/search?${params.toString()}`));
+        cache.get(cacheKey) ??
+        (await get(
+            `/application-directory-static/search?${params.toString()}`,
+        ));
     cache.set(cacheKey, res);
 
     return res.body;

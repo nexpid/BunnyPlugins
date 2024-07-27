@@ -32,8 +32,7 @@ export default function () {
                     style={{
                         marginVertical: 12,
                         maxHeight: RN.Dimensions.get("window").height * 0.7,
-                    }}
-                >
+                    }}>
                     <ChatItemWrapper
                         rowGenerator={new RowManager()}
                         message={

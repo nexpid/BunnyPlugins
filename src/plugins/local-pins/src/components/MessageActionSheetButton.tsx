@@ -24,8 +24,8 @@ export default function (message: {
                     showToast(
                         `Unpinned ${
                             message.nick ??
-              message.author.globalName ??
-              message.author.username
+                            message.author.globalName ??
+                            message.author.username
                         }'s message locally`,
                         getAssetIDByName("ic_message_pin"),
                     );
@@ -34,8 +34,8 @@ export default function (message: {
                     showToast(
                         `Pinned ${
                             message.nick ??
-              message.author.globalName ??
-              message.author.username
+                            message.author.globalName ??
+                            message.author.username
                         }'s message locally`,
                         getAssetIDByName("ic_message_pin"),
                     );

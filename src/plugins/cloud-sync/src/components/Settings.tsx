@@ -53,7 +53,9 @@ export default function () {
 
     const setBusy = (x: string) =>
         !isBusy.includes(x) && setIsBusy([...isBusy, x]);
-    const unBusy = (x: string) => { setIsBusy(isBusy.filter(y => x !== y)); };
+    const unBusy = (x: string) => {
+        setIsBusy(isBusy.filter(y => x !== y));
+    };
     let lastTap = 0;
 
     const bumpyScaleX = Reanimated.useSharedValue(1);
@@ -65,7 +67,7 @@ export default function () {
     const doBumpiness = () => {
         if (
             !settings.developerSettings ||
-      vstorage.realTrackingAnalyticsSentToChina.pressedSettings
+            vstorage.realTrackingAnalyticsSentToChina.pressedSettings
         )
             return;
 
@@ -80,7 +82,7 @@ export default function () {
     React.useEffect(() => {
         if (
             !settings.developerSettings ||
-      vstorage.realTrackingAnalyticsSentToChina.pressedSettings
+            vstorage.realTrackingAnalyticsSentToChina.pressedSettings
         ) {
             bumpyScaleX.value = Reanimated.withTiming(1, { duration: 150 });
             bumpyScaleY.value = Reanimated.withTiming(1, { duration: 150 });
@@ -132,16 +134,14 @@ export default function () {
             <BetterTableRowGroup
                 title={lang.format("settings.your_data.title", {})}
                 icon={getAssetIDByName("MobilePhoneShareIcon")}
-                padding={true}
-            >
+                padding={true}>
                 <RN.View
                     style={{
                         flexDirection: "row",
                         alignItems: "center",
                         justifyContent: "center",
                         marginVertical: 8,
-                    }}
-                >
+                    }}>
                     <DataStat
                         count={data ? Object.keys(data.plugins).length : "-"}
                         subtitle={"settings.your_data.plugins"}
@@ -154,25 +154,31 @@ export default function () {
                         count={
                             data
                                 ? Object.keys(data.fonts.installed).length +
-                  data.fonts.custom.length
+                                  data.fonts.custom.length
                                 : "-"
                         }
                         subtitle={"settings.your_data.fonts"}
                     />
                 </RN.View>
                 {at && (
-                    <Text variant="text-sm/medium" color="TEXT_MUTED" align="center">
+                    <Text
+                        variant="text-sm/medium"
+                        color="TEXT_MUTED"
+                        align="center">
                         {Lang.basicFormat(
                             lang.format("settings.your_data.last_synced", {
-                                date: new Date(at).toLocaleString(i18n.getLocale(), {
-                                    weekday: "long",
-                                    year: "numeric",
-                                    month: "long",
-                                    day: "numeric",
-                                    hour: "numeric",
-                                    minute: "numeric",
-                                    second: "numeric",
-                                }),
+                                date: new Date(at).toLocaleString(
+                                    i18n.getLocale(),
+                                    {
+                                        weekday: "long",
+                                        year: "numeric",
+                                        month: "long",
+                                        day: "numeric",
+                                        hour: "numeric",
+                                        minute: "numeric",
+                                        second: "numeric",
+                                    },
+                                ),
                             }),
                         )}
                     </Text>
@@ -185,18 +191,20 @@ export default function () {
                         disabled={false}
                         accessibilityRole={"button"}
                         onPress={() => {
-                            if (!vstorage.realTrackingAnalyticsSentToChina.pressedSettings)
+                            if (
+                                !vstorage.realTrackingAnalyticsSentToChina
+                                    .pressedSettings
+                            )
                                 doBumpiness();
 
                             if (lastTap >= Date.now()) {
                                 vstorage.realTrackingAnalyticsSentToChina.pressedSettings =
-                  true;
+                                    true;
                                 setShowDev(!showDev);
                                 lastTap = 0;
                             } else lastTap = Date.now() + 500;
                         }}
-                        style={{ width: "100%", marginBottom: 8 }}
-                    >
+                        style={{ width: "100%", marginBottom: 8 }}>
                         <Reanimated.default.View
                             style={[
                                 {
@@ -213,8 +221,7 @@ export default function () {
                                         { rotate: bumpyPressRot },
                                     ],
                                 },
-                            ]}
-                        >
+                            ]}>
                             <RN.Image
                                 style={styles.titleIcon}
                                 source={getAssetIDByName("SettingsIcon")}
@@ -226,30 +233,47 @@ export default function () {
                         </Reanimated.default.View>
                     </RN.Pressable>
                 }
-                icon={getAssetIDByName("SettingsIcon")}
-            >
+                icon={getAssetIDByName("SettingsIcon")}>
                 <FormSwitchRow
                     label={lang.format("settings.config.auto_save.title", {})}
-                    subLabel={lang.format("settings.config.auto_save.description", {})}
-                    leading={<FormRow.Icon source={getAssetIDByName("RefreshIcon")} />}
+                    subLabel={lang.format(
+                        "settings.config.auto_save.description",
+                        {},
+                    )}
+                    leading={
+                        <FormRow.Icon
+                            source={getAssetIDByName("RefreshIcon")}
+                        />
+                    }
                     onValueChange={() =>
                         (vstorage.config.autoSync = !vstorage.config.autoSync)
                     }
                     value={vstorage.config.autoSync}
                 />
                 <FormSwitchRow
-                    label={lang.format("settings.config.settings_pin.title", {})}
-                    subLabel={lang.format("settings.config.settings_pin.description", {})}
-                    leading={<FormRow.Icon source={getAssetIDByName("PinIcon")} />}
+                    label={lang.format(
+                        "settings.config.settings_pin.title",
+                        {},
+                    )}
+                    subLabel={lang.format(
+                        "settings.config.settings_pin.description",
+                        {},
+                    )}
+                    leading={
+                        <FormRow.Icon source={getAssetIDByName("PinIcon")} />
+                    }
                     onValueChange={() =>
-                        (vstorage.config.addToSettings = !vstorage.config.addToSettings)
+                        (vstorage.config.addToSettings =
+                            !vstorage.config.addToSettings)
                     }
                     value={vstorage.config.addToSettings}
                 />
                 <FormRow
                     label={lang.format("page.ignored_plugins.title", {})}
                     leading={
-                        <FormRow.Icon source={getAssetIDByName("ListBulletsIcon")} />
+                        <FormRow.Icon
+                            source={getAssetIDByName("ListBulletsIcon")}
+                        />
                     }
                     trailing={<FormRow.Arrow />}
                     onPress={() =>
@@ -263,8 +287,15 @@ export default function () {
                 <BetterTableRowGroup nearby>
                     <FormRow
                         label={lang.format("settings.dev.api_url.title", {})}
-                        subLabel={lang.format("settings.dev.api_url.description", {})}
-                        leading={<FormRow.Icon source={getAssetIDByName("PencilIcon")} />}
+                        subLabel={lang.format(
+                            "settings.dev.api_url.description",
+                            {},
+                        )}
+                        leading={
+                            <FormRow.Icon
+                                source={getAssetIDByName("PencilIcon")}
+                            />
+                        }
                     />
                     <FormInput
                         title=""
@@ -277,8 +308,15 @@ export default function () {
                     />
                     <FormRow
                         label={lang.format("settings.dev.client_id.title", {})}
-                        subLabel={lang.format("settings.dev.client_id.description", {})}
-                        leading={<FormRow.Icon source={getAssetIDByName("PencilIcon")} />}
+                        subLabel={lang.format(
+                            "settings.dev.client_id.description",
+                            {},
+                        )}
+                        leading={
+                            <FormRow.Icon
+                                source={getAssetIDByName("PencilIcon")}
+                            />
+                        }
                     />
                     <FormInput
                         title=""
@@ -293,36 +331,54 @@ export default function () {
             )}
             <BetterTableRowGroup
                 title={lang.format("settings.auth.title", {})}
-                icon={getAssetIDByName("LockIcon")}
-            >
+                icon={getAssetIDByName("LockIcon")}>
                 {isAuthorized() ? (
                     <>
                         <FormRow
-                            label={lang.format("settings.auth.log_out.title", {})}
-                            subLabel={lang.format("settings.auth.log_out.description", {})}
+                            label={lang.format(
+                                "settings.auth.log_out.title",
+                                {},
+                            )}
+                            subLabel={lang.format(
+                                "settings.auth.log_out.description",
+                                {},
+                            )}
                             // STUB[epic=icon] use new logout icon :3
                             leading={
-                                <FormRow.Icon source={getAssetIDByName("ic_logout_24px")} />
+                                <FormRow.Icon
+                                    source={getAssetIDByName("ic_logout_24px")}
+                                />
                             }
                             destructive
                             onPress={() =>
                                 !isBusy.length &&
-                showConfirmationAlert({
-                    title: lang.format("alert.log_out.title", {}),
-                    content: lang.format("alert.log_out.body", {}),
-                    onConfirm: () => {
-                        useAuthorizationStore.getState().setToken(null);
+                                showConfirmationAlert({
+                                    title: lang.format(
+                                        "alert.log_out.title",
+                                        {},
+                                    ),
+                                    content: lang.format(
+                                        "alert.log_out.body",
+                                        {},
+                                    ),
+                                    onConfirm: () => {
+                                        useAuthorizationStore
+                                            .getState()
+                                            .setToken(null);
 
-                        showToast(
-                            lang.format("toast.logout", {}),
-                            getAssetIDByName("ic_logout_24px"),
-                        );
-                    },
-                })
+                                        showToast(
+                                            lang.format("toast.logout", {}),
+                                            getAssetIDByName("ic_logout_24px"),
+                                        );
+                                    },
+                                })
                             }
                         />
                         <FormRow
-                            label={lang.format("settings.auth.delete_data.title", {})}
+                            label={lang.format(
+                                "settings.auth.delete_data.title",
+                                {},
+                            )}
                             subLabel={lang.format(
                                 "settings.auth.delete_data.description",
                                 {},
@@ -331,35 +387,55 @@ export default function () {
                                 isBusy.includes("delete_data") ? (
                                     <RN.ActivityIndicator size="small" />
                                 ) : (
-                                    <FormRow.Icon source={getAssetIDByName("TrashIcon")} />
+                                    <FormRow.Icon
+                                        source={getAssetIDByName("TrashIcon")}
+                                    />
                                 )
                             }
                             onPress={() =>
                                 !isBusy.length &&
-                showConfirmationAlert({
-                    title: lang.format("alert.delete_data.title", {}),
-                    content: lang.format("alert.delete_data.body", {}),
-                    confirmText: lang.format("alert.delete_data.confirm", {}),
-                    confirmColor: "red" as ButtonColors,
-                    onConfirm: async () => {
-                        setBusy("delete_data");
-                        await deleteData();
-                        useAuthorizationStore.getState().setToken(null);
+                                showConfirmationAlert({
+                                    title: lang.format(
+                                        "alert.delete_data.title",
+                                        {},
+                                    ),
+                                    content: lang.format(
+                                        "alert.delete_data.body",
+                                        {},
+                                    ),
+                                    confirmText: lang.format(
+                                        "alert.delete_data.confirm",
+                                        {},
+                                    ),
+                                    confirmColor: "red" as ButtonColors,
+                                    onConfirm: async () => {
+                                        setBusy("delete_data");
+                                        await deleteData();
+                                        useAuthorizationStore
+                                            .getState()
+                                            .setToken(null);
 
-                        unBusy("delete_data");
-                        showToast(
-                            lang.format("toast.deleted_data", {}),
-                            getAssetIDByName("TrashIcon"),
-                        );
-                    },
-                })
+                                        unBusy("delete_data");
+                                        showToast(
+                                            lang.format(
+                                                "toast.deleted_data",
+                                                {},
+                                            ),
+                                            getAssetIDByName("TrashIcon"),
+                                        );
+                                    },
+                                })
                             }
                         />
                     </>
                 ) : (
                     <FormRow
                         label={lang.format("settings.auth.authorize", {})}
-                        leading={<FormRow.Icon source={getAssetIDByName("LinkIcon")} />}
+                        leading={
+                            <FormRow.Icon
+                                source={getAssetIDByName("LinkIcon")}
+                            />
+                        }
                         trailing={FormRow.Arrow}
                         onPress={openOauth2Modal}
                     />
@@ -368,12 +444,14 @@ export default function () {
             <BetterTableRowGroup
                 title={lang.format("settings.manage_data.title", {})}
                 icon={getAssetIDByName("UserIcon")}
-                padding={!isAuthorized() || !data}
-            >
+                padding={!isAuthorized() || !data}>
                 {isAuthorized() && hasData() ? (
                     <>
                         <FormRow
-                            label={lang.format("settings.manage_data.save_data.title", {})}
+                            label={lang.format(
+                                "settings.manage_data.save_data.title",
+                                {},
+                            )}
                             subLabel={lang.format(
                                 "settings.manage_data.save_data.description",
                                 {},
@@ -382,32 +460,49 @@ export default function () {
                                 isBusy.includes("save_api") ? (
                                     <RN.ActivityIndicator size="small" />
                                 ) : (
-                                    <FormRow.Icon source={getAssetIDByName("UploadIcon")} />
+                                    <FormRow.Icon
+                                        source={getAssetIDByName("UploadIcon")}
+                                    />
                                 )
                             }
                             onPress={() =>
                                 !isBusy.length &&
-                showConfirmationAlert({
-                    title: lang.format("alert.save_data.title", {}),
-                    content: lang.format("alert.save_data.body", {}),
-                    confirmText: lang.format("alert.save_data.confirm", {}),
-                    onConfirm: async () => {
-                        setBusy("save_api");
-                        try {
-                            const everything = await grabEverything();
-                            await saveData(everything);
+                                showConfirmationAlert({
+                                    title: lang.format(
+                                        "alert.save_data.title",
+                                        {},
+                                    ),
+                                    content: lang.format(
+                                        "alert.save_data.body",
+                                        {},
+                                    ),
+                                    confirmText: lang.format(
+                                        "alert.save_data.confirm",
+                                        {},
+                                    ),
+                                    onConfirm: async () => {
+                                        setBusy("save_api");
+                                        try {
+                                            const everything =
+                                                await grabEverything();
+                                            await saveData(everything);
 
-                            showToast(
-                                lang.format("toast.saved_data", {}),
-                                getAssetIDByName("CircleCheckIcon-primary"),
-                            );
-                        } catch {
-                            // handled in saveData
-                        }
+                                            showToast(
+                                                lang.format(
+                                                    "toast.saved_data",
+                                                    {},
+                                                ),
+                                                getAssetIDByName(
+                                                    "CircleCheckIcon-primary",
+                                                ),
+                                            );
+                                        } catch {
+                                            // handled in saveData
+                                        }
 
-                        unBusy("save_api");
-                    },
-                })
+                                        unBusy("save_api");
+                                    },
+                                })
                             }
                         />
                         <FormRow
@@ -420,7 +515,11 @@ export default function () {
                                 isBusy.includes("import_api") ? (
                                     <RN.ActivityIndicator size="small" />
                                 ) : (
-                                    <FormRow.Icon source={getAssetIDByName("DownloadIcon")} />
+                                    <FormRow.Icon
+                                        source={getAssetIDByName(
+                                            "DownloadIcon",
+                                        )}
+                                    />
                                 )
                             }
                             onPress={() => {
@@ -430,13 +529,18 @@ export default function () {
                                     navigation,
                                 });
                                 setImportCallback(x =>
-                                    x ? setBusy("import_api") : unBusy("import_api"),
+                                    x
+                                        ? setBusy("import_api")
+                                        : unBusy("import_api"),
                                 );
                             }}
                         />
                     </>
                 ) : !isAuthorized() ? (
-                    <Text variant="text-md/semibold" color="TEXT_NORMAL" align="center">
+                    <Text
+                        variant="text-md/semibold"
+                        color="TEXT_NORMAL"
+                        align="center">
                         {lang.format("settings.label.auth_needed", {})}
                     </Text>
                 ) : (
@@ -458,7 +562,9 @@ export default function () {
                             isBusy.includes("download_compressed") ? (
                                 <RN.ActivityIndicator size="small" />
                             ) : (
-                                <FormRow.Icon source={getAssetIDByName("DownloadIcon")} />
+                                <FormRow.Icon
+                                    source={getAssetIDByName("DownloadIcon")}
+                                />
                             )
                         }
                         onPress={async () => {
@@ -471,17 +577,22 @@ export default function () {
                             try {
                                 data = await getRawData();
                             } catch {
-                                unBusy("download_compressed"); return;
+                                unBusy("download_compressed");
+                                return;
                             }
 
                             try {
                                 await RNFS.writeFile(
-                                    RNFS.DownloadDirectoryPath + "/" + data.file,
+                                    RNFS.DownloadDirectoryPath +
+                                        "/" +
+                                        data.file,
                                     data.data,
                                 );
 
                                 showToast(
-                                    lang.format("toast.backup_saved", { file: data.file }),
+                                    lang.format("toast.backup_saved", {
+                                        file: data.file,
+                                    }),
                                     getAssetIDByName("FileIcon"),
                                 );
                             } catch (e) {
@@ -507,7 +618,9 @@ export default function () {
                             isBusy.includes("import_compressed") ? (
                                 <RN.ActivityIndicator size="small" />
                             ) : (
-                                <FormRow.Icon source={getAssetIDByName("UploadIcon")} />
+                                <FormRow.Icon
+                                    source={getAssetIDByName("UploadIcon")}
+                                />
                             )
                         }
                         onPress={async () => {
@@ -516,13 +629,17 @@ export default function () {
 
                             let text: string;
                             try {
-                                const { fileCopyUri, type } = await DocumentPicker.pickSingle({
-                                    type: DocumentPicker.types.plainText,
-                                    mode: "open",
-                                    copyTo: "cachesDirectory",
-                                });
+                                const { fileCopyUri, type } =
+                                    await DocumentPicker.pickSingle({
+                                        type: DocumentPicker.types.plainText,
+                                        mode: "open",
+                                        copyTo: "cachesDirectory",
+                                    });
                                 if (type === "text/plain" && fileCopyUri)
-                                    text = await RNFS.readFile(fileCopyUri.slice(5), "utf8");
+                                    text = await RNFS.readFile(
+                                        fileCopyUri.slice(5),
+                                        "utf8",
+                                    );
                             } catch (e) {
                                 if (!DocumentPicker.isCancel(e))
                                     showToast(
@@ -538,7 +655,8 @@ export default function () {
                             try {
                                 data = await decompressRawData(text);
                             } catch {
-                                unBusy("import_compressed"); return;
+                                unBusy("import_compressed");
+                                return;
                             }
 
                             ActionSheet.open(ImportActionSheet, {

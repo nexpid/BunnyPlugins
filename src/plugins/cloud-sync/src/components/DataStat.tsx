@@ -17,8 +17,7 @@ export default function ({
                 alignItems: "center",
                 justifyContent: "center",
                 marginHorizontal: 16,
-            }}
-        >
+            }}>
             <Text variant="text-lg/bold" color="TEXT_NORMAL" align="center">
                 {count}
             </Text>

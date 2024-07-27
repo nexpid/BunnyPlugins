@@ -17,7 +17,9 @@ export default () => {
             <FormRow
                 label={lang.format("plugin.name", {})}
                 leading={
-                    <FormRow.Icon source={getAssetIDByName(manifest.vendetta.icon)} />
+                    <FormRow.Icon
+                        source={getAssetIDByName(manifest.vendetta.icon)}
+                    />
                 }
                 trailing={FormRow.Arrow}
                 onPress={() =>

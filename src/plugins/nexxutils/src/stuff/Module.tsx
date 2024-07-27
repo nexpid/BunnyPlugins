@@ -48,21 +48,21 @@ type ModuleSetting = {
     label: string;
     icon?: number;
 } & (
-  | {
-      subLabel?: string | ((value: boolean) => string);
-      type: "toggle";
-      default: boolean;
-  }
-  | {
-      type: "button";
-      action: (this: Module<any>) => void;
-  }
-  | {
-      subLabel?: string | ((value: string) => string);
-      type: "choose";
-      choices: string[];
-      default: string;
-  }
+    | {
+          subLabel?: string | ((value: boolean) => string);
+          type: "toggle";
+          default: boolean;
+      }
+    | {
+          type: "button";
+          action: (this: Module<any>) => void;
+      }
+    | {
+          subLabel?: string | ((value: string) => string);
+          type: "choose";
+          choices: string[];
+          default: string;
+      }
 );
 
 class Patches {
@@ -73,7 +73,9 @@ class Patches {
     }
 
     unpatch() {
-        this.store.forEach(x => { x(); });
+        this.store.forEach(x => {
+            x();
+        });
         this.store.length = 0;
     }
 }
@@ -161,7 +163,7 @@ export class Module<Settings extends Record<string, ModuleSetting>> {
         const options = Object.fromEntries(
             Object.entries(this.settings)
                 .filter(([_, x]) => "default" in x)
-            // @ts-expect-error fuck off typescript
+                // @ts-expect-error fuck off typescript
                 .map(([x, y]) => [x, y.default]),
         );
 
@@ -219,7 +221,10 @@ export class Module<Settings extends Record<string, ModuleSetting>> {
                         ...this.extra.credits.map((x, i, a) => (
                             <>
                                 {!Number.isNaN(Number(x)) ? (
-                                    <SmartMention userId={x} loadUsername={true} />
+                                    <SmartMention
+                                        userId={x}
+                                        loadUsername={true}
+                                    />
                                 ) : (
                                     x
                                 )}
@@ -246,18 +251,19 @@ export class Module<Settings extends Record<string, ModuleSetting>> {
                     color: "TEXT_DANGER",
                     icon: "ic_warning_24px",
                     iconColor: "STATUS_DANGER",
-                    action: () =>
-                    { openModal(
-                        "error-viewer",
-                        ErrorViewerModal({
-                            errors: this.errors,
-                            module: this.label,
-                            clearEntry: e => {
-                                delete this.errors[e];
-                                forceUpdate();
-                            },
-                        }),
-                    ); },
+                    action: () => {
+                        openModal(
+                            "error-viewer",
+                            ErrorViewerModal({
+                                errors: this.errors,
+                                module: this.label,
+                                clearEntry: e => {
+                                    delete this.errors[e];
+                                    forceUpdate();
+                                },
+                            }),
+                        );
+                    },
                 });
 
             return (
@@ -268,14 +274,16 @@ export class Module<Settings extends Record<string, ModuleSetting>> {
                                 style={{
                                     color: resolveSemanticColor(
                                         semanticColors[
-                                            extra[extra.length - 1]?.color ?? "TEXT_NORMAL"
+                                            extra[extra.length - 1]?.color ??
+                                                "TEXT_NORMAL"
                                         ],
                                     ),
-                                }}
-                            >
+                                }}>
                                 {this.label}
                             </RN.Text>,
-                            extra[0] && <RN.View style={{ paddingRight: 12 }} />,
+                            extra[0] && (
+                                <RN.View style={{ paddingRight: 12 }} />
+                            ),
                             extra
                                 .sort(() => -1)
                                 .map(x => (
@@ -285,9 +293,12 @@ export class Module<Settings extends Record<string, ModuleSetting>> {
                                             style={[
                                                 styles.icon,
                                                 x.iconColor && {
-                                                    tintColor: resolveSemanticColor(
-                                                        semanticColors[x.iconColor],
-                                                    ),
+                                                    tintColor:
+                                                        resolveSemanticColor(
+                                                            semanticColors[
+                                                                x.iconColor
+                                                            ],
+                                                        ),
                                                 },
                                             ]}
                                             source={getAssetIDByName(x.icon)}
@@ -297,10 +308,16 @@ export class Module<Settings extends Record<string, ModuleSetting>> {
                                 )),
                         ]}
                         subLabel={this.sublabel}
-                        leading={this.icon && <FormRow.Icon source={this.icon} />}
+                        leading={
+                            this.icon && <FormRow.Icon source={this.icon} />
+                        }
                         trailing={
                             <FormRow.Arrow
-                                style={{ transform: [{ rotate: `${hidden ? 180 : 90}deg` }] }}
+                                style={{
+                                    transform: [
+                                        { rotate: `${hidden ? 180 : 90}deg` },
+                                    ],
+                                }}
                             />
                         }
                         onPress={() => {
@@ -319,11 +336,16 @@ export class Module<Settings extends Record<string, ModuleSetting>> {
                                         {extra.map(x => {
                                             const children = (
                                                 <>
-                                                    <Text variant="text-md/semibold" color={x.color}>
+                                                    <Text
+                                                        variant="text-md/semibold"
+                                                        color={x.color}>
                                                         {x.content}
                                                     </Text>
                                                     {x.action && (
-                                                        <RN.View style={styles.rowTailing}>
+                                                        <RN.View
+                                                            style={
+                                                                styles.rowTailing
+                                                            }>
                                                             <FormRow.Arrow />
                                                         </RN.View>
                                                     )}
@@ -333,13 +355,16 @@ export class Module<Settings extends Record<string, ModuleSetting>> {
                                             return x.action ? (
                                                 <RN.Pressable
                                                     style={styles.row}
-                                                    android_ripple={styles.androidRipple}
-                                                    onPress={x.action}
-                                                >
+                                                    android_ripple={
+                                                        styles.androidRipple
+                                                    }
+                                                    onPress={x.action}>
                                                     {children}
                                                 </RN.Pressable>
                                             ) : (
-                                                <RN.View style={styles.row}>{children}</RN.View>
+                                                <RN.View style={styles.row}>
+                                                    {children}
+                                                </RN.View>
                                             );
                                         })}
                                     </RN.View>
@@ -351,76 +376,123 @@ export class Module<Settings extends Record<string, ModuleSetting>> {
                                         forceUpdate();
                                     }}
                                     leading={
-                                        <FormRow.Icon source={getAssetIDByName("SettingsIcon")} />
+                                        <FormRow.Icon
+                                            source={getAssetIDByName(
+                                                "SettingsIcon",
+                                            )}
+                                        />
                                     }
                                     value={this.storage.enabled}
                                 />
-                                {Object.entries(this.settings).map(([id, setting]) =>
-                                    setting.type === "toggle" ? (
-                                        <FormSwitchRow
-                                            label={setting.label}
-                                            subLabel={this.callable(
-                                                setting.subLabel,
-                                                this.storage.options[id],
-                                            )}
-                                            onValueChange={() => {
-                                                // @ts-expect-error type string cannot be used to index type
-                                                this.storage.options[id] = !this.storage.options[id];
-                                                this.restart();
-                                                forceUpdate();
-                                            }}
-                                            leading={<FormRow.Icon source={setting.icon} />}
-                                            value={this.storage.options[id]}
-                                        />
-                                    ) : setting.type === "button" ? (
-                                        <RN.View style={{ marginVertical: 12 }}>
-                                            <Button
-                                                size="md"
-                                                variant="primary"
-                                                text={setting.label}
-                                                onPress={() => { setting.action.bind(this)(); }}
-                                                icon={
-                                                    <RN.Image
-                                                        style={{ marginRight: 8 }}
-                                                        source={setting.icon}
-                                                    />
-                                                }
-                                            />
-                                        </RN.View>
-                                    ) : (
-                                        setting.type === "choose" && (
-                                            <FormRow
+                                {Object.entries(this.settings).map(
+                                    ([id, setting]) =>
+                                        setting.type === "toggle" ? (
+                                            <FormSwitchRow
                                                 label={setting.label}
                                                 subLabel={this.callable(
                                                     setting.subLabel,
                                                     this.storage.options[id],
                                                 )}
-                                                onPress={() =>
-                                                { ActionSheet.open(ChooseSheet, {
-                                                    title: setting.label,
-                                                    value: this.storage.options[id] as any,
-                                                    options: setting.choices.map(x => ({
-                                                        name: x,
-                                                        value: x,
-                                                    })),
-                                                    callback: val => {
-                                                        // @ts-expect-error type string cannot be used to index type
-                                                        this.storage.options[id] = val;
-                                                        this.restart();
-                                                        forceUpdate();
-                                                    },
-                                                }); }
+                                                onValueChange={() => {
+                                                    // @ts-expect-error type string cannot be used to index type
+                                                    this.storage.options[id] =
+                                                        !this.storage.options[
+                                                            id
+                                                        ];
+                                                    this.restart();
+                                                    forceUpdate();
+                                                }}
+                                                leading={
+                                                    <FormRow.Icon
+                                                        source={setting.icon}
+                                                    />
                                                 }
-                                                leading={<FormRow.Icon source={setting.icon} />}
-                                                trailing={
-                                                    <Text variant="text-md/medium" color="TEXT_MUTED">
-                                                        {/* @ts-expect-error type string cannot be used to index type*/}
-                                                        {this.storage.options[id]}
-                                                    </Text>
-                                                }
+                                                value={this.storage.options[id]}
                                             />
-                                        )
-                                    ),
+                                        ) : setting.type === "button" ? (
+                                            <RN.View
+                                                style={{ marginVertical: 12 }}>
+                                                <Button
+                                                    size="md"
+                                                    variant="primary"
+                                                    text={setting.label}
+                                                    onPress={() => {
+                                                        setting.action.bind(
+                                                            this,
+                                                        )();
+                                                    }}
+                                                    icon={
+                                                        <RN.Image
+                                                            style={{
+                                                                marginRight: 8,
+                                                            }}
+                                                            source={
+                                                                setting.icon
+                                                            }
+                                                        />
+                                                    }
+                                                />
+                                            </RN.View>
+                                        ) : (
+                                            setting.type === "choose" && (
+                                                <FormRow
+                                                    label={setting.label}
+                                                    subLabel={this.callable(
+                                                        setting.subLabel,
+                                                        this.storage.options[
+                                                            id
+                                                        ],
+                                                    )}
+                                                    onPress={() => {
+                                                        ActionSheet.open(
+                                                            ChooseSheet,
+                                                            {
+                                                                title: setting.label,
+                                                                value: this
+                                                                    .storage
+                                                                    .options[
+                                                                    id
+                                                                ] as any,
+                                                                options:
+                                                                    setting.choices.map(
+                                                                        x => ({
+                                                                            name: x,
+                                                                            value: x,
+                                                                        }),
+                                                                    ),
+                                                                callback:
+                                                                    val => {
+                                                                        // @ts-expect-error type string cannot be used to index type
+                                                                        this.storage.options[
+                                                                            id
+                                                                        ] = val;
+                                                                        this.restart();
+                                                                        forceUpdate();
+                                                                    },
+                                                            },
+                                                        );
+                                                    }}
+                                                    leading={
+                                                        <FormRow.Icon
+                                                            source={
+                                                                setting.icon
+                                                            }
+                                                        />
+                                                    }
+                                                    trailing={
+                                                        <Text
+                                                            variant="text-md/medium"
+                                                            color="TEXT_MUTED">
+                                                            {/* @ts-expect-error type string cannot be used to index type*/}
+                                                            {
+                                                                this.storage
+                                                                    .options[id]
+                                                            }
+                                                        </Text>
+                                                    }
+                                                />
+                                            )
+                                        ),
                                 )}
                             </RN.View>
                         </>

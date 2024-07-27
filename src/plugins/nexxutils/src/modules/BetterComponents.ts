@@ -27,10 +27,10 @@ function componentify<T extends "before" | "after" | "instead">(
     callback: typeof replacer extends "before"
         ? Parameters<typeof before>[2]
         : typeof replacer extends "after"
-        ? Parameters<typeof after>[2]
-        : typeof replacer extends "instead"
-        ? Parameters<typeof instead>[2]
-        : never,
+          ? Parameters<typeof after>[2]
+          : typeof replacer extends "instead"
+            ? Parameters<typeof instead>[2]
+            : never,
 ) {
     const fnc =
         replacer === "before" ? before : replacer === "after" ? after : instead;
@@ -143,6 +143,6 @@ export default new Module({
                 (_, ret) => React.createElement(CustomDialog, ret.props),
             );
         },
-        onStop() { },
+        onStop() {},
     },
 });

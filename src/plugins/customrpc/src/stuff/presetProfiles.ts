@@ -9,7 +9,7 @@ const PresetProfiles: Record<string, SettingsActivity> = {
         timestamps: {},
         assets: {
             largeImg:
-        "mp:external/1Hoxz2ijw0uHYRKT1DDAYvEDsOTkOTT6Le4YIoX7Joo/%3Fsize%3D128/https/cdn.discordapp.com/icons/1015931589865246730/5f8c26072398178c3fb6868124eeef59.png",
+                "mp:external/1Hoxz2ijw0uHYRKT1DDAYvEDsOTkOTT6Le4YIoX7Joo/%3Fsize%3D128/https/cdn.discordapp.com/icons/1015931589865246730/5f8c26072398178c3fb6868124eeef59.png",
         },
         type: 3,
         buttons: [

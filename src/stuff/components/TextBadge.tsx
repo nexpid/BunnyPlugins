@@ -26,8 +26,12 @@ export default function TextBadge({
             paddingHorizontal: 6,
             paddingVertical: 3,
             backgroundColor:
-        semanticColors[`REDESIGN_BUTTON_${variant.toUpperCase()}_BACKGROUND`],
-            color: semanticColors[`REDESIGN_BUTTON_${variant.toUpperCase()}_TEXT`],
+                semanticColors[
+                    `REDESIGN_BUTTON_${variant.toUpperCase()}_BACKGROUND`
+                ],
+            color: semanticColors[
+                `REDESIGN_BUTTON_${variant.toUpperCase()}_TEXT`
+            ],
             marginTop: 3,
             overflow: "hidden",
         },
@@ -53,7 +57,9 @@ export default function TextBadge({
                         randomness,
                         Reanimated.withTiming(width, {
                             duration: 800,
-                            easing: Reanimated.Easing.inOut(Reanimated.Easing.cubic),
+                            easing: Reanimated.Easing.inOut(
+                                Reanimated.Easing.cubic,
+                            ),
                         }),
                     ),
                 ),
@@ -65,8 +71,9 @@ export default function TextBadge({
     return (
         <RN.View
             style={[styles.main, style]}
-            onLayout={layout => { setWidth(layout.nativeEvent.layout.width * 0.5 + 4); }}
-        >
+            onLayout={layout => {
+                setWidth(layout.nativeEvent.layout.width * 0.5 + 4);
+            }}>
             {shiny && width !== 0 && (
                 <Reanimated.default.View
                     style={[
@@ -88,8 +95,7 @@ export default function TextBadge({
                 align="center"
                 style={{
                     textTransform: "uppercase",
-                }}
-            >
+                }}>
                 {children}
             </Text>
         </RN.View>

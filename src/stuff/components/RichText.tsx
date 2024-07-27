@@ -23,7 +23,9 @@ export namespace RichText {
         onPress?: () => void;
     }>) {
         return (
-            <RN.Text style={{ textDecorationLine: "underline" }} onPress={onPress}>
+            <RN.Text
+                style={{ textDecorationLine: "underline" }}
+                onPress={onPress}>
                 {children}
             </RN.Text>
         );

@@ -15,7 +15,9 @@ export function getPins(channel: string) {
 export function getAllPins() {
     const pins = new Array<{ id: string; pinned: number; channelId: string }>();
     for (const [channelId, msgs] of Object.entries(vstorage.pinned))
-        pins.push(...msgs.map(x => ({ id: x.id, pinned: x.pinned, channelId })));
+        pins.push(
+            ...msgs.map(x => ({ id: x.id, pinned: x.pinned, channelId })),
+        );
     return pins.sort((a, b) => b.pinned - a.pinned);
 }
 export function hasAnyPin() {
@@ -46,6 +48,8 @@ export default {
 
         unpatch = patcher();
     },
-    onUnload: () => { unpatch(); },
+    onUnload: () => {
+        unpatch();
+    },
     settings,
 };

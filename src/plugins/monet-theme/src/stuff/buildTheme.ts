@@ -10,14 +10,14 @@ import { Patches, PatchThing } from "../types";
 import { getLABShade, parseColor } from "./colors";
 
 export function apply(theme: ThemeDataWithPlus | false) {
-    const { bunny } = (window as any);
+    const { bunny } = window as any;
 
     const val = theme
         ? {
-            id: "monet-theme",
-            selected: false,
-            data: theme,
-        }
+              id: "monet-theme",
+              selected: false,
+              data: theme,
+          }
         : null;
 
     try {
@@ -60,7 +60,8 @@ export function build(patches: Patches): ThemeDataWithPlus {
         for (const c of checks) {
             if (!shouldPut) break;
             if (c.startsWith(">=")) shouldPut = shade >= Number(c.slice(2));
-            else if (c.startsWith("<=")) shouldPut = shade <= Number(c.slice(2));
+            else if (c.startsWith("<="))
+                shouldPut = shade <= Number(c.slice(2));
             else if (c.startsWith(">")) shouldPut = shade > Number(c.slice(1));
             else if (c.startsWith("<")) shouldPut = shade < Number(c.slice(1));
         }

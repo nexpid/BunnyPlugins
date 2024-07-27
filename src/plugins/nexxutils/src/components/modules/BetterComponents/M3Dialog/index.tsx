@@ -61,17 +61,17 @@ export default function ({
     const things = [
         {
             color:
-        {
-            brand: "BRAND",
-            red: "DANGER",
-            green: "POSITIVE",
-            primary: "PRIMARY",
-            transparent: "NORMAL",
-            grey: "NORMAL",
-            lightgrey: "NORMAL",
-            white: "NORMAL",
-            link: "NORMAL",
-        }[confirmColor] ?? "BRAND",
+                {
+                    brand: "BRAND",
+                    red: "DANGER",
+                    green: "POSITIVE",
+                    primary: "PRIMARY",
+                    transparent: "NORMAL",
+                    grey: "NORMAL",
+                    lightgrey: "NORMAL",
+                    white: "NORMAL",
+                    link: "NORMAL",
+                }[confirmColor] ?? "BRAND",
             text: confirmText ?? "Confirm",
             action: onConfirm,
             base: true,
@@ -79,21 +79,21 @@ export default function ({
         },
         cancelText
             ? {
-                color: "BRAND",
-                text: cancelText,
-                action: onCancel,
-                base: false,
-                loading: "cancel",
-            }
+                  color: "BRAND",
+                  text: cancelText,
+                  action: onCancel,
+                  base: false,
+                  loading: "cancel",
+              }
             : empty,
         secondaryConfirmText
             ? {
-                color: "BRAND",
-                text: secondaryConfirmText,
-                action: onConfirmSecondary,
-                base: false,
-                loading: "secondaryConfirm",
-            }
+                  color: "BRAND",
+                  text: secondaryConfirmText,
+                  action: onConfirmSecondary,
+                  base: false,
+                  loading: "secondaryConfirm",
+              }
             : empty,
     ].filter(x => x !== empty) as {
         color: string;

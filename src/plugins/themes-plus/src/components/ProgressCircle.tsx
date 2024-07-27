@@ -34,9 +34,12 @@ export default function ProgressCircle({
                 duration: 250,
             },
         );
-        animatedStroke.value = Reanimated.withTiming(progress !== 0 ? stroke : 0, {
-            duration: 250,
-        });
+        animatedStroke.value = Reanimated.withTiming(
+            progress !== 0 ? stroke : 0,
+            {
+                duration: 250,
+            },
+        );
     }, [progress, circumference, stroke]);
 
     return (
@@ -48,8 +51,7 @@ export default function ProgressCircle({
                 position: "absolute",
                 transform: [{ rotate: "-90deg" }, { translateY: stroke }],
             }}
-            pointerEvents="none"
-        >
+            pointerEvents="none">
             <AnimatedCircle
                 cx="50%"
                 cy="50%"

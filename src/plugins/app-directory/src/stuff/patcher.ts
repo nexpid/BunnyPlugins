@@ -33,7 +33,9 @@ export default () => {
     );
 
     let bowomp: () => void;
-    patches.push(() => { bowomp(); });
+    patches.push(() => {
+        bowomp();
+    });
     patches.push(
         after("default", GuildSettingsModalLanding, (_, main) => {
             bowomp();
@@ -67,5 +69,9 @@ export default () => {
         }),
     );
 
-    return () => { patches.forEach(x => { x(); }); };
+    return () => {
+        patches.forEach(x => {
+            x();
+        });
+    };
 };

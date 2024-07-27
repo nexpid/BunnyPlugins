@@ -81,10 +81,10 @@ export default new Module({
                         },
                     ];
                     if (
-                        !["OPEN_IN_BROWSER", "SHARE", "JUMP_TO_MESSAGE"].every(x =>
-                            items.find(y => y.label === i18n.Messages[x]),
+                        !["OPEN_IN_BROWSER", "SHARE", "JUMP_TO_MESSAGE"].every(
+                            x => items.find(y => y.label === i18n.Messages[x]),
                         ) ||
-            items.length !== 3
+                        items.length !== 3
                     )
                         return;
 
@@ -94,15 +94,21 @@ export default new Module({
 
                         if (item.label === i18n.Messages.OPEN_IN_BROWSER) {
                             // fake press to get the link
-                            const unpatch = instead("handleClick", handleClick, args => {
-                                link = parseURL(args[0].href);
-                                unpatch();
-                            });
+                            const unpatch = instead(
+                                "handleClick",
+                                handleClick,
+                                args => {
+                                    link = parseURL(args[0].href);
+                                    unpatch();
+                                },
+                            );
                             item._action();
 
                             item.action = () => {
-                                if (!link) { item._action(); return; }
-                                else
+                                if (!link) {
+                                    item._action();
+                                    return;
+                                } else
                                     handleClick.handleClick({
                                         href: link,
                                         onConfirm: () => url.openURL(link),
@@ -110,8 +116,10 @@ export default new Module({
                             };
                         } else if (item.label === i18n.Messages.SHARE) {
                             item.action = () => {
-                                if (!link) { item._action(); return; }
-                                else RN.Share.share({ message: link });
+                                if (!link) {
+                                    item._action();
+                                    return;
+                                } else RN.Share.share({ message: link });
                             };
                         }
                     }
@@ -123,9 +131,9 @@ export default new Module({
                             link
                                 ? MediaManager.downloadMediaAsset(link, 1)
                                 : showToast(
-                                    "Failed to download gif using NexxUtils",
-                                    getAssetIDByName("CircleXIcon-primary"),
-                                ),
+                                      "Failed to download gif using NexxUtils",
+                                      getAssetIDByName("CircleXIcon-primary"),
+                                  ),
                     });
                 }),
             );

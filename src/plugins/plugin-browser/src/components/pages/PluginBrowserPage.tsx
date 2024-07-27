@@ -40,28 +40,32 @@ export default () => {
 
         let dt = search
             ? fuzzysort
-                .go(search, parsed, {
-                    keys: [
-                        "vendetta.original",
-                        "name",
-                        "description",
-                        "authors.0.name",
-                        "authors.1.name",
-                        "authors.2.name", // THREE authors
-                    ],
-                })
-                .map(x => x.obj)
+                  .go(search, parsed, {
+                      keys: [
+                          "vendetta.original",
+                          "name",
+                          "description",
+                          "authors.0.name",
+                          "authors.1.name",
+                          "authors.2.name", // THREE authors
+                      ],
+                  })
+                  .map(x => x.obj)
             : parsed.slice();
         if ([Sort.NameAZ, Sort.NameZA].includes(sort))
-            dt = dt.sort((a, b) => (a.name < b.name ? -1 : a.name > b.name ? 1 : 0));
+            dt = dt.sort((a, b) =>
+                a.name < b.name ? -1 : a.name > b.name ? 1 : 0,
+            );
         if ([Sort.NameZA, Sort.DateNewest].includes(sort)) dt.reverse();
 
         return dt;
     }, [sort, parsed, search]);
 
     React.useEffect(() => {
-    // when user exits out of the page
-        return () => { updateChanges(); };
+        // when user exits out of the page
+        return () => {
+            updateChanges();
+        };
     }, []);
 
     React.useEffect(() => {
@@ -73,12 +77,14 @@ export default () => {
                     x
                         .json()
                         .then(x =>
-                        // pluh 🗣
+                            // pluh 🗣
                             x.map((plug: any) => ({
                                 ...plug,
                                 vendetta: {
                                     ...plug.vendetta,
-                                    original: properLink(plug.vendetta.original),
+                                    original: properLink(
+                                        plug.vendetta.original,
+                                    ),
                                 },
                             })),
                         )
@@ -87,19 +93,19 @@ export default () => {
                             changes.current = getChanges();
                             setParsed(x);
                         })
-                        .catch(() =>
-                        { showToast(
-                            lang.format("toast.data.fail_parse", {}),
-                            getAssetIDByName("Small"),
-                        ); },
-                        ),
+                        .catch(() => {
+                            showToast(
+                                lang.format("toast.data.fail_parse", {}),
+                                getAssetIDByName("Small"),
+                            );
+                        }),
                 )
-                .catch(() =>
-                { showToast(
-                    lang.format("toast.data.fail_fetch", {}),
-                    getAssetIDByName("Small"),
-                ); },
-                );
+                .catch(() => {
+                    showToast(
+                        lang.format("toast.data.fail_fetch", {}),
+                        getAssetIDByName("Small"),
+                    );
+                });
     }, [parsed]);
 
     managePage({
@@ -111,17 +117,19 @@ export default () => {
             ListHeaderComponent={
                 <Search
                     onChangeText={setSearch}
-                    onPressFilters={() =>
-                    { ActionSheet.open(ChooseSheet, {
-                        title: lang.format("sheet.sort.title", {}),
-                        value: sort,
-                        options: Object.values(Sort).map(value => ({
-                            name: lang.format(value, {}),
-                            value,
-                        })),
-                        callback: val => { currentSetSort.current(val as Sort); },
-                    }); }
-                    }
+                    onPressFilters={() => {
+                        ActionSheet.open(ChooseSheet, {
+                            title: lang.format("sheet.sort.title", {}),
+                            value: sort,
+                            options: Object.values(Sort).map(value => ({
+                                name: lang.format(value, {}),
+                                value,
+                            })),
+                            callback: val => {
+                                currentSetSort.current(val as Sort);
+                            },
+                        });
+                    }}
                 />
             }
             ListFooterComponent={<RN.View style={{ height: 20 }} />}

@@ -1,9 +1,9 @@
 * {
-  background-color: transparent !important;
-  overflow: hidden !important;
+    background-color: transparent !important;
+    overflow: hidden !important;
 }
 
 #jsbox {
-  width: 100vw !important;
-  height: 100vh !important;
+    width: 100vw !important;
+    height: 100vh !important;
 }

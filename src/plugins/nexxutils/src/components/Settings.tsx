@@ -20,8 +20,7 @@ export default () => {
                     flexDirection: "row",
                     justifyContent: "center",
                     alignItems: "center",
-                }}
-            >
+                }}>
                 <SillyAvatar />
                 <Text variant="text-lg/semibold" color="TEXT_NORMAL">
                     NexxUtils v{version}
@@ -33,8 +32,7 @@ export default () => {
                     <BetterTableRowGroup
                         title={title}
                         icon={icon}
-                        padding={mods.length === 0}
-                    >
+                        padding={mods.length === 0}>
                         {mods.length > 0 ? (
                             mods.map(x => (
                                 <ErrorBoundary>
@@ -45,8 +43,7 @@ export default () => {
                             <Text
                                 variant="text-md/semibold"
                                 color="TEXT_NORMAL"
-                                style={{ fontStyle: "italic" }}
-                            >
+                                style={{ fontStyle: "italic" }}>
                                 {`No plugins in the ${title} category yet!`}
                             </Text>
                         )}

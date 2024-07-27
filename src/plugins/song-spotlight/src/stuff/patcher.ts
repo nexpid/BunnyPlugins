@@ -14,10 +14,10 @@ export default function () {
         after("default", UserProfileBio, ([x], ret) => {
             return React.createElement(React.Fragment, {}, [
                 x?.displayProfile?.userId &&
-          React.createElement(UserProfileSongs, {
-              userId: x.displayProfile.userId,
-              you: false,
-          }),
+                    React.createElement(UserProfileSongs, {
+                        userId: x.displayProfile.userId,
+                        you: false,
+                    }),
                 ret,
             ]);
         }),
@@ -35,5 +35,9 @@ export default function () {
         }),
     );
 
-    return () => { patches.forEach(x => { x(); }); };
+    return () => {
+        patches.forEach(x => {
+            x();
+        });
+    };
 }

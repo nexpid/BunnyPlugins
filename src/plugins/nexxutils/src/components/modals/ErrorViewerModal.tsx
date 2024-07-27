@@ -79,24 +79,24 @@ const Card = ({
                 RN.LayoutAnimation.configureNext(
                     RN.LayoutAnimation.Presets.easeInEaseOut,
                 );
-            }}
-        >
+            }}>
             <RN.View
                 style={{
                     flexDirection: "row",
                     justifyContent: "center",
                     alignItems: "center",
-                }}
-            >
+                }}>
                 <RN.View style={styles.leading}>
                     <RN.Pressable
                         android_ripple={styles.androidRippleRound}
                         onPress={() => {
                             clipboard.setString(error);
-                            showToast("Copied error", getAssetIDByName("toast_copy_message"));
+                            showToast(
+                                "Copied error",
+                                getAssetIDByName("toast_copy_message"),
+                            );
                         }}
-                        style={{ padding: 4 }}
-                    >
+                        style={{ padding: 4 }}>
                         <RN.Image
                             source={getAssetIDByName("ic_message_copy")}
                             resizeMode="cover"
@@ -105,7 +105,10 @@ const Card = ({
                     </RN.Pressable>
                 </RN.View>
                 <RN.View style={styles.middle}>
-                    <Text variant="text-lg/bold" color="TEXT_NORMAL" align="center">
+                    <Text
+                        variant="text-lg/bold"
+                        color="TEXT_NORMAL"
+                        align="center">
                         {label}
                     </Text>
                 </RN.View>
@@ -115,10 +118,12 @@ const Card = ({
                         onPress={() => {
                             clear();
                             setGone(true);
-                            showToast("Cleared error", getAssetIDByName("trash"));
+                            showToast(
+                                "Cleared error",
+                                getAssetIDByName("trash"),
+                            );
                         }}
-                        style={{ padding: 4 }}
-                    >
+                        style={{ padding: 4 }}>
                         <RN.Image
                             source={getAssetIDByName("trash")}
                             resizeMode="cover"
@@ -128,7 +133,9 @@ const Card = ({
                 </RN.View>
             </RN.View>
             <RN.Pressable pointerEvents="box-none">
-                <Codeblock selectable={true}>{expanded ? error : short}</Codeblock>
+                <Codeblock selectable={true}>
+                    {expanded ? error : short}
+                </Codeblock>
             </RN.Pressable>
         </RN.Pressable>
     );
@@ -149,7 +156,13 @@ export default function ErrorViewerModal({
                 <RN.ScrollView style={{ flex: 1, padding: 12 }}>
                     <RN.View style={{ gap: 12, flexDirection: "column" }}>
                         {Object.entries(errors).map(([label, err]) => (
-                            <Card label={label} error={err} clear={() => { clearEntry(label); }} />
+                            <Card
+                                label={label}
+                                error={err}
+                                clear={() => {
+                                    clearEntry(label);
+                                }}
+                            />
                         ))}
                     </RN.View>
                 </RN.ScrollView>

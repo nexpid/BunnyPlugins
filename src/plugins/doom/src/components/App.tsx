@@ -39,11 +39,11 @@ export default function App() {
     managePage({
         headerRight: () => (
             <SuperAwesomeIcon
-                onPress={() =>
-                { ActionSheet.open(SettingsActionSheet, {
-                    kaboom: () => navigation.goBack(),
-                }); }
-                }
+                onPress={() => {
+                    ActionSheet.open(SettingsActionSheet, {
+                        kaboom: () => navigation.goBack(),
+                    });
+                }}
                 icon={getAssetIDByName("SettingsIcon")}
                 style="header"
             />
@@ -101,7 +101,7 @@ export default function App() {
         [vstorage.settings.game],
     );
     const files =
-    filePromise.fulfilled && filePromise.success && filePromise.response;
+        filePromise.fulfilled && filePromise.success && filePromise.response;
 
     const done = files && typeof files !== "string";
 
@@ -123,20 +123,28 @@ export default function App() {
             <RN.View
                 style={[
                     styles.webview,
-                    isLandscape ? styles.webviewLandscape : styles.webviewPortrait,
-                ]}
-            >
+                    isLandscape
+                        ? styles.webviewLandscape
+                        : styles.webviewPortrait,
+                ]}>
                 {done ? (
                     <WebView
                         source={{
                             html,
                             baseUrl: "https://localhost",
                         }}
-                        style={{ width: "100%", height: "100%", backgroundColor: "#0000" }}
+                        style={{
+                            width: "100%",
+                            height: "100%",
+                            backgroundColor: "#0000",
+                        }}
                     />
                 ) : (
                     <RN.View style={styles.webviewUnder}>
-                        <Text variant="text-lg/semibold" color="WHITE" align="center">
+                        <Text
+                            variant="text-lg/semibold"
+                            color="WHITE"
+                            align="center">
                             {typeof files === "string" ? files : text}
                         </Text>
                     </RN.View>

@@ -21,7 +21,8 @@ export const LiveRawActivityView = () => {
 
     const styles = stylesheet.createThemedStyleSheet({
         code: {
-            fontFamily: constants.Fonts.CODE_SEMIBOLD || constants.Fonts.CODE_NORMAL,
+            fontFamily:
+                constants.Fonts.CODE_SEMIBOLD || constants.Fonts.CODE_NORMAL,
             includeFontPadding: false,
             color: semanticColors.TEXT_NORMAL,
         },
@@ -36,14 +37,15 @@ export const LiveRawActivityView = () => {
                     </RN.Text>
                 ) : vstorage.settings.display ? (
                     <Text variant="text-md/semibold">
-                        Display activity setting is disabled. You need to actually enable it
-                        for the raw activity to show up lmao
+                        Display activity setting is disabled. You need to
+                        actually enable it for the raw activity to show up lmao
                     </Text>
                 ) : (
                     <Text
                         variant="text-md/semibold"
-                        onPress={() => { dispatchActivityIfPossible(); }}
-                    >
+                        onPress={() => {
+                            dispatchActivityIfPossible();
+                        }}>
                         No last raw activity yet. Tap text to force update
                     </Text>
                 )}
@@ -52,7 +54,9 @@ export const LiveRawActivityView = () => {
                 <Text variant="text-md/semibold" color="TEXT_NORMAL">
                     Last raw activity update:{" "}
                     {debug.lastRawActivityTimestamp
-                        ? new Date(debug.lastRawActivityTimestamp).toLocaleString("en-US")
+                        ? new Date(
+                              debug.lastRawActivityTimestamp,
+                          ).toLocaleString("en-US")
                         : "-"}
                 </Text>
             </FormSection>

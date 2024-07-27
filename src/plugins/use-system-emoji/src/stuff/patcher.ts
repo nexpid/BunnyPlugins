@@ -14,21 +14,21 @@ export default () => {
 
                 for (const y of x.content) {
                     const guh =
-            y.type === "emoji"
-                ? {
-                    type: "text",
-                    content: y.surrogate,
-                }
-                : y;
+                        y.type === "emoji"
+                            ? {
+                                  type: "text",
+                                  content: y.surrogate,
+                              }
+                            : y;
 
                     if (Array.isArray(y.content)) guh.content = branch(y, true);
 
                     if (
                         (y.type === "emoji" ||
-              y.type === "customEmoji" ||
-              (y.type === "text" && y.content?.match(/^\s*$/))) &&
-            y.jumboable &&
-            !isHeading
+                            y.type === "customEmoji" ||
+                            (y.type === "text" && y.content?.match(/^\s*$/))) &&
+                        y.jumboable &&
+                        !isHeading
                     ) {
                         if (y.type !== "text") {
                             delete guh.jumboable;

@@ -1,11 +1,13 @@
 import RNFS from "$/wrappers/RNFS";
 
 export const downloadSource =
-  "https://raw.githubusercontent.com/nexpid/VendettaDOOM/main/";
+    "https://raw.githubusercontent.com/nexpid/VendettaDOOM/main/";
 export const storePrefix = "vendetta/DOOM/";
 
 export function existsFile(fileName: string) {
-    return RNFS.exists(`${RNFS.DocumentDirectoryPath}/${storePrefix + fileName}`);
+    return RNFS.exists(
+        `${RNFS.DocumentDirectoryPath}/${storePrefix + fileName}`,
+    );
 }
 export async function saveFile(
     fileName: string,

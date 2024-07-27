@@ -75,7 +75,7 @@ export const FloatingActionButton = findPropPolyfill(
     "FloatingActionButton",
 ) as t.FAB;
 export const PressableScale = (_PressableScale ??
-  ReactNative.Pressable) as typeof ReactNative.Pressable;
+    ReactNative.Pressable) as typeof ReactNative.Pressable;
 export const IconButton = findPropPolyfill(false, "IconButton") as t.IconButton;
 
 // inputs

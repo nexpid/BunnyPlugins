@@ -7,7 +7,7 @@ import { storage } from "@vendetta/plugin";
 import App from "./components/App";
 
 export const assetsURL =
-  "https://raw.githubusercontent.com/nexpid/VendettaDOOM/main/";
+    "https://raw.githubusercontent.com/nexpid/VendettaDOOM/main/";
 
 export function newGameSuggestionURL() {
     const user = UserStore.getCurrentUser();

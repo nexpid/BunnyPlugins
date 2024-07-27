@@ -22,16 +22,15 @@ export default function ({
         setSongName(undefined);
         if (!id) return;
 
-        getSongName(service, type, id).then(s =>
-        { setSongName(s !== false ? s : "N/A"); },
-        );
+        getSongName(service, type, id).then(s => {
+            setSongName(s !== false ? s : "N/A");
+        });
     }, [id]);
 
     return (
         <Text
             variant={normal ? "text-md/semibold" : "text-md/medium"}
-            color={normal ? "TEXT_NORMAL" : "TEXT_MUTED"}
-        >
+            color={normal ? "TEXT_NORMAL" : "TEXT_MUTED"}>
             {songName ?? "-"}
         </Text>
     );

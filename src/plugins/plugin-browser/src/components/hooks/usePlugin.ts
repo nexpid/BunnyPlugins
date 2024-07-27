@@ -7,7 +7,9 @@ export default function (id: string) {
     const [status, setStatus] = React.useState(!!plugins[id]);
     const emitter = (plugins as any)[emitterSymbol] as Emitter;
 
-    const handler = () => { setStatus(!!plugins[id]); };
+    const handler = () => {
+        setStatus(!!plugins[id]);
+    };
     React.useEffect(() => {
         setStatus(!!plugins[id]);
         emitter.on("SET", handler);

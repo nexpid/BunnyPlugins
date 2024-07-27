@@ -42,12 +42,18 @@ export default function ({
 
     return (
         <>
-            <RN.View style={{ width: "100%", paddingRight: 32 + 8 }}>{def}</RN.View>
+            <RN.View style={{ width: "100%", paddingRight: 32 + 8 }}>
+                {def}
+            </RN.View>
             <RN.View style={{ position: "absolute", right: 0 }}>
                 <Button
                     size="small"
                     text=""
-                    style={[button.style, { width: 32 }, disabled && { opacity: 0.5 }]}
+                    style={[
+                        button.style,
+                        { width: 32 },
+                        disabled && { opacity: 0.5 },
+                    ]}
                     renderIcon={() => (
                         <Svg.SvgXml
                             width={20}
@@ -56,7 +62,10 @@ export default function ({
                         />
                     )}
                     onPress={() => {
-                        if (typeof disabled === "string") { showToast(disabled); return; }
+                        if (typeof disabled === "string") {
+                            showToast(disabled);
+                            return;
+                        }
 
                         showToast("Syncing", getAssetIDByName("Check"));
                         if (!SpotifyStore.getActivity()) {

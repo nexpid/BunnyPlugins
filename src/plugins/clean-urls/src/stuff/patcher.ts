@@ -38,7 +38,8 @@ const handleContent = (content: Content[]) => {
         if (thing.type === "link" && thing.target)
             thing.target = clean(thing.target);
 
-        if (typeof thing.content === "string") thing.content = clean(thing.content);
+        if (typeof thing.content === "string")
+            thing.content = clean(thing.content);
         else if (Array.isArray(thing.content))
             thing.content = handleContent(thing.content);
     }
@@ -54,10 +55,14 @@ export default function () {
     );
 
     patches.push(
-        before("sendMessage", Messages, args => { handleMessage(args[1]); }),
+        before("sendMessage", Messages, args => {
+            handleMessage(args[1]);
+        }),
     );
     patches.push(
-        before("editMessage", Messages, args => { handleMessage(args[2]); }),
+        before("editMessage", Messages, args => {
+            handleMessage(args[2]);
+        }),
     );
 
     patches.push(
@@ -73,5 +78,9 @@ export default function () {
 
     patches.push(unsubRulesStore);
 
-    return () => { patches.forEach(x => { x(); }); };
+    return () => {
+        patches.forEach(x => {
+            x();
+        });
+    };
 }

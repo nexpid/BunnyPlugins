@@ -27,7 +27,9 @@ export default function useLocalPinned(channelId?: string) {
                 const m = raw[i];
                 setStatus(i / raw.length);
 
-                const id = ("channelId" in m ? m.channelId : channelId) as string;
+                const id = (
+                    "channelId" in m ? m.channelId : channelId
+                ) as string;
                 if (!id) continue;
 
                 let message = MessageStore.getMessage(id, m.id);
@@ -63,7 +65,11 @@ export default function useLocalPinned(channelId?: string) {
     return {
         data,
         status,
-        clear: () => { setData([]); },
-        remove: (id: string) => { setData(data.filter(x => x.message.id !== id)); },
+        clear: () => {
+            setData([]);
+        },
+        remove: (id: string) => {
+            setData(data.filter(x => x.message.id !== id));
+        },
     };
 }

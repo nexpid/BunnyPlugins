@@ -12,8 +12,8 @@ export const iconsPath = `${RNFS.DocumentDirectoryPath}/pyoncord/downloads/theme
 export async function isPackInstalled(pack: Iconpack) {
     if (
         (await RNFS.exists(`${iconsPath}${pack.id}`)) &&
-    (await RNFS.exists(`${iconsPath}${pack.id}.hash`)) &&
-    state.iconpack.hashes[pack.id].hash
+        (await RNFS.exists(`${iconsPath}${pack.id}.hash`)) &&
+        state.iconpack.hashes[pack.id].hash
     ) {
         const hash = await RNFS.readFile(`${iconsPath}${pack.id}.hash`, "utf8");
         return state.iconpack.hashes[pack.id].hash === hash ? true : "outdated";
@@ -69,11 +69,15 @@ export async function installIconpack(
             const result: string = await (() =>
                 new Promise((res, rej) => {
                     const reader = new FileReader();
-                    reader.addEventListener("error", () =>
-                    { rej(new Error(`Failed to get blob of ${raw}`)); },
-                    );
-                    reader.addEventListener("load", () => { res(reader.result.toString()); });
-                    signal?.addEventListener("abort", () => { reader.abort(); });
+                    reader.addEventListener("error", () => {
+                        rej(new Error(`Failed to get blob of ${raw}`));
+                    });
+                    reader.addEventListener("load", () => {
+                        res(reader.result.toString());
+                    });
+                    signal?.addEventListener("abort", () => {
+                        reader.abort();
+                    });
                     reader.readAsDataURL(blob);
                 }))();
 
@@ -96,7 +100,10 @@ export async function installIconpack(
         new Array(10).fill(0).map((_, i, a) => {
             const quart = toDownload.length / a.length;
             return threadify(
-                toDownload.slice(Math.floor(i * quart), Math.floor((i + 1) * quart)),
+                toDownload.slice(
+                    Math.floor(i * quart),
+                    Math.floor((i + 1) * quart),
+                ),
             );
         }),
     );

@@ -39,10 +39,13 @@ export function BetterTableRowTitle({
                 gap: 4,
                 flexDirection: "row",
                 alignItems: "center",
-            }}
-        >
+            }}>
             {icon && (
-                <RN.Image style={styles.icon} source={icon} resizeMode="cover" />
+                <RN.Image
+                    style={styles.icon}
+                    source={icon}
+                    resizeMode="cover"
+                />
             )}
             <Text variant="text-sm/semibold" color="TEXT_MUTED">
                 {title}
@@ -91,7 +94,8 @@ export function BetterTableRowGroup({
             ) : null}
             <RN.View style={styles.main}>
                 {padding ? (
-                    <RN.View style={{ paddingHorizontal: 16, paddingVertical: 16 }}>
+                    <RN.View
+                        style={{ paddingHorizontal: 16, paddingVertical: 16 }}>
                         {children}
                     </RN.View>
                 ) : (

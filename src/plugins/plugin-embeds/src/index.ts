@@ -8,4 +8,6 @@ export interface Iterable {
 let unpatch: () => void;
 
 export const onLoad = () => (unpatch = patcher());
-export const onUnload = () => { unpatch(); };
+export const onUnload = () => {
+    unpatch();
+};

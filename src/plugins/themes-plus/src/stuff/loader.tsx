@@ -17,9 +17,11 @@ export const patches = new Array<() => void>();
 
 export default async function load() {
     // biunny...
-    const { bunny } = (window as any);
+    const { bunny } = window as any;
 
-    patches.forEach(x => { x(); });
+    patches.forEach(x => {
+        x();
+    });
     patches.length = 0;
 
     state.loading = true;
@@ -46,18 +48,22 @@ export default async function load() {
     } catch {
         if (
             !state.iconpack.list.length ||
-      !Object.keys(state.iconpack.hashes).length
+            !Object.keys(state.iconpack.hashes).length
         ) {
             state.loading = false;
             state.inactive.push(InactiveReason.NoIconpacksList);
-            updateState(); return;
+            updateState();
+            return;
         }
     }
 
     let selectedTheme = Object.values(bunny.managers.themes.themes).find(
         (x: any) => x.selected,
     ) as any;
-    if (!selectedTheme && vstorage.iconpack.mode === ConfigIconpackMode.Manual) {
+    if (
+        !selectedTheme &&
+        vstorage.iconpack.mode === ConfigIconpackMode.Manual
+    ) {
         selectedTheme = {
             data: {
                 plus: {
@@ -68,43 +74,45 @@ export default async function load() {
     } else if (!selectedTheme) {
         state.loading = false;
         state.inactive.push(InactiveReason.NoTheme);
-        updateState(); return;
+        updateState();
+        return;
     }
 
     const plusData = selectedTheme.data?.plus as PlusStructure;
     if (!plusData) {
         state.loading = false;
         state.inactive.push(InactiveReason.ThemesPlusUnsupported);
-        updateState(); return;
+        updateState();
+        return;
     }
 
     const useIconpack =
-    vstorage.iconpack.mode === ConfigIconpackMode.Automatic
-        ? plusData.iconpack
-        : vstorage.iconpack.mode === ConfigIconpackMode.Manual
-            ? vstorage.iconpack.pack
-            : undefined;
+        vstorage.iconpack.mode === ConfigIconpackMode.Automatic
+            ? plusData.iconpack
+            : vstorage.iconpack.mode === ConfigIconpackMode.Manual
+              ? vstorage.iconpack.pack
+              : undefined;
     const isCustomIconpack = vstorage.iconpack.isCustom;
 
     const user = UserStore.getCurrentUser();
     state.iconpack.iconpack = isCustomIconpack
         ? {
-            id: "custom-iconpack",
-            name: "Custom iconpack",
-            description: "A custom iconpack, created by you!",
-            credits: {
-                authors: [
-                    {
-                        name: user.username,
-                        id: user.id,
-                    },
-                ],
-                sources: ["N/A"],
-            },
-            config: null,
-            suffix: vstorage.iconpack.custom.suffix,
-            load: customUrl(),
-        }
+              id: "custom-iconpack",
+              name: "Custom iconpack",
+              description: "A custom iconpack, created by you!",
+              credits: {
+                  authors: [
+                      {
+                          name: user.username,
+                          id: user.id,
+                      },
+                  ],
+                  sources: ["N/A"],
+              },
+              config: null,
+              suffix: vstorage.iconpack.custom.suffix,
+              load: customUrl(),
+          }
         : state.iconpack.list.find(x => useIconpack === x.id);
 
     let iconpackConfig: IconpackConfig = {
@@ -113,7 +121,7 @@ export default async function load() {
     let tree = [];
 
     if (!isCustomIconpack && state.iconpack.iconpack) {
-    // TODO this should be an actual type
+        // TODO this should be an actual type
         let dt: Awaited<ReturnType<typeof getIconpackData>>;
         try {
             dt = await getIconpackData(
@@ -128,14 +136,17 @@ export default async function load() {
             state.loading = false;
             if (dt.config === null)
                 state.inactive.push(InactiveReason.NoIconpackConfig);
-            if (dt.tree === null) state.inactive.push(InactiveReason.NoIconpackFiles);
-            updateState(); return;
+            if (dt.tree === null)
+                state.inactive.push(InactiveReason.NoIconpackFiles);
+            updateState();
+            return;
         }
 
         tree = dt.tree;
         if (dt.config) iconpackConfig = dt.config;
     } else if (isCustomIconpack) {
-        iconpackConfig.biggerStatus = vstorage.iconpack.custom.config.biggerStatus;
+        iconpackConfig.biggerStatus =
+            vstorage.iconpack.custom.config.biggerStatus;
     }
 
     if (!enabled) return;

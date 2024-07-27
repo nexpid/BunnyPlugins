@@ -24,45 +24,61 @@ export default () => {
             for (const row of rows) {
                 const plugins = new Array<string>();
 
-                const iterate = (thing: Iterable | Iterable[]) =>
-                { (Array.isArray(thing) ? thing : [thing]).forEach(x => {
-                    if (typeof x.content === "string") {
-                        for (const url of x.content.match(HTTP_REGEX_MULTI) ?? [])
-                            if (
-                                [
-                                    constants.PROXY_PREFIX,
-                                    "https://vendetta.nexpid.xyz/", // :3
-                                    /^https?:\/\/\w+\.github\.io\//i,
-                                ].some(x =>
-                                    x instanceof RegExp
-                                        ? x.test(url.toLowerCase())
-                                        : url.toLowerCase().startsWith(x.toLowerCase()),
+                const iterate = (thing: Iterable | Iterable[]) => {
+                    (Array.isArray(thing) ? thing : [thing]).forEach(x => {
+                        if (typeof x.content === "string") {
+                            for (const url of x.content.match(
+                                HTTP_REGEX_MULTI,
+                            ) ?? [])
+                                if (
+                                    [
+                                        constants.PROXY_PREFIX,
+                                        "https://vendetta.nexpid.xyz/", // :3
+                                        /^https?:\/\/\w+\.github\.io\//i,
+                                    ].some(x =>
+                                        x instanceof RegExp
+                                            ? x.test(url.toLowerCase())
+                                            : url
+                                                  .toLowerCase()
+                                                  .startsWith(x.toLowerCase()),
+                                    )
                                 )
-                            )
-                                plugins.push(!url.endsWith("/") ? `${url}/` : url);
-                    } else if (typeof x.content === "object" && x.content !== null)
-                    { iterate(x.content); return; }
-                }); };
+                                    plugins.push(
+                                        !url.endsWith("/") ? `${url}/` : url,
+                                    );
+                        } else if (
+                            typeof x.content === "object" &&
+                            x.content !== null
+                        ) {
+                            iterate(x.content);
+                            return;
+                        }
+                    });
+                };
 
                 if (row.message) {
                     if (row.message.content) iterate(row.message.content);
 
-                    for (const [plug, ids] of Object.entries(pluginMessageCache))
+                    for (const [plug, ids] of Object.entries(
+                        pluginMessageCache,
+                    ))
                         if (
                             ids.find(x => x[0] === row.message.id) &&
-              !plugins.includes(plug)
+                            !plugins.includes(plug)
                         )
                             ids.length === 1
                                 ? delete pluginMessageCache[plug]
                                 : (pluginMessageCache[plug] = ids.filter(
-                                    x => x[0] !== row.message.id,
-                                ));
+                                      x => x[0] !== row.message.id,
+                                  ));
 
                     if (plugins[0]) codedLinksCache[row.message.id] = {};
                     for (const plugin of plugins) {
                         pluginMessageCache[plugin] ??= [];
                         if (
-                            !pluginMessageCache[plugin].find(x => x[0] === row.message.id)
+                            !pluginMessageCache[plugin].find(
+                                x => x[0] === row.message.id,
+                            )
                         )
                             pluginMessageCache[plugin].push([
                                 row.message.id,
@@ -71,7 +87,8 @@ export default () => {
 
                         row.message.codedLinks ??= [];
                         codedLinksCache[row.message.id][
-                            row.message.codedLinks.push(getCodedLink(plugin)) - 1
+                            row.message.codedLinks.push(getCodedLink(plugin)) -
+                                1
                         ] = plugin;
                     }
                 }
@@ -85,7 +102,12 @@ export default () => {
         if (handlers.__ple_patched) return;
         handlers.__ple_patched = true;
 
-        if (Object.prototype.hasOwnProperty.call(handlers, "handleTapInviteEmbed"))
+        if (
+            Object.prototype.hasOwnProperty.call(
+                handlers,
+                "handleTapInviteEmbed",
+            )
+        )
             patches.push(
                 instead("handleTapInviteEmbed", handlers, (args, orig) => {
                     const [
@@ -111,12 +133,12 @@ export default () => {
                     } else {
                         updateMessages(plugin, true);
                         installPlugin(plugin)
-                            .then(() =>
-                            { showToast(
-                                `Successfully installed ${plugins[plugin].manifest.name}.`,
-                                getAssetIDByName("Check"),
-                            ); },
-                            )
+                            .then(() => {
+                                showToast(
+                                    `Successfully installed ${plugins[plugin].manifest.name}.`,
+                                    getAssetIDByName("Check"),
+                                );
+                            })
                             .catch(e => {
                                 console.log(e);
                                 showToast(
@@ -124,7 +146,9 @@ export default () => {
                                     getAssetIDByName("Small"),
                                 );
                             })
-                            .finally(() => { updateMessages(plugin, false); });
+                            .finally(() => {
+                                updateMessages(plugin, false);
+                            });
                     }
                 }),
             );
@@ -137,22 +161,26 @@ export default () => {
         "params",
     ).get;
     origGetParams &&
-    Object.defineProperty(MessagesHandlers.prototype, "params", {
-        configurable: true,
-        get() {
-            if (this) patchHandlers(this);
-            return origGetParams.call(this);
-        },
-    });
+        Object.defineProperty(MessagesHandlers.prototype, "params", {
+            configurable: true,
+            get() {
+                if (this) patchHandlers(this);
+                return origGetParams.call(this);
+            },
+        });
 
     patches.push(
         () =>
             origGetParams &&
-      Object.defineProperty(MessagesHandlers.prototype, "params", {
-          configurable: true,
-          get: origGetParams,
-      }),
+            Object.defineProperty(MessagesHandlers.prototype, "params", {
+                configurable: true,
+                get: origGetParams,
+            }),
     );
 
-    return () => { patches.forEach(x => { x(); }); };
+    return () => {
+        patches.forEach(x => {
+            x();
+        });
+    };
 };

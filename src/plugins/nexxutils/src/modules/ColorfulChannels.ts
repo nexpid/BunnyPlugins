@@ -57,7 +57,8 @@ export default new Module({
         },
         colorIcons: {
             label: "Colored icon symbols",
-            subLabel: "Turns locked channel symbols yellow, NSFW channel symbols red",
+            subLabel:
+                "Turns locked channel symbols yellow, NSFW channel symbols red",
             type: "toggle",
             default: true,
         },
@@ -71,7 +72,11 @@ export default new Module({
                             React.Fragment,
                             {},
                             channel.nsfw_ &&
-                React.createElement(TextBadge, { variant: "danger" }, "nsfw"),
+                                React.createElement(
+                                    TextBadge,
+                                    { variant: "danger" },
+                                    "nsfw",
+                                ),
                             ret,
                         ),
                     ),
@@ -83,27 +88,36 @@ export default new Module({
                     RN.Image,
                     ([{ source, style }]: [{ source: number; style: any }]) => {
                         const name =
-              typeof source === "number" && getAssetByID(source).name;
+                            typeof source === "number" &&
+                            getAssetByID(source).name;
                         if (!name) return;
 
                         const warninger = warnings.find(
                             ([x]) => name === `${x}WarningIcon`,
                         );
-                        const locker = locks.find(([x]) => name === `${x}LockIcon`);
+                        const locker = locks.find(
+                            ([x]) => name === `${x}LockIcon`,
+                        );
 
                         const img = warninger
                             ? {
-                                base: warninger[1],
-                                overlay: warninger[2] ? warningBottom : warning,
-                                color: resolveSemanticColor(semanticColors.STATUS_DANGER),
-                            }
+                                  base: warninger[1],
+                                  overlay: warninger[2]
+                                      ? warningBottom
+                                      : warning,
+                                  color: resolveSemanticColor(
+                                      semanticColors.STATUS_DANGER,
+                                  ),
+                              }
                             : locker
-                                ? {
+                              ? {
                                     base: locker[1],
                                     overlay: locker[2] ? lockBottom : lock,
-                                    color: resolveSemanticColor(semanticColors.STATUS_WARNING),
+                                    color: resolveSemanticColor(
+                                        semanticColors.STATUS_WARNING,
+                                    ),
                                 }
-                                : null;
+                              : null;
 
                         if (img)
                             return React.createElement(
@@ -116,7 +130,11 @@ export default new Module({
                                 React.createElement(
                                     RN.View,
                                     {
-                                        style: { position: "absolute", right: 0, bottom: 0 },
+                                        style: {
+                                            position: "absolute",
+                                            right: 0,
+                                            bottom: 0,
+                                        },
                                     },
                                     React.createElement(RN.Image, {
                                         style: {

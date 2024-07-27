@@ -32,7 +32,9 @@ export async function getData(): Promise<UserData> {
         },
     }).then(async res => {
         const dt = await res.json();
-        useCacheStore.getState().updateData(dt, res.headers.get("last-modified"));
+        useCacheStore
+            .getState()
+            .updateData(dt, res.headers.get("last-modified"));
         return dt;
     });
 }

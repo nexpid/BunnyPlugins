@@ -19,8 +19,8 @@ export function matchGithubLink(link: string): string | undefined {
         return `https://github.com/${multi[1]}/${multi[2]}/tree/master/plugins/${multi[3]}`;
 
     const single =
-    link.match(linkMatches.singlePluginGitio) ??
-    link.match(linkMatches.githubReleases);
+        link.match(linkMatches.singlePluginGitio) ??
+        link.match(linkMatches.githubReleases);
     if (single?.[0]) return `https://github.com/${single[1]}/${single[2]}`;
 
     const [_, origin, path] = link.match(linkMatches.origin);

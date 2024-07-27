@@ -29,5 +29,7 @@ export default (): (() => void) => {
     patches.push(unsubAuthStore);
     patches.push(unsubCacheStore);
 
-    return () => { patches.forEach(x => x()); };
+    return () => {
+        patches.forEach(x => x());
+    };
 };

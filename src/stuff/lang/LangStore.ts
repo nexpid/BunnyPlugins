@@ -16,7 +16,10 @@ export const useLangStore = zustand.create<
     [
         [
             "zustand/persist",
-            { values: LangState["values"]; lastModified: LangState["lastModified"] },
+            {
+                values: LangState["values"];
+                lastModified: LangState["lastModified"];
+            },
         ],
     ]
 >(
@@ -29,7 +32,8 @@ export const useLangStore = zustand.create<
                     set({
                         values: DEV_LANG,
                         lastModified: null,
-                    }); return;
+                    });
+                    return;
                 }
 
                 const res = await fetch(
@@ -56,7 +60,8 @@ export const useLangStore = zustand.create<
                 values: state.values,
                 lastModified: state.lastModified,
             }),
-            onRehydrateStorage: () => () => RNMMKVManager.removeItem("nexpid-lang"),
+            onRehydrateStorage: () => () =>
+                RNMMKVManager.removeItem("nexpid-lang"),
         },
     ),
 );

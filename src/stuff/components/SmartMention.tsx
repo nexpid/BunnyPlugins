@@ -25,10 +25,12 @@ export default function SmartMention({
     React.useEffect(
         () =>
             !loadedUsername &&
-      loadUsername &&
-      (UserStore.getUser(userId)
-          ? setLoadedUsername(UserStore.getUser(userId).username)
-          : fetchProfile(userId).then(x => { setLoadedUsername(x.user.username); })),
+            loadUsername &&
+            (UserStore.getUser(userId)
+                ? setLoadedUsername(UserStore.getUser(userId).username)
+                : fetchProfile(userId).then(x => {
+                      setLoadedUsername(x.user.username);
+                  })),
         [loadUsername],
     );
 
@@ -39,9 +41,10 @@ export default function SmartMention({
             onPress={() =>
                 UserStore.getUser(userId)
                     ? showUserProfile({ userId })
-                    : fetchProfile(userId).then(() => showUserProfile({ userId }))
-            }
-        >
+                    : fetchProfile(userId).then(() =>
+                          showUserProfile({ userId }),
+                      )
+            }>
             {loadUsername ? `@${loadedUsername ?? "..."}` : children}
         </Text>
     );

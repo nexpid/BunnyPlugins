@@ -40,24 +40,27 @@ export default function (props: { content: any; source?: any; icon?: any }) {
 
     const img = props.source ?? props.icon;
     const Content =
-    typeof props.content === "function"
-        ? props.content
-        : () => props.content ?? null;
+        typeof props.content === "function"
+            ? props.content
+            : () => props.content ?? null;
     const Image =
-    img &&
-    (typeof img === "function"
-        ? img
-        : () => (
-            <RN.Image source={img} style={styles.icon} resizeMode="contain" />
-        ));
+        img &&
+        (typeof img === "function"
+            ? img
+            : () => (
+                  <RN.Image
+                      source={img}
+                      style={styles.icon}
+                      resizeMode="contain"
+                  />
+              ));
 
     return (
         <RN.View style={[styles.container, styles.shadow]}>
             <Text
                 variant="text-md/semibold"
                 color="TEXT_NORMAL"
-                style={{ width: 280 }}
-            >
+                style={{ width: 280 }}>
                 <Content />
             </Text>
             {img && (

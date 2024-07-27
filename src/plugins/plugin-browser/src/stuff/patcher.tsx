@@ -18,7 +18,9 @@ export default (): (() => void) => {
     patches.push(
         patchSettingsPin(
             () => true,
-            () => <SettingsSection changes={Object.keys(getChanges()).length} />,
+            () => (
+                <SettingsSection changes={Object.keys(getChanges()).length} />
+            ),
             {
                 key: plugin.manifest.name,
                 icon: getAssetIDByName(manifest.vendetta.icon),
@@ -27,7 +29,9 @@ export default (): (() => void) => {
                         Object.keys(getChanges()).length,
                     ).current;
                     if (changes > 0)
-                        return <TextBadge variant="danger">{changes}</TextBadge>;
+                        return (
+                            <TextBadge variant="danger">{changes}</TextBadge>
+                        );
                 },
                 title: () => lang.format("plugin.name", {}),
                 page: {
@@ -39,5 +43,7 @@ export default (): (() => void) => {
     patches.push(initThing());
     patches.push(lang.unload);
 
-    return () => { patches.forEach(x => x()); };
+    return () => {
+        patches.forEach(x => x());
+    };
 };

@@ -29,7 +29,7 @@ const ListItem = ({
     trolley: boolean;
 }>) => {
     const trolleySupercalifragilisticexpialidocious =
-    Reanimated.useSharedValue("0deg");
+        Reanimated.useSharedValue("0deg");
 
     const color = state ? "TEXT_POSITIVE" : "TEXT_DANGER";
 
@@ -49,14 +49,15 @@ const ListItem = ({
 
     React.useEffect(() => {
         if (trolley)
-            trolleySupercalifragilisticexpialidocious.value = Reanimated.withRepeat(
-                Reanimated.withTiming("360deg", {
-                    duration: 1000,
-                    easing: Reanimated.Easing.linear,
-                }),
-                -1,
-                false,
-            );
+            trolleySupercalifragilisticexpialidocious.value =
+                Reanimated.withRepeat(
+                    Reanimated.withTiming("360deg", {
+                        duration: 1000,
+                        easing: Reanimated.Easing.linear,
+                    }),
+                    -1,
+                    false,
+                );
     }, []);
 
     const thing = Reanimated.FadeInLeft.duration(200)
@@ -80,8 +81,7 @@ const ListItem = ({
                 } as any,
             ]}
             entering={thing}
-            exiting={out}
-        >
+            exiting={out}>
             <RN.Image
                 source={
                     state
@@ -93,8 +93,7 @@ const ListItem = ({
             />
             <Text
                 variant={state ? "text-md/semibold" : "text-md/medium"}
-                color={color}
-            >
+                color={color}>
                 {children}
             </Text>
         </Reanimated.default.View>
@@ -212,9 +211,11 @@ export default function () {
     return (
         <RN.View style={styles.base}>
             <Reanimated.default.View
-                style={[styles.container, { transform: [{ rotate: trolleyShake }] }]}
-                layout={transition}
-            >
+                style={[
+                    styles.container,
+                    { transform: [{ rotate: trolleyShake }] },
+                ]}
+                layout={transition}>
                 {state.loading ? (
                     <RN.ActivityIndicator
                         size="large"
@@ -225,38 +226,45 @@ export default function () {
                         <Reanimated.default.View
                             style={styles.row}
                             entering={inUp}
-                            exiting={out}
-                        >
+                            exiting={out}>
                             <Reanimated.default.Image
                                 source={
                                     trolley
                                         ? getAssetIDByName("clyde-avatar")
                                         : state.active
-                                            ? getAssetIDByName("CircleCheckIcon-primary")
-                                            : getAssetIDByName("CircleXIcon-primary")
+                                          ? getAssetIDByName(
+                                                "CircleCheckIcon-primary",
+                                            )
+                                          : getAssetIDByName(
+                                                "CircleXIcon-primary",
+                                            )
                                 }
                                 style={
                                     trolley
                                         ? {
-                                            width: 100,
-                                            height: 100,
-                                            borderRadius: 25,
-                                            transform: [
-                                                { rotateY: trolleyClyde },
-                                                { perspective: 100 },
-                                            ],
-                                        }
+                                              width: 100,
+                                              height: 100,
+                                              borderRadius: 25,
+                                              transform: [
+                                                  { rotateY: trolleyClyde },
+                                                  { perspective: 100 },
+                                              ],
+                                          }
                                         : styles.titleIcon
                                 }
                                 resizeMode="cover"
                             />
-                            <Text variant="text-lg/semibold" color="TEXT_NORMAL">
+                            <Text
+                                variant="text-lg/semibold"
+                                color="TEXT_NORMAL">
                                 {trolley ? (
                                     <>
                                         Themes+ is{" "}
-                                        <Text variant="heading-xxl/bold" color="TEXT_WARNING">
-                                            AAAAAAAAAAAAAAAAAAAAAAAAAHHHH AAAAAAAAAAAA
-                                            AAAAAAAGHHHHHHHHH
+                                        <Text
+                                            variant="heading-xxl/bold"
+                                            color="TEXT_WARNING">
+                                            AAAAAAAAAAAAAAAAAAAAAAAAAHHHH
+                                            AAAAAAAAAAAA AAAAAAAGHHHHHHHHH
                                         </Text>
                                     </>
                                 ) : (
@@ -270,37 +278,49 @@ export default function () {
                         </Reanimated.default.View>
                         {state.active
                             ? Object.values(PatchType)
-                                .sort((a, b) => {
-                                    const isA = state.patches.includes(a);
-                                    const isB = state.patches.includes(b);
+                                  .sort((a, b) => {
+                                      const isA = state.patches.includes(a);
+                                      const isB = state.patches.includes(b);
 
-                                    // patches are sorted by their activity & alphabetically
-                                    if (isA === isB) return a < b ? -1 : a > b ? 1 : 0;
-                                    else return isA ? -1 : isB ? 1 : 0;
-                                })
-                                .map((x, i) => (
-                                    <ListItem
-                                        key={i}
-                                        index={i}
-                                        state={state.patches.includes(x)}
-                                        trolley={trolley}
-                                    >
-                                        {lang.format(`settings.patch.${x}`, {})}
-                                    </ListItem>
-                                ))
+                                      // patches are sorted by their activity & alphabetically
+                                      if (isA === isB)
+                                          return a < b ? -1 : a > b ? 1 : 0;
+                                      else return isA ? -1 : isB ? 1 : 0;
+                                  })
+                                  .map((x, i) => (
+                                      <ListItem
+                                          key={i}
+                                          index={i}
+                                          state={state.patches.includes(x)}
+                                          trolley={trolley}>
+                                          {lang.format(
+                                              `settings.patch.${x}`,
+                                              {},
+                                          )}
+                                      </ListItem>
+                                  ))
                             : state.inactive.map((x, i) => (
-                                <ListItem key={i} index={i} state={false} trolley={trolley}>
-                                    {lang.format(`settings.inactive.${x}`, {})}
-                                </ListItem>
-                            ))}
+                                  <ListItem
+                                      key={i}
+                                      index={i}
+                                      state={false}
+                                      trolley={trolley}>
+                                      {lang.format(
+                                          `settings.inactive.${x}`,
+                                          {},
+                                      )}
+                                  </ListItem>
+                              ))}
                     </>
                 )}
             </Reanimated.default.View>
 
             <Reanimated.default.View
-                style={[styles.bottomButtons, { transform: [{ rotate: trolleyRot }] }]}
-                layout={transition}
-            >
+                style={[
+                    styles.bottomButtons,
+                    { transform: [{ rotate: trolleyRot }] },
+                ]}
+                layout={transition}>
                 <Button
                     size={trolley ? "sm" : "md"}
                     variant="primary"
@@ -337,14 +357,18 @@ export default function () {
                             resizeMode="cover"
                         />
                     }
-                    onPress={() => { openModal("config-modal", ConfigModal); }}
+                    onPress={() => {
+                        openModal("config-modal", ConfigModal);
+                    }}
                     style={{ flex: trolley ? 0.75 : 0.5 }}
                 />
             </Reanimated.default.View>
             <FloatingActionButton
                 icon={getAssetIDByName("CircleQuestionIcon-primary")}
                 positionBottom={16}
-                onPress={() => url.openURL("https://github.com/nexpid/ThemesPlus")}
+                onPress={() =>
+                    url.openURL("https://github.com/nexpid/ThemesPlus")
+                }
             />
         </RN.View>
     );

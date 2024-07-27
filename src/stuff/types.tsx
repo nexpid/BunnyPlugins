@@ -61,14 +61,16 @@ export function getUserAvatar(
     const isPomelo = user.discriminator === "0";
 
     return user.avatar
-        ? `https://cdn.discordapp.com/avatars/${user.id}/${animated && user.avatar.startsWith("a_")
-            ? `${user.avatar}.gif`
-            : `${user.avatar}.png`
-        }`
-        : `https://cdn.discordapp.com/embed/avatars/${isPomelo
-            ? (parseInt(user.id) >> 22) % 6
-            : parseInt(user.discriminator) % 5
-        }`;
+        ? `https://cdn.discordapp.com/avatars/${user.id}/${
+              animated && user.avatar.startsWith("a_")
+                  ? `${user.avatar}.gif`
+                  : `${user.avatar}.png`
+          }`
+        : `https://cdn.discordapp.com/embed/avatars/${
+              isPomelo
+                  ? (parseInt(user.id) >> 22) % 6
+                  : parseInt(user.discriminator) % 5
+          }`;
 }
 
 export function openModal(key: string, modal: typeof Modal) {
@@ -82,7 +84,8 @@ export function openModal(key: string, modal: typeof Modal) {
                 .filter(x => x !== empty)
                 .join(", ")} is missing! Please try reinstalling your client.`,
             getAssetIDByName("Small"),
-        ); return;
+        );
+        return;
     }
 
     pushModal({
@@ -106,7 +109,8 @@ export function doHaptic(dur: number): Promise<void> {
 }
 
 export function androidifyColor(color: string, alpha = 255): number {
-    const [_, r, g, b] = color.match(/#([A-F0-9]{2})([A-F0-9]{2})([A-F0-9]{2})/i) ?? [];
+    const [_, r, g, b] =
+        color.match(/#([A-F0-9]{2})([A-F0-9]{2})([A-F0-9]{2})/i) ?? [];
     if (!_) return 0;
 
     return (

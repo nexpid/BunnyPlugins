@@ -58,13 +58,14 @@ export default function Text({
         <RN.Text
             style={[
                 variant ? TextStyleSheet[variant] : {},
-                color ? { color: resolveSemanticColor(semanticColors[color]) } : {},
+                color
+                    ? { color: resolveSemanticColor(semanticColors[color]) }
+                    : {},
                 align ? { textAlign: align } : {},
                 style ?? {},
             ]}
             numberOfLines={lineClamp}
-            onPress={onPress}
-        >
+            onPress={onPress}>
             {getChildren?.() ?? children}
         </RN.Text>
     );

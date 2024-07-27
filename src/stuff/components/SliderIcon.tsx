@@ -33,8 +33,7 @@ export default function SliderIcon({
         <RN.Pressable
             android_ripple={styles.androidRipple}
             accessible={false}
-            onPress={onPress}
-        >
+            onPress={onPress}>
             <RN.View>
                 <RN.Image
                     style={styles.iconSecondary}

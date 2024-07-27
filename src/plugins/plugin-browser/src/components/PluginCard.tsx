@@ -85,14 +85,18 @@ export default function PluginCard({
             headerLabel={item.name}
             headerSuffix={
                 isNew && (
-                    <TextBadge variant="primary" style={{ marginLeft: 4 }} shiny>
+                    <TextBadge
+                        variant="primary"
+                        style={{ marginLeft: 4 }}
+                        shiny>
                         {lang.format("browser.plugin.new", {})}
                     </TextBadge>
                 )
             }
             highlight={!!isNew}
             headerSublabel={
-                item.authors[0] && `by ${item.authors.map(x => x.name).join(", ")}`
+                item.authors[0] &&
+                `by ${item.authors.map(x => x.name).join(", ")}`
             }
             headerIcon={item.vendetta.icon}
             descriptionLabel={item.description}
@@ -100,29 +104,33 @@ export default function PluginCard({
             actions={
                 !isDisabled
                     ? [
-                        {
-                            icon: status.hasPlugin ? "TrashIcon" : "DownloadIcon",
-                            disabled: status.pending,
-                            loading: status.pending,
-                            isDestructive: status.hasPlugin,
-                            onPress: installFunction,
-                        },
-                    ]
+                          {
+                              icon: status.hasPlugin
+                                  ? "TrashIcon"
+                                  : "DownloadIcon",
+                              disabled: status.pending,
+                              loading: status.pending,
+                              isDestructive: status.hasPlugin,
+                              onPress: installFunction,
+                          },
+                      ]
                     : []
             }
             overflowActions={[
                 ...(!isDisabled
                     ? [
-                        {
-                            label: lang.format(
-                                `sheet.plugin.${status.hasPlugin ? "un" : ""}install`,
-                                {},
-                            ),
-                            icon: status.hasPlugin ? "TrashIcon" : "DownloadIcon",
-                            isDestructive: status.hasPlugin,
-                            onPress: installFunction,
-                        },
-                    ]
+                          {
+                              label: lang.format(
+                                  `sheet.plugin.${status.hasPlugin ? "un" : ""}install`,
+                                  {},
+                              ),
+                              icon: status.hasPlugin
+                                  ? "TrashIcon"
+                                  : "DownloadIcon",
+                              isDestructive: status.hasPlugin,
+                              onPress: installFunction,
+                          },
+                      ]
                     : []),
                 {
                     label: lang.format("sheet.plugin.copy_plugin_link", {}),
@@ -137,23 +145,32 @@ export default function PluginCard({
                 },
                 ...(githubLink
                     ? [
-                        {
-                            label: lang.format("sheet.plugin.open_github", {}),
-                            icon: "img_account_sync_github_white",
-                            onPress: async () => {
-                                showToast(
-                                    lang.format("toast.open_link", {}),
-                                    getAssetIDByName("LinkExternalSmallIcon"),
-                                );
-                                if (await RN.Linking.canOpenURL("https://github.com")) {
-                                    // the website redirects to the actual default branch, while the app doesn't
-                                    // so we have to fix the link manually
-                                    const { url } = await fetch(githubLink, { redirect: "follow" });
-                                    RN.Linking.openURL(url);
-                                } else url.openURL(githubLink);
-                            },
-                        },
-                    ]
+                          {
+                              label: lang.format(
+                                  "sheet.plugin.open_github",
+                                  {},
+                              ),
+                              icon: "img_account_sync_github_white",
+                              onPress: async () => {
+                                  showToast(
+                                      lang.format("toast.open_link", {}),
+                                      getAssetIDByName("LinkExternalSmallIcon"),
+                                  );
+                                  if (
+                                      await RN.Linking.canOpenURL(
+                                          "https://github.com",
+                                      )
+                                  ) {
+                                      // the website redirects to the actual default branch, while the app doesn't
+                                      // so we have to fix the link manually
+                                      const { url } = await fetch(githubLink, {
+                                          redirect: "follow",
+                                      });
+                                      RN.Linking.openURL(url);
+                                  } else url.openURL(githubLink);
+                              },
+                          },
+                      ]
                     : []),
                 {
                     label: lang.format("sheet.plugin.copy_unproxied_link", {}),
@@ -163,7 +180,9 @@ export default function PluginCard({
                             lang.format("toast.copy_link", {}),
                             getAssetIDByName("CopyIcon"),
                         );
-                        clipboard.setString("https://" + item.vendetta.original);
+                        clipboard.setString(
+                            "https://" + item.vendetta.original,
+                        );
                     },
                 },
             ]}

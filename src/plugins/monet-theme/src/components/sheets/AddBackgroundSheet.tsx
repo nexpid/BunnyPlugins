@@ -24,7 +24,9 @@ export default function AddBackgroundSheet({
             <FormRow
                 label="Select an image"
                 subLabel={file.name}
-                leading={<FormRow.Icon source={getAssetIDByName("ImageIcon")} />}
+                leading={
+                    <FormRow.Icon source={getAssetIDByName("ImageIcon")} />
+                }
                 onPress={() => {
                     DocumentPicker.pickSingle({
                         type: DocumentPicker.types.images,
@@ -43,7 +45,9 @@ export default function AddBackgroundSheet({
                 label="Title"
                 placeholder="New background"
                 value={name}
-                onChange={x => { setName(x); }}
+                onChange={x => {
+                    setName(x);
+                }}
             />
             <RN.View style={{ height: 8 }} />
             <Button

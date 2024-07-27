@@ -36,12 +36,16 @@ export default function ChooseSheet({
                         x.iconComponent
                             ? x.iconComponent
                             : x.icon && (
-                                <RN.Image
-                                    source={x.icon}
-                                    resizeMode="cover"
-                                    style={{ width: 24, height: 24, tintColor: x.iconColor }}
-                                />
-                            )
+                                  <RN.Image
+                                      source={x.icon}
+                                      resizeMode="cover"
+                                      style={{
+                                          width: 24,
+                                          height: 24,
+                                          tintColor: x.iconColor,
+                                      }}
+                                  />
+                              )
                     }
                     leading={<FormRow.Radio selected={x.value === value} />}
                     onPress={() => {

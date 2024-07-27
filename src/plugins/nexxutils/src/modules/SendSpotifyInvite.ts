@@ -85,7 +85,10 @@ export default new Module({
                         );
                         if (textComp) {
                             textComp.children = "Spotify invite";
-                            textComp.style = [styles.text, disabled && styles.disabledText];
+                            textComp.style = [
+                                styles.text,
+                                disabled && styles.disabledText,
+                            ];
                         }
 
                         const iconComp = findInReactTree(a.children, x =>
@@ -94,14 +97,18 @@ export default new Module({
                         if (iconComp)
                             iconComp.type = () =>
                                 React.createElement(RN.Image, {
-                                    source: getAssetIDByName("ic_spotify_white_16px"),
+                                    source: getAssetIDByName(
+                                        "ic_spotify_white_16px",
+                                    ),
                                     resizeMode: "cover",
                                     style: [
                                         {
                                             width: 20,
                                             height: 20,
                                         },
-                                        RN.StyleSheet.flatten(iconComp.props.style),
+                                        RN.StyleSheet.flatten(
+                                            iconComp.props.style,
+                                        ),
                                         disabled && styles.disabledIcon,
                                     ],
                                 });

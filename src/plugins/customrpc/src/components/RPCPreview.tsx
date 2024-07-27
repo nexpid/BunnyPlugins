@@ -78,17 +78,17 @@ export default ({ edit, act }: { edit: boolean; act: SettingsActivity }) => {
                     <Text
                         variant="eyebrow"
                         color="TEXT_NORMAL"
-                        onPress={() =>
-                        { ActionSheet.open(ActivityTypeActionSheet, {
-                            type: act.type ?? ActivityType.Playing,
-                            update: x => {
-                                act.type = x;
-                                update();
-                            },
-                        }); }
-                        }
-                    >
-                        {activityTypePreview[act.type ?? ActivityType.Playing]} ...
+                        onPress={() => {
+                            ActionSheet.open(ActivityTypeActionSheet, {
+                                type: act.type ?? ActivityType.Playing,
+                                update: x => {
+                                    act.type = x;
+                                    update();
+                                },
+                            });
+                        }}>
+                        {activityTypePreview[act.type ?? ActivityType.Playing]}{" "}
+                        ...
                     </Text>
                 </RN.View>
                 <RN.View style={styles.card}>
@@ -96,52 +96,61 @@ export default ({ edit, act }: { edit: boolean; act: SettingsActivity }) => {
                         <RN.View style={styles.card2}>
                             <RN.View style={styles.images}>
                                 <RN.Pressable
-                                    onPress={() =>
-                                    { ActionSheet.open(ImageActionSheet, {
-                                        appId: act.app.id,
-                                        role: "Large",
-                                        image: act.assets.largeImg,
-                                        navigation,
-                                        update: x => {
-                                            act.assets.largeImg = x;
-                                            update();
-                                        },
-                                    }); }
-                                    }
-                                >
+                                    onPress={() => {
+                                        ActionSheet.open(ImageActionSheet, {
+                                            appId: act.app.id,
+                                            role: "Large",
+                                            image: act.assets.largeImg,
+                                            navigation,
+                                            update: x => {
+                                                act.assets.largeImg = x;
+                                                update();
+                                            },
+                                        });
+                                    }}>
                                     <RN.Image
                                         source={{
                                             uri:
-                        displayImage(act.assets.largeImg ?? ".", act.app.id) ??
-                        placeholders.image,
+                                                displayImage(
+                                                    act.assets.largeImg ?? ".",
+                                                    act.app.id,
+                                                ) ?? placeholders.image,
                                         }}
-                                        style={{ borderRadius: 3, width: 56, height: 56 }}
+                                        style={{
+                                            borderRadius: 3,
+                                            width: 56,
+                                            height: 56,
+                                        }}
                                     />
                                 </RN.Pressable>
                                 <RN.View style={styles.smallImageBg}>
                                     <RN.Pressable
-                                        onPress={() =>
-                                        { ActionSheet.open(ImageActionSheet, {
-                                            appId: act.app.id,
-                                            role: "Small",
-                                            image: act.assets.smallImg,
-                                            navigation,
-                                            update: x => {
-                                                act.assets.smallImg = x;
-                                                update();
-                                            },
-                                        }); }
-                                        }
-                                    >
+                                        onPress={() => {
+                                            ActionSheet.open(ImageActionSheet, {
+                                                appId: act.app.id,
+                                                role: "Small",
+                                                image: act.assets.smallImg,
+                                                navigation,
+                                                update: x => {
+                                                    act.assets.smallImg = x;
+                                                    update();
+                                                },
+                                            });
+                                        }}>
                                         <RN.Image
                                             source={{
                                                 uri:
-                          displayImage(
-                              act.assets.smallImg ?? ".",
-                              act.app.id,
-                          ) ?? placeholders.image,
+                                                    displayImage(
+                                                        act.assets.smallImg ??
+                                                            ".",
+                                                        act.app.id,
+                                                    ) ?? placeholders.image,
                                             }}
-                                            style={{ borderRadius: 14, width: 28, height: 28 }}
+                                            style={{
+                                                borderRadius: 14,
+                                                width: 28,
+                                                height: 28,
+                                            }}
                                         />
                                     </RN.Pressable>
                                 </RN.View>
@@ -150,140 +159,170 @@ export default ({ edit, act }: { edit: boolean; act: SettingsActivity }) => {
                                 <Text
                                     variant="text-md/semibold"
                                     color="TEXT_NORMAL"
-                                    onPress={() =>
-                                    { ActionSheet.open(ApplicationActionSheet, {
-                                        appId: act.app.id,
-                                        appName: act.app.name,
-                                        navigation,
-                                        update: x => {
-                                            if (x?.id !== act.app.id) {
-                                                if (!Number.isNaN(Number(act.assets.smallImg)))
-                                                    delete act.assets.smallImg;
-                                                if (!Number.isNaN(Number(act.assets.largeImg)))
-                                                    delete act.assets.largeImg;
-                                            }
+                                    onPress={() => {
+                                        ActionSheet.open(
+                                            ApplicationActionSheet,
+                                            {
+                                                appId: act.app.id,
+                                                appName: act.app.name,
+                                                navigation,
+                                                update: x => {
+                                                    if (x?.id !== act.app.id) {
+                                                        if (
+                                                            !Number.isNaN(
+                                                                Number(
+                                                                    act.assets
+                                                                        .smallImg,
+                                                                ),
+                                                            )
+                                                        )
+                                                            delete act.assets
+                                                                .smallImg;
+                                                        if (
+                                                            !Number.isNaN(
+                                                                Number(
+                                                                    act.assets
+                                                                        .largeImg,
+                                                                ),
+                                                            )
+                                                        )
+                                                            delete act.assets
+                                                                .largeImg;
+                                                    }
 
-                                            act.app.id = x?.id;
-                                            act.app.name = x?.name;
-                                            update();
-                                        },
-                                    }); }
-                                    }
-                                >
+                                                    act.app.id = x?.id;
+                                                    act.app.name = x?.name;
+                                                    update();
+                                                },
+                                            },
+                                        );
+                                    }}>
                                     {act.app.name ?? placeholders.appName}
                                 </Text>
                                 <Text
                                     variant="text-sm/normal"
                                     color="TEXT_NORMAL"
-                                    onPress={() =>
-                                    { simpleInput({
-                                        role: "Details",
-                                        current: act.details,
-                                        update: x => {
-                                            act.details = x;
-                                            update();
-                                        },
-                                    }); }
-                                    }
-                                >
+                                    onPress={() => {
+                                        simpleInput({
+                                            role: "Details",
+                                            current: act.details,
+                                            update: x => {
+                                                act.details = x;
+                                                update();
+                                            },
+                                        });
+                                    }}>
                                     {act.details ?? placeholders.details}
                                 </Text>
                                 <Text
                                     variant="text-sm/normal"
                                     color="TEXT_NORMAL"
-                                    onPress={() =>
-                                    { simpleInput({
-                                        role: "State",
-                                        current: act.state,
-                                        update: x => {
-                                            act.state = x;
-                                            update();
-                                        },
-                                    }); }
-                                    }
-                                >
+                                    onPress={() => {
+                                        simpleInput({
+                                            role: "State",
+                                            current: act.state,
+                                            update: x => {
+                                                act.state = x;
+                                                update();
+                                            },
+                                        });
+                                    }}>
                                     {act.state ?? placeholders.state}
                                 </Text>
                                 <Text
                                     variant="text-sm/normal"
                                     color="TEXT_NORMAL"
-                                    onPress={() =>
-                                    { ActionSheet.open(TimestampActionSheet, {
-                                        start: act.timestamps.start,
-                                        end: act.timestamps.end,
-                                        update: x => {
-                                            act.timestamps.start = x.start;
-                                            act.timestamps.end = x.end;
-                                            update();
-                                        },
-                                    }); }
-                                    }
+                                    onPress={() => {
+                                        ActionSheet.open(TimestampActionSheet, {
+                                            start: act.timestamps.start,
+                                            end: act.timestamps.end,
+                                            update: x => {
+                                                act.timestamps.start = x.start;
+                                                act.timestamps.end = x.end;
+                                                update();
+                                            },
+                                        });
+                                    }}
                                     liveUpdate={true}
                                     getChildren={() =>
                                         typeof act.timestamps.end === "string"
                                             ? `{${act.timestamps.end}}`
-                                            : typeof act.timestamps.end === "number"
-                                                ? `${stringifyTimeDiff(
-                                                    parseTimestamp(act.timestamps.end) - Date.now(),
+                                            : typeof act.timestamps.end ===
+                                                "number"
+                                              ? `${stringifyTimeDiff(
+                                                    parseTimestamp(
+                                                        act.timestamps.end,
+                                                    ) - Date.now(),
                                                 )} left`
-                                                : typeof act.timestamps.start === "string"
-                                                    ? `{${act.timestamps.start}}`
-                                                    : typeof act.timestamps.start === "number"
-                                                        ? `${stringifyTimeDiff(
-                                                            Date.now() -
-                                  parseTimestamp(act.timestamps.start),
-                                                        )} elapsed`
-                                                        : placeholders.timestamp
+                                              : typeof act.timestamps.start ===
+                                                  "string"
+                                                ? `{${act.timestamps.start}}`
+                                                : typeof act.timestamps
+                                                        .start === "number"
+                                                  ? `${stringifyTimeDiff(
+                                                        Date.now() -
+                                                            parseTimestamp(
+                                                                act.timestamps
+                                                                    .start,
+                                                            ),
+                                                    )} elapsed`
+                                                  : placeholders.timestamp
                                     }
                                 />
                             </RN.View>
                         </RN.View>
                         <RN.View style={{ marginTop: 16 }}>
                             <Button
-                                text={act.buttons[0]?.text ?? placeholders.button1}
+                                text={
+                                    act.buttons[0]?.text ?? placeholders.button1
+                                }
                                 style={{ backgroundColor: "grey" }}
                                 size={"small"}
-                                onPress={() =>
-                                { ActionSheet.open(ButtonActionSheet, {
-                                    role: "1",
-                                    text: act.buttons[0]?.text,
-                                    url: act.buttons[0]?.url,
-                                    update: ({ text, url }) => {
-                                        if (!text && !url) act.buttons[0] = undefined;
-                                        else
-                                            act.buttons[0] = {
-                                                text,
-                                                url,
-                                            };
+                                onPress={() => {
+                                    ActionSheet.open(ButtonActionSheet, {
+                                        role: "1",
+                                        text: act.buttons[0]?.text,
+                                        url: act.buttons[0]?.url,
+                                        update: ({ text, url }) => {
+                                            if (!text && !url)
+                                                act.buttons[0] = undefined;
+                                            else
+                                                act.buttons[0] = {
+                                                    text,
+                                                    url,
+                                                };
 
-                                        update();
-                                    },
-                                }); }
-                                }
+                                            update();
+                                        },
+                                    });
+                                }}
                             />
                         </RN.View>
                         <RN.View style={{ marginTop: 10 }}>
                             <Button
-                                text={act.buttons[1]?.text ?? placeholders.button2}
+                                text={
+                                    act.buttons[1]?.text ?? placeholders.button2
+                                }
                                 style={{ backgroundColor: "grey" }}
                                 size={"small"}
-                                onPress={() =>
-                                { ActionSheet.open(ButtonActionSheet, {
-                                    role: "2",
-                                    text: act.buttons[1]?.text,
-                                    url: act.buttons[1]?.url,
-                                    update: ({ text, url }) => {
-                                        if (!text && !url) act.buttons[1] = undefined;
-                                        else
-                                            act.buttons[1] = {
-                                                text,
-                                                url,
-                                            };
+                                onPress={() => {
+                                    ActionSheet.open(ButtonActionSheet, {
+                                        role: "2",
+                                        text: act.buttons[1]?.text,
+                                        url: act.buttons[1]?.url,
+                                        update: ({ text, url }) => {
+                                            if (!text && !url)
+                                                act.buttons[1] = undefined;
+                                            else
+                                                act.buttons[1] = {
+                                                    text,
+                                                    url,
+                                                };
 
-                                        update();
-                                    },
-                                }); }
-                                }
+                                            update();
+                                        },
+                                    });
+                                }}
                             />
                         </RN.View>
                     </RN.View>

@@ -33,11 +33,15 @@ export default function () {
     React.useEffect(() => {
         if (shouldAppear) setVisible(true);
 
-        fade.value = Reanimated.withTiming(shouldAppear ? 1 : 0, { duration: 100 });
+        fade.value = Reanimated.withTiming(shouldAppear ? 1 : 0, {
+            duration: 100,
+        });
         clearTimeout(shallTimeout.current);
 
         if (!shouldAppear)
-            shallTimeout.current = setTimeout(() => { setVisible(false); }, 100);
+            shallTimeout.current = setTimeout(() => {
+                setVisible(false);
+            }, 100);
     }, [shouldAppear]);
 
     return (
@@ -46,12 +50,10 @@ export default function () {
                 styles.container,
                 !visible && { display: "none" },
                 { opacity: fade },
-            ]}
-        >
+            ]}>
             <Text
                 variant="text-xs/semibold"
-                color={dspLength <= maxLength ? "TEXT_NORMAL" : "TEXT_DANGER"}
-            >
+                color={dspLength <= maxLength ? "TEXT_NORMAL" : "TEXT_DANGER"}>
                 {display(dspLength)}
             </Text>
         </Reanimated.default.View>

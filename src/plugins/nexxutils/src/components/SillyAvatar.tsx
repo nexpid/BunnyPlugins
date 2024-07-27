@@ -36,11 +36,12 @@ export default function () {
                         `COMBO: ${comboTimer.current[1].toString().padStart(3, "0")}`,
                     );
                     scaleAnim.value = 1 + comboTimer.current[1] / 50;
-                    scaleAnim.value = Reanimated.withTiming(1, { duration: 500 });
+                    scaleAnim.value = Reanimated.withTiming(1, {
+                        duration: 500,
+                    });
                 }
             }}
-            style={{ marginRight: 12 }}
-        >
+            style={{ marginRight: 12 }}>
             <Reanimated.default.Image
                 style={[
                     {

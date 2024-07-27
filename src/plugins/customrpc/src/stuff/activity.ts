@@ -147,19 +147,21 @@ export function settingsActivityToRaw(activity: SettingsActivity): {
         details: activity.details && handleVar.str(activity.details),
         timestamps: {
             start:
-        activity.timestamps.start !== undefined
-            ? handleVar.tim(activity.timestamps.start)
-            : undefined,
+                activity.timestamps.start !== undefined
+                    ? handleVar.tim(activity.timestamps.start)
+                    : undefined,
             end:
-        activity.timestamps.end !== undefined
-            ? handleVar.tim(activity.timestamps.end)
-            : undefined,
+                activity.timestamps.end !== undefined
+                    ? handleVar.tim(activity.timestamps.end)
+                    : undefined,
         },
         assets: {
             large_image:
-        activity.assets.largeImg && handleVar.img(activity.assets.largeImg),
+                activity.assets.largeImg &&
+                handleVar.img(activity.assets.largeImg),
             small_image:
-        activity.assets.smallImg && handleVar.img(activity.assets.smallImg),
+                activity.assets.smallImg &&
+                handleVar.img(activity.assets.smallImg),
         },
     };
 
@@ -211,8 +213,8 @@ export async function dispatchActivity(
 export function getSavedActivity(): SettingsActivity {
     return (
         vstorage.profiles[vstorage.activity.profile] ??
-    vstorage.activity.editing ??
-    makeEmptySettingsActivity()
+        vstorage.activity.editing ??
+        makeEmptySettingsActivity()
     );
 }
 
