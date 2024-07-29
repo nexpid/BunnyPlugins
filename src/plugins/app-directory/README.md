@@ -6,7 +6,7 @@
 <div align="center">
 <img alt="plugin_status" src="https://img.shields.io/badge/plugin_status-unfinished-b8c0e0?style=for-the-badge&labelColor=24273a" />
 <br/>
-<a href="https://bunny.nexpid.xyz/app-directory"><img alt="copy_link" src="https://img.shields.io/badge/copy_link-1e2030?style=for-the-badge" /></a>
+<a href="https://dev.bunny.nexpid.xyz/app-directory"><img alt="copy_dev_link" src="https://img.shields.io/badge/copy_dev_link-1e2030?style=for-the-badge" /></a>
 </div>
 
 <h1 align="center">App Directory</h1>

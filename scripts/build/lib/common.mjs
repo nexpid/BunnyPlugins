@@ -16,7 +16,7 @@ ${mdNoteFlavors[flavor][1]}`;
 
 /** @type {string} */
 export const branch = execSync("git branch --show-current").toString().trim();
-export const isDevBranch = branch === "dev";
+export const isDevBranch = branch !== "main";
 
 export const isDev =
     process.argv.includes("-d") || process.argv.includes("--dev");

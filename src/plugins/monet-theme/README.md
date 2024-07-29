@@ -6,8 +6,7 @@
 <div align="center">
 <img alt="plugin_status" src="https://img.shields.io/badge/plugin_status-finished-a6da95?style=for-the-badge&labelColor=24273a" />
 <br/>
-<a href="https://bn-plugins.github.io/vd-proxy/vendetta.nexpid.xyz/monet-theme"><img alt="copy_proxied_link" src="https://img.shields.io/badge/copy_proxied_link-181926?style=for-the-badge" /></a>
-<a href="https://bunny.nexpid.xyz/monet-theme"><img alt="copy_link" src="https://img.shields.io/badge/copy_link-1e2030?style=for-the-badge" /></a>
+<a href="https://dev.bunny.nexpid.xyz/monet-theme"><img alt="copy_dev_link" src="https://img.shields.io/badge/copy_dev_link-1e2030?style=for-the-badge" /></a>
 </div>
 
 <h1 align="center">Monet Theme</h1>
