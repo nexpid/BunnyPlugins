@@ -36,7 +36,6 @@ export default tseslint.config(
             "@typescript-eslint/no-invalid-void-type": "error",
             "@typescript-eslint/no-non-null-asserted-nullish-coalescing":
                 "error",
-            "@typescript-eslint/no-non-null-assertion": "error",
             "@typescript-eslint/prefer-literal-enum-member": [
                 "error",
                 { allowBitwiseExpressions: true },

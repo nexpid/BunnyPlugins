@@ -36,7 +36,6 @@
     "@eslint/js": "^9.2.0",
     "@revenge-mod/vendetta-types": "github:revenge-mod/vendetta-types",
     "@shopify/flash-list": "^1.6.4",
-    "@types/bun": "^1.1.6",
     "chokidar": "^3.6.0",
     "eslint": "^9.2.0",
     "eslint-plugin-path-alias": "^2.1.0",
