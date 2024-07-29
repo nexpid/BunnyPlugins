@@ -10,7 +10,7 @@
   "type": "module",
   "scripts": {
     "build": "node scripts/build/index.mjs",
-    "build:dev": "pnpm build --dev",
+    "dev": "pnpm build --dev",
     "watch": "node scripts/watch/index.mjs",
     "serve": "http-server dist --port 8731",
     "lint": "eslint --fix",
@@ -60,6 +60,9 @@
         "react",
         "react-native"
       ]
+    },
+    "patchedDependencies": {
+      "picocolors@1.0.1": "patches/picocolors@1.0.1.patch"
     }
   },
   "engines": {

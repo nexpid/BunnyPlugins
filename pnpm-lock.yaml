@@ -4,6 +4,11 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+patchedDependencies:
+  picocolors@1.0.1:
+    hash: 6swi6tv3myzmgefw5pw432whxi
+    path: patches/picocolors@1.0.1.patch
+
 importers:
 
   .:
@@ -80,7 +85,7 @@ importers:
         version: 17.13.3
       picocolors:
         specifier: ^1.0.1
-        version: 1.0.1
+        version: 1.0.1(patch_hash=6swi6tv3myzmgefw5pw432whxi)
       react-native-document-picker:
         specifier: ^9.3.0
         version: 9.3.0(react-native@0.74.3(@babel/core@7.24.9)(@babel/preset-env@7.25.0(@babel/core@7.24.9))(react@18.3.1))(react@18.3.1)
@@ -3779,7 +3784,7 @@ snapshots:
   '@babel/code-frame@7.24.7':
     dependencies:
       '@babel/highlight': 7.24.7
-      picocolors: 1.0.1
+      picocolors: 1.0.1(patch_hash=6swi6tv3myzmgefw5pw432whxi)
 
   '@babel/compat-data@7.25.0': {}
 
@@ -3950,7 +3955,7 @@ snapshots:
       '@babel/helper-validator-identifier': 7.24.7
       chalk: 2.4.2
       js-tokens: 4.0.0
-      picocolors: 1.0.1
+      picocolors: 1.0.1(patch_hash=6swi6tv3myzmgefw5pw432whxi)
 
   '@babel/parser@7.25.0':
     dependencies:
@@ -7143,7 +7148,7 @@ snapshots:
 
   path-type@4.0.0: {}
 
-  picocolors@1.0.1: {}
+  picocolors@1.0.1(patch_hash=6swi6tv3myzmgefw5pw432whxi): {}
 
   picomatch@2.3.1: {}
 
@@ -7790,7 +7795,7 @@ snapshots:
     dependencies:
       browserslist: 4.23.2
       escalade: 3.1.2
-      picocolors: 1.0.1
+      picocolors: 1.0.1(patch_hash=6swi6tv3myzmgefw5pw432whxi)
 
   uri-js@4.4.1:
     dependencies:
