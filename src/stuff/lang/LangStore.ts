@@ -3,7 +3,7 @@ import { createJSONStorage, persist } from "zustand/middleware";
 import constants from "$/constants";
 import { RNMMKVManager, zustand } from "$/deps";
 
-import { LangValues } from "../../lang/defs";
+import LangValues from "../../../lang/defs";
 
 interface LangState {
     values: Record<string, Record<string, string>>;

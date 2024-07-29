@@ -1,2 +1,3 @@
 dist
 lang/values/*.json
+pnpm-lock.yaml

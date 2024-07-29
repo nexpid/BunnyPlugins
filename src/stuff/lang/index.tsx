@@ -4,7 +4,7 @@ import { i18n, ReactNative as RN } from "@vendetta/metro/common";
 import { fluxSubscribe } from "$/types";
 import RNFS from "$/wrappers/RNFS";
 
-import type { LangValues } from "../../../lang/defs";
+import type LangValues from "../../../lang/defs";
 import { useLangStore } from "./LangStore";
 
 // from Pyoncord
