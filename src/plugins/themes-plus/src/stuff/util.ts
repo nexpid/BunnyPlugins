@@ -3,7 +3,7 @@ import { useCacheStore } from "../stores/CacheStore";
 
 export function customUrl() {
     const { url } = vstorage.iconpack.custom;
-    return url.length > 1 && (!url.endsWith("/") ? `${url}/` : url);
+    return url.length > 1 ? (!url.endsWith("/") ? `${url}/` : url) : "";
 }
 
 export function fixPath(path: string) {

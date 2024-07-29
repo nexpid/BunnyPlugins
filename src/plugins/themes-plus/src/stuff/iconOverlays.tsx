@@ -13,7 +13,7 @@ export function getIconTint(
 ): string | undefined {
     const name = customName ?? getAssetByID(icon).name;
     if (!name) return;
-    if (!plus.icons[name]) return;
+    if (!plus.icons?.[name]) return;
 
     return resolveColor(plus.icons[name]);
 }

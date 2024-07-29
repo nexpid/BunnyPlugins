@@ -27,7 +27,7 @@ export default async function load() {
     state.loading = true;
     state.active = false;
     state.iconpack = {
-        iconpack: null,
+        iconpack: undefined,
         list: [],
         hashes: {},
     };
@@ -37,13 +37,13 @@ export default async function load() {
 
     try {
         state.iconpack = {
-            iconpack: null,
+            iconpack: undefined,
             list: await cFetch<IconpackData>(
                 constants.iconpacks.list,
-                null,
+                undefined,
                 "json",
             ).then(res => res.list),
-            hashes: await cFetch(constants.iconpacks.hashes, null, "json"),
+            hashes: await cFetch(constants.iconpacks.hashes, undefined, "json"),
         };
     } catch {
         if (
@@ -109,7 +109,7 @@ export default async function load() {
                   ],
                   sources: ["N/A"],
               },
-              config: null,
+              config: undefined,
               suffix: vstorage.iconpack.custom.suffix,
               load: customUrl(),
           }
@@ -118,7 +118,7 @@ export default async function load() {
     let iconpackConfig: IconpackConfig = {
         biggerStatus: false,
     };
-    let tree = [];
+    let tree = new Array<string>();
 
     if (!isCustomIconpack && state.iconpack.iconpack) {
         // TODO this should be an actual type

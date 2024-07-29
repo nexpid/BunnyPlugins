@@ -21,7 +21,7 @@ export default function patchMentionLineColors(plus: PlusStructure) {
                 "createBackgroundHighlight",
                 RowGeneratorUtils,
                 ([x], ret) => {
-                    const clr = resolveColor(plus.mentionLineColor);
+                    const clr = resolveColor(plus.mentionLineColor!);
                     if (x?.message?.mentioned && clr)
                         ret.gutterColor = androidifyColor(clr, 200);
                 },

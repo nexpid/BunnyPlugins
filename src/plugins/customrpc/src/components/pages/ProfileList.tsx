@@ -267,6 +267,8 @@ export const ProfileList = () => {
                             },
                             secondaryButton: "Save profile",
                             secondaryRun: () => {
+                                if (!vstorage.activity.profile) return;
+
                                 vstorage.profiles[vstorage.activity.profile] =
                                     JSON.parse(
                                         JSON.stringify(

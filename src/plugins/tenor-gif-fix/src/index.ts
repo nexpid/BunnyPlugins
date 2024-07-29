@@ -16,7 +16,7 @@ const parseURL = (url: string): string | undefined => {
     return `https://${host}/${id.slice(0, -2)}AC/${file.split(".")[0]}.gif`;
 };
 
-let patches = [];
+let patches = new Array<any>();
 
 export default {
     onLoad: () => {

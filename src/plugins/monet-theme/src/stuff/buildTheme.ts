@@ -9,7 +9,7 @@ import { getDiscordTheme, vstorage } from "..";
 import { Patches, PatchThing } from "../types";
 import { getLABShade, parseColor } from "./colors";
 
-export function apply(theme: ThemeDataWithPlus | false) {
+export function apply(theme: ThemeDataWithPlus | null) {
     const { bunny } = window as any;
 
     const val = theme
@@ -34,7 +34,10 @@ export function apply(theme: ThemeDataWithPlus | false) {
 }
 
 export function build(patches: Patches): ThemeDataWithPlus {
-    const theme: ThemeDataWithPlus = {
+    const raw = {} as Record<string, string>;
+    const semantic = {} as Record<string, (string | null)[]>;
+
+    const theme = {
         name: "Material You Theme 2.0",
         description: "A Bunny theme with Material You theming.",
         authors: [
@@ -43,10 +46,8 @@ export function build(patches: Patches): ThemeDataWithPlus {
                 id: "853550207039832084",
             },
         ],
-        semanticColors: {},
-        rawColors: {},
         spec: 2,
-    };
+    } as ThemeDataWithPlus;
 
     const style = getDiscordTheme();
 
@@ -84,7 +85,7 @@ export function build(patches: Patches): ThemeDataWithPlus {
                     ? Math.floor((shade / 26) * 1000)
                     : shade;
 
-                theme.rawColors[c] = getLABShade(
+                raw[c] = getLABShade(
                     clr,
                     y.base ? useShade + (500 - y.base) : useShade,
                     y.ratio,
@@ -92,18 +93,27 @@ export function build(patches: Patches): ThemeDataWithPlus {
             }
         }
 
-    for (const [x, y] of entries(get(patches.raw)))
-        theme.rawColors[x] = parseColor(y);
-
-    for (const [x, y] of Object.entries(patches.semantic.both))
-        theme.semanticColors[x] = [parseColor(y), parseColor(y)];
-    for (const [x, y] of Object.entries(patches.semantic.dark)) {
-        if (theme.semanticColors[x]) theme.semanticColors[x][0] = parseColor(y);
-        else theme.semanticColors[x] = [parseColor(y)];
+    const rawPatches = get(patches.raw);
+    for (const key of Object.keys(rawPatches)) {
+        const clr = parseColor(rawPatches[key]);
+        if (clr) raw[key] = clr;
     }
-    for (const [x, y] of Object.entries(patches.semantic.light)) {
-        if (theme.semanticColors[x]) theme.semanticColors[x][1] = parseColor(y);
-        else theme.semanticColors[x] = [undefined, parseColor(y)];
+
+    for (const key of Object.keys(patches.semantic.both)) {
+        const clr = parseColor(rawPatches[key]);
+        if (clr) semantic[key] = [clr, clr];
+    }
+    for (const key of Object.keys(patches.semantic.dark)) {
+        const clr = parseColor(rawPatches[key]);
+
+        if (semantic[key] && clr) semantic[key][0] = clr;
+        else if (clr) semantic[key] = [clr];
+    }
+    for (const key of Object.keys(patches.semantic.light)) {
+        const clr = parseColor(rawPatches[key]);
+
+        if (semantic[key] && clr) semantic[key][1] = clr;
+        else if (clr) semantic[key] = [null, clr];
     }
 
     if (vstorage.config.wallpaper !== "none")
@@ -119,9 +129,15 @@ export function build(patches: Patches): ThemeDataWithPlus {
             icons: {},
         };
 
-        for (const [x, y] of entries(get(patches.plus.icons)))
-            theme.plus.icons[x] = parseColor(y);
+        const icons = {};
+        for (const key of Object.keys(get(patches.plus.icons)))
+            icons[key] = parseColor(key);
+
+        theme.plus.icons = icons;
     }
+
+    theme.semanticColors = semantic as any;
+    theme.rawColors = raw;
 
     return JSON.parse(JSON.stringify(theme));
 }

@@ -32,7 +32,7 @@ export default function () {
         searchSemantic(query: string) {
             query ??= "";
             return Object.fromEntries(
-                Object.entries(window.nx.semantic).filter(([x]) =>
+                Object.entries(this.semantic).filter(([x]) =>
                     query.startsWith("^") && query.endsWith("$")
                         ? x.toLowerCase() === query.toLowerCase().slice(1, -1)
                         : query.startsWith("^")
@@ -52,7 +52,7 @@ export default function () {
             const { theme } = ThemeStore;
 
             return Object.fromEntries(
-                Object.entries(window.nx.semantic)
+                Object.entries(this.semantic)
                     .map(([x, y]) => [
                         x,
                         Object.fromEntries(

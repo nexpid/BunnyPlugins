@@ -61,17 +61,19 @@ export default function ({
     const things = [
         {
             color:
-                {
-                    brand: "BRAND",
-                    red: "DANGER",
-                    green: "POSITIVE",
-                    primary: "PRIMARY",
-                    transparent: "NORMAL",
-                    grey: "NORMAL",
-                    lightgrey: "NORMAL",
-                    white: "NORMAL",
-                    link: "NORMAL",
-                }[confirmColor] ?? "BRAND",
+                (confirmColor &&
+                    {
+                        brand: "BRAND",
+                        red: "DANGER",
+                        green: "POSITIVE",
+                        primary: "PRIMARY",
+                        transparent: "NORMAL",
+                        grey: "NORMAL",
+                        lightgrey: "NORMAL",
+                        white: "NORMAL",
+                        link: "NORMAL",
+                    }[confirmColor]) ??
+                "BRAND",
             text: confirmText ?? "Confirm",
             action: onConfirm,
             base: true,
@@ -130,7 +132,7 @@ export default function ({
                                 [x.loading]: true,
                             });
                             if ("action" in x && isSpecial) {
-                                await x.action().catch(() => void 0);
+                                await x.action?.().catch(() => void 0);
                                 setLoader({
                                     ...loader,
                                     [x.loading]: false,

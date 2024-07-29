@@ -26,7 +26,7 @@ export interface RawActivity {
         start?: number;
         end?: number;
     };
-    assets?: {
+    assets: {
         large_image?: string;
         large_text?: string;
         small_image?: string;
@@ -80,7 +80,7 @@ export const SettingsActivity = Joi.object({
     assets: Joi.object({
         largeImg: Joi.string().optional(),
         smallImg: Joi.string().optional(),
-    }),
+    }).required(),
     buttons: [
         Joi.object({
             text: Joi.string(),
@@ -173,7 +173,7 @@ export function settingsActivityToRaw(activity: SettingsActivity): {
             button_urls: activity.buttons
                 .slice(0, 2)
                 .filter(x => !!x.text)
-                .map(x => (x.url ? handleVar.str(x.url) : null)),
+                .map(x => (x.url ? handleVar.str(x.url) : null)) as string[],
         };
         at.buttons = activity.buttons
             .slice(0, 2)
@@ -212,8 +212,9 @@ export async function dispatchActivity(
 
 export function getSavedActivity(): SettingsActivity {
     return (
-        vstorage.profiles[vstorage.activity.profile] ??
-        vstorage.activity.editing ??
+        (vstorage.activity.profile &&
+            vstorage.profiles[vstorage.activity.profile]) ||
+        vstorage.activity.editing ||
         makeEmptySettingsActivity()
     );
 }

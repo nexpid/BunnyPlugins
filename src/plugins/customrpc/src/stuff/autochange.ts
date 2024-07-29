@@ -15,11 +15,10 @@ export function registerChangeCronJob(
     key: string,
     cron: (date: Date) => number,
     run: () => void,
-    isDefault?: boolean,
 ) {
     if (cronjobs[key]) return;
     const change = {
-        default: isDefault,
+        default: true,
         timeout: -1 as any,
     };
     cronjobs[key] = change;
@@ -47,13 +46,12 @@ export function registerChangeFluxEvent(
     key: string,
     event: string,
     run: (...fluxargs: any[]) => void,
-    isDefault?: boolean,
 ) {
     if (fluxEvents[key]) return;
 
     FluxDispatcher.subscribe(event, run);
     fluxEvents[key] = {
-        default: isDefault,
+        default: false,
         event,
         handler: run,
     };
@@ -78,7 +76,6 @@ export function registerDefaultChanges() {
         "auto_fix_timestamps",
         x => x.setHours(24, 0, 0, 0),
         forceUpdateActivity,
-        true,
     );
 }
 

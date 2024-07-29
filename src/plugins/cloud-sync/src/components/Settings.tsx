@@ -45,7 +45,7 @@ const { FormRow, FormInput, FormSwitchRow } = Forms;
 export default function () {
     useProxy(vstorage);
     const [showDev, setShowDev] = React.useState(false);
-    const [isBusy, setIsBusy] = React.useState([]);
+    const [isBusy, setIsBusy] = React.useState<string[]>([]);
     const { data, at, hasData } = useCacheStore();
     const { isAuthorized } = useAuthorizationStore();
 
@@ -364,7 +364,7 @@ export default function () {
                                     onConfirm: () => {
                                         useAuthorizationStore
                                             .getState()
-                                            .setToken(null);
+                                            .setToken(undefined);
 
                                         showToast(
                                             lang.format("toast.logout", {}),
@@ -413,7 +413,7 @@ export default function () {
                                         await deleteData();
                                         useAuthorizationStore
                                             .getState()
-                                            .setToken(null);
+                                            .setToken(undefined);
 
                                         unBusy("delete_data");
                                         showToast(
@@ -597,7 +597,7 @@ export default function () {
                                 );
                             } catch (e) {
                                 showToast(
-                                    e.toString(),
+                                    String(e),
                                     getAssetIDByName("CircleXIcon-primary"),
                                 );
                             }
@@ -627,7 +627,7 @@ export default function () {
                             if (isBusy.length) return;
                             setBusy("import_compressed");
 
-                            let text: string;
+                            let text: string | null = null;
                             try {
                                 const { fileCopyUri, type } =
                                     await DocumentPicker.pickSingle({
@@ -643,7 +643,7 @@ export default function () {
                             } catch (e) {
                                 if (!DocumentPicker.isCancel(e))
                                     showToast(
-                                        lang.format(e.toString(), {}),
+                                        String(e),
                                         getAssetIDByName("CircleXIcon-primary"),
                                     );
                             }

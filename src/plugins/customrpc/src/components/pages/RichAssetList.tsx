@@ -77,7 +77,7 @@ export const RichAssetList = () => {
                             if (wentBack) return;
                             wentBack = true;
                             navigation.goBack();
-                            richAssetListCallback(item.id);
+                            richAssetListCallback?.(item.id);
                         }}
                         style={{
                             width: `${TabletManagerIdk.isTablet ? 1 / 0.03 : 1 / 0.02}%`,

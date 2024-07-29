@@ -41,7 +41,7 @@ export const ApplicationList = () => {
                     return;
                 }
 
-                applicationListCallback({
+                applicationListCallback?.({
                     id: txt,
                 });
             },
@@ -79,7 +79,7 @@ export const ApplicationList = () => {
                             if (wentBack) return;
                             wentBack = true;
                             navigation.goBack();
-                            applicationListCallback({
+                            applicationListCallback?.({
                                 id: item.id,
                                 name: item.name,
                             });

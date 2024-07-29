@@ -283,14 +283,9 @@ export default ({ edit, act }: { edit: boolean; act: SettingsActivity }) => {
                                         role: "1",
                                         text: act.buttons[0]?.text,
                                         url: act.buttons[0]?.url,
-                                        update: ({ text, url }) => {
-                                            if (!text && !url)
-                                                act.buttons[0] = undefined;
-                                            else
-                                                act.buttons[0] = {
-                                                    text,
-                                                    url,
-                                                };
+                                        update: data => {
+                                            if (!data) act.buttons.splice(0, 1);
+                                            else act.buttons[0] = data;
 
                                             update();
                                         },
@@ -310,14 +305,9 @@ export default ({ edit, act }: { edit: boolean; act: SettingsActivity }) => {
                                         role: "2",
                                         text: act.buttons[1]?.text,
                                         url: act.buttons[1]?.url,
-                                        update: ({ text, url }) => {
-                                            if (!text && !url)
-                                                act.buttons[1] = undefined;
-                                            else
-                                                act.buttons[1] = {
-                                                    text,
-                                                    url,
-                                                };
+                                        update: data => {
+                                            if (!data) act.buttons.splice(1, 1);
+                                            else act.buttons[1] = data;
 
                                             update();
                                         },

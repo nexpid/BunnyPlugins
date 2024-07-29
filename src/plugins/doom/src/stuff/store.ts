@@ -14,12 +14,8 @@ const getFile = async (
         disable?: boolean;
         encoding?: "utf8" | "base64";
     } = {},
-): Promise<
-    typeof extra.parse extends undefined
-        ? string
-        : ReturnType<typeof extra.parse>
-> => {
-    let content: string;
+): Promise<any> => {
+    let content: string | null = null;
 
     const oldEtag =
         !extra.disable &&
@@ -31,7 +27,7 @@ const getFile = async (
             headers: {
                 "If-None-Match": oldEtag,
                 "Cache-Control": "no-cache",
-            },
+            } as any,
             signal: extra.signal,
         });
         if (res.ok) {
@@ -49,6 +45,8 @@ const getFile = async (
                                 res(false);
                             });
                             reader.addEventListener("load", () => {
+                                if (!reader.result) return res(false);
+
                                 const splitter = ";base64,";
                                 const aResult = reader.result
                                     .toString()
@@ -79,8 +77,8 @@ const getFile = async (
         try {
             return extra.parse(content);
         } catch (e) {
-            console.error("[DOOM] getFile->parser error!");
-            logger.error(`getFile->parser error!\n${e.stack}`);
+            const err = e instanceof Error ? e : new Error(String(e));
+            logger.error(`getFile->parser error!\n${err.stack}`);
             showToast("Failed to parse file!", getAssetIDByName("Small"));
             return false;
         }
@@ -111,7 +109,7 @@ const mimes = {
 
 export async function getFiles(
     update: (text: string) => void,
-    signal?: AbortSignal,
+    signal: AbortSignal,
 ): Promise<Record<string, string> | string> {
     update("Fetching manifest.json...");
     const manifest = await getManifest(signal);
@@ -124,16 +122,16 @@ export async function getFiles(
     const root = manifest.games.find(
         x => x.id === vstorage.settings.game,
     )?.root;
-    const files = [
-        ...Object.entries(manifest.required),
-        root && ["URL_GAME_LINK", root],
-    ].filter(x => !!x);
+
+    const files = manifest.required;
+    if (root) files.URL_GAME_LINK = root;
 
     update("Fetching assets...");
     const content = {};
-    for (const [key, file] of files) {
+    for (const key of Object.keys(files)) {
         if (signal.aborted) break;
 
+        const file = files[key];
         const ext = file.split(".").slice(-1)[0];
         const stat = key.endsWith("?u")
             ? { id: key.slice(0, -2), quot: false }

@@ -7,7 +7,7 @@ export const state = {
     loading: true,
     active: false,
     iconpack: {
-        iconpack: null as Iconpack | null,
+        iconpack: undefined as Iconpack | undefined,
         list: [] as IconpackData["list"],
         hashes: {} as Record<string, { hash: string; size: number }>,
     },

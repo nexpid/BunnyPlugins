@@ -66,11 +66,12 @@ export const ActionSheet = (({
     );
 }) as {
     (props: ActionSheetProps): JSX.Element;
-    open: <Sheet extends React.FunctionComponent>(
+    open: <Sheet extends React.FunctionComponent<any>>(
         sheet: Sheet,
         props: Parameters<Sheet>[0],
     ) => void;
 };
+
 ActionSheet.open = (sheet, props) => {
     openLazy(
         new Promise(res => {

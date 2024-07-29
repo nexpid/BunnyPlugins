@@ -5,7 +5,7 @@ import { lang, vstorage } from "..";
 const emojiRegex = new RegExp(`(${rawEmojiRegex.source})`, rawEmojiRegex.flags);
 
 export interface EmojiPack {
-    title: keyof typeof lang.Values;
+    title: keyof NonNullable<typeof lang.Values>;
     format: (src: string) => string;
     noVariation?: boolean;
 }

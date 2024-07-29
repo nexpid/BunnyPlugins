@@ -19,14 +19,14 @@ const destructiveText: Parameters<typeof Text>[0] = {
     variant: "text-md/semibold",
 };
 
-export default function ({
+export default function SongInfoSheet({
     song,
-    remove,
     showAdd,
+    remove,
 }: {
     song: API.Song;
+    showAdd: boolean;
     remove?: () => void;
-    showAdd?: boolean;
 }) {
     const styles = stylesheet.createThemedStyleSheet({
         destructiveIcon: {

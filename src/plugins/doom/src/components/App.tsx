@@ -127,7 +127,7 @@ export default function App() {
                         ? styles.webviewLandscape
                         : styles.webviewPortrait,
                 ]}>
-                {done ? (
+                {done && html ? (
                     <WebView
                         source={{
                             html,

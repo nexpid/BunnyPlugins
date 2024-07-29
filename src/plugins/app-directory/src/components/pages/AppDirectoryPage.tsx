@@ -14,6 +14,7 @@ import usePromise from "$/hooks/usePromise";
 import { managePage } from "$/lib/ui";
 
 import {
+    APIAppDirectorySearch,
     APICollectionApplication,
     APICollectionItem,
     APICollectionType,
@@ -34,7 +35,9 @@ export default function AppDirectoryPage({
     const locale = i18n.getLocale();
 
     const [search, setSearch] = React.useState("");
-    const [selCategory, setSelCategory] = React.useState(undefined);
+    const [selCategory, setSelCategory] = React.useState<number | undefined>(
+        undefined,
+    );
 
     const categoriesPromise = usePromise(
         () => getAppDirectoryCategories(),
@@ -46,7 +49,7 @@ export default function AppDirectoryPage({
     );
 
     const [searchPage, setSearchPage] = React.useState(0);
-    const searchResultsPromise = usePromise(
+    const searchResultsPromise = usePromise<APIAppDirectorySearch | null>(
         () =>
             search || selCategory !== undefined
                 ? searchAppDirectory(
@@ -55,7 +58,7 @@ export default function AppDirectoryPage({
                       selCategory ?? 0,
                       guildId,
                   )
-                : null,
+                : (() => new Promise(res => res(null)))(),
         [search, searchPage, selCategory, locale],
     );
 
@@ -204,6 +207,7 @@ export default function AppDirectoryPage({
 
     const pageFirst = pushPages[0]?.num === 1;
     const pageLast =
+        searchResults &&
         pushPages[pushPages.length - 1]?.num === searchResults.num_pages;
     const renderPushPages = pushPages.slice(
         pageFirst ? 0 : 2,

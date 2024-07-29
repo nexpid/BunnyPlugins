@@ -8,7 +8,7 @@ export default function ({
     subtitle,
     count,
 }: {
-    subtitle: keyof typeof lang.Values;
+    subtitle: keyof NonNullable<typeof lang.Values>;
     count: string | number;
 }) {
     return (

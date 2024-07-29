@@ -16,14 +16,14 @@ export default function AddBackgroundSheet({
     const [file, setFile] = React.useState<{
         name: string;
         path: string;
-    }>(null);
+    } | null>(null);
     const [name, setName] = React.useState("");
 
     return (
         <ActionSheet title={"Add custom background"}>
             <FormRow
                 label="Select an image"
-                subLabel={file.name}
+                subLabel={file?.name}
                 leading={
                     <FormRow.Icon source={getAssetIDByName("ImageIcon")} />
                 }
@@ -34,8 +34,8 @@ export default function AddBackgroundSheet({
                         copyTo: "documentDirectory",
                     }).then(file => {
                         setFile({
-                            name: file.name,
-                            path: file.fileCopyUri,
+                            name: file.name!,
+                            path: file.fileCopyUri!,
                         });
                     });
                 }}
@@ -57,6 +57,8 @@ export default function AddBackgroundSheet({
                 iconPosition="start"
                 icon={getAssetIDByName("PlusIcon")}
                 onPress={() => {
+                    if (!file || !name) return;
+
                     add(name, `file://${file.path}`);
                     hideActionSheet();
                 }}

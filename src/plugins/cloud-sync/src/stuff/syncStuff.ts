@@ -53,7 +53,7 @@ export async function grabEverything(): Promise<UserData> {
     const fonts = getFonts();
 
     for (const item of Object.values(fonts).filter(item => item.__source))
-        sync.fonts.installed[item.__source] = {
+        sync.fonts.installed[item.__source!] = {
             enabled: selFont === item.name,
         };
     for (const item of Object.values(fonts).filter(item => !item.__source))
@@ -141,7 +141,7 @@ export async function importData(data: UserData, options: SyncImportOptions) {
 
     const status = { plugins: 0, themes: 0, fonts: 0 };
     let failedAny = false;
-    let selFont: FontDefinition;
+    let selFont: FontDefinition | undefined = undefined;
 
     const { bunny } = window as any;
 
@@ -267,8 +267,8 @@ export async function importData(data: UserData, options: SyncImportOptions) {
             getAssetIDByName("CircleCheckIcon-primary"),
         );
 
-    const selectTheme =
-        themes[ithemes.find(([_, { enabled }]) => enabled)?.[0]];
+    const didSelectTheme = ithemes.find(([_, { enabled }]) => enabled)?.[0];
+    const selectTheme = didSelectTheme && themes[didSelectTheme];
     if (selectTheme) {
         try {
             bunny.managers.themes.selectTheme(selectTheme);
@@ -306,7 +306,7 @@ export async function importData(data: UserData, options: SyncImportOptions) {
         addLog(
             "fonts",
             lang.format("log.import.reload_for_font", {
-                name: selFont.name,
+                name: (selFont as any).name,
             }),
         );
 

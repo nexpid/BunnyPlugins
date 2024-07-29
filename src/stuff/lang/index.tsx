@@ -64,7 +64,7 @@ export class Lang<Plugin extends keyof LangValues> {
         for (const rule of rules) {
             const matches = Array.from(text.matchAll(rule.regex));
             for (const match of matches)
-                if (match[1]) {
+                if (match[1] && match.index) {
                     txt.splice(
                         match.index - off,
                         match[0].length,

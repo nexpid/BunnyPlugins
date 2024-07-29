@@ -36,7 +36,7 @@ export default function CompatSlider({
                     Math.max(value - step, minimumValue),
                     maximumValue,
                 );
-                if (val !== value) onValueChange(val);
+                if (val !== value) onValueChange?.(val);
             }}
         />
     );
@@ -48,7 +48,7 @@ export default function CompatSlider({
                     Math.max(value + step, minimumValue),
                     maximumValue,
                 );
-                if (val !== value) onValueChange(val);
+                if (val !== value) onValueChange?.(val);
             }}
         />
     );
@@ -131,7 +131,7 @@ export default function CompatSlider({
 
                     if (val !== liveValue.current && gesture.moveX !== 0) {
                         setPressing(true);
-                        onValueChange(val);
+                        onValueChange?.(val);
                     }
                 });
             },

@@ -244,7 +244,7 @@ const StylingPage = () => {
                                 value: "right",
                             },
                         ],
-                        callback(v) {
+                        callback(v: any) {
                             vstorage.styling.xPos = v;
                         },
                     });
@@ -290,7 +290,7 @@ const StylingPage = () => {
                                 value: "bottom",
                             },
                         ],
-                        callback(v) {
+                        callback(v: any) {
                             vstorage.styling.yPos = v;
                         },
                     });
@@ -345,7 +345,7 @@ const AppearPage = () => {
                                 value: "always",
                             },
                         ],
-                        callback(v) {
+                        callback(v: any) {
                             vstorage.appear.style = v;
                         },
                     });

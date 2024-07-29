@@ -15,7 +15,7 @@ export interface Iconpack {
         source?: string;
         sources: string[];
     };
-    config: string | null;
+    config: string | undefined;
     suffix: string;
     load: string;
 }

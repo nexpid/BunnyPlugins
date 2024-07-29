@@ -12,7 +12,8 @@ import { lang } from "../..";
 export let isInPage = false;
 
 let logged: () => void;
-const logs = [];
+const logs = new Array<[string, string]>();
+
 export function clearLogs() {
     logs.length = 0;
     logged();
@@ -45,7 +46,7 @@ export const ImportLogsPage = () => {
     const [_, forceUpdate] = React.useReducer(x => ~x, 0);
     logged = forceUpdate;
 
-    const scroller = React.useRef<ScrollView>();
+    const scroller = React.useRef<ScrollView | null>(null);
 
     React.useEffect(() => {
         isInPage = true;
@@ -59,7 +60,7 @@ export const ImportLogsPage = () => {
             style={{ flex: 1 }}
             ref={scroller}
             onContentSizeChange={() => {
-                scroller.current.scrollToEnd({ animated: true });
+                scroller.current?.scrollToEnd({ animated: true });
             }}>
             <RN.Text style={styles.text}>
                 {logs.map(([scope, message]) => [

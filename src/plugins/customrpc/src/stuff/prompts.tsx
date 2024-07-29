@@ -64,7 +64,8 @@ export function ImageVariableActionSheet({
     );
 }
 
-export let richAssetListCallback: (prop: string) => void;
+export let richAssetListCallback: ((prop: string) => void) | undefined =
+    undefined;
 export let richAssetListAppId: string;
 export function ImageActionSheet({
     appId,
@@ -73,7 +74,7 @@ export function ImageActionSheet({
     navigation,
     update,
 }: {
-    appId: string;
+    appId?: string;
     role: string;
     image: string | undefined;
     navigation: any;
@@ -129,12 +130,14 @@ export function ImageActionSheet({
                                     "Proxied image",
                                     getAssetIDByName("Check"),
                                 );
-                            } catch (p) {
-                                console.error(
-                                    "[CustomRPC] ImageActionSheet->customImg proxy error!",
-                                );
+                            } catch (e) {
+                                const err =
+                                    e instanceof Error
+                                        ? e
+                                        : new Error(String(e));
+
                                 logger.error(
-                                    `ImageActionSheet->customImg proxy error!\n${p.stack}`,
+                                    `ImageActionSheet->customImg proxy error!\n${err.stack}`,
                                 );
                                 showToast(
                                     "Failed to proxy image",
@@ -204,10 +207,12 @@ export function ButtonActionSheet({
     role: string;
     text: string | undefined;
     url: string | undefined;
-    update: (props: {
-        text: string | undefined;
-        url: string | undefined;
-    }) => void;
+    update: (
+        props: {
+            text: string;
+            url: string | undefined;
+        } | null,
+    ) => void;
 }) {
     return (
         <ActionSheet title={`Edit Button ${role}`}>
@@ -240,7 +245,7 @@ export function ButtonActionSheet({
                         role: `Button ${role} URL`,
                         current: url,
                         update: x => {
-                            update({ text, url: x });
+                            update({ text: text ?? "", url: x });
                         },
                     });
                 }}
@@ -255,7 +260,7 @@ export function ButtonActionSheet({
                         />
                     }
                     onPress={() => {
-                        update({ text, url: undefined });
+                        update({ text: text ?? "", url: undefined });
                         hideActionSheet();
                     }}
                 />
@@ -270,7 +275,7 @@ export function ButtonActionSheet({
                         />
                     }
                     onPress={() => {
-                        update({ text: undefined, url: undefined });
+                        update(null);
                         hideActionSheet();
                     }}
                 />
@@ -279,10 +284,9 @@ export function ButtonActionSheet({
     );
 }
 
-export let applicationListCallback: (props: {
-    id?: string;
-    name?: string;
-}) => void;
+export let applicationListCallback:
+    | ((props: { id?: string; name?: string }) => void)
+    | undefined;
 export function ApplicationActionSheet({
     appId,
     appName,
@@ -364,7 +368,7 @@ export function ActivityTypeActionSheet({
         <ActionSheet title="Edit Activity Type">
             {...Object.values(ActivityType)
                 .filter(x => typeof x === "number")
-                .map((x: number) => (
+                .map((x: any) => (
                     <FormRadioRow
                         label={activityTypePreview[x]}
                         trailing={<FormRow.Arrow />}

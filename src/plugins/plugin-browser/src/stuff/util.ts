@@ -23,7 +23,7 @@ export function matchGithubLink(link: string): string | undefined {
         link.match(linkMatches.githubReleases);
     if (single?.[0]) return `https://github.com/${single[1]}/${single[2]}`;
 
-    const [_, origin, path] = link.match(linkMatches.origin);
+    const [_, origin, path] = link.match(linkMatches.origin)!;
     if (constants.customLinks[origin])
         return constants.customLinks[origin](path.split("/"));
 }

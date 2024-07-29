@@ -49,9 +49,9 @@ const SpotifySongEmbed = ({
     const [playing, setPlaying] = React.useState(false);
     const [position, setPosition] = React.useState(0);
 
-    const [songData, setSongData] = React.useState<SpotifyEmbedEntity | false>(
-        undefined,
-    );
+    const [songData, setSongData] = React.useState<
+        SpotifyEmbedEntity | false | undefined
+    >(undefined);
     const ratio =
         (songData && songData.type === "track") || song.type === "track"
             ? 600 / 152
@@ -80,14 +80,14 @@ const SpotifySongEmbed = ({
         [],
     );
 
-    const background =
-        songData &&
-        (songData.coverArt.extractedColors.colorLight
+    const background = songData
+        ? songData.coverArt.extractedColors.colorLight
             ? resolveCustomSemantic(
                   songData.coverArt.extractedColors.colorDark.hex,
                   songData.coverArt.extractedColors.colorLight.hex,
               )
-            : songData.coverArt.extractedColors.colorDark.hex);
+            : songData.coverArt.extractedColors.colorDark.hex
+        : undefined;
 
     const styles = stylesheet.createThemedStyleSheet({
         emptyCard: {
@@ -232,7 +232,7 @@ const SpotifySongEmbed = ({
         } as any,
     });
 
-    const triggerController = React.useRef(null);
+    const triggerController = React.useRef<AbortController | null>(null);
 
     const trigger = () => {
         triggerController.current?.abort();
@@ -265,12 +265,12 @@ const SpotifySongEmbed = ({
         return () => triggerController.current?.abort();
     }, []);
 
-    const covers = songData && songData.coverArt.sources;
+    const covers = songData ? songData.coverArt.sources : undefined;
 
-    const tracklistRef = React.useRef<FlatList>();
+    const flastlistRef = React.useRef<FlatList | null>(null);
 
     React.useEffect(() => {
-        tracklistRef.current?.scrollToIndex({
+        flastlistRef.current?.scrollToIndex({
             animated: true,
             index: position,
             viewOffset: 16,
@@ -364,7 +364,7 @@ const SpotifySongEmbed = ({
                         <RN.Image
                             style={styles.cardImage}
                             source={covers
-                                .sort((a, b) => a.width - b.width)
+                                ?.sort((a, b) => a.width - b.width)
                                 .map(x => ({
                                     uri: x.url,
                                     width: x.width,
@@ -485,7 +485,7 @@ const SpotifySongEmbed = ({
                 {songData.type !== "track" && (
                     <RN.FlatList
                         nestedScrollEnabled
-                        ref={tracklistRef}
+                        ref={flastlistRef}
                         getItemLayout={(_, index) => ({
                             length: entryHeight,
                             offset: 8 * (index + 1) + entryHeight * index,
@@ -602,7 +602,7 @@ const SpotifySongEmbed = ({
 };
 
 export default function ({ userId, you }: { userId: string; you: boolean }) {
-    const [songs, setSongs] = React.useState<API.Song[] | undefined>(undefined);
+    const [songs, setSongs] = React.useState<(API.Song | null)[] | null>(null);
 
     const youId = UserStore.getCurrentUser().id;
 
@@ -638,14 +638,15 @@ export default function ({ userId, you }: { userId: string; you: boolean }) {
                           song={x}
                           showAdd={userId !== youId && !!currentAuthorization()}
                           remove={
-                              userId === youId &&
-                              (() => {
-                                  const songs = cache.data?.songs;
-                                  if (!songs) return;
+                              userId === youId
+                                  ? () => {
+                                        const songs = cache.data?.songs;
+                                        if (!songs) return;
 
-                                  songs[i] = null;
-                                  check();
-                              })
+                                        songs[i] = null;
+                                        check();
+                                    }
+                                  : undefined
                           }
                       />
                   )
@@ -655,28 +656,26 @@ export default function ({ userId, you }: { userId: string; you: boolean }) {
         <RN.ActivityIndicator size="small" style={{ flex: 1 }} />
     );
 
-    return (
-        !hide &&
-        (you ? (
-            <YouScreenProfileCard>
-                <TableRowGroupTitle title="Song Spotlight" />
-                <RN.View
-                    style={{ flexDirection: "column", gap: 8, marginTop: 4 }}>
-                    {content}
-                </RN.View>
-            </YouScreenProfileCard>
-        ) : (
-            <UserProfileSection title="Song Spotlight" showContainer={true}>
-                <RN.View
-                    style={{
-                        flexDirection: "column",
-                        gap: 8,
-                        paddingHorizontal: 8,
-                        paddingVertical: 8,
-                    }}>
-                    {content}
-                </RN.View>
-            </UserProfileSection>
-        ))
+    if (hide) return null;
+
+    return you ? (
+        <YouScreenProfileCard>
+            <TableRowGroupTitle title="Song Spotlight" />
+            <RN.View style={{ flexDirection: "column", gap: 8, marginTop: 4 }}>
+                {content}
+            </RN.View>
+        </YouScreenProfileCard>
+    ) : (
+        <UserProfileSection title="Song Spotlight" showContainer={true}>
+            <RN.View
+                style={{
+                    flexDirection: "column",
+                    gap: 8,
+                    paddingHorizontal: 8,
+                    paddingVertical: 8,
+                }}>
+                {content}
+            </RN.View>
+        </UserProfileSection>
     );
 }

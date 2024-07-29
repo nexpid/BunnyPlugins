@@ -40,14 +40,7 @@ export default ({ inputProps }): JSX.Element => {
     const fade = Reanimated.useSharedValue(0);
 
     patches.push(
-        after(
-            "onChangeText",
-            inputProps,
-            ([txt]: [string]) => {
-                setText(txt);
-            },
-            true,
-        ),
+        after("onChangeText", inputProps, ([txt]) => setText(txt), true),
     );
 
     const shouldAppear = text.length > 0;

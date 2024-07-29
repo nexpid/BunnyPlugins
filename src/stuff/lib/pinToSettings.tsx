@@ -32,7 +32,7 @@ export function patchSettingsPin(
         key: string;
         icon?: number;
         title: () => string;
-        trailing?: React.FC;
+        trailing?: () => React.ReactNode;
         page: {
             render: React.ComponentType;
             noErrorBoundary?: boolean;
@@ -40,7 +40,7 @@ export function patchSettingsPin(
         };
     },
 ): () => void {
-    const patches = [];
+    const patches = [] as any[];
 
     // REVIEW the Bunny code below freezes the client :3 not ready for production yet
     // REVIEW check again, maybe it's fixed now??

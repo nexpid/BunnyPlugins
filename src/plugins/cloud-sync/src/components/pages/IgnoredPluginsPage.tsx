@@ -82,7 +82,7 @@ export default function IgnoredPluginsPage() {
                         leading={
                             <FormRow.Icon
                                 source={getAssetIDByName(
-                                    item.manifest.vendetta.icon,
+                                    item.manifest.vendetta?.icon ?? "",
                                 )}
                             />
                         }

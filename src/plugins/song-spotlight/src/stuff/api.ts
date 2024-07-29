@@ -37,7 +37,7 @@ export async function getAuthorization(): Promise<string> {
             )}`,
         );
         if (x.status !== 200) throw new SongSpotlightAPIError(await x.json());
-        auth = await x.json();
+        auth = (await x.json()) as AuthRecord;
 
         vstorage.auth[UserStore.getCurrentUser().id] = auth;
     }
@@ -66,7 +66,7 @@ export async function getProfileData(id: string): Promise<API.Save> {
     else throw new SongSpotlightAPIError(await res.json());
 }
 
-export async function getSaveData(): Promise<API.Save> {
+export async function getSaveData(): Promise<API.Save | undefined> {
     if (!currentAuthorization()) return;
 
     const res = await fetch(`${constants.api}api/get-data`, {

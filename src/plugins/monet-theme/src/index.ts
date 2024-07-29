@@ -66,7 +66,7 @@ export const vstorage = storage as {
     };
 };
 
-export const patches = [];
+export const patches = new Array<any>();
 
 export default {
     settings,
@@ -171,7 +171,7 @@ export default {
                 content:
                     "Monet theme is currently selected, would you like to deselect it?",
                 onConfirm: async () => {
-                    apply(false);
+                    apply(null);
                 },
                 confirmText: "Unload",
                 confirmColor: "brand" as ButtonColors,

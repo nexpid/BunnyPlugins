@@ -73,7 +73,7 @@ export async function installIconpack(
                         rej(new Error(`Failed to get blob of ${raw}`));
                     });
                     reader.addEventListener("load", () => {
-                        res(reader.result.toString());
+                        if (reader.result) res(reader.result.toString());
                     });
                     signal?.addEventListener("abort", () => {
                         reader.abort();
@@ -91,7 +91,7 @@ export async function installIconpack(
             incr++;
 
             if (signal?.aborted) throw new Error("Aborted");
-            progress(incr / toDownload.length);
+            progress?.(incr / toDownload.length);
         }
     };
 

@@ -29,9 +29,8 @@ export default {
         try {
             unpatch = await patcher();
         } catch (e) {
-            const txt = lang.format("log.patch_error", {});
-            console.error(`[UsrPFP] ${txt}`);
-            logger.error(`${txt}\n${e.stack}`);
+            const err = e instanceof Error ? e : new Error(String(e));
+            logger.error(`${lang.format("log.patch_error", {})}\n${err.stack}`);
 
             showToast(
                 lang.format("toast.patch_error", {}),

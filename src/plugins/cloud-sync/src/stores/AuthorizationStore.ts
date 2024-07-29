@@ -8,10 +8,10 @@ import { fluxSubscribe } from "$/types";
 const UserStore = findByStoreName("UserStore");
 
 interface AuthorizationState {
-    token: string | null;
+    token: string | undefined;
     tokens: Record<string, string>;
     init: () => void;
-    setToken: (token: string | null) => void;
+    setToken: (token?: string) => void;
     isAuthorized: () => boolean;
 }
 
@@ -21,14 +21,14 @@ export const useAuthorizationStore = zustand.create<
 >(
     persist(
         (set, get) => ({
-            token: null,
+            token: undefined,
             tokens: {},
-            init: () => {
+            init() {
                 set({
                     token: get().tokens[UserStore.getCurrentUser()?.id] ?? null,
                 });
             },
-            setToken: (token: string | null) => {
+            setToken(token) {
                 set({
                     token,
                     tokens: {
@@ -43,9 +43,7 @@ export const useAuthorizationStore = zustand.create<
             name: "cloudsync-auth",
             storage: createJSONStorage(() => RNMMKVManager),
             partialize: state => ({ tokens: state.tokens }),
-            onRehydrateStorage: () => state => {
-                state.init();
-            },
+            onRehydrateStorage: () => state => state?.init(),
         },
     ),
 );

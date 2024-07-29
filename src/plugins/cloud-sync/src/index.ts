@@ -61,7 +61,7 @@ const emitterSymbol = Symbol.for("vendetta.storage.emitter");
 
 export const lang = new Lang("cloud_sync");
 
-const patches = [];
+const patches = new Array<any>();
 export default {
     onLoad: () => {
         vstorage.config ??= {

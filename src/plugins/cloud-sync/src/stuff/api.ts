@@ -12,7 +12,7 @@ export async function authFetch(url: RequestInfo, options?: RequestInit) {
         headers: {
             ...options?.headers,
             authorization: useAuthorizationStore.getState().token,
-        },
+        } as any,
     });
 
     if (res.ok) return res;
@@ -29,12 +29,12 @@ export async function getData(): Promise<UserData> {
     return await authFetch(`${constants.api}api/data`, {
         headers: {
             "if-modified-since": useCacheStore.getState().at,
-        },
+        } as any,
     }).then(async res => {
         const dt = await res.json();
         useCacheStore
             .getState()
-            .updateData(dt, res.headers.get("last-modified"));
+            .updateData(dt, res.headers.get("last-modified") ?? undefined);
         return dt;
     });
 }
@@ -58,7 +58,7 @@ export async function deleteData(): Promise<true> {
     })
         .then(res => res.json())
         .then(json => {
-            useCacheStore.getState().updateData(null, null);
+            useCacheStore.getState().updateData();
             return json;
         });
 }
@@ -73,13 +73,13 @@ export async function getRawData(): Promise<RawData> {
         return {
             data,
             file: JSON.parse(
-                res.headers.get("content-disposition").split("filename=")[1],
+                res.headers.get("content-disposition")!.split("filename=")[1],
             ),
         };
     });
 }
 export function rawDataURL() {
-    return `${constants.api}api/data/raw?auth=${encodeURIComponent(useAuthorizationStore.getState().token)}`;
+    return `${constants.api}api/data/raw?auth=${encodeURIComponent(useAuthorizationStore.getState().token ?? "")}`;
 }
 
 export async function decompressRawData(data: string): Promise<UserData> {

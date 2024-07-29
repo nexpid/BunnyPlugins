@@ -22,7 +22,7 @@ const { FormCheckboxRow } = Forms;
 
 export default function ImportActionSheet({
     defOptions,
-    data = useCacheStore.getState().data,
+    data = useCacheStore.getState().data!,
     navigation,
 }: {
     defOptions?: SyncImportOptions;

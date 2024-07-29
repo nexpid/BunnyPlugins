@@ -150,7 +150,7 @@ export default function AppInfoPage({
                         pagingEnabled
                         showsHorizontalScrollIndicator={false}
                         decelerationRate="normal"
-                        data={app.directory_entry.carousel_items.filter(
+                        data={app.directory_entry.carousel_items?.filter(
                             x => x.type === 1,
                         )}
                         style={{

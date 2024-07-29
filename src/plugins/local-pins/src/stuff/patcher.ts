@@ -63,12 +63,7 @@ export default function () {
             after(
                 "MessagesScreen",
                 screens,
-                (
-                    [{ searchContext, tab }]: [
-                        { searchContext: SearchContext; tab: string },
-                    ],
-                    ret,
-                ) => {
+                ([{ searchContext, tab }], ret) => {
                     if (tab === "pins") {
                         const { channelId } = searchContext;
                         React.useEffect(

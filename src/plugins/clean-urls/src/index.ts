@@ -7,7 +7,7 @@ import patcher from "./stuff/patcher";
 export const listUrl = "https://rules2.clearurls.xyz/data.minify.json";
 
 export const vstorage = storage as {
-    config?: {
+    config: {
         redirect: boolean;
         referrals: boolean;
     };

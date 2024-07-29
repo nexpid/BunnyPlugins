@@ -3,10 +3,8 @@ import { findByProps } from "@vendetta/metro";
 import { ReactNative as RN } from "@vendetta/metro/common";
 import { before } from "@vendetta/patcher";
 
-import RNFS from "$/wrappers/RNFS";
-
 import { unsubRulesStore } from "../stores/RulesStore";
-import { _depreacted_filePath, cleanUrl } from "./rules";
+import { cleanUrl } from "./rules";
 
 const Messages = findByProps("sendMessage", "editMessage");
 const { DCDChatManager } = RN.NativeModules;
@@ -48,11 +46,6 @@ const handleContent = (content: Content[]) => {
 
 export default function () {
     const patches = new Array<() => void>();
-
-    // STUB[epic=plugin] get rid of this one day
-    RNFS.exists(_depreacted_filePath()).then(
-        yes => yes && RNFS.unlink(_depreacted_filePath()),
-    );
 
     patches.push(
         before("sendMessage", Messages, args => {

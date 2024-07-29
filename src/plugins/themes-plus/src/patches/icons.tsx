@@ -35,7 +35,7 @@ export default function patchIcons(
         );
 
     let isInstalled = false;
-    isPackInstalled(iconpack).then(x => (isInstalled = !!x));
+    isPackInstalled(iconpack!).then(x => (isInstalled = !!x));
 
     if (plus.icons || plus.customOverlays || iconpack) {
         if (plus.icons) state.patches.push(PatchType.Icons);
@@ -62,7 +62,7 @@ export default function patchIcons(
                         `${asset.name}${iconpack.suffix}.${asset.type}`,
                     ].join("/");
                 const useIconpack =
-                    iconpack &&
+                    assetIconpackLocation &&
                     (tree.length ? tree.includes(assetIconpackLocation) : true);
 
                 let overlay: any;

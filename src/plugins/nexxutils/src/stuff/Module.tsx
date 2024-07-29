@@ -101,8 +101,8 @@ export class Module<Settings extends Record<string, ModuleSetting>> {
     errors: Record<string, string> = {};
 
     private handlers: {
-        onStart?: (this: Module<Settings>) => void;
-        onStop?: (this: Module<Settings>) => void;
+        onStart: (this: Module<Settings>) => void;
+        onStop: (this: Module<Settings>) => void;
     };
 
     patches = new Patches();
@@ -292,14 +292,17 @@ export class Module<Settings extends Record<string, ModuleSetting>> {
                                             resizeMode="cover"
                                             style={[
                                                 styles.icon,
-                                                x.iconColor && {
-                                                    tintColor:
-                                                        resolveSemanticColor(
-                                                            semanticColors[
-                                                                x.iconColor
-                                                            ],
-                                                        ),
-                                                },
+                                                x.iconColor
+                                                    ? {
+                                                          tintColor:
+                                                              resolveSemanticColor(
+                                                                  semanticColors[
+                                                                      x
+                                                                          .iconColor
+                                                                  ],
+                                                              ),
+                                                      }
+                                                    : null,
                                             ]}
                                             source={getAssetIDByName(x.icon)}
                                         />
@@ -518,9 +521,11 @@ export class Module<Settings extends Record<string, ModuleSetting>> {
             this.handlers.onStart.bind(this)();
         } catch (e) {
             this.stop();
-            console.error(`[NexxUtils] [${this.label}]: Error on starting!`);
-            logger.error(`[${this.label}]: Error on starting!\n${e.stack}`);
-            this.errors[ModuleErrorLabel.OnStart] = e.stack;
+            const err = e instanceof Error ? e : new Error(String(e));
+
+            logger.error(`[${this.label}]: Error on starting!\n${err}`);
+            this.errors[ModuleErrorLabel.OnStart] = String(err.stack);
+
             showToast(
                 "NexxUtils module errored on starting!",
                 getAssetIDByName("Small"),
@@ -532,9 +537,11 @@ export class Module<Settings extends Record<string, ModuleSetting>> {
             this.handlers.onStop.bind(this)();
             this.patches.unpatch();
         } catch (e) {
-            console.error(`[NexxUtils] [${this.label}]: Error on stopping!`);
-            logger.error(`[${this.label}]: Error on stopping!\n${e.stack}`);
-            this.errors[ModuleErrorLabel.OnStop] = e.stack;
+            const err = e instanceof Error ? e : new Error(String(e));
+
+            logger.error(`[${this.label}]: Error on stopping!\n${err.stack}`);
+            this.errors[ModuleErrorLabel.OnStop] = String(err.stack);
+
             showToast(
                 "NexxUtils module errored on stopping!",
                 getAssetIDByName("Small"),

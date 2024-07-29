@@ -1,11 +1,5 @@
-import RNFS from "$/wrappers/RNFS";
-
 import { vstorage } from "..";
 import { RulesType, useRulesStore } from "../stores/RulesStore";
-
-/** @deprecated */
-export const _depreacted_filePath = () =>
-    `${RNFS.DocumentDirectoryPath}/vendetta/CleanURLs/list.json`;
 
 const useProvider = (
     provider: RulesType["providers"][string],
@@ -31,7 +25,7 @@ const useProvider = (
             urlObj.search = urlObj.search.replace(new RegExp(rule, "gi"), "");
 
     // apply rules & referrals
-    const toRemove = [].concat(
+    const toRemove = new Array<any>().concat(
         provider.rules ?? [],
         (vstorage.config.referrals && provider.referralMarketing) ?? [],
     );

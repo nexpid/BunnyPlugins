@@ -45,7 +45,6 @@ export default function () {
     });
 
     const isAuthed = !!currentAuthorization();
-    const hasData = !!cache.data;
 
     return (
         <RN.ScrollView>
@@ -53,7 +52,7 @@ export default function () {
                 title="Songs"
                 icon={getAssetIDByName("abc")}
                 padding={true}>
-                {isAuthed && hasData ? (
+                {isAuthed && !!cache.data ? (
                     <RN.View
                         style={{
                             flexDirection: "column",
@@ -89,7 +88,9 @@ export default function () {
                                     x &&
                                     ActionSheet.open(SongInfoSheet, {
                                         song: x,
+                                        showAdd: false,
                                         remove: () =>
+                                            cache.data &&
                                             (cache.data.songs[i] = null),
                                     })
                                 }
@@ -104,13 +105,13 @@ export default function () {
                                         ].sort(() =>
                                             Math.random() > 0.5 ? 1 : -1,
                                         )[0],
-                                        initialValue:
-                                            x &&
-                                            rebuildLink(
-                                                x.service,
-                                                x.type,
-                                                x.id,
-                                            ),
+                                        initialValue: x
+                                            ? rebuildLink(
+                                                  x.service,
+                                                  x.type,
+                                                  x.id,
+                                              )
+                                            : undefined,
                                         cancelText: "Cancel",
                                         confirmText: "Save",
                                         onConfirm: async val => {
@@ -126,9 +127,12 @@ export default function () {
                                             let base = new URL(url);
                                             let host = base.hostname;
 
-                                            let service: API.Song["service"],
-                                                type: API.Song["type"],
-                                                id: string;
+                                            let service:
+                                                    | API.Song["service"]
+                                                    | null = null,
+                                                type: API.Song["type"] | null =
+                                                    null,
+                                                id: string | null = null;
 
                                             if (host === "spotify.link") {
                                                 service = "spotify";
@@ -151,7 +155,7 @@ export default function () {
                                                     ].includes(_type) &&
                                                     _id
                                                 ) {
-                                                    type = _type as typeof type;
+                                                    type = _type as any;
                                                     id = _id;
                                                 }
                                             }
@@ -172,11 +176,12 @@ export default function () {
                                                     "Invalid song!",
                                                 );
 
-                                            cache.data.songs[i] = {
-                                                service,
-                                                type,
-                                                id,
-                                            };
+                                            if (cache.data)
+                                                cache.data.songs[i] = {
+                                                    service,
+                                                    type,
+                                                    id,
+                                                };
                                         },
                                     });
                                 }}

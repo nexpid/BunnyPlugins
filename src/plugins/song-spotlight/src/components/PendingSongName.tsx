@@ -16,10 +16,10 @@ export default function ({
     id: EditableSong["id"];
     normal: boolean;
 }) {
-    const [songName, setSongName] = React.useState<string>(null);
+    const [songName, setSongName] = React.useState<string | null>(null);
 
     React.useEffect(() => {
-        setSongName(undefined);
+        setSongName(null);
         if (!id) return;
 
         getSongName(service, type, id).then(s => {

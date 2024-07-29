@@ -14,7 +14,7 @@ import { getChanges, initThing } from "./pluginChecker";
 export let pluginsEmitter: Emitter;
 
 export default (): (() => void) => {
-    const patches = [];
+    const patches = new Array<any>();
     patches.push(
         patchSettingsPin(
             () => true,
@@ -23,7 +23,7 @@ export default (): (() => void) => {
             ),
             {
                 key: plugin.manifest.name,
-                icon: getAssetIDByName(manifest.vendetta.icon),
+                icon: getAssetIDByName(manifest.vendetta?.icon ?? ""),
                 trailing: () => {
                     const changes = React.useRef(
                         Object.keys(getChanges()).length,

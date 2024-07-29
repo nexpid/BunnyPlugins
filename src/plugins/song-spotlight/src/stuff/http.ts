@@ -13,5 +13,5 @@ export function check() {
     rcache = JSON.stringify(cache.data);
 
     if (snapshot && snapshot !== JSON.stringify(cache.data))
-        hsync(() => syncSaveData(cache.data.songs));
+        hsync(() => cache.data && syncSaveData(cache.data.songs));
 }

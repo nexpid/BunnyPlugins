@@ -1,3 +1,4 @@
+import { logger } from "@vendetta";
 import { getDebugInfo } from "@vendetta/debug";
 import {
     clipboard,
@@ -58,8 +59,8 @@ export function setColorsFromDynamic(clr: VendettaSysColors) {
     };
 }
 
-export let stsCommits: CommitObj[];
-export let stsPatches: Patches;
+export let stsCommits: CommitObj[] | undefined = undefined;
+export let stsPatches: Patches | undefined = undefined;
 export default () => {
     const navigation = NavigationNative.useNavigation();
 
@@ -156,7 +157,7 @@ export default () => {
             });
     }, [commits]);
 
-    let showMessage: string;
+    let showMessage: string | undefined = undefined;
 
     const debug = getDebugInfo() as any;
     const syscolors = getSysColors();
@@ -416,8 +417,17 @@ export default () => {
                             try {
                                 theme = build(patches);
                             } catch (e) {
+                                const err =
+                                    e instanceof Error
+                                        ? e
+                                        : new Error(String(e));
+                                logger.error(
+                                    "Error during applying theme",
+                                    err.stack,
+                                );
+
                                 showToast(
-                                    e.toString(),
+                                    String(err),
                                     getAssetIDByName("Small"),
                                 );
                                 return;

@@ -1,6 +1,5 @@
 import { findByProps, findByStoreName } from "@vendetta/metro";
 import { React } from "@vendetta/metro/common";
-import { without } from "@vendetta/utils";
 
 import { getAllPins, getPins } from "..";
 
@@ -10,17 +9,22 @@ const messages = findByProps("sendMessage", "receiveMessage");
 
 export default function useLocalPinned(channelId?: string) {
     const [data, setData] = React.useState<
-        {
-            message: any;
-            channelId: string;
-            channel?: any;
-        }[]
+        | {
+              message: any;
+              channelId: string;
+              channel?: any;
+          }[]
+        | null
     >(null);
     const [status, setStatus] = React.useState(0);
 
     React.useEffect(() => {
         (async () => {
-            const parsed = [];
+            const parsed = new Array<{
+                message: any;
+                channelId: string;
+                channel?: any;
+            }>();
 
             const raw = channelId ? getPins(channelId) : getAllPins();
             for (let i = 0; i < raw.length; i++) {
@@ -48,8 +52,6 @@ export default function useLocalPinned(channelId?: string) {
                     message = MessageStore.getMessage(id, m.id);
                 }
 
-                console.log(without(message, "timestamp"));
-
                 if (message)
                     parsed.push({
                         message,
@@ -68,8 +70,7 @@ export default function useLocalPinned(channelId?: string) {
         clear: () => {
             setData([]);
         },
-        remove: (id: string) => {
-            setData(data.filter(x => x.message.id !== id));
-        },
+        remove: (id: string) =>
+            data && setData(data.filter(x => x.message.id !== id)),
     };
 }

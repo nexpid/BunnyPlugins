@@ -13,13 +13,13 @@ const MediaManager = findByProps("downloadMediaAsset");
 const showContextMenu = findByProps("showContextMenu");
 const handleClick = findByProps("handleClick", "isLinkTrusted");
 
-const parseURL = (url: string): string | undefined => {
+const parseURL = (url: string) => {
     const path = url.split("/");
     const tenorIndex = path.findIndex(x => x.endsWith(".tenor.com"));
-    if (tenorIndex === -1) return;
+    if (tenorIndex === -1) return url;
 
     const [host, id, file] = path.slice(tenorIndex, tenorIndex + 3);
-    if (!host || !id || !file) return;
+    if (!host || !id || !file) return url;
 
     return `https://${host}/${id.slice(0, -2)}AC/${file.split(".")[0]}.gif`;
 };
@@ -106,7 +106,7 @@ export default new Module({
 
                             item.action = () => {
                                 if (!link) {
-                                    item._action();
+                                    item._action?.();
                                     return;
                                 } else
                                     handleClick.handleClick({
@@ -117,7 +117,7 @@ export default new Module({
                         } else if (item.label === i18n.Messages.SHARE) {
                             item.action = () => {
                                 if (!link) {
-                                    item._action();
+                                    item._action?.();
                                     return;
                                 } else RN.Share.share({ message: link });
                             };

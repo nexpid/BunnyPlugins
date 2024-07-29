@@ -11,14 +11,14 @@ import { unsubAuthStore } from "../stores/AuthorizationStore";
 import { unsubCacheStore } from "../stores/CacheStore";
 
 export default (): (() => void) => {
-    const patches = [];
+    const patches = new Array<any>();
     patches.push(
         patchSettingsPin(
             () => vstorage.config.addToSettings,
             () => <SettingsSection />,
             {
                 key: plugin.manifest.name,
-                icon: getAssetIDByName(manifest.vendetta.icon),
+                icon: getAssetIDByName(manifest.vendetta?.icon ?? ""),
                 title: () => lang.format("plugin.name", {}),
                 page: {
                     render: Settings,

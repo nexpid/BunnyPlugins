@@ -45,7 +45,7 @@ export const useRulesStore = zustand.create<
                 const res = await fetch(listUrl, {
                     headers: {
                         "if-modified-since": get().lastModified,
-                    },
+                    } as any,
                 });
                 if (!res.ok) return;
 
@@ -60,7 +60,7 @@ export const useRulesStore = zustand.create<
                 rules: state.rules,
                 lastModified: state.lastModified,
             }),
-            onRehydrateStorage: () => state => state.update(),
+            onRehydrateStorage: () => state => state?.update(),
         },
     ),
 );

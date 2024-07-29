@@ -8,23 +8,23 @@ import { UserData } from "../types";
 const UserStore = findByStoreName("UserStore");
 
 interface CacheState {
-    data: UserData | null;
-    at: string | null;
+    data: UserData | undefined;
+    at: string | undefined;
     dir: Record<string, { data: UserData; at: string }>;
     init: () => void;
-    updateData: (data: UserData | null, at: string | null) => void;
+    updateData: (data?: UserData, at?: string) => void;
     hasData: () => boolean;
 }
 
 export const useCacheStore = zustand.create<CacheState>((set, get) => ({
-    data: null,
-    at: null,
+    data: undefined,
+    at: undefined,
     dir: {},
-    init: () => {
+    init() {
         const dt = get().dir[UserStore.getCurrentUser()?.id];
         set({ data: dt.data, at: dt.at });
     },
-    updateData: (data: UserData | null, at: string | null) => {
+    updateData(data, at) {
         set({
             data,
             at,

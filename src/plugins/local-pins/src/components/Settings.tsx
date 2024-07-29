@@ -66,7 +66,7 @@ export default () => {
                             confirmText: "Clear",
                             confirmColor: "red" as ButtonColors,
                             onConfirm: () => {
-                                delete vstorage.pinned;
+                                vstorage.pinned = {};
                             },
                             isDismissable: true,
                         });

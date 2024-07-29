@@ -20,7 +20,7 @@ export default async function getIconpackData(
     return {
         config:
             config.status === "fulfilled" && typeof config.value !== "symbol"
-                ? config.value
+                ? (config.value as IconpackConfig)
                 : null,
         tree: tree.status === "fulfilled" ? tree.value : null,
     };

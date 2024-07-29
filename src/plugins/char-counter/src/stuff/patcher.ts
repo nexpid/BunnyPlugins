@@ -11,7 +11,7 @@ import SimpleCharCounter from "../components/SimpleCharCounter";
 const { ChatInput } = findByProps("ChatInput");
 const { MessagesWrapper } = findByProps("MessagesWrapper");
 
-export let patches = [];
+export let patches = new Array<any>();
 
 let _lastText = {
     value: "",
@@ -52,7 +52,7 @@ export default () => {
                     after(
                         "onChangeText",
                         props,
-                        ([txt]: [string]) => (lastText.value = txt),
+                        ([txt]) => (lastText.value = txt),
                     ),
                 );
             }

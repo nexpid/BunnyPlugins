@@ -31,14 +31,12 @@ const readFileGeneric = (
     const options = getOptions(encoding);
 
     return command(normalizeFilePath(filepath)).then((b64: string) => {
-        let contents: string;
+        let contents = b64;
 
         if (options.encoding === "utf8") {
             contents = Buffer.from(b64, "base64").toString("utf8");
         } else if (options.encoding === "ascii") {
             contents = Buffer.from(b64, "base64").toString("ascii");
-        } else if (options.encoding === "base64") {
-            contents = b64;
         }
 
         return contents;
@@ -47,8 +45,8 @@ const readFileGeneric = (
 
 const resolveWrite = (filepath: string) => {
     let write = {
-        style: null as "cache" | "documents" | null,
-        path: null as string | null,
+        style: "documents" as "cache" | "documents",
+        path: "",
     };
 
     const constants = RNFileManager.getConstants();
@@ -120,13 +118,11 @@ const RNFS = {
             ).then(() => void 0);
         }
 
-        let b64: string;
+        let b64 = contents;
         if (options.encoding === "utf8") {
             b64 = Buffer.from(contents, "utf8").toString("base64");
         } else if (options.encoding === "ascii") {
             b64 = Buffer.from(contents, "ascii").toString("base64");
-        } else if (options.encoding === "base64") {
-            b64 = contents;
         }
 
         return RNFSManager.writeFile(normalizeFilePath(filepath), b64, options);

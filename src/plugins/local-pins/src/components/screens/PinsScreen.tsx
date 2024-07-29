@@ -42,9 +42,7 @@ export default function PinsScreen({
                           props: {
                               searchContext,
                               message,
-                              onPress: () => {
-                                  press(channelId, message.id);
-                              },
+                              onPress: () => press?.(channelId, message.id),
                               highlighter: (something: any) => something,
                               lineClamp: 10,
                           },

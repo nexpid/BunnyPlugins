@@ -42,7 +42,7 @@ export default function IconpackRow({
         },
     });
 
-    const [packStatus, setPackStatus] = React.useState<null | {
+    const [packStatus, setPackStatus] = React.useState<{
         installed: boolean;
         outdated: boolean;
         loading: boolean;
@@ -51,7 +51,7 @@ export default function IconpackRow({
         outdated: false,
         loading: true,
     });
-    const [progressCnt, setProgressCnt] = React.useState(null);
+    const [progressCnt, setProgressCnt] = React.useState<number | null>(0);
 
     React.useEffect(() => {
         isPackInstalled(pack).then(x => {
@@ -108,7 +108,7 @@ export default function IconpackRow({
                 setProgressCnt(0);
 
                 if (!controller.signal.aborted)
-                    showToast(e.toString(), getAssetIDByName("Small"));
+                    showToast(String(e), getAssetIDByName("Small"));
                 setPackStatus({
                     installed: willUninstall,
                     outdated: packStatus.outdated,
@@ -147,7 +147,7 @@ export default function IconpackRow({
                         </Text>
                         <InlineCheckbox
                             initialValue={
-                                vstorage.downloadIconpackModalDismissed
+                                !!vstorage.downloadIconpackModalDismissed
                             }
                             update={v => (balls = v)}
                             label={lang.format(
@@ -167,7 +167,7 @@ export default function IconpackRow({
         else cont();
     };
 
-    const cancelRef = React.useRef(null);
+    const cancelRef = React.useRef<(() => void) | null>(null);
     React.useEffect(() => {
         return () => cancelRef.current?.();
     }, []);

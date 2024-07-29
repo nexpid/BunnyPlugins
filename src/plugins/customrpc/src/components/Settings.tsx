@@ -54,10 +54,9 @@ export default () => {
 
     useProxy(vstorage);
 
-    React.useEffect(
-        () => vstorage.settings.display && dispatchActivityIfPossible(),
-        [JSON.stringify(vstorage.activity.editing), vstorage.settings.display],
-    );
+    React.useEffect(() => {
+        vstorage.settings.display && dispatchActivityIfPossible();
+    }, [JSON.stringify(vstorage.activity.editing), vstorage.settings.display]);
 
     managePage({
         headerRight: () => (
@@ -244,6 +243,8 @@ export default () => {
                                     />
                                 }
                                 onPress={() => {
+                                    if (!vstorage.activity.profile) return;
+
                                     vstorage.profiles[
                                         vstorage.activity.profile
                                     ] = JSON.parse(
@@ -272,6 +273,9 @@ export default () => {
                                         role: "revert",
                                         button: "Revert",
                                         run: () => {
+                                            if (!vstorage.activity.profile)
+                                                return;
+
                                             vstorage.activity.editing =
                                                 JSON.parse(
                                                     JSON.stringify(
@@ -315,6 +319,9 @@ export default () => {
                                         },
                                         secondaryButton: "Save profile",
                                         secondaryRun: () => {
+                                            if (!vstorage.activity.profile)
+                                                return;
+
                                             vstorage.profiles[
                                                 vstorage.activity.profile
                                             ] = JSON.parse(

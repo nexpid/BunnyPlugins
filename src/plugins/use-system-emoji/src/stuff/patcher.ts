@@ -9,8 +9,8 @@ export default () => {
         MessageMarkupRendererGuhh,
         (_, ret) => {
             const branch = (x: { content: any[] }, isHeading: boolean) => {
-                const jumboableChain = [];
-                const content = [];
+                const jumboableChain = new Array<any>();
+                const content = new Array<any>();
 
                 for (const y of x.content) {
                     const guh =

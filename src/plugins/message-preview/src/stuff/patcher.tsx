@@ -9,7 +9,7 @@ import openPreview from "./openPreview";
 
 const { ChatInput } = findByProps("ChatInput");
 
-export const patches = [];
+export const patches = new Array<any>();
 
 export default () => {
     patches.push(

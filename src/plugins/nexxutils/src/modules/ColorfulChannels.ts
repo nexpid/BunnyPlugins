@@ -83,70 +83,61 @@ export default new Module({
                 );
 
             this.patches.add(
-                after(
-                    "render",
-                    RN.Image,
-                    ([{ source, style }]: [{ source: number; style: any }]) => {
-                        const name =
-                            typeof source === "number" &&
-                            getAssetByID(source).name;
-                        if (!name) return;
+                after("render", RN.Image, ([{ source, style }]) => {
+                    const name =
+                        typeof source === "number" && getAssetByID(source).name;
+                    if (!name) return;
 
-                        const warninger = warnings.find(
-                            ([x]) => name === `${x}WarningIcon`,
-                        );
-                        const locker = locks.find(
-                            ([x]) => name === `${x}LockIcon`,
-                        );
+                    const warninger = warnings.find(
+                        ([x]) => name === `${x}WarningIcon`,
+                    );
+                    const locker = locks.find(([x]) => name === `${x}LockIcon`);
 
-                        const img = warninger
-                            ? {
-                                  base: warninger[1],
-                                  overlay: warninger[2]
-                                      ? warningBottom
-                                      : warning,
-                                  color: resolveSemanticColor(
-                                      semanticColors.STATUS_DANGER,
-                                  ),
-                              }
-                            : locker
-                              ? {
-                                    base: locker[1],
-                                    overlay: locker[2] ? lockBottom : lock,
-                                    color: resolveSemanticColor(
-                                        semanticColors.STATUS_WARNING,
-                                    ),
-                                }
-                              : null;
-
-                        if (img)
-                            return React.createElement(
-                                RN.View,
-                                {},
-                                React.createElement(RN.Image, {
-                                    style: RN.StyleSheet.flatten(style),
-                                    source: { uri: img.base },
-                                }),
-                                React.createElement(
-                                    RN.View,
-                                    {
-                                        style: {
-                                            position: "absolute",
-                                            right: 0,
-                                            bottom: 0,
-                                        },
-                                    },
-                                    React.createElement(RN.Image, {
-                                        style: {
-                                            ...RN.StyleSheet.flatten(style),
-                                            tintColor: img.color,
-                                        },
-                                        source: { uri: img.overlay },
-                                    }),
+                    const img = warninger
+                        ? {
+                              base: warninger[1],
+                              overlay: warninger[2] ? warningBottom : warning,
+                              color: resolveSemanticColor(
+                                  semanticColors.STATUS_DANGER,
+                              ),
+                          }
+                        : locker
+                          ? {
+                                base: locker[1],
+                                overlay: locker[2] ? lockBottom : lock,
+                                color: resolveSemanticColor(
+                                    semanticColors.STATUS_WARNING,
                                 ),
-                            );
-                    },
-                ),
+                            }
+                          : null;
+
+                    if (img)
+                        return React.createElement(
+                            RN.View,
+                            {},
+                            React.createElement(RN.Image, {
+                                style: RN.StyleSheet.flatten(style),
+                                source: { uri: img.base },
+                            }),
+                            React.createElement(
+                                RN.View,
+                                {
+                                    style: {
+                                        position: "absolute",
+                                        right: 0,
+                                        bottom: 0,
+                                    },
+                                },
+                                React.createElement(RN.Image, {
+                                    style: {
+                                        ...RN.StyleSheet.flatten(style),
+                                        tintColor: img.color,
+                                    },
+                                    source: { uri: img.overlay },
+                                }),
+                            ),
+                        );
+                }),
             );
         },
         onStop() {},

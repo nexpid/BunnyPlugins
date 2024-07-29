@@ -58,14 +58,7 @@ export default ({ inputProps }: { inputProps: any }) => {
     const fadeExtra = Reanimated.useSharedValue(0);
 
     lastText.value = text;
-    after(
-        "onChangeText",
-        inputProps,
-        ([txt]: [string]) => {
-            setText(txt);
-        },
-        true,
-    );
+    after("onChangeText", inputProps, ([txt]) => setText(txt), true);
 
     const curLength = text.length,
         maxLength = getMessageLength();
