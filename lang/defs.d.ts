@@ -56,7 +56,7 @@ export default interface LangValues {
     themes_plus: {
         values: typeof import("./values/base/themes_plus.json");
         fillers: {
-            "settings.header": { active: string };
+            "settings.header": { active: boolean };
             "alert.downloadpack.body": { iconpack: string; space: string };
         };
     };

@@ -53,19 +53,11 @@ export namespace Readmes {
 
 export namespace Lang {
     export type Rule = {
+        type: string;
         variable: string;
         start: number;
         length: number;
-    } & (
-        | {
-              type: "variable";
-          }
-        | {
-              type: "choose";
-              kind: "select" | "plural";
-              replacers: Record<string, string>;
-          }
-    );
+    };
 }
 
 export namespace Worker {

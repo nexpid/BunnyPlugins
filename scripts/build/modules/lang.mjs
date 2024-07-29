@@ -13,7 +13,7 @@ const variableRules = [
     // Hello world from {plugin.name}!
     /{([^}]+)}/g,
 ];
-const replacerRegExp = /(\w+) {([^}]*)} ?/g;
+const replacerRegExp = /(\w+) {.*?} ?/g;
 
 /**
  * @param {string} text
@@ -38,25 +38,33 @@ function parseVariablesToRules(text) {
 
             if (!kind)
                 rules.push({
-                    type: "variable",
+                    type: "string",
                     variable,
                     start,
                     length,
                 });
             else if (kind === "select" || kind === "plural") {
-                // map replacers into an object
-                const replacers = Object.fromEntries(
-                    Array.from(
-                        (rawReplacers + "}").matchAll(replacerRegExp),
-                    ).map(x => [x[1], x[2]]),
-                );
+                // map replacers into an array
+                const replacers = Array.from(
+                    (rawReplacers + "}").matchAll(replacerRegExp),
+                ).map(x => x[1]);
+                const isBool =
+                    ["true", "false", "other"].every(x =>
+                        replacers.includes(x),
+                    ) && replacers.length === 3;
+
                 rules.push({
-                    type: "choose",
-                    kind,
+                    type:
+                        kind === "plural"
+                            ? "number"
+                            : kind === "select" && isBool
+                              ? "boolean"
+                              : replacers
+                                    .map(x => JSON.stringify(x))
+                                    .join(" | "),
                     variable,
                     start,
                     length,
-                    replacers,
                 });
             }
         }
@@ -145,7 +153,7 @@ export async function makeLangDefs() {
                     `${JSON.stringify(key)}: { ${Object.values(keyRulesMap[key])
                         .map(
                             rule =>
-                                `${JSON.stringify(rule.variable)}: ${rule.type === "choose" && rule.kind === "plural" ? "number" : "string"}`,
+                                `${JSON.stringify(rule.variable)}: ${rule.type}`,
                         )
                         .join(", ")} }`,
                 );
