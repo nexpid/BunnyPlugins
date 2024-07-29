@@ -191,8 +191,11 @@ async function listPluginMetadatas() {
     return plugins;
 }
 
-export async function writePluginReadmes() {
-    for (const plugin of await listPluginMetadatas()) {
+/** @param {string[]=} filter */
+export async function writePluginReadmes(filter = []) {
+    for (const plugin of (await listPluginMetadatas()).filter(plugin =>
+        filter.length !== 0 ? filter.includes(plugin.name) : true,
+    )) {
         await writeFile(
             `src/plugins/${plugin.id}/README.md`,
             await format(

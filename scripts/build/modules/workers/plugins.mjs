@@ -17,6 +17,7 @@ import {
     makeMdNote,
     markdownPrettierOptions,
 } from "../../lib/common.mjs";
+import { readCache, saveCache } from "../../lib/rollupCache.mjs";
 
 const mdNote = makeMdNote("scripts/build/modules/workers/plugins.ts", "md");
 
@@ -77,6 +78,7 @@ async function buildPlugin(plugin, lang) {
     }
 
     const bundle = await rollup({
+        cache: await readCache(plugin),
         input: join("src/plugins", plugin, manifest.main),
         onwarn: () => void 0,
         plugins: [
@@ -189,6 +191,7 @@ async function buildPlugin(plugin, lang) {
         JSON.stringify(outManifest),
     );
 
+    await saveCache(plugin, bundle.cache);
     return manifest.name;
 }
 

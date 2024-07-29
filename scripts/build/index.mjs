@@ -20,7 +20,7 @@ import {
 } from "./modules/plugins.mjs";
 import { writePluginReadmes, writeRootReadme } from "./modules/readmes.mjs";
 
-logDebug("Waiting for Workers to boot up");
+logDebug("Booting up Workers");
 
 await (() =>
     new Promise(res => {
@@ -79,37 +79,3 @@ await Promise.all([
 logFinished("writing README files", writeReadmeFiles.stop());
 
 logCompleted(Math.floor(performance.now() - offset));
-
-// point();
-// logHeader("Building plugins");
-// for (let i = 0; i < meow.length; i++) {
-//     const x = meow[i];
-
-//     await wait(25);
-//     logScope(`Built plugin ${pc.yellow(x)}`, point());
-//     if ((i + 1) % 4 === 0) await wait(500);
-// }
-// logFinished("building plugins", Math.floor(Math.random() * 5000));
-
-// logHeader("Writing READMEs");
-// logScope(`Wrote ${pc.yellow("root")} README`, Math.floor(Math.random() * 500));
-// await wait(1000);
-// logScope(
-//     `Wrote ${pc.yellow("plugin")} READMEs`,
-//     Math.floor(Math.random() * 1000) + 500,
-// );
-// logFinished("writing READMEs", Math.floor(Math.random() * 2000));
-
-// logHeader("Writing lang files");
-// logScope(
-//     `Wrote ${pc.yellow("defs.d.ts")} file`,
-//     Math.floor(Math.random() * 300),
-// );
-// await wait(350);
-// logScope(
-//     `Fixed ${pc.yellow("cloud_sync")}'s lang file`,
-//     Math.floor(Math.random() * 200),
-// );
-// logFinished("writing lang files", Math.floor(Math.random() * 500));
-
-// logCompleted(Math.floor(performance.now()));

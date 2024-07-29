@@ -65,8 +65,11 @@ function parseVariablesToRules(text) {
     return rules;
 }
 
-export async function fixPluginLangs() {
-    for (const { lang: plugin } of await listPlugins()) {
+/** @param {string[]=} filter */
+export async function fixPluginLangs(filter = []) {
+    for (const { lang: plugin } of (await listPlugins()).filter(plugin =>
+        filter.length !== 0 ? filter.includes(plugin.name) : true,
+    )) {
         if (!plugin) continue;
 
         /** @type {Record<string, Record<string, string>>} */

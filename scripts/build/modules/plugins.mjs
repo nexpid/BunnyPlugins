@@ -27,24 +27,31 @@ let usedWorkers = 0;
 export const workerResolves = {
     res: () => void 0,
     rej: () => void 0,
-    rejected: false,
+    code: "",
 };
 
 /** @type {Worker[]} */
 export const workers = [];
-let workerInd = 0;
+export let workerInd = 0;
 
-/** @param {import("../types").Worker.PluginWorkerRequest} plugin */
-export function buildPlugin(plugin) {
+/**
+ * @param {import("../types").Worker.PluginWorkerRequest} plugin
+ * @param {boolean=} silent
+ */
+export function buildPlugin(plugin, silent) {
+    const { code } = workerResolves;
+
     usedWorkers++;
     if (usedWorkers > workers.length) {
         pendingWorkers.push(plugin);
     } else {
         const started = bench();
 
-        const worker = workers[workerInd++];
+        const worker = workers[usedWorkers - 1];
         worker.postMessage(plugin);
         worker.addListener("message", data => {
+            if (code !== workerResolves.code) return;
+
             /** @type {import("../types").Worker.PluginWorkerResponse} */
             const status = data.data ?? data;
             if (workerResolves.rejected) return;
@@ -52,7 +59,7 @@ export function buildPlugin(plugin) {
             const label = `Built plugin ${highlight(status.result === "yay" ? status.plugin : plugin.name)}`;
 
             if (status.result === "yay") {
-                logScopeFinished(label, started.stop());
+                if (!silent) logScopeFinished(label, started.stop());
 
                 plugin = pendingWorkers.splice(0, 1)[0];
                 usedWorkers--;
@@ -60,7 +67,7 @@ export function buildPlugin(plugin) {
                 if (plugin) worker.postMessage(plugin);
                 else if (usedWorkers <= 0) workerResolves.res();
             } else if (status.result === "nay") {
-                logScopeFailed(label);
+                if (!silent) logScopeFailed(label);
 
                 workers.forEach(x => x.terminate());
                 workerResolves.rejected = true;
@@ -68,4 +75,10 @@ export function buildPlugin(plugin) {
             }
         });
     }
+}
+
+export function restartBuild() {
+    workerInd = 0;
+    usedWorkers = 0;
+    pendingWorkers.length = 0;
 }
