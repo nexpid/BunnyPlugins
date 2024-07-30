@@ -54,7 +54,7 @@ export default async function load() {
     }
   }
 
-  let selectedTheme = Object.values(bunny.managers.themes.themes).find(
+  let selectedTheme = Object.values(bunny.themes.themes).find(
     (x: any) => x.selected,
   ) as any;
   if (!selectedTheme && vstorage.iconpack.mode === ConfigIconpackMode.Manual) {
