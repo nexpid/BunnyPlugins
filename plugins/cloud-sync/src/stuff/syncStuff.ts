@@ -254,8 +254,8 @@ export async function importData(data: UserData, options: SyncImportOptions) {
   const selectTheme = themes[ithemes.find(([_, { enabled }]) => enabled)?.[0]];
   if (selectTheme) {
     try {
-      bunny.managers.themes.selectTheme(selectTheme);
-      bunny.managers.themes.applyTheme(selectTheme);
+      bunny.themes.selectTheme(selectTheme);
+      bunny.themes.applyTheme(selectTheme);
 
       addLog(
         "themes",
