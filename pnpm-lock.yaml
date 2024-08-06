@@ -37,6 +37,9 @@ importers:
       fuzzysort:
         specifier: ^2.0.4
         version: 2.0.4
+      mime:
+        specifier: ^4.0.4
+        version: 4.0.4
       prettier:
         specifier: ^3.3.3
         version: 3.3.3
@@ -2773,6 +2776,11 @@ packages:
   mime@2.6.0:
     resolution: {integrity: sha512-USPkMeET31rOMiarsBNIHZKLGgvKc/LrjofAnBlOttf5ajRvqiRA8QsenbcooctK6d6Ts6aqZXBA+XbkKthiQg==}
     engines: {node: '>=4.0.0'}
+    hasBin: true
+
+  mime@4.0.4:
+    resolution: {integrity: sha512-v8yqInVjhXyqP6+Kw4fV3ZzeMRqEW6FotRsKXjRS5VMTNIuXsdRoAvklpoRgSqXm6o9VNH4/C0mgedko9DdLsQ==}
+    engines: {node: '>=16'}
     hasBin: true
 
   mimic-fn@2.1.0:
@@ -6918,6 +6926,8 @@ snapshots:
   mime@1.6.0: {}
 
   mime@2.6.0: {}
+
+  mime@4.0.4: {}
 
   mimic-fn@2.1.0: {}
 

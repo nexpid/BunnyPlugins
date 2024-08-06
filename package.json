@@ -12,7 +12,7 @@
     "build": "node scripts/build/index.mjs",
     "dev": "pnpm build --dev",
     "watch": "node scripts/watch/index.mjs",
-    "serve": "http-server dist --port 8731",
+    "serve": "node scripts/serve/index.mjs",
     "lint": "eslint --fix",
     "format": "prettier . --write",
     "ci": "pnpm lint && pnpm format && tsc --noEmit"
@@ -26,6 +26,7 @@
     "@swc/helpers": "^0.5.11",
     "esbuild": "^0.20.1",
     "fuzzysort": "^2.0.4",
+    "mime": "^4.0.4",
     "prettier": "^3.3.3",
     "rollup": "^4.19.1",
     "rollup-plugin-esbuild": "^6.1.1",
