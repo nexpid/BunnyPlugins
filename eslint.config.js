@@ -19,6 +19,12 @@ export default tseslint.config(
                 performance: false,
                 console: false,
                 process: false,
+                setInterval: false,
+                clearInterval: false,
+                setTimeout: false,
+                clearTimeout: false,
+                setImmediate: false,
+                clearImmediate: false,
             },
         },
         plugins: {
