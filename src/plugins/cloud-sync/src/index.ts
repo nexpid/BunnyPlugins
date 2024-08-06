@@ -13,12 +13,6 @@ import { debounceSync } from "./stuff/http";
 import patcher from "./stuff/patcher";
 import { grabEverything } from "./stuff/syncStuff";
 
-export interface AuthRecord {
-    accessToken: string;
-    refreshToken: string;
-    expiresAt: number;
-}
-
 export const vstorage = storage as {
     config: {
         autoSync: boolean;
