@@ -3,7 +3,7 @@ import { ReactNative as RN } from "@vendetta/metro/common";
 import { type ImageSourcePropType } from "react-native";
 
 const _ActionSheet =
-    findByProps("ActionSheet").ActionSheet ??
+    findByProps("ActionSheet")?.ActionSheet ??
     find(x => x.render?.name === "ActionSheet"); // thank you to @pylixonly for fixing this
 
 const { ActionSheetTitleHeader, ActionSheetCloseButton } = findByProps(

@@ -17,7 +17,7 @@ const NotFound = (prop: string, isFunction?: boolean) => () => {
     return null;
 };
 
-const findProp = (...props: string[]) => findByProps(...props)[props[0]];
+const findProp = (...props: string[]) => findByProps(...props)?.[props[0]];
 const findPropPolyfill = (isFunction: boolean, ...props: string[]) =>
     findProp(...props) ?? NotFound(props[0], isFunction);
 

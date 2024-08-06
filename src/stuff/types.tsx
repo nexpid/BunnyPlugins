@@ -1,4 +1,4 @@
-import { findByName, findByProps, findByStoreName } from "@vendetta/metro";
+import { findByProps, findByStoreName } from "@vendetta/metro";
 import { FluxDispatcher } from "@vendetta/metro/common";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { showToast } from "@vendetta/ui/toasts";
@@ -9,16 +9,15 @@ const ThemeStore = findByStoreName("ThemeStore");
 const { triggerHaptic } = findByProps("triggerHaptic");
 
 const colorModule = findByProps("colors", "unsafe_rawColors");
-const colorResolver = colorModule.internal ?? colorModule.meta;
+const colorResolver = colorModule?.internal ?? colorModule?.meta;
 
 export const TextStyleSheet = findByProps("TextStyleSheet")
     .TextStyleSheet as _TextStyleSheet;
 
-export const Navigator =
-    findByName("Navigator") ?? findByProps("Navigator").Navigator;
-export const modalCloseButton =
-    findByProps("getRenderCloseButton").getRenderCloseButton ??
-    findByProps("getHeaderCloseButton").getHeaderCloseButton;
+export const Navigator = findByProps("Navigator")?.Navigator;
+export const modalCloseButton = findByProps(
+    "getHeaderCloseButton",
+)?.getHeaderCloseButton;
 export const { popModal, pushModal } = findByProps("popModal", "pushModal");
 
 export type Entries<T> = [keyof T, T[keyof T]];
@@ -47,7 +46,7 @@ export function resolveSemanticColor(
     color: any,
     theme: string = ThemeStore.theme,
 ) {
-    return colorResolver.resolveSemanticColor(theme, color);
+    return colorResolver?.resolveSemanticColor(theme, color);
 }
 
 export function getUserAvatar(

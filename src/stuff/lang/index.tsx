@@ -90,7 +90,7 @@ export class Lang<Plugin extends keyof LangValues> {
         if (!values) return String(key);
 
         const val =
-            values[locale][key] ?? values.en[key] ?? DEFAULT_LANG?.[key];
+            values[locale]?.[key] ?? values.en?.[key] ?? DEFAULT_LANG?.[key];
         if (!val) return String(key);
 
         if (Object.keys(input as any).length > 0)
