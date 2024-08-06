@@ -1,3 +1,4 @@
+import { createHash } from "node:crypto";
 import { existsSync } from "node:fs";
 import { readFile } from "node:fs/promises";
 import { dirname, extname, join, resolve } from "node:path";
@@ -6,6 +7,9 @@ import { logDebug } from "./print.mjs";
 
 /** @type {Map<string, Set<string>>} */
 export const dependencyMap = new Map();
+
+/** @type {Map<string, string>} */
+export const hashMap = new Map();
 
 const baseExtensions = [".d.ts", ".ts", ".js", ".mjs", ".cjs"];
 const jsxExtensions = [
@@ -41,9 +45,10 @@ export default async function getDependencies(file) {
 
     const dir = dirname(file);
 
-    const rawMatches = (await readFile(file, "utf8")).matchAll(
-        /import .*? from "(.*?)"/gs,
-    );
+    const content = await readFile(file, "utf8");
+    hashMap.set(file, createHash("sha256").update(content).digest("hex"));
+
+    const rawMatches = content.matchAll(/import .*? from "(.*?)"/gs);
     for (const match of rawMatches) {
         const module = match[1];
 

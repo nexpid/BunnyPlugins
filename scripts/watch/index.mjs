@@ -1,5 +1,5 @@
-import { randomUUID } from "node:crypto";
-import { readdir } from "node:fs/promises";
+import { createHash, randomUUID } from "node:crypto";
+import { readdir, readFile } from "node:fs/promises";
 import { cpus } from "node:os";
 import { extname, join, resolve } from "node:path";
 import { Worker } from "node:worker_threads";
@@ -7,6 +7,10 @@ import { Worker } from "node:worker_threads";
 import chokidar from "chokidar";
 import pc from "picocolors";
 
+import { isDev } from "../build/lib/common.mjs";
+import rejuvenatePlugins, {
+    shouldRejuvenate,
+} from "../build/lib/rejuvenate.mjs";
 import { fixPluginLangs, makeLangDefs } from "../build/modules/lang.mjs";
 import {
     buildPlugin,
@@ -22,8 +26,9 @@ import {
 import getDependencies, {
     allExtensions,
     dependencyMap,
+    hashMap,
 } from "./lib/getImports.mjs";
-import { logBuild, logBuildErr, logWatch } from "./lib/print.mjs";
+import { logBuild, logBuildErr, logDebug, logWatch } from "./lib/print.mjs";
 
 logWatch("Booting up Workers");
 
@@ -37,6 +42,7 @@ await (() =>
                         import.meta.dirname,
                         "../build/modules/workers/plugins.mjs",
                     ),
+                    { workerData: { isDev } },
                 ).once("message", () => ++count >= workers.length && res()),
             );
     }))();
@@ -62,9 +68,13 @@ const srcPath = resolve("src");
 
 /** @param {string} file */
 const runFileChange = async localPath => {
-    logWatch(`File changed  ${pc.italic(pc.gray(localPath))}`);
-
     const file = resolve(localPath);
+    const newHash = createHash("sha256")
+        .update(await readFile(file, "utf8"))
+        .digest("hex");
+    if (hashMap.get(file) === newHash) return;
+
+    logWatch(`File changed  ${pc.italic(pc.gray(localPath))}`);
     await getDependencies(file);
 
     /** @type {Set<string>} */
@@ -72,9 +82,7 @@ const runFileChange = async localPath => {
     /** @type {Set<string>} */
     const checked = new Set();
 
-    /**
-     * @param {Set<string>} deps
-     */
+    /** @param {Set<string>} deps */
     const goThroughDeps = deps => {
         for (const dep of deps) {
             if (checked.has(dep)) continue;
@@ -104,20 +112,10 @@ const runFileChange = async localPath => {
 
         try {
             logBuild(
-                `Rebuilding ${pc.bold(`${affected.length} plugin${affected.length !== 1 ? "s" : ""}`)}  ${pc.italic(
-                    pc.gray(
-                        affected
-                            .map(name =>
-                                name
-                                    .toUpperCase()
-                                    .split("-")
-                                    .map(split => split[0])
-                                    .join(""),
-                            )
-                            .join(", "),
-                    ),
-                )}`,
+                `Rebuilding ${pc.bold(`${affected.length} plugin${affected.length !== 1 ? "s" : ""}`)}`,
             );
+
+            const rejuvenate = await rejuvenatePlugins(affected);
 
             const plugins = (await listPlugins()).filter(plugin =>
                 affected.includes(plugin.name),
@@ -140,6 +138,8 @@ const runFileChange = async localPath => {
             await promise1;
 
             if (workerResolves.code === code) {
+                await rejuvenate();
+
                 logBuild("Finished building");
                 workerResolves.code = "";
             }
@@ -155,6 +155,9 @@ const runFileChange = async localPath => {
         }
     }
 };
+
+if (!shouldRejuvenate())
+    logDebug(`Rejuvenate is not running. Please run "pnpm serve"`);
 
 chokidar
     .watch(["src/**/*.*"], {
