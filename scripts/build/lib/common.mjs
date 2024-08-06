@@ -1,4 +1,5 @@
 import { execSync } from "node:child_process";
+import { resolve } from "node:path";
 
 const mdNoteFlavors = {
     jsts: ["/*", "*/"],
@@ -19,7 +20,9 @@ export const branch = execSync("git branch --show-current").toString().trim();
 export const isDevBranch = branch !== "main";
 
 export const isDev =
-    process.argv.includes("-d") || process.argv.includes("--dev");
+    process.argv.includes("-d") ||
+    process.argv.includes("--dev") ||
+    process.argv[1] === resolve("scripts/watch/index.mjs");
 
 /** @type {import("prettier").Options} */
 export const prettierOptions = {

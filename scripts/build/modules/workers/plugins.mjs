@@ -2,24 +2,23 @@ import { createHash } from "node:crypto";
 import { existsSync } from "node:fs";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { extname, join } from "node:path";
-import { parentPort } from "node:worker_threads";
+import { parentPort, workerData } from "node:worker_threads";
 
 import commonjs from "@rollup/plugin-commonjs";
 import nodeResolve from "@rollup/plugin-node-resolve";
 import { transform } from "@swc/core";
+import Mime from "mime";
 import { format } from "prettier";
 import { rollup } from "rollup";
 import esbuild from "rollup-plugin-esbuild";
 import tsConfigPaths from "rollup-plugin-tsconfig-paths";
 
-import {
-    isDev,
-    makeMdNote,
-    markdownPrettierOptions,
-} from "../../lib/common.mjs";
+import { makeMdNote, markdownPrettierOptions } from "../../lib/common.mjs";
 import { readCache, saveCache } from "../../lib/rollupCache.mjs";
 
 const mdNote = makeMdNote("scripts/build/modules/workers/plugins.ts", "md");
+
+const { isDev } = workerData;
 
 /**
  * @param {string} plugin
@@ -126,9 +125,6 @@ async function buildPlugin(plugin, lang) {
                         raw: ["json"],
                         uri: ["png"],
                     };
-                    const extToMime = {
-                        png: "image/png",
-                    };
 
                     const ext = extname(id).slice(1);
                     const mode = Object.entries(parsers).find(([_, v]) =>
@@ -141,7 +137,7 @@ async function buildPlugin(plugin, lang) {
                     else if (mode === "raw") thing = code;
                     else if (mode === "uri")
                         thing = JSON.stringify(
-                            `data:${extToMime[ext] ?? ""};base64,${(await readFile(id)).toString("base64")}`,
+                            `data:${Mime.getType(id)};base64,${(await readFile(id)).toString("base64")}`,
                         );
 
                     if (thing) return { code: `export default ${thing}` };
@@ -174,7 +170,7 @@ async function buildPlugin(plugin, lang) {
             return map[id] || null;
         },
         format: "iife",
-        compact: true,
+        compact: !isDev,
         exports: "named",
     });
     await bundle.close();

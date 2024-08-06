@@ -2,6 +2,7 @@ import { cpus } from "node:os";
 import { join } from "node:path";
 import { Worker } from "node:worker_threads";
 
+import { isDev } from "./lib/common.mjs";
 import {
     bench,
     highlight,
@@ -11,6 +12,7 @@ import {
     logHeader,
     runTask,
 } from "./lib/print.mjs";
+import rejuvenatePlugins from "./lib/rejuvenate.mjs";
 import { fixPluginLangs, makeLangDefs } from "./modules/lang.mjs";
 import {
     buildPlugin,
@@ -29,6 +31,7 @@ await (() =>
             workers.push(
                 new Worker(
                     join(import.meta.dirname, "modules/workers/plugins.mjs"),
+                    { workerData: { isDev } },
                 ).once("message", () => ++count >= workers.length && res()),
             );
     }))();
@@ -51,6 +54,9 @@ await Promise.all([
 logFinished("writing plugin lang files", writePluginLangFiles.stop());
 
 // Build plugins
+
+const rejuvenate =
+    isDev && (await rejuvenatePlugins((await listPlugins()).map(x => x.name)));
 
 const buildingPlugins = bench();
 logHeader("Building plugins");
@@ -79,3 +85,5 @@ await Promise.all([
 logFinished("writing README files", writeReadmeFiles.stop());
 
 logCompleted(Math.floor(performance.now() - offset));
+
+if (rejuvenate) await rejuvenate();

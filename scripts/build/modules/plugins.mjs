@@ -1,5 +1,6 @@
 import { readdir } from "node:fs/promises";
 
+import { isDev } from "../lib/common.mjs";
 import {
     bench,
     highlight,
@@ -7,17 +8,20 @@ import {
     logScopeFinished,
 } from "../lib/print.mjs";
 
-export async function listPlugins() {
+/** @param {boolean=} noDev */
+export async function listPlugins(noDev) {
     const plugins = await readdir("src/plugins");
     const lang = await readdir("lang/values");
 
-    return plugins.map(plugin => {
-        const langName = plugin.replaceAll("-", "_");
-        return {
-            name: plugin,
-            lang: lang.includes(`${langName}.json`) ? langName : null,
-        };
-    });
+    return plugins
+        .filter(x => (x.endsWith(".dev") ? isDev && !noDev : true))
+        .map(plugin => {
+            const langName = plugin.replaceAll("-", "_");
+            return {
+                name: plugin,
+                lang: lang.includes(`${langName}.json`) ? langName : null,
+            };
+        });
 }
 
 /** @type {import("../types").Worker.PluginWorkerRequest[]} */

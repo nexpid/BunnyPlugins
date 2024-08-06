@@ -121,11 +121,12 @@ function makeEndpointBadge(badge, mdLink) {
     else return img;
 }
 
-async function listPluginMetadatas() {
+/** @param {noDev=} boolean */
+async function listPluginMetadatas(noDev) {
     /** @type {import("../types").Readmes.Plugin[]} */
     const plugins = [];
 
-    for (const { name: plugin } of await listPlugins()) {
+    for (const { name: plugin } of await listPlugins(noDev)) {
         /** @type {import("../types").Readmes.Manifest} */
         const manifest = JSON.parse(
             await readFile(
@@ -224,7 +225,7 @@ export async function writePluginReadmes(filter = []) {
 }
 
 export async function writeRootReadme() {
-    const plugins = await listPluginMetadatas();
+    const plugins = await listPluginMetadatas(true);
     const stats = {
         finished: plugins.filter(plugin => plugin.status === "finished").length,
         unfinished: plugins.filter(plugin => plugin.status === "unfinished")
