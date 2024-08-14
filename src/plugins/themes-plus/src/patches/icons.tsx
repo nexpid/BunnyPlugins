@@ -35,7 +35,10 @@ export default function patchIcons(
         );
 
     let isInstalled = false;
-    isPackInstalled(iconpack!).then(x => (isInstalled = !!x));
+    isPackInstalled(iconpack!).then(x => {
+        isInstalled = !!x;
+        console.log("Hi!! Just checked: ", iconpack, x);
+    });
 
     if (plus.icons || plus.customOverlays || iconpack) {
         if (plus.icons) state.patches.push(PatchType.Icons);
@@ -86,7 +89,7 @@ export default function patchIcons(
                         ];
                 }
 
-                if (useIconpack) {
+                if (useIconpack)
                     x.source = {
                         uri: isInstalled
                             ? `file://${iconsPath}${iconpack.id}/${flattenFilePath(assetIconpackLocation)}`
@@ -94,8 +97,9 @@ export default function patchIcons(
                         headers: {
                             "cache-contorl": "public, max-age=3600",
                         },
+                        width: asset.width,
+                        height: asset.height,
                     };
-                }
 
                 const ret = orig(...args);
 
