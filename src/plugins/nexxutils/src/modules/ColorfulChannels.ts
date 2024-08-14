@@ -85,7 +85,8 @@ export default new Module({
             this.patches.add(
                 after("render", RN.Image, ([{ source, style }]) => {
                     const name =
-                        typeof source === "number" && getAssetByID(source).name;
+                        typeof source === "number" &&
+                        getAssetByID(source)?.name;
                     if (!name) return;
 
                     const warninger = warnings.find(

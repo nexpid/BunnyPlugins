@@ -26,7 +26,7 @@ export default {
         undevtool = devtools();
     },
     onUnload: () => (
-        modules.forEach(x => x.storage.enabled && x.stop()), undevtool()
+        modules.forEach(x => x.storage.enabled && x.stop()), undevtool?.()
     ),
     settings,
 };

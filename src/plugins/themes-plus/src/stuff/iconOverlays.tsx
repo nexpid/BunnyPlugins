@@ -11,7 +11,7 @@ export function getIconTint(
     icon: number,
     customName?: string,
 ): string | undefined {
-    const name = customName ?? getAssetByID(icon).name;
+    const name = customName ?? getAssetByID(icon)?.name;
     if (!name) return;
     if (!plus.icons?.[name]) return;
 
@@ -44,7 +44,7 @@ export function getIconOverlay(
 ):
     | React.PropsWithChildren<{ style?: Record<string, any>; replace?: string }>
     | undefined {
-    const ic = getAssetByID(icon).name;
+    const ic = getAssetByID(icon)?.name;
     if (!ic) return;
 
     if (

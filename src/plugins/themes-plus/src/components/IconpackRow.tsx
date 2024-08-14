@@ -63,7 +63,7 @@ export default function IconpackRow({
         });
     }, []);
 
-    const { size } = state.iconpack.hashes[pack.id];
+    const size = state.iconpack.hashes[pack.id]?.size;
     useState();
 
     const doInstall = () => {

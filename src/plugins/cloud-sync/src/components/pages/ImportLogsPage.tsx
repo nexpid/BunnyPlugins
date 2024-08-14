@@ -16,11 +16,11 @@ const logs = new Array<[string, string]>();
 
 export function clearLogs() {
     logs.length = 0;
-    logged();
+    logged?.();
 }
 export function addLog(scope: keyof typeof logScopes, message: string) {
     logs.push([scope, message]);
-    logged();
+    logged?.();
 }
 
 const logScopes = {

@@ -76,7 +76,7 @@ export type SyncImportOptions = Record<
 >;
 export async function importData(data: UserData, options: SyncImportOptions) {
     if (!data) return;
-    importCallback(true);
+    importCallback?.(true);
 
     const iplugins = [
         ...Object.entries(data.plugins).filter(
@@ -107,7 +107,7 @@ export async function importData(data: UserData, options: SyncImportOptions) {
     );
 
     if (!iplugins[0] && !ithemes[0] && !ifonts[0] && !icustomFonts[0]) {
-        importCallback(false);
+        importCallback?.(false);
         showToast(
             lang.format("toast.sync.no_import", {}),
             getAssetIDByName("CircleXIcon-primary"),
@@ -310,5 +310,5 @@ export async function importData(data: UserData, options: SyncImportOptions) {
             }),
         );
 
-    importCallback(false);
+    importCallback?.(false);
 }

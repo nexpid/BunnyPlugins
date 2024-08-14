@@ -33,12 +33,10 @@ export default () => {
     );
 
     let bowomp: () => void;
-    patches.push(() => {
-        bowomp();
-    });
+    patches.push(() => bowomp?.());
     patches.push(
         after("default", GuildSettingsModalLanding, (_, main) => {
-            bowomp();
+            bowomp?.();
             bowomp = after("type", main, (_, content) => {
                 const sett = findInReactTree(
                     content,

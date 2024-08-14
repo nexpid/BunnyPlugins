@@ -13,10 +13,12 @@ export async function isPackInstalled(pack: Iconpack) {
     if (
         (await RNFS.exists(`${iconsPath}${pack.id}`)) &&
         (await RNFS.exists(`${iconsPath}${pack.id}.hash`)) &&
-        state.iconpack.hashes[pack.id].hash
+        state.iconpack.hashes[pack.id]?.hash
     ) {
         const hash = await RNFS.readFile(`${iconsPath}${pack.id}.hash`, "utf8");
-        return state.iconpack.hashes[pack.id].hash === hash ? true : "outdated";
+        return state.iconpack.hashes[pack.id]?.hash === hash
+            ? true
+            : "outdated";
     } else return false;
 }
 
