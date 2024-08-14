@@ -25,13 +25,10 @@ export interface IconpackData {
     list: Iconpack[];
 }
 
-export interface CoolAsset {
-    __packager_asset: boolean;
+export interface BunnyAsset {
     httpServerLocation: string;
     width: number;
     height: number;
-    scales: number[];
-    hash: string;
     name: string;
     type: string;
 }

@@ -7,11 +7,12 @@ import { PlusStructure } from "$/typings";
 
 import { PatchType } from "..";
 import { state } from "../stuff/active";
+import { bunnyIconDataUri } from "../stuff/BunnyIcon";
 import { getIconOverlay, getIconTint } from "../stuff/iconOverlays";
 import { patches } from "../stuff/loader";
 import { iconsPath, isPackInstalled } from "../stuff/packInstaller";
-import { flattenFilePath } from "../stuff/util";
-import { CoolAsset, IconpackConfig } from "../types";
+import { fixPath, flattenFilePath } from "../stuff/util";
+import { BunnyAsset, IconpackConfig } from "../types";
 
 const Status = findByName("Status", false);
 
@@ -23,14 +24,19 @@ export default function patchIcons(
     const { iconpack } = state.iconpack;
     if (config.biggerStatus)
         patches.push(
-            before("default", Status, args => {
-                const c = [...args];
+            before("default", Status, _args => {
+                const args = _args.slice();
 
                 const sizes = Object.values(Status.StatusSizes);
-                c[0].size = sizes[sizes.findIndex(x => c[0].size === x) + 1];
-                c[0].size ??= Status.StatusSizes.XLARGE;
+                const index = sizes.findIndex(x => args[0].size === x);
+                args[0] = {
+                    ...args[0],
+                    size:
+                        (index !== -1 ? sizes[index + 1] : null) ??
+                        Status.StatusSizes.XLARGE,
+                };
 
-                return c;
+                return args;
             }),
         );
 
@@ -46,40 +52,56 @@ export default function patchIcons(
         patches.push(
             instead("render", RN.Image, (_args, orig) => {
                 const args = _args.slice();
-                const [x] = args;
-                if (typeof x.source !== "number" || x.ignore)
-                    return orig(...args);
-                const { source } = x;
+                const [props] = args;
 
-                // @ts-expect-error these properties are missing from the Asset type
-                const asset: CoolAsset = getAssetByID(source);
+                if (props.ignore) return orig(...args);
+                const { source } = props;
+
+                let asset: BunnyAsset | null = null;
+
+                // theme the Bunny icon
+                if (source?.uri === bunnyIconDataUri)
+                    asset = {
+                        httpServerLocation: "//_",
+                        width: 64,
+                        height: 64,
+                        name: "bunny",
+                        type: "png",
+                    };
+                // any other asset
+                else if (typeof props.source === "number")
+                    asset = getAssetByID(source) as any;
+
                 if (!asset?.httpServerLocation) return orig(...args);
 
                 const assetIconpackLocation =
                     iconpack &&
-                    [
-                        ...asset.httpServerLocation.split("/").slice(2),
-                        `${asset.name}${iconpack.suffix}.${asset.type}`,
-                    ].join("/");
+                    fixPath(
+                        [
+                            ...asset.httpServerLocation.split("/").slice(2),
+                            `${asset.name}${iconpack.suffix}.${asset.type}`,
+                        ].join("/"),
+                    );
                 const useIconpack =
                     assetIconpackLocation &&
                     (tree.length ? tree.includes(assetIconpackLocation) : true);
 
                 let overlay: any;
                 if (plus.customOverlays && !useIconpack) {
-                    overlay = getIconOverlay(plus, source, x.style);
+                    overlay = getIconOverlay(plus, source, props.style);
                     if (overlay) {
                         if (overlay.replace)
-                            x.source = getAssetIDByName(overlay.replace);
-                        if (overlay.style) x.style = [x.style, overlay.style];
+                            props.source = getAssetIDByName(overlay.replace);
+                        if (overlay.style)
+                            props.style = [props.style, overlay.style];
                     }
                 }
 
                 if (plus.icons) {
                     const tint = getIconTint(plus, source);
                     if (tint)
-                        x.style = [
-                            x.style,
+                        props.style = [
+                            props.style,
                             {
                                 tintColor: tint,
                             },
@@ -87,7 +109,7 @@ export default function patchIcons(
                 }
 
                 if (useIconpack)
-                    x.source = {
+                    props.source = {
                         uri: isInstalled
                             ? `file://${iconsPath}${iconpack.id}/${flattenFilePath(assetIconpackLocation)}`
                             : iconpack.load + assetIconpackLocation,
