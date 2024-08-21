@@ -155,14 +155,24 @@ function updateListener() {
 }
 
 server.listen(port, async () => {
-    const interfaces = Object.values(os.networkInterfaces())
+    const interfaces = Object.entries(os.networkInterfaces())
+        .map(([group, entries]) =>
+            entries.map(entry => ({
+                ...entry,
+                group,
+            })),
+        )
         .flat()
-        .filter(int => int.family === "IPv4")
-        .map(x => x.address);
+        .filter(int => int.family === "IPv4");
+    const longestInterface = Math.max(
+        ...interfaces.map(int => int.address.length),
+    );
 
     logDebug("Server and WSS started on:");
     for (const int of interfaces)
-        logDebug(`  - http://${int}${pc.white(`:${port}`)}`);
+        logDebug(
+            `  - http://${int.address}${pc.white(`:${port}`)}${" ".repeat(longestInterface - int.address.length)}  ${pc.bold(int.group)}`,
+        );
 
     await mkdir(cachePath, { recursive: true });
     await writeFile(join(cachePath, "update"), "");
