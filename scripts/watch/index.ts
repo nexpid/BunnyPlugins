@@ -7,11 +7,11 @@ import { Worker } from "node:worker_threads";
 import chokidar from "chokidar";
 import pc from "picocolors";
 
-import { isDev } from "../build/lib/common.mjs";
+import { isDev } from "../build/lib/common.ts";
 import rejuvenatePlugins, {
     shouldRejuvenate,
-} from "../build/lib/rejuvenate.mjs";
-import { fixPluginLangs, makeLangDefs } from "../build/modules/lang.mjs";
+} from "../build/lib/rejuvenate.ts";
+import { fixPluginLangs, makeLangDefs } from "../build/modules/lang.ts";
 import {
     buildPlugin,
     listPlugins,

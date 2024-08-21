@@ -3,7 +3,7 @@ import { existsSync } from "node:fs";
 import { readFile } from "node:fs/promises";
 import { dirname, extname, join, resolve } from "node:path";
 
-import { logDebug } from "./print.mjs";
+import { logDebug } from "./print.ts";
 
 /** @type {Map<string, Set<string>>} */
 export const dependencyMap = new Map();

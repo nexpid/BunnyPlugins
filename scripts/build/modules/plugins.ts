@@ -1,12 +1,12 @@
 import { readdir } from "node:fs/promises";
 
-import { isDev } from "../lib/common.mjs";
+import { isDev } from "../lib/common.ts";
 import {
     bench,
     highlight,
     logScopeFailed,
     logScopeFinished,
-} from "../lib/print.mjs";
+} from "../lib/print.ts";
 
 /** @param {boolean=} noDev */
 export async function listPlugins(noDev) {

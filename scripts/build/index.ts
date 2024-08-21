@@ -2,7 +2,7 @@ import { cpus } from "node:os";
 import { join } from "node:path";
 import { Worker } from "node:worker_threads";
 
-import { isDev } from "./lib/common.mjs";
+import { isDev } from "./lib/common.ts";
 import {
     bench,
     highlight,
@@ -11,16 +11,16 @@ import {
     logFinished,
     logHeader,
     runTask,
-} from "./lib/print.mjs";
-import rejuvenatePlugins from "./lib/rejuvenate.mjs";
-import { fixPluginLangs, makeLangDefs } from "./modules/lang.mjs";
+} from "./lib/print.ts";
+import rejuvenatePlugins from "./lib/rejuvenate.ts";
+import { fixPluginLangs, makeLangDefs } from "./modules/lang.ts";
 import {
     buildPlugin,
     listPlugins,
     workerResolves,
     workers,
-} from "./modules/plugins.mjs";
-import { writePluginReadmes, writeRootReadme } from "./modules/readmes.mjs";
+} from "./modules/plugins.ts";
+import { writePluginReadmes, writeRootReadme } from "./modules/readmes.ts";
 
 logDebug("Booting up Workers");
 
@@ -30,7 +30,7 @@ await (() =>
         for (let i = 0; i < cpus().length; i++)
             workers.push(
                 new Worker(
-                    join(import.meta.dirname, "modules/workers/plugins.mjs"),
+                    join(import.meta.dirname, "modules/workers/plugins.ts"),
                     { workerData: { isDev } },
                 ).once("message", () => ++count >= workers.length && res()),
             );

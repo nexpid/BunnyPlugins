@@ -3,15 +3,15 @@ import { join } from "node:path";
 
 import { format } from "prettier";
 
-import { stringifyChart } from "../lib/chart.mjs";
+import { stringifyChart } from "../lib/chart.ts";
 import {
     branch,
     isDevBranch,
     makeMdNote,
     markdownPrettierOptions,
     plural,
-} from "../lib/common.mjs";
-import { listPlugins } from "./plugins.mjs";
+} from "../lib/common.ts";
+import { listPlugins } from "./plugins.ts";
 
 const mdNote = makeMdNote("scripts/build/modules/readmes.ts", "md");
 const links = {

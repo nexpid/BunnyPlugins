@@ -3,8 +3,8 @@ import { join } from "node:path";
 
 import { format } from "prettier";
 
-import { prettierOptions } from "../lib/common.mjs";
-import { listPlugins } from "./plugins.mjs";
+import { prettierOptions } from "../lib/common.ts";
+import { listPlugins } from "./plugins.ts";
 
 const variableRules = [
     // You have {plugins} {plugins, plural, one {plugin} other {plugins}}!

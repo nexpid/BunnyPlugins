@@ -13,8 +13,8 @@ import { rollup } from "rollup";
 import esbuild from "rollup-plugin-esbuild";
 import tsConfigPaths from "rollup-plugin-tsconfig-paths";
 
-import { makeMdNote, markdownPrettierOptions } from "../../lib/common.mjs";
-import { readCache, saveCache } from "../../lib/rollupCache.mjs";
+import { makeMdNote, markdownPrettierOptions } from "../../lib/common.ts";
+import { readCache, saveCache } from "../../lib/rollupCache.ts";
 
 const mdNote = makeMdNote("scripts/build/modules/workers/plugins.ts", "md");
 
