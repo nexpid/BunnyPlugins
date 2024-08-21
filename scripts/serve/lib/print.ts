@@ -8,18 +8,15 @@ function rn() {
 
 export const highlight = pc.yellow;
 
-/** @param {string} message */
-export const logServer = message =>
+export const logServer = (message: string) =>
     console.log(
         `${pc.bold(pc.cyan(`${rn()} [SERVER]`))} ${pc.cyanBright(message)}`,
     );
 
-/** @param {string} message */
-export const logWss = message =>
+export const logWss = (message: string) =>
     console.log(
         `${pc.bold(pc.yellow(`${rn()} [WSS]`))} ${pc.yellowBright(message)}`,
     );
 
-/** @param {string} message */
-export const logDebug = message =>
+export const logDebug = (message: string) =>
     console.log(pc.gray(`${pc.bold(pc.gray(`${rn()} [DEBUG]`))} ${message}`));

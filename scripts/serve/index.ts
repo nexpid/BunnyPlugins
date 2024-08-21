@@ -9,15 +9,14 @@ import Mime from "mime";
 import pc from "picocolors";
 import * as WS from "ws";
 
-import { logDebug, logServer, logWss } from "./lib/print.mjs";
+import { logDebug, logServer, logWss } from "./lib/print.ts";
 
 const WebSocketServer = WS.default.Server;
 
 const cachePath = "node_modules/.serve/";
 const port = 8731;
 
-/** @param {string} path */
-async function exists(path) {
+async function exists(path: string): Promise<boolean> {
     return existsSync(path) && (await stat(path)).isFile();
 }
 
@@ -49,10 +48,10 @@ server.on("request", async (req, res) => {
     }
 
     if (file) {
-        res.writeHead(200, {
+        res.writeHead(200, JSON.stringify({
             "content-type": Mime.getType(file),
             "content-length": file.size,
-        });
+        }));
 
         const sr = createReadStream(path);
         sr.on("data", chunk => res.write(chunk));
@@ -88,17 +87,14 @@ const wss = new WebSocketServer({
     server,
 });
 
-/** @type {Map<string, Set<string>>} */
-const wssCatchup = new Map();
-/** @type {Set<string>} */
-const allCatchup = new Set();
+const wssCatchup: Map<string, Set<string>> = new Map();
+const allCatchup: Set<string> = new Set();
 
 wss.on("connection", ws => {
-    let heartbeat, identity;
+    let heartbeat: NodeJS.Timeout, identity: string;
 
     ws.addEventListener("message", event => {
-        /** @type {import("./types").WSS.IncomingMessage} */
-        let data;
+        let data: import("./types").WSS.IncomingMessage;
         try {
             data = JSON.parse(event.data.toString());
         } catch {

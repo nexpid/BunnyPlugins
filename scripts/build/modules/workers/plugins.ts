@@ -20,13 +20,8 @@ const mdNote = makeMdNote("scripts/build/modules/workers/plugins.ts", "md");
 
 const { isDev } = workerData;
 
-/**
- * @param {string} plugin
- * @param {string | null} lang
- */
-async function buildPlugin(plugin, lang) {
-    /** @type {import("../../types").Readmes.Manifest} */
-    const manifest = JSON.parse(
+async function buildPlugin(plugin: string, lang: string | null) {
+    const manifest: import("../../types").Readmes.Manifest = JSON.parse(
         await readFile(join("src/plugins", plugin, "manifest.json"), "utf8"),
     );
 
@@ -63,8 +58,8 @@ async function buildPlugin(plugin, lang) {
         ),
     );
 
-    let langDefault;
-    let langValues;
+    let langDefault: object;
+    let langValues: object;
 
     if (lang) {
         const langDefaultFile = join("lang/values/base", `${lang}.json`);
@@ -132,7 +127,7 @@ async function buildPlugin(plugin, lang) {
                     )?.[0];
                     if (!mode) return null;
 
-                    let thing = null;
+                    let thing: string | null = null;
                     if (mode === "text") thing = JSON.stringify(code);
                     else if (mode === "raw") thing = code;
                     else if (mode === "uri")
@@ -191,7 +186,7 @@ async function buildPlugin(plugin, lang) {
     return manifest.name;
 }
 
-parentPort.postMessage("ready");
+parentPort!.postMessage("ready");
 
 if (parentPort)
     parentPort.addListener("message", data =>

@@ -18,17 +18,17 @@ import {
     restartBuild,
     workerResolves,
     workers,
-} from "../build/modules/plugins.mjs";
+} from "../build/modules/plugins.ts";
 import {
     writePluginReadmes,
     writeRootReadme,
-} from "../build/modules/readmes.mjs";
+} from "../build/modules/readmes.ts";
 import getDependencies, {
     allExtensions,
     dependencyMap,
     hashMap,
-} from "./lib/getImports.mjs";
-import { logBuild, logBuildErr, logDebug, logWatch } from "./lib/print.mjs";
+} from "./lib/getImports.ts";
+import { logBuild, logBuildErr, logDebug, logWatch } from "./lib/print.ts";
 
 logWatch("Booting up Workers");
 
@@ -66,8 +66,7 @@ await Promise.all(promises);
 
 const srcPath = resolve("src");
 
-/** @param {string} file */
-const runFileChange = async localPath => {
+const runFileChange = async (localPath: string) => {
     const file = resolve(localPath);
     const newHash = createHash("sha256")
         .update(await readFile(file, "utf8"))
@@ -77,13 +76,10 @@ const runFileChange = async localPath => {
     logWatch(`File changed  ${pc.italic(pc.gray(localPath))}`);
     await getDependencies(file);
 
-    /** @type {Set<string>} */
-    const affectedPlugins = new Set();
-    /** @type {Set<string>} */
-    const checked = new Set();
+    const affectedPlugins: Set<string> = new Set();
+    const checked: Set<string> = new Set();
 
-    /** @param {Set<string>} deps */
-    const goThroughDeps = deps => {
+    const goThroughDeps = (deps: Set<string>) => {
         for (const dep of deps) {
             if (checked.has(dep)) continue;
             checked.add(dep);

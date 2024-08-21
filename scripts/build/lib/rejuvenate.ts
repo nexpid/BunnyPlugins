@@ -8,10 +8,8 @@ export function shouldRejuvenate() {
     return existsSync(join(serveCachePath, "update"));
 }
 
-/** @param {string[]} plugins */
-export default async function rejuvenatePlugins(plugins) {
-    /** @type {Record<string, string>} */
-    const oldManifests = {};
+export default async function rejuvenatePlugins(plugins: string[]) {
+    const oldManifests: Record<string, string> = {};
     for (const plugin of plugins)
         try {
             oldManifests[plugin] = await readFile(
@@ -23,8 +21,7 @@ export default async function rejuvenatePlugins(plugins) {
         }
 
     return async () => {
-        /** @type {Record<string, string>} */
-        const newManifests = {};
+        const newManifests: Record<string, string> = {};
         for (const plugin of plugins)
             try {
                 newManifests[plugin] = await readFile(
@@ -35,8 +32,7 @@ export default async function rejuvenatePlugins(plugins) {
                 // meow
             }
 
-        /** @type {Array<string>} */
-        const changes = [];
+        const changes: string[] = [];
 
         for (const plugin of Object.keys(newManifests))
             if (newManifests[plugin] !== oldManifests[plugin])

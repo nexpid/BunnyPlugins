@@ -1,15 +1,9 @@
 import { randomUUID } from "node:crypto";
 
-/**
- * @param {object} data
- * @param {Record<string, any>} vars
- */
-export function stringifyChart(data, vars) {
-    /** @type {Map<string, (...args: any[]) => void>} */
-    const replace = new Map();
+export function stringifyChart(data: object, vars: Record<string, any>) {
+    const replace: Map<string, (...args: any[]) => void> = new Map();
 
-    /** @param {object} */
-    const browse = obj => {
+    const browse = (obj: object) => {
         for (const key of Object.keys(obj)) {
             if (typeof obj[key] === "function") {
                 const uuid = randomUUID();

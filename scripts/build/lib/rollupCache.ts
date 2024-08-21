@@ -17,21 +17,13 @@ const deserialize = data =>
             : val,
     );
 
-/**
- * @param {string} key
- * @param {import("rollup").RollupCache} cache
- */
-export async function saveCache(key, cache) {
+export async function saveCache(key: string, cache: import("rollup").RollupCache) {
     if (!existsSync(cacheDir)) await mkdir(cacheDir, { recursive: true });
 
     await writeFile(join(cacheDir, `${key}.cache`), serialize(cache));
 }
 
-/**
- * @param {string} key
- * @returns {Promise<import("rollup").RollupCache=>}
- */
-export async function readCache(key) {
+export async function readCache(key: string): Promise<import("rollup").RollupCache | undefined> {
     const location = join(cacheDir, `${key}.cache`);
     if (!existsSync(location)) return;
 

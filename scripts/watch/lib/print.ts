@@ -8,24 +8,20 @@ function rn() {
 
 export const highlight = pc.yellow;
 
-/** @param {string} message */
-export const logWatch = message =>
+export const logWatch = (message: string) =>
     console.log(
         `${pc.bold(pc.magenta(`${rn()} [WATCH]`))} ${pc.magentaBright(message)}`,
     );
 
-/** @param {string} message */
-export const logBuild = message =>
+export const logBuild = (message: string) =>
     console.log(
         `${pc.bold(pc.cyan(`${rn()} [BUILD]`))} ${pc.cyanBright(message)}`,
     );
 
-/** @param {string} message */
-export const logBuildErr = message =>
+export const logBuildErr = (message: string) =>
     console.log(
         `${pc.bold(pc.red(`${rn()} [BUILD] ERR!`))} ${pc.redBright(message)}`,
     );
 
-/** @param {string} message */
-export const logDebug = message =>
+export const logDebug = (message: string) =>
     console.log(pc.gray(`${pc.bold(pc.gray(`${rn()} [DEBUG]`))} ${message}`));

@@ -8,8 +8,7 @@ import {
     logScopeFinished,
 } from "../lib/print.ts";
 
-/** @param {boolean=} noDev */
-export async function listPlugins(noDev) {
+export async function listPlugins(noDev?: boolean) {
     const plugins = await readdir("src/plugins");
     const lang = await readdir("lang/values");
 
@@ -24,8 +23,7 @@ export async function listPlugins(noDev) {
         });
 }
 
-/** @type {import("../types").Worker.PluginWorkerRequest[]} */
-const pendingWorkers = [];
+const pendingWorkers: import("../types").Worker.PluginWorkerRequest[] = [];
 let usedWorkers = 0;
 
 export const workerResolves = {
@@ -34,15 +32,10 @@ export const workerResolves = {
     code: "",
 };
 
-/** @type {Worker[]} */
-export const workers = [];
+export const workers: Worker[] = [];
 export let workerInd = 0;
 
-/**
- * @param {import("../types").Worker.PluginWorkerRequest} plugin
- * @param {boolean=} silent
- */
-export function buildPlugin(plugin, silent) {
+export function buildPlugin(plugin: import("../types").Worker.PluginWorkerRequest, silent?: boolean) {
     const { code } = workerResolves;
 
     usedWorkers++;

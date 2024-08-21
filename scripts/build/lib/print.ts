@@ -2,28 +2,17 @@ import pc from "picocolors";
 
 export const highlight = pc.yellow;
 
-/** @param {string} message */
-export const logDebug = message => console.log(pc.gray(message));
-/** @param {string} name */
-export const logHeader = name => console.log(`\n${pc.bold(pc.green(name))}`);
-/** @param {number} time */
-export const logCompleted = time =>
+export const logDebug = (message: string) => console.log(pc.gray(message));
+export const logHeader = (name: string) => console.log(`\n${pc.bold(pc.green(name))}`);
+export const logCompleted = (time: number) =>
     console.log(pc.cyan(`\nCompleted in ${pc.bold(`${time}ms`)}`));
-/**
- * @param {string} scope
- * @param {number} time
- */
-export const logFinished = (scope, time) =>
+export const logFinished = (scope: string, time: number) =>
     console.log(pc.magenta(` Finished ${scope} in ${pc.bold(`${time}ms`)}`));
 
-/**
- * @param {string} scope
- * @param {number} time
- */
-export const logScopeFinished = (scope, time) =>
+
+export const logScopeFinished = (scope: string, time: number) =>
     console.log(`  ${scope} ${pc.italic(pc.gray(`${time}ms`))}`);
-/** @param {string} scope */
-export const logScopeFailed = scope =>
+export const logScopeFailed = (scope: string) =>
     console.log(`\n${pc.red(`${pc.bold("FAILED!")} During:`)} ${scope}`);
 
 export function bench() {
@@ -39,13 +28,7 @@ export function bench() {
     };
 }
 
-/**
- *
- * @param {string} scope
- * @param {Promise<any>} promise
- * @param {boolean=} delay
- */
-export async function runTask(scope, promise, delay) {
+export async function runTask(scope: string, promise: Promise<any>, delay?: boolean) {
     const task = bench();
 
     let finish = () => void 0;
