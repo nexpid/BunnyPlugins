@@ -1,0 +1,2 @@
+-s GITHUB_TOKEN="$(gh auth token)"
+--action-offline-mode

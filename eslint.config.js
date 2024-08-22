@@ -91,6 +91,7 @@ export default tseslint.config(
         ignores: [
             "dist/**/*.*",
             "eslint.config.js", // no clue why this is needed but im not gonna complain
+            "**/.pnpm-store/**/defs.d.ts", // got a lint error when running deploy-main.yml locally using https://nektosact.com/
         ],
     },
 );
