@@ -1,4 +1,4 @@
-name: Delete old workflow runs
+name: Wipe workflow runs (24h)
 
 on:
   schedule:
