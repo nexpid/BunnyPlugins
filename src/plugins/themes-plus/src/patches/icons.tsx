@@ -7,7 +7,7 @@ import { PlusStructure } from "$/typings";
 
 import { PatchType } from "..";
 import { state } from "../stuff/active";
-import { bunnyIconDataUri } from "../stuff/BunnyIcon";
+import { bunnyIconDataUri } from "../stuff/bunnyIcon";
 import { getIconOverlay, getIconTint } from "../stuff/iconOverlays";
 import { patches } from "../stuff/loader";
 import { iconsPath, isPackInstalled } from "../stuff/packInstaller";
