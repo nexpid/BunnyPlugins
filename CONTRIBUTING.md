@@ -68,7 +68,14 @@ git clone https://github.com/nexpid/BunnyPlugins.git --branch dev
 > [!CAUTION]
 > Make sure your changes are made to the `dev` branch, not the `main` branch.
 
-Then, make your changes, test them with act and you're done!
+Then, copy and paste `.actrc.sample` to `.actrc` and replace **<TOKEN HERE>** with the output of `gh auth token`:
+
+```sh
+cp .actrc.sample .actrc
+sed -i s/<TOKEN HERE>/$(gh auth token)/g" ".actrc"
+```
+
+Finally, make your changes, test them with act and you're done!
 
 ```sh
 act -W ".github/workflows/<workflow>.yml"
