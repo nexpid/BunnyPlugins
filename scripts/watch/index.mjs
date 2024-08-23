@@ -23,12 +23,17 @@ import {
     writePluginReadmes,
     writeRootReadme,
 } from "../build/modules/readmes.mjs";
+import {
+    logBuild,
+    logBuildErr,
+    logDebug,
+    logWatch,
+} from "../common/live/print.mjs";
 import getDependencies, {
     allExtensions,
     dependencyMap,
     hashMap,
 } from "./lib/getImports.mjs";
-import { logBuild, logBuildErr, logDebug, logWatch } from "./lib/print.mjs";
 
 logWatch("Booting up Workers");
 

@@ -9,7 +9,7 @@ import Mime from "mime";
 import pc from "picocolors";
 import * as WS from "ws";
 
-import { logDebug, logServer, logWss } from "./lib/print.mjs";
+import { logDebug, logServer, logWss } from "../common/live/print.mjs";
 
 const WebSocketServer = WS.default.Server;
 

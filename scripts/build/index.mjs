@@ -2,7 +2,6 @@ import { cpus } from "node:os";
 import { join } from "node:path";
 import { Worker } from "node:worker_threads";
 
-import { isDev } from "./lib/common.mjs";
 import {
     bench,
     highlight,
@@ -11,7 +10,8 @@ import {
     logFinished,
     logHeader,
     runTask,
-} from "./lib/print.mjs";
+} from "../common/statistics/print.mjs";
+import { isDev } from "./lib/common.mjs";
 import rejuvenatePlugins from "./lib/rejuvenate.mjs";
 import { fixPluginLangs, makeLangDefs } from "./modules/lang.mjs";
 import {
@@ -45,10 +45,7 @@ logHeader("Writing plugin lang files");
 
 await Promise.all([
     runTask(`Wrote ${highlight("defs.d.ts")} types file`, makeLangDefs()),
-    runTask(
-        `Fixed ${highlight("plugin translation")} filess`,
-        fixPluginLangs(),
-    ),
+    runTask(`Fixed ${highlight("plugin translation")} files`, fixPluginLangs()),
 ]);
 
 logFinished("writing plugin lang files", writePluginLangFiles.stop());

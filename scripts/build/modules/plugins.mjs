@@ -1,17 +1,17 @@
 import { readdir } from "node:fs/promises";
 
-import { isDev } from "../lib/common.mjs";
 import {
     bench,
     highlight,
     logScopeFailed,
     logScopeFinished,
-} from "../lib/print.mjs";
+} from "../../common/statistics/print.mjs";
+import { isDev } from "../lib/common.mjs";
 
 /** @param {boolean=} noDev */
 export async function listPlugins(noDev) {
     const plugins = await readdir("src/plugins");
-    const lang = await readdir("lang/values");
+    const lang = await readdir("lang/values/base");
 
     return plugins
         .filter(x => (x.endsWith(".dev") ? isDev && !noDev : true))
