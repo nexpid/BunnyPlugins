@@ -54,17 +54,19 @@ jobs:
 
       - name: setup workspace
         uses: ./.github/actions/setup
+        with:
+          root: dev/
 
       - name: delete old lang files
-        working-directory: main
+        working-directory: dev
         run: rm lang/values/*.json
 
       - name: write new lang files
-        working-directory: main
+        working-directory: dev
         run: pnpm crowdin ../i18n/lang/values
 
       - name: deploy
-        working-directory: main
+        working-directory: dev
         # todo: only run this if "git status -z" is empty
         run: |
           git add .
