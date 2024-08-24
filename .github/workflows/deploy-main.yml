@@ -4,7 +4,13 @@ on:
   push:
     branches:
       - main
+    paths:
+      - src/**/*.*
   workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-main
+  cancel-in-progress: true
 
 jobs:
   ci:
@@ -17,24 +23,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: setup workspace
-        uses: ./.github/actions/setup
-
-      - name: lint
-        run: pnpm lint
-
-      - name: format
-        run: pnpm lint
-
-      - name: typecheck
-        run: tsc --noEmit
-
-      - name: checkout
-        # todo: only run this if "git status -z" is empty
-        run: |
-          git add .
-          git commit -m "chore: run ci" || true
-          git pull --ff-only
-          git push
+        uses: ./.github/actions/ci
   build:
     needs: ci
 
@@ -65,17 +54,22 @@ jobs:
 
       - name: upload pages artifact
         uses: actions/upload-pages-artifact@v3
+        if: ${{ !env.ACT }}
         with:
           path: built
   deploy:
     needs: build
 
-    runs-on: ubuntu-latest
     permissions:
-      contents: write
+      pages: write
+      id-token: write
 
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    runs-on: ubuntu-latest
     steps:
-      - name: test
-        run: |
-          echo Hello, World!
-          ls
+      - name: deploy to pages
+        id: deployment
+        uses: actions/deploy-pages@v4

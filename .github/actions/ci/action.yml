@@ -1,0 +1,29 @@
+name: Setup
+description: Sets up the workspace
+
+runs:
+  using: composite
+  steps:
+    - name: setup workspace
+      uses: ./.github/actions/setup
+
+    - name: lint
+      if: ${{ !env.ACT }}
+      run: pnpm lint
+
+    - name: format
+      if: ${{ !env.ACT }}
+      run: pnpm format
+
+    - name: typecheck
+      if: ${{ !env.ACT }}
+      run: pnpm tsc --noEmit
+
+    - name: checkout
+      # todo: only run this if "git status -z" is empty
+      if: ${{ !env.ACT }}
+      run: |
+        git add .
+        git commit -m "chore: run ci" || true
+        git pull --ff-only
+        git push

@@ -6,28 +6,30 @@ inputs:
     description: Where the package files are located
     default: ""
     required: false
+  gitonly:
+    description: Only set up git
+    default: false
+    required: false
 
 runs:
   using: composite
   steps:
-
-    - uses: actions/checkout@v4
-      with:
-        ref: ${{ inputs.branch }}
-        path: ${{ inputs.root }}
-
     - uses: pnpm/action-setup@v4
+      if: ${{ !inputs.gitonly  }}
       with:
-        package_json_file: ${{ inputs.root }}/package.json
+        package_json_file: ${{ inputs.root }}package.json
 
     - uses: actions/setup-node@v4
+      if: ${{ !inputs.gitonly  }}
       with:
+        node-version: "23.0.0-nightly"
         cache: "pnpm"
-        cache-dependency-path: ${{ inputs.root }}/pnpm-lock.yaml
+        cache-dependency-path: ${{ inputs.root }}pnpm-lock.yaml
 
     - run: pnpm install --frozen-lockfile
-      working-directory: base
- 
+      if: ${{ !inputs.gitonly  }}
+      working-directory: ${{ inputs.root }}
+
     - run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+        git config --global user.name "github-actions[bot]"
+        git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"

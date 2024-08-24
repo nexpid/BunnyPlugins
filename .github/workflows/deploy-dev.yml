@@ -1,0 +1,108 @@
+name: Deploy dev branch
+
+on:
+  push:
+    branches:
+      - dev
+    paths:
+      - src/**/*.*
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-dev
+  cancel-in-progress: true
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+
+      - name: setup workspace
+        uses: ./.github/actions/ci
+  build:
+    needs: ci
+
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+
+      - name: setup workspace
+        uses: ./.github/actions/setup
+
+      - name: build plugins
+        run: pnpm build
+
+      - name: copy readme and assets
+        run: |
+          cp README.md dist/index.md
+          cp -r assets dist/assets
+
+      - name: build pages
+        uses: actions/jekyll-build-pages@v1
+        with:
+          source: dist
+          destination: built
+
+      - name: upload pages artifact
+        uses: actions/upload-pages-artifact@v3
+        if: ${{ !env.ACT }}
+        with:
+          path: built
+  deploy:
+    needs: build
+
+    permissions:
+      pages: write
+      id-token: write
+
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout pages repo
+        uses: actions/checkout@v4
+        with:
+          repository: nexpid/BunnyPlugins-dev-pages
+          path: pages-repo
+          token: ${{ secrets.DEV_PAGES_TOKEN }}
+
+      - name: setup workspace
+        uses: ./.github/actions/setup
+        with:
+          gitonly: true
+
+      - name: download pages artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: github-pages
+
+      - name: fix files
+        run: |
+          mkdir pages-repo-tmp
+          mv pages-repo/CNAME pages-repo-tmp/CNAME
+          mv pages-repo/.git pages-repo-tmp/.git
+
+          rm -rf pages-repo/*
+          tar -xvf artifact.tar -C pages-repo
+
+          mv pages-repo-tmp/CNAME pages-repo/CNAME
+          mv pages-repo-tmp/.git pages-repo/.git
+          rm -rf pages-repo-tmp
+
+          grep -rl 'https://bunny.nexpid.xyz' pages-repo/. | xargs -I '{}' sed -i -e 's/https:\/\/bunny.nexpid.xyz/https:\/\/dev.bunny.nexpid.xyz/g' {}
+
+      - name: deploy
+        working-directory: pages-repo
+        # todo: only run this if "git status -z" is empty
+        run: |
+          git add .
+          git commit -m "chore: ${{ github.sha || 'deploy' }}" || true 
+          git pull --ff-only
+          git push
