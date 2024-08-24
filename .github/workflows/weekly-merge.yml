@@ -67,12 +67,13 @@ jobs:
 
       - name: deploy
         working-directory: dev
-        # todo: only run this if "git status -z" is empty
         run: |
-          git add .
-          git commit -m "chore(i18n): sync translations" || true 
-          git pull --ff-only
-          git push
+          if [ ! -z "$(git status -s)" ]; then
+            git add .
+            git commit -m "chore(i18n): sync translations" || true 
+            git pull --ff-only
+            git push
+          fi
   merge:
     needs: i18n-to-dev
 

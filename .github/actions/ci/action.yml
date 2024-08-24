@@ -20,10 +20,11 @@ runs:
       run: pnpm tsc --noEmit
 
     - name: checkout
-      # todo: only run this if "git status -z" is empty
       if: ${{ !env.ACT }}
       run: |
-        git add .
-        git commit -m "chore: run ci" || true
-        git pull --ff-only
-        git push
+        if [ ! -z "$(git status -s)" ]; then
+          git add .
+          git commit -m "chore: run ci" || true
+          git pull --ff-only
+          git push
+        fi

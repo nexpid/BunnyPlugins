@@ -100,9 +100,10 @@ jobs:
 
       - name: deploy
         working-directory: pages-repo
-        # todo: only run this if "git status -z" is empty
         run: |
-          git add .
-          git commit -m "chore: ${{ github.sha || 'deploy' }}" || true 
-          git pull --ff-only
-          git push
+          if [ ! -z "$(git status -s)" ]; then
+            git add .
+            git commit -m "chore: ${{ github.sha || 'deploy' }}" || true 
+            git pull --ff-only
+            git push
+          fi
