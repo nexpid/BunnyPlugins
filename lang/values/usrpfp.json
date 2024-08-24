@@ -25,7 +25,7 @@
   "sv": {"log.patch_error":"Ett fel uppstod när laddade!","log.fetch_error":"Det gick inte att hämta avatarer!","toast.patch_error":"UsrPFP stötte på ett fel när du laddade!","toast.fetch_error":"UsrPFP kunde inte hämta avatarer!"},
   "th": {"log.patch_error":"Encountered an error while loading!","log.fetch_error":"Failed to fetch avatars!","toast.patch_error":"UsrPFP encountered an error while loading!","toast.fetch_error":"UsrPFP failed to fetch avatars!"},
   "tr": {"log.patch_error":"Yüklenirken bir şeyler ters gitti!","log.fetch_error":"Avatarlar alınamadı!","toast.patch_error":"UsrPFP yüklenirken bir şeyler ters gitti!","toast.fetch_error":"UsrPFP avatarları alamadı!"},
-  "uk": {"log.patch_error":"Сталася помилка під час завантаження!","log.fetch_error":"Не вдалося отримати аватари!","toast.patch_error":"UsrPFP зіткнувся з помилкою під час завантаження!","toast.fetch_error":"UsrPFP не вдалося отримати аватар!"},
+  "uk": {"log.patch_error":"Сталася помилка під час завантаження!","log.fetch_error":"Не вдалося отримати аватари!","toast.patch_error":"UsrPFP зіткнувся з помилкою під час завантаження!","toast.fetch_error":"UsrPFP не зміг отримати аватар!"},
   "vi": {"log.patch_error":"Gặp lỗi khi đang tải!","log.fetch_error":"Không tìm nạp được hình đại diện!","toast.patch_error":"UsrPFP gặp lỗi khi đang tải!","toast.fetch_error":"UsrPFP không thể tải avatar!"},
   "zh-Hans": {"log.patch_error":"加载时出现错误！","log.fetch_error":"获取头像失败！","toast.patch_error":"UsrPEP在加载时遇到错误！","toast.fetch_error":"UsrPEP无法获取头像！"},
   "zh-Hant": {"log.patch_error":"Encountered an error while loading!","log.fetch_error":"Failed to fetch avatars!","toast.patch_error":"UsrPFP encountered an error while loading!","toast.fetch_error":"UsrPFP failed to fetch avatars!"}

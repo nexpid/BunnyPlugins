@@ -9,6 +9,7 @@
   "author": "nexpid",
   "type": "module",
   "scripts": {
+    "crowdin": "node scripts/crowdin/index.mjs",
     "build": "node scripts/build/index.mjs",
     "dev": "pnpm build --dev",
     "watch": "node scripts/watch/index.mjs",
