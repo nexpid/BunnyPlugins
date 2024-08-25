@@ -1,9 +1,13 @@
-name: Delete old workflow runs
+name: Wipe workflow runs (daily)
 
 on:
   schedule:
-    - cron: "0 0 * * *"
+    - cron: "0 12 * * *"
   workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: true
 
 jobs:
   delete:
@@ -13,7 +17,7 @@ jobs:
       contents: read
 
     steps:
-      - name: Delete workflow runs
+      - name: wipe workflow runs
         uses: Mattraks/delete-workflow-runs@v2
         with:
           retain_days: 7

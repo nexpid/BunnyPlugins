@@ -49,9 +49,41 @@ pnpm serve # ps: you should open another terminal tab for this
 
 Then, install the `rejuvenate.dev`[^1] plugin, and you're done! Your plugins now automatically refresh when you edit any file.
 
+## Testing github workflows
+
+### Prerequisites
+
+- [Docker](https://docs.docker.com/get-started/get-docker/)
+- [act](https://nektosact.com/)
+- [GitHub cli](https://cli.github.com/)
+
+### Steps
+
+Start by cloning the repository:
+
+```sh
+git clone https://github.com/nexpid/BunnyPlugins.git --branch dev
+```
+
+> [!CAUTION]
+> Make sure your changes are made to the `dev` branch, not the `main` branch.
+
+Then, copy and paste `.actrc.sample` to `.actrc` and replace **<TOKEN HERE>** with the output of `gh auth token`:
+
+```sh
+cp .actrc.sample .actrc
+sed -i s/<TOKEN HERE>/$(gh auth token)/g" ".actrc"
+```
+
+Finally, make your changes, test them with act and you're done!
+
+```sh
+act -W ".github/workflows/<workflow>.yml"
+```
+
 ## Commiting your changes
 
-Before you start committing your changes, you need to make sure your workspace is set up correctly.  
+Before you start committing your changes, you need to make sure your workspace is set up correctly.
 For starters, make sure you're on a seperate feature branch, which should be titled `feat/<summary of your changes>`:
 
 ```sh

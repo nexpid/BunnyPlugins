@@ -2,7 +2,7 @@ import { all } from "@vendetta/ui/assets";
 
 import RNFS from "$/wrappers/RNFS";
 
-import { CoolAsset, Iconpack } from "../types";
+import { BunnyAsset, Iconpack } from "../types";
 import { state } from "./active";
 import getIconpackData from "./iconpackDataGetter";
 import { flattenFilePath } from "./util";
@@ -46,7 +46,7 @@ export async function installIconpack(
     if (RNFS.hasRNFS) await RNFS.mkdir(`${iconsPath}${pack.id}`);
     await RNFS.writeFile(`${iconsPath}${pack.id}.hash`, hash);
 
-    const shouldDownload = (Object.values(all) as any as CoolAsset[]).map(
+    const shouldDownload = (Object.values(all) as any as BunnyAsset[]).map(
         asset =>
             [
                 ...asset.httpServerLocation.split("/").slice(2),

@@ -89,6 +89,7 @@ export default tseslint.config(
     },
     {
         ignores: [
+            ".pnpm-store", // got a lint error when running github workflows locally using https://nektosact.com/
             "dist/**/*.*",
             "eslint.config.js", // no clue why this is needed but im not gonna complain
         ],
