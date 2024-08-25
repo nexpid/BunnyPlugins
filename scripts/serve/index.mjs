@@ -7,11 +7,9 @@ import { join } from "node:path";
 import { watch } from "chokidar";
 import Mime from "mime";
 import pc from "picocolors";
-import * as WS from "ws";
+import { WebSocketServer } from "ws";
 
 import { logDebug, logServer, logWss } from "../common/live/print.mjs";
-
-const WebSocketServer = WS.default.Server;
 
 const cachePath = "node_modules/.serve/";
 const port = 8731;
