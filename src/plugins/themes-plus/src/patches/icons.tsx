@@ -87,7 +87,11 @@ export default function patchIcons(
                     (tree.length ? tree.includes(assetIconpackLocation) : true);
 
                 let overlay: any;
-                if (plus.customOverlays && !useIconpack) {
+                if (
+                    plus.customOverlays &&
+                    !useIconpack &&
+                    typeof source === "number"
+                ) {
                     overlay = getIconOverlay(plus, source, props.style);
                     if (overlay) {
                         if (overlay.replace)
@@ -98,7 +102,7 @@ export default function patchIcons(
                 }
 
                 if (plus.icons) {
-                    const tint = getIconTint(plus, source);
+                    const tint = getIconTint(plus, source, asset.name);
                     if (tint)
                         props.style = [
                             props.style,
