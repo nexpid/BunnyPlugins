@@ -9,14 +9,14 @@
   "author": "nexpid",
   "type": "module",
   "scripts": {
-    "crowdin": "node scripts/crowdin/index.mjs",
-    "build": "node scripts/build/index.mjs",
+    "build": "tsx scripts/build/index.ts",
     "dev": "pnpm build --dev",
-    "watch": "node scripts/watch/index.mjs",
-    "serve": "node scripts/serve/index.mjs",
+    "watch": "tsx scripts/watch/index.ts",
+    "serve": "tsx scripts/serve/index.ts",
+    "crowdin": "tsx scripts/crowdin/index.ts",
+    "ci": "pnpm lint && pnpm format && tsc --noEmit",
     "lint": "eslint --fix",
-    "format": "prettier . --write",
-    "ci": "pnpm lint && pnpm format && tsc --noEmit"
+    "format": "prettier . --write"
   },
   "dependencies": {
     "@material/material-color-utilities": "^0.2.7",
@@ -50,21 +50,21 @@
     "react-native-reanimated": "^3.11.0",
     "react-native-svg": "^15.0.0",
     "react-native-webview": "^13.8.1",
-    "ts-node": "^10.9.2",
+    "tsx": "^4.18.0",
     "typescript": "^5.4.5",
     "typescript-eslint": "^7.8.0",
     "zustand": "^4.5.4"
   },
   "packageManager": "pnpm@9.1.0",
   "pnpm": {
+    "patchedDependencies": {
+      "picocolors@1.0.1": "patches/picocolors@1.0.1.patch"
+    },
     "peerDependencyRules": {
       "ignoreMissing": [
         "react",
         "react-native"
       ]
-    },
-    "patchedDependencies": {
-      "picocolors@1.0.1": "patches/picocolors@1.0.1.patch"
     }
   },
   "engines": {

@@ -2,50 +2,50 @@ import { createHash, randomUUID } from "node:crypto";
 import { readdir, readFile } from "node:fs/promises";
 import { cpus } from "node:os";
 import { extname, join, resolve } from "node:path";
-import { Worker } from "node:worker_threads";
 
 import chokidar from "chokidar";
 import pc from "picocolors";
 
-import { isDev } from "../build/lib/common.mjs";
+import { isDev } from "../build/lib/common.ts";
 import rejuvenatePlugins, {
     shouldRejuvenate,
-} from "../build/lib/rejuvenate.mjs";
-import { fixPluginLangs, makeLangDefs } from "../build/modules/lang.mjs";
+} from "../build/lib/rejuvenate.ts";
+import { fixPluginLangs, makeLangDefs } from "../build/modules/lang.ts";
 import {
     buildPlugin,
     listPlugins,
     restartBuild,
     workerResolves,
     workers,
-} from "../build/modules/plugins.mjs";
+} from "../build/modules/plugins.ts";
 import {
     writePluginReadmes,
     writeRootReadme,
-} from "../build/modules/readmes.mjs";
+} from "../build/modules/readmes.ts";
 import {
     logBuild,
     logBuildErr,
     logDebug,
     logWatch,
-} from "../common/live/print.mjs";
+} from "../common/live/print.ts";
+import { TsWorker } from "../common/worker/index.ts";
 import getDependencies, {
     allExtensions,
     dependencyMap,
     hashMap,
-} from "./lib/getImports.mjs";
+} from "./lib/getImports.ts";
 
 logWatch("Booting up Workers");
 
 await (() =>
-    new Promise(res => {
+    new Promise<void>(res => {
         let count = 0;
         for (let i = 0; i < cpus().length; i++)
             workers.push(
-                new Worker(
+                new TsWorker(
                     join(
                         import.meta.dirname,
-                        "../build/modules/workers/plugins.mjs",
+                        "../build/modules/workers/plugins.ts",
                     ),
                     { workerData: { isDev } },
                 ).once("message", () => ++count >= workers.length && res()),
@@ -54,8 +54,7 @@ await (() =>
 
 logWatch("Parsing imports...");
 
-/** @type {Promise[]} */
-const promises = [];
+const promises: Promise<void>[] = [];
 
 for (const file of await readdir("src", {
     withFileTypes: true,
@@ -82,13 +81,10 @@ const runFileChange = async localPath => {
     logWatch(`File changed  ${pc.italic(pc.gray(localPath))}`);
     await getDependencies(file);
 
-    /** @type {Set<string>} */
-    const affectedPlugins = new Set();
-    /** @type {Set<string>} */
-    const checked = new Set();
+    const affectedPlugins: Set<string> = new Set();
+    const checked: Set<string> = new Set();
 
-    /** @param {Set<string>} deps */
-    const goThroughDeps = deps => {
+    const goThroughDeps = (deps: Set<string>) => {
         for (const dep of deps) {
             if (checked.has(dep)) continue;
             checked.add(dep);
@@ -98,14 +94,14 @@ const runFileChange = async localPath => {
                 .split(/[\\/]/g);
             if (folder === "plugins") affectedPlugins.add(plugin);
 
-            if (dependencyMap.has(dep)) goThroughDeps(dependencyMap.get(dep));
+            if (dependencyMap.has(dep)) goThroughDeps(dependencyMap.get(dep)!);
         }
     };
 
     const [_folder, _plugin] = file.slice(srcPath.length + 1).split(/[\\/]/g);
     if (_folder === "plugins") affectedPlugins.add(_plugin);
 
-    if (dependencyMap.has(file)) goThroughDeps(dependencyMap.get(file));
+    if (dependencyMap.has(file)) goThroughDeps(dependencyMap.get(file)!);
 
     const affected = [...affectedPlugins.values()];
     if (affected.length) {
@@ -136,9 +132,9 @@ const runFileChange = async localPath => {
             for (const plugin of plugins) buildPlugin(plugin, true);
 
             await (() =>
-                new Promise((res, rej) => {
-                    workerResolves.res = res;
-                    workerResolves.rej = rej;
+                new Promise<void>((res, rej) => {
+                    workerResolves.res = res as any;
+                    workerResolves.rej = rej as any;
                 }))();
             await promise1;
 
@@ -148,10 +144,10 @@ const runFileChange = async localPath => {
                 logBuild("Finished building");
                 workerResolves.code = "";
             }
-        } catch (e) {
+        } catch (e: any) {
             logBuildErr(
                 `Failed while building!\n${pc.reset(
-                    (e instanceof Error ? e : new Error(e)).stack
+                    String((e instanceof Error ? e : new Error(e)).stack)
                         .split("\n")
                         .map(x => `  ${x}`)
                         .join("\n"),

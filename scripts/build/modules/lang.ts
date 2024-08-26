@@ -3,8 +3,8 @@ import { join } from "node:path";
 
 import { format } from "prettier";
 
-import { prettierOptions } from "../lib/common.mjs";
-import { listPlugins } from "./plugins.mjs";
+import { prettierOptions } from "../lib/common.ts";
+import { listPlugins } from "./plugins.ts";
 
 const variableRules = [
     // You have {plugins} {plugins, plural, one {plugin} other {plugins}}!
@@ -15,12 +15,8 @@ const variableRules = [
 ];
 const replacerRegExp = /(\w+) {.*?} ?/g;
 
-/**
- * @param {string} text
- */
-function parseVariablesToRules(text) {
-    /** @type {import("../types").Lang.Rule[]} */
-    const rules = [];
+function parseVariablesToRules(text: string) {
+    const rules: import("../types").Lang.Rule[] = [];
 
     for (const regex of variableRules) {
         const matches = text.matchAll(regex);
@@ -73,20 +69,17 @@ function parseVariablesToRules(text) {
     return rules;
 }
 
-/** @param {string[]=} filter */
-export async function fixPluginLangs(filter = []) {
+export async function fixPluginLangs(filter: string[] = []) {
     for (const { lang: plugin } of (await listPlugins()).filter(plugin =>
         filter.length !== 0 ? filter.includes(plugin.name) : true,
     )) {
         if (!plugin) continue;
 
-        /** @type {Record<string, Record<string, string>>} */
-        const translations = JSON.parse(
+        const translations: Record<string, Record<string, string>> = JSON.parse(
             await readFile(join("lang/values", plugin + ".json"), "utf-8"),
         );
 
-        /** @type {Record<string, string>} */
-        const base = JSON.parse(
+        const base: Record<string, string> = JSON.parse(
             await readFile(join("lang/values/base", plugin + ".json"), "utf8"),
         );
 
@@ -116,8 +109,7 @@ export async function fixPluginLangs(filter = []) {
 }
 
 export async function makeLangDefs() {
-    /** @type {string[]} */
-    const chunks = [];
+    const chunks: string[] = [];
 
     // header
     chunks.push("export default interface LangValues {");
@@ -136,8 +128,7 @@ export async function makeLangDefs() {
             await readFile(join("lang/values/base", plugin + ".json"), "utf8"),
         );
 
-        /** @type {Record<string, import("../types").Lang.Rule[]>} */
-        const keyRulesMap = {};
+        const keyRulesMap: Record<string, import("../types").Lang.Rule[]> = {};
 
         for (const key of Object.keys(values)) {
             const rules = parseVariablesToRules(values[key]);

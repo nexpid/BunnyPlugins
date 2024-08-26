@@ -1,15 +1,15 @@
 import { readdir } from "node:fs/promises";
+import { Worker } from "node:worker_threads";
 
 import {
     bench,
     highlight,
     logScopeFailed,
     logScopeFinished,
-} from "../../common/statistics/print.mjs";
-import { isDev } from "../lib/common.mjs";
+} from "../../common/statistics/print.ts";
+import { isDev } from "../lib/common.ts";
 
-/** @param {boolean=} noDev */
-export async function listPlugins(noDev) {
+export async function listPlugins(noDev?: boolean) {
     const plugins = await readdir("src/plugins");
     const lang = await readdir("lang/values/base");
 
@@ -24,25 +24,23 @@ export async function listPlugins(noDev) {
         });
 }
 
-/** @type {import("../types").Worker.PluginWorkerRequest[]} */
-const pendingWorkers = [];
+const pendingWorkers: import("../types").Worker.PluginWorkerRequest[] = [];
 let usedWorkers = 0;
 
 export const workerResolves = {
     res: () => void 0,
-    rej: () => void 0,
+    rej: (() => void 0) as (error: any) => void,
+    rejected: false,
     code: "",
 };
 
-/** @type {Worker[]} */
-export const workers = [];
+export const workers: Worker[] = [];
 export let workerInd = 0;
 
-/**
- * @param {import("../types").Worker.PluginWorkerRequest} plugin
- * @param {boolean=} silent
- */
-export function buildPlugin(plugin, silent) {
+export function buildPlugin(
+    plugin: import("../types").Worker.PluginWorkerRequest,
+    silent?: boolean,
+) {
     const { code } = workerResolves;
 
     usedWorkers++;
@@ -56,8 +54,8 @@ export function buildPlugin(plugin, silent) {
         worker.addListener("message", data => {
             if (code !== workerResolves.code) return;
 
-            /** @type {import("../types").Worker.PluginWorkerResponse} */
-            const status = data.data ?? data;
+            const status: import("../types").Worker.PluginWorkerResponse =
+                data.data ?? data;
             if (workerResolves.rejected) return;
 
             const label = `Built plugin ${highlight(status.result === "yay" ? status.plugin : plugin.name)}`;

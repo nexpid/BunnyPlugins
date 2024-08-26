@@ -1,6 +1,5 @@
 import { cpus } from "node:os";
 import { join } from "node:path";
-import { Worker } from "node:worker_threads";
 
 import {
     bench,
@@ -10,28 +9,33 @@ import {
     logFinished,
     logHeader,
     runTask,
-} from "../common/statistics/print.mjs";
-import { isDev } from "./lib/common.mjs";
-import rejuvenatePlugins from "./lib/rejuvenate.mjs";
-import { fixPluginLangs, makeLangDefs } from "./modules/lang.mjs";
+} from "../common/statistics/print.ts";
+import { TsWorker } from "../common/worker/index.ts";
+import { isDev } from "./lib/common.ts";
+import rejuvenatePlugins from "./lib/rejuvenate.ts";
+import { fixPluginLangs, makeLangDefs } from "./modules/lang.ts";
 import {
     buildPlugin,
     listPlugins,
     workerResolves,
     workers,
-} from "./modules/plugins.mjs";
-import { writePluginReadmes, writeRootReadme } from "./modules/readmes.mjs";
+} from "./modules/plugins.ts";
+import { writePluginReadmes, writeRootReadme } from "./modules/readmes.ts";
 
 logDebug("Booting up Workers");
 
 await (() =>
-    new Promise(res => {
+    new Promise<void>(res => {
         let count = 0;
         for (let i = 0; i < cpus().length; i++)
             workers.push(
-                new Worker(
-                    join(import.meta.dirname, "modules/workers/plugins.mjs"),
-                    { workerData: { isDev } },
+                new TsWorker(
+                    join(import.meta.dirname, "modules/workers/plugins.ts"),
+                    {
+                        workerData: {
+                            isDev: String(isDev),
+                        },
+                    },
                 ).once("message", () => ++count >= workers.length && res()),
             );
     }))();
@@ -61,9 +65,9 @@ logHeader("Building plugins");
 for (const plugin of await listPlugins()) buildPlugin(plugin);
 
 await (() =>
-    new Promise((res, rej) => {
-        workerResolves.res = res;
-        workerResolves.rej = rej;
+    new Promise<void>((res, rej) => {
+        workerResolves.res = res as any;
+        workerResolves.rej = rej as any;
     }))();
 
 workers.forEach(x => x.terminate());

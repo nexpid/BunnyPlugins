@@ -3,15 +3,15 @@ import { join } from "node:path";
 
 import { format } from "prettier";
 
-import { stringifyChart } from "../lib/chart.mjs";
+import { stringifyChart } from "../lib/chart.ts";
 import {
     branch,
     isDevBranch,
     makeMdNote,
     markdownPrettierOptions,
     plural,
-} from "../lib/common.mjs";
-import { listPlugins } from "./plugins.mjs";
+} from "../lib/common.ts";
+import { listPlugins } from "./plugins.ts";
 
 const mdNote = makeMdNote("scripts/build/modules/readmes.ts", "md");
 const links = {
@@ -66,11 +66,7 @@ const shields = {
     },
 };
 
-/**
- * @param {import("../types").Readmes.Badge} badge
- * @param {boolean=} mdLink
- */
-function makeBadge(badge, mdLink) {
+function makeBadge(badge: import("../types").Readmes.Badge, mdLink?: boolean) {
     const chunks = [
         badge.text,
         badge.value && badge.value?.text,
@@ -97,11 +93,7 @@ function makeBadge(badge, mdLink) {
     else return img;
 }
 
-/**
- * @param {import("../types").Readmes.EndpointBadge} badge
- * @param {boolean=} mdLink
- */
-function makeEndpointBadge(badge, mdLink) {
+function makeEndpointBadge(badge: import("../types").Readmes.EndpointBadge, mdLink?: boolean) {
     const params = new URLSearchParams();
     params.append("style", "for-the-badge");
     params.append("label", badge.text);
@@ -121,21 +113,17 @@ function makeEndpointBadge(badge, mdLink) {
     else return img;
 }
 
-/** @param {noDev=} boolean */
-async function listPluginMetadatas(noDev) {
-    /** @type {import("../types").Readmes.Plugin[]} */
-    const plugins = [];
+async function listPluginMetadatas(noDev?: boolean) {
+    const plugins: import("../types").Readmes.Plugin[] = [];
 
     for (const { name: plugin } of await listPlugins(noDev)) {
-        /** @type {import("../types").Readmes.Manifest} */
-        const manifest = JSON.parse(
+        const manifest: import("../types").Readmes.Manifest = JSON.parse(
             await readFile(
                 join("src/plugins/", plugin, "manifest.json"),
                 "utf8",
             ),
         );
-        /** @type {import("../types").Readmes.Status} */
-        const status = JSON.parse(
+        const status: import("../types").Readmes.Status = JSON.parse(
             await readFile(join("src/plugins/", plugin, "status.json"), "utf8"),
         );
 
@@ -192,8 +180,7 @@ async function listPluginMetadatas(noDev) {
     return plugins;
 }
 
-/** @param {string[]=} filter */
-export async function writePluginReadmes(filter = []) {
+export async function writePluginReadmes(filter: string[] = []) {
     for (const plugin of (await listPluginMetadatas()).filter(plugin =>
         filter.length !== 0 ? filter.includes(plugin.name) : true,
     )) {

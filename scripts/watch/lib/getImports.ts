@@ -3,13 +3,11 @@ import { existsSync } from "node:fs";
 import { readFile } from "node:fs/promises";
 import { dirname, extname, join, resolve } from "node:path";
 
-import { logDebug } from "./print.mjs";
+import { logDebug } from "../../common/live/print.ts";
 
-/** @type {Map<string, Set<string>>} */
-export const dependencyMap = new Map();
+export const dependencyMap: Map<string, Set<string>> = new Map();
 
-/** @type {Map<string, string>} */
-export const hashMap = new Map();
+export const hashMap: Map<string, string> = new Map();
 
 const baseExtensions = [".d.ts", ".ts", ".js", ".mjs", ".cjs"];
 const jsxExtensions = [
@@ -22,11 +20,9 @@ export const allExtensions = [
     "",
 ];
 
-/** @type {Map<string, string | undefined>} */
-const foundFiles = new Map();
+const foundFiles: Map<string, string | undefined> = new Map();
 
-/** @param {string | undefined} path */
-function findFile(path) {
+function findFile(path: string) {
     if (foundFiles.has(path)) return foundFiles.get(path);
 
     const res = allExtensions
@@ -39,8 +35,7 @@ function findFile(path) {
 
 const stuffDir = resolve("src/stuff");
 
-/** @param {string} file */
-export default async function getDependencies(file) {
+export default async function getDependencies(file: string) {
     if (!allExtensions.includes(extname(file))) return;
 
     const dir = dirname(file);
@@ -52,10 +47,8 @@ export default async function getDependencies(file) {
     for (const match of rawMatches) {
         const module = match[1];
 
-        /** @type {string} */
-        let dep;
-        /** @type {boolean} */
-        let willWarn;
+        let dep: string | undefined;
+        let willWarn = false;
 
         if (module.match(/^\.\.?\//))
             (dep = findFile(join(dir, module))), (willWarn = true);
@@ -65,7 +58,7 @@ export default async function getDependencies(file) {
 
         if (dep) {
             if (!dependencyMap.has(dep)) dependencyMap.set(dep, new Set());
-            dependencyMap.get(dep).add(file);
+            dependencyMap.get(dep)!.add(file);
         } else if (willWarn && !dep) {
             logDebug(
                 `Couldn't find dep "${module}" from ${JSON.stringify(file)}`,
