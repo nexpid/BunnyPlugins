@@ -25,6 +25,7 @@ export namespace Readmes {
         vendetta: {
             icon: string;
         };
+        hash?: string;
     }
 
     export interface Status {

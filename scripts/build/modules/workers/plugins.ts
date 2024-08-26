@@ -58,8 +58,8 @@ async function buildPlugin(plugin: string, lang: string | null) {
         ),
     );
 
-    let langDefault: object;
-    let langValues: object;
+    let langDefault: object | null = null;
+    let langValues: object | null = null;
 
     if (lang) {
         const langDefaultFile = join("lang/values/base", `${lang}.json`);
@@ -182,11 +182,12 @@ async function buildPlugin(plugin: string, lang: string | null) {
         JSON.stringify(outManifest),
     );
 
-    await saveCache(plugin, bundle.cache);
+    if (bundle.cache) await saveCache(plugin, bundle.cache);
     return manifest.name;
 }
 
-parentPort!.postMessage("ready");
+if (parentPort) parentPort.postMessage("ready");
+else throw new Error("why is parentPort missing???");
 
 if (parentPort)
     parentPort.addListener("message", data =>

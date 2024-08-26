@@ -3,7 +3,7 @@ import { existsSync } from "node:fs";
 import { readFile } from "node:fs/promises";
 import { dirname, extname, join, resolve } from "node:path";
 
-import { logDebug } from "./print.ts";
+import { logDebug } from "../../common/live/print.ts";
 
 export const dependencyMap: Map<string, Set<string>> = new Map();
 
@@ -48,7 +48,7 @@ export default async function getDependencies(file: string) {
         const module = match[1];
 
         let dep: string | undefined;
-        let willWarn: boolean;
+        let willWarn = false;
 
         if (module.match(/^\.\.?\//))
             (dep = findFile(join(dir, module))), (willWarn = true);
@@ -58,7 +58,7 @@ export default async function getDependencies(file: string) {
 
         if (dep) {
             if (!dependencyMap.has(dep)) dependencyMap.set(dep, new Set());
-            dependencyMap.get(dep).add(file);
+            dependencyMap.get(dep)!.add(file);
         } else if (willWarn && !dep) {
             logDebug(
                 `Couldn't find dep "${module}" from ${JSON.stringify(file)}`,
