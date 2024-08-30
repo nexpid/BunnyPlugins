@@ -51,6 +51,7 @@ export default function TooMuchDataSheet({ navigation }: { navigation: any }) {
                         "alert.too_much_data.antied.desc",
                         {},
                     )}
+                    icon={getAssetIDByName("ic_edit_24px")}
                     onPress={async () => {
                         const { enabled } = plugins[antied.old];
 
@@ -95,6 +96,7 @@ export default function TooMuchDataSheet({ navigation }: { navigation: any }) {
                     "alert.too_much_data.ignore_plugins.desc",
                     {},
                 )}
+                icon={getAssetIDByName("ListBulletsIcon")}
                 onPress={() => {
                     hideActionSheet();
                     navigation.push("VendettaCustomPage", {
