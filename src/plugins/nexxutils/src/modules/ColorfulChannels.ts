@@ -85,8 +85,13 @@ export default new Module({
             this.patches.add(
                 after("render", RN.Image, ([{ source, style }]) => {
                     const name =
-                        typeof source === "number" &&
-                        getAssetByID(source)?.name;
+                        typeof source === "object" &&
+                        !Array.isArray(source) &&
+                        typeof source.original === "number"
+                            ? getAssetByID(source.original)?.name
+                            : typeof source === "number"
+                              ? getAssetByID(source)?.name
+                              : null;
                     if (!name) return;
 
                     const warninger = warnings.find(
@@ -118,7 +123,7 @@ export default new Module({
                             {},
                             React.createElement(RN.Image, {
                                 style: RN.StyleSheet.flatten(style),
-                                source: { uri: img.base },
+                                source: img.base,
                             }),
                             React.createElement(
                                 RN.View,
@@ -134,7 +139,7 @@ export default new Module({
                                         ...RN.StyleSheet.flatten(style),
                                         tintColor: img.color,
                                     },
-                                    source: { uri: img.overlay },
+                                    source: img.overlay,
                                 }),
                             ),
                         );
