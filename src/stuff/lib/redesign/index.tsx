@@ -8,12 +8,16 @@ import CompatSlider from "$/components/compat/CompatSlider";
 import * as t from "./types"; // shamelessly stolen from Bunny
 
 const NotFound = (prop: string, isFunction?: boolean) => () => {
-    React.useEffect(() => {
+    const trigger = () => {
         showToast(`${prop} not found! Search for PNF in Debug Logs!`);
         console.warn(
             `!! PNF ERROR !!\nMissing the redesign ${isFunction ? "function" : "component"}: ${prop}. Please bug @nexpid about this on Discord!`,
         );
-    }, []);
+    };
+
+    if (isFunction) trigger();
+    else React.useEffect(trigger, []);
+
     return null;
 };
 
@@ -77,6 +81,10 @@ export const FloatingActionButton = findPropPolyfill(
 export const PressableScale = (_PressableScale ??
     ReactNative.Pressable) as typeof ReactNative.Pressable;
 export const IconButton = findPropPolyfill(false, "IconButton") as t.IconButton;
+export const ContextMenu = findPropPolyfill(
+    false,
+    "ContextMenu",
+) as t.ContextMenu;
 
 // inputs
 export const Slider = (_Slider ? BetterSlider : CompatSlider) as t.Slider;

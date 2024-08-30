@@ -47,11 +47,12 @@ export type Button = React.FC<
 
 export type RowButton = React.FC<
     PrimitiveButton & {
+        icon?: ImageSourcePropType;
         label: string;
         subLabel?: string;
         variant?: "primary" | "secondary";
         trailing?: React.ReactNode;
-        draggable?: boolean;
+        disabled?: boolean;
         arrow?: boolean;
         /** Requires onPress to bet set */
         onPressIn?: () => void;
@@ -78,12 +79,33 @@ export type FAB = React.FC<{
 
 export type IconButton = React.FC<{
     icon: ImageSourcePropType | React.ReactNode;
-    onPress: () => void;
+    onPress?: () => void;
+    onLongPress?: () => void;
     loading?: boolean;
     disabled?: boolean;
     size?: "sm" | "md" | "lg";
     variant?: ButtonVariant;
     style?: ViewStyle;
+}>;
+
+export type ContextMenu = React.FC<{
+    title?: string;
+    triggerOnLongPress?: boolean;
+    align?: "left" | "right" | "above" | "below";
+    items: {
+        label: string;
+        variant: "default" | "destructive";
+        action: () => void;
+        iconSource?: number;
+        // TODO add IconComponent
+    }[];
+    children: (data: {
+        ref: React.MutableRefObject<any>;
+        onPress: (() => void) | undefined;
+        onLongPress: (() => void) | undefined;
+        onAccessibilityAction: () => void;
+        accessibilityActions: { name: string; label: string }[];
+    }) => React.ReactNode | undefined;
 }>;
 
 export type Slider = React.FC<{
@@ -108,6 +130,8 @@ export type TextInput = React.FC<{
     description?: React.ReactNode;
     editable?: boolean;
     focusable?: boolean;
+    onFocus?: () => void;
+    onBlur?: () => void;
     placeholder?: string;
     placeholderTextColor?: string;
     defaultValue?: string;
