@@ -88,11 +88,11 @@ const wss = new WebSocketServer({
     server,
 });
 
-const wssCatchup: Map<string, Set<string>> = new Map();
-const allCatchup: Set<string> = new Set();
+const wssCatchup: Map<string, number> = new Map();
 
 wss.on("connection", ws => {
-    let heartbeat, identity;
+    let heartbeat: NodeJS.Timeout,
+        ready = false;
 
     ws.addEventListener("message", event => {
         let data: import("./types").WSS.IncomingMessage;
@@ -102,18 +102,17 @@ wss.on("connection", ws => {
             return;
         }
 
-        if (
-            data.op === "connect" &&
-            typeof data.identity === "string" &&
-            !identity
-        ) {
-            identity = data.identity;
+        if (data.op === "connect" && typeof data.since === "number" && !ready) {
+            ready = true;
 
-            const catchup = wssCatchup.get(data.identity) ?? allCatchup;
+            const catchup = [...wssCatchup.entries()]
+                .filter(([_, date]) => date >= data.since)
+                .map(([plugin]) => plugin);
+
             ws.send(
                 JSON.stringify({
                     op: "connect",
-                    catchup: [...catchup.values()],
+                    catchup,
                 }),
             );
 
@@ -124,10 +123,7 @@ wss.on("connection", ws => {
         }
     });
 
-    ws.addEventListener("close", () => {
-        if (identity) wssCatchup.set(identity, new Set());
-        clearInterval(heartbeat);
-    });
+    ws.addEventListener("close", () => clearInterval(heartbeat));
 });
 
 function updateListener() {
@@ -140,10 +136,8 @@ function updateListener() {
                 `Rejuvenating ${pc.bold(plugins.length)} plugin${plugins.length !== 1 ? "s" : ""} for ${pc.bold(wss.clients.size)} client${wss.clients.size !== 1 ? "s" : ""}`,
             );
 
-            for (const plugin of plugins) {
-                allCatchup.add(plugin);
-                wssCatchup.forEach(set => set.add(plugin));
-            }
+            for (const plugin of plugins) wssCatchup.set(plugin, Date.now());
+
             wss.clients.forEach(ws =>
                 ws.send(JSON.stringify({ op: "update", update: plugins })),
             );

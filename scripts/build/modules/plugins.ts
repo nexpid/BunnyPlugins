@@ -51,7 +51,8 @@ export function buildPlugin(
 
         const worker = workers[usedWorkers - 1];
         worker.postMessage(plugin);
-        worker.addListener("message", data => {
+
+        const listener = (data: any) => {
             if (code !== workerResolves.code) return;
 
             const status: import("../types").Worker.PluginWorkerResponse =
@@ -67,7 +68,9 @@ export function buildPlugin(
                 usedWorkers--;
 
                 if (plugin) worker.postMessage(plugin);
-                else if (usedWorkers <= 0) workerResolves.res();
+                else if (usedWorkers <= 0)
+                    workers.forEach(x => x.emit("finished")),
+                        workerResolves.res();
             } else if (status.result === "nay") {
                 if (!silent) logScopeFailed(label);
 
@@ -75,7 +78,11 @@ export function buildPlugin(
                 workerResolves.rejected = true;
                 workerResolves.rej(status.err);
             }
-        });
+        };
+        worker.addListener("message", listener);
+        worker.once("finished", () =>
+            worker.removeListener("message", listener),
+        );
     }
 }
 

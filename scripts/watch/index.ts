@@ -1,7 +1,7 @@
 import { createHash, randomUUID } from "node:crypto";
 import { readdir, readFile } from "node:fs/promises";
 import { cpus } from "node:os";
-import { extname, join, resolve } from "node:path";
+import { extname, join } from "node:path";
 
 import chokidar from "chokidar";
 import pc from "picocolors";
@@ -27,13 +27,23 @@ import {
     logBuildErr,
     logDebug,
     logWatch,
+    logWatchErr,
 } from "../common/live/print.ts";
 import { TsWorker } from "../common/worker/index.ts";
 import getDependencies, {
     allExtensions,
     dependencyMap,
     hashMap,
+    slashResolve,
 } from "./lib/getImports.ts";
+
+const makeErrorGoodLooking = (e: any) =>
+    pc.reset(
+        String((e instanceof Error ? e : new Error(e)).stack)
+            .split("\n")
+            .map(x => `  ${x}`)
+            .join("\n"),
+    );
 
 logWatch("Booting up Workers");
 
@@ -61,47 +71,60 @@ for (const file of await readdir("src", {
     recursive: true,
 })) {
     if (file.isFile() && allExtensions.includes(extname(file.name)))
-        promises.push(getDependencies(resolve(join(file.path, file.name))));
+        promises.push(
+            getDependencies(
+                slashResolve(join(file.path, file.name)).replace(/\\/g, "/"),
+            ),
+        );
 }
 
 await Promise.all(promises);
 
 // meow
 
-const srcPath = resolve("src");
+const srcPath = slashResolve("src") + "/";
+const langPath = slashResolve("lang") + "/";
 
-/** @param {string} file */
-const runFileChange = async localPath => {
-    const file = resolve(localPath);
+const runFileChange = async (localPath: string) => {
+    const file = slashResolve(localPath);
     const newHash = createHash("sha256")
         .update(await readFile(file, "utf8"))
         .digest("hex");
     if (hashMap.get(file) === newHash) return;
 
-    logWatch(`File changed  ${pc.italic(pc.gray(localPath))}`);
-    await getDependencies(file);
-
     const affectedPlugins: Set<string> = new Set();
-    const checked: Set<string> = new Set();
 
-    const goThroughDeps = (deps: Set<string>) => {
-        for (const dep of deps) {
-            if (checked.has(dep)) continue;
-            checked.add(dep);
+    logWatch(`File changed  ${pc.italic(pc.gray(localPath))}`);
 
-            const [folder, plugin] = dep
-                .slice(srcPath.length + 1)
-                .split(/[\\/]/g);
-            if (folder === "plugins") affectedPlugins.add(plugin);
+    if (file.slice(langPath.length).startsWith("values/base/")) {
+        const [_, __, langFile] = file.slice(langPath.length).split("/");
 
-            if (dependencyMap.has(dep)) goThroughDeps(dependencyMap.get(dep)!);
-        }
-    };
+        affectedPlugins.add(
+            langFile.split(".").slice(0, -1).join(".").replace(/_/g, "-"),
+        );
+    } else {
+        await getDependencies(file);
 
-    const [_folder, _plugin] = file.slice(srcPath.length + 1).split(/[\\/]/g);
-    if (_folder === "plugins") affectedPlugins.add(_plugin);
+        const checked: Set<string> = new Set();
 
-    if (dependencyMap.has(file)) goThroughDeps(dependencyMap.get(file)!);
+        const goThroughDeps = (deps: Set<string>) => {
+            for (const dep of deps) {
+                if (checked.has(dep)) continue;
+                checked.add(dep);
+
+                const [folder, plugin] = dep.slice(srcPath.length).split("/");
+                if (folder === "plugins") affectedPlugins.add(plugin);
+
+                if (dependencyMap.has(dep))
+                    goThroughDeps(dependencyMap.get(dep)!);
+            }
+        };
+
+        const [_folder, _plugin] = file.slice(srcPath.length).split("/");
+        if (_folder === "plugins") affectedPlugins.add(_plugin);
+
+        if (dependencyMap.has(file)) goThroughDeps(dependencyMap.get(file)!);
+    }
 
     const affected = [...affectedPlugins.values()];
     if (affected.length) {
@@ -123,20 +146,18 @@ const runFileChange = async localPath => {
             );
 
             await fixPluginLangs(affected);
-            await makeLangDefs();
-
-            const promise1 = Promise.all([
+            const promise = Promise.all([
+                makeLangDefs(),
                 writePluginReadmes(affected),
                 writeRootReadme(),
-            ]);
-            for (const plugin of plugins) buildPlugin(plugin, true);
-
-            await (() =>
                 new Promise<void>((res, rej) => {
                     workerResolves.res = res as any;
                     workerResolves.rej = rej as any;
-                }))();
-            await promise1;
+                }),
+            ]);
+
+            for (const plugin of plugins) buildPlugin(plugin, true);
+            await promise;
 
             if (workerResolves.code === code) {
                 await rejuvenate();
@@ -145,14 +166,7 @@ const runFileChange = async localPath => {
                 workerResolves.code = "";
             }
         } catch (e: any) {
-            logBuildErr(
-                `Failed while building!\n${pc.reset(
-                    String((e instanceof Error ? e : new Error(e)).stack)
-                        .split("\n")
-                        .map(x => `  ${x}`)
-                        .join("\n"),
-                )}`,
-            );
+            logBuildErr(`Failed while building!\n${makeErrorGoodLooking(e)}`);
         }
     }
 };
@@ -161,11 +175,25 @@ if (!shouldRejuvenate())
     logDebug(`Rejuvenate is not running. Please run "pnpm serve"`);
 
 chokidar
-    .watch(["src/**/*.*"], {
+    .watch(["src/**/*.*", "lang/values/base/*.json"], {
         persistent: true,
         ignoreInitial: true,
     })
-    .on("add", runFileChange)
-    .on("change", runFileChange)
-    .on("unlink", runFileChange)
+    .on("add", path =>
+        runFileChange(path).catch(e =>
+            logWatchErr(
+                `Failed during runFileChange (${path})!\n${makeErrorGoodLooking(e)}`,
+            ),
+        ),
+    )
+    .on("change", path =>
+        runFileChange(path).catch(e =>
+            logWatchErr(
+                `Failed during runFileChange (${path})!\n${makeErrorGoodLooking(e)}`,
+            ),
+        ),
+    )
     .on("ready", () => logWatch("Ready!"));
+
+process.on("uncaughtException", () => {});
+process.on("unhandledRejection", () => {});

@@ -5,8 +5,11 @@ import { dirname, extname, join, resolve } from "node:path";
 
 import { logDebug } from "../../common/live/print.ts";
 
-export const dependencyMap: Map<string, Set<string>> = new Map();
+export function slashResolve(path: string) {
+    return resolve(path).replace(/\\/g, "/");
+}
 
+export const dependencyMap: Map<string, Set<string>> = new Map();
 export const hashMap: Map<string, string> = new Map();
 
 const baseExtensions = [".d.ts", ".ts", ".js", ".mjs", ".cjs"];
@@ -33,7 +36,7 @@ function findFile(path: string) {
     return res;
 }
 
-const stuffDir = resolve("src/stuff");
+const stuffDir = slashResolve("src/stuff");
 
 export default async function getDependencies(file: string) {
     if (!allExtensions.includes(extname(file))) return;

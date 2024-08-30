@@ -14,7 +14,7 @@ import esbuild from "rollup-plugin-esbuild";
 import tsConfigPaths from "rollup-plugin-tsconfig-paths";
 
 import { makeMdNote, markdownPrettierOptions } from "../../lib/common.ts";
-import { readCache, saveCache } from "../../lib/rollupCache.ts";
+import { saveCache } from "../../lib/rollupCache.ts";
 
 const mdNote = makeMdNote("scripts/build/modules/workers/plugins.ts", "md");
 
@@ -72,7 +72,8 @@ async function buildPlugin(plugin: string, lang: string | null) {
     }
 
     const bundle = await rollup({
-        cache: await readCache(plugin),
+        // cache: await readCache(plugin),
+        cache: false, // cache was turned off due to caching lang, which we don't want
         input: join("src/plugins", plugin, manifest.main),
         onwarn: () => void 0,
         plugins: [

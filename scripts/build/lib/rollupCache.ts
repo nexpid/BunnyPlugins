@@ -4,11 +4,14 @@ import { join } from "node:path";
 
 const cacheDir = join("node_modules/rollup/.cache");
 
-const serialize = data =>
-    JSON.stringify(data, (_, val) =>
-        typeof val === "bigint" ? `BigInt${val.toString()}BigInt` : val,
+const serialize = (data: object) =>
+    JSON.stringify(
+        data,
+        (_, val) =>
+            typeof val === "bigint" ? `BigInt${val.toString()}BigInt` : val,
+        4,
     );
-const deserialize = data =>
+const deserialize = (data: string) =>
     JSON.parse(data, (_, val) =>
         typeof val === "string" &&
         val.startsWith("BigInt") &&
@@ -17,13 +20,18 @@ const deserialize = data =>
             : val,
     );
 
-export async function saveCache(key: string, cache: import("rollup").RollupCache) {
+export async function saveCache(
+    key: string,
+    cache: import("rollup").RollupCache,
+) {
     if (!existsSync(cacheDir)) await mkdir(cacheDir, { recursive: true });
 
     await writeFile(join(cacheDir, `${key}.cache`), serialize(cache));
 }
 
-export async function readCache(key: string): Promise<import("rollup").RollupCache | undefined> {
+export async function readCache(
+    key: string,
+): Promise<import("rollup").RollupCache | undefined> {
     const location = join(cacheDir, `${key}.cache`);
     if (!existsSync(location)) return;
 

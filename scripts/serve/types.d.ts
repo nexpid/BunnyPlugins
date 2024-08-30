@@ -2,7 +2,7 @@ export namespace WSS {
     export type IncomingMessage =
         | {
               op: "connect";
-              identity: string;
+              since: number;
           }
         | {
               op: "ping";
