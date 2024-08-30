@@ -68,8 +68,30 @@ export default function patchIcons(
                         name: "bunny",
                         type: "png",
                     };
+                // custom themhed icons API
+                else if (
+                    source &&
+                    typeof source.uri === "string" &&
+                    typeof source.width === "number" &&
+                    typeof source.height === "number" &&
+                    typeof source.file === "string" &&
+                    source.allowIconTheming
+                ) {
+                    const [file, ...parent] = source.file
+                        .split("/")
+                        .reverse() as string[];
+                    const [ext, ...base] = file.split(".").reverse();
+
+                    asset = {
+                        httpServerLocation: `//_/external${parent[0] ? "/" : ""}${parent.reverse().join("/")}`,
+                        width: source.width,
+                        height: source.height,
+                        name: base.reverse().join("."),
+                        type: ext,
+                    };
+                }
                 // any other asset
-                else if (typeof props.source === "number")
+                else if (typeof source === "number")
                     asset = getAssetByID(source) as any;
 
                 if (!asset?.httpServerLocation) return orig(...args);

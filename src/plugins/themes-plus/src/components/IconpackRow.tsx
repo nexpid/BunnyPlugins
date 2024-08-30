@@ -8,6 +8,7 @@ import InlineCheckbox from "$/components/InlineCheckbox";
 import Text from "$/components/Text";
 import { Lang } from "$/lang";
 import { buttonVariantPolyfill, IconButton } from "$/lib/redesign";
+import { formatBytes } from "$/types";
 
 import { lang, vstorage } from "..";
 import { state, useState } from "../stuff/active";
@@ -16,7 +17,6 @@ import {
     isPackInstalled,
     uninstallIconpack,
 } from "../stuff/packInstaller";
-import { formatBytes } from "../stuff/util";
 import { Iconpack } from "../types";
 import ProgressCircle from "./ProgressCircle";
 
