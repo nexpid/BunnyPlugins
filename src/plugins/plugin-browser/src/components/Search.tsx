@@ -9,6 +9,10 @@ import { ErrorBoundary } from "@vendetta/ui/components";
 import { ContextMenu, IconButton, TextInput } from "$/lib/redesign";
 import { resolveSemanticColor } from "$/types";
 
+import SortDateNewestIcon from "../../assets/SortDateNewestIcon.png";
+import SortDateOldestIcon from "../../assets/SortDateOldestIcon.png";
+import SortNameAZIcon from "../../assets/SortNameAZIcon.png";
+import SortNameZAIcon from "../../assets/SortNameZAIcon.png";
 import { lang } from "..";
 import { Sort } from "./pages/PluginBrowserPage";
 
@@ -80,6 +84,12 @@ export default ({
                             label: lang.format(value, {}),
                             variant: "default",
                             action: () => filterSetSort.current(value as Sort),
+                            iconSource: {
+                                "sheet.sort.date_newest": SortDateNewestIcon,
+                                "sheet.sort.date_oldest": SortDateOldestIcon,
+                                "sheet.sort.name_az": SortNameAZIcon,
+                                "sheet.sort.name_za": SortNameZAIcon,
+                            }[value],
                         }))}>
                         {(props: any) => (
                             <IconButton

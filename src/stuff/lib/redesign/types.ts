@@ -96,7 +96,7 @@ export type ContextMenu = React.FC<{
         label: string;
         variant: "default" | "destructive";
         action: () => void;
-        iconSource?: number;
+        iconSource?: ImageSourcePropType;
         // TODO add IconComponent
     }[];
     children: (data: {
