@@ -37,7 +37,7 @@ const styles = stylesheet.createThemedStyleSheet({
         gap: 6,
     },
     pluginIcon: {
-        tintColor: semanticColors.TEXT_NORMAL,
+        tintColor: semanticColors.LOGO_PRIMARY,
         width: 18,
         height: 18,
     },
@@ -64,7 +64,7 @@ interface CardProps {
     headerLabel: React.ReactNode;
     headerSuffix?: React.ReactNode;
     headerSublabel?: React.ReactNode;
-    headerIcon?: string;
+    headerIcon?: number;
     descriptionLabel?: string;
     actions: Action[];
     overflowTitle: string;
@@ -111,19 +111,16 @@ export default function Card(props: CardProps) {
                 <RN.View style={styles.content}>
                     <Stack spacing={0}>
                         <RN.View style={styles.title}>
-                            {props.headerIcon &&
-                                getAssetIDByName(props.headerIcon) && (
-                                    <RN.Image
-                                        style={styles.pluginIcon}
-                                        resizeMode="cover"
-                                        source={getAssetIDByName(
-                                            props.headerIcon,
-                                        )}
-                                    />
-                                )}
+                            {props.headerIcon && (
+                                <RN.Image
+                                    style={styles.pluginIcon}
+                                    resizeMode="cover"
+                                    source={props.headerIcon}
+                                />
+                            )}
                             <Text
-                                variant="heading-md/semibold"
-                                color="TEXT_NORMAL"
+                                variant="heading-lg/semibold"
+                                color="HEADER_PRIMARY"
                                 lineClamp={1}>
                                 {props.headerLabel}
                             </Text>
@@ -168,18 +165,14 @@ export default function Card(props: CardProps) {
                                             header: {
                                                 title: props.overflowTitle,
                                                 icon: props.headerIcon &&
-                                                    getAssetIDByName(
-                                                        props.headerIcon,
-                                                    ) && (
+                                                    props.headerIcon && (
                                                         <FormRow.Icon
-                                                            source={getAssetIDByName(
-                                                                props.headerIcon,
-                                                            )}
+                                                            source={
+                                                                props.headerIcon
+                                                            }
                                                         />
                                                     ),
-                                                onClose: () => {
-                                                    hideActionSheet();
-                                                },
+                                                onClose: hideActionSheet,
                                             },
                                             options: props.overflowActions?.map(
                                                 i => ({
@@ -202,7 +195,7 @@ export default function Card(props: CardProps) {
                     </RN.View>
                 </RN.View>
                 {props.descriptionLabel && (
-                    <Text variant="text-md/normal" color="TEXT_NORMAL">
+                    <Text variant="text-md/medium" color="TEXT_NORMAL">
                         {props.descriptionLabel}
                     </Text>
                 )}

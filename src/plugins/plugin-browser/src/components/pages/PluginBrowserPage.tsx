@@ -4,8 +4,6 @@ import { showToast } from "@vendetta/ui/toasts";
 import { safeFetch } from "@vendetta/utils";
 import fuzzysort from "fuzzysort";
 
-import { ActionSheet } from "$/components/ActionSheet";
-import ChooseSheet from "$/components/sheets/ChooseSheet";
 import { FlashList } from "$/deps";
 import { managePage } from "$/lib/ui";
 
@@ -17,7 +15,7 @@ import { FullPlugin } from "../../types";
 import PluginCard from "../PluginCard";
 import Search from "../Search";
 
-enum Sort {
+export enum Sort {
     DateNewest = "sheet.sort.date_newest",
     DateOldest = "sheet.sort.date_oldest",
     NameAZ = "sheet.sort.name_az",
@@ -38,27 +36,28 @@ export default () => {
     const sortedData = React.useMemo(() => {
         if (!parsed) return [];
 
-        let dt = search
-            ? fuzzysort
-                  .go(search, parsed, {
-                      keys: [
-                          "vendetta.original",
-                          "name",
-                          "description",
-                          "authors.0.name",
-                          "authors.1.name",
-                          "authors.2.name", // THREE authors
-                      ],
-                  })
-                  .map(x => x.obj)
-            : parsed.slice();
+        if (search)
+            return fuzzysort
+                .go(search, parsed, {
+                    keys: [
+                        "vendetta.original",
+                        "name",
+                        "description",
+                        "authors.0.name",
+                        "authors.1.name",
+                        "authors.2.name", // THREE authors
+                    ],
+                })
+                .map(x => x.obj);
+
+        let sorted = parsed.slice();
         if ([Sort.NameAZ, Sort.NameZA].includes(sort))
-            dt = dt.sort((a, b) =>
+            sorted = sorted.sort((a, b) =>
                 a.name < b.name ? -1 : a.name > b.name ? 1 : 0,
             );
-        if ([Sort.NameZA, Sort.DateNewest].includes(sort)) dt.reverse();
+        if ([Sort.NameZA, Sort.DateNewest].includes(sort)) sorted.reverse();
 
-        return dt;
+        return sorted;
     }, [sort, parsed, search]);
 
     React.useEffect(() => {
@@ -117,19 +116,7 @@ export default () => {
             ListHeaderComponent={
                 <Search
                     onChangeText={setSearch}
-                    onPressFilters={() => {
-                        ActionSheet.open(ChooseSheet, {
-                            title: lang.format("sheet.sort.title", {}),
-                            value: sort,
-                            options: Object.values(Sort).map(value => ({
-                                name: lang.format(value, {}),
-                                value,
-                            })),
-                            callback: val => {
-                                currentSetSort.current(val as Sort);
-                            },
-                        });
-                    }}
+                    filterSetSort={currentSetSort}
                 />
             }
             ListFooterComponent={<RN.View style={{ height: 20 }} />}

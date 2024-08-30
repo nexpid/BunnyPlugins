@@ -98,7 +98,7 @@ export default function PluginCard({
                 item.authors[0] &&
                 `by ${item.authors.map(x => x.name).join(", ")}`
             }
-            headerIcon={item.vendetta.icon}
+            headerIcon={getAssetIDByName(item.vendetta.icon ?? "")}
             descriptionLabel={item.description}
             overflowTitle={item.name}
             actions={
@@ -143,6 +143,19 @@ export default function PluginCard({
                         clipboard.setString(proxiedLink);
                     },
                 },
+                {
+                    label: lang.format("sheet.plugin.copy_unproxied_link", {}),
+                    icon: "CopyIcon",
+                    onPress: () => {
+                        showToast(
+                            lang.format("toast.copy_link", {}),
+                            getAssetIDByName("CopyIcon"),
+                        );
+                        clipboard.setString(
+                            "https://" + item.vendetta.original,
+                        );
+                    },
+                },
                 ...(githubLink
                     ? [
                           {
@@ -172,19 +185,6 @@ export default function PluginCard({
                           },
                       ]
                     : []),
-                {
-                    label: lang.format("sheet.plugin.copy_unproxied_link", {}),
-                    icon: "CopyIcon",
-                    onPress: () => {
-                        showToast(
-                            lang.format("toast.copy_link", {}),
-                            getAssetIDByName("CopyIcon"),
-                        );
-                        clipboard.setString(
-                            "https://" + item.vendetta.original,
-                        );
-                    },
-                },
             ]}
             disabled={isDisabled}
         />

@@ -6,8 +6,11 @@ import { semanticColors } from "@vendetta/ui";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { ErrorBoundary } from "@vendetta/ui/components";
 
-import { IconButton, TextInput } from "$/lib/redesign";
+import { ContextMenu, IconButton, TextInput } from "$/lib/redesign";
 import { resolveSemanticColor } from "$/types";
+
+import { lang } from "..";
+import { Sort } from "./pages/PluginBrowserPage";
 
 function SearchIcon() {
     return (
@@ -26,12 +29,15 @@ function SearchIcon() {
 
 export default ({
     onChangeText,
-    onPressFilters,
+    filterSetSort,
 }: {
     onChangeText: (v: string) => void;
-    onPressFilters: () => void;
+    filterSetSort: React.MutableRefObject<
+        React.Dispatch<React.SetStateAction<Sort>>
+    >;
 }) => {
     const [query, setQuery] = React.useState("");
+    const [focused, setFocused] = React.useState(false);
 
     const onChange = (value: string) => {
         setQuery(value);
@@ -63,14 +69,28 @@ export default ({
                         autoCorrect={false}
                         value={query}
                         isRound
+                        onFocus={() => setFocused(true)}
+                        onBlur={() => setFocused(false)}
                     />
                 </RN.View>
-                <IconButton
-                    onPress={onPressFilters}
-                    icon={getAssetIDByName("FiltersHorizontalIcon")}
-                    size="md"
-                    variant="secondary"
-                />
+                {!focused && !query && (
+                    <ContextMenu
+                        title={lang.format("sheet.sort.title", {})}
+                        items={Object.values(Sort).map(value => ({
+                            label: lang.format(value, {}),
+                            variant: "default",
+                            action: () => filterSetSort.current(value as Sort),
+                        }))}>
+                        {(props: any) => (
+                            <IconButton
+                                icon={getAssetIDByName("FiltersHorizontalIcon")}
+                                size="md"
+                                variant="tertiary"
+                                {...props}
+                            />
+                        )}
+                    </ContextMenu>
+                )}
             </RN.View>
         </ErrorBoundary>
     );

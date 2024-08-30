@@ -6,6 +6,7 @@ export default interface LangValues {
             themes: { themes: number };
             fonts: { fonts: number };
             "toast.backup_saved": { file: string };
+            "toast.fetch_error": { urlpath: string };
             "settings.your_data.last_synced": { date: string };
             "sheet.import_data.unproxied_plugins": { count: string };
             "sheet.import_data.plugins": { count: string };
@@ -29,6 +30,8 @@ export default interface LangValues {
             };
             "log.import.select_theme.success": { theme: string };
             "log.import.select_theme.fail": { theme: string };
+            "alert.too_much_data.body": { storage: string };
+            "page.ignored_plugins.title": { count: string };
             "log.import.result": {
                 plugins: string;
                 themes: string;
