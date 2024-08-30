@@ -22,7 +22,7 @@ const jsxExtensions = [
 ];
 export const allExtensions = [
     ...jsxExtensions,
-    ...jsxExtensions.map(ext => `\\index${ext}`),
+    ...jsxExtensions.map(ext => `/index${ext}`),
     "",
 ];
 
@@ -56,7 +56,7 @@ export default async function getDependencies(file: string) {
         let dep: string | undefined;
         let willWarn = false;
 
-        if (module.match(/^\.\.?\//))
+        if (module.match(/^\.\.?\/?/))
             (dep = findFile(slashJoin(dir, module))), (willWarn = true);
         else if (module.startsWith("$/"))
             (dep = findFile(slashJoin(stuffDir, module.slice(2)))),
