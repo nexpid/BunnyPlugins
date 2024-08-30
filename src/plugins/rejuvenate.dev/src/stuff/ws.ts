@@ -1,4 +1,4 @@
-import { settings } from "@vendetta";
+import { logger, settings } from "@vendetta";
 import {
     fetchPlugin,
     plugins,
@@ -8,11 +8,12 @@ import {
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { showToast } from "@vendetta/ui/toasts";
 
-import { getPluginUrl, identity } from "./constants";
+import { getPluginUrl } from "./constants";
 
 export let timeout: any, ws: WebSocket;
+let since = Date.now();
 
-async function refetchPlugins(raw: string[], quiet?: boolean) {
+async function refetchPlugins(raw: string[], catchup?: boolean) {
     const refetching = raw
         .map(id => plugins[`http://${getPluginUrl()}/${id}/`])
         .filter(x => !!x);
@@ -23,19 +24,19 @@ async function refetchPlugins(raw: string[], quiet?: boolean) {
         if (plugin.enabled) await startPlugin(plugin.id);
     }
 
-    if (!quiet && refetching[0])
+    if (refetching[0])
         showToast(
-            `Rejuvenated ${refetching.length} plugin${refetching.length !== 1 ? "s" : ""}`,
+            `Rejuvenated ${refetching.length} plugin${refetching.length !== 1 ? "s" : ""}${catchup ? " (catchup)" : ""}`,
             getAssetIDByName("AppsIcon"),
         );
 }
 
 function connectToWs() {
     ws = new WebSocket(`ws://${getPluginUrl()}`);
-    console.log(`Opened WS!`);
+    logger.log("Connected to WS!");
 
     ws.addEventListener("open", () =>
-        ws.send(JSON.stringify({ op: "connect", identity })),
+        ws.send(JSON.stringify({ op: "connect", since })),
     );
     ws.addEventListener("message", event => {
         let data: import("$/../../scripts/serve/types").WSS.OutgoingMessage;
@@ -46,13 +47,14 @@ function connectToWs() {
         }
 
         if (data.op === "ping") ws.send(JSON.stringify({ op: "ping" }));
-        // else if (data.op === "connect" && !initial)
-        //     refetchPlugins(data.catchup, true);
+        else if (data.op === "connect") refetchPlugins(data.catchup, true);
         else if (data.op === "update") refetchPlugins(data.update);
     });
     ws.addEventListener(
         "close",
-        ev => ev?.reason !== "plugin stopped" && tryToConnect(),
+        ev =>
+            ev?.reason !== "plugin stopped" &&
+            ((since = Date.now()), tryToConnect()),
     );
 }
 
