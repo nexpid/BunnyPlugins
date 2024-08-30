@@ -84,11 +84,10 @@ export async function fixPluginLangs(filter: string[] = []) {
         );
 
         for (const entries of Object.values(translations)) {
-            for (const key of Object.keys(entries)) {
+            for (const key of Object.keys(entries))
                 if (!base[key]) delete entries[key];
                 else if (translations.en[key] !== base[key])
                     entries[key] = base[key];
-            }
 
             for (const key of Object.keys(base))
                 if (!entries[key]) entries[key] = base[key];

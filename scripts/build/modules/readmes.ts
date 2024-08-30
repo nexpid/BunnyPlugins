@@ -93,7 +93,10 @@ function makeBadge(badge: import("../types").Readmes.Badge, mdLink?: boolean) {
     else return img;
 }
 
-function makeEndpointBadge(badge: import("../types").Readmes.EndpointBadge, mdLink?: boolean) {
+function makeEndpointBadge(
+    badge: import("../types").Readmes.EndpointBadge,
+    mdLink?: boolean,
+) {
     const params = new URLSearchParams();
     params.append("style", "for-the-badge");
     params.append("label", badge.text);
