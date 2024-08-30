@@ -37,6 +37,9 @@ importers:
       fuzzysort:
         specifier: ^2.0.4
         version: 2.0.4
+      image-size:
+        specifier: ^1.1.1
+        version: 1.1.1
       mime:
         specifier: ^4.0.4
         version: 4.0.4

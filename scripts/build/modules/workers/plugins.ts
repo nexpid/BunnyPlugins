@@ -1,12 +1,14 @@
 import { createHash } from "node:crypto";
 import { existsSync } from "node:fs";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
-import { extname, join } from "node:path";
+import { dirname, extname, join } from "node:path";
+import { promisify } from "node:util";
 import { parentPort, workerData } from "node:worker_threads";
 
 import commonjs from "@rollup/plugin-commonjs";
 import nodeResolve from "@rollup/plugin-node-resolve";
 import { transform } from "@swc/core";
+import imageSize from "image-size";
 import Mime from "mime";
 import { format } from "prettier";
 import { rollup } from "rollup";
@@ -16,6 +18,7 @@ import tsConfigPaths from "rollup-plugin-tsconfig-paths";
 import { makeMdNote, markdownPrettierOptions } from "../../lib/common.ts";
 import { saveCache } from "../../lib/rollupCache.ts";
 
+const sizeOf = promisify(imageSize);
 const mdNote = makeMdNote("scripts/build/modules/workers/plugins.ts", "md");
 
 const { isDev } = workerData;
@@ -116,27 +119,70 @@ async function buildPlugin(plugin: string, lang: string | null) {
             {
                 name: "file-parser",
                 async transform(code, id) {
-                    const parsers = {
-                        text: ["html", "css", "svg"],
-                        raw: ["json"],
-                        uri: ["png"],
-                    };
+                    const ext = extname(id);
 
-                    const ext = extname(id).slice(1);
-                    const mode = Object.entries(parsers).find(([_, v]) =>
-                        v.includes(ext),
-                    )?.[0];
-                    if (!mode) return null;
+                    if (
+                        [
+                            ".png",
+                            ".jpg",
+                            ".jpeg",
+                            ".bmp",
+                            ".gif",
+                            ".webp",
+                            ".psd",
+                        ].includes(ext)
+                    ) {
+                        const dimensions = (await sizeOf(id))!;
 
-                    let thing: string | null = null;
-                    if (mode === "text") thing = JSON.stringify(code);
-                    else if (mode === "raw") thing = code;
-                    else if (mode === "uri")
-                        thing = JSON.stringify(
-                            `data:${Mime.getType(id)};base64,${(await readFile(id)).toString("base64")}`,
-                        );
+                        const checkTpConfig = async (
+                            root: string,
+                        ): Promise<{
+                            config: { root: string };
+                            location: string;
+                        } | null> =>
+                            existsSync(join(root, "tpconfig.json"))
+                                ? {
+                                      config: JSON.parse(
+                                          await readFile(
+                                              join(root, "tpconfig.json"),
+                                              "utf8",
+                                          ),
+                                      ),
+                                      location: root,
+                                  }
+                                : null;
 
-                    if (thing) return { code: `export default ${thing}` };
+                        // only support one subfolder
+                        const tpConfig =
+                            (await checkTpConfig(dirname(id))) ??
+                            (await checkTpConfig(dirname(dirname(id))));
+
+                        return {
+                            code: `export default ${JSON.stringify({
+                                uri: `data:${Mime.getType(id)};base64,${(await readFile(id)).toString("base64")}`,
+                                width: dimensions.width,
+                                height: dimensions.height,
+                                file: tpConfig
+                                    ? join(
+                                          tpConfig.config.root,
+                                          id.slice(
+                                              tpConfig.location.length + 1,
+                                          ),
+                                      ).replace(/\\/g, "/")
+                                    : null,
+                                allowIconTheming: !!tpConfig,
+                            })};`,
+                        };
+                    } else if (
+                        [".html", ".css", ".svg", ".json"].includes(ext)
+                    ) {
+                        return {
+                            code:
+                                ext === ".json"
+                                    ? `export default ${code};`
+                                    : `export default ${JSON.stringify(code)};`,
+                        };
+                    }
                 },
             },
             esbuild({

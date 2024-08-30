@@ -1,18 +1,25 @@
-declare module "*.svg" {
-    const content: string;
-    export default content;
-}
-declare module "*.png" {
-    const content: string;
-    export default content;
+declare module "*.html" {
+    const text: string;
+    export default text;
 }
 declare module "*.css" {
-    const content: string;
-    export default content;
+    const text: string;
+    export default text;
 }
-declare module "*.html" {
-    const content: string;
-    export default content;
+declare module "*.svg" {
+    const text: string;
+    export default text;
+}
+
+declare module "*.png" {
+    const icon: {
+        uri: string;
+        width: number;
+        height: number;
+        file: string | null;
+        allowIconTheming: boolean;
+    };
+    export default icon;
 }
 
 declare const IS_DEV: boolean;

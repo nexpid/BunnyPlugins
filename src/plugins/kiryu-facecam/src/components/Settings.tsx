@@ -133,7 +133,7 @@ const SettingsKyriu = () => {
                     },
                 ]}>
                 <RN.Image
-                    source={{ uri: kazuma }}
+                    source={kazuma}
                     style={kyriuStyles.empty}
                     resizeMode="stretch"
                 />

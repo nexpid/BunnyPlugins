@@ -160,7 +160,7 @@ export default function Kiryu({ oldUI }: { oldUI: boolean }) {
                     },
                 ]}>
                 <RN.Image
-                    source={{ uri: kazuma }}
+                    source={kazuma}
                     style={[
                         kyriuStyles.empty,
                         {

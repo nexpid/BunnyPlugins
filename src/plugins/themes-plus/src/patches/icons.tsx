@@ -144,6 +144,7 @@ export default function patchIcons(
                         },
                         width: asset.width,
                         height: asset.height,
+                        original: props.source,
                     };
 
                 const ret = orig(...args);

@@ -251,17 +251,18 @@ export default () => {
                                     );
                                     vstorage.colors = theme.colors;
 
-                                    // @ts-expect-error Invalid type!!
-                                    showToast("Imported Repainter theme", {
-                                        uri: RepainterIcon,
-                                    });
+                                    showToast(
+                                        "Imported Repainter theme",
+                                        // @ts-expect-error Invalid type!!
+                                        RepainterIcon,
+                                    );
                                 },
                                 confirmColor: "brand" as ButtonColors,
                                 cancelText: "Cancel",
                             });
                         }}>
                         <RN.Image
-                            source={{ uri: RepainterIcon }}
+                            source={RepainterIcon}
                             style={styles.labelIcon}
                             resizeMode="cover"
                         />

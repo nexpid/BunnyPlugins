@@ -64,7 +64,7 @@ export function getIconOverlay(
                         plus,
                         `${ic}__overlay`,
                         <RN.Image
-                            source={{ uri: check }}
+                            source={check}
                             style={[
                                 style,
                                 {
@@ -89,7 +89,7 @@ export function getIconOverlay(
                         plus,
                         `${ic}__overlay`,
                         <RN.Image
-                            source={{ uri: check }}
+                            source={check}
                             style={[
                                 style,
                                 {
