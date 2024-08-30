@@ -1,27 +1,63 @@
+import { logger } from "@vendetta";
 import { React, ReactNative as RN } from "@vendetta/metro/common";
 import { plugins } from "@vendetta/plugins";
 import { showConfirmationAlert } from "@vendetta/ui/alerts";
 import { getAssetIDByName } from "@vendetta/ui/assets";
-import { Forms, Search } from "@vendetta/ui/components";
+import { Search } from "@vendetta/ui/components";
+import { showToast } from "@vendetta/ui/toasts";
 
-import { buttonVariantPolyfill, IconButton } from "$/lib/redesign";
+import { buttonVariantPolyfill, IconButton, RowButton } from "$/lib/redesign";
 import { managePage } from "$/lib/ui";
+import { formatBytes } from "$/types";
 
 import { lang, vstorage } from "../..";
-
-const { FormCheckboxRow, FormRow } = Forms;
+import { grabEverything } from "../../stuff/syncStuff";
 
 export default function IgnoredPluginsPage() {
     const [search, setSearch] = React.useState("");
+    const [sizedPlugins, setSizedPlugins] = React.useState<
+        | {
+              id: string;
+              plugin: Plugin;
+              size: number;
+          }[]
+        | null
+    >(null);
     const [_, forceUpdate] = React.useReducer(x => ~x, 0);
 
-    React.useEffect(() => {
-        setSearch("");
-    }, []);
+    React.useEffect(() => setSearch(""), []);
+    React.useEffect(
+        () => (
+            grabEverything(true)
+                .then(val =>
+                    setSizedPlugins(
+                        Object.entries(plugins)
+                            .map(([id, plugin]) => ({
+                                id,
+                                plugin,
+                                size: (val.plugins[id]?.storage ?? "").length,
+                            }))
+                            .sort((a, b) => b.size - a.size),
+                    ),
+                )
+                .catch(
+                    e => (
+                        showToast(
+                            "Failed to grab plugins womp womp what a bummer",
+                        ),
+                        logger.error("grabEverything", e)
+                    ),
+                ),
+            void 0
+        ),
+        [],
+    );
 
     managePage(
         {
-            title: lang.format("page.ignored_plugins.title", {}),
+            title: lang.format("page.ignored_plugins.title", {
+                count: vstorage.config.ignoredPlugins.length.toString(),
+            }),
             headerRight: () => (
                 <IconButton
                     onPress={() => {
@@ -60,6 +96,9 @@ export default function IgnoredPluginsPage() {
         vstorage.config.ignoredPlugins.length,
     );
 
+    if (!sizedPlugins)
+        return <RN.ActivityIndicator style={{ flex: 1 }} size="large" />;
+
     return (
         <RN.FlatList
             ListHeaderComponent={
@@ -72,32 +111,74 @@ export default function IgnoredPluginsPage() {
             }
             style={{ paddingHorizontal: 10, paddingTop: 10 }}
             contentContainerStyle={{ paddingBottom: 20 }}
-            data={Object.entries(plugins).filter(x =>
-                x[1].manifest.name.toLowerCase().includes(search),
+            ItemSeparatorComponent={() => <RN.View style={{ height: 8 }} />}
+            data={sizedPlugins.filter(x =>
+                x.plugin.manifest.name.toLowerCase().includes(search),
             )}
-            renderItem={({ item: [id, item] }) => {
+            renderItem={({ item: { id, plugin, size } }) => {
                 return (
-                    <FormCheckboxRow
-                        label={item.manifest.name}
-                        leading={
-                            <FormRow.Icon
-                                source={getAssetIDByName(
-                                    item.manifest.vendetta?.icon ?? "",
+                    <RowButton
+                        icon={getAssetIDByName(
+                            plugin.manifest.vendetta?.icon ?? "",
+                        )}
+                        label={plugin.manifest.name}
+                        subLabel={formatBytes(size)}
+                        arrow={false}
+                        trailing={
+                            <IconButton
+                                variant={
+                                    vstorage.config.ignoredPlugins.includes(id)
+                                        ? "primary"
+                                        : "secondary"
+                                }
+                                size="md"
+                                icon={getAssetIDByName(
+                                    vstorage.config.ignoredPlugins.includes(id)
+                                        ? "EyeIcon"
+                                        : "EyeSlashIcon",
                                 )}
+                                onPress={() => {
+                                    if (
+                                        vstorage.config.ignoredPlugins.includes(
+                                            id,
+                                        )
+                                    )
+                                        vstorage.config.ignoredPlugins.splice(
+                                            vstorage.config.ignoredPlugins.indexOf(
+                                                id,
+                                            ),
+                                            1,
+                                        );
+                                    else
+                                        vstorage.config.ignoredPlugins.push(id);
+                                    forceUpdate();
+                                }}
                             />
                         }
-                        onPress={() => {
-                            if (vstorage.config.ignoredPlugins.includes(id))
-                                vstorage.config.ignoredPlugins.splice(
-                                    vstorage.config.ignoredPlugins.indexOf(id),
-                                    1,
-                                );
-                            else vstorage.config.ignoredPlugins.push(id);
-                            forceUpdate();
-                        }}
-                        selected={vstorage.config.ignoredPlugins.includes(id)}
                     />
                 );
+                // return (
+                //     <FormCheckboxRow
+                //         label={item.manifest.name}
+                //         leading={
+                //             <FormRow.Icon
+                //                 source={getAssetIDByName(
+                //                     item.manifest.vendetta?.icon ?? "",
+                //                 )}
+                //             />
+                //         }
+                //         onPress={() => {
+                //             if (vstorage.config.ignoredPlugins.includes(id))
+                //                 vstorage.config.ignoredPlugins.splice(
+                //                     vstorage.config.ignoredPlugins.indexOf(id),
+                //                     1,
+                //                 );
+                //             else vstorage.config.ignoredPlugins.push(id);
+                //             forceUpdate();
+                //         }}
+                //         selected={vstorage.config.ignoredPlugins.includes(id)}
+                //     />
+                // );
             }}
         />
     );

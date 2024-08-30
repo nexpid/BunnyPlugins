@@ -25,6 +25,7 @@ export const vstorage = storage as {
     };
     realTrackingAnalyticsSentToChina: {
         pressedSettings?: boolean;
+        tooMuchData?: boolean;
     };
 };
 
@@ -48,7 +49,18 @@ const autoSync = async () => {
 
     const everything = await grabEverything();
     if (JSON.stringify(cache.data) !== JSON.stringify(everything))
-        debounceSync(async () => saveData(everything));
+        debounceSync(async () => {
+            try {
+                await saveData(everything);
+            } catch (e: any) {
+                const str = e?.message;
+                if (str.includes("request entity too large")) {
+                    vstorage.realTrackingAnalyticsSentToChina.tooMuchData =
+                        true;
+                    vstorage.config.autoSync = false;
+                }
+            }
+        });
 };
 
 const emitterSymbol = Symbol.for("vendetta.storage.emitter");
@@ -69,6 +81,7 @@ export default {
         };
         vstorage.realTrackingAnalyticsSentToChina ??= {
             pressedSettings: false,
+            tooMuchData: false,
         };
 
         const emitters = {

@@ -24,7 +24,7 @@ import {
     installFont,
 } from "./fonts";
 
-export async function grabEverything(): Promise<UserData> {
+export async function grabEverything(debug?: boolean): Promise<UserData> {
     const sync = {
         plugins: {},
         themes: {},
@@ -35,7 +35,8 @@ export async function grabEverything(): Promise<UserData> {
     } as UserData;
 
     for (const item of Object.values(plugins)) {
-        if (vstorage.config.ignoredPlugins.includes(item.id)) continue;
+        if (!debug && vstorage.config.ignoredPlugins.includes(item.id))
+            continue;
 
         const storage = await createMMKVBackend(item.id).get();
         sync.plugins[item.id] = {

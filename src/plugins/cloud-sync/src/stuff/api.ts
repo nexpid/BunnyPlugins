@@ -1,12 +1,16 @@
+import { logger } from "@vendetta";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { showToast } from "@vendetta/ui/toasts";
 
+import { lang } from "..";
 import constants from "../constants";
 import { useAuthorizationStore } from "../stores/AuthorizationStore";
 import { useCacheStore } from "../stores/CacheStore";
 import { UserData } from "../types";
 
-export async function authFetch(url: RequestInfo, options?: RequestInit) {
+export async function authFetch(_url: string | URL, options?: RequestInit) {
+    const url = new URL(_url);
+
     const res = await fetch(url, {
         ...options,
         headers: {
@@ -18,7 +22,11 @@ export async function authFetch(url: RequestInfo, options?: RequestInit) {
     if (res.ok) return res;
     else {
         const text = await res.text();
-        showToast(text, getAssetIDByName("CircleXIcon-primary"));
+        showToast(
+            lang.format("toast.fetch_error", { urlpath: url.pathname }),
+            getAssetIDByName("CircleXIcon-primary"),
+        );
+        logger.error("authFetch error", url.toString(), text);
         throw new Error(text);
     }
 }

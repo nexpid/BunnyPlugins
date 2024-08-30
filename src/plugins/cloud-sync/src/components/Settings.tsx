@@ -1,4 +1,4 @@
-import { settings } from "@vendetta";
+import { logger, plugin, settings } from "@vendetta";
 import {
     i18n,
     NavigationNative,
@@ -7,6 +7,7 @@ import {
     stylesheet,
     url,
 } from "@vendetta/metro/common";
+import { storage } from "@vendetta/plugin";
 import { useProxy } from "@vendetta/storage";
 import { semanticColors } from "@vendetta/ui";
 import { showConfirmationAlert } from "@vendetta/ui/alerts";
@@ -39,11 +40,14 @@ import { UserData } from "../types";
 import DataStat from "./DataStat";
 import IgnoredPluginsPage from "./pages/IgnoredPluginsPage";
 import ImportActionSheet from "./sheets/ImportActionSheet";
+import TooMuchDataSheet from "./sheets/TooMuchDataSheet";
 
 const { FormRow, FormInput, FormSwitchRow } = Forms;
 
 export default function () {
-    useProxy(vstorage);
+    useProxy(storage);
+    const [, forceUpdate] = React.useReducer(x => ~x, 0);
+
     const [showDev, setShowDev] = React.useState(false);
     const [isBusy, setIsBusy] = React.useState<string[]>([]);
     const { data, at, hasData } = useCacheStore();
@@ -133,7 +137,7 @@ export default function () {
         <RN.ScrollView>
             <BetterTableRowGroup
                 title={lang.format("settings.your_data.title", {})}
-                icon={getAssetIDByName("MobilePhoneShareIcon")}
+                icon={getAssetIDByName(plugin.manifest.vendetta?.icon ?? "")}
                 padding={true}>
                 <RN.View
                     style={{
@@ -236,18 +240,34 @@ export default function () {
                 icon={getAssetIDByName("SettingsIcon")}>
                 <FormSwitchRow
                     label={lang.format("settings.config.auto_save.title", {})}
-                    subLabel={lang.format(
-                        "settings.config.auto_save.description",
-                        {},
-                    )}
+                    subLabel={
+                        vstorage.realTrackingAnalyticsSentToChina
+                            .tooMuchData ? (
+                            <Text color="TEXT_DANGER" variant="text-sm/bold">
+                                {lang.format(
+                                    "settings.config.auto_save.description.error",
+                                    {},
+                                )}
+                            </Text>
+                        ) : (
+                            lang.format(
+                                "settings.config.auto_save.description",
+                                {},
+                            )
+                        )
+                    }
                     leading={
                         <FormRow.Icon
                             source={getAssetIDByName("RefreshIcon")}
                         />
                     }
-                    onValueChange={() =>
-                        (vstorage.config.autoSync = !vstorage.config.autoSync)
-                    }
+                    onValueChange={() => {
+                        vstorage.realTrackingAnalyticsSentToChina.tooMuchData =
+                            false;
+                        vstorage.config.autoSync = !vstorage.config.autoSync;
+                        // TODO don't use forceUpdate here
+                        forceUpdate();
+                    }}
                     value={vstorage.config.autoSync}
                 />
                 <FormSwitchRow
@@ -269,7 +289,9 @@ export default function () {
                     value={vstorage.config.addToSettings}
                 />
                 <FormRow
-                    label={lang.format("page.ignored_plugins.title", {})}
+                    label={lang.format("page.ignored_plugins.title", {
+                        count: vstorage.config.ignoredPlugins.length.toString(),
+                    })}
                     leading={
                         <FormRow.Icon
                             source={getAssetIDByName("ListBulletsIcon")}
@@ -365,6 +387,8 @@ export default function () {
                                         useAuthorizationStore
                                             .getState()
                                             .setToken(undefined);
+                                        vstorage.realTrackingAnalyticsSentToChina.tooMuchData =
+                                            false;
 
                                         showToast(
                                             lang.format("toast.logout", {}),
@@ -465,8 +489,17 @@ export default function () {
                                     />
                                 )
                             }
-                            onPress={() =>
-                                !isBusy.length &&
+                            onPress={() => {
+                                if (isBusy.length) return;
+
+                                if (
+                                    vstorage.realTrackingAnalyticsSentToChina
+                                        .tooMuchData
+                                )
+                                    return ActionSheet.open(TooMuchDataSheet, {
+                                        navigation,
+                                    });
+
                                 showConfirmationAlert({
                                     title: lang.format(
                                         "alert.save_data.title",
@@ -502,8 +535,8 @@ export default function () {
 
                                         unBusy("save_api");
                                     },
-                                })
-                            }
+                                });
+                            }}
                         />
                         <FormRow
                             label={lang.format("sheet.import_data.title", {})}
@@ -597,9 +630,10 @@ export default function () {
                                 );
                             } catch (e) {
                                 showToast(
-                                    String(e),
+                                    lang.format("toast.backup_not_saved", {}),
                                     getAssetIDByName("CircleXIcon-primary"),
-                                );
+                                ),
+                                    logger.error("backup not saved", e);
                             }
 
                             unBusy("download_compressed");
@@ -643,9 +677,13 @@ export default function () {
                             } catch (e) {
                                 if (!DocumentPicker.isCancel(e))
                                     showToast(
-                                        String(e),
+                                        lang.format(
+                                            "toast.failed_file_open",
+                                            {},
+                                        ),
                                         getAssetIDByName("CircleXIcon-primary"),
-                                    );
+                                    ),
+                                        logger.error(e);
                             }
 
                             unBusy("import_compressed");
