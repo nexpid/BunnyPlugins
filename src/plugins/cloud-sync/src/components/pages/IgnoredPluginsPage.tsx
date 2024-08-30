@@ -27,8 +27,8 @@ export default function IgnoredPluginsPage() {
 
     React.useEffect(() => setSearch(""), []);
     React.useEffect(
-        () => (
-            grabEverything(true)
+        () =>
+            void grabEverything(true)
                 .then(val =>
                     setSizedPlugins(
                         Object.entries(plugins)
@@ -48,8 +48,6 @@ export default function IgnoredPluginsPage() {
                         logger.error("grabEverything", e)
                     ),
                 ),
-            void 0
-        ),
         [],
     );
 

@@ -26,12 +26,10 @@ export default function TooMuchDataSheet({ navigation }: { navigation: any }) {
     const [data, setData] = React.useState<number | null>(null);
 
     React.useEffect(
-        () => (
-            grabEverything()
+        () =>
+            void grabEverything()
                 .then(val => setData(JSON.stringify(val).length))
                 .catch(() => setData(0)),
-            void 0
-        ),
         [],
     );
 
