@@ -8,6 +8,9 @@ import { logDebug } from "../../common/live/print.ts";
 export function slashResolve(path: string) {
     return resolve(path).replace(/\\/g, "/");
 }
+export function slashJoin(...paths: string[]) {
+    return join(...paths).replace(/\\/g, "/");
+}
 
 export const dependencyMap: Map<string, Set<string>> = new Map();
 export const hashMap: Map<string, string> = new Map();
@@ -54,9 +57,9 @@ export default async function getDependencies(file: string) {
         let willWarn = false;
 
         if (module.match(/^\.\.?\//))
-            (dep = findFile(join(dir, module))), (willWarn = true);
+            (dep = findFile(slashJoin(dir, module))), (willWarn = true);
         else if (module.startsWith("$/"))
-            (dep = findFile(join(stuffDir, module.slice(2)))),
+            (dep = findFile(slashJoin(stuffDir, module.slice(2)))),
                 (willWarn = true);
 
         if (dep) {

@@ -34,6 +34,7 @@ import getDependencies, {
     allExtensions,
     dependencyMap,
     hashMap,
+    slashJoin,
     slashResolve,
 } from "./lib/getImports.ts";
 
@@ -73,7 +74,10 @@ for (const file of await readdir("src", {
     if (file.isFile() && allExtensions.includes(extname(file.name)))
         promises.push(
             getDependencies(
-                slashResolve(join(file.path, file.name)).replace(/\\/g, "/"),
+                slashResolve(slashJoin(file.path, file.name)).replace(
+                    /\\/g,
+                    "/",
+                ),
             ),
         );
 }
