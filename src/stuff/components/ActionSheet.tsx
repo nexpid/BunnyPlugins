@@ -1,6 +1,7 @@
 import { find, findByProps } from "@vendetta/metro";
 import { ReactNative as RN } from "@vendetta/metro/common";
-import { type ImageSourcePropType } from "react-native";
+import { without } from "@vendetta/utils";
+import { type ImageSourcePropType, type ViewProps } from "react-native";
 
 const _ActionSheet =
     findByProps("ActionSheet")?.ActionSheet ??
@@ -36,24 +37,22 @@ export const { showSimpleActionSheet } = findByProps(
     }) => void;
 };
 
-type ActionSheetProps = React.PropsWithChildren<{
-    title: string;
-    onClose?: () => void;
-}>;
+type ActionSheetProps = React.PropsWithChildren<
+    ViewProps & {
+        title: string;
+        onClose?: () => void;
+    }
+>;
 
-export const ActionSheet = (({
-    title,
-    onClose,
-    children,
-}: ActionSheetProps) => {
+export const ActionSheet = ((props: ActionSheetProps) => {
     return (
         <_ActionSheet>
             <ActionSheetTitleHeader
-                title={title}
+                title={props.title}
                 trailing={
                     <ActionSheetCloseButton
                         onPress={
-                            onClose ??
+                            props.onClose ??
                             (() => {
                                 hideActionSheet();
                             })
@@ -61,7 +60,7 @@ export const ActionSheet = (({
                     />
                 }
             />
-            <RN.View>{children}</RN.View>
+            <RN.View {...without(props, "title", "onClose")} />
         </_ActionSheet>
     );
 }) as {
