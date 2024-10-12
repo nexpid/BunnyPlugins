@@ -1,0 +1,6 @@
+{
+  "log.patch_error": "Gặp lỗi khi đang tải!",
+  "log.fetch_error": "Không tìm nạp được hình đại diện!",
+  "toast.patch_error": "UsrPFP gặp lỗi khi đang tải!",
+  "toast.fetch_error": "UsrPFP không thể tải avatar!"
+}

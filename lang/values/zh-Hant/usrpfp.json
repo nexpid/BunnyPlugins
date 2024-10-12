@@ -1,0 +1,6 @@
+{
+  "log.patch_error": "載入時發生錯誤！",
+  "log.fetch_error": "無法獲得頭像！",
+  "toast.patch_error": "UsrPFP 載入時發生錯誤！",
+  "toast.fetch_error": "UsrPFP 無法獲得頭像！"
+}
