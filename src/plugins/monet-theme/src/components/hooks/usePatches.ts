@@ -1,3 +1,4 @@
+import { logger } from "@vendetta";
 import { React } from "@vendetta/metro/common";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { showToast } from "@vendetta/ui/toasts";
@@ -45,20 +46,22 @@ const refetch = async () => {
             x.text().then(text => {
                 try {
                     return parse(text.replace(/\r/g, ""));
-                } catch {
+                } catch (err: any) {
                     showToast(
                         "Failed to parse color patches!",
                         getAssetIDByName("Small"),
                     );
+                    logger.error("usePatches refetch error (parse)", err);
                     return null;
                 }
             }),
         )
-        .catch(() => {
+        .catch((err: any) => {
             showToast(
                 "Failed to fetch color patches!",
                 getAssetIDByName("Small"),
             );
+            logger.error("usePatches refetch error (fetch)", err);
             return null;
         });
 

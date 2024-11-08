@@ -91,10 +91,12 @@ const conventionalCommitLabelColors = {
 export default function Commit({
     commit,
     state,
+    contextProps,
     ...props
 }: {
     commit: CommitObj;
     state?: CommitState;
+    contextProps?: any;
 } & PressableProps) {
     useProxy(vstorage);
 
@@ -215,6 +217,8 @@ export default function Commit({
             ]}
             android_ripple={styles.androidRipple}
             key={commit.sha}
+            pointerEvents="box-only"
+            {...contextProps}
             {...props}>
             <Stack spacing={6}>
                 <RN.View style={styles.title}>

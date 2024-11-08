@@ -1,9 +1,9 @@
+import { logger } from "@vendetta";
 import { React } from "@vendetta/metro/common";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { showToast } from "@vendetta/ui/toasts";
 import { safeFetch } from "@vendetta/utils";
 
-import { commitsURL } from "../..";
 import { CommitObj } from "../Commit";
 
 const revalidateTimeout = 5000;
@@ -33,23 +33,57 @@ window[commitsSymbol] = data;
 const uponRevalidate = new Set<(data: any) => void>();
 let canRevalidate = 0;
 
+// graphql test!!!!
+//
+// query {
+//     repository(owner: "nexpid", name: "VendettaMonetTheme") {
+//       ref(qualifiedName: "main") {
+//         target {
+//           ... on Commit {
+//             history(path: "patches.jsonc", first: 10) {
+//               edges {
+//                 node {
+//                   oid,
+//                   message,
+//                   committedDate,
+//                   author {
+//                     name,
+//                     avatarUrl
+//                   },
+//                   additions,
+//                   deletions
+//                 }
+//               }
+//             }
+//           }
+//         }
+//       }
+//     }
+//   }
+
 const refetch = async () => {
-    const commits = await safeFetch(commitsURL, {
-        cache: "no-store",
-    })
+    const commits = await safeFetch(
+        "https://api.github.com/repos/nexpid/VendettaMonetTheme/commits?path=patches.jsonc",
+        {
+            cache: "no-store",
+        },
+    )
         .then(x =>
-            x.json().catch(() => {
+            x.json().catch((err: any) => {
                 showToast(
                     "Failed to parse GitHub commits!",
                     getAssetIDByName("Small"),
                 );
+                logger.error("useCommits refetch error (parse)", err);
+                return null;
             }),
         )
-        .catch(() => {
+        .catch((err: any) => {
             showToast(
                 "Failed to fetch GitHub commits!",
                 getAssetIDByName("Small"),
             );
+            logger.error("useCommits refetch error (fetch)", err);
             return null;
         });
 

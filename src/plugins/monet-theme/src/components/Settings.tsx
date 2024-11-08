@@ -15,17 +15,13 @@ import { Forms } from "@vendetta/ui/components";
 import { showToast } from "@vendetta/ui/toasts";
 
 import {
-    hideActionSheet,
-    showSimpleActionSheet,
-} from "$/components/ActionSheet";
-import {
     BetterTableRowGroup,
     BetterTableRowTitle,
 } from "$/components/BetterTableRow";
 import { RichText } from "$/components/RichText";
 import Skeleton from "$/components/Skeleton";
 import Text from "$/components/Text";
-import { buttonVariantPolyfill, IconButton } from "$/lib/redesign";
+import { buttonVariantPolyfill, ContextMenu, IconButton } from "$/lib/redesign";
 import { ThemeDataWithPlus, VendettaSysColors } from "$/typings";
 
 import RepainterIcon from "../../assets/icons/RepainterIcon.png";
@@ -257,38 +253,41 @@ export default () => {
             {!commits ? (
                 <Skeleton height={79.54} style={{ marginHorizontal: 16 }} />
             ) : Array.isArray(commits) ? (
-                <Commit
-                    commit={
-                        commits.find(x => x.sha === vstorage.patches.commit) ??
-                        commits[0]
-                    }
-                    onPress={() =>
-                        navigation.push("VendettaCustomPage", {
-                            render: CommitsPage,
-                        })
-                    }
-                    onLongPress={() => {
-                        showSimpleActionSheet({
-                            key: "CardOverflow",
-                            header: {
-                                title: "Patches",
-                                onClose: () => {
-                                    hideActionSheet();
-                                },
-                            },
-                            options: [
-                                {
-                                    label: "Revert",
-                                    icon: getAssetIDByName(
-                                        "ArrowAngleLeftUpIcon",
-                                    ),
-                                    onPress: () =>
-                                        delete vstorage.patches.commit,
-                                },
-                            ],
-                        });
-                    }}
-                />
+                <ContextMenu
+                    title="Patches"
+                    items={[
+                        {
+                            label: "Revert",
+                            variant: "default",
+                            action: () => (
+                                delete vstorage.patches.commit,
+                                showToast(
+                                    "Using latest commit for patches",
+                                    getAssetIDByName("ArrowAngleLeftUpIcon"),
+                                )
+                            ),
+                            iconSource: getAssetIDByName(
+                                "ArrowAngleLeftUpIcon",
+                            ),
+                        },
+                    ]}
+                    triggerOnLongPress>
+                    {(props: any) => (
+                        <Commit
+                            commit={
+                                commits.find(
+                                    x => x.sha === vstorage.patches.commit,
+                                ) ?? commits[0]
+                            }
+                            onPress={() =>
+                                navigation.push("VendettaCustomPage", {
+                                    render: CommitsPage,
+                                })
+                            }
+                            contextProps={props}
+                        />
+                    )}
+                </ContextMenu>
             ) : (
                 <RN.View
                     style={{

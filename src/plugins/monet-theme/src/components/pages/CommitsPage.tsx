@@ -1,6 +1,7 @@
-import { ReactNative as RN } from "@vendetta/metro/common";
+import { React, ReactNative as RN } from "@vendetta/metro/common";
 import { useProxy } from "@vendetta/storage";
 import { getAssetIDByName } from "@vendetta/ui/assets";
+import { showToast } from "@vendetta/ui/toasts";
 
 import { FlashList } from "$/deps";
 import { IconButton } from "$/lib/redesign";
@@ -12,7 +13,7 @@ import useCommits from "../hooks/useCommits";
 
 export default function CommitsPage() {
     useProxy(vstorage);
-    const { commits } = useCommits();
+    const { commits, revalidate } = useCommits();
 
     managePage(
         {
@@ -23,7 +24,13 @@ export default function CommitsPage() {
                     size="sm"
                     variant="secondary"
                     disabled={!vstorage.patches.commit}
-                    onPress={() => delete vstorage.patches.commit}
+                    onPress={() => (
+                        delete vstorage.patches.commit,
+                        showToast(
+                            "Using latest commit for patches",
+                            getAssetIDByName("ArrowAngleLeftUpIcon"),
+                        )
+                    )}
                 />
             ),
         },
@@ -35,7 +42,8 @@ export default function CommitsPage() {
         <FlashList
             ItemSeparatorComponent={() => <RN.View style={{ height: 12 }} />}
             ListFooterComponent={<RN.View style={{ height: 20 }} />}
-            estimatedItemSize={131}
+            onRefresh={revalidate}
+            estimatedItemSize={79.54}
             data={commits ?? []}
             extraData={vstorage.patches.commit}
             keyExtractor={item => item.sha}
