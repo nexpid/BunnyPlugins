@@ -166,6 +166,8 @@ const runFileChange = async (localPath: string) => {
                 workerResolves.code = "";
             }
         } catch (e: any) {
+            workerResolves.code = "";
+            workerResolves.rejected = false;
             logBuildErr(`Failed while building!\n${makeErrorGoodLooking(e)}`);
         }
     }
@@ -195,5 +197,5 @@ chokidar
     )
     .on("ready", () => logWatch("Ready!"));
 
-process.on("uncaughtException", () => {});
-process.on("unhandledRejection", () => {});
+process.on("uncaughtException", () => void 0);
+process.on("unhandledRejection", () => void 0);

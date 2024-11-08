@@ -74,7 +74,7 @@ export function buildPlugin(
             } else if (status.result === "nay") {
                 if (!silent) logScopeFailed(label);
 
-                workers.forEach(x => x.terminate());
+                worker.emit("finished");
                 workerResolves.rejected = true;
                 workerResolves.rej(status.err);
             }
