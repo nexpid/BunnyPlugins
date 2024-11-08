@@ -21,8 +21,8 @@ export function apply(theme: ThemeDataWithPlus | null) {
         : null;
 
     try {
-        bunny.managers.themes.selectTheme(val);
-        bunny.managers.themes.applyTheme(val);
+        bunny.themes.selectTheme(val);
+        bunny.themes.applyTheme(val);
 
         if (!val) showToast("Cleared theme", getAssetIDByName("TrashIcon"));
         else showToast("Applied theme", getAssetIDByName("PaintPaletteIcon"));

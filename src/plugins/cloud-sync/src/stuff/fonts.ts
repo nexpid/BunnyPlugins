@@ -3,7 +3,7 @@
 import { without } from "@vendetta/utils";
 
 const { bunny } = window as any;
-export const rawFonts = bunny.managers.fonts.fonts;
+export const rawFonts = bunny.fonts.fonts;
 
 type FontMap = Record<string, string>;
 
@@ -30,8 +30,8 @@ export function hasFontByName(name: string, fonts = getFonts()): boolean {
 }
 
 export async function installFont(source: string, select?: boolean) {
-    return bunny.managers.fonts.installFont(source, select);
+    return bunny.fonts.installFont(source, select);
 }
 export async function addFont(font: FontDefinition, select?: boolean) {
-    return bunny.managers.fonts.saveFont(font, select);
+    return bunny.fonts.saveFont(font, select);
 }
