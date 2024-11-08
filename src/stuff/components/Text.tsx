@@ -40,18 +40,14 @@ export default function Text({
 
     React.useEffect(() => {
         if (!liveUpdate) return;
-        const nextSecond = new Date().setMilliseconds(1000);
+        const nextSecond = () => Date.now() - new Date().setMilliseconds(1000);
 
-        let interval: any;
-        const timeout = setTimeout(() => {
+        let timeout = setTimeout(function update() {
             forceUpdate();
-            interval = setInterval(forceUpdate, 1000);
-        }, nextSecond - Date.now());
+            timeout = setTimeout(update, nextSecond());
+        }, nextSecond());
 
-        return () => {
-            clearTimeout(timeout);
-            clearInterval(interval);
-        };
+        return () => clearTimeout(timeout);
     }, []);
 
     return (
