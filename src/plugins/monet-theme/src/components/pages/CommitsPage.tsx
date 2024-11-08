@@ -13,7 +13,7 @@ import useCommits from "../hooks/useCommits";
 
 export default function CommitsPage() {
     useProxy(vstorage);
-    const { commits, revalidate } = useCommits();
+    const { commits } = useCommits();
 
     managePage(
         {
@@ -42,7 +42,6 @@ export default function CommitsPage() {
         <FlashList
             ItemSeparatorComponent={() => <RN.View style={{ height: 12 }} />}
             ListFooterComponent={<RN.View style={{ height: 20 }} />}
-            onRefresh={revalidate}
             estimatedItemSize={79.54}
             data={commits ?? []}
             extraData={vstorage.patches.commit}
