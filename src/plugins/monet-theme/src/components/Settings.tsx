@@ -13,7 +13,6 @@ import { showInputAlert } from "@vendetta/ui/alerts";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { Forms } from "@vendetta/ui/components";
 import { showToast } from "@vendetta/ui/toasts";
-import { safeFetch } from "@vendetta/utils";
 
 import {
     hideActionSheet,
@@ -30,21 +29,14 @@ import { buttonVariantPolyfill, IconButton } from "$/lib/redesign";
 import { ThemeDataWithPlus, VendettaSysColors } from "$/typings";
 
 import RepainterIcon from "../../assets/icons/RepainterIcon.png";
-import {
-    commitsURL,
-    devPatchesURL,
-    getSysColors,
-    hasTheme,
-    patchesURL,
-    vstorage,
-} from "..";
+import { getSysColors, hasTheme, vstorage } from "..";
 import { apply, build } from "../stuff/buildTheme";
-import { parse } from "../stuff/jsoncParser";
 import { checkForURL, fetchRawTheme, parseTheme } from "../stuff/repainter";
-import { Patches } from "../types";
 import Color from "./Color";
-import Commit, { CommitObj } from "./Commit";
-import { openCommitsPage } from "./pages/CommitsPage";
+import Commit from "./Commit";
+import useCommits from "./hooks/useCommits";
+import usePatches from "./hooks/usePatches";
+import CommitsPage from "./pages/CommitsPage";
 import { openConfigurePage } from "./pages/ConfigurePage";
 
 const { FormRow, FormSwitchRow } = Forms;
@@ -59,19 +51,11 @@ export function setColorsFromDynamic(clr: VendettaSysColors) {
     };
 }
 
-export let stsCommits: CommitObj[] | undefined = undefined;
-export let stsPatches: Patches | undefined = undefined;
 export default () => {
     const navigation = NavigationNative.useNavigation();
 
-    const [commits, setCommits] = React.useState<CommitObj[] | undefined>(
-        undefined,
-    );
-    const [patches, setPatches] = React.useState<Patches | undefined>(
-        undefined,
-    );
-    stsCommits = commits;
-    stsPatches = patches;
+    const { commits, revalidate: revalidateCommits } = useCommits();
+    const { patches, revalidate: revalidatePatches } = usePatches();
 
     const [isLoadedTheme, setIsLoadedTheme] = React.useState(hasTheme());
 
@@ -103,59 +87,6 @@ export default () => {
             tintColor: semanticColors.TEXT_NORMAL,
         },
     });
-
-    React.useEffect(() => {
-        safeFetch(
-            vstorage.patches.from === "local" ? devPatchesURL : patchesURL(),
-            {
-                headers: { "cache-control": "max-age=120" },
-            },
-        )
-            .then(x =>
-                x.text().then(text => {
-                    try {
-                        setPatches(parse(text.replace(/\r/g, "")));
-                    } catch {
-                        showToast(
-                            "Failed to parse color patches!",
-                            getAssetIDByName("Small"),
-                        );
-                        return;
-                    }
-                }),
-            )
-            .catch(() => {
-                showToast(
-                    "Failed to fetch color patches!",
-                    getAssetIDByName("Small"),
-                );
-            });
-    }, [patches]);
-
-    React.useEffect(() => {
-        safeFetch(commitsURL, {
-            cache: "force-cache",
-        })
-            .then(x =>
-                x
-                    .json()
-                    .then(x => {
-                        setCommits(x);
-                    })
-                    .catch(() => {
-                        showToast(
-                            "Failed to parse GitHub commits!",
-                            getAssetIDByName("Small"),
-                        );
-                    }),
-            )
-            .catch(() => {
-                showToast(
-                    "Failed to fetch GitHub commits!",
-                    getAssetIDByName("Small"),
-                );
-            });
-    }, [commits]);
 
     let showMessage: string | undefined = undefined;
 
@@ -318,22 +249,24 @@ export default () => {
                             getAssetIDByName("RetryIcon"),
                         );
                         vstorage.patches.from = otter;
-                        setPatches(undefined);
+                        revalidatePatches();
                     } else lastThemePressTime.current = Date.now() + 750;
                 }}
                 padding
             />
             {!commits ? (
-                <Skeleton height={79} style={{ marginHorizontal: 16 }} />
+                <Skeleton height={79.54} style={{ marginHorizontal: 16 }} />
             ) : Array.isArray(commits) ? (
                 <Commit
                     commit={
                         commits.find(x => x.sha === vstorage.patches.commit) ??
                         commits[0]
                     }
-                    onPress={() => {
-                        openCommitsPage(navigation);
-                    }}
+                    onPress={() =>
+                        navigation.push("VendettaCustomPage", {
+                            render: CommitsPage,
+                        })
+                    }
                     onLongPress={() => {
                         showSimpleActionSheet({
                             key: "CardOverflow",
@@ -345,14 +278,12 @@ export default () => {
                             },
                             options: [
                                 {
-                                    label: "Use latest commit as patches",
-                                    onPress: () => {
-                                        showToast(
-                                            "Using latest commit",
-                                            getAssetIDByName("ThreadPlusIcon"),
-                                        );
-                                        delete vstorage.patches.commit;
-                                    },
+                                    label: "Revert",
+                                    icon: getAssetIDByName(
+                                        "ArrowAngleLeftUpIcon",
+                                    ),
+                                    onPress: () =>
+                                        delete vstorage.patches.commit,
                                 },
                             ],
                         });
@@ -377,17 +308,15 @@ export default () => {
                         variant="text-md/semibold"
                         color="TEXT_DANGER"
                         align="center"
-                        onPress={() => {
-                            setCommits(undefined);
-                        }}>
+                        onPress={revalidateCommits}>
                         <RichText.Underline>Tap to retry</RichText.Underline>
                     </Text>
                 </RN.View>
             )}
             {!patches ? (
                 <Skeleton
-                    height={291}
-                    style={{ marginHorizontal: 16, marginTop: 16 }}
+                    height={308.36}
+                    style={{ marginHorizontal: 16, marginTop: 8 }}
                 />
             ) : (
                 <BetterTableRowGroup nearby>
@@ -475,9 +404,7 @@ export default () => {
                                 source={getAssetIDByName("ActivitiesIcon")}
                             />
                         }
-                        onPress={() => {
-                            setPatches(undefined);
-                        }}
+                        onPress={revalidatePatches}
                     />
                 </BetterTableRowGroup>
             )}

@@ -99,14 +99,12 @@ function Wallpaper({
 function WallpaperCollection({
     collection,
     configurable,
-    clear,
 }: {
     collection: Collection;
     configurable?: {
         add: (title: string, location: string) => void;
         remove: (entry: CollectionEntry) => void;
     };
-    clear?: boolean;
 }) {
     return (
         <RN.View>
@@ -117,21 +115,6 @@ function WallpaperCollection({
                 {collection.label}
             </Text>
             <RN.ScrollView horizontal>
-                {clear && (
-                    <Wallpaper
-                        label="None"
-                        image={getAssetIDByName("EyeSlashIcon")}
-                        centerImage={true}
-                        selected={vstorage.config.wallpaper === "none"}
-                        onPress={() => {
-                            showToast(
-                                "Removed background",
-                                getAssetIDByName("TrashIcon"),
-                            );
-                            vstorage.config.wallpaper = "none";
-                        }}
-                    />
-                )}
                 {configurable && (
                     <Wallpaper
                         label="Add"
@@ -151,11 +134,19 @@ function WallpaperCollection({
                         image={{ uri: x.url }}
                         selected={vstorage.config.wallpaper === x.url}
                         onPress={() => {
-                            showToast(
-                                `Set background to ${x.title}`,
-                                getAssetIDByName("ImagePlusIcon"),
-                            );
-                            vstorage.config.wallpaper = x.url;
+                            if (vstorage.config.wallpaper === x.url) {
+                                showToast(
+                                    "Removed background",
+                                    getAssetIDByName("TrashIcon"),
+                                );
+                                vstorage.config.wallpaper = "none";
+                            } else {
+                                showToast(
+                                    `Set background to ${x.title}`,
+                                    getAssetIDByName("ImagePlusIcon"),
+                                );
+                                vstorage.config.wallpaper = x.url;
+                            }
                         }}
                         onLongPress={
                             configurable &&
@@ -207,10 +198,10 @@ export const ConfigurePage = () => {
             <BetterTableRowGroup
                 title="Backgrounds"
                 icon={getAssetIDByName("ImageIcon")}
-                padding={true}>
+                padding>
                 {collections.map((x, i) => (
                     <>
-                        <WallpaperCollection clear={i === 0} collection={x} />
+                        <WallpaperCollection collection={x} />
                         <RN.View style={{ height: 8 }} />
                     </>
                 ))}

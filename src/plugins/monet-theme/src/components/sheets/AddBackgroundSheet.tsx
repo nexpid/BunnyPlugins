@@ -17,7 +17,7 @@ export default function AddBackgroundSheet({
         name: string;
         path: string;
     } | null>(null);
-    const [name, setName] = React.useState("");
+    const [label, setLabel] = React.useState("");
 
     return (
         <ActionSheet title={"Add custom background"}>
@@ -42,12 +42,10 @@ export default function AddBackgroundSheet({
             />
             <TextInput
                 size="md"
-                label="Title"
+                label="Label"
                 placeholder="New background"
-                value={name}
-                onChange={x => {
-                    setName(x);
-                }}
+                value={label}
+                onChange={x => setLabel(x)}
             />
             <RN.View style={{ height: 8 }} />
             <Button
@@ -57,12 +55,12 @@ export default function AddBackgroundSheet({
                 iconPosition="start"
                 icon={getAssetIDByName("PlusIcon")}
                 onPress={() => {
-                    if (!file || !name) return;
+                    if (!file || !label) return;
 
-                    add(name, `file://${file.path}`);
+                    add(label, `file://${file.path}`);
                     hideActionSheet();
                 }}
-                disabled={!file || !name}
+                disabled={!file || !label}
             />
         </ActionSheet>
     );

@@ -3,14 +3,12 @@ import { storage } from "@vendetta/plugin";
 import { showConfirmationAlert } from "@vendetta/ui/alerts";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { showToast } from "@vendetta/ui/toasts";
-import { safeFetch } from "@vendetta/utils";
 
 import { ThemeDataWithPlus, VendettaSysColors } from "$/typings";
 
+import usePatches from "./components/hooks/usePatches";
 import settings from "./components/Settings";
 import { apply, build } from "./stuff/buildTheme";
-import { parse } from "./stuff/jsoncParser";
-import { Patches } from "./types";
 
 export const patchesURL = () =>
     `https://raw.githubusercontent.com/nexpid/VendettaMonetTheme/${
@@ -23,13 +21,9 @@ export const commitsURL =
 const ThemeStore = findByStoreName("ThemeStore");
 
 export const getSysColors = () =>
-    (
-        window as any
-    ).bunny.api.native.loader.getSysColors() as VendettaSysColors | null;
+    (window as any).__vendetta_syscolors as VendettaSysColors | null;
 export const hasTheme = () =>
-    (window as any).bunny.managers.themes
-        .getCurrentTheme()
-        ?.id.includes("monet-theme");
+    (window as any).bunny.themes.getCurrentTheme()?.id.includes("monet-theme");
 export const getDiscordTheme = () => {
     // getDefaultFallbackTheme is not exported :(
     const { theme } = ThemeStore;
@@ -108,31 +102,12 @@ export default {
             if (!vstorage.reapply.enabled || !hasTheme()) return;
             showToast("Reapplying Monet Theme", getAssetIDByName("RetryIcon"));
 
-            let cpatches: Patches;
-            try {
-                cpatches = parse(
-                    (
-                        await (
-                            await safeFetch(
-                                vstorage.patches.from === "local"
-                                    ? devPatchesURL
-                                    : patchesURL(),
-                                {
-                                    headers: {
-                                        "cache-control": "public, max-age=600",
-                                    },
-                                },
-                            )
-                        ).text()
-                    ).replace(/\r/g, ""),
-                );
-            } catch (e: any) {
-                showToast(
+            const cpatches = await usePatches.patches;
+            if (!cpatches)
+                return showToast(
                     "Failed to fetch color patches!",
                     getAssetIDByName("Small"),
                 );
-                return;
-            }
 
             let theme: ThemeDataWithPlus;
             try {
