@@ -29,14 +29,13 @@ import {
     logWatch,
     logWatchErr,
 } from "../common/live/print.ts";
-import { TsWorker } from "../common/worker/index.ts";
-import getDependencies, {
+import {
     allExtensions,
-    dependencyMap,
     hashMap,
-    slashJoin,
     slashResolve,
-} from "./lib/getImports.ts";
+} from "../common/parser/getImports.ts";
+import { TsWorker } from "../common/worker/index.ts";
+import getDependencies, { dependencyMap } from "./lib/listDeps.ts";
 
 const makeErrorGoodLooking = (e: any) =>
     pc.reset(
@@ -74,10 +73,7 @@ for (const file of await readdir("src", {
     if (file.isFile() && allExtensions.includes(extname(file.name)))
         promises.push(
             getDependencies(
-                slashResolve(slashJoin(file.path, file.name)).replace(
-                    /\\/g,
-                    "/",
-                ),
+                slashResolve(join(file.path, file.name)).replace(/\\/g, "/"),
             ),
         );
 }

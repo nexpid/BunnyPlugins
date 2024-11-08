@@ -1,0 +1,8 @@
+{
+  "dependencies": [
+    "react-native-webview@13.8.1",
+    "react-native-document-picker@9.3.0",
+    "joi@17.13.1",
+    "@shopify/flash-list@1.6.4"
+  ]
+}
