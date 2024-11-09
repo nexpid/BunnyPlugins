@@ -81,8 +81,8 @@ export default {
         };
 
         let lTheme = getDiscordTheme();
-        const oldColors = vstorage.reapply.cache.colors;
-        const oldTheme = vstorage.reapply.cache.theme;
+        const oldColors = vstorage.reapply?.cache?.colors;
+        const oldTheme = vstorage.reapply?.cache?.theme;
 
         vstorage.reapply ??= {
             enabled: false,
