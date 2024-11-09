@@ -33,7 +33,7 @@ interface Content {
 
 const handleContent = (content: Content[]) => {
     for (const thing of content) {
-        if (thing.type === "link" && thing.target)
+        if (thing.type === "link" && typeof thing.target === "string")
             thing.target = clean(thing.target);
 
         if (typeof thing.content === "string")
