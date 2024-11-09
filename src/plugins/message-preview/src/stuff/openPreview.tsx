@@ -12,15 +12,18 @@ const MessageRecord = findByName("MessageRecord");
 const RowManager = findByName("RowManager");
 const SelectedChannelStore = findByStoreName("SelectedChannelStore");
 const UserStore = findByStoreName("UserStore");
+const DraftStore = findByStoreName("DraftStore");
+const UploadStore = findByStoreName("UploadStore");
 
 const { receiveMessage } = findByProps("receiveMessage");
 const { createBotMessage } = findByProps("createBotMessage");
 
-const { getText } = findByProps("openSystemKeyboard", "getText");
-
 export default function () {
-    const text = getText(SelectedChannelStore.getChannelId());
+    const channelId = SelectedChannelStore.getChannelId();
+    const text = DraftStore.getDraft(channelId, 0);
     if (text.trim() === "") return;
+
+    const files = UploadStore.getFiles(channelId);
 
     if (vstorage.previewType === "popup")
         showConfirmationAlert({
