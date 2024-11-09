@@ -13,7 +13,7 @@ export function slashJoin(...paths: string[]) {
     return join(...paths).replace(/\\/g, "/");
 }
 
-const baseExtensions = [".d.ts", ".ts", ".js", ".mjs", ".cjs"];
+const baseExtensions = [".ts", ".js", ".mjs", ".cjs", ".d.ts"];
 const jsxExtensions = [
     ...baseExtensions,
     ...baseExtensions.map(ext => ext + "x"),
