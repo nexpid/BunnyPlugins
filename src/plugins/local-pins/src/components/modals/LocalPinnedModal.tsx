@@ -1,10 +1,5 @@
 import { findByName, findByProps, findByStoreName } from "@vendetta/metro";
-import {
-    i18n,
-    ReactNative as RN,
-    stylesheet,
-    url,
-} from "@vendetta/metro/common";
+import { ReactNative as RN, stylesheet, url } from "@vendetta/metro/common";
 import { semanticColors } from "@vendetta/ui";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 
@@ -14,6 +9,7 @@ import {
 } from "$/components/ActionSheet";
 import Modal from "$/components/Modal";
 import Text from "$/components/Text";
+import intlProxy from "$/lib/intlProxy";
 import { popModal } from "$/types";
 
 import { hasAnyPin, removePin } from "../..";
@@ -148,8 +144,7 @@ export default function LocalPinnedModal() {
                         variant="text-md/medium"
                         color="TEXT_MUTED"
                         align="center">
-                        {i18n.Messages.NO_PINS_IN_CHANNEL ??
-                            "This channel doesn't have any\npinned messages... yet."}
+                        {intlProxy.NO_PINS_IN_CHANNEL}
                     </Text>
                 </RN.View>
             </Modal>

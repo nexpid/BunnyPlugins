@@ -1,7 +1,6 @@
 import { findByProps } from "@vendetta/metro";
 import {
     clipboard,
-    i18n,
     React,
     ReactNative as RN,
     stylesheet,
@@ -13,6 +12,7 @@ import { showToast } from "@vendetta/ui/toasts";
 
 import Text from "$/components/Text";
 import usePromise from "$/hooks/usePromise";
+import intlProxy from "$/lib/intlProxy";
 import { Button } from "$/lib/redesign";
 import { managePage } from "$/lib/ui";
 
@@ -259,10 +259,7 @@ export default function AppInfoPage({
                 <RN.View style={styles.baseAppActions}>
                     <Button
                         style={{ flex: 1 / 2 }}
-                        text={
-                            i18n.Messages.APP_DIRECTORY_PROFILE_SHARE_BUTTON ||
-                            "Copy Link"
-                        }
+                        text={intlProxy.APP_DIRECTORY_PROFILE_SHARE_BUTTON}
                         variant="secondary"
                         size="md"
                         icon={getAssetIDByName("copy")}
@@ -271,18 +268,14 @@ export default function AppInfoPage({
                                 `https://discord.com/application-directory/${app.id}`,
                             );
                             showToast(
-                                i18n.Messages.COPIED_LINK ||
-                                    "Copied to clipboard.",
+                                intlProxy.COPIED_LINK,
                                 getAssetIDByName("toast_copy_link"),
                             );
                         }}
                     />
                     <Button
                         style={{ flex: 1 / 2 }}
-                        text={
-                            i18n.Messages.APP_DIRECTORY_PROFILE_ADD_BUTTON ||
-                            "Add to Server"
-                        }
+                        text={intlProxy.APP_DIRECTORY_PROFILE_ADD_BUTTON}
                         variant="primary"
                         size="md"
                         icon={getAssetIDByName("ic_download_24px")}
@@ -324,11 +317,7 @@ export default function AppInfoPage({
             {detailedInfo.directory_entry.popular_application_commands && (
                 <RN.View style={styles.group}>
                     <TableRowGroupTitle
-                        title={
-                            i18n.Messages
-                                .APP_DIRECTORY_PROFILE_COMMANDS_HEADING ||
-                            "Popular Slash Commands"
-                        }
+                        title={intlProxy.APP_DIRECTORY_PROFILE_COMMANDS_HEADING}
                     />
                     {detailedInfo.directory_entry.popular_application_commands.map(
                         (x, i, a) => (
@@ -360,10 +349,7 @@ export default function AppInfoPage({
             <RN.View style={styles.sillyGroup}>
                 <RN.View style={{ paddingHorizontal: 16 }}>
                     <TableRowGroupTitle
-                        title={
-                            i18n.Messages.APP_DIRECTORY_PROFILE_LINKS_HEADING ||
-                            "Links"
-                        }
+                        title={intlProxy.APP_DIRECTORY_PROFILE_LINKS_HEADING}
                     />
                 </RN.View>
                 <TableRowGroup>
@@ -380,11 +366,7 @@ export default function AppInfoPage({
                     )) ?? []}
                     {app.terms_of_service_url && (
                         <TableRow
-                            label={
-                                i18n.Messages
-                                    .APP_DIRECTORY_PROFILE_TERMS_LINK ||
-                                "Terms of Service"
-                            }
+                            label={intlProxy.APP_DIRECTORY_PROFILE_TERMS_LINK}
                             icon={
                                 <TableRowIcon
                                     source={getAssetIDByName("ic_link")}
@@ -397,11 +379,7 @@ export default function AppInfoPage({
                     )}
                     {app.privacy_policy_url && (
                         <TableRow
-                            label={
-                                i18n.Messages
-                                    .APP_DIRECTORY_PROFILE_PRIVACY_LINK ||
-                                "Privacy Policy"
-                            }
+                            label={intlProxy.APP_DIRECTORY_PROFILE_PRIVACY_LINK}
                             icon={
                                 <TableRowIcon
                                     source={getAssetIDByName("ic_lock")}

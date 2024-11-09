@@ -1,7 +1,9 @@
 import { findByName } from "@vendetta/metro";
-import { i18n, React } from "@vendetta/metro/common";
+import { React } from "@vendetta/metro/common";
 import { after } from "@vendetta/patcher";
 import { getAssetIDByName } from "@vendetta/ui/assets";
+
+import intlProxy from "$/lib/intlProxy";
 
 import { Module, ModuleCategory } from "../stuff/Module";
 
@@ -17,7 +19,7 @@ export default new Module({
         onStart() {
             this.patches.add(
                 after("default", UserProfileRow, (args, ret) =>
-                    args[0].label === i18n.Messages.GUILD_INVITE_CTA
+                    args[0].label === intlProxy.GUILD_INVITE_CTA
                         ? React.createElement(React.Fragment)
                         : ret,
                 ),

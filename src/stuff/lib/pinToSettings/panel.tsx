@@ -1,10 +1,11 @@
 // Based on: https://github.com/pyoncord/Bunny/blob/dev/src/lib/ui/settings/patches/panel.tsx
 
-import { i18n, NavigationNative } from "@vendetta/metro/common";
+import { NavigationNative } from "@vendetta/metro/common";
 import { after } from "@vendetta/patcher";
 import { Forms } from "@vendetta/ui/components";
 import { findInReactTree } from "@vendetta/utils";
 
+import intlProxy from "../intlProxy";
 import { PinToSettingsTabs } from ".";
 
 const { FormSection, FormRow } = Forms;
@@ -54,8 +55,8 @@ export function patchPanelUI(tabs: PinToSettingsTabs, patches: (() => void)[]) {
                         UserSettingsOverview.type.prototype,
                         (_args, res) => {
                             const titles = [
-                                i18n.Messages.BILLING_SETTINGS,
-                                i18n.Messages.PREMIUM_SETTINGS,
+                                intlProxy.BILLING_SETTINGS,
+                                intlProxy.PREMIUM_SETTINGS,
                             ];
 
                             const sections = findInReactTree(

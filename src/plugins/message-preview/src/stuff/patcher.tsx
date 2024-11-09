@@ -1,7 +1,9 @@
 import { findByProps } from "@vendetta/metro";
-import { i18n, ReactNative as RN } from "@vendetta/metro/common";
+import { ReactNative as RN } from "@vendetta/metro/common";
 import { after, before } from "@vendetta/patcher";
 import { findInReactTree } from "@vendetta/utils";
+
+import intlProxy from "$/lib/intlProxy";
 
 import { vstorage } from "..";
 import PreviewButton from "../components/PreviewButton";
@@ -37,7 +39,7 @@ export default () => {
     patches.push(
         // @ts-expect-error not in RN typings
         before("render", RN.Pressable.type, ([a]) => {
-            if (a?.accessibilityLabel === i18n.Messages.SEND)
+            if (a?.accessibilityLabel === intlProxy.SEND)
                 a.onLongPress = () =>
                     vstorage.buttonType === "send" && openPreview();
         }),

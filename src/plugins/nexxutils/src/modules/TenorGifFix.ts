@@ -1,10 +1,11 @@
 import { findByProps } from "@vendetta/metro";
-import { i18n, ReactNative as RN, url } from "@vendetta/metro/common";
+import { ReactNative as RN, url } from "@vendetta/metro/common";
 import { before, instead } from "@vendetta/patcher";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { showToast } from "@vendetta/ui/toasts";
 
 import { LazyActionSheet } from "$/components/ActionSheet";
+import intlProxy from "$/lib/intlProxy";
 
 import { Module, ModuleCategory } from "../stuff/Module";
 
@@ -82,7 +83,7 @@ export default new Module({
                     ];
                     if (
                         !["OPEN_IN_BROWSER", "SHARE", "JUMP_TO_MESSAGE"].every(
-                            x => items.find(y => y.label === i18n.Messages[x]),
+                            x => items.find(y => y.label === intlProxy[x]),
                         ) ||
                         items.length !== 3
                     )
@@ -92,7 +93,7 @@ export default new Module({
                     for (const item of items) {
                         if (!item._action) item._action = item.action;
 
-                        if (item.label === i18n.Messages.OPEN_IN_BROWSER) {
+                        if (item.label === intlProxy.OPEN_IN_BROWSER) {
                             // fake press to get the link
                             const unpatch = instead(
                                 "handleClick",
@@ -114,7 +115,7 @@ export default new Module({
                                         onConfirm: () => url.openURL(link),
                                     });
                             };
-                        } else if (item.label === i18n.Messages.SHARE) {
+                        } else if (item.label === intlProxy.SHARE) {
                             item.action = () => {
                                 if (!link) {
                                     item._action?.();
@@ -126,7 +127,7 @@ export default new Module({
 
                     items.unshift({
                         iconSource: getAssetIDByName("DownloadIcon"),
-                        label: i18n.Messages.SAVE,
+                        label: intlProxy.SAVE,
                         action: () =>
                             link
                                 ? MediaManager.downloadMediaAsset(link, 1)

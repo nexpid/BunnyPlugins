@@ -1,11 +1,12 @@
 import { findByName, findByProps } from "@vendetta/metro";
-import { i18n, React, ReactNative as RN } from "@vendetta/metro/common";
+import { React, ReactNative as RN } from "@vendetta/metro/common";
 import { after, before } from "@vendetta/patcher";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { findInReactTree } from "@vendetta/utils";
 
 import { LazyActionSheet } from "$/components/ActionSheet";
 import SuperAwesomeIcon from "$/components/SuperAwesomeIcon";
+import intlProxy from "$/lib/intlProxy";
 import { SearchContext } from "$/types";
 
 import ChannelPinsRow from "../components/ChannelPinsRow";
@@ -147,7 +148,7 @@ export default function () {
 
                     const at = Math.max(
                         buttons.findIndex(
-                            x => x.props.message === i18n.Messages.MARK_UNREAD,
+                            x => x.props.message === intlProxy.MARK_UNREAD,
                         ),
                         0,
                     );
@@ -164,7 +165,7 @@ export default function () {
     if (FlashList)
         patches.push(
             after("render", FlashList, ([d], ret) =>
-                d.accessibilityLabel === i18n.Messages.HAPPENING_NOW
+                d.accessibilityLabel === intlProxy.HAPPENING_NOW
                     ? React.createElement(RedesignChannelPinsRow, { ret })
                     : ret,
             ),
@@ -172,7 +173,7 @@ export default function () {
 
     // patches.push(
     //   after("default", FastList, ([d], ret) =>
-    //     d.accessibilityLabel === i18n.Messages.DIRECT_MESSAGES
+    //     d.accessibilityLabel === intlProxy.DIRECT_MESSAGES
     //       ? React.createElement(MessagesPinsRow, { ret })
     //       : ret,
     //   ),

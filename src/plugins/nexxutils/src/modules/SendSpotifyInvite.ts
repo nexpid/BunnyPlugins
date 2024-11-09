@@ -1,15 +1,11 @@
 import { findByProps, findByStoreName } from "@vendetta/metro";
-import {
-    i18n,
-    React,
-    ReactNative as RN,
-    stylesheet,
-} from "@vendetta/metro/common";
+import { React, ReactNative as RN, stylesheet } from "@vendetta/metro/common";
 import { before } from "@vendetta/patcher";
 import { semanticColors } from "@vendetta/ui";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { findInReactTree } from "@vendetta/utils";
 
+import intlProxy from "$/lib/intlProxy";
 import { TextStyleSheet } from "$/types";
 
 import { Module, ModuleCategory } from "../stuff/Module";
@@ -74,14 +70,14 @@ export default new Module({
             this.patches.add(
                 // @ts-expect-error not in RN typings
                 before("render", RN.Pressable.type, ([a]) => {
-                    if (a.accessibilityLabel === i18n.Messages.CAMERA) {
+                    if (a.accessibilityLabel === intlProxy.CAMERA) {
                         const disabled = !SpotifyStore.getActivity()?.party?.id;
                         a.disabled = disabled;
                         a.onPress = sendInvite;
 
                         const textComp = findInReactTree(
                             a.children,
-                            x => x.children === i18n.Messages.CAMERA,
+                            x => x.children === intlProxy.CAMERA,
                         );
                         if (textComp) {
                             textComp.children = "Spotify invite";

@@ -1,7 +1,7 @@
-import { i18n } from "@vendetta/metro/common";
+import intlProxy, { intlFormat } from "$/lib/intlProxy";
 
 export function inServers(x: number) {
-    return i18n.Messages.APP_DIRECTORY_PROFILE_EMBED_GUILD_COUNT.format({
+    return intlFormat.APP_DIRECTORY_PROFILE_EMBED_GUILD_COUNT({
         guildCount:
             x < 1_000
                 ? x.toString()
@@ -32,9 +32,7 @@ export const parseDesc = (detailed: string | null, short: string) => {
         }
     } else {
         parsed.push({
-            title:
-                i18n.Messages.APP_DIRECTORY_PROFILE_DESCRIPTION_HEADING ||
-                "Overview",
+            title: intlProxy.APP_DIRECTORY_PROFILE_DESCRIPTION_HEADING,
             content: l.length ? l : [short],
         });
     }
