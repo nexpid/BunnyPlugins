@@ -1,4 +1,11 @@
-//! https://github.com/refined-github/refined-github/blob/4cb77df3ccf6da9de3b2427e841ad5d2afa25f35/source/helpers/conventional-commits.ts#L20
+/**
+ * refined-github
+ *
+ * @copyright Sindre Sorhus <sindresorhus@gmail.com> (https://sindresorhus.com)
+ * @link https://github.com/refined-github/refined-github/blob/4cb77df3ccf6da9de3b2427e841ad5d2afa25f35/source/helpers/conventional-commits.ts
+ * @license MIT
+ */
+
 // Using https://www.conventionalcommits.org/ as a reference.
 export const conventionalCommitRegex =
     /^(?<type>\w+)(?:\((?<scope>.+)\))?(?<major>!)?: /;
