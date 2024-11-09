@@ -21,7 +21,12 @@ import {
 import { RichText } from "$/components/RichText";
 import Skeleton from "$/components/Skeleton";
 import Text from "$/components/Text";
-import { buttonVariantPolyfill, ContextMenu, IconButton } from "$/lib/redesign";
+import {
+    buttonVariantPolyfill,
+    ContextMenu,
+    IconButton,
+    PressableScale,
+} from "$/lib/redesign";
 import { ThemeDataWithPlus, VendettaSysColors } from "$/typings";
 
 import RepainterIcon from "../../assets/icons/RepainterIcon.png";
@@ -131,7 +136,7 @@ export default () => {
                         gap: 8,
                     }}>
                     {syscolors && (
-                        <RN.Pressable
+                        <PressableScale
                             android_ripple={styles.androidRipple}
                             style={styles.pill}
                             onPress={() => {
@@ -151,9 +156,9 @@ export default () => {
                                 color="TEXT_NORMAL">
                                 Autofill
                             </Text>
-                        </RN.Pressable>
+                        </PressableScale>
                     )}
-                    <RN.Pressable
+                    <PressableScale
                         android_ripple={styles.androidRipple}
                         style={styles.pill}
                         onPress={async () => {
@@ -196,7 +201,7 @@ export default () => {
                         <Text variant="text-sm/semibold" color="TEXT_NORMAL">
                             Use Repainter theme
                         </Text>
-                    </RN.Pressable>
+                    </PressableScale>
                 </RN.View>
                 <RN.View
                     style={{
@@ -205,27 +210,27 @@ export default () => {
                         justifyContent: "center",
                     }}>
                     <Color
-                        title={"Neutral\n"}
+                        title={"Neutral"}
                         color={vstorage.colors.neutral1}
                         update={c => (vstorage.colors.neutral1 = c)}
                     />
                     <Color
-                        title={"Neutral\nVariant"}
+                        title={"Neutral variant"}
                         color={vstorage.colors.neutral2}
                         update={c => (vstorage.colors.neutral2 = c)}
                     />
                     <Color
-                        title={"Primary\n"}
+                        title={"Primary"}
                         color={vstorage.colors.accent1}
                         update={c => (vstorage.colors.accent1 = c)}
                     />
                     <Color
-                        title={"Secondary\n"}
+                        title={"Secondary"}
                         color={vstorage.colors.accent2}
                         update={c => (vstorage.colors.accent2 = c)}
                     />
                     <Color
-                        title={"Tertiary\n"}
+                        title={"Tertiary"}
                         color={vstorage.colors.accent3}
                         update={c => (vstorage.colors.accent3 = c)}
                     />
@@ -257,7 +262,7 @@ export default () => {
                     title="Patches"
                     items={[
                         {
-                            label: "Revert",
+                            label: "Use latest",
                             variant: "default",
                             action: () => (
                                 delete vstorage.patches.commit,

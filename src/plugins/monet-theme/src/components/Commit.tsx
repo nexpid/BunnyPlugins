@@ -117,7 +117,7 @@ export default function Commit({
             borderColor: semanticColors.TEXT_BRAND,
         },
         cardDefault: {
-            borderColor: "#fff5",
+            borderColor: "#fffa",
         },
         title: {
             flexDirection: "row",

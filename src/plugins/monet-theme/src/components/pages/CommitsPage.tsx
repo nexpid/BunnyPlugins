@@ -1,11 +1,13 @@
 import { React, ReactNative as RN } from "@vendetta/metro/common";
 import { useProxy } from "@vendetta/storage";
+import { semanticColors } from "@vendetta/ui";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { showToast } from "@vendetta/ui/toasts";
 
+import Text from "$/components/Text";
 import { FlashList } from "$/deps";
-import { IconButton } from "$/lib/redesign";
 import { managePage } from "$/lib/ui";
+import { resolveSemanticColor } from "$/types";
 
 import { vstorage } from "../..";
 import Commit, { CommitState } from "../Commit";
@@ -19,11 +21,12 @@ export default function CommitsPage() {
         {
             title: "Commits",
             headerRight: () => (
-                <IconButton
-                    icon={getAssetIDByName("ArrowAngleLeftUpIcon")}
-                    size="sm"
-                    variant="secondary"
-                    disabled={!vstorage.patches.commit}
+                <RN.Pressable
+                    android_ripple={{
+                        color: resolveSemanticColor(
+                            semanticColors.ANDROID_RIPPLE,
+                        ),
+                    }}
                     onPress={() => (
                         delete vstorage.patches.commit,
                         showToast(
@@ -31,7 +34,21 @@ export default function CommitsPage() {
                             getAssetIDByName("ArrowAngleLeftUpIcon"),
                         )
                     )}
-                />
+                    disabled={!vstorage.patches.commit}>
+                    <Text
+                        variant={
+                            !vstorage.patches.commit
+                                ? "text-md/normal"
+                                : "text-md/semibold"
+                        }
+                        color={
+                            !vstorage.patches.commit
+                                ? "TEXT_MUTED"
+                                : "TEXT_BRAND"
+                        }>
+                        Use latest
+                    </Text>
+                </RN.Pressable>
             ),
         },
         null,

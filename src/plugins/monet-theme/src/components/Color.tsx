@@ -73,7 +73,7 @@ export default ({
                     showToast("Copied", getAssetIDByName("toast_copy_message"));
                 }}
             />
-            <Text variant="text-sm/semibold" color="TEXT_NORMAL" align="center">
+            <Text variant="text-xs/medium" color="TEXT_MUTED" align="center">
                 {title}
             </Text>
         </RN.View>
