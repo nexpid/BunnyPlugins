@@ -4,6 +4,7 @@ import { semanticColors } from "@vendetta/ui";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { Forms } from "@vendetta/ui/components";
 import { showToast } from "@vendetta/ui/toasts";
+import { type ImageSourcePropType } from "react-native";
 
 import { ActionSheet } from "$/components/ActionSheet";
 import ChooseSheet from "$/components/sheets/ChooseSheet";
@@ -95,7 +96,7 @@ export class Module<Settings extends Record<string, ModuleSetting>> {
     label: string;
     sublabel: string;
     category: ModuleCategory;
-    icon?: number;
+    icon?: ImageSourcePropType;
     settings: Settings;
     extra?: ModuleExtra;
     errors: Record<string, string> = {};
@@ -121,7 +122,7 @@ export class Module<Settings extends Record<string, ModuleSetting>> {
         label: string;
         sublabel: string;
         category: ModuleCategory;
-        icon?: number;
+        icon?: ImageSourcePropType;
         settings?: Settings;
         extra?: ModuleExtra;
         handlers: {

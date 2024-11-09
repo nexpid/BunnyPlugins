@@ -1,6 +1,7 @@
 import type { Module } from "../stuff/Module";
 import BetterComponents from "./BetterComponents";
 import ColorfulChannels from "./ColorfulChannels";
+import Minimod from "./Minimod";
 import NoInviteToServers from "./NoInviteToServers";
 import SendSpotifyInvite from "./SendSpotifyInvite";
 import SpotifyListenAlong from "./SpotifyListenAlong";
@@ -10,6 +11,7 @@ import TenorGifFix from "./TenorGifFix";
 export default [
     BetterComponents,
     ColorfulChannels,
+    Minimod,
     NoInviteToServers,
     SendSpotifyInvite,
     SpotifyListenAlong,
