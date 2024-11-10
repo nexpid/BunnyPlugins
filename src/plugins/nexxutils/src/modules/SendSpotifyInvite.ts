@@ -1,63 +1,12 @@
-import { findByProps, findByStoreName } from "@vendetta/metro";
-import { React, ReactNative as RN, stylesheet } from "@vendetta/metro/common";
-import { before } from "@vendetta/patcher";
-import { semanticColors } from "@vendetta/ui";
+import { findByTypeName } from "@vendetta/metro";
+import { React } from "@vendetta/metro/common";
+import { after } from "@vendetta/patcher";
 import { getAssetIDByName } from "@vendetta/ui/assets";
-import { findInReactTree } from "@vendetta/utils";
 
-import intlProxy from "$/lib/intlProxy";
-import { TextStyleSheet } from "$/types";
-
+import InviteButton from "../components/modules/SendSpotifyInvite/InviteButton";
 import { Module, ModuleCategory } from "../stuff/Module";
 
-const SpotifyStore = findByStoreName("SpotifyStore");
-const SelectedChannelStore = findByStoreName("SelectedChannelStore");
-
-const { sendMessage } = findByProps("sendMessage", "revealMessage");
-const { getText, setText } = findByProps(
-    "openSystemKeyboard",
-    "getText",
-    "setText",
-);
-
-const sendInvite = () => {
-    const activity = SpotifyStore.getActivity();
-    if (!activity?.party?.id) return;
-
-    const channel = SelectedChannelStore.getChannelId();
-    sendMessage(
-        channel,
-        {
-            content: getText(channel),
-            tts: false,
-            invalidEmojis: [],
-            validNonShortcutEmojis: [],
-        },
-        true,
-        {
-            activityAction: {
-                activity,
-                type: 3,
-            },
-        },
-    );
-
-    if (setText.length >= 2) setText(channel, "");
-    else setText("");
-};
-
-const styles = stylesheet.createThemedStyleSheet({
-    disabledIcon: {
-        tintColor: semanticColors.INTERACTIVE_MUTED,
-    },
-    text: {
-        ...TextStyleSheet["text-md/semibold"],
-        color: semanticColors.TEXT_NORMAL,
-    },
-    disabledText: {
-        color: semanticColors.TEXT_MUTED,
-    },
-});
+const MediaKeyboardListHeader = findByTypeName("MediaKeyboardListHeader");
 
 export default new Module({
     id: "send-spotify-invite",
@@ -68,49 +17,68 @@ export default new Module({
     handlers: {
         onStart() {
             this.patches.add(
-                // @ts-expect-error not in RN typings
-                before("render", RN.Pressable.type, ([a]) => {
-                    if (a.accessibilityLabel === intlProxy.CAMERA) {
-                        const disabled = !SpotifyStore.getActivity()?.party?.id;
-                        a.disabled = disabled;
-                        a.onPress = sendInvite;
-
-                        const textComp = findInReactTree(
-                            a.children,
-                            x => x.children === intlProxy.CAMERA,
-                        );
-                        if (textComp) {
-                            textComp.children = "Spotify invite";
-                            textComp.style = [
-                                styles.text,
-                                disabled && styles.disabledText,
-                            ];
-                        }
-
-                        const iconComp = findInReactTree(a.children, x =>
-                            x.props?.style?.find((y: any) => y?.tintColor),
-                        );
-                        if (iconComp)
-                            iconComp.type = () =>
-                                React.createElement(RN.Image, {
-                                    source: getAssetIDByName(
-                                        "ic_spotify_white_16px",
-                                    ),
-                                    resizeMode: "cover",
-                                    style: [
-                                        {
-                                            width: 20,
-                                            height: 20,
-                                        },
-                                        RN.StyleSheet.flatten(
-                                            iconComp.props.style,
-                                        ),
-                                        disabled && styles.disabledIcon,
-                                    ],
-                                });
-                    }
+                after("type", MediaKeyboardListHeader, (_, ret) => {
+                    return {
+                        ...ret,
+                        props: {
+                            ...ret.props,
+                            children: [
+                                ...ret.props.children,
+                                React.createElement(InviteButton, {}),
+                            ],
+                        },
+                    };
                 }),
             );
+            // this.patches.add(
+            //     // @ts-expect-error not in RN typings
+            //     before("render", RN.Pressable.type, ([a]) => {
+            //         if (a.accessibilityLabel === intlProxy.POLLS) {
+            //             const [_, forceUpdate] = React.useReducer(x => ~x, 0);
+            //             React.useEffect(() =>
+            //                 fluxSubscribe("SPOTIFY_PLAYER_STATE", forceUpdate),
+            //             );
+
+            //             const disabled = !SpotifyStore.getActivity()?.party?.id;
+            //             a.disabled = disabled;
+            //             a.onPress = sendInvite;
+
+            //             const textComp = findInReactTree(
+            //                 a.children,
+            //                 x =>
+            //                     x.children === intlProxy.POLLS ||
+            //                     x.children === "Invite",
+            //             );
+            //             if (textComp) {
+            //                 textComp.children = "Invite";
+            //                 textComp.style = [
+            //                     styles.text,
+            //                     disabled && styles.disabled,
+            //                 ];
+            //             }
+
+            //             const iconComp = findInReactTree(
+            //                 a.children,
+            //                 x => x.props?.style?.tintColor,
+            //             );
+            //             if (iconComp) {
+            //                 iconComp.type = () =>
+            //                     React.createElement(RN.Image, {
+            //                         source: getAssetIDByName(
+            //                             "ic_spotify_white_16px",
+            //                         ),
+            //                         resizeMode: "cover",
+            //                         style: [
+            //                             iconComp.props.style,
+            //                             disabled && styles.disabled,
+            //                         ],
+            //                     });
+            //             } else console.log("Couldn't find icon :(");
+
+            //             console.log("Update!");
+            //         }
+            //     }),
+            // );
         },
         onStop() {},
     },
