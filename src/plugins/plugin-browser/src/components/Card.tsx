@@ -30,11 +30,13 @@ const styles = stylesheet.createThemedStyleSheet({
     content: {
         flexDirection: "row",
         alignItems: "center",
+        flex: 1,
     },
     title: {
         flexDirection: "row",
         alignItems: "center",
         gap: 6,
+        flexShrink: 1,
     },
     pluginIcon: {
         tintColor: semanticColors.LOGO_PRIMARY,
@@ -109,7 +111,7 @@ export default function Card(props: CardProps) {
             ]}>
             <Stack spacing={16}>
                 <RN.View style={styles.content}>
-                    <Stack spacing={0}>
+                    <Stack spacing={0} style={{ flex: 1 }}>
                         <RN.View style={styles.title}>
                             {props.headerIcon && (
                                 <RN.Image
@@ -121,7 +123,9 @@ export default function Card(props: CardProps) {
                             <Text
                                 variant="heading-lg/semibold"
                                 color="HEADER_PRIMARY"
-                                lineClamp={1}>
+                                lineClamp={1}
+                                ellipsis="tail"
+                                style={{ flexShrink: 1 }}>
                                 {props.headerLabel}
                             </Text>
                             {props.headerSuffix}
@@ -132,8 +136,8 @@ export default function Card(props: CardProps) {
                             </Text>
                         )}
                     </Stack>
-                    <RN.View style={{ marginLeft: "auto" }}>
-                        <Stack spacing={12} direction="horizontal">
+                    <RN.View>
+                        <Stack spacing={5} direction="horizontal">
                             {props.actions?.map(
                                 ({
                                     icon,

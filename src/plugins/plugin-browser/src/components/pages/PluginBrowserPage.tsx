@@ -1,10 +1,13 @@
+import { type FlashList as FlashListType } from "@shopify/flash-list";
 import { React, ReactNative as RN } from "@vendetta/metro/common";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { showToast } from "@vendetta/ui/toasts";
 import { safeFetch } from "@vendetta/utils";
 import fuzzysort from "fuzzysort";
+import { type TextInput } from "react-native";
 
-import { FlashList } from "$/deps";
+import { FlashList, Reanimated } from "$/deps";
+import { IconButton } from "$/lib/redesign";
 import { managePage } from "$/lib/ui";
 
 import { lang } from "../..";
@@ -22,6 +25,9 @@ export enum Sort {
     NameZA = "sheet.sort.name_za",
 }
 
+const AnimatedIconButton =
+    Reanimated.default.createAnimatedComponent(IconButton);
+
 export default () => {
     const [parsed, setParsed] = React.useState<FullPlugin[] | null>(null);
     const [search, setSearch] = React.useState("");
@@ -32,6 +38,10 @@ export default () => {
     currentSetSort.current = setSort;
 
     const changes = React.useRef(getChanges());
+
+    const flashlistRef = React.useRef<FlashListType<any>>();
+    const inputRef = React.useRef<TextInput>();
+    const [scrolledPast, setScrolledPast] = React.useState(false);
 
     const sortedData = React.useMemo(() => {
         if (!parsed) return [];
@@ -107,9 +117,30 @@ export default () => {
                 });
     }, [parsed]);
 
-    managePage({
-        title: lang.format("plugin.name", {}),
-    });
+    managePage(
+        {
+            title: lang.format("plugin.name", {}),
+            headerRight: () =>
+                scrolledPast ? (
+                    <AnimatedIconButton
+                        icon={getAssetIDByName("ArrowSmallUpIcon")}
+                        variant="secondary"
+                        size="sm"
+                        onPress={() => (
+                            flashlistRef.current?.scrollToOffset({
+                                animated: true,
+                                offset: 0,
+                            }),
+                            inputRef.current?.focus()
+                        )}
+                        entering={Reanimated.FadeIn.duration(200)}
+                        exiting={Reanimated.FadeOut.duration(200)}
+                    />
+                ) : null,
+        },
+        null,
+        [scrolledPast],
+    );
 
     return (
         <FlashList
@@ -117,13 +148,13 @@ export default () => {
                 <Search
                     onChangeText={setSearch}
                     filterSetSort={currentSetSort}
+                    inputRef={inputRef}
                 />
             }
-            ListFooterComponent={<RN.View style={{ height: 20 }} />}
-            ItemSeparatorComponent={() => <RN.View style={{ height: 15 }} />}
+            ItemSeparatorComponent={() => <RN.View style={{ height: 8 }} />}
             contentContainerStyle={{ paddingHorizontal: 10 }}
             data={sortedData}
-            estimatedItemSize={111}
+            estimatedItemSize={113}
             renderItem={({ item }) => (
                 <PluginCard item={item} changes={changes.current} />
             )}
@@ -135,6 +166,7 @@ export default () => {
                     onRefresh={() => parsed !== null && setParsed(null)}
                 />
             }
+            onScroll={e => setScrolledPast(e.nativeEvent.contentOffset.y >= 45)}
         />
     );
 };

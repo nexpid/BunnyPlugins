@@ -5,6 +5,7 @@ import { React, ReactNative as RN } from "@vendetta/metro/common";
 import { semanticColors } from "@vendetta/ui";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { ErrorBoundary } from "@vendetta/ui/components";
+import { type TextInput as TextInputType } from "react-native";
 
 import intlProxy from "$/lib/intlProxy";
 import { ContextMenu, IconButton, TextInput } from "$/lib/redesign";
@@ -32,15 +33,17 @@ function SearchIcon() {
     );
 }
 
-export default ({
+export default function Search({
     onChangeText,
     filterSetSort,
+    inputRef,
 }: {
     onChangeText: (v: string) => void;
     filterSetSort: React.MutableRefObject<
         React.Dispatch<React.SetStateAction<Sort>>
     >;
-}) => {
+    inputRef: React.MutableRefObject<TextInputType | undefined>;
+}) {
     const [query, setQuery] = React.useState("");
     const [focused, setFocused] = React.useState(false);
 
@@ -76,6 +79,7 @@ export default ({
                         isRound
                         onFocus={() => setFocused(true)}
                         onBlur={() => setFocused(false)}
+                        ref={inputRef}
                     />
                 </RN.View>
                 {!focused && !query && (
@@ -105,4 +109,4 @@ export default ({
             </RN.View>
         </ErrorBoundary>
     );
-};
+}
