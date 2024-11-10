@@ -9,7 +9,7 @@ export function hsync(run: () => void) {
 
 let rcache: string;
 export function check() {
-    const snapshot = rcache.slice();
+    const snapshot = rcache?.slice();
     rcache = JSON.stringify(cache.data);
 
     if (snapshot && snapshot !== JSON.stringify(cache.data))
