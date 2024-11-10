@@ -21,6 +21,9 @@ export async function authFetch(_url: string | URL, options?: RequestInit) {
 
     if (res.ok) return res;
     else {
+        // not modified
+        if (res.status === 304) return null;
+
         const text = await res.text();
         showToast(
             lang.format("toast.fetch_error", { urlpath: url.pathname }),
@@ -39,6 +42,8 @@ export async function getData(): Promise<UserData> {
             "if-modified-since": useCacheStore.getState().at,
         } as any,
     }).then(async res => {
+        if (!res) return useCacheStore.getState().data;
+
         const dt = await res.json();
         useCacheStore
             .getState()
@@ -54,7 +59,7 @@ export async function saveData(data: UserData): Promise<true> {
             "content-type": "application/json",
         },
     })
-        .then(res => res.json())
+        .then(res => res!.json())
         .then(json => {
             useCacheStore.getState().updateData(data, new Date().toUTCString());
             return json;
@@ -64,7 +69,7 @@ export async function deleteData(): Promise<true> {
     return await authFetch(`${constants.api}api/data`, {
         method: "DELETE",
     })
-        .then(res => res.json())
+        .then(res => res!.json())
         .then(json => {
             useCacheStore.getState().updateData();
             return json;
@@ -77,11 +82,11 @@ export interface RawData {
 }
 export async function getRawData(): Promise<RawData> {
     return await authFetch(`${constants.api}api/data/raw`).then(async res => {
-        const data = await res.text();
+        const data = await res!.text();
         return {
             data,
             file: JSON.parse(
-                res.headers.get("content-disposition")!.split("filename=")[1],
+                res!.headers.get("content-disposition")!.split("filename=")[1],
             ),
         };
     });
@@ -91,13 +96,11 @@ export function rawDataURL() {
 }
 
 export async function decompressRawData(data: string): Promise<UserData> {
-    return await (
-        await authFetch(`${constants.api}api/data/decompress`, {
-            method: "POST",
-            body: data,
-            headers: {
-                "content-type": "text/plain",
-            },
-        })
-    ).json();
+    return await (await authFetch(`${constants.api}api/data/decompress`, {
+        method: "POST",
+        body: data,
+        headers: {
+            "content-type": "text/plain",
+        },
+    }))!.json();
 }
