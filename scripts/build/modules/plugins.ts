@@ -35,6 +35,7 @@ export const workerResolves = {
 };
 
 export const workers: Worker[] = [];
+export const finishUp = new Set<{ prcess: string; worker: Worker }>();
 export let workerInd = 0;
 
 export function buildPlugin(
@@ -48,9 +49,10 @@ export function buildPlugin(
         pendingWorkers.push(plugin);
     } else {
         const started = bench();
-
         const worker = workers[usedWorkers - 1];
+
         worker.postMessage(plugin);
+        if (silent) finishUp.add({ prcess: plugin.prcess, worker });
 
         const listener = (data: any) => {
             if (code !== workerResolves.code) return;
@@ -62,12 +64,19 @@ export function buildPlugin(
             const label = `Built plugin ${highlight(status.result === "yay" ? status.plugin : plugin.name)}`;
 
             if (status.result === "yay") {
-                if (!silent) logScopeFinished(label, started.stop());
+                if (!silent) {
+                    logScopeFinished(label, started.stop());
+                    worker.postMessage({
+                        finishUp: plugin.prcess,
+                    });
+                }
 
                 plugin = pendingWorkers.splice(0, 1)[0];
                 usedWorkers--;
 
-                if (plugin) worker.postMessage(plugin);
+                if (plugin)
+                    worker.postMessage(plugin),
+                        finishUp.add({ prcess: plugin.prcess, worker });
                 else if (usedWorkers <= 0)
                     workers.forEach(x => x.emit("finished")),
                         workerResolves.res();

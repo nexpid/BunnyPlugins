@@ -1,6 +1,8 @@
-import { timeout, tryToConnect, ws } from "./stuff/ws";
+import { timeout, tryToConnect, ws, wsSymbol } from "./stuff/ws";
 
-export const onLoad = () => tryToConnect();
+export const onLoad = () => (
+    window[wsSymbol]?.close(1000, "plugin killed"), tryToConnect()
+);
 export const onUnload = () => {
     ws && ws.close(1000, "plugin stopped");
     clearTimeout(timeout);

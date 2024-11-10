@@ -10,19 +10,31 @@ import { showToast } from "@vendetta/ui/toasts";
 
 import { getPluginUrl } from "./constants";
 
+export const wsSymbol = Symbol.for("rejuvenate.ws");
+
 export let timeout: any, ws: WebSocket;
 let since = Date.now();
 
-async function refetchPlugins(raw: string[], catchup?: boolean) {
-    const refetching = raw
-        .map(id => plugins[`http://${getPluginUrl()}/${id}/`])
-        .filter(x => !!x);
+async function refetchPlugins(pluh: Record<string, string>, catchup?: boolean) {
+    const refetching = Object.entries(pluh)
+        .map(
+            ([id, hash]) =>
+                [plugins[`http://${getPluginUrl()}/${id}/`], hash] as [
+                    Plugin,
+                    string,
+                ],
+        )
+        .filter(([plugin, hash]) => plugin && plugin?.manifest?.hash !== hash);
 
-    for (const plugin of refetching) {
-        if (plugin.enabled) stopPlugin(plugin.id, false);
-        await fetchPlugin(plugin.id);
-        if (plugin.enabled) await startPlugin(plugin.id);
-    }
+    await Promise.all(
+        refetching.map(([plugin]) =>
+            (async () => {
+                if (plugin.enabled) stopPlugin(plugin.id, false);
+                await fetchPlugin(plugin.id);
+                if (plugin.enabled) await startPlugin(plugin.id);
+            })(),
+        ),
+    );
 
     if (refetching[0])
         showToast(
@@ -33,6 +45,8 @@ async function refetchPlugins(raw: string[], catchup?: boolean) {
 
 function connectToWs() {
     ws = new WebSocket(`ws://${getPluginUrl()}`);
+    window[wsSymbol] = ws;
+
     logger.log("Connected to WS!");
 
     ws.addEventListener("open", () =>
@@ -47,8 +61,8 @@ function connectToWs() {
         }
 
         if (data.op === "ping") ws.send(JSON.stringify({ op: "ping" }));
-        else if (data.op === "connect") refetchPlugins(data.catchup, true);
-        else if (data.op === "update") refetchPlugins(data.update);
+        else if (data.op === "connect") refetchPlugins(data.map, true);
+        else if (data.op === "update") refetchPlugins(data.updates);
     });
     ws.addEventListener(
         "close",
@@ -61,7 +75,10 @@ function connectToWs() {
 export async function tryToConnect(tries = 1) {
     if (tries > 5) return;
 
-    // fetch() just hangs forever if the port doesn't exist
+    // fetch() just hangs forever without this
+    const controller = new AbortController();
+    setTimeout(() => controller.abort(), 20_000);
+
     const { status } = await fetch(
         `http://${settings.debuggerUrl.slice(0, -4)}8731`,
         {
@@ -69,9 +86,10 @@ export async function tryToConnect(tries = 1) {
                 upgrade: "websocket",
                 connection: "Upgrade",
             },
+            signal: controller.signal,
         },
-    );
+    ).catch(() => ({ status: 0 }));
 
     if (status === 400) return connectToWs();
-    timeout = setTimeout(() => tryToConnect(tries + 1), 2000);
+    timeout = setTimeout(() => tryToConnect(tries + 1), 15_000);
 }

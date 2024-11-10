@@ -7,12 +7,10 @@ import chokidar from "chokidar";
 import pc from "picocolors";
 
 import { isDev } from "../build/lib/common.ts";
-import rejuvenatePlugins, {
-    shouldRejuvenate,
-} from "../build/lib/rejuvenate.ts";
 import { fixPluginLangs, makeLangDefs } from "../build/modules/lang.ts";
 import {
     buildPlugin,
+    finishUp,
     listPlugins,
     restartBuild,
     workerResolves,
@@ -25,7 +23,6 @@ import {
 import {
     logBuild,
     logBuildErr,
-    logDebug,
     logWatch,
     logWatchErr,
 } from "../common/live/print.ts";
@@ -139,11 +136,12 @@ const runFileChange = async (localPath: string) => {
                 `Rebuilding ${pc.bold(`${affected.length} plugin${affected.length !== 1 ? "s" : ""}`)}`,
             );
 
-            const rejuvenate = await rejuvenatePlugins(affected);
-
-            const plugins = (await listPlugins()).filter(plugin =>
-                affected.includes(plugin.name),
-            );
+            const plugins = (await listPlugins())
+                .filter(plugin => affected.includes(plugin.name))
+                .map(plugin => ({
+                    ...plugin,
+                    prcess: crypto.randomUUID(),
+                }));
 
             await fixPluginLangs(affected);
             const promise = Promise.all([
@@ -160,7 +158,10 @@ const runFileChange = async (localPath: string) => {
             await promise;
 
             if (workerResolves.code === code) {
-                await rejuvenate();
+                finishUp.forEach(({ prcess, worker }) =>
+                    worker.postMessage({ finishUp: prcess }),
+                );
+                finishUp.clear();
 
                 logBuild("Finished building");
                 workerResolves.code = "";
@@ -172,9 +173,6 @@ const runFileChange = async (localPath: string) => {
         }
     }
 };
-
-if (!shouldRejuvenate())
-    logDebug(`Rejuvenate is not running. Please run "pnpm serve"`);
 
 chokidar
     .watch(["src/**/*.*", "lang/values/base/*.json"], {

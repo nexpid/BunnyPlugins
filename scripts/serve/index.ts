@@ -1,5 +1,5 @@
-import { createReadStream, existsSync, unlinkSync } from "node:fs";
-import { mkdir, readFile, stat, writeFile } from "node:fs/promises";
+import { createReadStream, existsSync } from "node:fs";
+import { readFile, stat } from "node:fs/promises";
 import http from "node:http";
 import * as os from "node:os";
 import { join } from "node:path";
@@ -11,7 +11,6 @@ import { WebSocketServer } from "ws";
 
 import { logDebug, logServer, logWss } from "../common/live/print.ts";
 
-const cachePath = "node_modules/.serve/";
 const port = 8731;
 
 async function exists(path: string) {
@@ -88,7 +87,49 @@ const wss = new WebSocketServer({
     server,
 });
 
-const wssCatchup: Map<string, number> = new Map();
+let nextMessage: any = {};
+let nextMessageTimeout: any = 0;
+
+const pluginHashes = new Map<string, string>();
+let chokidarReady = false;
+watch("dist/*/manifest.json", {
+    ignoreInitial: false,
+})
+    .on("all", async (event, _path) => {
+        if (!["add", "change"].includes(event)) return;
+        const path = _path.replace(/\\/g, "/");
+
+        const id = path.split("/")[1];
+        let hash: string;
+
+        try {
+            pluginHashes.set(
+                id,
+                (hash = JSON.parse(await readFile(path, "utf8")).hash),
+            );
+        } catch (e) {
+            return null;
+        }
+
+        if (!chokidarReady) return;
+
+        nextMessage[id] = hash;
+
+        clearTimeout(nextMessageTimeout);
+        nextMessageTimeout = setTimeout(() => {
+            const plugins = Object.keys(nextMessage).length;
+            if (wss.clients.size > 0)
+                logWss(
+                    `Rejuvenating ${plugins === 1 ? pc.bold(id) : `${pc.bold(plugins)} plugin${plugins !== 1 ? "s" : ""}`} for ${pc.bold(wss.clients.size)} client${wss.clients.size !== 1 ? "s" : ""}`,
+                );
+
+            wss.clients.forEach(ws =>
+                ws.send(JSON.stringify({ op: "update", updates: nextMessage })),
+            );
+            nextMessage = {};
+        }, 500);
+    })
+    .on("ready", () => (chokidarReady = true));
 
 wss.on("connection", ws => {
     let heartbeat: NodeJS.Timeout,
@@ -102,17 +143,13 @@ wss.on("connection", ws => {
             return;
         }
 
-        if (data.op === "connect" && typeof data.since === "number" && !ready) {
+        if (data.op === "connect" && !ready) {
             ready = true;
-
-            const catchup = [...wssCatchup.entries()]
-                .filter(([_, date]) => date >= data.since)
-                .map(([plugin]) => plugin);
 
             ws.send(
                 JSON.stringify({
                     op: "connect",
-                    catchup,
+                    map: Object.fromEntries(pluginHashes.entries()),
                 }),
             );
 
@@ -125,25 +162,6 @@ wss.on("connection", ws => {
 
     ws.addEventListener("close", () => clearInterval(heartbeat));
 });
-
-function updateListener() {
-    setTimeout(async () => {
-        const text = await readFile(join(cachePath, "update"), "utf8");
-        const plugins = text.split("\u0000");
-
-        if (plugins[0]) {
-            logWss(
-                `Rejuvenating ${pc.bold(plugins.length)} plugin${plugins.length !== 1 ? "s" : ""} for ${pc.bold(wss.clients.size)} client${wss.clients.size !== 1 ? "s" : ""}`,
-            );
-
-            for (const plugin of plugins) wssCatchup.set(plugin, Date.now());
-
-            wss.clients.forEach(ws =>
-                ws.send(JSON.stringify({ op: "update", update: plugins })),
-            );
-        }
-    }, 50);
-}
 
 server.listen(port, async () => {
     const interfaces = Object.entries(os.networkInterfaces())
@@ -165,28 +183,4 @@ server.listen(port, async () => {
         logDebug(
             `  - http://${int.address}${pc.white(`:${port}`)}${" ".repeat(longestInterface - int.address.length)}  ${pc.bold(int.group)}`,
         );
-
-    await mkdir(cachePath, { recursive: true });
-    await writeFile(join(cachePath, "update"), "");
-
-    watch(join(cachePath, "update"), { ignoreInitial: true }).on(
-        "change",
-        updateListener,
-    );
 });
-
-process.stdin.resume();
-
-function exitHandler(options) {
-    if (options.cleanup) unlinkSync(join(cachePath, "update"));
-    if (options.exit) process.exit();
-}
-
-process.on("exit", exitHandler.bind(null, { cleanup: true }));
-
-process.on("SIGINT", exitHandler.bind(null, { exit: true }));
-
-process.on("SIGUSR1", exitHandler.bind(null, { exit: true }));
-process.on("SIGUSR2", exitHandler.bind(null, { exit: true }));
-
-process.on("uncaughtException", exitHandler.bind(null, { exit: true }));

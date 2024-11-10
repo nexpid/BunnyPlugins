@@ -23,7 +23,11 @@ const mdNote = makeMdNote("scripts/build/modules/workers/plugins.ts", "md");
 
 const { isDev } = workerData;
 
-async function buildPlugin(plugin: string, lang: string | null) {
+async function buildPlugin(
+    plugin: string,
+    lang: string | null,
+    prcess: string,
+) {
     const manifest: import("../../types").Readmes.Manifest = JSON.parse(
         await readFile(join("src/plugins", plugin, "manifest.json"), "utf8"),
     );
@@ -224,42 +228,51 @@ async function buildPlugin(plugin: string, lang: string | null) {
     const outManifest = manifest;
     outManifest.hash = hash;
     outManifest.main = "index.js";
-    await writeFile(
-        join("dist", plugin, "manifest.json"),
-        JSON.stringify(outManifest),
-    );
+
+    finishUp.set(prcess, () => {
+        finishUp.delete(prcess);
+
+        writeFile(
+            join("dist", plugin, "manifest.json"),
+            JSON.stringify(outManifest),
+        );
+    });
 
     if (bundle.cache) await saveCache(plugin, bundle.cache);
     return manifest.name;
 }
+
+const finishUp = new Map<string, () => void>();
 
 if (parentPort) parentPort.postMessage("ready");
 else throw new Error("why is parentPort missing???");
 
 if (parentPort)
     parentPort.addListener("message", data =>
-        buildPlugin(data.data?.name ?? data.name, data.data?.lang ?? data.lang)
-            .then(
-                plugin =>
-                    parentPort &&
-                    parentPort.postMessage({
-                        result: "yay",
-                        plugin,
-                    }),
-            )
-            .catch(
-                err =>
-                    parentPort &&
-                    parentPort.postMessage({
-                        result: "nay",
-                        err:
-                            err instanceof Error
-                                ? err
-                                : new Error(
-                                      err?.message ??
-                                          err?.toString?.() ??
-                                          String(err),
-                                  ),
-                    }),
-            ),
+        finishUp.has(data.finishUp)
+            ? finishUp.get(data.finishUp)?.()
+            : buildPlugin(data.name, data.lang, data.prcess)
+                  .then(
+                      plugin =>
+                          parentPort &&
+                          parentPort.postMessage({
+                              result: "yay",
+                              plugin,
+                          }),
+                  )
+                  .catch(
+                      err =>
+                          parentPort &&
+                          parentPort.postMessage({
+                              result: "nay",
+                              err:
+                                  err instanceof Error
+                                      ? err
+                                      : new Error(
+                                            err?.message ??
+                                                err?.toString?.() ??
+                                                String(err),
+                                        ),
+                          }),
+                  ),
     );

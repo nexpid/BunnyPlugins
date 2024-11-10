@@ -12,7 +12,6 @@ import {
 } from "../common/statistics/print.ts";
 import { TsWorker } from "../common/worker/index.ts";
 import { isDev } from "./lib/common.ts";
-import rejuvenatePlugins from "./lib/rejuvenate.ts";
 import { fixPluginLangs, makeLangDefs } from "./modules/lang.ts";
 import {
     buildPlugin,
@@ -56,9 +55,6 @@ logFinished("writing plugin lang files", writePluginLangFiles.stop());
 
 // Build plugins
 
-const rejuvenate =
-    isDev && (await rejuvenatePlugins((await listPlugins()).map(x => x.name)));
-
 const buildingPlugins = bench();
 logHeader("Building plugins");
 
@@ -86,5 +82,3 @@ await Promise.all([
 logFinished("writing README files", writeReadmeFiles.stop());
 
 logCompleted(Math.floor(performance.now() - offset));
-
-if (rejuvenate) await rejuvenate();

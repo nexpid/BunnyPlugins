@@ -2,7 +2,6 @@ export namespace WSS {
     export type IncomingMessage =
         | {
               op: "connect";
-              since: number;
           }
         | {
               op: "ping";
@@ -11,11 +10,11 @@ export namespace WSS {
     export type OutgoingMessage =
         | {
               op: "connect";
-              catchup: string[];
+              map: Record<string, string>;
           }
         | {
               op: "update";
-              update: string[];
+              updates: Record<string, string>;
           }
         | {
               op: "ping";
