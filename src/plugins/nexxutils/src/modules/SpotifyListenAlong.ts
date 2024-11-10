@@ -19,14 +19,6 @@ export default new Module({
     extra: {
         credits: ["1001086404203389018"],
     },
-    settings: {
-        redesigned: {
-            label: "Redesigned Icon",
-            subLabel: "Uses the new redesigned Listen along icon",
-            type: "toggle",
-            default: true,
-        },
-    },
     handlers: {
         onStart() {
             this.patches.add(
@@ -39,7 +31,6 @@ export default new Module({
                         button: ath,
                         activity: aprops.activity,
                         user: aprops.activity.user,
-                        redesigned: this.storage.options.redesigned,
                     });
                 }),
             );

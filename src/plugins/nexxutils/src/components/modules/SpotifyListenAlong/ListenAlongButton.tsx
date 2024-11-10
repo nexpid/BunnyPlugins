@@ -1,13 +1,12 @@
 import { findByProps, findByStoreName } from "@vendetta/metro";
 import { React, ReactNative as RN } from "@vendetta/metro/common";
-import { getAssetIDByName } from "@vendetta/ui/assets";
+import { semanticColors } from "@vendetta/ui";
 import { Button } from "@vendetta/ui/components";
 import { showToast } from "@vendetta/ui/toasts";
 
-import { Svg } from "$/deps";
+import { resolveSemanticColor } from "$/types";
 
-import listenAlong from "../../../../assets/SpotifyListenAlong/listenAlong.svg";
-import listenAlong2 from "../../../../assets/SpotifyListenAlong/listenAlong2.svg";
+import UserPlayIcon from "../../../../assets/SpotifyListenAlong/UserPlayIcon.png";
 
 const UserStore = findByStoreName("UserStore");
 const SpotifyStore = findByStoreName("SpotifyStore");
@@ -18,12 +17,10 @@ export default function ({
     button,
     activity,
     user,
-    redesigned,
 }: {
     button: any;
     activity: any;
     user: { id: string };
-    redesigned: boolean;
 }) {
     const [_, forceUpdate] = React.useReducer(x => ~x, 0);
     React.useEffect(() => {
@@ -36,16 +33,13 @@ export default function ({
     let disabled: false | string = false;
     const swith = SpotifyStore.getSyncingWith();
     if (swith?.userId === user.id)
-        disabled = "You're already syncing with this user.";
+        disabled = "You're already listening along this user.";
     if (UserStore.getCurrentUser().id === user.id)
         disabled = "Listen along with someone else, not yourself.";
 
     return (
         <>
-            <RN.View style={{ width: "100%", paddingRight: 32 + 8 }}>
-                {def}
-            </RN.View>
-            <RN.View style={{ position: "absolute", right: 0 }}>
+            <RN.View style={{ position: "absolute", left: 0 }}>
                 <Button
                     size="small"
                     text=""
@@ -55,10 +49,15 @@ export default function ({
                         disabled && { opacity: 0.5 },
                     ]}
                     renderIcon={() => (
-                        <Svg.SvgXml
-                            width={20}
-                            height={20}
-                            xml={redesigned ? listenAlong2 : listenAlong}
+                        <RN.Image
+                            source={UserPlayIcon}
+                            style={{
+                                width: 20,
+                                height: 20,
+                                tintColor: resolveSemanticColor(
+                                    semanticColors.TEXT_NORMAL,
+                                ),
+                            }}
                         />
                     )}
                     onPress={() => {
@@ -67,7 +66,6 @@ export default function ({
                             return;
                         }
 
-                        showToast("Syncing", getAssetIDByName("Check"));
                         if (!SpotifyStore.getActivity()) {
                             const x = () => {
                                 SpotifyStore.removeChangeListener(x);
@@ -78,6 +76,9 @@ export default function ({
                         } else sync(activity, user.id);
                     }}
                 />
+            </RN.View>
+            <RN.View style={{ width: "100%", paddingLeft: 32 + 8 }}>
+                {def}
             </RN.View>
         </>
     );
