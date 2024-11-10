@@ -30,55 +30,6 @@ export default new Module({
                     };
                 }),
             );
-            // this.patches.add(
-            //     // @ts-expect-error not in RN typings
-            //     before("render", RN.Pressable.type, ([a]) => {
-            //         if (a.accessibilityLabel === intlProxy.POLLS) {
-            //             const [_, forceUpdate] = React.useReducer(x => ~x, 0);
-            //             React.useEffect(() =>
-            //                 fluxSubscribe("SPOTIFY_PLAYER_STATE", forceUpdate),
-            //             );
-
-            //             const disabled = !SpotifyStore.getActivity()?.party?.id;
-            //             a.disabled = disabled;
-            //             a.onPress = sendInvite;
-
-            //             const textComp = findInReactTree(
-            //                 a.children,
-            //                 x =>
-            //                     x.children === intlProxy.POLLS ||
-            //                     x.children === "Invite",
-            //             );
-            //             if (textComp) {
-            //                 textComp.children = "Invite";
-            //                 textComp.style = [
-            //                     styles.text,
-            //                     disabled && styles.disabled,
-            //                 ];
-            //             }
-
-            //             const iconComp = findInReactTree(
-            //                 a.children,
-            //                 x => x.props?.style?.tintColor,
-            //             );
-            //             if (iconComp) {
-            //                 iconComp.type = () =>
-            //                     React.createElement(RN.Image, {
-            //                         source: getAssetIDByName(
-            //                             "ic_spotify_white_16px",
-            //                         ),
-            //                         resizeMode: "cover",
-            //                         style: [
-            //                             iconComp.props.style,
-            //                             disabled && styles.disabled,
-            //                         ],
-            //                     });
-            //             } else console.log("Couldn't find icon :(");
-
-            //             console.log("Update!");
-            //         }
-            //     }),
-            // );
         },
         onStop() {},
     },

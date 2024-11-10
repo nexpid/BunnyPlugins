@@ -1,14 +1,14 @@
-import { findByName, findByProps } from "@vendetta/metro";
+import { findByProps } from "@vendetta/metro";
 import { React } from "@vendetta/metro/common";
-import { after, before } from "@vendetta/patcher";
+import { after } from "@vendetta/patcher";
 import { getAssetIDByName } from "@vendetta/ui/assets";
-import { findInReactTree } from "@vendetta/utils";
 
-import ListenAlongButton from "../components/modules/SpotifyListenAlong/ListenAlongButton";
+import ClassicListenButton from "../components/modules/SpotifyListenAlong/ClassicListenButton";
+import SimplifiedListenButton from "../components/modules/SpotifyListenAlong/SimplifiedListenButton";
 import { Module, ModuleCategory } from "../stuff/Module";
 
 const { SpotifyPlayButton } = findByProps("SpotifyPlayButton");
-const UserProfileSection = findByName("UserProfileSection", false);
+const PlayOnSpotifyButton = findByProps("PlayOnSpotifyButton");
 
 export default new Module({
     id: "spotify-listen-along",
@@ -22,37 +22,36 @@ export default new Module({
     handlers: {
         onStart() {
             this.patches.add(
-                after("render", SpotifyPlayButton.prototype, (_, ret) => {
-                    const aprops = ret?._owner?.stateNode?.props;
-                    if (!aprops?.activity?.user) return;
-
-                    const ath = ret.props;
-                    return React.createElement(ListenAlongButton, {
-                        button: ath,
-                        activity: aprops.activity,
-                        user: aprops.activity.user,
-                    });
-                }),
+                after(
+                    "render",
+                    SpotifyPlayButton.prototype,
+                    (
+                        _,
+                        {
+                            props: button,
+                            _owner: {
+                                stateNode: {
+                                    props: { activity },
+                                },
+                            },
+                        },
+                    ) =>
+                        React.createElement(ClassicListenButton, {
+                            button,
+                            activity,
+                        }),
+                ),
             );
             this.patches.add(
-                before("default", UserProfileSection, ([arg]) => {
-                    if (arg.title?.includes("Spotify")) {
-                        const actions = findInReactTree(
-                            arg.children,
-                            x => x.type?.name === "Actions",
-                        );
-
-                        if (actions)
-                            this.patches.add(
-                                before(
-                                    "type",
-                                    actions,
-                                    ([a]) => (a.activity.user = a.user),
-                                    true,
-                                ),
-                            );
-                    }
-                }),
+                after(
+                    "PlayOnSpotifyButton",
+                    PlayOnSpotifyButton,
+                    ([{ activity }], button) =>
+                        React.createElement(SimplifiedListenButton, {
+                            button,
+                            activity,
+                        }),
+                ),
             );
         },
         onStop() {},
