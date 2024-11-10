@@ -1,6 +1,6 @@
 import { React, ReactNative as RN } from "@vendetta/metro/common";
 import { semanticColors } from "@vendetta/ui";
-import { type StyleProp, type TextStyle } from "react-native";
+import { TextProps } from "react-native";
 
 import {
     resolveSemanticColor,
@@ -26,15 +26,18 @@ export default function Text({
     getChildren,
     children,
     liveUpdate,
+    ellipsis,
 }: React.PropsWithChildren<{
     variant?: TextStyleSheetVariant;
-    lineClamp?: number;
     color?: string;
-    align?: "left" | "right" | "center";
-    style?: StyleProp<TextStyle>;
-    onPress?: () => void;
     getChildren?: () => React.ReactNode | undefined;
     liveUpdate?: boolean;
+
+    lineClamp?: TextProps["numberOfLines"];
+    align?: "left" | "right" | "center";
+    style?: TextProps["style"];
+    onPress?: TextProps["onPress"];
+    ellipsis?: TextProps["ellipsizeMode"];
 }>) {
     const [_, forceUpdate] = React.useReducer(x => ~x, 0);
 
@@ -53,15 +56,16 @@ export default function Text({
     return (
         <RN.Text
             style={[
-                variant ? TextStyleSheet[variant] : {},
+                variant && TextStyleSheet[variant],
                 color
                     ? { color: resolveSemanticColor(semanticColors[color]) }
                     : {},
-                align ? { textAlign: align } : {},
+                align && { textAlign: align },
                 style ?? {},
             ]}
             numberOfLines={lineClamp}
-            onPress={onPress}>
+            onPress={onPress}
+            ellipsizeMode={ellipsis}>
             {getChildren?.() ?? children}
         </RN.Text>
     );

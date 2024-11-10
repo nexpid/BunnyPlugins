@@ -3,7 +3,6 @@ import {
     type PressableProps,
     type View,
     type ViewProps,
-    type ViewStyle,
 } from "react-native";
 import { type SharedValue } from "react-native-reanimated";
 
@@ -24,7 +23,7 @@ export interface PrimitiveButton {
     onPress?: () => void;
     disabled?: boolean;
     icon?: ImageSourcePropType | React.ReactNode;
-    style?: ViewStyle;
+    style?: ViewProps["style"];
 }
 export interface PrimitiveButtonIcon {
     source: ImageSourcePropType;
@@ -85,7 +84,7 @@ export type IconButton = React.FC<{
     disabled?: boolean;
     size?: "sm" | "md" | "lg";
     variant?: ButtonVariant;
-    style?: ViewStyle;
+    style?: ViewProps["style"];
 }>;
 
 export type ContextMenu = React.FC<{
@@ -155,6 +154,7 @@ export type TextInput = React.FC<{
     autoCorrect?: boolean;
     isRound?: boolean;
     onChange?: (value: string) => void;
+    ref?: any;
 }>;
 
 type controlState = symbol;

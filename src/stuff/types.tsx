@@ -120,9 +120,16 @@ export function androidifyColor(color: string, alpha = 255): number {
     );
 }
 
-export function fluxSubscribe(topic: string, callback: (data: any) => void) {
-    FluxDispatcher.subscribe(topic, callback);
-    return () => FluxDispatcher.unsubscribe(topic, callback);
+export function fluxSubscribe(
+    topic: string,
+    callback: (data: any) => void,
+    once?: boolean,
+) {
+    const cback = (data: any) => (
+        callback(data), once && FluxDispatcher.unsubscribe(topic, cback)
+    );
+    FluxDispatcher.subscribe(topic, cback);
+    return () => FluxDispatcher.unsubscribe(topic, cback);
 }
 
 export function formatBytes(bytes: number) {
