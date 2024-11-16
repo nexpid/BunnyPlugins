@@ -249,7 +249,7 @@ else throw new Error("why is parentPort missing???");
 
 if (parentPort)
     parentPort.addListener("message", data =>
-        finishUp.has(data.finishUp)
+        data.finishUp
             ? finishUp.get(data.finishUp)?.()
             : buildPlugin(data.name, data.lang, data.prcess)
                   .then(

@@ -58,7 +58,11 @@ logFinished("writing plugin lang files", writePluginLangFiles.stop());
 const buildingPlugins = bench();
 logHeader("Building plugins");
 
-for (const plugin of await listPlugins()) buildPlugin(plugin);
+for (const plugin of await listPlugins())
+    buildPlugin({
+        ...plugin,
+        prcess: crypto.randomUUID(),
+    });
 
 await (() =>
     new Promise<void>((res, rej) => {
