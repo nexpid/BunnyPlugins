@@ -53,6 +53,7 @@ type ModuleSetting = {
           subLabel?: string | ((value: boolean) => string);
           type: "toggle";
           default: boolean;
+          predicate?: (this: Module<any>) => void;
       }
     | {
           type: "button";
@@ -63,6 +64,7 @@ type ModuleSetting = {
           type: "choose";
           choices: string[];
           default: string;
+          predicate?: (this: Module<any>) => void;
       }
 );
 
@@ -390,30 +392,7 @@ export class Module<Settings extends Record<string, ModuleSetting>> {
                                 />
                                 {Object.entries(this.settings).map(
                                     ([id, setting]) =>
-                                        setting.type === "toggle" ? (
-                                            <FormSwitchRow
-                                                label={setting.label}
-                                                subLabel={this.callable(
-                                                    setting.subLabel,
-                                                    this.storage.options[id],
-                                                )}
-                                                onValueChange={() => {
-                                                    // @ts-expect-error type string cannot be used to index type
-                                                    this.storage.options[id] =
-                                                        !this.storage.options[
-                                                            id
-                                                        ];
-                                                    this.restart();
-                                                    forceUpdate();
-                                                }}
-                                                leading={
-                                                    <FormRow.Icon
-                                                        source={setting.icon}
-                                                    />
-                                                }
-                                                value={this.storage.options[id]}
-                                            />
-                                        ) : setting.type === "button" ? (
+                                        setting.type === "button" ? (
                                             <RN.View
                                                 style={{ marginVertical: 12 }}>
                                                 <Button
@@ -425,21 +404,18 @@ export class Module<Settings extends Record<string, ModuleSetting>> {
                                                             this,
                                                         )();
                                                     }}
-                                                    icon={
-                                                        <RN.Image
-                                                            style={{
-                                                                marginRight: 8,
-                                                            }}
-                                                            source={
-                                                                setting.icon
-                                                            }
-                                                        />
-                                                    }
+                                                    icon={setting.icon}
                                                 />
                                             </RN.View>
                                         ) : (
-                                            setting.type === "choose" && (
-                                                <FormRow
+                                              setting.predicate
+                                                  ? setting.predicate?.bind(
+                                                        this,
+                                                    )()
+                                                  : true
+                                          ) ? (
+                                            setting.type === "toggle" ? (
+                                                <FormSwitchRow
                                                     label={setting.label}
                                                     subLabel={this.callable(
                                                         setting.subLabel,
@@ -447,34 +423,15 @@ export class Module<Settings extends Record<string, ModuleSetting>> {
                                                             id
                                                         ],
                                                     )}
-                                                    onPress={() => {
-                                                        ActionSheet.open(
-                                                            ChooseSheet,
-                                                            {
-                                                                title: setting.label,
-                                                                value: this
-                                                                    .storage
-                                                                    .options[
-                                                                    id
-                                                                ] as any,
-                                                                options:
-                                                                    setting.choices.map(
-                                                                        x => ({
-                                                                            name: x,
-                                                                            value: x,
-                                                                        }),
-                                                                    ),
-                                                                callback:
-                                                                    val => {
-                                                                        // @ts-expect-error type string cannot be used to index type
-                                                                        this.storage.options[
-                                                                            id
-                                                                        ] = val;
-                                                                        this.restart();
-                                                                        forceUpdate();
-                                                                    },
-                                                            },
-                                                        );
+                                                    onValueChange={() => {
+                                                        // @ts-expect-error type string cannot be used to index type
+                                                        this.storage.options[
+                                                            id
+                                                        ] =
+                                                            !this.storage
+                                                                .options[id];
+                                                        this.restart();
+                                                        forceUpdate();
                                                     }}
                                                     leading={
                                                         <FormRow.Icon
@@ -483,20 +440,73 @@ export class Module<Settings extends Record<string, ModuleSetting>> {
                                                             }
                                                         />
                                                     }
-                                                    trailing={
-                                                        <Text
-                                                            variant="text-md/medium"
-                                                            color="TEXT_MUTED">
-                                                            {/* @ts-expect-error type string cannot be used to index type*/}
-                                                            {
-                                                                this.storage
-                                                                    .options[id]
-                                                            }
-                                                        </Text>
+                                                    value={
+                                                        this.storage.options[id]
                                                     }
                                                 />
+                                            ) : (
+                                                setting.type === "choose" && (
+                                                    <FormRow
+                                                        label={setting.label}
+                                                        subLabel={this.callable(
+                                                            setting.subLabel,
+                                                            this.storage
+                                                                .options[id],
+                                                        )}
+                                                        onPress={() => {
+                                                            ActionSheet.open(
+                                                                ChooseSheet,
+                                                                {
+                                                                    title: setting.label,
+                                                                    value: this
+                                                                        .storage
+                                                                        .options[
+                                                                        id
+                                                                    ] as any,
+                                                                    options:
+                                                                        setting.choices.map(
+                                                                            x => ({
+                                                                                name: x,
+                                                                                value: x,
+                                                                            }),
+                                                                        ),
+                                                                    callback:
+                                                                        val => {
+                                                                            // @ts-expect-error type string cannot be used to index type
+                                                                            this.storage.options[
+                                                                                id
+                                                                            ] =
+                                                                                val;
+                                                                            this.restart();
+                                                                            forceUpdate();
+                                                                        },
+                                                                },
+                                                            );
+                                                        }}
+                                                        leading={
+                                                            <FormRow.Icon
+                                                                source={
+                                                                    setting.icon
+                                                                }
+                                                            />
+                                                        }
+                                                        trailing={
+                                                            <Text
+                                                                variant="text-md/medium"
+                                                                color="TEXT_MUTED">
+                                                                {/* @ts-expect-error type string cannot be used to index type*/}
+                                                                {
+                                                                    this.storage
+                                                                        .options[
+                                                                        id
+                                                                    ]
+                                                                }
+                                                            </Text>
+                                                        }
+                                                    />
+                                                )
                                             )
-                                        ),
+                                        ) : null,
                                 )}
                             </RN.View>
                         </>
