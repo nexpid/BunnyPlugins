@@ -1,13 +1,13 @@
-import { findByStoreName } from "@vendetta/metro";
-import { ReactNative as RN } from "@vendetta/metro/common";
+import { findByProps, findByStoreName } from "@vendetta/metro";
 import { before } from "@vendetta/patcher";
 
 import NerdEmoji from "../../assets/MiniMod/NerdEmoji.png";
 import { Module, ModuleCategory } from "../stuff/Module";
 
 // It's just like Among Us
-const { DCDChatManager } = RN.NativeModules;
 const GuildMemberStore = findByStoreName("GuildMemberStore");
+
+const chatManager = findByProps("updateRows", "getConstants");
 
 export default new Module({
     id: "minimod",
@@ -28,7 +28,7 @@ export default new Module({
         onStart() {
             if (this.storage.options.showTimeouts)
                 this.patches.add(
-                    before("updateRows", DCDChatManager, args => {
+                    before("updateRows", chatManager, args => {
                         const rows = JSON.parse(args[1]);
 
                         if (rows.find((row: any) => row?.message)) {

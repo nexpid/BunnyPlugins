@@ -1,7 +1,6 @@
 import { constants } from "@vendetta";
 import { HTTP_REGEX_MULTI } from "@vendetta/constants";
 import { findByProps } from "@vendetta/metro";
-import { ReactNative as RN } from "@vendetta/metro/common";
 import { before, instead } from "@vendetta/patcher";
 import { installPlugin, plugins, removePlugin } from "@vendetta/plugins";
 import { getAssetIDByName } from "@vendetta/ui/assets";
@@ -11,15 +10,15 @@ import { Iterable } from "..";
 import { pluginMessageCache, updateMessages } from "./messages";
 import { getCodedLink } from "./plugins";
 
-const { DCDChatManager } = RN.NativeModules;
 const codedLinksCache = {} as Record<string, Record<number, string>>;
 const { MessagesHandlers } = findByProps("MessagesHandlers");
+const chatManager = findByProps("updateRows", "getConstants");
 
 export default () => {
     const patches = new Array<() => void>();
 
     patches.push(
-        before("updateRows", DCDChatManager, args => {
+        before("updateRows", chatManager, args => {
             const rows = JSON.parse(args[1]);
             for (const row of rows) {
                 const plugins = new Array<string>();
