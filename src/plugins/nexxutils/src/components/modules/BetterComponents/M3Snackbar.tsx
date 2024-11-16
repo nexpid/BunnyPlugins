@@ -1,18 +1,40 @@
 import { ReactNative as RN, stylesheet } from "@vendetta/metro/common";
-import { semanticColors } from "@vendetta/ui";
+import { rawColors } from "@vendetta/ui";
 
 import Text from "$/components/Text";
+import { Reanimated } from "$/deps";
+import { resolveCustomSemantic } from "$/types";
 
-export default function (props: { content: any; source?: any; icon?: any }) {
+export default function (props: {
+    content: any;
+    source?: any;
+    icon?: any;
+    isOnBottom?: boolean;
+}) {
+    const height = RN.Dimensions.get("window").height - 40;
     const styles = stylesheet.createThemedStyleSheet({
         container: {
-            backgroundColor: semanticColors.CARD_PRIMARY_BG,
+            backgroundColor: resolveCustomSemantic(
+                rawColors.PRIMARY_200,
+                rawColors.PRIMARY_730,
+            ),
             width: 344,
             minHeight: 48,
-            borderRadius: 4,
+            borderRadius: 8,
             paddingHorizontal: 16,
             paddingVertical: 14,
             flexDirection: "row",
+        },
+        containerBottom: {
+            position: "absolute",
+            bottom: -height,
+        },
+        text: {
+            color: resolveCustomSemantic(
+                rawColors.PRIMARY_730,
+                rawColors.PRIMARY_130,
+            ),
+            width: 280,
         },
         iconContainer: {
             alignSelf: "flex-end",
@@ -56,11 +78,18 @@ export default function (props: { content: any; source?: any; icon?: any }) {
               ));
 
     return (
-        <RN.View style={[styles.container, styles.shadow]}>
-            <Text
-                variant="text-md/semibold"
-                color="TEXT_NORMAL"
-                style={{ width: 280 }}>
+        <Reanimated.default.View
+            style={[
+                styles.container,
+                props.isOnBottom && styles.containerBottom,
+                styles.shadow,
+            ]}
+            entering={
+                props.isOnBottom
+                    ? Reanimated.FadeInUp.duration(150)
+                    : Reanimated.FadeInDown.duration(150)
+            }>
+            <Text variant="text-md/semibold" style={styles.text}>
                 <Content />
             </Text>
             {img && (
@@ -68,6 +97,6 @@ export default function (props: { content: any; source?: any; icon?: any }) {
                     <Image />
                 </RN.View>
             )}
-        </RN.View>
+        </Reanimated.default.View>
     );
 }
