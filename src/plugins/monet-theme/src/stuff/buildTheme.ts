@@ -3,9 +3,10 @@ import { rawColors } from "@vendetta/ui";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { showToast } from "@vendetta/ui/toasts";
 
+import { getDiscordTheme } from "$/types";
 import { ThemeDataWithPlus } from "$/typings";
 
-import { getDiscordTheme, vstorage } from "..";
+import { vstorage } from "..";
 import { Patches, PatchThing } from "../types";
 import { getLABShade, parseColor } from "./colors";
 

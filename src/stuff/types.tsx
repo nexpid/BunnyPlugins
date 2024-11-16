@@ -23,8 +23,16 @@ export const { popModal, pushModal } = findByProps("popModal", "pushModal");
 export type Entries<T> = [keyof T, T[keyof T]];
 
 // ...
+export const getDiscordTheme = () => {
+    // getDefaultFallbackTheme is not exported :(
+    const { theme } = ThemeStore;
+
+    if (theme.startsWith("vd-theme-")) return theme.split("-")[3];
+    else return theme;
+};
+
 export const resolveCustomSemantic = (dark: string, light: string) =>
-    ThemeStore.theme !== "light" ? dark : light;
+    getDiscordTheme() === "light" ? light : dark;
 
 export const lerp = (og: string, target: string, perc: number) => {
     const hex2rgb = (hex: string) =>

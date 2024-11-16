@@ -13,8 +13,9 @@ import {
 import { BetterTableRowGroup } from "$/components/BetterTableRow";
 import Text from "$/components/Text";
 import { hasPressableScale, PressableScale } from "$/lib/redesign";
+import { getDiscordTheme } from "$/types";
 
-import { getDiscordTheme, vstorage } from "../..";
+import { vstorage } from "../..";
 import wallpapers, {
     Collection,
     CollectionEntry,

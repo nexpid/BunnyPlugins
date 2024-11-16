@@ -5,8 +5,9 @@ import { type PressableProps } from "react-native";
 
 import Text from "$/components/Text";
 import { PressableScale, Stack } from "$/lib/redesign";
+import { getDiscordTheme } from "$/types";
 
-import { getDiscordTheme, vstorage } from "..";
+import { vstorage } from "..";
 import {
     conventionalCommitRegex,
     parseConventionalCommit,

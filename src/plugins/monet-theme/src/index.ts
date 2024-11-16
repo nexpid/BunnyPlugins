@@ -4,6 +4,7 @@ import { showConfirmationAlert } from "@vendetta/ui/alerts";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { showToast } from "@vendetta/ui/toasts";
 
+import { getDiscordTheme } from "$/types";
 import { ThemeDataWithPlus, VendettaSysColors } from "$/typings";
 
 import usePatches from "./components/hooks/usePatches";
@@ -22,13 +23,6 @@ export const getSysColors = () =>
     (window as any).__vendetta_syscolors as VendettaSysColors | null;
 export const hasTheme = () =>
     (window as any).bunny.themes.getCurrentTheme()?.id.includes("monet-theme");
-export const getDiscordTheme = () => {
-    // getDefaultFallbackTheme is not exported :(
-    const { theme } = ThemeStore;
-
-    if (theme.startsWith("vd-theme-")) return theme.split("-")[3];
-    else return theme;
-};
 
 export const vstorage = storage as {
     colors: {
