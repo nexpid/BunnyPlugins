@@ -1,4 +1,5 @@
 import { logger, plugin, settings } from "@vendetta";
+import { findByStoreName } from "@vendetta/metro";
 import {
     i18n,
     NavigationNative,
@@ -22,13 +23,13 @@ import { DocumentPicker, Reanimated } from "$/deps";
 import { Lang } from "$/lang";
 import RNFS from "$/wrappers/RNFS";
 
-import { lang, vstorage } from "..";
-import constants, { defaultClientId, defaultHost } from "../constants";
+import { initState, lang, vstorage } from "..";
 import { useAuthorizationStore } from "../stores/AuthorizationStore";
 import { useCacheStore } from "../stores/CacheStore";
 import {
     decompressRawData,
     deleteData,
+    getData,
     getRawData,
     RawData,
     rawDataURL,
@@ -38,11 +39,14 @@ import { openOauth2Modal } from "../stuff/oauth2";
 import { grabEverything, setImportCallback } from "../stuff/syncStuff";
 import { UserData } from "../types";
 import DataStat from "./DataStat";
+import NerdConfig from "./NerdConfig";
 import IgnoredPluginsPage from "./pages/IgnoredPluginsPage";
 import ImportActionSheet from "./sheets/ImportActionSheet";
 import TooMuchDataSheet from "./sheets/TooMuchDataSheet";
 
-const { FormRow, FormInput, FormSwitchRow } = Forms;
+const UserStore = findByStoreName("UserStore");
+
+const { FormRow, FormSwitchRow } = Forms;
 
 export default function () {
     useProxy(storage);
@@ -52,6 +56,12 @@ export default function () {
     const [isBusy, setIsBusy] = React.useState<string[]>([]);
     const { data, at, hasData } = useCacheStore();
     const { isAuthorized } = useAuthorizationStore();
+
+    const userId = UserStore.getCurrentUser()?.id ?? null;
+    if (initState.didInit !== userId) {
+        initState.didInit = userId;
+        isAuthorized() && getData();
+    }
 
     const navigation = NavigationNative.useNavigation();
 
@@ -194,20 +204,25 @@ export default function () {
                         android_ripple={styles.androidRipple}
                         disabled={false}
                         accessibilityRole={"button"}
-                        onPress={() => {
-                            if (
-                                !vstorage.realTrackingAnalyticsSentToChina
-                                    .pressedSettings
-                            )
-                                doBumpiness();
+                        onPress={
+                            settings.developerSettings
+                                ? () => {
+                                      if (
+                                          !vstorage
+                                              .realTrackingAnalyticsSentToChina
+                                              .pressedSettings
+                                      )
+                                          doBumpiness();
 
-                            if (lastTap >= Date.now()) {
-                                vstorage.realTrackingAnalyticsSentToChina.pressedSettings =
-                                    true;
-                                setShowDev(!showDev);
-                                lastTap = 0;
-                            } else lastTap = Date.now() + 500;
-                        }}
+                                      if (lastTap >= Date.now()) {
+                                          vstorage.realTrackingAnalyticsSentToChina.pressedSettings =
+                                              true;
+                                          setShowDev(!showDev);
+                                          lastTap = 0;
+                                      } else lastTap = Date.now() + 500;
+                                  }
+                                : undefined
+                        }
                         style={{ width: "100%", marginBottom: 8 }}>
                         <Reanimated.default.View
                             style={[
@@ -305,52 +320,7 @@ export default function () {
                     }
                 />
             </BetterTableRowGroup>
-            {showDev && (
-                <BetterTableRowGroup nearby>
-                    <FormRow
-                        label={lang.format("settings.dev.api_url.title", {})}
-                        subLabel={lang.format(
-                            "settings.dev.api_url.description",
-                            {},
-                        )}
-                        leading={
-                            <FormRow.Icon
-                                source={getAssetIDByName("PencilIcon")}
-                            />
-                        }
-                    />
-                    <FormInput
-                        title=""
-                        placeholder={defaultHost}
-                        value={vstorage.custom.host || defaultHost}
-                        onChange={(x: string) =>
-                            (vstorage.custom.host = x.length > 0 ? x : null)
-                        }
-                        style={{ marginTop: -25, marginHorizontal: 12 }}
-                    />
-                    <FormRow
-                        label={lang.format("settings.dev.client_id.title", {})}
-                        subLabel={lang.format(
-                            "settings.dev.client_id.description",
-                            {},
-                        )}
-                        leading={
-                            <FormRow.Icon
-                                source={getAssetIDByName("PencilIcon")}
-                            />
-                        }
-                    />
-                    <FormInput
-                        title=""
-                        placeholder={defaultClientId}
-                        value={constants.oauth2.clientId || defaultClientId}
-                        onChange={(x: string) =>
-                            (vstorage.custom.clientId = x.length > 0 ? x : null)
-                        }
-                        style={{ marginTop: -25, marginHorizontal: 12 }}
-                    />
-                </BetterTableRowGroup>
-            )}
+            {showDev && <NerdConfig />}
             <BetterTableRowGroup
                 title={lang.format("settings.auth.title", {})}
                 icon={getAssetIDByName("LockIcon")}>
@@ -384,6 +354,7 @@ export default function () {
                                         {},
                                     ),
                                     onConfirm: () => {
+                                        useCacheStore.getState().updateData();
                                         useAuthorizationStore
                                             .getState()
                                             .setToken(undefined);
@@ -529,8 +500,20 @@ export default function () {
                                                     "CircleCheckIcon-primary",
                                                 ),
                                             );
-                                        } catch {
-                                            // handled in saveData
+                                        } catch (e: any) {
+                                            if (
+                                                e?.message
+                                                    ?.toLowerCase()
+                                                    .includes(
+                                                        "request entity too large",
+                                                    )
+                                            )
+                                                ActionSheet.open(
+                                                    TooMuchDataSheet,
+                                                    {
+                                                        navigation,
+                                                    },
+                                                );
                                         }
 
                                         unBusy("save_api");

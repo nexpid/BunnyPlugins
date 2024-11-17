@@ -1,6 +1,7 @@
 import { findByStoreName } from "@vendetta/metro";
+import { createJSONStorage, persist } from "zustand/middleware";
 
-import { zustand } from "$/deps";
+import { RNMMKVManager, zustand } from "$/deps";
 import { fluxSubscribe } from "$/types";
 
 import { UserData } from "../types";
@@ -16,27 +17,40 @@ interface CacheState {
     hasData: () => boolean;
 }
 
-export const useCacheStore = zustand.create<CacheState>((set, get) => ({
-    data: undefined,
-    at: undefined,
-    dir: {},
-    init() {
-        const dt = get().dir[UserStore.getCurrentUser()?.id];
-        set({ data: dt.data, at: dt.at });
-    },
-    updateData(data, at) {
-        set({
-            data,
-            at,
-            dir: {
-                ...get().dir,
-                [UserStore.getCurrentUser()?.id]: { data, at },
+export const useCacheStore = zustand.create<
+    CacheState,
+    [["zustand/persist", { dir: CacheState["dir"] }]]
+>(
+    persist(
+        (set, get) => ({
+            data: undefined,
+            at: undefined,
+            dir: {},
+            init() {
+                const dt = get().dir[UserStore.getCurrentUser()?.id];
+                set({ data: dt?.data, at: dt?.at });
             },
-        });
-    },
-    hasData: () => !!get().data && !!get().at,
-}));
+            updateData(data, at) {
+                set({
+                    data,
+                    at,
+                    dir: {
+                        ...get().dir,
+                        [UserStore.getCurrentUser()?.id]: { data, at },
+                    },
+                });
+            },
+            hasData: () => !!get().data && !!get().at,
+        }),
+        {
+            name: "cloudsync-cache",
+            storage: createJSONStorage(() => RNMMKVManager),
+            partialize: state => ({ dir: state.dir }),
+            onRehydrateStorage: () => state => state?.init(),
+        },
+    ),
+);
 
 export const unsubCacheStore = fluxSubscribe("CONNECTION_OPEN", () => {
-    useCacheStore.getState().init();
+    useCacheStore.persist.rehydrate();
 });

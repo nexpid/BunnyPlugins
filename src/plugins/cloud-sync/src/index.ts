@@ -1,4 +1,5 @@
 import { constants } from "@vendetta";
+import { findByStoreName } from "@vendetta/metro";
 import { storage } from "@vendetta/plugin";
 import { plugins } from "@vendetta/plugins";
 import { themes } from "@vendetta/themes";
@@ -13,6 +14,8 @@ import { debounceSync } from "./stuff/http";
 import patcher from "./stuff/patcher";
 import { grabEverything } from "./stuff/syncStuff";
 
+const UserStore = findByStoreName("UserStore");
+
 export const vstorage = storage as {
     config: {
         autoSync: boolean;
@@ -20,8 +23,8 @@ export const vstorage = storage as {
         ignoredPlugins: string[];
     };
     custom: {
-        host: string | null;
-        clientId: string | null;
+        host: string;
+        clientId: string;
     };
     realTrackingAnalyticsSentToChina: {
         pressedSettings?: boolean;
@@ -43,29 +46,49 @@ export function canImport(id: string) {
 }
 
 const autoSync = async () => {
-    if (!vstorage.config.autoSync) return;
+    if (
+        !vstorage.config.autoSync ||
+        !useAuthorizationStore.getState().isAuthorized()
+    )
+        return;
 
     const cache = useCacheStore.getState();
 
     const everything = await grabEverything();
-    if (JSON.stringify(cache.data) !== JSON.stringify(everything))
-        debounceSync(async () => {
-            try {
-                await saveData(everything);
-            } catch (e: any) {
-                const str = e?.message;
-                if (str.includes("request entity too large")) {
-                    vstorage.realTrackingAnalyticsSentToChina.tooMuchData =
-                        true;
-                    vstorage.config.autoSync = false;
+    if (JSON.stringify(cache.data) !== JSON.stringify(everything)) {
+        // let's double check
+        const userId = UserStore.getCurrentUser()?.id ?? null;
+        if (initState.didInit !== userId) {
+            initState.didInit = userId;
+            await getData();
+        }
+
+        if (JSON.stringify(cache.data) !== JSON.stringify(everything))
+            debounceSync(async () => {
+                try {
+                    if (useAuthorizationStore.getState().isAuthorized())
+                        await saveData(everything);
+                } catch (e: any) {
+                    if (
+                        e?.message
+                            ?.toLowerCase()
+                            .includes("request entity too large")
+                    ) {
+                        vstorage.realTrackingAnalyticsSentToChina.tooMuchData =
+                            true;
+                        vstorage.config.autoSync = false;
+                    }
                 }
-            }
-        });
+            });
+    }
 };
 
 const emitterSymbol = Symbol.for("vendetta.storage.emitter");
 
 export const lang = new Lang("cloud_sync");
+export const initState = {
+    didInit: null,
+};
 
 const patches = new Array<any>();
 export default {
@@ -76,8 +99,8 @@ export default {
             ignoredPlugins: [],
         };
         vstorage.custom ??= {
-            host: null,
-            clientId: null,
+            host: "",
+            clientId: "",
         };
         vstorage.realTrackingAnalyticsSentToChina ??= {
             pressedSettings: false,
@@ -100,10 +123,6 @@ export default {
             emitters.plugins.off("DEL", autoSync);
             emitters.themes.off("DEL", autoSync);
         });
-
-        useAuthorizationStore.persist.onFinishHydration(
-            () => useAuthorizationStore.getState().isAuthorized() && getData(),
-        );
 
         patches.push(patcher());
         patches.push(lang.unload);
