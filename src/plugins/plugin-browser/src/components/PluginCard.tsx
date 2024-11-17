@@ -24,7 +24,13 @@ export default function PluginCard({
     changes: string[];
 }) {
     const proxiedLink = properLink(
-        `${constants.proxyUrl}${item.vendetta.original}`,
+        React.useMemo(() => {
+            if (plugins[`https://${item.vendetta.original}`])
+                return `https://${item.vendetta.original}`;
+            else if (plugins[`http://${item.vendetta.original}`])
+                return `http://${item.vendetta.original}`;
+            else return `${constants.proxyUrl}${item.vendetta.original}`;
+        }, []),
     );
     const githubLink = matchGithubLink(item.vendetta.original);
     const isNew = React.useMemo(
