@@ -29,7 +29,13 @@ export async function authFetch(_url: string | URL, options?: RequestInit) {
             lang.format("toast.fetch_error", { urlpath: url.pathname }),
             getAssetIDByName("CircleXIcon-primary"),
         );
-        logger.error("authFetch error", url.toString(), res.status, text);
+        logger.error(
+            "authFetch error",
+            options?.method ?? "GET",
+            url.toString(),
+            res.status,
+            text,
+        );
         throw new Error(text);
     }
 }

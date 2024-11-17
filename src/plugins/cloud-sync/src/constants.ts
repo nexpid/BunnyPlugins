@@ -17,7 +17,7 @@ export default {
     get api() {
         return api();
     },
-    raw: `${constants.github.raw}plugins/cloud-sync/`,
+    raw: `${constants.github.raw}src/plugins/cloud-sync/`,
     oauth2: {
         get clientId() {
             return vstorage.custom.clientId || defaultClientId;
