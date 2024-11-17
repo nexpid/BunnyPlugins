@@ -37,7 +37,10 @@ export default function TooMuchDataSheet({ navigation }: { navigation: any }) {
         <ActionSheet
             title={lang.format("alert.too_much_data.title", {})}
             style={{ gap: 12 }}>
-            <Text variant="text-md/medium" color="TEXT_NORMAL">
+            <Text
+                variant="text-md/medium"
+                color="TEXT_NORMAL"
+                style={{ marginBottom: 8 }}>
                 {Lang.basicFormat(
                     lang.format("alert.too_much_data.body", {
                         storage: data === null ? "... B" : formatBytes(data),
@@ -113,6 +116,7 @@ export default function TooMuchDataSheet({ navigation }: { navigation: any }) {
                     vstorage.realTrackingAnalyticsSentToChina.tooMuchData =
                         false;
                 }}
+                style={{ marginTop: 8 }}
             />
         </ActionSheet>
     );
