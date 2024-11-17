@@ -1,6 +1,7 @@
 export default {
     github: {
-        url: "https://github.com/nexpid/BunnyPlugins/",
-        raw: "https://raw.githubusercontent.com/nexpid/BunnyPlugins/main/",
+        // FIXME don't use custom branch
+        url: "https://github.com/nexpid/BunnyPlugins/tree/feat/improve-workspace",
+        raw: "https://raw.githubusercontent.com/nexpid/BunnyPlugins/feat/improve-workspace/",
     },
 };
