@@ -1,6 +1,6 @@
 import { createJSONStorage, persist } from "zustand/middleware";
 
-import { RNMMKVManager, zustand } from "$/deps";
+import { RNCacheModule, zustand } from "$/deps";
 
 interface CacheState {
     cache: Record<string, string>;
@@ -27,7 +27,7 @@ export const useCacheStore = zustand.create<
         }),
         {
             name: "themes-plus-cache",
-            storage: createJSONStorage(() => RNMMKVManager),
+            storage: createJSONStorage(() => RNCacheModule),
             partialize: state => ({ cache: state.cache }),
         },
     ),

@@ -1,6 +1,6 @@
 // this is a basic rewrite for the RNFS js wrapper, with support for DCDFileManager for backwards compability
 
-import { RNFileManager, RNFSManager } from "../deps";
+import { RNFileManager, RNFileModule } from "../deps";
 
 type Encoding = "utf8" | "ascii" | "base64";
 type EncodingOrOptions =
@@ -71,8 +71,8 @@ const resolveWrite = (filepath: string) => {
 
 const RNFS = {
     unlink(filepath: string): Promise<void> {
-        if (RNFSManager)
-            return RNFSManager.unlink(normalizeFilePath(filepath)).then(
+        if (RNFileModule)
+            return RNFileModule.unlink(normalizeFilePath(filepath)).then(
                 () => void 0,
             );
 
@@ -82,12 +82,13 @@ const RNFS = {
         );
     },
     exists(filepath: string): Promise<boolean> {
-        if (RNFSManager) return RNFSManager.exists(normalizeFilePath(filepath));
+        if (RNFileModule)
+            return RNFileModule.exists(normalizeFilePath(filepath));
         else return RNFileManager.fileExists(normalizeFilePath(filepath));
     },
     readFile(filepath: string, encoding?: EncodingOrOptions): Promise<string> {
-        if (RNFSManager)
-            return readFileGeneric(filepath, encoding, RNFSManager.readFile);
+        if (RNFileModule)
+            return readFileGeneric(filepath, encoding, RNFileModule.readFile);
         else {
             const options = getOptions(encoding);
             if (options.encoding === "ascii")
@@ -103,7 +104,7 @@ const RNFS = {
         encoding?: EncodingOrOptions,
     ): Promise<void> {
         const options = getOptions(encoding);
-        if (!RNFSManager) {
+        if (!RNFileModule) {
             if (options.encoding === "ascii")
                 throw new Error(
                     `Encoding type "ascii" is unsupported on versions <211.6 (missing RNFS)`,
@@ -125,41 +126,46 @@ const RNFS = {
             b64 = Buffer.from(contents, "ascii").toString("base64");
         }
 
-        return RNFSManager.writeFile(normalizeFilePath(filepath), b64, options);
+        return RNFileModule.writeFile(
+            normalizeFilePath(filepath),
+            b64,
+            options,
+        );
     },
     mkdir(filepath: string): Promise<void> {
-        if (!RNFSManager)
+        if (!RNFileModule)
             throw new Error(
                 "Function 'mkdir' is unsupported on versions <211.6 (missing RNFS)",
             );
-        return RNFSManager.mkdir(normalizeFilePath(filepath), {}).then(
+        return RNFileModule.mkdir(normalizeFilePath(filepath), {}).then(
             () => void 0,
         );
     },
 
-    MainBundlePath: RNFSManager?.RNFSMainBundlePath,
+    MainBundlePath: RNFileModule?.RNFSMainBundlePath,
     get CachesDirectoryPath() {
         return (
-            RNFSManager?.RNFSCachesDirectoryPath ??
+            RNFileModule?.RNFSCachesDirectoryPath ??
             RNFileManager.getConstants().CacheDirPath
         );
     },
-    ExternalCachesDirectoryPath: RNFSManager?.RNFSExternalCachesDirectoryPath,
+    ExternalCachesDirectoryPath: RNFileModule?.RNFSExternalCachesDirectoryPath,
     get DocumentDirectoryPath() {
         return (
-            RNFSManager?.RNFSDocumentDirectoryPath ??
+            RNFileModule?.RNFSDocumentDirectoryPath ??
             RNFileManager.getConstants().DocumentsDirPath
         );
     },
-    DownloadDirectoryPath: RNFSManager?.RNFSDownloadDirectoryPath,
-    ExternalDirectoryPath: RNFSManager?.RNFSExternalDirectoryPath,
-    ExternalStorageDirectoryPath: RNFSManager?.RNFSExternalStorageDirectoryPath,
-    TemporaryDirectoryPath: RNFSManager?.RNFSTemporaryDirectoryPath,
-    LibraryDirectoryPath: RNFSManager?.RNFSLibraryDirectoryPath,
-    PicturesDirectoryPath: RNFSManager?.RNFSPicturesDirectoryPath, // For Windows
-    FileProtectionKeys: RNFSManager?.RNFSFileProtectionKeys,
-    RoamingDirectoryPath: RNFSManager?.RNFSRoamingDirectoryPath, // For Windows
+    DownloadDirectoryPath: RNFileModule?.RNFSDownloadDirectoryPath,
+    ExternalDirectoryPath: RNFileModule?.RNFSExternalDirectoryPath,
+    ExternalStorageDirectoryPath:
+        RNFileModule?.RNFSExternalStorageDirectoryPath,
+    TemporaryDirectoryPath: RNFileModule?.RNFSTemporaryDirectoryPath,
+    LibraryDirectoryPath: RNFileModule?.RNFSLibraryDirectoryPath,
+    PicturesDirectoryPath: RNFileModule?.RNFSPicturesDirectoryPath, // For Windows
+    FileProtectionKeys: RNFileModule?.RNFSFileProtectionKeys,
+    RoamingDirectoryPath: RNFileModule?.RNFSRoamingDirectoryPath, // For Windows
 
-    hasRNFS: !!RNFSManager,
+    hasRNFS: !!RNFileModule,
 };
 export default RNFS;

@@ -1,13 +1,13 @@
-import { findByProps, findByStoreName } from "@vendetta/metro";
+import { findByStoreName } from "@vendetta/metro";
 import { before } from "@vendetta/patcher";
+
+import { RNChatModule } from "$/deps";
 
 import NerdEmoji from "../../assets/MiniMod/NerdEmoji.png";
 import { Module, ModuleCategory } from "../stuff/Module";
 
 // It's just like Among Us
 const GuildMemberStore = findByStoreName("GuildMemberStore");
-
-const chatManager = findByProps("updateRows", "getConstants");
 
 export default new Module({
     id: "minimod",
@@ -28,7 +28,7 @@ export default new Module({
         onStart() {
             if (this.storage.options.showTimeouts)
                 this.patches.add(
-                    before("updateRows", chatManager, args => {
+                    before("updateRows", RNChatModule, args => {
                         const rows = JSON.parse(args[1]);
 
                         if (rows.find((row: any) => row?.message)) {

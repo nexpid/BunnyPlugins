@@ -2,7 +2,7 @@
 import { findByStoreName } from "@vendetta/metro";
 import { createJSONStorage, persist } from "zustand/middleware";
 
-import { RNMMKVManager, zustand } from "$/deps";
+import { RNCacheModule, zustand } from "$/deps";
 import { fluxSubscribe } from "$/types";
 
 const UserStore = findByStoreName("UserStore");
@@ -41,7 +41,7 @@ export const useAuthorizationStore = zustand.create<
         }),
         {
             name: "cloudsync-auth",
-            storage: createJSONStorage(() => RNMMKVManager),
+            storage: createJSONStorage(() => RNCacheModule),
             partialize: state => ({ tokens: state.tokens }),
             onRehydrateStorage: () => state => state?.init(),
         },

@@ -1,7 +1,7 @@
 import { createJSONStorage, persist } from "zustand/middleware";
 
 import constants from "$/constants";
-import { RNMMKVManager, zustand } from "$/deps";
+import { RNCacheModule, zustand } from "$/deps";
 
 import LangValues from "../../../lang/defs";
 
@@ -55,13 +55,13 @@ export const useLangStore = zustand.create<
         }),
         {
             name: "nexpid-lang",
-            storage: createJSONStorage(() => RNMMKVManager),
+            storage: createJSONStorage(() => RNCacheModule),
             partialize: state => ({
                 values: state.values,
                 lastModified: state.lastModified,
             }),
             onRehydrateStorage: () => () =>
-                RNMMKVManager.removeItem("nexpid-lang"),
+                RNCacheModule.removeItem("nexpid-lang"),
         },
     ),
 );

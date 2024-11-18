@@ -2,11 +2,12 @@ import { HTTP_REGEX_MULTI } from "@vendetta/constants";
 import { findByProps } from "@vendetta/metro";
 import { before } from "@vendetta/patcher";
 
+import { RNChatModule } from "$/deps";
+
 import { unsubRulesStore } from "../stores/RulesStore";
 import { cleanUrl } from "./rules";
 
 const Messages = findByProps("sendMessage", "editMessage");
-const chatManager = findByProps("updateRows", "getConstants");
 
 const clean = (text: string) =>
     text.replace(HTTP_REGEX_MULTI, str => {
@@ -58,7 +59,7 @@ export default function () {
     );
 
     patches.push(
-        before("updateRows", chatManager, args => {
+        before("updateRows", RNChatModule, args => {
             const rows = JSON.parse(args[1]);
             for (const row of rows)
                 if (row.message?.content)

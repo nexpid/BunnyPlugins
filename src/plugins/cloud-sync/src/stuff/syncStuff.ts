@@ -5,7 +5,7 @@ import { getAssetIDByName } from "@vendetta/ui/assets";
 import { showToast } from "@vendetta/ui/toasts";
 import { without } from "@vendetta/utils";
 
-import { RNMMKVManager } from "$/deps";
+import { RNCacheModule } from "$/deps";
 
 import { canImport, isPluginProxied, lang, vstorage } from "..";
 import {
@@ -150,7 +150,7 @@ export async function importData(data: UserData, options: SyncImportOptions) {
         ...iplugins.map(
             ([id, { enabled, storage }]) =>
                 new Promise<void>(res => {
-                    if (storage) RNMMKVManager.setItem(id, storage);
+                    if (storage) RNCacheModule.setItem(id, storage);
                     installPlugin(id, enabled)
                         .then(() => {
                             status.plugins++;

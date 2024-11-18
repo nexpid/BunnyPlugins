@@ -6,19 +6,20 @@ import { installPlugin, plugins, removePlugin } from "@vendetta/plugins";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { showToast } from "@vendetta/ui/toasts";
 
+import { RNChatModule } from "$/deps";
+
 import { Iterable } from "..";
 import { pluginMessageCache, updateMessages } from "./messages";
 import { getCodedLink } from "./plugins";
 
 const codedLinksCache = {} as Record<string, Record<number, string>>;
 const { MessagesHandlers } = findByProps("MessagesHandlers");
-const chatManager = findByProps("updateRows", "getConstants");
 
 export default () => {
     const patches = new Array<() => void>();
 
     patches.push(
-        before("updateRows", chatManager, args => {
+        before("updateRows", RNChatModule, args => {
             const rows = JSON.parse(args[1]);
             for (const row of rows) {
                 const plugins = new Array<string>();

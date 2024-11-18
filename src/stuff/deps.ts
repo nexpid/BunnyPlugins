@@ -1,4 +1,4 @@
-import { find, findByName, findByProps } from "@vendetta/metro";
+import { find, findByProps } from "@vendetta/metro";
 import { ReactNative as RN } from "@vendetta/metro/common";
 import { type StateStorage } from "zustand/middleware";
 
@@ -20,22 +20,28 @@ export const Reanimated = findByProps(
 export const FlashList = findByProps("FlashList")
     .FlashList as typeof import("@shopify/flash-list").FlashList;
 
-export const zustand = {
-    create: findByName("create") as typeof import("zustand").create,
-};
+export const zustand = findByProps(
+    "create",
+    "useStore",
+) as typeof import("zustand");
 
 export const DocumentPicker = findByProps(
     "pickSingle",
     "isCancel",
 ) as typeof import("react-native-document-picker");
 
-export const RNMMKVManager = RN.NativeModules.MMKVManager as StateStorage;
-
 //
 // raw native modules
 //
-export const RNFileManager = (RN.NativeModules.DCDFileManager ??
-    RN.NativeModules.RTNFileManager) as {
+export const RNCacheModule = (RN.NativeModules.MMKVManager ??
+    RN.NativeModules.NativeCacheModule) as StateStorage;
+
+export const RNChatModule = (RN.NativeModules.DCDChatManager ??
+    RN.NativeModules.NativeChatModule) as {
+    updateRows: (id: string, json: string) => any;
+};
+
+export const RNFileManager = RN.NativeModules.DCDFileManager as {
     /**
      * @param path **Full** path to file
      */
@@ -86,24 +92,5 @@ export const RNFileManager = (RN.NativeModules.DCDFileManager ??
     DocumentsDirPath: string;
 };
 
-// TODO finish types for RNBundleUpdaterManager
-export const RNBundleUpdaterManager = RN.NativeModules.BundleUpdaterManager as {
-    reload: () => void;
-};
-
-export const RNSoundManager = RN.NativeModules.DCDSoundManager as {
-    pause: (soundId: number) => void;
-    play: (soundId: number) => void;
-    stop: (soundId: number) => void;
-    prepare: (
-        url: string,
-        type: "notification",
-        soundId: number,
-        callback: (
-            error: any,
-            meta: { numberOfChannels: number; duration: number },
-        ) => any,
-    ) => void;
-};
-
-export const { RNFSManager } = RN.NativeModules;
+export const RNFileModule =
+    RN.NativeModules.RNFSManager ?? RN.NativeModules.NativeFileModule;
