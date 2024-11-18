@@ -3,7 +3,7 @@ import constants from "$/constants";
 import { vstorage } from ".";
 import { redirectRoute } from "./stuff/api";
 
-export const defaultHost = "https://bazinga.cloudsync.nexpid.xyz/";
+export const defaultHost = "https://dc.cloudsync.nexpid.xyz/";
 export const defaultClientId = "1120793656878714913";
 
 const api = () =>
