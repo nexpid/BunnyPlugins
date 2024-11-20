@@ -41,56 +41,41 @@ export const RNChatModule = (RN.NativeModules.DCDChatManager ??
     updateRows: (id: string, json: string) => any;
 };
 
-export const RNFileManager = RN.NativeModules.DCDFileManager as {
-    /**
-     * @param path **Full** path to file
-     */
-    fileExists: (path: string) => Promise<boolean>;
-    /**
-     * Allowed URI schemes on Android: `file://`, `content://` ([See here](https://developer.android.com/reference/android/content/ContentResolver#accepts-the-following-uri-schemes:_3))
-     */
-    getSize: (uri: string) => Promise<boolean>;
-    /**
-     * @param path **Full** path to file
-     * @param encoding Set to `base64` in order to encode response
-     */
+export const RNFileModule = (RN.NativeModules.DCDFileManager ??
+    RN.NativeModules.NativeFileModule) as {
     readFile(path: string, encoding: "base64" | "utf8"): Promise<string>;
-    saveFileToGallery?(
-        uri: string,
-        fileName: string,
-        fileType: "PNG" | "JPEG",
-    ): Promise<string>;
-    /**
-     * Beware! This function has differing functionality on iOS and Android.
-     * @param storageDir Either `cache` or `documents`.
-     * @param path Path in `storageDir`, parents are recursively created.
-     * @param data The data to write to the file
-     * @param encoding Set to `base64` if `data` is base64 encoded.
-     * @returns Promise that resolves to path of the file once it got written
-     */
+    fileExists(path: string): Promise<boolean>;
+    removeFile(
+        storageDir: "documents" | "cache",
+        path: string,
+    ): Promise<boolean>;
     writeFile(
         storageDir: "cache" | "documents",
         path: string,
         data: string,
         encoding: "base64" | "utf8",
     ): Promise<string>;
-    removeFile(
-        storageDir: "cache" | "documents",
-        path: string,
-    ): Promise<unknown>;
-    getConstants: () => {
-        /**
-         * The path the `documents` storage dir (see {@link writeFile}) represents.
-         */
-        DocumentsDirPath: string;
-        CacheDirPath: string;
-    };
-    /**
-     * Will apparently cease to exist some time in the future so please use {@link getConstants} instead.
-     * @deprecated
-     */
-    DocumentsDirPath: string;
-};
 
-export const RNFileModule =
-    RN.NativeModules.RNFSManager ?? RN.NativeModules.NativeFileModule;
+    clearFolder(
+        storageDir: "documents" | "cache",
+        path: string,
+    ): Promise<boolean>;
+    saveFileToGallery(
+        uri: `file://${string}`,
+        fileName: string,
+        fileType: "PNG" | "JPEG",
+    ): Promise<string>;
+    readAsset(path: string, encoding: "base64" | "utf8"): void;
+    getSize(uri: string): Promise<boolean>;
+
+    /** Doesn't end with / */
+    CacheDirPath: string;
+    /** Doesn't end with / */
+    DocumentsDirPath: string;
+    getConstants: () => {
+        /** Doesn't end with / */
+        CacheDirPath: string;
+        /** Doesn't end with / */
+        DocumentsDirPath: string;
+    };
+};

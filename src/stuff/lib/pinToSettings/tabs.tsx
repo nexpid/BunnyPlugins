@@ -1,5 +1,6 @@
 // Based on: https://github.com/pyoncord/Bunny/blob/dev/src/lib/ui/settings/patches/tabs.tsx
 
+import { findByProps } from "@vendetta/metro";
 import { React } from "@vendetta/metro/common";
 import { after } from "@vendetta/patcher";
 import { findInReactTree } from "@vendetta/utils";
@@ -7,6 +8,8 @@ import { findInReactTree } from "@vendetta/utils";
 import { PinToSettingsTabs } from ".";
 
 const { bunny } = window as any;
+
+const { TableRowIcon } = findByProps("TableRowIcon");
 
 const tabsNavigationRef = bunny.metro.findByPropsLazy("getRootNavigationRef");
 
@@ -28,6 +31,8 @@ export function patchTabsUI(tabs: PinToSettingsTabs, patches: (() => void)[]) {
             type: "pressable",
             title: tabs.title,
             icon: tabs.icon,
+            IconComponent:
+                tabs.icon && (() => <TableRowIcon source={tabs.icon} />),
             usePredicate: tabs.predicate,
             useTrailing: tabs.trailing,
             onPress: () => {

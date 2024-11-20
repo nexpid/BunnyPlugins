@@ -1,21 +1,24 @@
 import { all } from "@vendetta/ui/assets";
 
-import RNFS from "$/wrappers/RNFS";
+import { RNFileModule } from "$/deps";
 
 import { BunnyAsset, Iconpack } from "../types";
 import { state } from "./active";
 import getIconpackData from "./iconpackDataGetter";
 import { flattenFilePath } from "./util";
 
-export const iconsPath = `${RNFS.DocumentDirectoryPath}/pyoncord/downloads/themesplus/`;
+const iconsPath = "pyoncord/downloads/themesplus/";
+export const fullIconsPath = `${RNFileModule.DocumentsDirPath}/${iconsPath}`;
 
 export async function isPackInstalled(pack: Iconpack) {
     if (
-        (await RNFS.exists(`${iconsPath}${pack.id}`)) &&
-        (await RNFS.exists(`${iconsPath}${pack.id}.hash`)) &&
+        (await RNFileModule.fileExists(`${fullIconsPath}${pack.id}.hash`)) &&
         state.iconpack.hashes[pack.id]?.hash
     ) {
-        const hash = await RNFS.readFile(`${iconsPath}${pack.id}.hash`, "utf8");
+        const hash = await RNFileModule.readFile(
+            `${iconsPath}${pack.id}.hash`,
+            "utf8",
+        );
         return state.iconpack.hashes[pack.id]?.hash === hash
             ? true
             : "outdated";
@@ -43,8 +46,12 @@ export async function installIconpack(
     const { tree } = await getIconpackData(pack.id);
     if (!tree) throw new Error("Failed to get iconpack tree");
 
-    if (RNFS.hasRNFS) await RNFS.mkdir(`${iconsPath}${pack.id}`);
-    await RNFS.writeFile(`${iconsPath}${pack.id}.hash`, hash);
+    await RNFileModule.writeFile(
+        "documents",
+        `${iconsPath}${pack.id}.hash`,
+        hash,
+        "utf8",
+    );
 
     const shouldDownload = (Object.values(all) as any as BunnyAsset[]).map(
         asset =>
@@ -89,7 +96,7 @@ export async function installIconpack(
             if (index === -1) throw new Error(`Failed to get base64 of ${raw}`);
             const data = result.slice(index + 8);
 
-            await RNFS.writeFile(to, data, "base64");
+            await RNFileModule.writeFile("documents", to, data, "base64");
             incr++;
 
             if (signal?.aborted) throw new Error("Aborted");
@@ -112,6 +119,5 @@ export async function installIconpack(
 }
 
 export async function uninstallIconpack(pack: Iconpack) {
-    await RNFS.unlink(`${iconsPath}${pack.id}`);
-    await RNFS.unlink(`${iconsPath}${pack.id}.hash`);
+    await RNFileModule.clearFolder("documents", `${iconsPath}${pack.id}`);
 }

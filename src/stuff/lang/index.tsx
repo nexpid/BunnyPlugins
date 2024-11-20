@@ -2,23 +2,12 @@ import { findByName } from "@vendetta/metro";
 import { i18n, ReactNative as RN } from "@vendetta/metro/common";
 
 import { fluxSubscribe } from "$/types";
-import RNFS from "$/wrappers/RNFS";
 
 import type LangValues from "../../../lang/defs";
 import { useLangStore } from "./LangStore";
 
 // from Pyoncord
 const IntlMessageFormat = findByName("MessageFormat");
-
-RNFS.exists(`${RNFS.DocumentDirectoryPath}/vendetta/NexpidLang`)
-    .then(
-        yes =>
-            yes &&
-            void RNFS.unlink(
-                `${RNFS.DocumentDirectoryPath}/vendetta/NexpidLang`,
-            ),
-    )
-    .catch(() => void 0);
 
 export class Lang<Plugin extends keyof LangValues> {
     private _unload: () => void;

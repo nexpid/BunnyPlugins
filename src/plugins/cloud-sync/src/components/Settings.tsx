@@ -19,9 +19,8 @@ import { showToast } from "@vendetta/ui/toasts";
 import { ActionSheet } from "$/components/ActionSheet";
 import { BetterTableRowGroup } from "$/components/BetterTableRow";
 import Text from "$/components/Text";
-import { DocumentPicker, Reanimated } from "$/deps";
+import { DocumentPicker, Reanimated, RNFileModule } from "$/deps";
 import { Lang } from "$/lang";
-import RNFS from "$/wrappers/RNFS";
 
 import { initState, lang, vstorage } from "..";
 import { useAuthorizationStore } from "../stores/AuthorizationStore";
@@ -30,8 +29,6 @@ import {
     decompressRawData,
     deleteData,
     getData,
-    getRawData,
-    RawData,
     rawDataURL,
     saveData,
 } from "../stuff/api";
@@ -583,44 +580,46 @@ export default function () {
                                 />
                             )
                         }
-                        onPress={async () => {
-                            if (isBusy.length) return;
-                            if (!RNFS.hasRNFS) return url.openURL(rawDataURL());
+                        onPress={() =>
+                            !isBusy.length && url.openURL(rawDataURL())
+                        }
+                        // onPress={async () => {
+                        //     if (isBusy.length) return;
 
-                            setBusy("download_compressed");
+                        //     setBusy("download_compressed");
 
-                            let data: RawData;
-                            try {
-                                data = await getRawData();
-                            } catch {
-                                unBusy("download_compressed");
-                                return;
-                            }
+                        //     let data: RawData;
+                        //     try {
+                        //         data = await getRawData();
+                        //     } catch {
+                        //         unBusy("download_compressed");
+                        //         return;
+                        //     }
 
-                            try {
-                                await RNFS.writeFile(
-                                    RNFS.DownloadDirectoryPath +
-                                        "/" +
-                                        data.file,
-                                    data.data,
-                                );
+                        //     try {
+                        //         await RNFS.writeFile(
+                        //             RNFS.DownloadDirectoryPath +
+                        //                 "/" +
+                        //                 data.file,
+                        //             data.data,
+                        //         );
 
-                                showToast(
-                                    lang.format("toast.backup_saved", {
-                                        file: data.file,
-                                    }),
-                                    getAssetIDByName("FileIcon"),
-                                );
-                            } catch (e) {
-                                showToast(
-                                    lang.format("toast.backup_not_saved", {}),
-                                    getAssetIDByName("CircleXIcon-primary"),
-                                ),
-                                    logger.error("backup not saved", e);
-                            }
+                        //         showToast(
+                        //             lang.format("toast.backup_saved", {
+                        //                 file: data.file,
+                        //             }),
+                        //             getAssetIDByName("FileIcon"),
+                        //         );
+                        //     } catch (e) {
+                        //         showToast(
+                        //             lang.format("toast.backup_not_saved", {}),
+                        //             getAssetIDByName("CircleXIcon-primary"),
+                        //         ),
+                        //             logger.error("backup not saved", e);
+                        //     }
 
-                            unBusy("download_compressed");
-                        }}
+                        //     unBusy("download_compressed");
+                        // }}
                     />
                     <FormRow
                         label={lang.format(
@@ -653,7 +652,7 @@ export default function () {
                                         copyTo: "cachesDirectory",
                                     });
                                 if (type === "text/plain" && fileCopyUri)
-                                    text = await RNFS.readFile(
+                                    text = await RNFileModule.readFile(
                                         fileCopyUri.slice(5),
                                         "utf8",
                                     );

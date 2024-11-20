@@ -10,7 +10,7 @@ import { state } from "../stuff/active";
 import { bunnyIconDataUri } from "../stuff/bunnyIcon";
 import { getIconOverlay, getIconTint } from "../stuff/iconOverlays";
 import { patches } from "../stuff/loader";
-import { iconsPath, isPackInstalled } from "../stuff/packInstaller";
+import { fullIconsPath, isPackInstalled } from "../stuff/packInstaller";
 import { fixPath, flattenFilePath } from "../stuff/util";
 import { BunnyAsset, IconpackConfig } from "../types";
 
@@ -137,7 +137,7 @@ export default function patchIcons(
                 if (useIconpack)
                     props.source = {
                         uri: isInstalled
-                            ? `file://${iconsPath}${iconpack.id}/${flattenFilePath(assetIconpackLocation)}`
+                            ? `file://${fullIconsPath}${iconpack.id}/${flattenFilePath(assetIconpackLocation)}`
                             : iconpack.load + assetIconpackLocation,
                         headers: {
                             "cache-contorl": "public, max-age=3600",
