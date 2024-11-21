@@ -12,15 +12,48 @@ const MessageRecord = findByName("MessageRecord");
 const RowManager = findByName("RowManager");
 const SelectedChannelStore = findByStoreName("SelectedChannelStore");
 const UserStore = findByStoreName("UserStore");
+const UploadAttachmentStore = findByStoreName("UploadAttachmentStore");
 
 const { receiveMessage } = findByProps("receiveMessage");
 const { createBotMessage } = findByProps("createBotMessage");
 const { getText } = findByProps("getText");
 
-export default function () {
+const getAttachments = async (channelId: string) =>
+    await Promise.all(
+        UploadAttachmentStore.getUploads(channelId, 0).map(async upload => {
+            const { isImage, uniqueId, filename, spoiler, item } = upload;
+            const { uri, mimeType, width, height } = item;
+
+            const attachment = {
+                id: uniqueId,
+                filename: spoiler ? `SPOILER_${filename}` : filename,
+                content_type: mimeType,
+                size: await upload.getSize(),
+                spoiler,
+                url: `${uri}#`,
+                proxy_url: `${uri}#`,
+            } as any;
+
+            if (isImage) {
+                attachment.width = width;
+                attachment.height = height;
+            }
+
+            return attachment;
+        }),
+    ).catch(() => []);
+
+export default async function openPreview() {
     const channelId = SelectedChannelStore.getChannelId();
-    const text = getText(channelId, 0);
-    if (text.trim() === "") return;
+    const content = getText(channelId, 0);
+    if (
+        content.trim() === "" &&
+        !UploadAttachmentStore.getUploads(channelId).length
+    )
+        return;
+
+    const author = UserStore.getCurrentUser();
+    const attachments = await getAttachments(channelId);
 
     if (vstorage.previewType === "popup")
         showConfirmationAlert({
@@ -38,30 +71,28 @@ export default function () {
                         message={
                             new MessageRecord({
                                 id: "0",
-                                channel_id: SelectedChannelStore.getChannelId(),
-                                author: UserStore.getCurrentUser(),
-                                content: text,
+                                channel_id: channelId,
+                                content,
+                                attachments,
+                                author,
                             })
                         }
                     />
                 </RN.ScrollView>
             ),
         });
-    else {
-        const channel = SelectedChannelStore.getChannelId();
-        const author = UserStore.getCurrentUser();
-
-        return receiveMessage(
-            channel,
+    else
+        receiveMessage(
+            channelId,
             Object.assign(
                 createBotMessage({
-                    channelId: channel,
-                    content: text,
+                    channelId,
+                    content,
                 }),
                 {
                     author,
+                    attachments,
                 },
             ),
         );
-    }
 }
