@@ -40,6 +40,7 @@ import NerdConfig from "./NerdConfig";
 import IgnoredPluginsPage from "./pages/IgnoredPluginsPage";
 import ImportActionSheet from "./sheets/ImportActionSheet";
 import TooMuchDataSheet from "./sheets/TooMuchDataSheet";
+import WwyltdSheet from "./sheets/WwyltdSheet";
 
 const UserStore = findByStoreName("UserStore");
 
@@ -671,16 +672,16 @@ export default function () {
                             unBusy("import_compressed");
                             if (!text) return;
 
-                            let data: UserData;
+                            let backup: UserData;
                             try {
-                                data = await decompressRawData(text);
+                                backup = await decompressRawData(text);
                             } catch {
                                 unBusy("import_compressed");
                                 return;
                             }
 
-                            ActionSheet.open(ImportActionSheet, {
-                                data,
+                            ActionSheet.open(WwyltdSheet, {
+                                backup,
                                 navigation,
                             });
                             unBusy("import_compressed");

@@ -5,9 +5,10 @@ import { getAssetIDByName } from "@vendetta/ui/assets";
 import { showToast } from "@vendetta/ui/toasts";
 
 import { ActionSheet, hideActionSheet } from "$/components/ActionSheet";
+import ScaleRowButton from "$/components/ScaleRowButton";
 import Text from "$/components/Text";
 import { Lang } from "$/lang";
-import { Button, RowButton } from "$/lib/redesign";
+import { Button } from "$/lib/redesign";
 import { formatBytes } from "$/types";
 
 import { lang, vstorage } from "../..";
@@ -48,7 +49,7 @@ export default function TooMuchDataSheet({ navigation }: { navigation: any }) {
                 )}
             </Text>
             {hasOldAntied && (
-                <RowButton
+                <ScaleRowButton
                     label={lang.format("alert.too_much_data.antied.label", {})}
                     subLabel={lang.format(
                         "alert.too_much_data.antied.desc",
@@ -88,9 +89,10 @@ export default function TooMuchDataSheet({ navigation }: { navigation: any }) {
                                     getAssetIDByName("CircleWarningIcon"),
                                 );
                     }}
+                    arrow={false}
                 />
             )}
-            <RowButton
+            <ScaleRowButton
                 label={lang.format(
                     "alert.too_much_data.ignore_plugins.label",
                     {},
