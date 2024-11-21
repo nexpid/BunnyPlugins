@@ -18,6 +18,7 @@
   "toast.antied.failed": "Failed to install Antied.",
   "toast.antied.already_installed": "Antied is already installed.",
   "toast.fetch_error": "Cloud Sync fetch error at {urlpath}",
+  "toast.saving": "Saving to cloud...",
 
   "settings.your_data.title": "Your data",
   "settings.your_data.plugins": "plugins",
@@ -57,6 +58,9 @@
   "sheet.import_data.themes": "Themes ({count})",
   "sheet.import_data.fonts": "Fonts ({count})",
   "sheet.import_data.import": "Import",
+  "sheet.wwyltd.title": "Import backup",
+  "sheet.wwyltd.actions.save_to_cloud": "Save to cloud",
+  "sheet.wwyltd.actions.import": "Import",
 
   "log.import.start.combo": "Starting to import {plugins}, {themes} and {fonts}",
   "log.import.plugin.success": "Imported plugin: {name}",
