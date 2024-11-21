@@ -24,20 +24,13 @@ export default function patchIcons(
     const { iconpack } = state.iconpack;
     if (config.biggerStatus)
         patches.push(
-            before("default", Status, _args => {
-                const args = _args.slice();
-
-                const sizes = Object.values(Status.StatusSizes);
-                const index = sizes.findIndex(x => args[0].size === x);
-                args[0] = {
-                    ...args[0],
-                    size:
-                        (index !== -1 ? sizes[index + 1] : null) ??
-                        Status.StatusSizes.XLARGE,
-                };
-
-                return args;
-            }),
+            before("default", Status, ([props], ...args) => [
+                {
+                    ...props,
+                    size: Math.floor(props.size * 1.5),
+                },
+                ...args,
+            ]),
         );
 
     let isInstalled = false;
