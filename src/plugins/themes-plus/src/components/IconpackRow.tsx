@@ -53,15 +53,17 @@ export default function IconpackRow({
     });
     const [progressCnt, setProgressCnt] = React.useState<number | null>(0);
 
-    React.useEffect(() => {
-        isPackInstalled(pack).then(x => {
-            setPackStatus({
-                installed: !!x,
-                outdated: x === "outdated",
-                loading: false,
-            });
-        });
-    }, []);
+    React.useEffect(
+        () =>
+            void isPackInstalled(pack).then(x =>
+                setPackStatus({
+                    installed: !!x,
+                    outdated: x === "outdated",
+                    loading: false,
+                }),
+            ),
+        [],
+    );
 
     const size = state.iconpack.hashes[pack.id]?.size;
     useState();

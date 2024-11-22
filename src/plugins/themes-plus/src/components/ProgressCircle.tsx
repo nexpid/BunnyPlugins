@@ -24,22 +24,19 @@ export default function ProgressCircle({
         [radius, stroke],
     );
 
-    const animatedProgress = Reanimated.useSharedValue(circumference);
-    const animatedStroke = Reanimated.useSharedValue(0);
+    const strokeDashoffset = Reanimated.useSharedValue(circumference);
+    const strokeWidth = Reanimated.useSharedValue(1);
 
     React.useEffect(() => {
-        animatedProgress.value = Reanimated.withTiming(
+        strokeDashoffset.value = Reanimated.withTiming(
             circumference - progress * circumference,
             {
                 duration: 250,
             },
         );
-        animatedStroke.value = Reanimated.withTiming(
-            progress !== 0 ? stroke : 0,
-            {
-                duration: 250,
-            },
-        );
+        strokeWidth.value = Reanimated.withTiming(progress !== 0 ? stroke : 0, {
+            duration: 250,
+        });
     }, [progress, circumference, stroke]);
 
     return (
@@ -56,12 +53,12 @@ export default function ProgressCircle({
                 cx="50%"
                 cy="50%"
                 stroke={color}
-                strokeWidth={animatedStroke}
                 r={circleRadius}
                 fill={"#0000"}
-                strokeDasharray={circumference}
                 strokeLinecap="round"
-                strokeDashoffset={animatedProgress}
+                strokeDasharray={circumference}
+                strokeDashoffset={strokeDashoffset}
+                strokeWidth={strokeWidth}
             />
         </Svg.Svg>
     );

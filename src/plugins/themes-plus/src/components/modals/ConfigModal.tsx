@@ -1,4 +1,9 @@
-import { React, ReactNative as RN, stylesheet } from "@vendetta/metro/common";
+import {
+    constants,
+    React,
+    ReactNative as RN,
+    stylesheet,
+} from "@vendetta/metro/common";
 import { useProxy } from "@vendetta/storage";
 import { semanticColors } from "@vendetta/ui";
 import { getAssetIDByName } from "@vendetta/ui/assets";
@@ -38,11 +43,20 @@ const tabs = {
                     borderRadius: 8,
                     justifyContent: "center",
                     alignItems: "center",
-                    marginBottom: 20,
+                    marginBottom: 4,
+                    marginTop: 8,
                 },
                 previewImage: {
                     width: 50,
                     height: 50,
+                },
+                previewSource: {
+                    marginHorizontal: -16,
+                    paddingBottom: 20,
+                    fontFamily:
+                        constants.Fonts.CODE_SEMIBOLD ||
+                        constants.Fonts.CODE_NORMAL,
+                    includeFontPadding: false,
                 },
             });
 
@@ -163,9 +177,6 @@ const tabs = {
                                                             "center",
                                                         alignItems: "center",
                                                     },
-                                                    {
-                                                        gap: 8,
-                                                    } as any,
                                                 ]}>
                                                 <Text
                                                     variant="text-sm/semibold"
@@ -187,6 +198,20 @@ const tabs = {
                                                         resizeMode="cover"
                                                     />
                                                 </RN.View>
+                                                <Text
+                                                    variant="text-xxs/medium"
+                                                    color="TEXT_MUTED"
+                                                    style={
+                                                        styles.previewSource
+                                                    }>
+                                                    {customUrl()}
+                                                    images/native/main_tabs/Messages
+                                                    {
+                                                        vstorage.iconpack.custom
+                                                            .suffix
+                                                    }
+                                                    .png
+                                                </Text>
                                             </RN.View>
 
                                             <TextInput
