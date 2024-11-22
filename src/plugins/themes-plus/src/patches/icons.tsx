@@ -34,7 +34,7 @@ export default function patchIcons(
         );
 
     let isInstalled = false;
-    isPackInstalled(iconpack!).then(x => (isInstalled = !!x));
+    isPackInstalled(iconpack!).then(x => (isInstalled = x === true));
 
     if (plus.icons || plus.customOverlays || iconpack) {
         if (plus.icons) state.patches.push(PatchType.Icons);
