@@ -6,7 +6,6 @@ import { format } from "prettier";
 import { stringifyChart } from "../lib/chart.ts";
 import {
     branch,
-    isDevBranch,
     makeMdNote,
     markdownPrettierOptions,
     plural,
@@ -17,7 +16,7 @@ const mdNote = makeMdNote("scripts/build/modules/readmes.ts", "md");
 const links = {
     // STUB[epic=proxy] vendetta.nexpid.xyz => bunny.nexpid.xyz
     proxied: "https://bn-plugins.github.io/vd-proxy/vendetta.nexpid.xyz/",
-    base: `https://${isDevBranch ? "dev." : ""}bunny.nexpid.xyz/`,
+    base: "https://bunny.nexpid.xyz/",
     code: `https://github.com/nexpid/BunnyPlugins/tree/${branch}/src/plugins/`,
     external: {
         backend: "https://github.com/nexpid/",
@@ -130,7 +129,7 @@ async function listPluginMetadatas(noDev?: boolean) {
             await readFile(join("src/plugins/", plugin, "status.json"), "utf8"),
         );
 
-        const proxied = !isDevBranch ? !!status.proxied : false;
+        const proxied = !!status.proxied;
 
         plugins.push({
             id: plugin,
@@ -157,7 +156,7 @@ async function listPluginMetadatas(noDev?: boolean) {
                           }
                         : null,
                     {
-                        text: isDevBranch ? "copy_dev_link" : "copy_link",
+                        text: "copy_link",
                         color: LabelColor.UnproxiedLink,
                         link: links.base + plugin,
                     },
@@ -339,6 +338,7 @@ export async function writeRootReadme() {
                     value: {
                         color: shields.stars.color,
                     },
+                    link: "https://github.com/nexpid/BunnyPlugins/stars",
                 }),
                 makeEndpointBadge({
                     endpoint: "github/issues/nexpid/BunnyPlugins",
@@ -348,6 +348,7 @@ export async function writeRootReadme() {
                     value: {
                         color: shields.issues.color,
                     },
+                    link: "https://github.com/nexpid/BunnyPlugins/issues",
                 }),
                 makeEndpointBadge({
                     endpoint: "github/issues-pr/nexpid/BunnyPlugins",
@@ -357,21 +358,26 @@ export async function writeRootReadme() {
                     value: {
                         color: shields.pulls.color,
                     },
+                    link: "https://github.com/nexpid/BunnyPlugins/pulls",
                 }),
                 makeEndpointBadge({
-                    endpoint: "discord/1196075698301968455",
-                    text: "pyoncord chat",
+                    endpoint: "discord/1205207689832038522",
+                    text: "support",
                     color: LabelColor.Status,
                     icon: shields.discord.icon,
                     value: {
                         color: shields.discord.color,
                     },
+                    link: "https://discord.com/invite/ddcQf3s2Uq",
                 }),
                 // footer
                 "</div>\n",
 
                 "> [!IMPORTANT]  ",
-                "> My plugins assume you're using version atleast **211.10** (211210) from **January 1st**, they might not work properly if you use an older version than that.\n",
+                "> My plugins assume you're using version atleast **211.10** (211210) from **January 1st 2023**, they might not work properly if you use an older version than that.\n",
+
+                "> [!CAUTION]  ",
+                "> If you have any plugins that are installed under the **dev.bunny.nexpid.xyz** subdomain, make sure to reinstall them under **bunny.nexpid.xyz**, as the dev subdomain is being sunsetted.\n",
 
                 "## 🌐 Localization\n",
 

@@ -6,7 +6,7 @@
 <div align="center">
 <img alt="plugin_status" src="https://img.shields.io/badge/plugin_status-finished-a6da95?style=for-the-badge&labelColor=24273a" />
 <br/>
-<a href="https://dev.bunny.nexpid.xyz/cloud-sync"><img alt="copy_dev_link" src="https://img.shields.io/badge/copy_dev_link-1e2030?style=for-the-badge" /></a>
+<a href="https://bunny.nexpid.xyz/cloud-sync"><img alt="copy_link" src="https://img.shields.io/badge/copy_link-1e2030?style=for-the-badge" /></a>
 <a href="https://github.com/nexpid/VendettaCloudSync"><img alt="view_backend_code" src="https://img.shields.io/badge/view_backend_code-494d64?style=for-the-badge" /></a>
 </div>
 
