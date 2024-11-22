@@ -6,31 +6,24 @@ body:
   - type: markdown
     attributes:
       value: |
-        ## Thanks for taking the time to suggest a plugin feature! Make sure to fill in the issue title.
+        ## Thanks for taking the time to suggest a plugin! Make sure to fill in the issue title.
   - type: checkboxes
     attributes:
       label: Check all the boxes below
       options:
-        - label: I have checked that this feature hasn't already been suggested
+        - label: I have checked that this hasn't already been suggested
           required: true
   - type: input
     id: discord-username
     attributes:
       label: Discord username
-      description: Enter your discord username (@User#0000 / @user)
+      description: Enter your discord @username
     validations:
-      required: true
-  - type: textarea
-    id: simple-description
-    attributes:
-      label: Simple description
-      description: A simple description of your suggestion
-    validations:
-      required: true
+      required: false
   - type: textarea
     id: elaborate
     attributes:
       label: Elaborate
-      description: A simple description of your suggestion
+      description: A more detailed description of your suggestion
     validations:
       required: true
