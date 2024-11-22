@@ -16,7 +16,7 @@ export async function isPackInstalled(pack: Iconpack) {
         state.iconpack.hashes[pack.id]?.hash
     ) {
         const hash = await RNFileModule.readFile(
-            `${iconsPath}${pack.id}.hash`,
+            `${fullIconsPath}${pack.id}.hash`,
             "utf8",
         );
         return state.iconpack.hashes[pack.id]?.hash === hash
@@ -120,4 +120,5 @@ export async function installIconpack(
 
 export async function uninstallIconpack(pack: Iconpack) {
     await RNFileModule.clearFolder("documents", `${iconsPath}${pack.id}`);
+    await RNFileModule.removeFile("documents", `${iconsPath}${pack.id}.hash`);
 }
