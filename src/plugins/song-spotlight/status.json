@@ -1,6 +1,6 @@
 {
   "status": "finished",
-  "proxied": true,
+  "proxied": false,
   "external": {
     "backend": "SongSpotlight"
   }
