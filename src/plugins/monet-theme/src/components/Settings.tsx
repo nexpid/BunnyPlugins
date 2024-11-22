@@ -362,7 +362,7 @@ export default () => {
 
                                 showToast(
                                     String(err),
-                                    getAssetIDByName("Small"),
+                                    getAssetIDByName("CircleXIcon"),
                                 );
                                 return;
                             }

@@ -259,12 +259,12 @@ export default function AppDirectoryPage({
                                 style={styles.categoryIcon}
                                 source={getAssetIDByName(
                                     {
-                                        0: "ic_globe_24px",
+                                        0: "GlobeEarthIcon",
                                         4: "ic_monitor_24px",
-                                        6: "ic_controller_24px",
-                                        8: "img_nitro_remixing",
-                                        9: "ic_friend_wave_24px",
-                                        10: "ic_progress_wrench_24px",
+                                        6: "GameControllerIcon",
+                                        8: "PencilSparkleIcon",
+                                        9: "FriendsIcon",
+                                        10: "WrenchIcon",
                                     }[item.id] ?? "",
                                 )}
                             />

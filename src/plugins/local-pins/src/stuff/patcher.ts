@@ -104,12 +104,12 @@ export default function () {
                         style: { flexDirection: "row-reverse" },
                     },
                     React.createElement(SuperAwesomeIcon, {
-                        icon: getAssetIDByName("ic_filter"),
+                        icon: getAssetIDByName("FiltersHorizontalIcon"),
                         style: "header",
                         onPress: () => pinsCallback.filters?.(),
                     }),
                     React.createElement(SuperAwesomeIcon, {
-                        icon: getAssetIDByName("ic_message_delete"),
+                        icon: getAssetIDByName("TrashIcon"),
                         style: "header",
                         destructive: true,
                         onPress: () => pinsCallback.clear?.(),

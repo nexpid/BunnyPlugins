@@ -52,7 +52,7 @@ export const ProfileList = () => {
                 if (txt.match(/^\s*$/)) {
                     showToast(
                         "Profile name cannot be empty",
-                        getAssetIDByName("Small"),
+                        getAssetIDByName("CircleXIcon"),
                     );
                     return;
                 }
@@ -61,7 +61,7 @@ export const ProfileList = () => {
                 if (vstorage.profiles[txt]) {
                     showToast(
                         "A profile with that name already exists",
-                        getAssetIDByName("Small"),
+                        getAssetIDByName("CircleXIcon"),
                     );
                     return;
                 }
@@ -71,7 +71,10 @@ export const ProfileList = () => {
                 );
                 vstorage.activity.profile = txt;
                 forceUpdate();
-                showToast("Created profile", getAssetIDByName("Check"));
+                showToast(
+                    "Created profile",
+                    getAssetIDByName("CircleCheckIcon"),
+                );
             },
             cancelText: "Cancel",
         });
@@ -87,7 +90,7 @@ export const ProfileList = () => {
 
         const data = SettingsActivity.validate(activity);
         if (data.error) {
-            showToast("Invalid profile data", getAssetIDByName("Small"));
+            showToast("Invalid profile data", getAssetIDByName("CircleXIcon"));
             return;
         }
 
@@ -101,7 +104,7 @@ export const ProfileList = () => {
         vstorage.profiles[name] = data.value as SettingsActivity;
         vstorage.activity.profile = name;
         forceUpdate();
-        showToast("Imported profile", getAssetIDByName("Check"));
+        showToast("Imported profile", getAssetIDByName("CircleCheckIcon"));
     };
 
     let wentBack = false;
@@ -153,7 +156,7 @@ export const ProfileList = () => {
                                 },
                                 {
                                     label: "Rename Profile",
-                                    icon: getAssetIDByName("ic_message_edit"),
+                                    icon: getAssetIDByName("PencilIcon"),
                                     onPress: () => {
                                         showInputAlert({
                                             title: "Enter new profile name",
@@ -168,7 +171,7 @@ export const ProfileList = () => {
                                                     showToast(
                                                         "Profile name cannot be empty",
                                                         getAssetIDByName(
-                                                            "Small",
+                                                            "CircleXIcon",
                                                         ),
                                                     );
                                                     return;
@@ -179,7 +182,7 @@ export const ProfileList = () => {
                                                     showToast(
                                                         "A profile with that name already exists",
                                                         getAssetIDByName(
-                                                            "Small",
+                                                            "CircleXIcon",
                                                         ),
                                                     );
                                                     return;
@@ -198,7 +201,9 @@ export const ProfileList = () => {
 
                                                 showToast(
                                                     "Renamed profile",
-                                                    getAssetIDByName("Check"),
+                                                    getAssetIDByName(
+                                                        "CircleCheckIcon",
+                                                    ),
                                                 );
                                             },
                                             cancelText: "Cancel",
@@ -232,7 +237,9 @@ export const ProfileList = () => {
                                                 forceUpdateSettings();
                                                 showToast(
                                                     "Deleted",
-                                                    getAssetIDByName("Check"),
+                                                    getAssetIDByName(
+                                                        "CircleCheckIcon",
+                                                    ),
                                                 );
                                             },
                                             cancelText: "Cancel",
@@ -247,7 +254,7 @@ export const ProfileList = () => {
                         if (vstorage.activity.profile === item) {
                             showToast(
                                 `${item} is already loaded`,
-                                getAssetIDByName("Small"),
+                                getAssetIDByName("CircleXIcon"),
                             );
                             return;
                         }
@@ -263,7 +270,10 @@ export const ProfileList = () => {
                                 wentBack = true;
                                 navigation.goBack();
                                 forceUpdateSettings();
-                                showToast("Loaded", getAssetIDByName("Check"));
+                                showToast(
+                                    "Loaded",
+                                    getAssetIDByName("CircleCheckIcon"),
+                                );
                             },
                             secondaryButton: "Save profile",
                             secondaryRun: () => {
@@ -294,12 +304,12 @@ export function showProfileList(navigation: any) {
             <RN.View style={{ flexDirection: "row-reverse" }}>
                 <SuperAwesomeIcon
                     style="header"
-                    icon={getAssetIDByName("ic_add_24px")}
+                    icon={getAssetIDByName("PlusLargeIcon")}
                     onPress={() => headerRightCallbacks.add?.()}
                 />
                 <SuperAwesomeIcon
                     style="header"
-                    icon={getAssetIDByName("ic_file_upload_24px")}
+                    icon={getAssetIDByName("UploadIcon")}
                     onPress={() => headerRightCallbacks.import?.()}
                 />
             </RN.View>

@@ -85,9 +85,7 @@ export function ImageActionSheet({
             <FormRow
                 label="Set Image Variable"
                 leading={
-                    <FormRow.Icon
-                        source={getAssetIDByName("ic_essentials_sparkle")}
-                    />
+                    <FormRow.Icon source={getAssetIDByName("SparklesIcon")} />
                 }
                 trailing={<FormRow.Arrow />}
                 onPress={() => {
@@ -102,7 +100,7 @@ export function ImageActionSheet({
             <FormRow
                 label="Use Custom Image"
                 subLabel="Make sure your image is in a square aspect ratio"
-                leading={<FormRow.Icon source={getAssetIDByName("ic_link")} />}
+                leading={<FormRow.Icon source={getAssetIDByName("LinkIcon")} />}
                 onPress={() => {
                     showInputAlert({
                         title: "Enter the link to your image link",
@@ -116,19 +114,19 @@ export function ImageActionSheet({
                             if (!url) {
                                 showToast(
                                     "Invalid URL",
-                                    getAssetIDByName("Small"),
+                                    getAssetIDByName("CircleXIcon"),
                                 );
                                 return;
                             }
                             showToast(
                                 "Proxying image...",
-                                getAssetIDByName("ic_clock"),
+                                getAssetIDByName("ClockIcon"),
                             );
                             try {
                                 update(`mp:${await getExternalAsset(url)}`);
                                 showToast(
                                     "Proxied image",
-                                    getAssetIDByName("Check"),
+                                    getAssetIDByName("CircleCheckIcon"),
                                 );
                             } catch (e) {
                                 const err =
@@ -141,7 +139,7 @@ export function ImageActionSheet({
                                 );
                                 showToast(
                                     "Failed to proxy image",
-                                    getAssetIDByName("Small"),
+                                    getAssetIDByName("CircleXIcon"),
                                 );
                             }
                         },
@@ -152,9 +150,7 @@ export function ImageActionSheet({
             <FormRow
                 label="Select RPC Asset"
                 leading={
-                    <FormRow.Icon
-                        source={getAssetIDByName("ic_media_channel")}
-                    />
+                    <FormRow.Icon source={getAssetIDByName("ImageIcon")} />
                 }
                 trailing={<FormRow.Arrow />}
                 onPress={() => {
@@ -219,9 +215,7 @@ export function ButtonActionSheet({
             <FormRow
                 label="Button Text"
                 leading={
-                    <FormRow.Icon
-                        source={getAssetIDByName("ic_message_edit")}
-                    />
+                    <FormRow.Icon source={getAssetIDByName("PencilIcon")} />
                 }
                 onPress={() => {
                     simpleInput({
@@ -236,9 +230,7 @@ export function ButtonActionSheet({
             <FormRow
                 label="Button URL"
                 leading={
-                    <FormRow.Icon
-                        source={getAssetIDByName("ic_message_edit")}
-                    />
+                    <FormRow.Icon source={getAssetIDByName("PencilIcon")} />
                 }
                 onPress={() => {
                     simpleInput({
@@ -305,9 +297,7 @@ export function ApplicationActionSheet({
             <FormRow
                 label="Application Name"
                 leading={
-                    <FormRow.Icon
-                        source={getAssetIDByName("ic_message_edit")}
-                    />
+                    <FormRow.Icon source={getAssetIDByName("PencilIcon")} />
                 }
                 onPress={() => {
                     simpleInput({
@@ -322,7 +312,7 @@ export function ApplicationActionSheet({
             <FormRow
                 label="Select Application"
                 leading={
-                    <FormRow.Icon source={getAssetIDByName("ic_robot_24px")} />
+                    <FormRow.Icon source={getAssetIDByName("RobotIcon")} />
                 }
                 trailing={<FormRow.Arrow />}
                 onPress={() => {
@@ -447,9 +437,7 @@ export function TimestampActionSheet({
             <FormRow
                 label="Set Start Time Variable"
                 leading={
-                    <FormRow.Icon
-                        source={getAssetIDByName("ic_essentials_sparkle")}
-                    />
+                    <FormRow.Icon source={getAssetIDByName("SparklesIcon")} />
                 }
                 trailing={<FormRow.Arrow />}
                 onPress={() => {
@@ -465,9 +453,7 @@ export function TimestampActionSheet({
                 <FormRow
                     label="Edit Start Time"
                     leading={
-                        <FormRow.Icon
-                            source={getAssetIDByName("ic_message_edit")}
-                        />
+                        <FormRow.Icon source={getAssetIDByName("PencilIcon")} />
                     }
                     trailing={<FormRow.Arrow />}
                     onPress={() => {
@@ -498,9 +484,7 @@ export function TimestampActionSheet({
             <FormRow
                 label="Set End Time Variable"
                 leading={
-                    <FormRow.Icon
-                        source={getAssetIDByName("ic_essentials_sparkle")}
-                    />
+                    <FormRow.Icon source={getAssetIDByName("SparklesIcon")} />
                 }
                 trailing={<FormRow.Arrow />}
                 onPress={() => {
@@ -516,9 +500,7 @@ export function TimestampActionSheet({
                 <FormRow
                     label="Edit End Time"
                     leading={
-                        <FormRow.Icon
-                            source={getAssetIDByName("ic_message_edit")}
-                        />
+                        <FormRow.Icon source={getAssetIDByName("PencilIcon")} />
                     }
                     onPress={() => {
                         prompt({

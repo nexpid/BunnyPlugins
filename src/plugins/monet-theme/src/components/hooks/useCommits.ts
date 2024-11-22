@@ -72,7 +72,7 @@ const refetch = async () => {
             x.json().catch((err: any) => {
                 showToast(
                     "Failed to parse GitHub commits!",
-                    getAssetIDByName("Small"),
+                    getAssetIDByName("CircleXIcon"),
                 );
                 logger.error("useCommits refetch error (parse)", err);
                 return null;
@@ -81,7 +81,7 @@ const refetch = async () => {
         .catch((err: any) => {
             showToast(
                 "Failed to fetch GitHub commits!",
-                getAssetIDByName("Small"),
+                getAssetIDByName("CircleXIcon"),
             );
             logger.error("useCommits refetch error (fetch)", err);
             return null;

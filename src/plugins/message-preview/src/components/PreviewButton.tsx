@@ -70,7 +70,7 @@ export default ({ inputProps }): JSX.Element => {
                 style={styles.actionButton}>
                 <RN.Image
                     style={styles.actionIcon}
-                    source={getAssetIDByName("ic_eye")}
+                    source={getAssetIDByName("EyeIcon")}
                 />
             </UseComponent>
         </Reanimated.default.View>

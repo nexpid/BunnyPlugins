@@ -24,7 +24,7 @@ const fetchData = async () => {
 
         showToast(
             lang.format("toast.fetch_error", {}),
-            getAssetIDByName("Small"),
+            getAssetIDByName("CircleXIcon"),
         );
     }
 };

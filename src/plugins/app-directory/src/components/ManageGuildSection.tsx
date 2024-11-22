@@ -10,7 +10,7 @@ export default function ({ run }: { run: () => void }) {
         <FormSection title="Apps">
             <AutoRow
                 label="App Directory"
-                icon={getAssetIDByName("ic_robot_24px")}
+                icon={getAssetIDByName("RobotIcon")}
                 onPress={run}
             />
         </FormSection>

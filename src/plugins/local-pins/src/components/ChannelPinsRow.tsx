@@ -53,7 +53,7 @@ export default function ChannelPinsRow() {
             }}>
             <RN.View style={styles.icon}>
                 <RN.Image
-                    source={getAssetIDByName("ic_pins")}
+                    source={getAssetIDByName("PinIcon")}
                     style={styles.iconImg}
                     resizeMode="cover"
                 />

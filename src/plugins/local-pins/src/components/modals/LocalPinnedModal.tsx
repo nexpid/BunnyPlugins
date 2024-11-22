@@ -77,7 +77,7 @@ const Message = ({
                     options: [
                         {
                             label: "Unpin",
-                            icon: getAssetIDByName("ic_message_pin"),
+                            icon: getAssetIDByName("PinIcon"),
                             onPress: () => {
                                 removePin(channelId, message.id);
                                 remove();
@@ -91,7 +91,7 @@ const Message = ({
                 style={{ flexDirection: "row", alignItems: "center", gap: 4 }}>
                 <RN.Image
                     style={styles.icon}
-                    source={getAssetIDByName("ic_chat_bubble_16px")}
+                    source={getAssetIDByName("ChatIcon")}
                     resizeMode="cover"
                 />
                 <Text variant="text-md/medium" color="TEXT_NORMAL">

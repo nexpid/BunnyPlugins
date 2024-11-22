@@ -133,7 +133,7 @@ export default new Module({
                                 ? MediaManager.downloadMediaAsset(link, 1)
                                 : showToast(
                                       "Failed to download gif using NexxUtils",
-                                      getAssetIDByName("CircleXIcon-primary"),
+                                      getAssetIDByName("CircleXIcon"),
                                   ),
                     });
                 }),

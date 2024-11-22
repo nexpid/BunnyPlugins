@@ -55,7 +55,7 @@ export default function TooMuchDataSheet({ navigation }: { navigation: any }) {
                         "alert.too_much_data.antied.desc",
                         {},
                     )}
-                    icon={getAssetIDByName("ic_edit_24px")}
+                    icon={getAssetIDByName("PencilIcon")}
                     onPress={async () => {
                         const { enabled } = plugins[antied.old];
 

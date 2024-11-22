@@ -336,7 +336,7 @@ export default function () {
                             // STUB[epic=icon] use new logout icon :3
                             leading={
                                 <FormRow.Icon
-                                    source={getAssetIDByName("ic_logout_24px")}
+                                    source={getAssetIDByName("DoorExitIcon")}
                                 />
                             }
                             destructive
@@ -361,7 +361,7 @@ export default function () {
 
                                         showToast(
                                             lang.format("toast.logout", {}),
-                                            getAssetIDByName("ic_logout_24px"),
+                                            getAssetIDByName("DoorExitIcon"),
                                         );
                                     },
                                 })
@@ -495,7 +495,7 @@ export default function () {
                                                     {},
                                                 ),
                                                 getAssetIDByName(
-                                                    "CircleCheckIcon-primary",
+                                                    "CircleCheckIcon",
                                                 ),
                                             );
                                         } catch (e: any) {
@@ -614,7 +614,7 @@ export default function () {
                         //     } catch (e) {
                         //         showToast(
                         //             lang.format("toast.backup_not_saved", {}),
-                        //             getAssetIDByName("CircleXIcon-primary"),
+                        //             getAssetIDByName("CircleXIcon"),
                         //         ),
                         //             logger.error("backup not saved", e);
                         //     }
@@ -664,7 +664,7 @@ export default function () {
                                             "toast.failed_file_open",
                                             {},
                                         ),
-                                        getAssetIDByName("CircleXIcon-primary"),
+                                        getAssetIDByName("CircleXIcon"),
                                     ),
                                         logger.error(e);
                             }

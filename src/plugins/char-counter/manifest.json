@@ -9,6 +9,6 @@
   ],
   "main": "src/index.ts",
   "vendetta": {
-    "icon": "ic_message_edit"
+    "icon": "PencilIcon"
   }
 }

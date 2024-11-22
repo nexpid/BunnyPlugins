@@ -105,14 +105,14 @@ export default () => {
                         .catch(() => {
                             showToast(
                                 lang.format("toast.data.fail_parse", {}),
-                                getAssetIDByName("Small"),
+                                getAssetIDByName("CircleXIcon"),
                             );
                         }),
                 )
                 .catch(() => {
                     showToast(
                         lang.format("toast.data.fail_fetch", {}),
-                        getAssetIDByName("Small"),
+                        getAssetIDByName("CircleXIcon"),
                     );
                 });
     }, [parsed]);

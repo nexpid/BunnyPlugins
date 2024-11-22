@@ -29,7 +29,7 @@ export default () => {
         <RN.ScrollView>
             <BetterTableRowGroup
                 title="Settings"
-                icon={getAssetIDByName("ic_cog_24px")}>
+                icon={getAssetIDByName("SettingsIcon")}>
                 <FormRow
                     label="Data size"
                     subLabel={
@@ -44,9 +44,7 @@ export default () => {
                             : "N/A"
                     }
                     leading={
-                        <FormRow.Icon
-                            source={getAssetIDByName("ic_message_edit")}
-                        />
+                        <FormRow.Icon source={getAssetIDByName("PencilIcon")} />
                     }
                 />
                 <FormRow
@@ -54,7 +52,7 @@ export default () => {
                     leading={
                         <FormRow.Icon
                             style={styles.destructiveIcon}
-                            source={getAssetIDByName("ic_message_delete")}
+                            source={getAssetIDByName("TrashIcon")}
                         />
                     }
                     trailing={<FormRow.Arrow />}

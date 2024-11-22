@@ -255,7 +255,7 @@ const SpotifySongEmbed = ({
                     logger.error(`Failed to get song data!\n${e.stack}`),
                     showToast(
                         "Failed to get song data!",
-                        getAssetIDByName("Small"),
+                        getAssetIDByName("CircleXIcon"),
                     ),
                     setSongData(false)),
             );
@@ -334,7 +334,9 @@ const SpotifySongEmbed = ({
                     <RN.Pressable
                         android_ripple={styles.androidRipple}
                         onPress={more}>
-                        <RN.Image source={getAssetIDByName("ic_feed_more")} />
+                        <RN.Image
+                            source={getAssetIDByName("MoreHorizontalIcon")}
+                        />
                     </RN.Pressable>
                 </RN.View>
             </AnimatedPressable>
@@ -420,7 +422,7 @@ const SpotifySongEmbed = ({
                                 });
                             }}>
                             <RN.Image
-                                source={getAssetIDByName("ic_feed_more")}
+                                source={getAssetIDByName("MoreHorizontalIcon")}
                             />
                         </RN.Pressable>
                         <RN.View style={styles.cardOtherBottom}>
@@ -589,7 +591,7 @@ const SpotifySongEmbed = ({
                 onPress={trigger}>
                 <RN.Image
                     style={styles.noImage}
-                    source={getAssetIDByName("ic_message_retry")}
+                    source={getAssetIDByName("RetryIcon")}
                     resizeMode="contain"
                 />
             </RN.Pressable>
@@ -622,7 +624,7 @@ export default function ({ userId, you }: { userId: string; you: boolean }) {
                         logger.error(`Failed to get profile data!\n${e.stack}`),
                         showToast(
                             "Failed to get profile data!",
-                            getAssetIDByName("Small"),
+                            getAssetIDByName("CircleXIcon"),
                         ),
                         setSongs([])),
                 );

@@ -13,6 +13,6 @@
   ],
   "main": "src/index.ts",
   "vendetta": {
-    "icon": "ic_eye"
+    "icon": "EyeIcon"
   }
 }

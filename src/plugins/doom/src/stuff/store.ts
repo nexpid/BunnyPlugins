@@ -79,7 +79,7 @@ const getFile = async (
         } catch (e) {
             const err = e instanceof Error ? e : new Error(String(e));
             logger.error(`getFile->parser error!\n${err.stack}`);
-            showToast("Failed to parse file!", getAssetIDByName("Small"));
+            showToast("Failed to parse file!", getAssetIDByName("CircleXIcon"));
             return false;
         }
     else return content;

@@ -49,7 +49,7 @@ const refetch = async () => {
                 } catch (err: any) {
                     showToast(
                         "Failed to parse color patches!",
-                        getAssetIDByName("Small"),
+                        getAssetIDByName("CircleXIcon"),
                     );
                     logger.error("usePatches refetch error (parse)", err);
                     return null;
@@ -59,7 +59,7 @@ const refetch = async () => {
         .catch((err: any) => {
             showToast(
                 "Failed to fetch color patches!",
-                getAssetIDByName("Small"),
+                getAssetIDByName("CircleXIcon"),
             );
             logger.error("usePatches refetch error (fetch)", err);
             return null;

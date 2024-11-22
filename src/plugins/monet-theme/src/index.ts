@@ -98,14 +98,17 @@ export default {
             if (!cpatches)
                 return showToast(
                     "Failed to fetch color patches!",
-                    getAssetIDByName("Small"),
+                    getAssetIDByName("CircleXIcon"),
                 );
 
             let theme: ThemeDataWithPlus;
             try {
                 theme = build(cpatches);
             } catch (e: any) {
-                showToast("Failed to build theme!", getAssetIDByName("Small"));
+                showToast(
+                    "Failed to build theme!",
+                    getAssetIDByName("CircleXIcon"),
+                );
                 return;
             }
 

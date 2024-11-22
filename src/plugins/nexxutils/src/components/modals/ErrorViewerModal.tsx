@@ -98,7 +98,7 @@ const Card = ({
                         }}
                         style={{ padding: 4 }}>
                         <RN.Image
-                            source={getAssetIDByName("ic_message_copy")}
+                            source={getAssetIDByName("CopyIcon")}
                             resizeMode="cover"
                             style={styles.upIcon}
                         />

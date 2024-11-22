@@ -278,7 +278,7 @@ export default function AppInfoPage({
                         text={intlProxy.APP_DIRECTORY_PROFILE_ADD_BUTTON}
                         variant="primary"
                         size="md"
-                        icon={getAssetIDByName("ic_download_24px")}
+                        icon={getAssetIDByName("DownloadIcon")}
                         onPress={() =>
                             app.custom_install_url
                                 ? url.openURL(app.custom_install_url)
@@ -358,7 +358,7 @@ export default function AppInfoPage({
                             label={x.name}
                             icon={
                                 <TableRowIcon
-                                    source={getAssetIDByName("ic_link")}
+                                    source={getAssetIDByName("LinkIcon")}
                                 />
                             }
                             onPress={() => url.openURL(x.url)}
@@ -369,7 +369,7 @@ export default function AppInfoPage({
                             label={intlProxy.APP_DIRECTORY_PROFILE_TERMS_LINK}
                             icon={
                                 <TableRowIcon
-                                    source={getAssetIDByName("ic_link")}
+                                    source={getAssetIDByName("LinkIcon")}
                                 />
                             }
                             onPress={() =>
@@ -382,7 +382,7 @@ export default function AppInfoPage({
                             label={intlProxy.APP_DIRECTORY_PROFILE_PRIVACY_LINK}
                             icon={
                                 <TableRowIcon
-                                    source={getAssetIDByName("ic_lock")}
+                                    source={getAssetIDByName("LockIcon")}
                                 />
                             }
                             onPress={() => url.openURL(app.privacy_policy_url)}

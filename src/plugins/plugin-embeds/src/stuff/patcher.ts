@@ -126,7 +126,7 @@ export default () => {
                             console.log(e);
                             showToast(
                                 "Failed to uninstall plugin!",
-                                getAssetIDByName("Small"),
+                                getAssetIDByName("CircleXIcon"),
                             );
                         }
                         updateMessages(plugin, false);
@@ -136,14 +136,14 @@ export default () => {
                             .then(() => {
                                 showToast(
                                     `Successfully installed ${plugins[plugin].manifest.name}.`,
-                                    getAssetIDByName("Check"),
+                                    getAssetIDByName("CircleCheckIcon"),
                                 );
                             })
                             .catch(e => {
                                 console.log(e);
                                 showToast(
                                     "Failed to install plugin!",
-                                    getAssetIDByName("Small"),
+                                    getAssetIDByName("CircleXIcon"),
                                 );
                             })
                             .finally(() => {

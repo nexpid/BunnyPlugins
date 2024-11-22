@@ -9,6 +9,6 @@
   ],
   "main": "src/index.tsx",
   "vendetta": {
-    "icon": "ic_theme_24px"
+    "icon": "PaintPaletteIcon"
   }
 }

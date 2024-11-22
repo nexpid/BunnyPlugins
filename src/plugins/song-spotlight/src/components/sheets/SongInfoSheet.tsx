@@ -70,7 +70,7 @@ export default function SongInfoSheet({
                 <FormRow
                     label="Add to your profile"
                     leading={
-                        <FormRow.Icon source={getAssetIDByName("ic_pin")} />
+                        <FormRow.Icon source={getAssetIDByName("PinIcon")} />
                     }
                     onPress={() => {
                         hideActionSheet();
@@ -82,7 +82,7 @@ export default function SongInfoSheet({
                         if (available === -1) {
                             showToast(
                                 "No space left!",
-                                getAssetIDByName("Small"),
+                                getAssetIDByName("CircleXIcon"),
                             );
                             return;
                         }
@@ -92,7 +92,7 @@ export default function SongInfoSheet({
 
                         showToast(
                             "Added to your profile",
-                            getAssetIDByName("Check"),
+                            getAssetIDByName("CircleCheckIcon"),
                         );
                     }}
                 />

@@ -122,7 +122,7 @@ export default () => {
                             }
                         }
                     }}
-                    icon={getAssetIDByName("ic_eye")}
+                    icon={getAssetIDByName("EyeIcon")}
                     padding={vstorage.settings.edit}>
                     <RPCPreview
                         edit={vstorage.settings.edit}
@@ -131,13 +131,13 @@ export default () => {
                 </BetterTableRowGroup>
                 <BetterTableRowGroup
                     title="Settings"
-                    icon={getAssetIDByName("ic_cog_24px")}>
+                    icon={getAssetIDByName("SettingsIcon")}>
                     <FormSwitchRow
                         label="Edit Mode"
                         subLabel="Be able to edit your activity"
                         leading={
                             <FormIcon
-                                source={getAssetIDByName("ic_badge_staff")}
+                                source={getAssetIDByName("StaffBadgeIcon")}
                             />
                         }
                         onValueChange={() =>
@@ -149,9 +149,7 @@ export default () => {
                         label="Display Activity"
                         subLabel="Show off your super awesome poggers activity to the world"
                         leading={
-                            <FormIcon
-                                source={getAssetIDByName("ic_show_password")}
-                            />
+                            <FormIcon source={getAssetIDByName("EyeIcon")} />
                         }
                         onValueChange={() =>
                             (vstorage.settings.display =
@@ -162,7 +160,7 @@ export default () => {
                 </BetterTableRowGroup>
                 <BetterTableRowGroup
                     title="Data"
-                    icon={getAssetIDByName("ic_feedback")}>
+                    icon={getAssetIDByName("FolderIcon")}>
                     <FormRow
                         label="Copy as JSON"
                         leading={
@@ -186,7 +184,7 @@ export default () => {
                         label="Load from Clipboard"
                         leading={
                             <FormRow.Icon
-                                source={getAssetIDByName("ic_download_24px")}
+                                source={getAssetIDByName("DownloadIcon")}
                             />
                         }
                         onPress={() => {
@@ -202,7 +200,7 @@ export default () => {
                                     } catch {
                                         showToast(
                                             "Failed to parse JSON",
-                                            getAssetIDByName("Small"),
+                                            getAssetIDByName("CircleXIcon"),
                                         );
                                         return;
                                     }
@@ -212,7 +210,7 @@ export default () => {
                                     if (!data.error) {
                                         showToast(
                                             "Invalid activity data",
-                                            getAssetIDByName("Small"),
+                                            getAssetIDByName("CircleXIcon"),
                                         );
                                         return;
                                     }
@@ -223,7 +221,7 @@ export default () => {
                                     forceUpdate();
                                     showToast(
                                         "Loaded",
-                                        getAssetIDByName("Check"),
+                                        getAssetIDByName("CircleCheckIcon"),
                                     );
                                 },
                             });
@@ -237,9 +235,7 @@ export default () => {
                                 label={`Save Profile${!isActivitySaved() ? " 🔴" : ""}`}
                                 leading={
                                     <FormRow.Icon
-                                        source={getAssetIDByName(
-                                            "ic_message_edit",
-                                        )}
+                                        source={getAssetIDByName("PencilIcon")}
                                     />
                                 }
                                 onPress={() => {
@@ -254,7 +250,7 @@ export default () => {
                                     );
                                     showToast(
                                         "Saved",
-                                        getAssetIDByName("Check"),
+                                        getAssetIDByName("CircleCheckIcon"),
                                     );
                                     forceUpdate();
                                 }}
@@ -263,9 +259,7 @@ export default () => {
                                 label="Revert Profile"
                                 leading={
                                     <FormRow.Icon
-                                        source={getAssetIDByName(
-                                            "ic_message_edit",
-                                        )}
+                                        source={getAssetIDByName("PencilIcon")}
                                     />
                                 }
                                 onPress={() => {
@@ -287,7 +281,9 @@ export default () => {
                                                 );
                                             showToast(
                                                 "Reverted",
-                                                getAssetIDByName("Check"),
+                                                getAssetIDByName(
+                                                    "CircleCheckIcon",
+                                                ),
                                             );
                                             forceUpdate();
                                         },
@@ -298,9 +294,7 @@ export default () => {
                                 label="Close Profile"
                                 leading={
                                     <FormRow.Icon
-                                        source={getAssetIDByName(
-                                            "ic_message_edit",
-                                        )}
+                                        source={getAssetIDByName("PencilIcon")}
                                     />
                                 }
                                 onPress={() => {
@@ -313,7 +307,9 @@ export default () => {
                                             delete vstorage.activity.profile;
                                             showToast(
                                                 "Closed",
-                                                getAssetIDByName("Check"),
+                                                getAssetIDByName(
+                                                    "CircleCheckIcon",
+                                                ),
                                             );
                                             forceUpdate();
                                         },
@@ -339,7 +335,7 @@ export default () => {
                         label="Browse Profiles"
                         leading={
                             <FormRow.Icon
-                                source={getAssetIDByName("ic_message_edit")}
+                                source={getAssetIDByName("PencilIcon")}
                             />
                         }
                         trailing={<FormRow.Arrow />}
@@ -351,13 +347,13 @@ export default () => {
                 {vstorage.settings.debug.visible && (
                     <BetterTableRowGroup
                         title="Debug"
-                        icon={getAssetIDByName("ic_progress_wrench_24px")}>
+                        icon={getAssetIDByName("WrenchIcon")}>
                         <FormRow
                             label="Live RawActivity View"
                             trailing={<FormRow.Arrow />}
                             leading={
                                 <FormRow.Icon
-                                    source={getAssetIDByName("ic_badge_staff")}
+                                    source={getAssetIDByName("StaffBadgeIcon")}
                                 />
                             }
                             onPress={() => {
@@ -368,7 +364,7 @@ export default () => {
                             label="Flush MP Cache"
                             leading={
                                 <FormRow.Icon
-                                    source={getAssetIDByName("ic_badge_staff")}
+                                    source={getAssetIDByName("StaffBadgeIcon")}
                                 />
                             }
                             onPress={() => {

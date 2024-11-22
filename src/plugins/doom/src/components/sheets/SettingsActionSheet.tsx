@@ -89,7 +89,7 @@ export default function SettingsActionSheet({
             <FormRow
                 label="Suggest new game"
                 leading={
-                    <FormRow.Icon source={getAssetIDByName("ic_add_24px")} />
+                    <FormRow.Icon source={getAssetIDByName("PlusLargeIcon")} />
                 }
                 style={{ marginHorizontal: 12 }}
                 onPress={() => url.openURL(newGameSuggestionURL())}
@@ -99,7 +99,7 @@ export default function SettingsActionSheet({
                 leading={
                     <FormRow.Icon
                         style={styles.destructiveIcon}
-                        source={getAssetIDByName("ic_trash_24px")}
+                        source={getAssetIDByName("TrashIcon")}
                     />
                 }
                 onPress={() => {
@@ -115,7 +115,7 @@ export default function SettingsActionSheet({
                             await purgeFiles();
                             showToast(
                                 "Deleted files",
-                                getAssetIDByName("Check"),
+                                getAssetIDByName("CircleCheckIcon"),
                             );
                         },
                     });

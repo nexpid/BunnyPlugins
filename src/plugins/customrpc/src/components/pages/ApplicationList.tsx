@@ -32,12 +32,15 @@ export const ApplicationList = () => {
                 if (txt.match(/^\s*$/)) {
                     showToast(
                         "App ID cannot be empty",
-                        getAssetIDByName("Small"),
+                        getAssetIDByName("CircleXIcon"),
                     );
                     return;
                 }
                 if (Number.isNaN(Number(txt))) {
-                    showToast("Invalid app ID", getAssetIDByName("Small"));
+                    showToast(
+                        "Invalid app ID",
+                        getAssetIDByName("CircleXIcon"),
+                    );
                     return;
                 }
 
@@ -136,7 +139,7 @@ export function showApplicationList(navigation) {
         headerRight: () => (
             <SuperAwesomeIcon
                 style="header"
-                icon={getAssetIDByName("ic_custom_color")}
+                icon={getAssetIDByName("EyeDropperIcon")}
                 onPress={() => {
                     headerRightCallback();
                 }}

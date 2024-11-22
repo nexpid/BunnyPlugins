@@ -66,7 +66,7 @@ export default function PluginCard({
                         : "toast.plugin.install.fail",
                     { plugin: item.name },
                 ),
-                getAssetIDByName("Small"),
+                getAssetIDByName("CircleXIcon"),
             );
         }
 

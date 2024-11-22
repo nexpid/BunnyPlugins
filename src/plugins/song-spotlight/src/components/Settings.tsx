@@ -210,7 +210,7 @@ export default function () {
                             subLabel="Logs you out of SongSpotlight"
                             leading={
                                 <FormRow.Icon
-                                    source={getAssetIDByName("ic_logout_24px")}
+                                    source={getAssetIDByName("DoorExitIcon")}
                                 />
                             }
                             onPress={() => {
@@ -221,7 +221,7 @@ export default function () {
 
                                 showToast(
                                     "Successfully logged out",
-                                    getAssetIDByName("ic_logout_24px"),
+                                    getAssetIDByName("DoorExitIcon"),
                                 );
                             }}
                         />

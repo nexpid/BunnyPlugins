@@ -17,7 +17,7 @@ export default function (message: {
     return (
         <RedesignRow
             label={isPinned ? "Unpin Message Locally" : "Pin Message Locally"}
-            icon={getAssetIDByName("ic_message_pin")}
+            icon={getAssetIDByName("PinIcon")}
             onPress={() => {
                 if (isPinned) {
                     removePin(message.channel_id, message.id);
@@ -27,7 +27,7 @@ export default function (message: {
                             message.author.globalName ??
                             message.author.username
                         }'s message locally`,
-                        getAssetIDByName("ic_message_pin"),
+                        getAssetIDByName("PinIcon"),
                     );
                 } else {
                     addPin(message.channel_id, message.id);
@@ -37,7 +37,7 @@ export default function (message: {
                             message.author.globalName ??
                             message.author.username
                         }'s message locally`,
-                        getAssetIDByName("ic_message_pin"),
+                        getAssetIDByName("PinIcon"),
                     );
                 }
                 hideActionSheet();

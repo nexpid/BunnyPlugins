@@ -27,7 +27,7 @@ export async function authFetch(_url: string | URL, options?: RequestInit) {
         const text = await res.text();
         showToast(
             lang.format("toast.fetch_error", { urlpath: url.pathname }),
-            getAssetIDByName("CircleXIcon-primary"),
+            getAssetIDByName("CircleXIcon"),
         );
         logger.error(
             "authFetch error",

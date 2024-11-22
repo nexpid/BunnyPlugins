@@ -236,13 +236,13 @@ export class Module<Settings extends Record<string, ModuleSetting>> {
                         )),
                     ],
                     color: "TEXT_NORMAL",
-                    icon: "ic_copy_message_link",
+                    icon: "LinkIcon",
                 });
             if (this.extra?.warning)
                 extra.push({
                     content: this.extra.warning,
                     color: "TEXT_WARNING",
-                    icon: "ic_warning_24px",
+                    icon: "WarningIcon",
                     iconColor: "STATUS_WARNING",
                 });
 
@@ -252,7 +252,7 @@ export class Module<Settings extends Record<string, ModuleSetting>> {
                         Object.keys(this.errors).length !== 1 ? "s" : ""
                     }`,
                     color: "TEXT_DANGER",
-                    icon: "ic_warning_24px",
+                    icon: "WarningIcon",
                     iconColor: "STATUS_DANGER",
                     action: () => {
                         openModal(
@@ -539,7 +539,7 @@ export class Module<Settings extends Record<string, ModuleSetting>> {
 
             showToast(
                 "NexxUtils module errored on starting!",
-                getAssetIDByName("Small"),
+                getAssetIDByName("CircleXIcon"),
             );
         }
     }
@@ -555,7 +555,7 @@ export class Module<Settings extends Record<string, ModuleSetting>> {
 
             showToast(
                 "NexxUtils module errored on stopping!",
-                getAssetIDByName("Small"),
+                getAssetIDByName("CircleXIcon"),
             );
         }
     }

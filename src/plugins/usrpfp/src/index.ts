@@ -34,7 +34,7 @@ export default {
 
             showToast(
                 lang.format("toast.patch_error", {}),
-                getAssetIDByName("Small"),
+                getAssetIDByName("CircleXIcon"),
             );
             stopPlugin(id);
         }
