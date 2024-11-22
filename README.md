@@ -62,8 +62,8 @@
   - [<img alt="copy_dev_link" src="https://img.shields.io/badge/copy_dev_link-1e2030?style=for-the-badge" />](https://dev.bunny.nexpid.xyz/twemoji-everywhere) [<img alt="view_code" src="https://img.shields.io/badge/view_code-363a4f?style=for-the-badge" />](https://github.com/nexpid/BunnyPlugins/tree/feat/improve-workspace/src/plugins/twemoji-everywhere)
 - Use System Emoji — Replaces Twemoji with system emoji in messages
   - [<img alt="copy_dev_link" src="https://img.shields.io/badge/copy_dev_link-1e2030?style=for-the-badge" />](https://dev.bunny.nexpid.xyz/use-system-emoji) [<img alt="view_code" src="https://img.shields.io/badge/view_code-363a4f?style=for-the-badge" />](https://github.com/nexpid/BunnyPlugins/tree/feat/improve-workspace/src/plugins/use-system-emoji)
-- UserPFP — https://userpfp.github.io/UserPFP/#how-to-request-a-profile-picture-pfp
-  - [<img alt="copy_dev_link" src="https://img.shields.io/badge/copy_dev_link-1e2030?style=for-the-badge" />](https://dev.bunny.nexpid.xyz/usrpfp) [<img alt="view_code" src="https://img.shields.io/badge/view_code-363a4f?style=for-the-badge" />](https://github.com/nexpid/BunnyPlugins/tree/feat/improve-workspace/src/plugins/usrpfp)
+- UserPFP — https://userpfp.github.io/UserPFP/#using-userpfp
+  - [<img alt="copy_dev_link" src="https://img.shields.io/badge/copy_dev_link-1e2030?style=for-the-badge" />](https://dev.bunny.nexpid.xyz/userpfp) [<img alt="view_code" src="https://img.shields.io/badge/view_code-363a4f?style=for-the-badge" />](https://github.com/nexpid/BunnyPlugins/tree/feat/improve-workspace/src/plugins/userpfp)
 
 ### ❌ Unfinished
 

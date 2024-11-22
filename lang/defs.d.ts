@@ -67,8 +67,8 @@ export default interface LangValues {
         values: typeof import("./values/base/twemoji_everywhere.json");
         fillers: null;
     };
-    usrpfp: {
-        values: typeof import("./values/base/usrpfp.json");
+    userpfp: {
+        values: typeof import("./values/base/userpfp.json");
         fillers: null;
     };
 }

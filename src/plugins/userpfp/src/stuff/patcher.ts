@@ -5,7 +5,7 @@ import { getAssetIDByName } from "@vendetta/ui/assets";
 import { showToast } from "@vendetta/ui/toasts";
 import { safeFetch } from "@vendetta/utils";
 
-import { dataURL, enabled, hash, lang, staticGifURL } from "..";
+import { dataURL, enabled, lang } from "..";
 import { DataFile } from "../types";
 
 const avatarStuff = findByProps("getUserAvatarURL", "getUserAvatarSource");
@@ -16,11 +16,12 @@ let data: DataFile;
 const fetchData = async () => {
     try {
         data = await (
-            await safeFetch(`${dataURL}?_=${hash}`, { cache: "no-store" })
+            await safeFetch(dataURL, {
+                headers: { "cache-control": "max-age=1800" },
+            })
         ).json();
     } catch (e) {
-        const err = e instanceof Error ? e : new Error(String(e));
-        logger.error(`${lang.format("log.fetch_error", {})}\n${err.stack}`);
+        logger.error("fetch error", e);
 
         showToast(
             lang.format("toast.fetch_error", {}),
@@ -33,11 +34,9 @@ const getCustomAvatar = (id: string, isStatic?: boolean) => {
     if (!data.avatars[id]) return;
 
     const avatar = data.avatars[id];
-    if (isStatic && urlExt(avatar) === "gif") return staticGifURL(avatar);
-
-    const url = new URL(avatar);
-    url.searchParams.append("_", hash);
-    return url.toString();
+    if (isStatic && urlExt(avatar) === "gif")
+        return avatar.replace(".gif", ".png");
+    else return avatar;
 };
 
 const urlExt = (url: string) => new URL(url).pathname.split(".").slice(-1)[0];

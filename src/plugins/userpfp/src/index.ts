@@ -9,28 +9,18 @@ import { Lang } from "$/lang";
 import patcher from "./stuff/patcher";
 
 export const dataURL = "https://userpfp.github.io/UserPFP/source/data.json";
-export const staticGifURL = (url: string) =>
-    `https://static-gif.nexpid.workers.dev/convert.gif?url=${encodeURIComponent(
-        url,
-    )}&_=${hash}`;
-
 export let enabled = false;
-export let hash: string;
 
-export const lang = new Lang("usrpfp");
+export const lang = new Lang("userpfp");
 
 let unpatch: () => void;
 export default {
     onLoad: async () => {
-        hash = Array.from(crypto.getRandomValues(new Uint8Array(20)))
-            .map(b => b.toString(16).padStart(2, "0"))
-            .join("");
         enabled = true;
         try {
             unpatch = await patcher();
         } catch (e) {
-            const err = e instanceof Error ? e : new Error(String(e));
-            logger.error(`${lang.format("log.patch_error", {})}\n${err.stack}`);
+            logger.error("patch error", e);
 
             showToast(
                 lang.format("toast.patch_error", {}),
