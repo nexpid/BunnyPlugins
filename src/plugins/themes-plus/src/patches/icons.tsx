@@ -7,9 +7,9 @@ import { PlusStructure } from "$/typings";
 
 import { PatchType } from "..";
 import { state } from "../stuff/active";
-import { bunnyIconDataUri } from "../stuff/bunnyIcon";
 import { getIconOverlay, getIconTint } from "../stuff/iconOverlays";
 import { patches } from "../stuff/loader";
+import modIcons from "../stuff/modIcons";
 import { fullIconsPath, isPackInstalled } from "../stuff/packInstaller";
 import { fixPath, flattenFilePath } from "../stuff/util";
 import { BunnyAsset, IconpackConfig } from "../types";
@@ -52,13 +52,16 @@ export default function patchIcons(
 
                 let asset: BunnyAsset | null = null;
 
-                // theme the Bunny icon
-                if (source?.uri === bunnyIconDataUri)
+                // theme mod icons (bunny, revenge)
+                const modIcon = Object.entries(modIcons).find(
+                    ([_, uri]) => source?.uri === uri,
+                );
+                if (modIcon)
                     asset = {
                         httpServerLocation: "//_",
                         width: 64,
                         height: 64,
-                        name: "bunny",
+                        name: modIcon[0],
                         type: "png",
                     };
                 // custom themhed icons API
