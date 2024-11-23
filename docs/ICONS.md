@@ -36,7 +36,8 @@ Icons used by plugins are stored in the `<iconpack root>/_/external/` folder. He
   - <img src="../src/plugins/nexxutils/assets/ColorfulChannels/stage/lock.png" alt="ColorfulChannels lock" width=20 height=20 /> — `ColorfulChannels/stage/lock.png`
   - <img src="../src/plugins/nexxutils/assets/ColorfulChannels/text/lock.png" alt="ColorfulChannels lock" width=20 height=20 /> — `ColorfulChannels/text/lock.png`
   - <img src="../src/plugins/nexxutils/assets/ColorfulChannels/text/warning.png" alt="ColorfulChannels warning" width=20 height=20 /> — `ColorfulChannels/text/warning.png`
-  - <img src="../src/plugins/nexxutils/assets/ColorfulChannels/voice/both.png" alt="ColorfulChannels both" width=20 height=20 /> — `ColorfulChannels/voice/both.png`
+  - <img src="../src/plugins/nexxutils/assets/ColorfulChannels/voice/lock.png" alt="ColorfulChannels lock" width=20 height=20 /> — `ColorfulChannels/voice/lock.png`
+  - <img src="../src/plugins/nexxutils/assets/ColorfulChannels/voice/warning.png" alt="ColorfulChannels warning" width=20 height=20 /> — `ColorfulChannels/voice/warning.png`
 
 ### Minimod
 

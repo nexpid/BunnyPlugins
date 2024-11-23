@@ -18,7 +18,8 @@ import lockBottom from "../../assets/ColorfulChannels/lockBottom.png";
 import lockStage from "../../assets/ColorfulChannels/stage/lock.png";
 import lockText from "../../assets/ColorfulChannels/text/lock.png";
 import warningText from "../../assets/ColorfulChannels/text/warning.png";
-import bothVoice from "../../assets/ColorfulChannels/voice/both.png";
+import lockVoice from "../../assets/ColorfulChannels/voice/lock.png";
+import warningVoice from "../../assets/ColorfulChannels/voice/warning.png";
 import warning from "../../assets/ColorfulChannels/warning.png";
 import warningBottom from "../../assets/ColorfulChannels/warningBottom.png";
 import { Module, ModuleCategory } from "../stuff/Module";
@@ -26,7 +27,7 @@ import { Module, ModuleCategory } from "../stuff/Module";
 const locks = [
     ["Announcements", lockAnnouncements],
     ["Text", lockText],
-    ["Voice", bothVoice],
+    ["Voice", lockVoice],
     ["Forum", lockForum],
     ["Stage", lockStage, true],
     ["Image", lockImage, true],
@@ -34,7 +35,7 @@ const locks = [
 const warnings = [
     ["Announcements", warningAnnouncements],
     ["Text", warningText],
-    ["Voice", bothVoice],
+    ["Voice", warningVoice],
     ["Forum", warningForum], // discord fix yo shit this is unused
     // stage channels don't have a nsfw icon?,
     ["Image", warningImage, true],
