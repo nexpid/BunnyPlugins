@@ -4,7 +4,7 @@ import { getAssetIDByName } from "@vendetta/ui/assets";
 import { Forms } from "@vendetta/ui/components";
 
 import { BetterTableRowGroup } from "$/components/BetterTableRow";
-import { RowButton } from "$/lib/redesign";
+import ScaleRowButton from "$/components/ScaleRowButton";
 
 import { vstorage } from "..";
 
@@ -49,7 +49,7 @@ export default () => {
                 />
             </BetterTableRowGroup>
             <RN.View style={{ marginHorizontal: 16, marginTop: 12 }}>
-                <RowButton
+                <ScaleRowButton
                     label={"Visit source"}
                     onPress={() =>
                         url.openURL("https://gitlab.com/ClearURLs/Rules")
