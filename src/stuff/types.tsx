@@ -90,7 +90,7 @@ export function openModal(key: string, modal: typeof Modal) {
             ]
                 .filter(x => x !== empty)
                 .join(", ")} is missing! Please try reinstalling your client.`,
-            getAssetIDByName("CircleXIcon"),
+            getAssetIDByName("CircleXIcon-primary"),
         );
         return;
     }

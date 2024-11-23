@@ -14,7 +14,10 @@ export default function ({ url }: { alt?: string; url: string }) {
                     setDims([width, height]);
                 },
                 err => {
-                    showToast(`${err}`, getAssetIDByName("CircleXIcon"));
+                    showToast(
+                        `${err}`,
+                        getAssetIDByName("CircleXIcon-primary"),
+                    );
                     console.log(err);
                 },
             ),

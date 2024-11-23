@@ -39,10 +39,13 @@ export function openOauth2Modal() {
 
                         showToast(
                             "Successfully authenticated",
-                            getAssetIDByName("CircleCheckIcon"),
+                            getAssetIDByName("CircleCheckIcon-primary"),
                         );
                     } catch (e: any) {
-                        showToast(String(e), getAssetIDByName("CircleXIcon"));
+                        showToast(
+                            String(e),
+                            getAssetIDByName("CircleXIcon-primary"),
+                        );
                     }
                 },
                 dismissOAuthModal: () => popModal("oauth2-authorize"),

@@ -76,7 +76,9 @@ export default function TooMuchDataSheet({ navigation }: { navigation: any }) {
                                 .catch(() =>
                                     showToast(
                                         lang.format("toast.antied.failed", {}),
-                                        getAssetIDByName("CircleWarningIcon"),
+                                        getAssetIDByName(
+                                            "CircleWarningIcon-primary",
+                                        ),
                                     ),
                                 );
                         else
@@ -86,7 +88,9 @@ export default function TooMuchDataSheet({ navigation }: { navigation: any }) {
                                         "toast.antied.already_installed",
                                         {},
                                     ),
-                                    getAssetIDByName("CircleWarningIcon"),
+                                    getAssetIDByName(
+                                        "CircleWarningIcon-primary",
+                                    ),
                                 );
                     }}
                     arrow={false}

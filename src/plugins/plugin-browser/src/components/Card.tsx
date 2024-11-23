@@ -191,7 +191,7 @@ export default function Card(props: CardProps) {
                                     size="sm"
                                     variant="secondary"
                                     icon={getAssetIDByName(
-                                        "CircleInformationIcon",
+                                        "CircleInformationIcon-primary",
                                     )}
                                 />
                             )}

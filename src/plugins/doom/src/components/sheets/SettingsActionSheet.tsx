@@ -115,7 +115,7 @@ export default function SettingsActionSheet({
                             await purgeFiles();
                             showToast(
                                 "Deleted files",
-                                getAssetIDByName("CircleCheckIcon"),
+                                getAssetIDByName("CircleCheckIcon-primary"),
                             );
                         },
                     });

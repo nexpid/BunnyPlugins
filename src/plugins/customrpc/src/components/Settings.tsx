@@ -200,7 +200,9 @@ export default () => {
                                     } catch {
                                         showToast(
                                             "Failed to parse JSON",
-                                            getAssetIDByName("CircleXIcon"),
+                                            getAssetIDByName(
+                                                "CircleXIcon-primary",
+                                            ),
                                         );
                                         return;
                                     }
@@ -210,7 +212,9 @@ export default () => {
                                     if (!data.error) {
                                         showToast(
                                             "Invalid activity data",
-                                            getAssetIDByName("CircleXIcon"),
+                                            getAssetIDByName(
+                                                "CircleXIcon-primary",
+                                            ),
                                         );
                                         return;
                                     }
@@ -221,7 +225,9 @@ export default () => {
                                     forceUpdate();
                                     showToast(
                                         "Loaded",
-                                        getAssetIDByName("CircleCheckIcon"),
+                                        getAssetIDByName(
+                                            "CircleCheckIcon-primary",
+                                        ),
                                     );
                                 },
                             });
@@ -250,7 +256,9 @@ export default () => {
                                     );
                                     showToast(
                                         "Saved",
-                                        getAssetIDByName("CircleCheckIcon"),
+                                        getAssetIDByName(
+                                            "CircleCheckIcon-primary",
+                                        ),
                                     );
                                     forceUpdate();
                                 }}
@@ -282,7 +290,7 @@ export default () => {
                                             showToast(
                                                 "Reverted",
                                                 getAssetIDByName(
-                                                    "CircleCheckIcon",
+                                                    "CircleCheckIcon-primary",
                                                 ),
                                             );
                                             forceUpdate();
@@ -308,7 +316,7 @@ export default () => {
                                             showToast(
                                                 "Closed",
                                                 getAssetIDByName(
-                                                    "CircleCheckIcon",
+                                                    "CircleCheckIcon-primary",
                                                 ),
                                             );
                                             forceUpdate();

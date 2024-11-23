@@ -82,7 +82,7 @@ export default function SongInfoSheet({
                         if (available === -1) {
                             showToast(
                                 "No space left!",
-                                getAssetIDByName("CircleXIcon"),
+                                getAssetIDByName("CircleXIcon-primary"),
                             );
                             return;
                         }
@@ -92,7 +92,7 @@ export default function SongInfoSheet({
 
                         showToast(
                             "Added to your profile",
-                            getAssetIDByName("CircleCheckIcon"),
+                            getAssetIDByName("CircleCheckIcon-primary"),
                         );
                     }}
                 />

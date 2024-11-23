@@ -539,7 +539,7 @@ export class Module<Settings extends Record<string, ModuleSetting>> {
 
             showToast(
                 "NexxUtils module errored on starting!",
-                getAssetIDByName("CircleXIcon"),
+                getAssetIDByName("CircleXIcon-primary"),
             );
         }
     }
@@ -555,7 +555,7 @@ export class Module<Settings extends Record<string, ModuleSetting>> {
 
             showToast(
                 "NexxUtils module errored on stopping!",
-                getAssetIDByName("CircleXIcon"),
+                getAssetIDByName("CircleXIcon-primary"),
             );
         }
     }

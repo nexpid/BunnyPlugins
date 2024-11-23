@@ -98,7 +98,7 @@ export default {
             if (!cpatches)
                 return showToast(
                     "Failed to fetch color patches!",
-                    getAssetIDByName("CircleXIcon"),
+                    getAssetIDByName("CircleXIcon-primary"),
                 );
 
             let theme: ThemeDataWithPlus;
@@ -107,7 +107,7 @@ export default {
             } catch (e: any) {
                 showToast(
                     "Failed to build theme!",
-                    getAssetIDByName("CircleXIcon"),
+                    getAssetIDByName("CircleXIcon-primary"),
                 );
                 return;
             }

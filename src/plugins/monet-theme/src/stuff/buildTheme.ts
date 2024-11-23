@@ -29,7 +29,10 @@ export function apply(theme: ThemeDataWithPlus | null) {
         else showToast("Applied theme", getAssetIDByName("PaintPaletteIcon"));
         return true;
     } catch (e: any) {
-        showToast("Couldn't apply theme!", getAssetIDByName("CircleXIcon"));
+        showToast(
+            "Couldn't apply theme!",
+            getAssetIDByName("CircleXIcon-primary"),
+        );
         logger.error(`Failed to apply theme!\n${e.stack}`);
     }
 }

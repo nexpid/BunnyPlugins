@@ -495,7 +495,7 @@ export default function () {
                                                     {},
                                                 ),
                                                 getAssetIDByName(
-                                                    "CircleCheckIcon",
+                                                    "CircleCheckIcon-primary",
                                                 ),
                                             );
                                         } catch (e: any) {
@@ -614,7 +614,7 @@ export default function () {
                         //     } catch (e) {
                         //         showToast(
                         //             lang.format("toast.backup_not_saved", {}),
-                        //             getAssetIDByName("CircleXIcon"),
+                        //             getAssetIDByName("CircleXIcon-primary"),
                         //         ),
                         //             logger.error("backup not saved", e);
                         //     }
@@ -664,7 +664,7 @@ export default function () {
                                             "toast.failed_file_open",
                                             {},
                                         ),
-                                        getAssetIDByName("CircleXIcon"),
+                                        getAssetIDByName("CircleXIcon-primary"),
                                     ),
                                         logger.error(e);
                             }

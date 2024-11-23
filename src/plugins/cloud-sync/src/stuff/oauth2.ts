@@ -36,7 +36,7 @@ export function openOauth2Modal() {
 
                         showToast(
                             lang.format("toast.oauth.authorized", {}),
-                            getAssetIDByName("CircleCheckIcon"),
+                            getAssetIDByName("CircleCheckIcon-primary"),
                         );
                     } catch {
                         // handled in authFetch

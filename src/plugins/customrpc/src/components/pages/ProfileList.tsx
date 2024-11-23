@@ -52,7 +52,7 @@ export const ProfileList = () => {
                 if (txt.match(/^\s*$/)) {
                     showToast(
                         "Profile name cannot be empty",
-                        getAssetIDByName("CircleXIcon"),
+                        getAssetIDByName("CircleXIcon-primary"),
                     );
                     return;
                 }
@@ -61,7 +61,7 @@ export const ProfileList = () => {
                 if (vstorage.profiles[txt]) {
                     showToast(
                         "A profile with that name already exists",
-                        getAssetIDByName("CircleXIcon"),
+                        getAssetIDByName("CircleXIcon-primary"),
                     );
                     return;
                 }
@@ -73,7 +73,7 @@ export const ProfileList = () => {
                 forceUpdate();
                 showToast(
                     "Created profile",
-                    getAssetIDByName("CircleCheckIcon"),
+                    getAssetIDByName("CircleCheckIcon-primary"),
                 );
             },
             cancelText: "Cancel",
@@ -90,7 +90,10 @@ export const ProfileList = () => {
 
         const data = SettingsActivity.validate(activity);
         if (data.error) {
-            showToast("Invalid profile data", getAssetIDByName("CircleXIcon"));
+            showToast(
+                "Invalid profile data",
+                getAssetIDByName("CircleXIcon-primary"),
+            );
             return;
         }
 
@@ -104,7 +107,10 @@ export const ProfileList = () => {
         vstorage.profiles[name] = data.value as SettingsActivity;
         vstorage.activity.profile = name;
         forceUpdate();
-        showToast("Imported profile", getAssetIDByName("CircleCheckIcon"));
+        showToast(
+            "Imported profile",
+            getAssetIDByName("CircleCheckIcon-primary"),
+        );
     };
 
     let wentBack = false;
@@ -171,7 +177,7 @@ export const ProfileList = () => {
                                                     showToast(
                                                         "Profile name cannot be empty",
                                                         getAssetIDByName(
-                                                            "CircleXIcon",
+                                                            "CircleXIcon-primary",
                                                         ),
                                                     );
                                                     return;
@@ -182,7 +188,7 @@ export const ProfileList = () => {
                                                     showToast(
                                                         "A profile with that name already exists",
                                                         getAssetIDByName(
-                                                            "CircleXIcon",
+                                                            "CircleXIcon-primary",
                                                         ),
                                                     );
                                                     return;
@@ -202,7 +208,7 @@ export const ProfileList = () => {
                                                 showToast(
                                                     "Renamed profile",
                                                     getAssetIDByName(
-                                                        "CircleCheckIcon",
+                                                        "CircleCheckIcon-primary",
                                                     ),
                                                 );
                                             },
@@ -238,7 +244,7 @@ export const ProfileList = () => {
                                                 showToast(
                                                     "Deleted",
                                                     getAssetIDByName(
-                                                        "CircleCheckIcon",
+                                                        "CircleCheckIcon-primary",
                                                     ),
                                                 );
                                             },
@@ -254,7 +260,7 @@ export const ProfileList = () => {
                         if (vstorage.activity.profile === item) {
                             showToast(
                                 `${item} is already loaded`,
-                                getAssetIDByName("CircleXIcon"),
+                                getAssetIDByName("CircleXIcon-primary"),
                             );
                             return;
                         }
@@ -272,7 +278,7 @@ export const ProfileList = () => {
                                 forceUpdateSettings();
                                 showToast(
                                     "Loaded",
-                                    getAssetIDByName("CircleCheckIcon"),
+                                    getAssetIDByName("CircleCheckIcon-primary"),
                                 );
                             },
                             secondaryButton: "Save profile",

@@ -255,7 +255,7 @@ const SpotifySongEmbed = ({
                     logger.error(`Failed to get song data!\n${e.stack}`),
                     showToast(
                         "Failed to get song data!",
-                        getAssetIDByName("CircleXIcon"),
+                        getAssetIDByName("CircleXIcon-primary"),
                     ),
                     setSongData(false)),
             );
@@ -624,7 +624,7 @@ export default function ({ userId, you }: { userId: string; you: boolean }) {
                         logger.error(`Failed to get profile data!\n${e.stack}`),
                         showToast(
                             "Failed to get profile data!",
-                            getAssetIDByName("CircleXIcon"),
+                            getAssetIDByName("CircleXIcon-primary"),
                         ),
                         setSongs([])),
                 );

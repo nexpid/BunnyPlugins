@@ -111,7 +111,7 @@ export async function importData(data: UserData, options: SyncImportOptions) {
         importCallback?.(false);
         showToast(
             lang.format("toast.sync.no_import", {}),
-            getAssetIDByName("CircleXIcon"),
+            getAssetIDByName("CircleXIcon-primary"),
         );
         return;
     }
@@ -265,7 +265,7 @@ export async function importData(data: UserData, options: SyncImportOptions) {
                 themes: lang.format("themes", { themes: status.themes }),
                 fonts: lang.format("fonts", { fonts: status.fonts }),
             }),
-            getAssetIDByName("CircleCheckIcon"),
+            getAssetIDByName("CircleCheckIcon-primary"),
         );
 
     const didSelectTheme = ithemes.find(([_, { enabled }]) => enabled)?.[0];

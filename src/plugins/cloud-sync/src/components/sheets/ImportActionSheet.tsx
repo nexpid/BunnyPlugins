@@ -83,7 +83,9 @@ export default function ImportActionSheet({
                             marginTop: 8,
                         }}>
                         <RN.Image
-                            source={getAssetIDByName("CircleInformationIcon")}
+                            source={getAssetIDByName(
+                                "CircleInformationIcon-primary",
+                            )}
                             style={styles.icon}
                             resizeMode="cover"
                         />

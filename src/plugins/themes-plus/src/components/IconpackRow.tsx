@@ -110,7 +110,10 @@ export default function IconpackRow({
                 setProgressCnt(0);
 
                 if (!controller.signal.aborted)
-                    showToast(String(e), getAssetIDByName("CircleXIcon"));
+                    showToast(
+                        String(e),
+                        getAssetIDByName("CircleXIcon-primary"),
+                    );
                 setPackStatus({
                     installed: willUninstall,
                     outdated: packStatus.outdated,

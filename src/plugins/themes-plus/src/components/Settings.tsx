@@ -85,8 +85,8 @@ const ListItem = ({
             <RN.Image
                 source={
                     state
-                        ? getAssetIDByName("CircleCheckIcon")
-                        : getAssetIDByName("CircleXIcon")
+                        ? getAssetIDByName("CircleCheckIcon-primary")
+                        : getAssetIDByName("CircleXIcon-primary")
                 }
                 style={styles.icon}
                 resizeMode="cover"
@@ -232,8 +232,12 @@ export default function () {
                                     trolley
                                         ? getAssetIDByName("clyde-avatar")
                                         : state.active
-                                          ? getAssetIDByName("CircleCheckIcon")
-                                          : getAssetIDByName("CircleXIcon")
+                                          ? getAssetIDByName(
+                                                "CircleCheckIcon-primary",
+                                            )
+                                          : getAssetIDByName(
+                                                "CircleXIcon-primary",
+                                            )
                                 }
                                 style={
                                     trolley

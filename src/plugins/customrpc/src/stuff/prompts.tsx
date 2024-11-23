@@ -114,7 +114,7 @@ export function ImageActionSheet({
                             if (!url) {
                                 showToast(
                                     "Invalid URL",
-                                    getAssetIDByName("CircleXIcon"),
+                                    getAssetIDByName("CircleXIcon-primary"),
                                 );
                                 return;
                             }
@@ -126,7 +126,7 @@ export function ImageActionSheet({
                                 update(`mp:${await getExternalAsset(url)}`);
                                 showToast(
                                     "Proxied image",
-                                    getAssetIDByName("CircleCheckIcon"),
+                                    getAssetIDByName("CircleCheckIcon-primary"),
                                 );
                             } catch (e) {
                                 const err =
@@ -139,7 +139,7 @@ export function ImageActionSheet({
                                 );
                                 showToast(
                                     "Failed to proxy image",
-                                    getAssetIDByName("CircleXIcon"),
+                                    getAssetIDByName("CircleXIcon-primary"),
                                 );
                             }
                         },

@@ -115,7 +115,9 @@ export default () => {
                         marginTop: 8,
                     }}>
                     <RN.Image
-                        source={getAssetIDByName("CircleInformationIcon")}
+                        source={getAssetIDByName(
+                            "CircleInformationIcon-primary",
+                        )}
                         style={styles.help}
                     />
                     <Text variant="text-md/semibold" color={"TEXT_BRAND"}>
@@ -362,7 +364,7 @@ export default () => {
 
                                 showToast(
                                     String(err),
-                                    getAssetIDByName("CircleXIcon"),
+                                    getAssetIDByName("CircleXIcon-primary"),
                                 );
                                 return;
                             }

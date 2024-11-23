@@ -32,14 +32,14 @@ export const ApplicationList = () => {
                 if (txt.match(/^\s*$/)) {
                     showToast(
                         "App ID cannot be empty",
-                        getAssetIDByName("CircleXIcon"),
+                        getAssetIDByName("CircleXIcon-primary"),
                     );
                     return;
                 }
                 if (Number.isNaN(Number(txt))) {
                     showToast(
                         "Invalid app ID",
-                        getAssetIDByName("CircleXIcon"),
+                        getAssetIDByName("CircleXIcon-primary"),
                     );
                     return;
                 }
