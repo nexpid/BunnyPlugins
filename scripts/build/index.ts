@@ -12,6 +12,7 @@ import {
 } from "../common/statistics/print.ts";
 import { TsWorker } from "../common/worker/index.ts";
 import { isDev } from "./lib/common.ts";
+import { makeDocsIconsHook } from "./modules/docs.ts";
 import { fixPluginLangs, makeLangDefs } from "./modules/lang.ts";
 import {
     buildPlugin,
@@ -81,6 +82,7 @@ logHeader("Writing README files");
 await Promise.all([
     runTask(`Wrote ${highlight("plugins")} READMEs`, writePluginReadmes()),
     runTask(`Wrote ${highlight("root")} README`, writeRootReadme()),
+    runTask(`Updated ${highlight("ICONS.md")} doc`, makeDocsIconsHook()),
 ]);
 
 logFinished("writing README files", writeReadmeFiles.stop());

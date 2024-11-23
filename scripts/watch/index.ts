@@ -7,6 +7,7 @@ import chokidar from "chokidar";
 import pc from "picocolors";
 
 import { isDev } from "../build/lib/common.ts";
+import { makeDocsIconsHook } from "../build/modules/docs.ts";
 import { fixPluginLangs, makeLangDefs } from "../build/modules/lang.ts";
 import {
     buildPlugin,
@@ -144,10 +145,8 @@ const runFileChange = async (localPath: string) => {
                 }));
 
             await fixPluginLangs(affected);
-            const promise = Promise.all([
+            const initPromise = Promise.all([
                 makeLangDefs(),
-                writePluginReadmes(affected),
-                writeRootReadme(),
                 new Promise<void>((res, rej) => {
                     workerResolves.res = res as any;
                     workerResolves.rej = rej as any;
@@ -155,9 +154,15 @@ const runFileChange = async (localPath: string) => {
             ]);
 
             for (const plugin of plugins) buildPlugin(plugin, true);
-            await promise;
+            await initPromise;
 
             if (workerResolves.code === code) {
+                await Promise.all([
+                    writePluginReadmes(affected),
+                    writeRootReadme(),
+                    makeDocsIconsHook(),
+                ]);
+
                 finishUp.forEach(({ prcess, worker }) =>
                     worker.postMessage({ finishUp: prcess }),
                 );
