@@ -21,34 +21,30 @@ Icons used by plugins are stored in the `<iconpack root>/_/external/` folder. He
 
 <!-- icons hook start -->
 
-### MonetTheme
-
-- <img src="../src/plugins/monet-theme/assets/icons/RepainterIcon.png" alt="MonetTheme RepainterIcon" width=20 height=20 /> — `MonetTheme/RepainterIcon.png`
-
 ### ColorfulChannels
 
-- <img src="../src/plugins/nexxutils/assets/ColorfulChannels/announcement/lock.png" alt="ColorfulChannels lock" width=20 height=20 /> — `ColorfulChannels/announcement/lock.png`
-- <img src="../src/plugins/nexxutils/assets/ColorfulChannels/announcement/warning.png" alt="ColorfulChannels warning" width=20 height=20 /> — `ColorfulChannels/announcement/warning.png`
-- <img src="../src/plugins/nexxutils/assets/ColorfulChannels/forum/lock.png" alt="ColorfulChannels lock" width=20 height=20 /> — `ColorfulChannels/forum/lock.png`
-- <img src="../src/plugins/nexxutils/assets/ColorfulChannels/forum/warning.png" alt="ColorfulChannels warning" width=20 height=20 /> — `ColorfulChannels/forum/warning.png`
-- <img src="../src/plugins/nexxutils/assets/ColorfulChannels/image/lock.png" alt="ColorfulChannels lock" width=20 height=20 /> — `ColorfulChannels/image/lock.png`
-- <img src="../src/plugins/nexxutils/assets/ColorfulChannels/image/warning.png" alt="ColorfulChannels warning" width=20 height=20 /> — `ColorfulChannels/image/warning.png`
 - <img src="../src/plugins/nexxutils/assets/ColorfulChannels/lock.png" alt="ColorfulChannels lock" width=20 height=20 /> — `ColorfulChannels/lock.png`
 - <img src="../src/plugins/nexxutils/assets/ColorfulChannels/lockBottom.png" alt="ColorfulChannels lockBottom" width=20 height=20 /> — `ColorfulChannels/lockBottom.png`
-- <img src="../src/plugins/nexxutils/assets/ColorfulChannels/stage/lock.png" alt="ColorfulChannels lock" width=20 height=20 /> — `ColorfulChannels/stage/lock.png`
-- <img src="../src/plugins/nexxutils/assets/ColorfulChannels/text/lock.png" alt="ColorfulChannels lock" width=20 height=20 /> — `ColorfulChannels/text/lock.png`
-- <img src="../src/plugins/nexxutils/assets/ColorfulChannels/text/warning.png" alt="ColorfulChannels warning" width=20 height=20 /> — `ColorfulChannels/text/warning.png`
-- <img src="../src/plugins/nexxutils/assets/ColorfulChannels/voice/both.png" alt="ColorfulChannels both" width=20 height=20 /> — `ColorfulChannels/voice/both.png`
 - <img src="../src/plugins/nexxutils/assets/ColorfulChannels/warning.png" alt="ColorfulChannels warning" width=20 height=20 /> — `ColorfulChannels/warning.png`
 - <img src="../src/plugins/nexxutils/assets/ColorfulChannels/warningBottom.png" alt="ColorfulChannels warningBottom" width=20 height=20 /> — `ColorfulChannels/warningBottom.png`
+  - <img src="../src/plugins/nexxutils/assets/ColorfulChannels/announcement/lock.png" alt="ColorfulChannels lock" width=20 height=20 /> — `ColorfulChannels/announcement/lock.png`
+  - <img src="../src/plugins/nexxutils/assets/ColorfulChannels/announcement/warning.png" alt="ColorfulChannels warning" width=20 height=20 /> — `ColorfulChannels/announcement/warning.png`
+  - <img src="../src/plugins/nexxutils/assets/ColorfulChannels/forum/lock.png" alt="ColorfulChannels lock" width=20 height=20 /> — `ColorfulChannels/forum/lock.png`
+  - <img src="../src/plugins/nexxutils/assets/ColorfulChannels/forum/warning.png" alt="ColorfulChannels warning" width=20 height=20 /> — `ColorfulChannels/forum/warning.png`
+  - <img src="../src/plugins/nexxutils/assets/ColorfulChannels/image/lock.png" alt="ColorfulChannels lock" width=20 height=20 /> — `ColorfulChannels/image/lock.png`
+  - <img src="../src/plugins/nexxutils/assets/ColorfulChannels/image/warning.png" alt="ColorfulChannels warning" width=20 height=20 /> — `ColorfulChannels/image/warning.png`
+  - <img src="../src/plugins/nexxutils/assets/ColorfulChannels/stage/lock.png" alt="ColorfulChannels lock" width=20 height=20 /> — `ColorfulChannels/stage/lock.png`
+  - <img src="../src/plugins/nexxutils/assets/ColorfulChannels/text/lock.png" alt="ColorfulChannels lock" width=20 height=20 /> — `ColorfulChannels/text/lock.png`
+  - <img src="../src/plugins/nexxutils/assets/ColorfulChannels/text/warning.png" alt="ColorfulChannels warning" width=20 height=20 /> — `ColorfulChannels/text/warning.png`
+  - <img src="../src/plugins/nexxutils/assets/ColorfulChannels/voice/both.png" alt="ColorfulChannels both" width=20 height=20 /> — `ColorfulChannels/voice/both.png`
 
 ### Minimod
 
 - <img src="../src/plugins/nexxutils/assets/MiniMod/NerdEmoji.png" alt="Minimod NerdEmoji" width=20 height=20 /> — `Minimod/NerdEmoji.png`
 
-### SpotifyListenAlong
+### MonetTheme
 
-- <img src="../src/plugins/nexxutils/assets/SpotifyListenAlong/UserPlayIcon.png" alt="SpotifyListenAlong UserPlayIcon" width=20 height=20 /> — `SpotifyListenAlong/UserPlayIcon.png`
+- <img src="../src/plugins/monet-theme/assets/icons/RepainterIcon.png" alt="MonetTheme RepainterIcon" width=20 height=20 /> — `MonetTheme/RepainterIcon.png`
 
 ### PluginBrowser
 
@@ -56,5 +52,9 @@ Icons used by plugins are stored in the `<iconpack root>/_/external/` folder. He
 - <img src="../src/plugins/plugin-browser/assets/SortDateOldestIcon.png" alt="PluginBrowser SortDateOldestIcon" width=20 height=20 /> — `PluginBrowser/SortDateOldestIcon.png`
 - <img src="../src/plugins/plugin-browser/assets/SortNameAZIcon.png" alt="PluginBrowser SortNameAZIcon" width=20 height=20 /> — `PluginBrowser/SortNameAZIcon.png`
 - <img src="../src/plugins/plugin-browser/assets/SortNameZAIcon.png" alt="PluginBrowser SortNameZAIcon" width=20 height=20 /> — `PluginBrowser/SortNameZAIcon.png`
+
+### SpotifyListenAlong
+
+- <img src="../src/plugins/nexxutils/assets/SpotifyListenAlong/UserPlayIcon.png" alt="SpotifyListenAlong UserPlayIcon" width=20 height=20 /> — `SpotifyListenAlong/UserPlayIcon.png`
 
 <!-- icons hook end -->

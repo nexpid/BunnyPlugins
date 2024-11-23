@@ -21,17 +21,15 @@ export async function makeDocsIconsHook() {
     ).sort((a, b) => b.depth - a.depth);
 
     // Gather all custom icons
-    const res = new Array<
-        | {
-              tag: string;
-          }
-        | {
-              alt: string;
-              path: string;
-              location: string;
-              tag: string;
-          }
-    >();
+    const res = {} as Record<
+        string,
+        {
+            alt: string;
+            path: string;
+            location: string;
+            indentation: number;
+        }[]
+    >;
 
     for (const file of files.filter(x => x.endsWith(".png")).sort()) {
         const dirnm = dirname(file).replace(/\\/g, "/");
@@ -39,18 +37,26 @@ export async function makeDocsIconsHook() {
         if (!config) continue;
 
         const tag = config.config.root;
-        if (res[res.length - 1]?.tag !== tag)
-            res.push({
-                tag,
-            });
 
-        res.push({
+        res[tag] ??= [];
+        res[tag].push({
             alt: `${config.config.root} ${basename(file).split(".").slice(0, -1).join(".")}`,
             path: `${config.config.root}${dirnm.slice(config.parent.length)}/${basename(file)}`,
             location: join("..", "src", file).replace(/\\/g, "/"),
-            tag,
+            indentation:
+                dirnm.slice(config.parent.length).split("/").length - 1,
         });
     }
+
+    for (const key of Object.keys(res))
+        res[key] = res[key].sort((a, b) => {
+            const depthA = a.path.split("/").length;
+            const depthB = b.path.split("/").length;
+
+            return depthA === depthB
+                ? a.path.localeCompare(b.path)
+                : depthA - depthB;
+        });
 
     // Modify ICONS.md yea!!
 
@@ -60,6 +66,14 @@ export async function makeDocsIconsHook() {
 
     await writeFile(
         "docs/ICONS.md",
-        `${prefix}<!-- icons hook start -->\n${res.map(icon => (!("location" in icon) ? `\n### ${icon.tag}\n` : `- <img src=${JSON.stringify(icon.location)} alt=${JSON.stringify(icon.alt)} width=20 height=20 /> — \`${icon.path}\``)).join("\n")}\n\n<!-- icons hook end -->${suffix || ""}`,
+        `${prefix}<!-- icons hook start -->\n${Object.entries(res)
+            .sort((a, b) => a[0].localeCompare(b[0]))
+            .map(
+                ([tag, entries]) =>
+                    `\n### ${tag}\n\n${entries.map(icon => `${"  ".repeat(icon.indentation)}- <img src=${JSON.stringify(icon.location)} alt=${JSON.stringify(icon.alt)} width=20 height=20 /> — \`${icon.path}\``).join("\n")}`,
+            )
+            .join("\n")}\n\n<!-- icons hook end -->${suffix || ""}`,
     );
 }
+
+// makeDocsIconsHook();
