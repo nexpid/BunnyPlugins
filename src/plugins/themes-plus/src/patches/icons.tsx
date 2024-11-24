@@ -54,7 +54,7 @@ export default function patchIcons(
 
                 // theme mod icons (bunny, revenge)
                 const modIcon = Object.entries(modIcons).find(
-                    ([_, uri]) => source?.uri === uri,
+                    ([_, { raw }]) => source?.uri === raw,
                 );
                 if (modIcon)
                     asset = {
