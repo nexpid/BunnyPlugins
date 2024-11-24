@@ -17,6 +17,7 @@ import tsConfigPaths from "rollup-plugin-tsconfig-paths";
 
 import { makeMdNote, markdownPrettierOptions } from "../../lib/common.ts";
 import { saveCache } from "../../lib/rollupCache.ts";
+import { isJolly, jollifyManifest } from "../jollyposting.ts";
 
 const sizeOf = promisify(imageSize);
 const mdNote = makeMdNote("scripts/build/modules/workers/plugins.ts", "md");
@@ -228,6 +229,8 @@ async function buildPlugin(
     const outManifest = manifest;
     outManifest.hash = hash;
     outManifest.main = "index.js";
+
+    if (isJolly) jollifyManifest(outManifest);
 
     finishUp.set(prcess, () => {
         finishUp.delete(prcess);
