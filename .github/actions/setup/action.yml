@@ -26,10 +26,13 @@ runs:
         cache: "pnpm"
         cache-dependency-path: ${{ inputs.root }}pnpm-lock.yaml
 
-    - run: pnpm install --frozen-lockfile
-      if: ${{ !inputs.gitonly  }}
+    - name: install
       working-directory: ${{ inputs.root }}
+      if: ${{ !inputs.gitonly  }}
+      run: pnpm install --frozen-lockfile
+      shell: bash
 
     - run: |
         git config --global user.name "github-actions[bot]"
         git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+      shell: bash
