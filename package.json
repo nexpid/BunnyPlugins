@@ -44,7 +44,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.2.0",
-    "@revenge-mod/vendetta-types": "github:revenge-mod/vendetta-types",
+    "@revenge-mod/vendetta-types": "github:nexpid/revenge-types",
     "chokidar": "^3.6.0",
     "eslint": "^9.2.0",
     "eslint-plugin-path-alias": "^2.1.0",

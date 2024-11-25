@@ -200,7 +200,7 @@ export const ConfigurePage = () => {
                 title="Backgrounds"
                 icon={getAssetIDByName("ImageIcon")}
                 padding>
-                {collections.map((x, i) => (
+                {collections.map(x => (
                     <>
                         <WallpaperCollection collection={x} />
                         <RN.View style={{ height: 8 }} />

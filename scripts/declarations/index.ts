@@ -89,7 +89,11 @@ for (const { path, pkg } of [...artifactPaths.values()])
             path,
             pkg,
             join("declarations", `${pkg.split("/").slice(-1)[0]}.d.ts`),
-        ).catch(() => void logDebug(`Couldn't rollup ${highlight(pkg)}!`)),
+        ).catch(
+            err =>
+                void (logDebug(`Couldn't rollup ${highlight(pkg)}!`),
+                console.log(err)),
+        ),
     );
 
 await rm("temp", { recursive: true, force: true });

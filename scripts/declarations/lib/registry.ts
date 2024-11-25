@@ -3,14 +3,9 @@ import { PassThrough } from "node:stream";
 import { gunzipSync } from "node:zlib";
 
 import { generateDtsBundle } from "dts-bundle-generator";
-import { cp, mkdir, readFile, writeFile } from "fs/promises";
+import { existsSync } from "fs";
+import { mkdir, readFile, writeFile } from "fs/promises";
 import { extract } from "tar-fs";
-
-import {
-    listImports,
-    slashJoin,
-    slashResolve,
-} from "../../common/parser/getImports";
 
 export async function getTarball(pkg: string, version: string) {
     const orgLessPackage = pkg.split("/").slice(-1)[0];
@@ -59,16 +54,23 @@ function addDeclareModule(
     return `${header ? `${header}\n` : ""}declare module ${JSON.stringify(pkg)} {\n${content}\n};\n`;
 }
 
-function getTypes(packageJson: any) {
+function findTypes(path: string, packageJson: any) {
     const types: string = packageJson.typings ?? packageJson.types;
-    return types.endsWith(".d.ts") ? types : `${types}.d.ts`;
+    const maps = [`${types}/index.d.ts`, `${types}.d.ts`, types];
+
+    return maps.find(x => existsSync(join(path, x)));
 }
 
 export async function rollupDts(path: string, pkg: string, out: string) {
     const packageJson = JSON.parse(
         await readFile(join(path, "package.json"), "utf8"),
     ) as any;
-    const types = getTypes(packageJson);
+    const types = findTypes(path, packageJson);
+    if (!types)
+        throw new Error(
+            "Couldn't find types!",
+            packageJson.typings ?? packageJson.types,
+        );
 
     const bundle = generateDtsBundle([
         {
@@ -83,48 +85,48 @@ export async function rollupDts(path: string, pkg: string, out: string) {
 }
 
 // UNFINISHED :(
-export async function copyDts(path: string, pkg: string, out: string) {
-    const packageJson = JSON.parse(
-        await readFile(join(path, "package.json"), "utf8"),
-    ) as any;
+// export async function copyDts(path: string, pkg: string, out: string) {
+//     const packageJson = JSON.parse(
+//         await readFile(join(path, "package.json"), "utf8"),
+//     ) as any;
 
-    // let's hope types is index.d.ts, otherwise this won't work lol
-    const types = getTypes(packageJson);
-    const root = join(path, types, "..");
-    const thing = slashResolve(join(path, types));
+//     // let's hope types is index.d.ts, otherwise this won't work lol
+//     const types = getTypes(packageJson);
+//     const root = join(path, types, "..");
+//     const thing = slashResolve(join(path, types));
 
-    await writeFile(
-        thing,
-        addDeclareModule(pkg, await readFile(thing, "utf8")),
-    );
+//     await writeFile(
+//         thing,
+//         addDeclareModule(pkg, await readFile(thing, "utf8")),
+//     );
 
-    // get list of used files
-    const usedFiles = new Set<string>();
-    async function goThroughImports(imports: Set<string>) {
-        for (const imp of imports.values()) {
-            if (usedFiles.has(imp)) continue;
+//     // get list of used files
+//     const usedFiles = new Set<string>();
+//     async function goThroughImports(imports: Set<string>) {
+//         for (const imp of imports.values()) {
+//             if (usedFiles.has(imp)) continue;
 
-            usedFiles.add(imp);
-            if (!usedFiles.has(slashJoin(imp, "..")))
-                usedFiles.add(slashJoin(imp, ".."));
-            if (!usedFiles.has(slashJoin(imp, "..", "..")))
-                usedFiles.add(slashJoin(imp, "..", ".."));
+//             usedFiles.add(imp);
+//             if (!usedFiles.has(slashJoin(imp, "..")))
+//                 usedFiles.add(slashJoin(imp, ".."));
+//             if (!usedFiles.has(slashJoin(imp, "..", "..")))
+//                 usedFiles.add(slashJoin(imp, "..", ".."));
 
-            await goThroughImports(await listImports(imp));
-        }
-    }
+//             await goThroughImports(await listImports(imp));
+//         }
+//     }
 
-    usedFiles.add(thing);
-    await goThroughImports(await listImports(thing));
+//     usedFiles.add(thing);
+//     await goThroughImports(await listImports(thing));
 
-    if (pkg === "react-native-reanimated") console.log(usedFiles);
+//     if (pkg === "react-native-reanimated") console.log(usedFiles);
 
-    await mkdir(out, { recursive: true });
-    await cp(root, out, {
-        recursive: true,
-        force: true,
-        filter(source) {
-            return usedFiles.has(slashResolve(source).slice(4));
-        },
-    });
-}
+//     await mkdir(out, { recursive: true });
+//     await cp(root, out, {
+//         recursive: true,
+//         force: true,
+//         filter(source) {
+//             return usedFiles.has(slashResolve(source).slice(4));
+//         },
+//     });
+// }

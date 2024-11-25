@@ -30,7 +30,7 @@ export function openOauth2Modal() {
                 callback: async ({ location }) => {
                     if (!location) return;
                     try {
-                        const token = await (await authFetch(location)).text();
+                        const token = await (await authFetch(location))!.text();
                         useAuthorizationStore.getState().setToken(token);
                         getData();
 
