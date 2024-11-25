@@ -1,6 +1,6 @@
 import { Readmes } from "../types";
 
-// Merry rizzmas
+// Merry rizzmas 2028
 
 const commonNouns = [
     "app",
@@ -20,11 +20,11 @@ const commonNouns = [
 
 const emojis = ["🎅", "❄️", "🎁", "🎄"];
 
-export const isJolly = true;
+export const isJolly = false;
 
 export function jollifyManifest(manifest: Readmes.Manifest) {
     manifest.authors = manifest.authors.map(author => ({
-        name: `jolly ${author.name}`,
+        name: `${emojis[Math.floor(Math.random() * emojis.length)]} jolly ${author.name}`,
         id: author.id,
     }));
 
