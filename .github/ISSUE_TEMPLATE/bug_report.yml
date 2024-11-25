@@ -17,13 +17,13 @@ body:
     id: discord-username
     attributes:
       label: Discord username
-      description: Enter your discord username (@User#0000 / @user)
+      description: Enter your discord @username
     validations:
-      required: true
+      required: false
   - type: textarea
-    id: detailed-info
+    id: elaborate
     attributes:
-      label: Detailed Info
+      label: Elaborate
       description: Detailed information about the bug
     validations:
       required: false

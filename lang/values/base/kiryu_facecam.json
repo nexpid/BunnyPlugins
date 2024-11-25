@@ -20,12 +20,12 @@
   "settings.appear.style.fade": "Fade in",
   "settings.appear.style.always": "Always show",
   "settings.appear.speed": "Appear speed",
-  
+
   "settings.effects.title": "Effects",
 
   "settings.effects.swinging.enabled": "Facecam swinging",
   "settings.effects.swinging.speed": "Swinging speed",
-  
+
   "settings.effects.bounce.enabled": "Facecam bouncing",
   "settings.effects.bounce.speed": "Bounce speed",
   "settings.effects.bounce.multiplier": "Bounce multiplier"

@@ -1,0 +1,75 @@
+name: Deploy main branch
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - src/**/*.*
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: true
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+
+      - name: setup workspace
+        uses: ./.github/actions/ci
+  build:
+    needs: ci
+
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+
+      - name: setup workspace
+        uses: ./.github/actions/setup
+
+      - name: build plugins
+        run: pnpm build
+
+      - name: copy readme and assets
+        run: |
+          cp README.md dist/index.md
+          cp -r assets dist/assets
+
+      - name: build pages
+        uses: actions/jekyll-build-pages@v1
+        with:
+          source: dist
+          destination: built
+
+      - name: upload pages artifact
+        uses: actions/upload-pages-artifact@v3
+        if: ${{ !env.ACT }}
+        with:
+          path: built
+  deploy:
+    needs: build
+
+    permissions:
+      pages: write
+      id-token: write
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    runs-on: ubuntu-latest
+    steps:
+      - name: deploy to pages
+        id: deployment
+        uses: actions/deploy-pages@v4

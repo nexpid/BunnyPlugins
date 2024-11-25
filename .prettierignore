@@ -1,4 +1,4 @@
 dist
-archive
+.pnpm-store
+lang/values/*.json
 pnpm-lock.yaml
-lang/values/*

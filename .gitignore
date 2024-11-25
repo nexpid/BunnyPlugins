@@ -1,5 +1,6 @@
-node_modules/
 dist
-archive
-*/README.md
-README.md
+node_modules
+.actrc
+yarn.lock
+package-lock.json
+temp
