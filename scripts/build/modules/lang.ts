@@ -102,7 +102,7 @@ export async function fixPluginLangs(filter: string[] = []) {
                     ([lang, entries]) =>
                         `  ${JSON.stringify(lang)}: ${JSON.stringify(entries)}`,
                 )
-                .join(",\n")}\n}`,
+                .join(",\n")}\n}\n`,
         );
     }
 }

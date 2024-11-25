@@ -2,3 +2,4 @@ dist
 .pnpm-store
 lang/values/*.json
 pnpm-lock.yaml
+declarations/*.d.ts

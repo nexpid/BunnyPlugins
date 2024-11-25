@@ -22,7 +22,7 @@ import { isJolly, jollifyManifest } from "../jollyposting.ts";
 const sizeOf = promisify(imageSize);
 const mdNote = makeMdNote("scripts/build/modules/workers/plugins.ts", "md");
 
-const { isDev } = workerData;
+const isDev = workerData.isDev === "true";
 
 async function buildPlugin(
     plugin: string,
@@ -75,7 +75,7 @@ async function buildPlugin(
             langDefault = JSON.parse(await readFile(langDefaultFile, "utf8"));
 
         const langValuesFile = join("lang/values", `${lang}.json`);
-        if (existsSync(langValuesFile))
+        if (existsSync(langValuesFile) && isDev)
             langValues = JSON.parse(await readFile(langValuesFile, "utf8"));
     }
 
