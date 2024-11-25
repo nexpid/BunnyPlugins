@@ -1,4 +1,4 @@
-import { find, findByProps } from "@vendetta/metro";
+import { find, findByName, findByProps } from "@vendetta/metro";
 import { ReactNative as RN } from "@vendetta/metro/common";
 import { type StateStorage } from "zustand/middleware";
 
@@ -20,10 +20,9 @@ export const Reanimated = findByProps(
 export const FlashList = findByProps("FlashList")
     .FlashList as typeof import("@shopify/flash-list").FlashList;
 
-export const zustand = findByProps(
-    "create",
-    "useStore",
-) as typeof import("zustand");
+export const zustand = (findByProps("create", "useStore") ?? {
+    create: findByName("create"),
+}) as typeof import("zustand");
 
 export const DocumentPicker = findByProps(
     "pickSingle",
