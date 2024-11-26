@@ -40,7 +40,8 @@ export const RNChatModule = (RN.NativeModules.DCDChatManager ??
     updateRows: (id: string, json: string) => any;
 };
 
-export const RNFileModule = (RN.NativeModules.DCDFileManager ??
+export const RNFileModule = (RN.NativeModules.RTNFileManager ??
+    RN.NativeModules.DCDFileManager ??
     RN.NativeModules.NativeFileModule) as {
     readFile(path: string, encoding: "base64" | "utf8"): Promise<string>;
     fileExists(path: string): Promise<boolean>;
