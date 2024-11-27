@@ -23,19 +23,22 @@ export default function PluginCard({
     item: FullPlugin;
     changes: string[];
 }) {
-    const proxiedLink = properLink(
-        React.useMemo(() => {
-            if (plugins[`https://${item.vendetta.original}`])
-                return `https://${item.vendetta.original}`;
-            else if (plugins[`http://${item.vendetta.original}`])
-                return `http://${item.vendetta.original}`;
-            else return `${constants.proxyUrl}${item.vendetta.original}`;
-        }, []),
-    );
-    const githubLink = matchGithubLink(item.vendetta.original);
+    const { proxiedLink, githubLink } = React.useMemo(() => {
+        let proxiedLink = `${constants.proxyUrl}${item.vendetta.original}`;
+        if (plugins[`https://${item.vendetta.original}`])
+            proxiedLink = `https://${item.vendetta.original}`;
+        else if (plugins[`http://${item.vendetta.original}`])
+            proxiedLink = `http://${item.vendetta.original}`;
+
+        return {
+            proxiedLink: properLink(proxiedLink),
+            githubLink: matchGithubLink(item.vendetta.original),
+        };
+    }, [item]);
+
     const isNew = React.useMemo(
         () => changes.includes(properLink(item.vendetta.original)),
-        [changes],
+        [changes, item],
     );
     const isDisabled = !!item.bunny?.disabled;
 
@@ -46,6 +49,14 @@ export default function PluginCard({
         hasPlugin: !!plugins[proxiedLink],
         pending: false,
     });
+
+    React.useEffect(() => {
+        setStatus({
+            hasPlugin: !!plugins[proxiedLink],
+            pending: false,
+        });
+    }, [item]);
+
     const installFunction = async () => {
         if (status.pending || isDisabled) return;
         setStatus({
