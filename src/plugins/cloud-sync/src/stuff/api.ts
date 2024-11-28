@@ -26,7 +26,9 @@ export async function authFetch(_url: string | URL, options?: RequestInit) {
 
         const text = await res.text();
         showToast(
-            lang.format("toast.fetch_error", { urlpath: url.pathname }),
+            !text.includes("<body>") && res.status >= 400 && res.status <= 599
+                ? lang.format("toast.fetch_error_detailed", { error_msg: text })
+                : lang.format("toast.fetch_error", { urlpath: url.pathname }),
             getAssetIDByName("CircleXIcon-primary"),
         );
         logger.error(

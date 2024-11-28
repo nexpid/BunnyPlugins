@@ -18,6 +18,7 @@
   "toast.antied.failed": "Failed to install Antied.",
   "toast.antied.already_installed": "Antied is already installed.",
   "toast.fetch_error": "Cloud Sync fetch error at {urlpath}",
+  "toast.fetch_error_detailed": "Cloud Sync: {error_msg}",
   "toast.saving": "Saving to cloud...",
 
   "settings.your_data.title": "Your data",

@@ -7,6 +7,7 @@ export default interface LangValues {
             fonts: { fonts: number };
             "toast.backup_saved": { file: string };
             "toast.fetch_error": { urlpath: string };
+            "toast.fetch_error_detailed": { error_msg: string };
             "settings.your_data.last_synced": { date: string };
             "sheet.import_data.unproxied_plugins": { count: string };
             "sheet.import_data.plugins": { count: string };
