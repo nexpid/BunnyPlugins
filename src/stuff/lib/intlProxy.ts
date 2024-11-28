@@ -4,13 +4,11 @@
 import { findByProps } from "@vendetta/metro";
 import { i18n } from "@vendetta/metro/common";
 
-const { intl, t: intlMap } = findByProps("intl");
-const runtimeHashMessageKey = findByProps(
-    "runtimeHashMessageKey",
-)?.runtimeHashMessageKey;
+const { intl, t: intlMap } = findByProps("intl") ?? {};
+const { runtimeHashMessageKey } = findByProps("runtimeHashMessageKey") ?? {};
 
 const isUsingi18n =
-    !!i18n.Messages.DISCORD || !runtimeHashMessageKey || !intlMap;
+    !!i18n.Messages.DISCORD || !intl || !intlMap || !runtimeHashMessageKey;
 
 const _messages = {} as Record<string, string>;
 const intlProxy = Object.freeze(
