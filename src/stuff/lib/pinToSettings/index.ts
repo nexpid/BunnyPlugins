@@ -1,5 +1,3 @@
-import { React } from "@vendetta/metro/common";
-
 import { patchPanelUI } from "./panel";
 import { patchTabsUI } from "./tabs";
 
@@ -15,20 +13,14 @@ export interface PinToSettingsTabs {
 export function patchSettingsPin(tabs: PinToSettingsTabs): () => void {
     const patches = new Array<() => void>();
 
-    const realPredicate = tabs.predicate;
-    let disable: () => void;
+    let disabled = false;
 
-    tabs.predicate = () => {
-        const val = realPredicate?.() ?? true;
-        const [disabled, setDisabled] = React.useState(false);
-        disable = () => setDisabled(true);
-
-        return disabled ? false : val;
-    };
+    const realPredicate = tabs.predicate ?? (() => true);
+    tabs.predicate = () => (disabled ? false : realPredicate());
 
     patchPanelUI(tabs, patches);
     patchTabsUI(tabs, patches);
-    patches.push(() => disable());
+    patches.push(() => (disabled = true));
 
     return () => patches.forEach(x => x());
 }
