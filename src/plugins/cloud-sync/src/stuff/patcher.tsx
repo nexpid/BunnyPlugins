@@ -1,6 +1,5 @@
 import { plugin } from "@vendetta";
 import { manifest } from "@vendetta/plugin";
-import { useProxy } from "@vendetta/storage";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 
 import { patchSettingsPin } from "$/lib/pinToSettings";
@@ -17,7 +16,7 @@ export default (): (() => void) => {
             key: plugin.manifest.name,
             icon: getAssetIDByName(manifest.vendetta?.icon ?? ""),
             title: () => lang.format("plugin.name", {}),
-            predicate: () => useProxy(vstorage).config.addToSettings,
+            predicate: () => vstorage.config.addToSettings,
             page: Settings,
         }),
     );
