@@ -55,7 +55,7 @@ await (() =>
                         import.meta.dirname,
                         "../build/modules/workers/plugins.ts",
                     ),
-                    { workerData: { isDev } },
+                    { workerData: { isDev: String(isDev) } },
                 ).once("message", () => ++count >= workers.length && res()),
             );
     }))();
