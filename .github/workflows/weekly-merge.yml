@@ -53,9 +53,13 @@ jobs:
           ref: i18n
 
       - name: setup workspace
-        uses: ./.github/actions/setup
+        uses: ./dev/.github/actions/setup
         with:
           root: dev/
+
+      - name: sync dev and main
+        working-directory: dev
+        run: git pull origin main --rebase
 
       - name: delete old lang files
         working-directory: dev
@@ -84,11 +88,8 @@ jobs:
     steps:
       - name: checkout
         uses: actions/checkout@v4
-        with:
-          ref: dev
 
       - name: merge dev to main
         run: |
-          git merge main
-          git checkout main
-          git merge dev
+          git pull origin dev --ff-only
+          git push origin main
