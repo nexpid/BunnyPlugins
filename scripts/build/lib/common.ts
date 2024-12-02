@@ -19,9 +19,12 @@ export const branch: string = execSync("git branch --show-current")
     .trim();
 
 export const isDev =
-    process.argv.includes("-d") ||
     process.argv.includes("--dev") ||
     process.argv[1] === resolve("scripts/watch/index.ts");
+
+export const previewLang =
+    isDev &&
+    (process.argv.includes("-pl") || process.argv.includes("--preview-lang"));
 
 export const prettierOptions: import("prettier").Options = {
     // .editorconfig isn't properly parsed by prettier, so I have to write

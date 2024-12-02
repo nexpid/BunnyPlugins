@@ -22,7 +22,7 @@ import { isJolly, jollifyManifest } from "../jollyposting.ts";
 const sizeOf = promisify(imageSize);
 const mdNote = makeMdNote("scripts/build/modules/workers/plugins.ts", "md");
 
-const isDev = workerData.isDev === "true";
+const { isDev, previewLang } = workerData;
 
 async function buildPlugin(
     plugin: string,
@@ -195,12 +195,17 @@ async function buildPlugin(
                 minifyWhitespace: !isDev,
                 define: {
                     IS_DEV: String(isDev),
-                    DEFAULT_LANG: langDefault
-                        ? JSON.stringify(langDefault)
-                        : "undefined",
-                    DEV_LANG: langValues
-                        ? JSON.stringify(langValues)
-                        : "undefined",
+                    PREVIEW_LANG: String(previewLang),
+                    DEFAULT_LANG: previewLang
+                        ? "{}"
+                        : langDefault
+                          ? JSON.stringify(langDefault)
+                          : "undefined",
+                    DEV_LANG: previewLang
+                        ? "{}"
+                        : langValues
+                          ? JSON.stringify(langValues)
+                          : "undefined",
                 },
             }),
         ],

@@ -6,7 +6,7 @@ import { extname, join } from "node:path";
 import chokidar from "chokidar";
 import pc from "picocolors";
 
-import { isDev } from "../build/lib/common.ts";
+import { isDev, previewLang } from "../build/lib/common.ts";
 import { makeDocsIconsHook } from "../build/modules/docs.ts";
 import { fixPluginLangs, makeLangDefs } from "../build/modules/lang.ts";
 import {
@@ -55,7 +55,7 @@ await (() =>
                         import.meta.dirname,
                         "../build/modules/workers/plugins.ts",
                     ),
-                    { workerData: { isDev: String(isDev) } },
+                    { workerData: { isDev, previewLang } },
                 ).once("message", () => ++count >= workers.length && res()),
             );
     }))();

@@ -11,7 +11,7 @@ import {
     runTask,
 } from "../common/statistics/print.ts";
 import { TsWorker } from "../common/worker/index.ts";
-import { isDev } from "./lib/common.ts";
+import { isDev, previewLang } from "./lib/common.ts";
 import { makeDocsIconsHook } from "./modules/docs.ts";
 import { fixPluginLangs, makeLangDefs } from "./modules/lang.ts";
 import {
@@ -33,7 +33,8 @@ await (() =>
                     join(import.meta.dirname, "modules/workers/plugins.ts"),
                     {
                         workerData: {
-                            isDev: String(isDev),
+                            isDev,
+                            previewLang,
                         },
                     },
                 ).once("message", () => ++count >= workers.length && res()),

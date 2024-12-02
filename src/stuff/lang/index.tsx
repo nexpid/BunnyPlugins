@@ -73,6 +73,8 @@ export class Lang<Plugin extends keyof LangValues> {
             : Record<string, never>,
     ): string {
         const key = _key as string;
+        if (PREVIEW_LANG) return key;
+
         const locale = Lang.getLang();
 
         const { values } = useLangStore.getState();
