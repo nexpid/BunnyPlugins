@@ -63,6 +63,12 @@ export default new Module({
             type: "toggle",
             default: true,
         },
+        colorIconsFallback: {
+            label: "Fallback colors for colored icon symbols",
+            subLabel: "Uses yellow and red colors regardless of theme",
+            type: "toggle",
+            default: false,
+        },
     },
     handlers: {
         onStart() {
@@ -104,17 +110,21 @@ export default new Module({
                         ? {
                               base: warninger[1],
                               overlay: warninger[2] ? warningBottom : warning,
-                              color: resolveSemanticColor(
-                                  semanticColors.STATUS_DANGER,
-                              ),
+                              color: this.storage.options.colorIconsFallback
+                                  ? "#f23f43"
+                                  : resolveSemanticColor(
+                                        semanticColors.STATUS_DANGER,
+                                    ),
                           }
                         : locker
                           ? {
                                 base: locker[1],
                                 overlay: locker[2] ? lockBottom : lock,
-                                color: resolveSemanticColor(
-                                    semanticColors.STATUS_WARNING,
-                                ),
+                                color: this.storage.options.colorIconsFallback
+                                    ? "#f0b232"
+                                    : resolveSemanticColor(
+                                          semanticColors.STATUS_WARNING,
+                                      ),
                             }
                           : null;
 
