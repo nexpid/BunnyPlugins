@@ -4,12 +4,7 @@ import { join } from "node:path";
 import { format } from "prettier";
 
 import { stringifyChart } from "../lib/chart.ts";
-import {
-    branch,
-    makeMdNote,
-    markdownPrettierOptions,
-    plural,
-} from "../lib/common.ts";
+import { makeMdNote, markdownPrettierOptions, plural } from "../lib/common.ts";
 import { listPlugins } from "./plugins.ts";
 
 const mdNote = makeMdNote("scripts/build/modules/readmes.ts", "md");
@@ -17,7 +12,7 @@ const links = {
     // STUB[epic=proxy] vendetta.nexpid.xyz => bunny.nexpid.xyz
     proxied: "https://bn-plugins.github.io/vd-proxy/vendetta.nexpid.xyz/",
     base: "https://bunny.nexpid.xyz/",
-    code: `https://github.com/nexpid/BunnyPlugins/tree/${branch}/src/plugins/`,
+    code: "https://github.com/nexpid/BunnyPlugins/tree/dev/src/plugins/",
     external: {
         backend: "https://github.com/nexpid/",
     },
