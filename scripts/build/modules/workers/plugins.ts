@@ -85,8 +85,8 @@ async function buildPlugin(
         minifySyntax: !isDev,
         minifyWhitespace: !isDev,
         define: {
-            IS_DEV: String(isDev),
-            PREVIEW_LANG: String(previewLang),
+            IS_DEV: `${isDev}`,
+            PREVIEW_LANG: `${previewLang}`,
             DEFAULT_LANG: previewLang
                 ? "{}"
                 : langDefault
