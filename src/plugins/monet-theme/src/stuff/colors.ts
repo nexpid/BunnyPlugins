@@ -1,11 +1,10 @@
-import {
-    argbFromHex,
-    Hct,
-    hexFromArgb,
-} from "@material/material-color-utilities";
 import { rawColors } from "@vendetta/ui";
 
 import { vstorage } from "..";
+import { argbFromHex, hexFromArgb } from "./material";
+import { Cam16 } from "./material/cam16";
+import { HctSolver } from "./material/hctsolver";
+import { lstarFromArgb } from "./material/utils";
 
 export function parseColor(clr: string): string | undefined {
     const shade = Number(clr.split("_")[1]);
@@ -31,7 +30,14 @@ export function getLABShade(
 ): string {
     mult ??= 1;
 
-    const hct = Hct.fromInt(argbFromHex(color));
-    hct.tone += ((500 - shade) / 10) * mult;
-    return hexFromArgb(hct.toInt());
+    const argb = argbFromHex(color);
+    const cam = Cam16.fromInt(argb);
+
+    return hexFromArgb(
+        HctSolver.solveToInt(
+            cam.hue,
+            cam.chroma,
+            lstarFromArgb(argb) + ((500 - shade) / 10) * mult,
+        ),
+    );
 }

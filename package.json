@@ -20,7 +20,6 @@
     "format": "prettier . --write"
   },
   "dependencies": {
-    "@material/material-color-utilities": "^0.2.7",
     "@nexpid/vdp-shared": "^1.0.2",
     "@swc/core": "^1.5.3",
     "@swc/helpers": "^0.5.11",

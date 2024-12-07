@@ -104,7 +104,6 @@ async function buildPlugin(
             ".svg": "text",
             ".json": "json",
         },
-        external: ["@material/material-color-utilities"],
         globalName: "$",
         banner: { js: "(()=>{" },
         footer: { js: "return $;})();" },

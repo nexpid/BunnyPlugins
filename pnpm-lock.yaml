@@ -13,9 +13,6 @@ importers:
 
   .:
     dependencies:
-      '@material/material-color-utilities':
-        specifier: ^0.2.7
-        version: 0.2.7
       '@nexpid/vdp-shared':
         specifier: ^1.0.2
         version: 1.0.2(react-native@0.74.3(@babel/core@7.24.9)(@babel/preset-env@7.25.0(@babel/core@7.24.9))(react@18.3.1))(react@18.3.1)
@@ -1197,9 +1194,6 @@ packages:
 
   '@jridgewell/trace-mapping@0.3.25':
     resolution: {integrity: sha512-vNk6aEwybGtawWmy/PzwnGDOjCkLWSD2wqvjGGAgOAwCGWySYXfYoxt00IJkTF+8Lb57DwOb3Aa0o9CApepiYQ==}
-
-  '@material/material-color-utilities@0.2.7':
-    resolution: {integrity: sha512-0FCeqG6WvK4/Cc06F/xXMd/pv4FeisI0c1tUpBbfhA2n9Y8eZEv4Karjbmf2ZqQCPUWMrGp8A571tCjizxoTiQ==}
 
   '@nexpid/vdp-shared@1.0.2':
     resolution: {integrity: sha512-cUU4Iu8cWjbl42v/1dxIp3hhAZ1lyTxBjFw1WViGCTIOB60YDJ4LKw6D910TVgWv/3fAh3CUgWkyCsamRLWsng==}
@@ -4898,8 +4892,6 @@ snapshots:
     dependencies:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.0
-
-  '@material/material-color-utilities@0.2.7': {}
 
   '@nexpid/vdp-shared@1.0.2(react-native@0.74.3(@babel/core@7.24.9)(@babel/preset-env@7.25.0(@babel/core@7.24.9))(react@18.3.1))(react@18.3.1)':
     dependencies:
