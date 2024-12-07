@@ -52,7 +52,7 @@ export function buildPlugin(
         const worker = workers[usedWorkers - 1];
 
         worker.postMessage(plugin);
-        if (silent) finishUp.add({ prcess: plugin.prcess, worker });
+        if (plugin.prcess) finishUp.add({ prcess: plugin.prcess, worker });
 
         const listener = (data: any) => {
             if (code !== workerResolves.code) return;
@@ -64,19 +64,15 @@ export function buildPlugin(
             const label = `Built plugin ${highlight(status.result === "yay" ? status.plugin : plugin.name)}`;
 
             if (status.result === "yay") {
-                if (!silent) {
-                    logScopeFinished(label, started.stop());
-                    worker.postMessage({
-                        finishUp: plugin.prcess,
-                    });
-                }
+                if (!plugin.prcess) logScopeFinished(label, started.stop());
 
                 plugin = pendingWorkers.splice(0, 1)[0];
                 usedWorkers--;
 
                 if (plugin)
                     worker.postMessage(plugin),
-                        finishUp.add({ prcess: plugin.prcess, worker });
+                        plugin.prcess &&
+                            finishUp.add({ prcess: plugin.prcess, worker });
                 else if (usedWorkers <= 0)
                     workers.forEach(x => x.emit("finished")),
                         workerResolves.res();

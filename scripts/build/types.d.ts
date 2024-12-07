@@ -75,6 +75,6 @@ export namespace Worker {
     export interface PluginWorkerRequest {
         name: string;
         lang: string | null;
-        prcess: string;
+        prcess?: string;
     }
 }

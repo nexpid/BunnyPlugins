@@ -60,11 +60,7 @@ logFinished("writing plugin lang files", writePluginLangFiles.stop());
 const buildingPlugins = bench();
 logHeader("Building plugins");
 
-for (const plugin of await listPlugins())
-    buildPlugin({
-        ...plugin,
-        prcess: crypto.randomUUID(),
-    });
+for (const plugin of await listPlugins()) buildPlugin(plugin);
 
 await (() =>
     new Promise<void>((res, rej) => {
@@ -72,7 +68,6 @@ await (() =>
         workerResolves.rej = rej as any;
     }))();
 
-workers.forEach(x => x.terminate());
 logFinished("building plugins", buildingPlugins.stop());
 
 // Write READMEs
@@ -89,3 +84,5 @@ await Promise.all([
 logFinished("writing README files", writeReadmeFiles.stop());
 
 logCompleted(Math.floor(performance.now() - offset));
+
+workers.forEach(x => x.terminate());

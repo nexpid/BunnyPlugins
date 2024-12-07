@@ -1,22 +1,17 @@
 import { createHash } from "node:crypto";
 import { existsSync } from "node:fs";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
-import { dirname, extname, join } from "node:path";
+import { dirname, join } from "node:path";
 import { promisify } from "node:util";
 import { parentPort, workerData } from "node:worker_threads";
 
-import commonjs from "@rollup/plugin-commonjs";
-import nodeResolve from "@rollup/plugin-node-resolve";
-import { transform } from "@swc/core";
+import { transformFile } from "@swc/core";
+import { build } from "esbuild";
 import imageSize from "image-size";
 import Mime from "mime";
 import { format } from "prettier";
-import { rollup } from "rollup";
-import esbuild from "rollup-plugin-esbuild";
-import tsConfigPaths from "rollup-plugin-tsconfig-paths";
 
 import { makeMdNote, markdownPrettierOptions } from "../../lib/common.ts";
-import { saveCache } from "../../lib/rollupCache.ts";
 import { isJolly, jollifyManifest } from "../jollyposting.ts";
 
 const sizeOf = promisify(imageSize);
@@ -27,7 +22,7 @@ const { isDev, previewLang } = workerData;
 async function buildPlugin(
     plugin: string,
     lang: string | null,
-    prcess: string,
+    prcess?: string,
 ) {
     const manifest: import("../../types").Readmes.Manifest = JSON.parse(
         await readFile(join("src/plugins", plugin, "manifest.json"), "utf8"),
@@ -79,153 +74,150 @@ async function buildPlugin(
             langValues = JSON.parse(await readFile(langValuesFile, "utf8"));
     }
 
-    const bundle = await rollup({
-        // cache: await readCache(plugin),
-        cache: false, // cache was turned off due to caching lang, which we don't want
-        input: join("src/plugins", plugin, manifest.main),
-        onwarn: () => void 0,
+    await build({
+        entryPoints: [join("src/plugins", plugin, manifest.main)],
+        bundle: true,
+        outfile: join("dist", plugin, "index.js"),
+        format: "iife",
+        supported: {
+            "const-and-let": false,
+        },
+        minifySyntax: !isDev,
+        minifyWhitespace: !isDev,
+        define: {
+            IS_DEV: String(isDev),
+            PREVIEW_LANG: String(previewLang),
+            DEFAULT_LANG: previewLang
+                ? "{}"
+                : langDefault
+                  ? JSON.stringify(langDefault)
+                  : "undefined",
+            DEV_LANG: previewLang
+                ? "{}"
+                : langValues
+                  ? JSON.stringify(langValues)
+                  : "undefined",
+        },
+        loader: {
+            ".html": "text",
+            ".css": "text",
+            ".svg": "text",
+            ".json": "json",
+        },
+        external: ["@material/material-color-utilities"],
+        globalName: "$",
+        banner: { js: "(()=>{" },
+        footer: { js: "return $;})();" },
         plugins: [
-            tsConfigPaths(),
-            nodeResolve(),
-            commonjs(),
+            {
+                // based on eslint-plugin-globals
+                name: "vendetta",
+                setup(build) {
+                    build.onResolve(
+                        { filter: /^@vendetta\/?/ },
+                        ({ path }) => ({
+                            path,
+                            namespace: "vendetta",
+                        }),
+                    );
+                    build.onLoad(
+                        { filter: /.*/, namespace: "vendetta" },
+                        ({ path }) => ({
+                            contents: `module.exports = ${path.slice(1).replace(/\//g, ".")}`,
+                            loader: "js",
+                        }),
+                    );
+                },
+            },
             {
                 name: "swc",
-                async transform(code, id) {
-                    const ext = extname(id);
-                    if (![".ts", ".tsx", ".js", ".jsx"].includes(ext))
-                        return null;
-
-                    const ts = ext.includes("ts");
-                    const tsx = ts ? ext.endsWith("x") : undefined;
-                    const jsx = !ts ? ext.endsWith("x") : undefined;
-
-                    return await transform(code, {
-                        filename: id,
-                        jsc: {
-                            externalHelpers: false,
-                            parser: {
-                                syntax: ts ? "typescript" : "ecmascript",
-                                tsx,
-                                jsx,
+                setup(build) {
+                    build.onLoad({ filter: /\.[cm]?[jt]sx?$/ }, async args => {
+                        const result = await transformFile(args.path, {
+                            jsc: {
+                                externalHelpers: false,
                             },
-                        },
-                        env: {
-                            targets: "defaults",
-                            include: [
-                                "transform-classes",
-                                "transform-arrow-functions",
-                                "transform-class-properties",
-                            ],
-                        },
-                        sourceMaps: true,
+                            env: {
+                                targets: "fully supports es6",
+                                include: [
+                                    "transform-block-scoping",
+                                    "transform-classes",
+                                    "transform-async-to-generator",
+                                    "transform-async-generator-functions",
+                                    "transform-named-capturing-groups-regex",
+                                ],
+                                exclude: [
+                                    "transform-parameters",
+                                    "transform-template-literals",
+                                    "transform-exponentiation-operator",
+                                    "transform-nullish-coalescing-operator",
+                                    "transform-object-rest-spread",
+                                    "transform-optional-chaining",
+                                    "transform-logical-assignment-operators",
+                                ],
+                            },
+                        });
+
+                        return { contents: result.code };
                     });
                 },
             },
             {
-                name: "file-parser",
-                async transform(code, id) {
-                    const ext = extname(id);
+                name: "file parser",
+                setup(build) {
+                    const extensions = [
+                        "png",
+                        "jpg",
+                        "jpeg",
+                        "bmp",
+                        "gif",
+                        "webp",
+                        "psd",
+                    ];
+                    build.onLoad(
+                        {
+                            filter: new RegExp(
+                                `\\.(${extensions.join(")|(")})$`,
+                            ),
+                        },
+                        async args => {
+                            const dimensions = (await sizeOf(args.path))!;
 
-                    if (
-                        [
-                            ".png",
-                            ".jpg",
-                            ".jpeg",
-                            ".bmp",
-                            ".gif",
-                            ".webp",
-                            ".psd",
-                        ].includes(ext)
-                    ) {
-                        const dimensions = (await sizeOf(id))!;
+                            let root = dirname(args.path),
+                                tpConfig: { root: string } | null = null;
+                            for (let depth = 0; depth < 5; depth++) {
+                                if (existsSync(join(root, "tpconfig.json"))) {
+                                    tpConfig = JSON.parse(
+                                        await readFile(
+                                            join(root, "tpconfig.json"),
+                                        ),
+                                    );
+                                    break;
+                                }
 
-                        const checkTpConfig = async (
-                            root: string,
-                        ): Promise<{
-                            config: { root: string };
-                            location: string;
-                        } | null> =>
-                            existsSync(join(root, "tpconfig.json"))
-                                ? {
-                                      config: JSON.parse(
-                                          await readFile(
-                                              join(root, "tpconfig.json"),
-                                              "utf8",
-                                          ),
-                                      ),
-                                      location: root,
-                                  }
-                                : null;
+                                root = dirname(root);
+                            }
 
-                        // only support one subfolder
-                        const tpConfig =
-                            (await checkTpConfig(dirname(id))) ??
-                            (await checkTpConfig(dirname(dirname(id))));
-
-                        return {
-                            code: `export default ${JSON.stringify({
-                                uri: `data:${Mime.getType(id)};base64,${(await readFile(id)).toString("base64")}`,
-                                width: dimensions.width,
-                                height: dimensions.height,
-                                file: tpConfig
-                                    ? join(
-                                          tpConfig.config.root,
-                                          id.slice(
-                                              tpConfig.location.length + 1,
-                                          ),
-                                      ).replace(/\\/g, "/")
-                                    : null,
-                                allowIconTheming: !!tpConfig,
-                            })};`,
-                        };
-                    } else if (
-                        [".html", ".css", ".svg", ".json"].includes(ext)
-                    ) {
-                        return {
-                            code:
-                                ext === ".json"
-                                    ? `export default ${code};`
-                                    : `export default ${JSON.stringify(code)};`,
-                        };
-                    }
+                            return {
+                                contents: `export default ${JSON.stringify({
+                                    uri: `data:${Mime.getType(args.path)};base64,${(await readFile(args.path)).toString("base64")}`,
+                                    width: dimensions.width,
+                                    height: dimensions.height,
+                                    file: tpConfig
+                                        ? join(
+                                              tpConfig.root,
+                                              args.path.slice(root.length + 1),
+                                          ).replace(/\\/g, "/")
+                                        : null,
+                                    allowIconTheming: !!tpConfig,
+                                })};`,
+                            };
+                        },
+                    );
                 },
             },
-            esbuild({
-                minifySyntax: !isDev,
-                minifyWhitespace: !isDev,
-                define: {
-                    IS_DEV: String(isDev),
-                    PREVIEW_LANG: String(previewLang),
-                    DEFAULT_LANG: previewLang
-                        ? "{}"
-                        : langDefault
-                          ? JSON.stringify(langDefault)
-                          : "undefined",
-                    DEV_LANG: previewLang
-                        ? "{}"
-                        : langValues
-                          ? JSON.stringify(langValues)
-                          : "undefined",
-                },
-            }),
         ],
     });
-    await bundle.write({
-        file: join("dist", plugin, "index.js"),
-        globals(id) {
-            if (id.startsWith("@vendetta"))
-                return id.substring(1).replace(/\//g, ".");
-            const map = {
-                react: "window.React",
-            };
-
-            return map[id] || null;
-        },
-        format: "iife",
-        compact: !isDev,
-        exports: "named",
-    });
-    await bundle.close();
 
     const hash = createHash("sha256")
         .update(await readFile(join("dist", plugin, "index.js"), "utf8"))
@@ -237,16 +229,18 @@ async function buildPlugin(
 
     if (isJolly) jollifyManifest(outManifest);
 
-    finishUp.set(prcess, () => {
-        finishUp.delete(prcess);
+    const onFinish = async () => {
+        if (prcess) finishUp.delete(prcess);
 
-        writeFile(
+        await writeFile(
             join("dist", plugin, "manifest.json"),
             JSON.stringify(outManifest),
         );
-    });
+    };
 
-    if (bundle.cache) await saveCache(plugin, bundle.cache);
+    if (prcess) finishUp.set(prcess, onFinish);
+    else await onFinish();
+
     return manifest.name;
 }
 
@@ -255,32 +249,27 @@ const finishUp = new Map<string, () => void>();
 if (parentPort) parentPort.postMessage("ready");
 else throw new Error("why is parentPort missing???");
 
-if (parentPort)
-    parentPort.addListener("message", data =>
-        data.finishUp
-            ? finishUp.get(data.finishUp)?.()
-            : buildPlugin(data.name, data.lang, data.prcess)
-                  .then(
-                      plugin =>
-                          parentPort &&
-                          parentPort.postMessage({
-                              result: "yay",
-                              plugin,
-                          }),
-                  )
-                  .catch(
-                      err =>
-                          parentPort &&
-                          parentPort.postMessage({
-                              result: "nay",
-                              err:
-                                  err instanceof Error
-                                      ? err
-                                      : new Error(
-                                            err?.message ??
-                                                err?.toString?.() ??
-                                                String(err),
-                                        ),
-                          }),
-                  ),
-    );
+parentPort.addListener("message", data =>
+    data.finishUp
+        ? finishUp.get(data.finishUp)?.()
+        : buildPlugin(data.name, data.lang, data.prcess)
+              .then(plugin =>
+                  parentPort!.postMessage({
+                      result: "yay",
+                      plugin,
+                  }),
+              )
+              .catch(err =>
+                  parentPort!.postMessage({
+                      result: "nay",
+                      err:
+                          err instanceof Error
+                              ? err
+                              : new Error(
+                                    err?.message ??
+                                        err?.toString?.() ??
+                                        String(err),
+                                ),
+                  }),
+              ),
+);
