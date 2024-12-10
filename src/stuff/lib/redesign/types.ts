@@ -1,6 +1,7 @@
 import {
     type ImageSourcePropType,
     type PressableProps,
+    type TextInputProps,
     type View,
     type ViewProps,
 } from "react-native";
@@ -123,39 +124,29 @@ export type Slider = React.FC<{
     endIcon?: React.ReactNode;
 }>;
 
-export type TextInput = React.FC<{
-    size?: "sm" | "md" | "lg";
-    label?: string;
-    description?: React.ReactNode;
-    editable?: boolean;
-    focusable?: boolean;
-    onFocus?: () => void;
-    onBlur?: () => void;
-    placeholder?: string;
-    placeholderTextColor?: string;
-    defaultValue?: string;
-    value?: string;
-    isDisabled?: boolean;
-    leadingPressableProps?: PressableProps;
-    leadingIcon?: React.FC;
-    leadingText?: string;
-    trailingPressableProps?: PressableProps;
-    trailingIcon?: React.FC;
-    trailingText?: string;
-    secureTextEntry?: boolean;
-    isClearable?: boolean;
-    status?: "error" | "default";
-    errorMessage?: string;
-    spellCheck?: boolean;
-    isCentered?: boolean;
-    returnKeyType?: "search";
-    grow?: boolean;
-    autoCapitalize?: string;
-    autoCorrect?: boolean;
-    isRound?: boolean;
-    onChange?: (value: string) => void;
-    ref?: any;
-}>;
+export type TextInput = React.FC<
+    TextInputProps & {
+        onChange?: (value: string) => void;
+        size?: "sm" | "md" | "lg";
+        label?: string;
+        description?: React.ReactNode;
+        focusable?: boolean;
+        isDisabled?: boolean;
+        leadingPressableProps?: PressableProps;
+        leadingIcon?: React.FC;
+        leadingText?: string;
+        trailingPressableProps?: PressableProps;
+        trailingIcon?: React.FC;
+        trailingText?: string;
+        isClearable?: boolean;
+        status?: "error" | "default";
+        errorMessage?: string;
+        isCentered?: boolean;
+        grow?: boolean;
+        isRound?: boolean;
+        ref?: any;
+    }
+>;
 
 type controlState = symbol;
 export type Tabs = React.FC<{
