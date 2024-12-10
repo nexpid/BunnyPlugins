@@ -333,7 +333,6 @@ export default function () {
                                 "settings.auth.log_out.description",
                                 {},
                             )}
-                            // STUB[epic=icon] use new logout icon :3
                             leading={
                                 <FormRow.Icon
                                     source={getAssetIDByName("DoorExitIcon")}
@@ -437,7 +436,7 @@ export default function () {
             <BetterTableRowGroup
                 title={lang.format("settings.manage_data.title", {})}
                 icon={getAssetIDByName("UserIcon")}
-                padding={!isAuthorized() || !data}>
+                padding={!isAuthorized() || !hasData()}>
                 {isAuthorized() && hasData() ? (
                     <>
                         <FormRow
