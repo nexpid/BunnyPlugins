@@ -55,11 +55,13 @@ export async function listImports(
     if (hashedImports.has(path + hash)) return hashedImports.get(path + hash)!;
 
     const matches = content.matchAll(
-        /(?:import|export) .+?(?: as .+?)? from (?:"|')(.+?)(?:"|')/gs,
+        /(?:\/\/ )?(?:import|export) .+?(?: as .+?)? from (?:"|')(.+?)(?:"|')/gs,
     );
     const imports = new Set<string>();
 
-    for (const [, module] of matches) {
+    for (const [line, module] of matches) {
+        if (line.startsWith("//")) continue;
+
         let dep: string | undefined;
         let willWarn = true;
 
