@@ -125,7 +125,7 @@ export type Slider = React.FC<{
 }>;
 
 export type TextInput = React.FC<
-    TextInputProps & {
+    Omit<TextInputProps, "onChange"> & {
         onChange?: (value: string) => void;
         size?: "sm" | "md" | "lg";
         label?: string;
