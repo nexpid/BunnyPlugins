@@ -61,13 +61,11 @@ jobs:
         working-directory: dev
         run: git pull origin main --rebase
 
-      - name: delete old lang files
+      - name: write lang files
         working-directory: dev
-        run: rm lang/values/*.json
-
-      - name: write new lang files
-        working-directory: dev
-        run: pnpm crowdin ../i18n/lang/values
+        run: |
+          rm lang/values/*.json
+          pnpm crowdin ../i18n/lang/values
 
       - name: deploy
         working-directory: dev
