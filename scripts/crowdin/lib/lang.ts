@@ -24,16 +24,13 @@ export async function writeNewLangFiles(source: string) {
     for (const { lang: plugin } of await listPlugins()) {
         if (!plugin) continue;
 
+        const en = JSON.parse(
+            await readFile(join("lang/values/base", plugin + ".json"), "utf8"),
+        );
+
         // if translations aren't on crowdin yet, make a placeholder
-        if (!data[plugin])
-            data[plugin] = {
-                en: JSON.parse(
-                    await readFile(
-                        join("lang/values/base", plugin + ".json"),
-                        "utf8",
-                    ),
-                ),
-            };
+        if (!data[plugin]) data[plugin] = { en };
+        else data[plugin] = Object.assign(data[plugin], { en });
 
         // minify but also not really
         await writeFile(
