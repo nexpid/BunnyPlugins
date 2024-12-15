@@ -18,6 +18,8 @@ jobs:
     steps:
       - name: checkout
         uses: actions/checkout@v4
+        with:
+          ref: dev
 
       - name: sync crowdin
         uses: crowdin/github-action@v2
