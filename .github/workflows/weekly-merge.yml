@@ -59,7 +59,9 @@ jobs:
 
       - name: sync dev and main
         working-directory: dev
-        run: git pull origin main --rebase
+        run: |
+          git rev-parse HEAD
+          git pull origin main --rebase
 
       - name: delete old lang files
         working-directory: dev
