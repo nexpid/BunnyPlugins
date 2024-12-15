@@ -1,264 +1,277 @@
-import { HTTP_REGEX_MULTI } from "@vendetta/constants";
 import { findByStoreName } from "@vendetta/metro";
-import { ReactNative as RN, stylesheet } from "@vendetta/metro/common";
+import { React, ReactNative as RN, stylesheet } from "@vendetta/metro/common";
 import { useProxy } from "@vendetta/storage";
 import { semanticColors } from "@vendetta/ui";
-import { showInputAlert } from "@vendetta/ui/alerts";
+import { showConfirmationAlert } from "@vendetta/ui/alerts";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { Forms } from "@vendetta/ui/components";
 import { showToast } from "@vendetta/ui/toasts";
 
-import { ActionSheet } from "$/components/ActionSheet";
 import { BetterTableRowGroup } from "$/components/BetterTableRow";
 import Text from "$/components/Text";
+import { Button } from "$/lib/redesign";
+import { managePage } from "$/lib/ui";
+import { deepEquals } from "$/types";
 
-import { cache, vstorage } from "..";
-import { currentAuthorization, deleteSaveData } from "../stuff/api";
-import { check } from "../stuff/http";
+import { initState, lang, vstorage } from "..";
+import { useAuthorizationStore } from "../stores/AuthorizationStore";
+import { useCacheStore } from "../stores/CacheStore";
+import { deleteData, getData, saveData } from "../stuff/api";
 import { openOauth2Modal } from "../stuff/oauth2";
-import { validateSong } from "../stuff/songs";
-import { rebuildLink } from "../stuff/util";
-import { API } from "../types/api";
-import PendingSongName from "./PendingSongName";
-import SongInfoSheet from "./sheets/SongInfoSheet";
+import { UserData } from "../types";
+import AddSong from "./songs/AddSong";
+import SongInfo from "./songs/SongInfo";
 
 const { FormRow } = Forms;
 
 const UserStore = findByStoreName("UserStore");
 
+export const ModifiedDataContext = React.createContext({
+    data: [],
+    setData: () => null,
+} as {
+    data: UserData;
+    setData: (data: UserData) => void;
+});
+
 export default function () {
-    useProxy(cache);
     useProxy(vstorage);
-    check();
 
     const styles = stylesheet.createThemedStyleSheet({
-        song: {
+        songList: {
+            flexDirection: "column",
+            gap: 8,
+        },
+        songDisabled: {
             backgroundColor: semanticColors.BG_MOD_FAINT,
             borderRadius: 8,
-        },
-        serviceFrame: {
-            height: 24,
-            width: 24,
-            backgroundColor: semanticColors.BG_MOD_FAINT,
-            borderRadius: 2147483647,
+            opacity: 0.4,
         },
     });
 
-    const isAuthed = !!currentAuthorization();
+    const { isAuthorized } = useAuthorizationStore();
+    const [isFetching, setIsFetching] = React.useState(false);
+
+    const { data: _data } = useCacheStore();
+    const [data, setData] = React.useState(_data);
+    const isDataModified = React.useMemo(
+        () => data && _data && !deepEquals(data, _data),
+        [data, _data],
+    );
+
+    React.useEffect(() => setData(_data), [_data]);
+
+    const userId = UserStore.getCurrentUser()?.id ?? null;
+    if (!initState.inits.includes(userId)) {
+        initState.inits.push(userId);
+        isAuthorized() &&
+            (setIsFetching(true),
+            getData().finally(() => setIsFetching(false)));
+    }
+
+    const [isBusy, setIsBusy] = React.useState<string[]>([]);
+
+    const setBusy = (x: string) =>
+        !isBusy.includes(x) && setIsBusy([...isBusy, x]);
+    const unBusy = (x: string) => void setIsBusy(isBusy.filter(y => x !== y));
+
+    managePage(
+        {
+            headerRight: () => (
+                <Button
+                    size="sm"
+                    variant={
+                        isDataModified && !isFetching ? "primary" : "secondary"
+                    }
+                    disabled={!isDataModified || isFetching}
+                    loading={isFetching}
+                    text={lang.format("settings.update_songs", {})}
+                    onPress={() => {
+                        setIsFetching(true);
+                        saveData(data!)
+                            .then(() =>
+                                showToast(
+                                    lang.format("toast.updated_songs", {}),
+                                    getAssetIDByName("UploadIcon"),
+                                ),
+                            )
+                            .finally(() => setIsFetching(false));
+                    }}
+                />
+            ),
+        },
+        null,
+        isDataModified,
+        isFetching,
+    );
 
     return (
-        <RN.ScrollView>
-            <BetterTableRowGroup
-                title="Songs"
-                icon={getAssetIDByName("abc")}
-                padding={true}>
-                {isAuthed && !!cache.data ? (
-                    <RN.View
-                        style={{
-                            flexDirection: "column",
-                            gap: 8,
-                        }}>
-                        {cache.data.songs.map((x, i) => (
-                            <FormRow
-                                label={
-                                    x === null ? (
-                                        "Press to add song in this position"
-                                    ) : (
-                                        <PendingSongName
-                                            service={x.service}
-                                            type={x.type}
-                                            id={x.id}
-                                            normal={true}
+        <ModifiedDataContext.Provider value={{ data: data ?? [], setData }}>
+            <RN.ScrollView>
+                <BetterTableRowGroup
+                    title={lang.format("settings.songs.title", {})}
+                    icon={getAssetIDByName("MusicIcon")}
+                    padding>
+                    {isAuthorized() && data ? (
+                        <RN.View
+                            style={[
+                                styles.songList,
+                                isFetching && { opacity: 0.8 },
+                            ]}>
+                            {new Array(6)
+                                .fill(null)
+                                .map((_, i) =>
+                                    !data[i] && data[i - 1] ? (
+                                        <AddSong disabled={isFetching} />
+                                    ) : data[i] ? (
+                                        <SongInfo
+                                            song={data[i]}
+                                            disabled={isFetching}
                                         />
-                                    )
-                                }
-                                leading={
-                                    x === null ? (
-                                        <RN.View style={styles.serviceFrame} />
                                     ) : (
-                                        <RN.Image
-                                            style={styles.serviceFrame}
+                                        <FormRow
+                                            label=""
+                                            style={styles.songDisabled}
+                                        />
+                                    ),
+                                )}
+                        </RN.View>
+                    ) : !isAuthorized() ? (
+                        <Text
+                            variant="text-md/semibold"
+                            color="TEXT_NORMAL"
+                            align="center">
+                            {lang.format("settings.songs.auth_needed", {})}
+                        </Text>
+                    ) : (
+                        <RN.ActivityIndicator
+                            size="small"
+                            style={{ flex: 1 }}
+                        />
+                    )}
+                </BetterTableRowGroup>
+                <BetterTableRowGroup
+                    title="Authentication"
+                    icon={getAssetIDByName("LockIcon")}>
+                    {isAuthorized() ? (
+                        <>
+                            <FormRow
+                                label={lang.format(
+                                    "settings.auth.log_out.title",
+                                    {},
+                                )}
+                                subLabel={lang.format(
+                                    "settings.auth.log_out.description",
+                                    {},
+                                )}
+                                leading={
+                                    <FormRow.Icon
+                                        source={getAssetIDByName(
+                                            "DoorExitIcon",
+                                        )}
+                                    />
+                                }
+                                destructive
+                                onPress={() =>
+                                    !isBusy.length &&
+                                    showConfirmationAlert({
+                                        title: lang.format(
+                                            "alert.log_out.title",
+                                            {},
+                                        ),
+                                        content: lang.format(
+                                            "alert.log_out.body",
+                                            {},
+                                        ),
+                                        onConfirm: () => {
+                                            useCacheStore
+                                                .getState()
+                                                .updateData();
+                                            useAuthorizationStore
+                                                .getState()
+                                                .setToken(undefined);
+
+                                            showToast(
+                                                lang.format("toast.logout", {}),
+                                                getAssetIDByName(
+                                                    "DoorExitIcon",
+                                                ),
+                                            );
+                                        },
+                                    })
+                                }
+                            />
+                            <FormRow
+                                label={lang.format(
+                                    "settings.auth.delete_songs.title",
+                                    {},
+                                )}
+                                subLabel={lang.format(
+                                    "settings.auth.delete_songs.description",
+                                    {},
+                                )}
+                                leading={
+                                    isBusy.includes("delete_songs") ? (
+                                        <RN.ActivityIndicator size="small" />
+                                    ) : (
+                                        <FormRow.Icon
                                             source={getAssetIDByName(
-                                                "img_account_sync_spotify_light_and_dark",
+                                                "TrashIcon",
                                             )}
                                         />
                                     )
                                 }
-                                onLongPress={() =>
-                                    x &&
-                                    ActionSheet.open(SongInfoSheet, {
-                                        song: x,
-                                        showAdd: false,
-                                        remove: () =>
-                                            cache.data &&
-                                            (cache.data.songs[i] = null),
+                                onPress={() =>
+                                    !isBusy.length &&
+                                    showConfirmationAlert({
+                                        title: lang.format(
+                                            "alert.delete_songs.title",
+                                            {},
+                                        ),
+                                        content: lang.format(
+                                            "alert.delete_songs.body",
+                                            {},
+                                        ),
+                                        confirmText: lang.format(
+                                            "alert.delete_songs.confirm",
+                                            {},
+                                        ),
+                                        confirmColor: "red" as ButtonColors,
+                                        onConfirm: async () => {
+                                            setBusy("delete_songs");
+                                            await deleteData();
+                                            useAuthorizationStore
+                                                .getState()
+                                                .setToken(undefined);
+
+                                            unBusy("delete_songs");
+                                            showToast(
+                                                lang.format(
+                                                    "toast.deleted_songs",
+                                                    {},
+                                                ),
+                                                getAssetIDByName("TrashIcon"),
+                                            );
+                                        },
                                     })
                                 }
-                                onPress={() => {
-                                    showInputAlert({
-                                        title: "Add song",
-                                        placeholder: [
-                                            "https://open.spotify.com/track/ABC",
-                                            "https://open.spotify.com/album/ABC",
-                                            "https://open.spotify.com/playlist/ABC",
-                                            "https://spotify.link/ABC",
-                                        ].sort(() =>
-                                            Math.random() > 0.5 ? 1 : -1,
-                                        )[0],
-                                        initialValue: x
-                                            ? rebuildLink(
-                                                  x.service,
-                                                  x.type,
-                                                  x.id,
-                                              )
-                                            : undefined,
-                                        cancelText: "Cancel",
-                                        confirmText: "Save",
-                                        onConfirm: async val => {
-                                            const url =
-                                                val.match(
-                                                    HTTP_REGEX_MULTI,
-                                                )?.[0];
-                                            if (!url)
-                                                throw new Error(
-                                                    "Invalid link!",
-                                                );
-
-                                            let base = new URL(url);
-                                            let host = base.hostname;
-
-                                            let service:
-                                                    | API.Song["service"]
-                                                    | null = null,
-                                                type: API.Song["type"] | null =
-                                                    null,
-                                                id: string | null = null;
-
-                                            if (host === "spotify.link") {
-                                                service = "spotify";
-
-                                                base = new URL(
-                                                    (await fetch(url)).url,
-                                                );
-                                                host = base.hostname;
-                                            }
-                                            if (host === "open.spotify.com") {
-                                                service = "spotify";
-
-                                                const [_, _type, _id] =
-                                                    base.pathname.split("/");
-                                                if (
-                                                    [
-                                                        "album",
-                                                        "track",
-                                                        "playlist",
-                                                    ].includes(_type) &&
-                                                    _id
-                                                ) {
-                                                    type = _type as any;
-                                                    id = _id;
-                                                }
-                                            }
-
-                                            if (!service || !type || !id)
-                                                throw new Error(
-                                                    "Missing service, type or id!",
-                                                );
-
-                                            if (
-                                                !(await validateSong(
-                                                    service,
-                                                    type,
-                                                    id,
-                                                ))
-                                            )
-                                                throw new Error(
-                                                    "Invalid song!",
-                                                );
-
-                                            if (cache.data)
-                                                cache.data.songs[i] = {
-                                                    service,
-                                                    type,
-                                                    id,
-                                                };
-                                        },
-                                    });
-                                }}
-                                style={styles.song}
                             />
-                        ))}
-                    </RN.View>
-                ) : !isAuthed ? (
-                    <Text
-                        variant="text-md/semibold"
-                        color="TEXT_NORMAL"
-                        align="center">
-                        Authenticate first to manage your songs
-                    </Text>
-                ) : (
-                    <RN.ActivityIndicator size="small" style={{ flex: 1 }} />
-                )}
-            </BetterTableRowGroup>
-            <BetterTableRowGroup
-                title="Authentication"
-                icon={getAssetIDByName("lock")}>
-                {currentAuthorization() ? (
-                    <>
+                        </>
+                    ) : (
                         <FormRow
-                            label="Log out"
-                            subLabel="Logs you out of SongSpotlight"
+                            label={lang.format("settings.auth.authorize", {})}
                             leading={
                                 <FormRow.Icon
-                                    source={getAssetIDByName("DoorExitIcon")}
+                                    source={getAssetIDByName("LinkIcon")}
                                 />
                             }
-                            onPress={() => {
-                                delete vstorage.auth[
-                                    UserStore.getCurrentUser().id
-                                ];
-                                delete cache.data;
-
-                                showToast(
-                                    "Successfully logged out",
-                                    getAssetIDByName("DoorExitIcon"),
-                                );
-                            }}
+                            trailing={FormRow.Arrow}
+                            onPress={openOauth2Modal}
                         />
-                        <FormRow
-                            label="Delete data"
-                            subLabel="Deletes your SongSpotlight data"
-                            leading={
-                                <FormRow.Icon
-                                    source={getAssetIDByName("trash")}
-                                />
-                            }
-                            onPress={async () => {
-                                await deleteSaveData();
-                                delete vstorage.auth[
-                                    UserStore.getCurrentUser().id
-                                ];
-                                delete cache.data;
-
-                                showToast(
-                                    "Successfully deleted data",
-                                    getAssetIDByName("trash"),
-                                );
-                            }}
-                        />
-                    </>
-                ) : (
-                    <FormRow
-                        label="Authenticate"
-                        leading={
-                            <FormRow.Icon source={getAssetIDByName("copy")} />
-                        }
-                        trailing={FormRow.Arrow}
-                        onPress={openOauth2Modal}
-                    />
-                )}
-            </BetterTableRowGroup>
-            <RN.View style={{ height: 12 }} />
-        </RN.ScrollView>
+                    )}
+                </BetterTableRowGroup>
+                <RN.View style={{ height: 12 }} />
+            </RN.ScrollView>
+        </ModifiedDataContext.Provider>
     );
 }

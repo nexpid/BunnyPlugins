@@ -57,6 +57,16 @@ export default interface LangValues {
             "toast.plugin.install.fail": { plugin: string };
         };
     };
+    song_spotlight: {
+        values: typeof import("./values/base/song_spotlight.json");
+        fillers: {
+            "toast.fetch_error": { urlpath: string };
+            "toast.fetch_error_detailed": { error_msg: string };
+            "alert.add_song.description": {
+                services_seperated_by_commas: string;
+            };
+        };
+    };
     themes_plus: {
         values: typeof import("./values/base/themes_plus.json");
         fillers: {

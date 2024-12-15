@@ -58,6 +58,11 @@ Icons used by plugins are stored in the `<iconpack root>/_/external/` folder. He
 - <img src="../src/plugins/plugin-browser/assets/SortNameAZIcon.png" alt="PluginBrowser SortNameAZIcon" width=20 height=20 /> — `PluginBrowser/SortNameAZIcon.png`
 - <img src="../src/plugins/plugin-browser/assets/SortNameZAIcon.png" alt="PluginBrowser SortNameZAIcon" width=20 height=20 /> — `PluginBrowser/SortNameZAIcon.png`
 
+### SongSpotlight
+
+- <img src="../src/plugins/song-spotlight/assets/services/AppleMusicIcon.png" alt="SongSpotlight AppleMusicIcon" width=20 height=20 /> — `SongSpotlight/AppleMusicIcon.png`
+- <img src="../src/plugins/song-spotlight/assets/services/SoundcloudIcon.png" alt="SongSpotlight SoundcloudIcon" width=20 height=20 /> — `SongSpotlight/SoundcloudIcon.png`
+
 ### SpotifyListenAlong
 
 - <img src="../src/plugins/nexxutils/assets/SpotifyListenAlong/UserPlayIcon.png" alt="SpotifyListenAlong UserPlayIcon" width=20 height=20 /> — `SpotifyListenAlong/UserPlayIcon.png`

@@ -2,42 +2,73 @@ import { findByName } from "@vendetta/metro";
 import { React } from "@vendetta/metro/common";
 import { after } from "@vendetta/patcher";
 
-import UserProfileSongs from "../components/UserProfileSongs";
+import ProfileSongs from "../components/ProfileSongs";
+import { unsubAuthStore } from "../stores/AuthorizationStore";
+import { unsubCacheStore } from "../stores/CacheStore";
 
-const UserProfileBio = findByName("UserProfileBio", false);
 const YouAboutMeCard = findByName("YouAboutMeCard", false);
+const SimplifiedUserProfileAboutMeCard = findByName(
+    "SimplifiedUserProfileAboutMeCard",
+    false,
+);
+const UserProfileBio = findByName("UserProfileBio", false);
 
 export default function () {
-    const patches = new Array<() => void>();
+    const patches = new Array<any>();
 
     patches.push(
-        after("default", UserProfileBio, ([x], ret) => {
-            return React.createElement(React.Fragment, {}, [
-                x?.displayProfile?.userId &&
-                    React.createElement(UserProfileSongs, {
-                        userId: x.displayProfile.userId,
-                        you: false,
-                    }),
-                ret,
-            ]);
-        }),
-    );
-
-    patches.push(
-        after("default", YouAboutMeCard, ([{ userId }], ret) => {
-            return React.createElement(React.Fragment, {}, [
-                React.createElement(UserProfileSongs, {
+        after("default", YouAboutMeCard, ([{ userId }], ret) =>
+            React.createElement(React.Fragment, {}, [
+                React.createElement(ProfileSongs, {
                     userId,
-                    you: true,
+                    style: "you",
                 }),
                 ret,
-            ]);
-        }),
+            ]),
+        ),
     );
 
+    patches.push(
+        after(
+            "default",
+            SimplifiedUserProfileAboutMeCard,
+            ([{ userId }], ret) =>
+                React.createElement(React.Fragment, {}, [
+                    React.createElement(ProfileSongs, {
+                        userId,
+                        style: "simplified",
+                    }),
+                    ret,
+                ]),
+        ),
+    );
+
+    patches.push(
+        after(
+            "default",
+            UserProfileBio,
+            (
+                [
+                    {
+                        displayProfile: { userId },
+                    },
+                ],
+                ret,
+            ) =>
+                React.createElement(React.Fragment, {}, [
+                    React.createElement(ProfileSongs, {
+                        userId,
+                        style: "classic",
+                    }),
+                    ret,
+                ]),
+        ),
+    );
+
+    patches.push(unsubAuthStore);
+    patches.push(unsubCacheStore);
+
     return () => {
-        patches.forEach(x => {
-            x();
-        });
+        patches.forEach(x => x());
     };
 }
