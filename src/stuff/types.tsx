@@ -162,6 +162,16 @@ export function deepEquals(x: any, y: any) {
     }
 }
 
+export function formatDuration(duration: number) {
+    const seconds = duration % 60;
+    const minutes = Math.floor(duration / 60) % 60;
+    const hours = Math.floor(duration / 3600);
+
+    if (hours > 0)
+        return `${hours}:${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+    else return `${minutes}:${String(seconds).padStart(2, "0")}`;
+}
+
 // ...
 
 export type TextStyleSheetCase = "normal" | "medium" | "semibold" | "bold";
