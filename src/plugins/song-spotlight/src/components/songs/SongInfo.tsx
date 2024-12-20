@@ -3,7 +3,6 @@ import {
     React,
     ReactNative as RN,
     stylesheet,
-    url,
 } from "@vendetta/metro/common";
 import { semanticColors } from "@vendetta/ui";
 import { getAssetIDByName } from "@vendetta/ui/assets";
@@ -11,10 +10,10 @@ import { Forms } from "@vendetta/ui/components";
 import { showToast } from "@vendetta/ui/toasts";
 
 import Text from "$/components/Text";
-import { ContextMenu } from "$/lib/redesign";
+import { ContextMenu, Stack } from "$/lib/redesign";
 
 import { lang } from "../..";
-import { getServiceLink, serviceToIcon } from "../../stuff/songs";
+import { getServiceLink, openLink, serviceToIcon } from "../../stuff/songs";
 import { getSongInfo, SongInfo } from "../../stuff/songs/info";
 import { Song } from "../../types";
 import { ModifiedDataContext } from "../Settings";
@@ -109,23 +108,21 @@ export default function SongInfo({
                         <FormRow.Icon source={serviceToIcon[song.service]} />
                     }
                     trailing={
-                        <Text variant="eyebrow" color="TEXT_MUTED">
-                            {song.type}
-                        </Text>
+                        <Stack
+                            direction="horizontal"
+                            spacing={6}
+                            style={{ alignItems: "center" }}>
+                            <Text variant="eyebrow" color="TEXT_MUTED">
+                                {song.type}
+                            </Text>
+                            <FormRow.Arrow />
+                        </Stack>
                     }
                     style={styles.song}
                     disabled={disabled}
                     {...{
                         ...props,
-                        onPress: async () => {
-                            const link = await getServiceLink(song);
-                            if (link !== false) url.openDeeplink(link);
-                            else
-                                showToast(
-                                    lang.format("toast.cannot_open_link", {}),
-                                    getAssetIDByName("CircleXIcon-primary"),
-                                );
-                        },
+                        onPress: () => openLink(song),
                     }}
                 />
             )}

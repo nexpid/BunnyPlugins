@@ -1,4 +1,4 @@
-import { findByName } from "@vendetta/metro";
+import { findByName, findByStoreName } from "@vendetta/metro";
 import { React } from "@vendetta/metro/common";
 import { after } from "@vendetta/patcher";
 
@@ -12,6 +12,7 @@ const SimplifiedUserProfileAboutMeCard = findByName(
     false,
 );
 const UserProfileBio = findByName("UserProfileBio", false);
+const ThemeStore = findByStoreName("ThemeStore");
 
 export default function () {
     const patches = new Array<any>();
@@ -21,7 +22,7 @@ export default function () {
             React.createElement(React.Fragment, {}, [
                 React.createElement(ProfileSongs, {
                     userId,
-                    style: "you",
+                    variant: "you",
                 }),
                 ret,
             ]),
@@ -32,11 +33,12 @@ export default function () {
         after(
             "default",
             SimplifiedUserProfileAboutMeCard,
-            ([{ userId }], ret) =>
+            ([{ userId, style }], ret) =>
                 React.createElement(React.Fragment, {}, [
                     React.createElement(ProfileSongs, {
                         userId,
-                        style: "simplified",
+                        variant: "simplified",
+                        style,
                     }),
                     ret,
                 ]),
@@ -44,24 +46,22 @@ export default function () {
     );
 
     patches.push(
-        after(
-            "default",
-            UserProfileBio,
-            (
-                [
-                    {
-                        displayProfile: { userId },
-                    },
-                ],
-                ret,
-            ) =>
-                React.createElement(React.Fragment, {}, [
-                    React.createElement(ProfileSongs, {
-                        userId,
-                        style: "classic",
-                    }),
-                    ret,
-                ]),
+        after("default", UserProfileBio, ([{ displayProfile }], ret) =>
+            displayProfile
+                ? React.createElement(React.Fragment, {}, [
+                      React.createElement(ProfileSongs, {
+                          userId: displayProfile.userId,
+                          variant: "classic",
+                          style: displayProfile.themeColors ? {} : undefined,
+                          customBorder: displayProfile.themeColors
+                              ? ThemeStore.theme === "light"
+                                  ? "rgba(0, 0, 0, 0.24)"
+                                  : "rgba(255, 255, 255, 0.24)"
+                              : undefined,
+                      }),
+                      ret,
+                  ])
+                : ret,
         ),
     );
 

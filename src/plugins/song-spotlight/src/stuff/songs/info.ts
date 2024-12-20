@@ -33,6 +33,27 @@ export type SongInfo = SongInfoBase &
           }
     );
 
+const skeletonSongInfoBase = {
+    service: "spotify",
+    label: "Song Spotlight",
+    sublabel: "John Doe",
+    thumbnailUrl: "https://cdn.discordapp.com/embed/avatars/0.png",
+} as SongInfoBase;
+
+export const skeletonSongInfo = {
+    single: {
+        ...skeletonSongInfoBase,
+        type: "single",
+        explicit: false,
+        duration: 60000,
+    } as SongInfo,
+    entries: {
+        ...skeletonSongInfoBase,
+        type: "entries",
+        entries: [],
+    } as SongInfo,
+};
+
 export function soundcloudUrl(_url: string) {
     const url = new URL(_url);
     url.searchParams.set("client_id", "nIjtjiYnjkOhMyh5xrbqEW12DxeJVnic");

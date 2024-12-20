@@ -1,9 +1,11 @@
-import { ReactNative as RN } from "@vendetta/metro/common";
+import { ReactNative as RN, url } from "@vendetta/metro/common";
 import { getAssetIDByName } from "@vendetta/ui/assets";
+import { showToast } from "@vendetta/ui/toasts";
 import { type ImageSourcePropType } from "react-native";
 
 import AppleMusicIcon from "../../../assets/services/AppleMusicIcon.png";
 import SoundcloudIcon from "../../../assets/services/SoundcloudIcon.png";
+import { lang } from "../..";
 import { AppleMusicSong, Song, SoundcloudSong, SpotifySong } from "../../types";
 import { soundcloudUrl } from "./info";
 
@@ -82,4 +84,14 @@ export async function getServiceLink(
     for (const link of links)
         if (await RN.Linking.canOpenURL(link)) return link;
     return links[links.length - 1] ?? links[0];
+}
+
+export async function openLink(song: Song) {
+    const link = await getServiceLink(song);
+    if (link !== false) url.openDeeplink(link);
+    else
+        showToast(
+            lang.format("toast.cannot_open_link", {}),
+            getAssetIDByName("CircleXIcon-primary"),
+        );
 }
