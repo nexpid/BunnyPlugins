@@ -55,7 +55,8 @@ function addDeclareModule(
 }
 
 function findTypes(path: string, packageJson: any) {
-    const types: string = packageJson.typings ?? packageJson.types;
+    const types: string =
+        packageJson.typings ?? packageJson.types ?? packageJson.main;
     const maps = [`${types}/index.d.ts`, `${types}.d.ts`, types];
 
     return maps.find(x => existsSync(join(path, x)));

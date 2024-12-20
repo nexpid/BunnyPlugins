@@ -82,6 +82,7 @@ const makingDeclarations = bench();
 
 logHeader("Making declarations");
 
+let anyErrors = false;
 for (const { path, pkg } of [...artifactPaths.values()])
     await runTask(
         `Rolled up ${highlight(pkg)}`,
@@ -92,11 +93,12 @@ for (const { path, pkg } of [...artifactPaths.values()])
         ).catch(
             err =>
                 void (logDebug(`Couldn't rollup ${highlight(pkg)}!`),
-                console.log(err)),
+                console.log(err),
+                (anyErrors = true)),
         ),
     );
 
-await rm("temp", { recursive: true, force: true });
+if (!anyErrors) await rm("temp", { recursive: true, force: true });
 logFinished("rolling up .d.ts", makingDeclarations.stop());
 
 logCompleted(Math.floor(performance.now() - offset));
