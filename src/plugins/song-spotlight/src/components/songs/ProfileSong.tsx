@@ -179,12 +179,6 @@ export default function ProfileSong({
                             />
                         </Stack>
                     </RN.View>
-                    {/* <IconButton
-                    variant="secondary"
-                    icon={serviceToIcon[song.service]}
-                    size="sm"
-                    style={{ marginLeft: "auto", marginBottom: "auto" }}
-                /> */}
                 </Stack>
             </Reanimated.default.View>
         </Reanimated.default.View>
