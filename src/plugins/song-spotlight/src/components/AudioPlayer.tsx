@@ -22,8 +22,6 @@ function doSeek(vid: VideoRef) {
     didDoLastSeekYesOrNo[url] = !didDoLastSeekYesOrNo[url];
 }
 
-console.log("BCgA");
-
 export default function AudioPlayer({
     song,
     children,
