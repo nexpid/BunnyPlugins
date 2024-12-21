@@ -33,6 +33,7 @@ export default function ProfileSongs({
     const styles = stylesheet.createThemedStyleSheet({
         card: {
             backgroundColor: semanticColors.CARD_PRIMARY_BG,
+            minHeight: 200,
         },
     });
 
@@ -68,11 +69,13 @@ export default function ProfileSongs({
                     key={index}
                 />
             )}
+            scrollEnabled={false}
+            estimatedItemSize={91}
         />
     );
 
     return variant === "you" ? (
-        <YouScreenProfileCard>
+        <YouScreenProfileCard style={{ minHeight: 200 }}>
             <TableRowGroupTitle title={lang.format("plugin.name", {})} />
             {songs}
         </YouScreenProfileCard>
@@ -83,7 +86,9 @@ export default function ProfileSongs({
             {songs}
         </SimplifiedUserProfileCard>
     ) : (
-        <UserProfileSection title={lang.format("plugin.name", {})}>
+        <UserProfileSection
+            title={lang.format("plugin.name", {})}
+            style={{ minHeight: 200 }}>
             {songs}
         </UserProfileSection>
     );

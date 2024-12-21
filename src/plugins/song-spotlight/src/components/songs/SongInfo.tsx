@@ -40,12 +40,11 @@ export default function SongInfo({
     const { data, setData } = React.useContext(ModifiedDataContext);
 
     React.useEffect(() => {
-        const res = getSongInfo(song);
-
         setSongInfo(null);
-        if (res instanceof Promise)
-            res.then(val => setSongInfo(val)).catch(() => setSongInfo(false));
-        else setSongInfo(res);
+
+        getSongInfo(song)
+            .then(val => setSongInfo(val))
+            .catch(() => setSongInfo(false));
     }, [song.service + song.type + song.id]);
 
     return (

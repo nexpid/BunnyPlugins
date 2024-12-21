@@ -10,15 +10,20 @@ export const WebView = find(x => x?.WebView && !x.default)
 
 export const Svg = findByProps("SvgXml") as typeof import("react-native-svg");
 
-// @ts-expect-error "isJoi" is an untyped property in Joi
-export const Joi = findByProps("isJoi") as typeof import("joi");
-
 export const Reanimated = findByProps(
     "useSharedValue",
 ) as typeof import("react-native-reanimated");
 
 export const FlashList = findByProps("FlashList")
     .FlashList as typeof import("@shopify/flash-list").FlashList;
+
+export const { default: Video } = findByProps(
+    "DRMType",
+    "FilterType",
+) as typeof import("react-native-video");
+
+// @ts-expect-error "isJoi" is an untyped property in Joi
+export const Joi = findByProps("isJoi") as typeof import("joi");
 
 export const zustand = (findByProps("create", "useStore") ?? {
     create: findByName("create"),

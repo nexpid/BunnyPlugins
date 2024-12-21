@@ -13,6 +13,15 @@ interface SongInfoBase {
     thumbnailUrl: string;
 }
 
+export interface SongInfoEntry {
+    id: string;
+    label: string;
+    sublabel: string;
+    explicit: boolean;
+    duration: number;
+    previewUrl?: string;
+}
+
 export type SongInfo = SongInfoBase &
     (
         | {
@@ -23,13 +32,7 @@ export type SongInfo = SongInfoBase &
           }
         | {
               type: "entries";
-              entries: {
-                  label: string;
-                  sublabel: string;
-                  explicit: boolean;
-                  duration: number;
-                  previewUrl?: string;
-              }[];
+              entries: SongInfoEntry[];
           }
     );
 
@@ -111,6 +114,7 @@ const services = {
                     ...base,
                     type: "entries",
                     entries: entity.trackList.map(track => ({
+                        id: track.uid,
                         label: track.title,
                         sublabel: track.subtitle,
                         explicit: !!track.isExplicit,
@@ -171,6 +175,7 @@ const services = {
                     entries: tracks
                         .filter(track => track.streamable)
                         .map(track => ({
+                            id: String(track.id),
                             label: track.title,
                             sublabel: track.user.username,
                             explicit: !!track.publisher_metadata?.explicit,
@@ -195,6 +200,7 @@ const services = {
                     entries: data.tracks
                         .filter(track => track.streamable)
                         .map(track => ({
+                            id: String(track.id),
                             label: track.title,
                             sublabel: track.user.username,
                             explicit: !!track.publisher_metadata?.explicit,
@@ -271,6 +277,7 @@ const services = {
                                 song.attributes.artistName === attributes.name,
                         )
                         .map(({ attributes: song }) => ({
+                            id: song.isrc,
                             label: song.name,
                             sublabel: song.artistName,
                             explicit: song.contentRating === "explicit",
@@ -285,14 +292,12 @@ const services = {
     },
 } satisfies Record<Song["service"], (song: any) => Promise<SongInfo | false>>;
 
-export function getSongInfo(
-    song: Song,
-): false | SongInfo | Promise<false | SongInfo> {
+export async function getSongInfo(song: Song): Promise<false | SongInfo> {
     const hash = song.service + song.type + song.id;
     if (infoCache.has(hash)) return infoCache.get(hash)!;
 
-    return services[song.service](song as any).then(res => {
-        infoCache.set(hash, res);
-        return res;
-    });
+    const res = await services[song.service](song as any);
+    if (res && res.type === "entries") res.entries = res.entries.slice(0, 10);
+    infoCache.set(hash, res);
+    return res;
 }

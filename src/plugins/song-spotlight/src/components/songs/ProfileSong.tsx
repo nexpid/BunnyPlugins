@@ -3,7 +3,7 @@ import { semanticColors } from "@vendetta/ui";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 
 import Text from "$/components/Text";
-import { Reanimated } from "$/deps";
+import { FlashList, Reanimated } from "$/deps";
 import { IconButton, PressableScale, Stack } from "$/lib/redesign";
 import { formatDuration } from "$/types";
 
@@ -14,6 +14,10 @@ import {
     SongInfo,
 } from "../../stuff/songs/info";
 import { Song } from "../../types";
+import AudioPlayer from "../AudioPlayer";
+import { EntrySong } from "./EntrySong";
+
+const minTracksInEntriesView = 3;
 
 export default function ProfileSong({
     song,
@@ -24,7 +28,7 @@ export default function ProfileSong({
     themed?: boolean;
     customBorder?: string;
 }) {
-    const isSingle = ["album", "playlist", "artist", "user"].includes(
+    const isEntries = ["album", "playlist", "artist", "user"].includes(
         song.type,
     );
 
@@ -33,15 +37,14 @@ export default function ProfileSong({
     );
     const songInfo =
         _songInfo ||
-        (isSingle ? skeletonSongInfo.single : skeletonSongInfo.entries);
+        (isEntries ? skeletonSongInfo.entries : skeletonSongInfo.single);
 
     React.useEffect(() => {
-        const res = getSongInfo(song);
-
         setSongInfo(null);
-        if (res instanceof Promise)
-            res.then(val => setSongInfo(val)).catch(() => setSongInfo(false));
-        else setSongInfo(res);
+
+        getSongInfo(song)
+            .then(val => setTimeout(() => setSongInfo(val), 1000))
+            .catch(() => setSongInfo(false));
     }, [song.service + song.type + song.id]);
 
     const styles = stylesheet.createThemedStyleSheet({
@@ -51,7 +54,6 @@ export default function ProfileSong({
             borderColor: semanticColors.BORDER_SUBTLE,
             borderWidth: 1,
             borderRadius: 10,
-            padding: 10,
         },
         themedCard: {
             backgroundColor: "#1113",
@@ -77,7 +79,16 @@ export default function ProfileSong({
             alignItems: "center",
             justifyContent: "center",
             borderRadius: 4,
-            backgroundColor: semanticColors.BG_MOD_SUBTLE,
+            backgroundColor: "#fff2",
+        },
+        entriesMain: {
+            borderTopColor: customBorder ?? semanticColors.BORDER_SUBTLE,
+            borderTopWidth: 1,
+            paddingHorizontal: 10,
+            height:
+                36 * minTracksInEntriesView +
+                4 * (minTracksInEntriesView - 1) +
+                10 * 2,
         },
     });
 
@@ -95,16 +106,15 @@ export default function ProfileSong({
     const borderColor = Reanimated.useSharedValue(cardThing().borderColor);
 
     React.useEffect(() => {
-        opacityValue.value = Reanimated.withTiming(_songInfo ? 1 : 0, {
+        const cfg = {
             duration: 150,
-        });
+        };
         backgroundColor.value = Reanimated.withTiming(
             cardThing().backgroundColor,
-            { duration: 150 },
+            cfg,
         );
-        borderColor.value = Reanimated.withTiming(cardThing().borderColor, {
-            duration: 150,
-        });
+        borderColor.value = Reanimated.withTiming(cardThing().borderColor, cfg);
+        opacityValue.value = Reanimated.withTiming(_songInfo ? 1 : 0, cfg);
     }, [!!_songInfo]);
 
     return (
@@ -118,68 +128,157 @@ export default function ProfileSong({
                 style={[
                     { opacity: _songInfo ? 1 : 0 },
                     { opacity: opacityValue },
-                ]}>
-                <Stack direction="horizontal" spacing={12}>
-                    <PressableScale onPress={() => openLink(song)}>
-                        <RN.Image
-                            source={{
-                                uri: songInfo.thumbnailUrl,
-                                width: 64,
-                                height: 64,
-                                cache: "force-cache",
-                            }}
-                            style={styles.thumbnail}
-                        />
-                    </PressableScale>
-                    <Stack spacing={-1}>
-                        <Stack direction="horizontal" spacing={8}>
-                            <Text variant="text-md/bold" color="TEXT_NORMAL">
-                                {songInfo.label}
-                            </Text>
-                            {songInfo.type === "single" &&
-                                songInfo.explicit && (
-                                    <RN.View style={styles.explicit}>
+                ]}
+                key={"body"}>
+                <AudioPlayer song={songInfo}>
+                    {({ player, loaded, resolved }) => (
+                        <>
+                            <Stack
+                                direction="horizontal"
+                                spacing={12}
+                                style={{ padding: 10 }}>
+                                <PressableScale onPress={() => openLink(song)}>
+                                    <RN.Image
+                                        source={{
+                                            uri: songInfo.thumbnailUrl,
+                                            width: 64,
+                                            height: 64,
+                                            cache: "force-cache",
+                                        }}
+                                        style={styles.thumbnail}
+                                    />
+                                </PressableScale>
+                                <Stack spacing={-1}>
+                                    <Stack direction="horizontal" spacing={8}>
                                         <Text
-                                            variant="text-sm/bold"
+                                            variant="text-md/bold"
                                             color="TEXT_NORMAL">
-                                            E
+                                            {songInfo.label}
                                         </Text>
-                                    </RN.View>
-                                )}
-                        </Stack>
-                        <Text
-                            variant="text-md/normal"
-                            color="TEXT_MUTED"
-                            lineClamp={1}
-                            style={{ width: "65%" }}>
-                            {songInfo.sublabel}
-                        </Text>
-                    </Stack>
-                    <RN.View style={{ marginLeft: "auto", marginTop: "auto" }}>
-                        <Stack
-                            direction="horizontal"
-                            spacing={8}
-                            style={{
-                                alignSelf: "flex-end",
-                                alignItems: "flex-end",
-                            }}>
-                            {songInfo.type === "single" && (
-                                <Text
-                                    variant="text-md/medium"
-                                    color="TEXT_MUTED">
-                                    {formatDuration(
-                                        Math.ceil(songInfo.duration / 1000),
-                                    )}
-                                </Text>
+                                        {songInfo.type === "single" &&
+                                            songInfo.explicit && (
+                                                <RN.View
+                                                    style={styles.explicit}>
+                                                    <Text
+                                                        variant="text-sm/bold"
+                                                        color="TEXT_NORMAL">
+                                                        E
+                                                    </Text>
+                                                </RN.View>
+                                            )}
+                                    </Stack>
+                                    <Text
+                                        variant="text-md/normal"
+                                        color="TEXT_MUTED"
+                                        lineClamp={1}
+                                        style={{ width: "65%" }}>
+                                        {songInfo.sublabel}
+                                    </Text>
+                                </Stack>
+                                <RN.View
+                                    style={{
+                                        marginLeft: "auto",
+                                        marginTop: "auto",
+                                    }}>
+                                    <Stack
+                                        direction="horizontal"
+                                        spacing={8}
+                                        style={{
+                                            alignSelf: "flex-end",
+                                            alignItems: "flex-end",
+                                        }}>
+                                        {songInfo.type === "single" && (
+                                            <Text
+                                                variant="text-md/medium"
+                                                color="TEXT_MUTED">
+                                                {formatDuration(
+                                                    Math.ceil(
+                                                        songInfo.duration /
+                                                            1000,
+                                                    ),
+                                                )}
+                                            </Text>
+                                        )}
+                                        {songInfo.type === "single" && (
+                                            <IconButton
+                                                variant="secondary"
+                                                icon={
+                                                    player.current ===
+                                                    songInfo.previewUrl
+                                                        ? getAssetIDByName(
+                                                              "PauseIcon",
+                                                          )
+                                                        : getAssetIDByName(
+                                                              "PlayIcon",
+                                                          )
+                                                }
+                                                size="sm"
+                                                loading={
+                                                    songInfo.previewUrl
+                                                        ? !resolved.includes(
+                                                              songInfo.previewUrl,
+                                                          )
+                                                        : false
+                                                }
+                                                disabled={
+                                                    !songInfo.previewUrl ||
+                                                    !loaded.includes(
+                                                        songInfo.previewUrl,
+                                                    )
+                                                }
+                                                onPress={() =>
+                                                    player.current ===
+                                                    songInfo.previewUrl
+                                                        ? player.pause()
+                                                        : player.play(
+                                                              songInfo.previewUrl,
+                                                          )
+                                                }
+                                            />
+                                        )}
+                                    </Stack>
+                                </RN.View>
+                            </Stack>
+                            {songInfo.type === "entries" && (
+                                <RN.View style={styles.entriesMain}>
+                                    <FlashList
+                                        data={songInfo.entries}
+                                        keyExtractor={item => item.id}
+                                        nestedScrollEnabled
+                                        scrollEnabled
+                                        estimatedItemSize={36}
+                                        ItemSeparatorComponent={() => (
+                                            <RN.View style={{ height: 4 }} />
+                                        )}
+                                        ListHeaderComponent={() => (
+                                            <RN.View style={{ height: 5 }} />
+                                        )}
+                                        ListFooterComponent={() => (
+                                            <RN.View style={{ height: 5 }} />
+                                        )}
+                                        extraData={[
+                                            player.current,
+                                            loaded.length,
+                                        ]}
+                                        renderItem={({ item, index }) => (
+                                            <EntrySong
+                                                item={item}
+                                                index={index}
+                                                player={player}
+                                                isLoaded={
+                                                    item.previewUrl
+                                                        ? loaded.includes(
+                                                              item.previewUrl,
+                                                          )
+                                                        : false
+                                                }
+                                            />
+                                        )}></FlashList>
+                                </RN.View>
                             )}
-                            <IconButton
-                                variant="secondary"
-                                icon={getAssetIDByName("PlayIcon")}
-                                size="sm"
-                            />
-                        </Stack>
-                    </RN.View>
-                </Stack>
+                        </>
+                    )}
+                </AudioPlayer>
             </Reanimated.default.View>
         </Reanimated.default.View>
     );
