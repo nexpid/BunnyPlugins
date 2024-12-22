@@ -34,6 +34,82 @@ export const DocumentPicker = findByProps(
     "isCancel",
 ) as typeof import("react-native-document-picker");
 
+const _MAS = findByProps("MobileAudioSound").MobileAudioSound;
+
+// Messy code
+export class MobileAudioSound {
+    // Events
+    public onPlay?: () => void;
+    public onStop?: () => void;
+    public onEnd?: () => void;
+    public onLoad?: (loaded: boolean) => void;
+
+    private mas: any;
+
+    public duration?: number;
+    public isLoaded?: boolean;
+    public isPlaying?: boolean;
+
+    /** Preloads the audio, which automatically makes us better than Discord because they DON'T do that for some reason */
+    private async _preloadSound(skip?: boolean) {
+        const { _duration } = await this.mas._ensureSound();
+        this.duration = _duration;
+        this.isLoaded = !!_duration;
+
+        if (!skip) this.onLoad?.(!!_duration);
+        return !!_duration;
+    }
+
+    constructor(
+        public url: string,
+        public usage: "notification" | "voice" | "ring_tone" | "media",
+        public volume: number,
+    ) {
+        this.mas = new _MAS(
+            url,
+            {
+                media: "vibing_wumpus",
+                notification: "activity_launch",
+                ring_tone: "call_ringing",
+                voice: "mute",
+            }[usage],
+            volume,
+        );
+        this._preloadSound();
+    }
+
+    private _playTimeout?: number;
+
+    /** Plays the audio */
+    async play() {
+        if (!this.isLoaded && this.isLoaded !== false)
+            await this._preloadSound();
+        if (!this.isLoaded) return;
+
+        await this.mas.play();
+        this.isPlaying = true;
+        this.onPlay?.();
+
+        clearTimeout(this._playTimeout);
+        this._playTimeout = setTimeout(
+            () => (this.onEnd?.(), this.stop()),
+            this.duration,
+        ) as any;
+    }
+
+    /** Stops the audio */
+    async stop() {
+        if (!this.isLoaded) return;
+
+        this.mas.stop();
+        this.isPlaying = false;
+        this.onStop?.();
+
+        clearTimeout(this._playTimeout);
+        await this._preloadSound(true);
+    }
+}
+
 //
 // raw native modules
 //
