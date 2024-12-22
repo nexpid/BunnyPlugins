@@ -1,14 +1,15 @@
-import { React, ReactNative as RN, stylesheet } from "@vendetta/metro/common";
+import { findByProps } from "@vendetta/metro";
+import { React, ReactNative as RN } from "@vendetta/metro/common";
 import { semanticColors } from "@vendetta/ui";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 
 import Text from "$/components/Text";
 import { FlashList, Reanimated } from "$/deps";
 import { IconButton, PressableScale, Stack } from "$/lib/redesign";
-import { formatDuration } from "$/types";
+import { createThemeContextStyleSheet, formatDuration } from "$/types";
 
 import FastForwardIcon from "../../../assets/images/player/FastForwardIcon.png";
-import { openLink } from "../../stuff/songs";
+import { openLink, serviceToIcon } from "../../stuff/songs";
 import {
     getSongInfo,
     skeletonSongInfo,
@@ -19,6 +20,7 @@ import AudioPlayer from "../AudioPlayer";
 import { EntrySong } from "./EntrySong";
 
 const minTracksInEntriesView = 3;
+const { useThemeContext } = findByProps("useThemeContext");
 
 export default function ProfileSong({
     song,
@@ -37,6 +39,7 @@ export default function ProfileSong({
     const isEntries = ["album", "playlist", "artist", "user"].includes(
         song.type,
     );
+    const themeContext = useThemeContext();
 
     const [_songInfo, setSongInfo] = React.useState<null | false | SongInfo>(
         null,
@@ -53,17 +56,19 @@ export default function ProfileSong({
             .catch(() => setSongInfo(false));
     }, [song.service + song.type + song.id]);
 
-    const styles = stylesheet.createThemedStyleSheet({
+    const styles = createThemeContextStyleSheet({
         card: {
             width: "100%",
             backgroundColor: semanticColors.CARD_PRIMARY_BG,
-            borderColor: semanticColors.BORDER_SUBTLE,
+            borderColor: customBorder ?? semanticColors.BORDER_SUBTLE,
             borderWidth: 1,
             borderRadius: 10,
         },
         themedCard: {
-            backgroundColor: "#1113",
-            borderColor: customBorder ?? semanticColors.BORDER_SUBTLE,
+            backgroundColor:
+                themeContext.theme === "light"
+                    ? semanticColors.BG_MOD_SUBTLE
+                    : "#ffffff08",
         },
         noCard: {
             backgroundColor: semanticColors.CARD_SECONDARY_BG,
@@ -71,8 +76,14 @@ export default function ProfileSong({
             borderColor: semanticColors.CARD_SECONDARY_BG,
         },
         themedNoCard: {
-            backgroundColor: "#0003",
-            borderColor: "#0003",
+            backgroundColor:
+                themeContext.theme === "light"
+                    ? semanticColors.BG_MOD_FAINT
+                    : "#ffffff07",
+            borderColor:
+                themeContext.theme === "light"
+                    ? semanticColors.BG_MOD_FAINT
+                    : "#ffffff07",
         },
         thumbnail: {
             width: 64,
@@ -85,7 +96,7 @@ export default function ProfileSong({
             alignItems: "center",
             justifyContent: "center",
             borderRadius: 4,
-            backgroundColor: "#fff2",
+            backgroundColor: semanticColors.BG_MOD_SUBTLE,
         },
         entriesMain: {
             borderTopColor: customBorder ?? semanticColors.BORDER_SUBTLE,
@@ -95,6 +106,23 @@ export default function ProfileSong({
                 36 * minTracksInEntriesView +
                 4 * (minTracksInEntriesView - 1) +
                 10 * 2,
+        },
+        service: {
+            position: "absolute",
+            top: 0,
+            right: 0,
+            width: 24,
+            height: 24,
+            borderBottomLeftRadius: 9,
+            borderTopRightRadius: 10,
+            backgroundColor: customBorder ?? semanticColors.BORDER_SUBTLE,
+            justifyContent: "center",
+            alignItems: "center",
+        },
+        serviceIcon: {
+            tintColor: semanticColors.INTERACTIVE_NORMAL,
+            width: 18,
+            height: 18,
         },
     });
 
@@ -136,6 +164,12 @@ export default function ProfileSong({
                     { opacity: opacityValue },
                 ]}
                 key={"body"}>
+                <RN.View style={styles.service}>
+                    <RN.Image
+                        source={serviceToIcon[song.service]}
+                        style={styles.serviceIcon}
+                    />
+                </RN.View>
                 <AudioPlayer song={songInfo} playing={playing}>
                     {({ player, loaded, resolved }) => (
                         <>
@@ -154,11 +188,12 @@ export default function ProfileSong({
                                         style={styles.thumbnail}
                                     />
                                 </PressableScale>
-                                <Stack spacing={-1}>
+                                <Stack spacing={-1} style={{ width: "75%" }}>
                                     <Stack direction="horizontal" spacing={8}>
                                         <Text
                                             variant="text-md/bold"
-                                            color="TEXT_NORMAL">
+                                            color="TEXT_NORMAL"
+                                            lineClamp={1}>
                                             {songInfo.label}
                                         </Text>
                                         {songInfo.type === "single" &&
@@ -177,7 +212,12 @@ export default function ProfileSong({
                                         variant="text-md/normal"
                                         color="TEXT_MUTED"
                                         lineClamp={1}
-                                        style={{ width: "65%" }}>
+                                        style={{
+                                            width:
+                                                songInfo.type === "single"
+                                                    ? "85%"
+                                                    : "70%",
+                                        }}>
                                         {songInfo.sublabel}
                                     </Text>
                                 </Stack>
