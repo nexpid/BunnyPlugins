@@ -297,7 +297,7 @@ export async function getSongInfo(song: Song): Promise<false | SongInfo> {
     if (infoCache.has(hash)) return infoCache.get(hash)!;
 
     const res = await services[song.service](song as any);
-    if (res && res.type === "entries") res.entries = res.entries.slice(0, 10);
+    if (res && res.type === "entries") res.entries = res.entries.slice(0, 15);
     infoCache.set(hash, res);
     return res;
 }
