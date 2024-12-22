@@ -119,7 +119,7 @@ const services = {
                         sublabel: track.subtitle,
                         explicit: !!track.isExplicit,
                         duration: track.duration ?? 0,
-                        previewUrl: track.audioPreview.url,
+                        previewUrl: track.audioPreview?.url,
                     })),
                 };
         } catch (e) {
