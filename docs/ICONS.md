@@ -31,15 +31,21 @@ Icons used by plugins are stored in the `<iconpack root>/_/external/` folder. He
 - <img src="../src/plugins/nexxutils/assets/ColorfulChannels/lockBottom.png" alt="ColorfulChannels lockBottom" width=20 height=20 /> — `ColorfulChannels/lockBottom.png`
 - <img src="../src/plugins/nexxutils/assets/ColorfulChannels/warning.png" alt="ColorfulChannels warning" width=20 height=20 /> — `ColorfulChannels/warning.png`
 - <img src="../src/plugins/nexxutils/assets/ColorfulChannels/warningBottom.png" alt="ColorfulChannels warningBottom" width=20 height=20 /> — `ColorfulChannels/warningBottom.png`
+- 📂 `ColorfulChannels/announcement`
   - <img src="../src/plugins/nexxutils/assets/ColorfulChannels/announcement/lock.png" alt="ColorfulChannels lock" width=20 height=20 /> — `ColorfulChannels/announcement/lock.png`
   - <img src="../src/plugins/nexxutils/assets/ColorfulChannels/announcement/warning.png" alt="ColorfulChannels warning" width=20 height=20 /> — `ColorfulChannels/announcement/warning.png`
+- 📂 `ColorfulChannels/forum`
   - <img src="../src/plugins/nexxutils/assets/ColorfulChannels/forum/lock.png" alt="ColorfulChannels lock" width=20 height=20 /> — `ColorfulChannels/forum/lock.png`
   - <img src="../src/plugins/nexxutils/assets/ColorfulChannels/forum/warning.png" alt="ColorfulChannels warning" width=20 height=20 /> — `ColorfulChannels/forum/warning.png`
+- 📂 `ColorfulChannels/image`
   - <img src="../src/plugins/nexxutils/assets/ColorfulChannels/image/lock.png" alt="ColorfulChannels lock" width=20 height=20 /> — `ColorfulChannels/image/lock.png`
   - <img src="../src/plugins/nexxutils/assets/ColorfulChannels/image/warning.png" alt="ColorfulChannels warning" width=20 height=20 /> — `ColorfulChannels/image/warning.png`
+- 📂 `ColorfulChannels/stage`
   - <img src="../src/plugins/nexxutils/assets/ColorfulChannels/stage/lock.png" alt="ColorfulChannels lock" width=20 height=20 /> — `ColorfulChannels/stage/lock.png`
+- 📂 `ColorfulChannels/text`
   - <img src="../src/plugins/nexxutils/assets/ColorfulChannels/text/lock.png" alt="ColorfulChannels lock" width=20 height=20 /> — `ColorfulChannels/text/lock.png`
   - <img src="../src/plugins/nexxutils/assets/ColorfulChannels/text/warning.png" alt="ColorfulChannels warning" width=20 height=20 /> — `ColorfulChannels/text/warning.png`
+- 📂 `ColorfulChannels/voice`
   - <img src="../src/plugins/nexxutils/assets/ColorfulChannels/voice/lock.png" alt="ColorfulChannels lock" width=20 height=20 /> — `ColorfulChannels/voice/lock.png`
   - <img src="../src/plugins/nexxutils/assets/ColorfulChannels/voice/warning.png" alt="ColorfulChannels warning" width=20 height=20 /> — `ColorfulChannels/voice/warning.png`
 
@@ -60,7 +66,9 @@ Icons used by plugins are stored in the `<iconpack root>/_/external/` folder. He
 
 ### SongSpotlight
 
+- 📂 `SongSpotlight/player`
   - <img src="../src/plugins/song-spotlight/assets/images/player/FastForwardIcon.png" alt="SongSpotlight FastForwardIcon" width=20 height=20 /> — `SongSpotlight/player/FastForwardIcon.png`
+- 📂 `SongSpotlight/services`
   - <img src="../src/plugins/song-spotlight/assets/images/services/AppleMusicIcon.png" alt="SongSpotlight AppleMusicIcon" width=20 height=20 /> — `SongSpotlight/services/AppleMusicIcon.png`
   - <img src="../src/plugins/song-spotlight/assets/images/services/SoundcloudIcon.png" alt="SongSpotlight SoundcloudIcon" width=20 height=20 /> — `SongSpotlight/services/SoundcloudIcon.png`
 
