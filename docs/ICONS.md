@@ -1,16 +1,22 @@
 # Themeable custom icons
 
+> [!NOTE]
+> If you're a plugin developer looking to make your custom icons themable, go to [Making your custom icons themable](./ICONS_DEV_HOW2.md)
+
 ## Prerequisites
 
-- Themes+ iconpack repo
+- a Themes+ iconpack
 
 ## Intro
 
-Go into Themes+'s settings > Configure > Mode = Manual > Custom iconpack. Then, fill in the **URL** and **Filename Suffix** of your iconpack.
+Some of my plugins use custom icons when Discord's built-in icons just aren't enough. They can be themed using a special folder in your iconpack.
+
+To start, go into Themes+'s settings > Configure > **Manual** mode > Custom iconpack.  
+Then, fill in the **URL** and **Filename Suffix** of your iconpack.
 
 ## Common icons
 
-Common icons are stored in the `<iconpack root>/_/` folder.
+Common icons (consisting of mod icons) are stored in the `<iconpack root>/_/` folder.
 
 <!-- mod icons hook start -->
 
