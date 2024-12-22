@@ -11,26 +11,15 @@ const UserStore = findByStoreName("UserStore");
 interface CacheState {
     data: UserData | undefined;
     at: string | undefined;
-    revalidateAt: number | undefined;
     dir: Record<
         string,
         {
             data: UserData | undefined;
             at: string | undefined;
-            revalidateAt: number;
-            listed?: boolean;
         }
     >;
     init: () => void;
-    updateData: (data?: UserData, at?: string, revalidateAt?: number) => void;
-    updateDir: (
-        user: string,
-        data: {
-            data: UserData | undefined;
-            at: string | undefined;
-            revalidateAt: number;
-        },
-    ) => void;
+    updateData: (userId: null | string, data?: UserData, at?: string) => void;
     hasData: () => boolean;
 }
 
@@ -42,48 +31,35 @@ export const useCacheStore = zustand.create<
         (set, get) => ({
             data: undefined,
             at: undefined,
-            revalidateAt: undefined,
             dir: {},
             init() {
-                const { data, at, revalidateAt } =
+                const { data, at } =
                     get().dir[UserStore.getCurrentUser()?.id] ?? {};
-                set({ data, at, revalidateAt });
+                set({ data, at });
             },
-            updateData(data, at, revalidateAt) {
-                set({
-                    data,
-                    at,
-                    revalidateAt,
-                    dir: {
-                        ...get().dir,
-                        [UserStore.getCurrentUser()?.id]: {
-                            data,
-                            at,
-                            revalidateAt,
+            updateData(userId, data, at) {
+                const you = UserStore.getCurrentUser()?.id;
+                if (!userId || userId === you)
+                    set({
+                        data,
+                        at,
+                        dir: {
+                            ...get().dir,
+                            [userId ?? you]: {
+                                data,
+                                at,
+                            },
                         },
-                    },
-                });
-            },
-            updateDir(user, data) {
-                set({
-                    dir: {
-                        ...get().dir,
-                        [user]: { ...data, listed: true },
-                    },
-                });
+                    });
+                else set({ dir: { ...get().dir, [userId]: { data, at } } });
             },
             hasData: () => !!get().data && !!get().at,
         }),
         {
+            version: 2,
             name: "songspotlight-cache",
             storage: createJSONStorage(() => RNCacheModule),
-            partialize: state => ({
-                dir: Object.fromEntries(
-                    Object.entries(state.dir).filter(([_, data]) =>
-                        data.listed ? data.revalidateAt > Date.now() : true,
-                    ),
-                ),
-            }),
+            partialize: ({ dir }) => ({ dir }),
             onRehydrateStorage: () => state => state?.init(),
         },
     ),

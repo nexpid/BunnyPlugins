@@ -3,7 +3,7 @@ import { findByStoreName } from "@vendetta/metro";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { showToast } from "@vendetta/ui/toasts";
 
-import { lang, vstorage } from "..";
+import { lang } from "..";
 import constants from "../constants";
 import { useAuthorizationStore } from "../stores/AuthorizationStore";
 import { useCacheStore } from "../stores/CacheStore";
@@ -47,11 +47,7 @@ export async function authFetch(_url: string | URL, options?: RequestInit) {
 
 export const redirectRoute = "api/auth/authorize";
 
-export async function getData(): Promise<UserData> {
-    if (Date.now() - vstorage.lastCheck <= 90_000)
-        return useCacheStore.getState().data!;
-    vstorage.lastCheck = Date.now();
-
+export async function getData(): Promise<UserData | undefined> {
     return await authFetch(`${constants.api}api/data`, {
         headers: {
             "if-modified-since": useCacheStore.getState().at,
@@ -63,34 +59,32 @@ export async function getData(): Promise<UserData> {
         useCacheStore
             .getState()
             .updateData(
+                null,
                 dt,
                 res.headers.get("last-modified") ?? undefined,
-                Date.now() + 3600_000,
             );
         return dt;
     });
 }
-export async function listData(user: string): Promise<UserData | undefined> {
-    const data = useCacheStore.getState().dir[user];
-    if (data?.revalidateAt && data.revalidateAt > Date.now()) return data.data;
+export async function listData(userId: string): Promise<UserData | undefined> {
+    if (userId === UserStore.getCurrentUser()?.id) return await getData();
 
-    if (user === UserStore.getCurrentUser()?.id)
-        vstorage.lastCheck = Date.now();
-
-    return await authFetch(`${constants.api}api/data/${user}`, {
+    return await authFetch(`${constants.api}api/data/${userId}`, {
         headers: {
-            "if-modified-since": data?.at,
+            "if-modified-since": useCacheStore.getState().dir[userId]?.at,
         } as any,
     }).then(async res => {
-        if (!res) return undefined;
+        if (!res) return useCacheStore.getState().dir[userId]?.data;
 
-        const data = (await res.json()) || undefined;
-        useCacheStore.getState().updateDir(user, {
-            data,
-            at: res.headers.get("last-modified") || undefined,
-            revalidateAt: Date.now() + 3600_000,
-        });
-        return data;
+        const dt = await res.json();
+        useCacheStore
+            .getState()
+            .updateData(
+                userId,
+                dt || undefined,
+                res.headers.get("last-modified") ?? undefined,
+            );
+        return dt;
     });
 }
 export async function saveData(data: UserData): Promise<true> {
@@ -103,7 +97,9 @@ export async function saveData(data: UserData): Promise<true> {
     })
         .then(res => res!.json())
         .then(json => {
-            useCacheStore.getState().updateData(data, new Date().toUTCString());
+            useCacheStore
+                .getState()
+                .updateData(null, data, new Date().toUTCString());
             return json;
         });
 }
@@ -113,7 +109,7 @@ export async function deleteData(): Promise<true> {
     })
         .then(res => res!.json())
         .then(json => {
-            useCacheStore.getState().updateData();
+            useCacheStore.getState().updateData(null);
             return json;
         });
 }

@@ -10,7 +10,6 @@ export const vstorage = storage as {
         host: string;
         clientId: string;
     };
-    lastCheck: number;
 };
 
 export const initState = {
@@ -25,7 +24,6 @@ export default {
             host: "",
             clientId: "",
         };
-        vstorage.lastCheck ??= 0;
 
         patches.push(patcher());
     },

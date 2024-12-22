@@ -186,7 +186,7 @@ export default function () {
                                         onConfirm: () => {
                                             useCacheStore
                                                 .getState()
-                                                .updateData();
+                                                .updateData(null);
                                             useAuthorizationStore
                                                 .getState()
                                                 .setToken(undefined);

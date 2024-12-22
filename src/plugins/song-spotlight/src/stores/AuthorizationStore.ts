@@ -9,7 +9,7 @@ const UserStore = findByStoreName("UserStore");
 
 interface AuthorizationState {
     token: string | undefined;
-    tokens: Record<string, string>;
+    tokens: Record<string, string | undefined>;
     init: () => void;
     setToken: (token?: string) => void;
     isAuthorized: () => boolean;
@@ -25,7 +25,7 @@ export const useAuthorizationStore = zustand.create<
             tokens: {},
             init() {
                 set({
-                    token: get().tokens[UserStore.getCurrentUser()?.id] ?? null,
+                    token: get().tokens[UserStore.getCurrentUser()?.id],
                 });
             },
             setToken(token) {
@@ -42,7 +42,7 @@ export const useAuthorizationStore = zustand.create<
         {
             name: "songspotlight-auth",
             storage: createJSONStorage(() => RNCacheModule),
-            partialize: state => ({ tokens: state.tokens }),
+            partialize: ({ tokens }) => ({ tokens }),
             onRehydrateStorage: () => state => state?.init(),
         },
     ),
