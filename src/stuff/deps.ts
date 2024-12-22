@@ -64,6 +64,12 @@ export class MobileAudioSound {
         public url: string,
         public usage: "notification" | "voice" | "ring_tone" | "media",
         public volume: number,
+        events?: {
+            onPlay?: () => void;
+            onStop?: () => void;
+            onEnd?: () => void;
+            onLoad?: (loaded: boolean) => void;
+        },
     ) {
         this.mas = new _MAS(
             url,
@@ -75,7 +81,9 @@ export class MobileAudioSound {
             }[usage],
             volume,
         );
+
         this._preloadSound();
+        for (const [key, val] of Object.entries(events ?? {})) this[key] = val;
     }
 
     private _playTimeout?: number;
