@@ -140,15 +140,11 @@ export default function ProfileSong({
     const borderColor = Reanimated.useSharedValue(cardThing().borderColor);
 
     React.useEffect(() => {
-        const cfg = {
-            duration: 150,
-        };
-        backgroundColor.value = Reanimated.withTiming(
+        backgroundColor.value = Reanimated.withSpring(
             cardThing().backgroundColor,
-            cfg,
         );
-        borderColor.value = Reanimated.withTiming(cardThing().borderColor, cfg);
-        opacityValue.value = Reanimated.withTiming(_songInfo ? 1 : 0, cfg);
+        borderColor.value = Reanimated.withSpring(cardThing().borderColor);
+        opacityValue.value = Reanimated.withSpring(_songInfo ? 1 : 0);
     }, [!!_songInfo]);
 
     return (
