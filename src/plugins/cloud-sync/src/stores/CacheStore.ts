@@ -27,8 +27,9 @@ export const useCacheStore = zustand.create<
             at: undefined,
             dir: {},
             init() {
-                const dt = get().dir[UserStore.getCurrentUser()?.id];
-                set({ data: dt?.data, at: dt?.at });
+                const { data, at } =
+                    get().dir[UserStore.getCurrentUser()?.id] ?? {};
+                set({ data, at });
             },
             updateData(data, at) {
                 set({
@@ -45,7 +46,7 @@ export const useCacheStore = zustand.create<
         {
             name: "cloudsync-cache",
             storage: createJSONStorage(() => RNCacheModule),
-            partialize: state => ({ dir: state.dir }),
+            partialize: ({ dir }) => ({ dir }),
             onRehydrateStorage: () => state => state?.init(),
         },
     ),
