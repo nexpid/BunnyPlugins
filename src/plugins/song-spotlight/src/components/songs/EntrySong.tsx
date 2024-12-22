@@ -9,14 +9,14 @@ import { SongInfoEntry } from "../../stuff/songs/info";
 import { AudioPlayer } from "../AudioPlayer";
 
 export function EntrySong({
+    player,
     item,
     index,
-    player,
     isLoaded,
 }: {
+    player: AudioPlayer;
     item: SongInfoEntry;
     index: number;
-    player: AudioPlayer;
     isLoaded: boolean;
 }) {
     const styles = stylesheet.createThemedStyleSheet({
@@ -41,7 +41,8 @@ export function EntrySong({
                     ? player.pause()
                     : player.play(item.previewUrl))
             }
-            style={isLoaded ? { backgroundColor: "#3f35" } : {}}>
+            style={!isLoaded ? { opacity: 0.5 } : {}}
+            disabled={!isLoaded}>
             <Stack
                 direction="horizontal"
                 spacing={8}

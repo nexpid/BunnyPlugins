@@ -55,22 +55,29 @@ export default function ProfileSongs({
             });
     }, [userId]);
 
+    const [currentlyPlaying, setCurrentlyPlaying] = React.useState<
+        string | null
+    >(null);
+    React.useEffect(() => () => setCurrentlyPlaying(null), []);
+
     if (!data?.length) return null;
 
     const songs = (
         <FlashList
             ItemSeparatorComponent={() => <RN.View style={{ height: 8 }} />}
             data={data}
-            renderItem={({ item, index }) => (
+            extraData={[currentlyPlaying]}
+            renderItem={({ item }) => (
                 <ProfileSong
                     song={item}
                     themed={!!style || !!themeContext.primaryColor}
                     customBorder={customBorder}
-                    key={index}
+                    playing={{ currentlyPlaying, setCurrentlyPlaying }}
                 />
             )}
+            keyExtractor={item => item.service + item.type + item.id}
             scrollEnabled={false}
-            estimatedItemSize={91}
+            estimatedItemSize={167} // average of 92 (single) and 241.6 (entries)
         />
     );
 

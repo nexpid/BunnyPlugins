@@ -10,7 +10,7 @@ import { Forms } from "@vendetta/ui/components";
 import { showToast } from "@vendetta/ui/toasts";
 
 import Text from "$/components/Text";
-import { ContextMenu, Stack } from "$/lib/redesign";
+import { ContextMenu, PressableScale, Stack } from "$/lib/redesign";
 
 import { lang } from "../..";
 import { getServiceLink, openLink, serviceToIcon } from "../../stuff/songs";
@@ -92,38 +92,41 @@ export default function SongInfo({
                 },
             ]}>
             {(props: any) => (
-                <FormRow
-                    label={
-                        songInfo === null ? (
-                            <RN.ActivityIndicator size="small" />
-                        ) : songInfo === false ? (
-                            "<err!>"
-                        ) : (
-                            songInfo.label
-                        )
-                    }
-                    subLabel={songInfo ? songInfo.sublabel : undefined}
-                    leading={
-                        <FormRow.Icon source={serviceToIcon[song.service]} />
-                    }
-                    trailing={
-                        <Stack
-                            direction="horizontal"
-                            spacing={6}
-                            style={{ alignItems: "center" }}>
-                            <Text variant="eyebrow" color="TEXT_MUTED">
-                                {song.type}
-                            </Text>
-                            <FormRow.Arrow />
-                        </Stack>
-                    }
-                    style={styles.song}
-                    disabled={disabled}
-                    {...{
-                        ...props,
-                        onPress: () => openLink(song),
-                    }}
-                />
+                <PressableScale
+                    {...props}
+                    onPress={() => openLink(song)}
+                    disabled={disabled}>
+                    <FormRow
+                        label={
+                            songInfo === null ? (
+                                <RN.ActivityIndicator size="small" />
+                            ) : songInfo === false ? (
+                                "<err!>"
+                            ) : (
+                                songInfo.label
+                            )
+                        }
+                        subLabel={songInfo ? songInfo.sublabel : undefined}
+                        leading={
+                            <FormRow.Icon
+                                source={serviceToIcon[song.service]}
+                            />
+                        }
+                        trailing={
+                            <Stack
+                                direction="horizontal"
+                                spacing={6}
+                                style={{ alignItems: "center" }}>
+                                <Text variant="eyebrow" color="TEXT_MUTED">
+                                    {song.type}
+                                </Text>
+                                <FormRow.Arrow />
+                            </Stack>
+                        }
+                        style={styles.song}
+                        disabled={disabled}
+                    />
+                </PressableScale>
             )}
         </ContextMenu>
     );

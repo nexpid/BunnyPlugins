@@ -103,6 +103,7 @@ export default function () {
         null,
         isDataModified,
         isFetching,
+        data,
     );
 
     return (

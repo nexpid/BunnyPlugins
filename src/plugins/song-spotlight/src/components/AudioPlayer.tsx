@@ -1,32 +1,25 @@
 import { React } from "@vendetta/metro/common";
-import { type VideoRef } from "react-native-video";
 
-import { Video } from "$/deps";
+import { MobileAudioSound } from "$/deps";
 
 import { SongInfo } from "../stuff/songs/info";
 
 export interface AudioPlayer {
-    play(url?: string): void;
+    play(urlOrNext?: string | true): void;
     pause(): void;
     current: string | null;
 }
 
-type Listener = (topic: "STOP_ALL") => void;
-const listeners = new Set<Listener>();
-
-// i :heart: hacky stuff
-const didDoLastSeekYesOrNo: Record<string, boolean> = {};
-function doSeek(vid: VideoRef) {
-    const url = (vid as any).props.source.uri;
-    vid.seek(didDoLastSeekYesOrNo[url] ? 0.01 : 0, 1);
-    didDoLastSeekYesOrNo[url] = !didDoLastSeekYesOrNo[url];
-}
-
 export default function AudioPlayer({
     song,
+    playing,
     children,
 }: {
     song: SongInfo;
+    playing: {
+        currentlyPlaying: string | null;
+        setCurrentlyPlaying: (value: string | null) => void;
+    };
     children: ({
         player,
         loaded,
@@ -36,46 +29,38 @@ export default function AudioPlayer({
         resolved: string[];
     }) => React.ReactNode;
 }) {
-    const videos = React.useRef<Record<string, VideoRef>>({});
+    const { currentlyPlaying, setCurrentlyPlaying } = playing;
+
+    const sounds = React.useRef<Record<string, MobileAudioSound>>({});
     const [resolved, setResolved] = React.useState<Record<string, boolean>>({});
-    const [audioPlayerCurrent, setAudioPlayerCurrent] = React.useState<
-        string | null
-    >(null);
 
     const audioPlayer = React.useRef<Omit<AudioPlayer, "current">>({
         play() {},
         pause() {},
     });
     audioPlayer.current = {
-        play(url) {
-            let vid: VideoRef;
-            if (url && resolved[url]) vid = videos.current[url];
-            else if (!url) {
-                const first = Object.entries(resolved).find(
-                    ([_, res]) => res,
-                )?.[0];
-                if (first) (url = first), (vid = videos.current[url]);
-                else return;
-            } else return;
+        play(urlOrNext) {
+            const resolveds = Object.entries(resolved)
+                .filter(([_, val]) => val)
+                .map(([key]) => key);
 
-            if (!vid) return;
+            if (typeof urlOrNext === "string" && resolved[urlOrNext])
+                setCurrentlyPlaying(urlOrNext);
+            else if (urlOrNext === true) {
+                const index = currentlyPlaying
+                    ? resolveds.indexOf(currentlyPlaying)
+                    : -1;
+                const url = resolveds[index + 1];
 
-            listeners.forEach(x => x("STOP_ALL"));
-            doSeek(vid);
-            setAudioPlayerCurrent(url);
+                if (url) setCurrentlyPlaying(url);
+                else setCurrentlyPlaying(null);
+            } else if (!urlOrNext && resolveds[0])
+                setCurrentlyPlaying(resolveds[0]);
         },
         pause() {
-            setAudioPlayerCurrent(null);
+            setCurrentlyPlaying(null);
         },
     };
-
-    React.useEffect(() => {
-        const listener: Listener = topic =>
-            topic === "STOP_ALL" && audioPlayer.current.pause();
-
-        listeners.add(listener);
-        return () => void listeners.delete(listener);
-    });
 
     const songs = (
         song.type === "single"
@@ -83,56 +68,44 @@ export default function AudioPlayer({
             : song.entries.map(x => x.previewUrl)
     ).filter(x => !!x) as string[];
 
-    return (
-        <>
-            {songs.map((sng, i) => (
-                <Video
-                    source={{
-                        uri: sng,
-                        shouldCache: true,
-                        headers: [
-                            {
-                                key: "cache-control",
-                                value: "max-age=7200",
-                            },
-                        ],
-                    }}
-                    ref={vid =>
-                        vid &&
-                        (videos.current = {
-                            ...videos.current,
-                            [sng]: vid,
-                        })
-                    }
-                    onLoad={() =>
-                        setResolved({
-                            ...resolved,
-                            [sng]: true,
-                        })
-                    }
-                    onError={err => (
-                        console.log(err, sng),
-                        setResolved({
-                            ...resolved,
-                            [sng]: false,
-                        })
-                    )}
-                    onEnd={() => {
-                        listeners.forEach(x => x("STOP_ALL"));
+    React.useEffect(() => {
+        if (currentlyPlaying) sounds.current[currentlyPlaying]?.stop();
 
+        sounds.current = Object.fromEntries(
+            songs.map((url, i) => [
+                url,
+                new MobileAudioSound(url, "media", 1, {
+                    onLoad(val) {
+                        setResolved(res => ({
+                            ...res,
+                            [url]: val,
+                        }));
+                    },
+                    onEnd() {
                         const next = songs.find(
                             (nextSng, nextI) => nextI > i && resolved[nextSng],
                         );
-                        if (next && videos.current[next]) {
-                            doSeek(videos.current[next]);
-                            setAudioPlayerCurrent(next);
-                        } else setAudioPlayerCurrent(null);
-                    }}
-                    paused={audioPlayerCurrent !== sng}
-                    volume={1}
-                    key={sng}
-                />
-            ))}
+                        if (next && sounds.current[next])
+                            setCurrentlyPlaying(next);
+                        else setCurrentlyPlaying(null);
+                    },
+                }),
+            ]),
+        );
+    }, [songs.join(" ")]);
+
+    React.useEffect(
+        () =>
+            Object.entries(sounds.current).forEach(([url, snd]) =>
+                currentlyPlaying === url
+                    ? !snd.isPlaying && snd.play()
+                    : snd.isPlaying && snd.stop(),
+            ),
+        [currentlyPlaying],
+    );
+
+    return (
+        <>
             {children({
                 player: {
                     get play() {
@@ -142,12 +115,15 @@ export default function AudioPlayer({
                         return audioPlayer.current.pause;
                     },
                     get current() {
-                        return audioPlayerCurrent;
+                        return playing.currentlyPlaying &&
+                            songs.includes(playing.currentlyPlaying)
+                            ? playing.currentlyPlaying
+                            : null;
                     },
                 },
                 loaded: Object.entries(resolved)
                     .filter(([_, res]) => res)
-                    .map(([sng]) => sng),
+                    .map(([url]) => url),
                 resolved: Object.keys(resolved),
             })}
         </>

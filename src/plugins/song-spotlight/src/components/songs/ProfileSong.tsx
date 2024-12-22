@@ -7,6 +7,7 @@ import { FlashList, Reanimated } from "$/deps";
 import { IconButton, PressableScale, Stack } from "$/lib/redesign";
 import { formatDuration } from "$/types";
 
+import FastForwardIcon from "../../../assets/images/player/FastForwardIcon.png";
 import { openLink } from "../../stuff/songs";
 import {
     getSongInfo,
@@ -23,10 +24,15 @@ export default function ProfileSong({
     song,
     themed,
     customBorder,
+    playing,
 }: {
     song: Song;
     themed?: boolean;
     customBorder?: string;
+    playing: {
+        currentlyPlaying: string | null;
+        setCurrentlyPlaying: (value: string | null) => void;
+    };
 }) {
     const isEntries = ["album", "playlist", "artist", "user"].includes(
         song.type,
@@ -43,7 +49,7 @@ export default function ProfileSong({
         setSongInfo(null);
 
         getSongInfo(song)
-            .then(val => setTimeout(() => setSongInfo(val), 1000))
+            .then(val => setSongInfo(val))
             .catch(() => setSongInfo(false));
     }, [song.service + song.type + song.id]);
 
@@ -130,7 +136,7 @@ export default function ProfileSong({
                     { opacity: opacityValue },
                 ]}
                 key={"body"}>
-                <AudioPlayer song={songInfo}>
+                <AudioPlayer song={songInfo} playing={playing}>
                     {({ player, loaded, resolved }) => (
                         <>
                             <Stack
@@ -199,43 +205,37 @@ export default function ProfileSong({
                                                 )}
                                             </Text>
                                         )}
-                                        {songInfo.type === "single" && (
+                                        {songInfo.type === "entries" && (
                                             <IconButton
                                                 variant="secondary"
-                                                icon={
-                                                    player.current ===
-                                                    songInfo.previewUrl
-                                                        ? getAssetIDByName(
-                                                              "PauseIcon",
-                                                          )
-                                                        : getAssetIDByName(
-                                                              "PlayIcon",
-                                                          )
-                                                }
+                                                icon={FastForwardIcon}
                                                 size="sm"
-                                                loading={
-                                                    songInfo.previewUrl
-                                                        ? !resolved.includes(
-                                                              songInfo.previewUrl,
-                                                          )
-                                                        : false
-                                                }
-                                                disabled={
-                                                    !songInfo.previewUrl ||
-                                                    !loaded.includes(
-                                                        songInfo.previewUrl,
-                                                    )
-                                                }
+                                                disabled={!loaded[0]}
                                                 onPress={() =>
-                                                    player.current ===
-                                                    songInfo.previewUrl
-                                                        ? player.pause()
-                                                        : player.play(
-                                                              songInfo.previewUrl,
-                                                          )
+                                                    player.play(true)
                                                 }
                                             />
                                         )}
+                                        <IconButton
+                                            variant="secondary"
+                                            icon={
+                                                player.current
+                                                    ? getAssetIDByName(
+                                                          "PauseIcon",
+                                                      )
+                                                    : getAssetIDByName(
+                                                          "PlayIcon",
+                                                      )
+                                            }
+                                            size="sm"
+                                            loading={!resolved[0]}
+                                            disabled={!loaded[0]}
+                                            onPress={() =>
+                                                player.current
+                                                    ? player.pause()
+                                                    : player.play()
+                                            }
+                                        />
                                     </Stack>
                                 </RN.View>
                             </Stack>
@@ -262,9 +262,9 @@ export default function ProfileSong({
                                         ]}
                                         renderItem={({ item, index }) => (
                                             <EntrySong
+                                                player={player}
                                                 item={item}
                                                 index={index}
-                                                player={player}
                                                 isLoaded={
                                                     item.previewUrl
                                                         ? loaded.includes(
@@ -273,7 +273,8 @@ export default function ProfileSong({
                                                         : false
                                                 }
                                             />
-                                        )}></FlashList>
+                                        )}
+                                    />
                                 </RN.View>
                             )}
                         </>
