@@ -60,8 +60,9 @@ Icons used by plugins are stored in the `<iconpack root>/_/external/` folder. He
 
 ### SongSpotlight
 
-- <img src="../src/plugins/song-spotlight/assets/services/AppleMusicIcon.png" alt="SongSpotlight AppleMusicIcon" width=20 height=20 /> — `SongSpotlight/AppleMusicIcon.png`
-- <img src="../src/plugins/song-spotlight/assets/services/SoundcloudIcon.png" alt="SongSpotlight SoundcloudIcon" width=20 height=20 /> — `SongSpotlight/SoundcloudIcon.png`
+  - <img src="../src/plugins/song-spotlight/assets/images/player/FastForwardIcon.png" alt="SongSpotlight FastForwardIcon" width=20 height=20 /> — `SongSpotlight/player/FastForwardIcon.png`
+  - <img src="../src/plugins/song-spotlight/assets/images/services/AppleMusicIcon.png" alt="SongSpotlight AppleMusicIcon" width=20 height=20 /> — `SongSpotlight/services/AppleMusicIcon.png`
+  - <img src="../src/plugins/song-spotlight/assets/images/services/SoundcloudIcon.png" alt="SongSpotlight SoundcloudIcon" width=20 height=20 /> — `SongSpotlight/services/SoundcloudIcon.png`
 
 ### SpotifyListenAlong
 
