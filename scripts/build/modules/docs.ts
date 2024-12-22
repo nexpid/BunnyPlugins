@@ -103,5 +103,3 @@ export async function makeDocsIconsHook() {
 
     await writeFile("docs/ICONS.md", iconsMdCustomIcons);
 }
-
-makeDocsIconsHook();
