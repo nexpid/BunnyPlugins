@@ -1,9 +1,10 @@
-import { ReactNative as RN, stylesheet } from "@vendetta/metro/common";
+import { ReactNative as RN } from "@vendetta/metro/common";
 import { semanticColors } from "@vendetta/ui";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 
 import Text from "$/components/Text";
 import { PressableScale, Stack } from "$/lib/redesign";
+import { createThemeContextStyleSheet } from "$/types";
 
 import { SongInfoEntry } from "../../stuff/songs/info";
 import { AudioPlayer } from "../AudioPlayer";
@@ -19,7 +20,7 @@ export function EntrySong({
     index: number;
     isLoaded: boolean;
 }) {
-    const styles = stylesheet.createThemedStyleSheet({
+    const styles = createThemeContextStyleSheet({
         indexCont: {
             width: 24,
             alignItems: "center",
