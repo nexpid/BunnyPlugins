@@ -12,7 +12,7 @@ import { showToast } from "@vendetta/ui/toasts";
 
 import Text from "$/components/Text";
 import { Lang } from "$/lang";
-import { Button, Stack, TextInput } from "$/lib/redesign";
+import { Button, PressableScale, Stack, TextInput } from "$/lib/redesign";
 
 import { lang } from "../..";
 import { resolveLinkToSong } from "../../stuff/songs/parse";
@@ -105,13 +105,7 @@ export default function AddSong({ disabled }: { disabled: boolean }) {
     const { data, setData } = React.useContext(ModifiedDataContext);
 
     return (
-        <FormRow
-            label={lang.format("settings.songs.add_song", {})}
-            leading={
-                <RN.View style={styles.songIcon}>
-                    <FormRow.Icon source={getAssetIDByName("PlusMediumIcon")} />
-                </RN.View>
-            }
+        <PressableScale
             onPress={() =>
                 showConfirmationAlert({
                     title: lang.format("alert.add_song.title", {}),
@@ -143,7 +137,7 @@ export default function AddSong({ disabled }: { disabled: boolean }) {
                                         "toast.song_already_exists",
                                         {},
                                     ),
-                                    getAssetIDByName("DragIcon"),
+                                    getAssetIDByName("CircleXIcon-primary"),
                                 );
                         } else
                             showToast(
@@ -154,8 +148,19 @@ export default function AddSong({ disabled }: { disabled: boolean }) {
                     isDismissable: true,
                 })
             }
-            style={styles.song}
-            disabled={disabled}
-        />
+            disabled={disabled}>
+            <FormRow
+                label={lang.format("settings.songs.add_song", {})}
+                leading={
+                    <RN.View style={styles.songIcon}>
+                        <FormRow.Icon
+                            source={getAssetIDByName("PlusMediumIcon")}
+                        />
+                    </RN.View>
+                }
+                style={styles.song}
+                disabled={disabled}
+            />
+        </PressableScale>
     );
 }
