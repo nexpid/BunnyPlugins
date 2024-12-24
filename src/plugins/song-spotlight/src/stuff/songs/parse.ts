@@ -1,7 +1,5 @@
 import { Song } from "../../types";
 
-const linkCache = new Map<string, Song | null>();
-
 const services = [
     async function spotify(link) {
         if (link.hostname === "spotify.link")
@@ -82,6 +80,9 @@ const services = [
     },
 ] as ((url: URL) => Promise<Song | null>)[];
 
+const parseCacheSymbol = Symbol.for("songspotlight.cache.linktosong");
+(window as any)[parseCacheSymbol] ??= new Map();
+
 export function resolveLinkToSong(
     link: string,
 ): null | Song | Promise<null | Song> {
@@ -90,18 +91,19 @@ export function resolveLinkToSong(
     clean.search = "";
 
     const cleaned = clean.toString();
-    if (linkCache.has(cleaned)) return linkCache.get(cleaned)!;
+    if ((window as any)[parseCacheSymbol].has(cleaned))
+        return (window as any)[parseCacheSymbol].get(cleaned)!;
 
     return (async () => {
         for (const service of services) {
             const res = await service(clean);
             if (res) {
-                linkCache.set(cleaned, res);
+                (window as any)[parseCacheSymbol].set(cleaned, res);
                 return res;
             }
         }
 
-        linkCache.set(cleaned, null);
+        (window as any)[parseCacheSymbol].set(cleaned, null);
         return null;
     })();
 }

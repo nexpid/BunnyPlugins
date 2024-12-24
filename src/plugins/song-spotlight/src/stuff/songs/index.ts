@@ -1,4 +1,4 @@
-import { ReactNative as RN, url } from "@vendetta/metro/common";
+import { clipboard, ReactNative as RN, url } from "@vendetta/metro/common";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { showToast } from "@vendetta/ui/toasts";
 import { type ImageSourcePropType } from "react-native";
@@ -56,7 +56,8 @@ const serviceToApp = {
     (song: any) => string[] | Promise<string[] | false>
 >;
 
-const linkCache = new Map<string, string[] | false>();
+const linkCacheSymbol = Symbol.for("songspotlight.cache.servicelink");
+(window as any)[linkCacheSymbol] ??= new Map();
 
 export async function getServiceLink(
     song: Song,
@@ -65,9 +66,10 @@ export async function getServiceLink(
     const hash = song.service + song.type + song.id;
 
     const links =
-        linkCache.get(hash) ?? (await serviceToApp[song.service](song));
+        (window as any)[linkCacheSymbol].get(hash) ??
+        (await serviceToApp[song.service](song));
     if (!links) return false;
-    linkCache.set(hash, links);
+    (window as any)[linkCacheSymbol].set(hash, links);
 
     if (dry) return links[links.length - 1] ?? links[0];
 
@@ -81,6 +83,21 @@ export async function openLink(song: Song) {
     if (link !== false) url.openDeeplink(link);
     else
         showToast(
+            lang.format("toast.cannot_open_link", {}),
+            getAssetIDByName("CircleXIcon-primary"),
+        );
+}
+
+export async function copyLink(song: Song) {
+    const link = await getServiceLink(song, true);
+    if (link)
+        clipboard.setString(link),
+            showToast(
+                lang.format("toast.copied_link", {}),
+                getAssetIDByName("CopyIcon"),
+            );
+    else
+        return showToast(
             lang.format("toast.cannot_open_link", {}),
             getAssetIDByName("CircleXIcon-primary"),
         );

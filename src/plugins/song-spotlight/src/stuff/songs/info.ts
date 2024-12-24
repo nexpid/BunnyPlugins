@@ -36,6 +36,9 @@ export type SongInfo = SongInfoBase &
           }
     );
 
+const randomCover = () =>
+    `https://cdn.discordapp.com/embed/avatars/${Math.floor(Math.random() * 5) + 1}.png`;
+
 const skeletonSongInfoBase = {
     service: "spotify",
     label: "Song Spotlight",
@@ -66,8 +69,6 @@ export function soundcloudUrl(_url: string) {
     return url.toString();
 }
 
-const infoCache = new Map<string, SongInfo | false>();
-
 const services = {
     async spotify({ type, id, service }: SpotifySong) {
         const res = await fetch(
@@ -95,10 +96,14 @@ const services = {
                     entity.subtitle ??
                     entity.artists?.map(x => x.name).join(", "),
                 thumbnailUrl:
-                    entity.visualIdentity?.image.sort(
-                        (a, b) => a.maxWidth - b.maxWidth,
-                    )[0].url ??
-                    "https://cdn.discordapp.com/embed/avatars/0.png",
+                    (
+                        entity.coverArt?.sources?.sort(
+                            (a, b) => a.width - b.width,
+                        )[0] ??
+                        entity.visualIdentity.image?.sort(
+                            (a, b) => a.maxWidth - b.maxWidth,
+                        )[0]
+                    )?.url ?? randomCover(),
             };
 
             if (type === "track")
@@ -149,7 +154,22 @@ const services = {
                     data.user?.username ??
                     (data.track_count &&
                         `${data.track_count} track${data.track_count !== 1 ? "s" : ""}`),
-                thumbnailUrl: data.artwork_url ?? data.avatar_url,
+                thumbnailUrl:
+                    data.artwork_url ?? data.avatar_url ?? randomCover(),
+            };
+
+            const getPreview = async (url: string) => {
+                try {
+                    const { url: previewUrl } = await fetch(url, {
+                        cache: "force-cache",
+                        headers: {
+                            "cache-control": "public; max-age=1800",
+                        },
+                    }).then(x => x.json());
+                    return previewUrl;
+                } catch {
+                    return undefined;
+                }
             };
 
             if (type === "user") {
@@ -172,56 +192,74 @@ const services = {
                 return {
                     ...base,
                     type: "entries",
-                    entries: tracks
-                        .filter(track => track.streamable)
-                        .map(track => ({
-                            id: String(track.id),
-                            label: track.title,
-                            sublabel: track.user.username,
-                            explicit: !!track.publisher_metadata?.explicit,
-                            duration: track.duration ?? 0,
-                            previewUrl: (
-                                track.media.transcodings.find(
-                                    media => media.duration === track.duration,
-                                ) ?? track.media.transcodings[0]
-                            )?.url,
-                        }))
-                        .map(track => ({
-                            ...track,
-                            previewUrl:
-                                track.previewUrl &&
-                                soundcloudUrl(track.previewUrl),
-                        })),
+                    entries: await Promise.all(
+                        tracks
+                            .filter(track => track.streamable)
+                            .map(track => ({
+                                id: String(track.id),
+                                label: track.title,
+                                sublabel: track.user.username,
+                                explicit: !!track.publisher_metadata?.explicit,
+                                duration: track.duration ?? 0,
+                                previewUrl: (
+                                    track.media.transcodings.find(
+                                        ({ format }) =>
+                                            format.protocol === "progressive" &&
+                                            format.mime_type === "audio/mpeg",
+                                    ) ?? track.media.transcodings[0]
+                                )?.url,
+                            }))
+                            .map(track =>
+                                track.previewUrl
+                                    ? getPreview(
+                                          soundcloudUrl(track.previewUrl),
+                                      ).then(previewUrl => ({
+                                          ...track,
+                                          previewUrl,
+                                      }))
+                                    : track,
+                            ),
+                    ),
                 };
             } else if (type === "playlist")
                 return {
                     ...base,
                     type: "entries",
-                    entries: data.tracks
-                        .filter(track => track.streamable)
-                        .map(track => ({
-                            id: String(track.id),
-                            label: track.title,
-                            sublabel: track.user.username,
-                            explicit: !!track.publisher_metadata?.explicit,
-                            duration: track.duration ?? 0,
-                            previewUrl: (
-                                track.media.transcodings.find(
-                                    media => media.duration === track.duration,
-                                ) ?? track.media.transcodings[0]
-                            )?.url,
-                        }))
-                        .map(track => ({
-                            ...track,
-                            previewUrl:
-                                track.previewUrl &&
-                                soundcloudUrl(track.previewUrl),
-                        })),
+                    entries: await Promise.all(
+                        data.tracks
+                            .filter(track => track.streamable)
+                            .map(track => ({
+                                id: String(track.id),
+                                label: track.title,
+                                sublabel: track.user.username,
+                                explicit: !!track.publisher_metadata?.explicit,
+                                duration: track.duration ?? 0,
+                                previewUrl: (
+                                    track.media.transcodings.find(
+                                        ({ format }) =>
+                                            format.protocol === "progressive" &&
+                                            format.mime_type === "audio/mpeg",
+                                    ) ?? track.media.transcodings[0]
+                                )?.url,
+                            }))
+                            .map(track =>
+                                track.previewUrl
+                                    ? getPreview(
+                                          soundcloudUrl(track.previewUrl),
+                                      ).then(previewUrl => ({
+                                          ...track,
+                                          previewUrl,
+                                      }))
+                                    : track,
+                            ),
+                    ),
                 };
             else {
                 const previewUrl = (
                     data.media.transcodings.find(
-                        media => media.duration === data.duration,
+                        ({ format }) =>
+                            format.protocol === "progressive" &&
+                            format.mime_type === "audio/mpeg",
                     ) ?? data.media.transcodings[0]
                 )?.url;
                 return {
@@ -229,7 +267,9 @@ const services = {
                     type: "single",
                     explicit: !!data.publisher_metadata?.explicit,
                     duration: data.duration ?? 0,
-                    previewUrl: previewUrl && soundcloudUrl(previewUrl),
+                    previewUrl:
+                        previewUrl &&
+                        (await getPreview(soundcloudUrl(previewUrl))),
                 };
             }
         } catch (e) {
@@ -256,7 +296,9 @@ const services = {
                 service,
                 label: attributes.name,
                 sublabel: attributes.artistName ?? "Popular tracks",
-                thumbnailUrl: attributes.artwork.url.replace(/{[wh]}/g, "128"),
+                thumbnailUrl:
+                    attributes.artwork.url?.replace(/{[wh]}/g, "72") ??
+                    randomCover(),
             };
 
             if (type === "song")
@@ -292,12 +334,16 @@ const services = {
     },
 } satisfies Record<Song["service"], (song: any) => Promise<SongInfo | false>>;
 
+const infoCacheSymbol = Symbol.for("songspotlight.cache.songinfo");
+(window as any)[infoCacheSymbol] ??= new Map();
+
 export async function getSongInfo(song: Song): Promise<false | SongInfo> {
     const hash = song.service + song.type + song.id;
-    if (infoCache.has(hash)) return infoCache.get(hash)!;
+    if ((window as any)[infoCacheSymbol].has(hash))
+        return (window as any)[infoCacheSymbol].get(hash)!;
 
     const res = await services[song.service](song as any);
     if (res && res.type === "entries") res.entries = res.entries.slice(0, 15);
-    infoCache.set(hash, res);
+    (window as any)[infoCacheSymbol].set(hash, res);
     return res;
 }
