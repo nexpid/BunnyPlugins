@@ -1,5 +1,10 @@
 import { findByStoreName } from "@vendetta/metro";
-import { React, ReactNative as RN, stylesheet } from "@vendetta/metro/common";
+import {
+    clipboard,
+    React,
+    ReactNative as RN,
+    stylesheet,
+} from "@vendetta/metro/common";
 import { useProxy } from "@vendetta/storage";
 import { semanticColors } from "@vendetta/ui";
 import { showConfirmationAlert } from "@vendetta/ui/alerts";
@@ -14,7 +19,14 @@ import { Button } from "$/lib/redesign";
 import { managePage } from "$/lib/ui";
 import { deepEquals } from "$/types";
 
-import { initState, lang, vstorage } from "..";
+import {
+    debugLog,
+    debugLogs,
+    initState,
+    lang,
+    showDebugLogs,
+    vstorage,
+} from "..";
 import { useAuthorizationStore } from "../stores/AuthorizationStore";
 import { useCacheStore } from "../stores/CacheStore";
 import { deleteData, getData, saveData } from "../stuff/api";
@@ -152,6 +164,7 @@ export default function Settings({ newData }: { newData?: UserData }) {
 
     const userId = UserStore.getCurrentUser()?.id ?? null;
     if (!initState.inits.includes(userId) && !newData) {
+        debugLog("initState happening, fetching data!!!!");
         initState.inits.push(userId);
         isAuthorized() &&
             (setIsFetching(true),
@@ -358,6 +371,33 @@ export default function Settings({ newData }: { newData?: UserData }) {
                         }}
                     />
                 </BetterTableRowGroup>
+                {showDebugLogs && (
+                    <Button
+                        variant="secondary"
+                        size="md"
+                        text="DO DIAGNOSTICS"
+                        icon={
+                            <RN.Image
+                                source={{
+                                    uri: "https://cdn.discordapp.com/attachments/919655852724604978/1321246029148065883/plink.jpg?ex=676c89c0&is=676b3840&hm=d52249eecae923f738c0c3b2338cd56fa4e219b738e5def7a05358b3d6588a03&width=64&height=64",
+                                }}
+                                style={{
+                                    width: 18,
+                                    height: 18,
+                                    marginRight: 4,
+                                    borderRadius: 16,
+                                }}
+                            />
+                        }
+                        onPress={() => {
+                            showToast("COPIED TO CLIPBOARD!!!!!!");
+                            clipboard.setString(
+                                `\`\`\`\n${debugLogs.join("\n")}\`\`\``,
+                            );
+                        }}
+                        style={{ paddingHorizontal: 12, marginVertical: 12 }}
+                    />
+                )}
                 <RN.View style={{ height: 12 }} />
             </RN.ScrollView>
         </ModifiedDataContext.Provider>

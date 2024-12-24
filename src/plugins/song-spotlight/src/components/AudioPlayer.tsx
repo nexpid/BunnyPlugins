@@ -103,6 +103,10 @@ export default function AudioPlayer({
             ),
         [currentlyPlaying],
     );
+    React.useEffect(
+        () => () => Object.values(sounds.current).forEach(x => x.stop()),
+        [],
+    );
 
     return (
         <>

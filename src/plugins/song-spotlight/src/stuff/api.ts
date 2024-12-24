@@ -60,7 +60,7 @@ export async function getData(): Promise<UserData | undefined> {
             .getState()
             .updateData(
                 null,
-                dt,
+                dt || [],
                 res.headers.get("last-modified") ?? undefined,
             );
         return dt;
