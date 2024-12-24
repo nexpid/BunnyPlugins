@@ -53,7 +53,10 @@ export class MobileAudioSound {
     /** Preloads the audio, which automatically makes us better than Discord because they DON'T do that for some reason */
     private async _preloadSound(skip?: boolean) {
         const { _duration } = await this.mas._ensureSound();
-        this.duration = _duration;
+        this.duration = RN.Platform.select({
+            ios: _duration ? _duration * 1000 : _duration,
+            default: _duration,
+        });
         this.isLoaded = !!_duration;
 
         if (!skip) this.onLoad?.(!!_duration);
