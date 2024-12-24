@@ -2,14 +2,23 @@ import { findByProps } from "@vendetta/metro";
 import { React, ReactNative as RN } from "@vendetta/metro/common";
 import { semanticColors } from "@vendetta/ui";
 import { getAssetIDByName } from "@vendetta/ui/assets";
+import { showToast } from "@vendetta/ui/toasts";
 
+import { hideActionSheet } from "$/components/ActionSheet";
+import Modal from "$/components/Modal";
 import Text from "$/components/Text";
 import { FlashList, Reanimated } from "$/deps";
-import { IconButton, PressableScale, Stack } from "$/lib/redesign";
-import { createThemeContextStyleSheet, formatDuration } from "$/types";
+import { ContextMenu, IconButton, PressableScale, Stack } from "$/lib/redesign";
+import {
+    createThemeContextStyleSheet,
+    formatDuration,
+    openModal,
+} from "$/types";
 
 import FastForwardIcon from "../../../assets/images/player/FastForwardIcon.png";
-import { openLink, serviceToIcon } from "../../stuff/songs";
+import { lang } from "../..";
+import { useCacheStore } from "../../stores/CacheStore";
+import { copyLink, openLink, serviceToIcon } from "../../stuff/songs";
 import {
     getSongInfo,
     skeletonSongInfo,
@@ -17,6 +26,7 @@ import {
 } from "../../stuff/songs/info";
 import { Song } from "../../types";
 import AudioPlayer from "../AudioPlayer";
+import Settings from "../Settings";
 import { EntrySong } from "./EntrySong";
 
 const minTracksInEntriesView = 3;
@@ -173,19 +183,108 @@ export default function ProfileSong({
                                 direction="horizontal"
                                 spacing={12}
                                 style={{ padding: 10 }}>
-                                <PressableScale onPress={() => openLink(song)}>
-                                    <RN.Image
-                                        source={{
-                                            uri: songInfo.thumbnailUrl,
-                                            width: 64,
-                                            height: 64,
-                                            cache: "force-cache",
-                                        }}
-                                        style={styles.thumbnail}
-                                    />
-                                </PressableScale>
+                                <ContextMenu
+                                    title={songInfo.label}
+                                    triggerOnLongPress
+                                    items={[
+                                        {
+                                            label: lang.format(
+                                                "sheet.user_song.steal_song",
+                                                {},
+                                            ),
+                                            variant: "default",
+                                            action() {
+                                                const data =
+                                                    useCacheStore.getState()
+                                                        .data ?? [];
+                                                if (data.length >= 6)
+                                                    return showToast(
+                                                        lang.format(
+                                                            "toast.steal_song_no_space_left",
+                                                            {},
+                                                        ),
+                                                        getAssetIDByName(
+                                                            "CircleXIcon-primary",
+                                                        ),
+                                                    );
+                                                if (
+                                                    data.find(
+                                                        item =>
+                                                            item.service +
+                                                                item.type +
+                                                                item.id ===
+                                                            song.service +
+                                                                song.type +
+                                                                song.id,
+                                                    )
+                                                )
+                                                    return showToast(
+                                                        lang.format(
+                                                            "toast.song_already_exists",
+                                                            {},
+                                                        ),
+                                                        getAssetIDByName(
+                                                            "CircleXIcon-primary",
+                                                        ),
+                                                    );
+
+                                                const newData = [
+                                                    ...data,
+                                                    song,
+                                                ].slice(0, 6);
+                                                console.log(newData);
+
+                                                hideActionSheet();
+                                                openModal("settings", () => (
+                                                    <Modal
+                                                        mkey="settings"
+                                                        title={lang.format(
+                                                            "plugin.name",
+                                                            {},
+                                                        )}>
+                                                        <Settings
+                                                            newData={newData}
+                                                        />
+                                                    </Modal>
+                                                ));
+                                            },
+                                            iconSource:
+                                                getAssetIDByName(
+                                                    "UnknownGameIcon",
+                                                ),
+                                        },
+                                        {
+                                            label: lang.format(
+                                                "sheet.manage_song.copy_link",
+                                                {},
+                                            ),
+                                            variant: "default",
+                                            action: () => copyLink(song),
+                                            iconSource:
+                                                getAssetIDByName("LinkIcon"),
+                                        },
+                                    ]}>
+                                    {props => (
+                                        <PressableScale
+                                            {...props}
+                                            onPress={() => openLink(song)}>
+                                            <RN.Image
+                                                source={{
+                                                    uri: songInfo.thumbnailUrl,
+                                                    width: 64,
+                                                    height: 64,
+                                                    cache: "force-cache",
+                                                }}
+                                                style={styles.thumbnail}
+                                            />
+                                        </PressableScale>
+                                    )}
+                                </ContextMenu>
                                 <Stack spacing={-1} style={{ width: "75%" }}>
-                                    <Stack direction="horizontal" spacing={8}>
+                                    <Stack
+                                        direction="horizontal"
+                                        spacing={8}
+                                        style={{ alignItems: "center" }}>
                                         <Text
                                             variant="text-md/bold"
                                             color="TEXT_NORMAL"
@@ -299,7 +398,7 @@ export default function ProfileSong({
                                         renderItem={({ item, index }) => (
                                             <EntrySong
                                                 player={player}
-                                                item={item}
+                                                entry={item}
                                                 index={index}
                                                 isLoaded={
                                                     item.previewUrl

@@ -13,6 +13,7 @@
   "toast.updated_songs": "Updated songs!",
   "toast.song_already_exists": "You've already added this song!",
   "toast.song_fetch_failed": "Failed to fetch song!",
+  "toast.steal_song_no_space_left": "No space left on your profile!",
 
   "settings.update_songs": "Update",
   "settings.songs.title": "Your songs",
@@ -42,5 +43,6 @@
 
   "sheet.manage_song.title": "Manage song",
   "sheet.manage_song.copy_link": "Copy link",
-  "sheet.manage_song.remove_song": "Remove song"
+  "sheet.manage_song.remove_song": "Remove song",
+  "sheet.user_song.steal_song": "Steal song"
 }
