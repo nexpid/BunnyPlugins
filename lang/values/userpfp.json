@@ -11,7 +11,7 @@
   "fr": {"toast.patch_error":"Le patch des avatars via UserPFP a échoué!","toast.fetch_error":"UserPFP n'a pas pu récupérer les avatars!"},
   "hi": {"toast.patch_error":"UserPFP couldn't patch avatars!","toast.fetch_error":"UserPFP couldn't fetch avatars!"},
   "hr": {"toast.patch_error":"UserPFP couldn't patch avatars!","toast.fetch_error":"UserPFP couldn't fetch avatars!"},
-  "hu": {"toast.patch_error":"UserPFP couldn't patch avatars!","toast.fetch_error":"UserPFP couldn't fetch avatars!"},
+  "hu": {"toast.patch_error":"A UserPFP nem tudott profilképeket javítani!","toast.fetch_error":"A UserPFP nem tudta lekérni az profilképeket!"},
   "it": {"toast.patch_error":"UserPFP non è riuscito a modificare gli avatar!","toast.fetch_error":"UserPFP non è riuscito a recuperare gli avatar!"},
   "ja": {"toast.patch_error":"UserPFP couldn't patch avatars!","toast.fetch_error":"UserPFP couldn't fetch avatars!"},
   "ko": {"toast.patch_error":"UserPFP couldn't patch avatars!","toast.fetch_error":"UserPFP couldn't fetch avatars!"},
