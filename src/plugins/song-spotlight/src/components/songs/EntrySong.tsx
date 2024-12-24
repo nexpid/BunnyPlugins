@@ -11,12 +11,12 @@ import { AudioPlayer } from "../AudioPlayer";
 
 export function EntrySong({
     player,
-    item,
+    entry,
     index,
     isLoaded,
 }: {
     player: AudioPlayer;
-    item: SongInfoEntry;
+    entry: SongInfoEntry;
     index: number;
     isLoaded: boolean;
 }) {
@@ -31,16 +31,23 @@ export function EntrySong({
             height: 18,
             tintColor: semanticColors.INTERACTIVE_NORMAL,
         },
+        explicit: {
+            width: 16,
+            height: 16,
+            alignItems: "center",
+            justifyContent: "center",
+            borderRadius: 4,
+            backgroundColor: semanticColors.BG_MOD_SUBTLE,
+        },
     });
-
     return (
         <PressableScale
             onPress={() =>
                 isLoaded &&
-                item.previewUrl &&
-                (player.current === item.previewUrl
+                entry.previewUrl &&
+                (player.current === entry.previewUrl
                     ? player.pause()
-                    : player.play(item.previewUrl))
+                    : player.play(entry.previewUrl))
             }
             style={!isLoaded ? { opacity: 0.5 } : {}}
             disabled={!isLoaded}>
@@ -54,7 +61,7 @@ export function EntrySong({
                         alignItems: "center",
                         justifyContent: "center",
                     }}>
-                    {player.current === item.previewUrl ? (
+                    {player.current === entry.previewUrl ? (
                         <RN.Image
                             source={getAssetIDByName("PauseIcon")}
                             style={styles.pauseIcon}
@@ -73,14 +80,26 @@ export function EntrySong({
                         variant="text-sm/medium"
                         color="TEXT_NORMAL"
                         lineClamp={1}>
-                        {item.label}
+                        {entry.label}
                     </Text>
-                    <Text
-                        variant="text-sm/normal"
-                        color="TEXT_MUTED"
-                        lineClamp={1}>
-                        {item.sublabel}
-                    </Text>
+                    <Stack
+                        direction="horizontal"
+                        spacing={4}
+                        style={{ alignItems: "center" }}>
+                        {entry.explicit && (
+                            <RN.View style={styles.explicit}>
+                                <Text variant="text-xs/bold" color="TEXT_MUTED">
+                                    E
+                                </Text>
+                            </RN.View>
+                        )}
+                        <Text
+                            variant="text-sm/normal"
+                            color="TEXT_MUTED"
+                            lineClamp={1}>
+                            {entry.sublabel}
+                        </Text>
+                    </Stack>
                 </Stack>
             </Stack>
         </PressableScale>
