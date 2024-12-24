@@ -128,7 +128,7 @@ const services = {
                     })),
                 };
         } catch (e) {
-            logger.error("info->spotify", e);
+            logger.error("info->spotify", e, `${service}->${type}->${id}`);
             return false;
         }
     },
@@ -273,7 +273,7 @@ const services = {
                 };
             }
         } catch (e) {
-            logger.error("info->soundcloud", e);
+            logger.error("info->soundcloud", e, `${service}->${type}->${id}`);
             return false;
         }
     },
@@ -328,7 +328,7 @@ const services = {
                         })),
                 };
         } catch (e) {
-            logger.error("info->applemusic", e);
+            logger.error("info->applemusic", e, `${service}->${type}->${id}`);
             return false;
         }
     },
