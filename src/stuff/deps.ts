@@ -10,15 +10,20 @@ export const WebView = find(x => x?.WebView && !x.default)
 
 export const Svg = findByProps("SvgXml") as typeof import("react-native-svg");
 
-// @ts-expect-error "isJoi" is an untyped property in Joi
-export const Joi = findByProps("isJoi") as typeof import("joi");
-
 export const Reanimated = findByProps(
     "useSharedValue",
 ) as typeof import("react-native-reanimated");
 
 export const FlashList = findByProps("FlashList")
     .FlashList as typeof import("@shopify/flash-list").FlashList;
+
+export const { default: Video } = findByProps(
+    "DRMType",
+    "FilterType",
+) as typeof import("react-native-video");
+
+// @ts-expect-error "isJoi" is an untyped property in Joi
+export const Joi = findByProps("isJoi") as typeof import("joi");
 
 export const zustand = (findByProps("create", "useStore") ?? {
     create: findByName("create"),
@@ -28,6 +33,90 @@ export const DocumentPicker = findByProps(
     "pickSingle",
     "isCancel",
 ) as typeof import("react-native-document-picker");
+
+const _MAS = findByProps("MobileAudioSound").MobileAudioSound;
+
+// Messy code
+export class MobileAudioSound {
+    // Events
+    public onPlay?: () => void;
+    public onStop?: () => void;
+    public onEnd?: () => void;
+    public onLoad?: (loaded: boolean) => void;
+
+    private mas: any;
+
+    public duration?: number;
+    public isLoaded?: boolean;
+    public isPlaying?: boolean;
+
+    /** Preloads the audio, which automatically makes us better than Discord because they DON'T do that for some reason */
+    private async _preloadSound(skip?: boolean) {
+        const { _duration } = await this.mas._ensureSound();
+        this.duration = _duration;
+        this.isLoaded = !!_duration;
+
+        if (!skip) this.onLoad?.(!!_duration);
+        return !!_duration;
+    }
+
+    constructor(
+        public url: string,
+        public usage: "notification" | "voice" | "ring_tone" | "media",
+        public volume: number,
+        events?: {
+            onPlay?: () => void;
+            onStop?: () => void;
+            onEnd?: () => void;
+            onLoad?: (loaded: boolean) => void;
+        },
+    ) {
+        this.mas = new _MAS(
+            url,
+            {
+                media: "vibing_wumpus",
+                notification: "activity_launch",
+                ring_tone: "call_ringing",
+                voice: "mute",
+            }[usage],
+            volume,
+        );
+
+        this._preloadSound();
+        for (const [key, val] of Object.entries(events ?? {})) this[key] = val;
+    }
+
+    private _playTimeout?: number;
+
+    /** Plays the audio */
+    async play() {
+        if (!this.isLoaded && this.isLoaded !== false)
+            await this._preloadSound();
+        if (!this.isLoaded) return;
+
+        await this.mas.play();
+        this.isPlaying = true;
+        this.onPlay?.();
+
+        clearTimeout(this._playTimeout);
+        this._playTimeout = setTimeout(
+            () => (this.onEnd?.(), this.stop()),
+            this.duration,
+        ) as any;
+    }
+
+    /** Stops the audio */
+    async stop() {
+        if (!this.isLoaded) return;
+
+        this.mas.stop();
+        this.isPlaying = false;
+        this.onStop?.();
+
+        clearTimeout(this._playTimeout);
+        await this._preloadSound(true);
+    }
+}
 
 //
 // raw native modules

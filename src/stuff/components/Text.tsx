@@ -1,3 +1,4 @@
+import { findByProps } from "@vendetta/metro";
 import { React, ReactNative as RN } from "@vendetta/metro/common";
 import { semanticColors } from "@vendetta/ui";
 import { TextProps } from "react-native";
@@ -15,6 +16,8 @@ export function TrailingText({ children }: React.PropsWithChildren<object>) {
         </Text>
     );
 }
+
+const { useThemeContext } = findByProps("useThemeContext");
 
 export default function Text({
     variant,
@@ -39,6 +42,7 @@ export default function Text({
     onPress?: TextProps["onPress"];
     ellipsis?: TextProps["ellipsizeMode"];
 }>) {
+    const themeContext = useThemeContext();
     const [_, forceUpdate] = React.useReducer(x => ~x, 0);
 
     React.useEffect(() => {
@@ -58,7 +62,12 @@ export default function Text({
             style={[
                 variant && TextStyleSheet[variant],
                 color
-                    ? { color: resolveSemanticColor(semanticColors[color]) }
+                    ? {
+                          color: resolveSemanticColor(
+                              semanticColors[color],
+                              themeContext?.theme,
+                          ),
+                      }
                     : {},
                 align && { textAlign: align },
                 style ?? {},

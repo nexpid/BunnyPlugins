@@ -1,7 +1,8 @@
 import { findByProps, findByStoreName } from "@vendetta/metro";
-import { FluxDispatcher } from "@vendetta/metro/common";
+import { FluxDispatcher, ReactNative as RN } from "@vendetta/metro/common";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { showToast } from "@vendetta/ui/toasts";
+import { type StyleSheet } from "react-native";
 
 import Modal from "./components/Modal";
 
@@ -10,6 +11,8 @@ const { triggerHaptic } = findByProps("triggerHaptic");
 
 const colorModule = findByProps("colors", "unsafe_rawColors");
 const colorResolver = colorModule?.internal ?? colorModule?.meta;
+
+const { useThemeContext } = findByProps("useThemeContext");
 
 export const TextStyleSheet = findByProps("TextStyleSheet")
     .TextStyleSheet as _TextStyleSheet;
@@ -160,6 +163,36 @@ export function deepEquals(x: any, y: any) {
 
         return true;
     }
+}
+
+export function formatDuration(duration: number) {
+    const seconds = duration % 60;
+    const minutes = Math.floor(duration / 60) % 60;
+    const hours = Math.floor(duration / 3600);
+
+    if (hours > 0)
+        return `${hours}:${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+    else return `${minutes}:${String(seconds).padStart(2, "0")}`;
+}
+
+export function createThemeContextStyleSheet<
+    T extends StyleSheet.NamedStyles<any>,
+>(sheet: T) {
+    const themeContext = useThemeContext();
+
+    for (const key in sheet) {
+        //@ts-expect-error types
+        sheet[key] = new Proxy(RN.StyleSheet.flatten(sheet[key]), {
+            get(target, prop, receiver) {
+                const res = Reflect.get(target, prop, receiver);
+                return colorResolver.isSemanticColor(res)
+                    ? resolveSemanticColor(res, themeContext?.theme)
+                    : res;
+            },
+        });
+    }
+
+    return sheet;
 }
 
 // ...

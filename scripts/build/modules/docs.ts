@@ -33,6 +33,7 @@ export async function makeDocsIconsHook() {
         string,
         {
             alt: string;
+            root: string;
             path: string;
             location: string;
             indentation: number;
@@ -49,6 +50,7 @@ export async function makeDocsIconsHook() {
         res[tag] ??= [];
         res[tag].push({
             alt: `${config.config.root} ${basename(file).split(".").slice(0, -1).join(".")}`,
+            root: `${config.config.root}${dirnm.slice(config.parent.length)}/`,
             path: `${config.config.root}${dirnm.slice(config.parent.length)}/${basename(file)}`,
             location: join("..", "src", file).replace(/\\/g, "/"),
             indentation:
@@ -80,6 +82,8 @@ export async function makeDocsIconsHook() {
             )
             .join("\n")}\n\n`,
     );
+
+    const subfolderMarker = new Set();
     const iconsMdCustomIcons = replaceHook(
         iconsMdModIcons,
         "custom icons hook",
@@ -87,12 +91,15 @@ export async function makeDocsIconsHook() {
             .sort((a, b) => a[0].localeCompare(b[0]))
             .map(
                 ([tag, entries]) =>
-                    `\n### ${tag}\n\n${entries.map(icon => `${"  ".repeat(icon.indentation)}- <img src=${JSON.stringify(icon.location)} alt=${JSON.stringify(icon.alt)} width=20 height=20 /> — \`${icon.path}\``).join("\n")}`,
+                    `\n### ${tag}\n\n${entries
+                        .map(
+                            icon =>
+                                `${icon.indentation > 0 && !subfolderMarker.has(icon.root) ? (subfolderMarker.add(icon.root), `${"  ".repeat(icon.indentation - 1)}- 📂 \`${icon.root}\`\n`) : ""}${"  ".repeat(icon.indentation)}- <img src=${JSON.stringify(icon.location)} alt=${JSON.stringify(icon.alt)} width=20 height=20 /> — \`${icon.path}\``,
+                        )
+                        .join("\n")}`,
             )
             .join("\n")}\n\n`,
     );
 
     await writeFile("docs/ICONS.md", iconsMdCustomIcons);
 }
-
-// makeDocsIconsHook();

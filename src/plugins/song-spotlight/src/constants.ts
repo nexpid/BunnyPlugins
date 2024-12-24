@@ -1,24 +1,26 @@
 import { vstorage } from ".";
+import { redirectRoute } from "./stuff/api";
 
-const root = "https://songspotlight.nexpid.xyz/"; // "http://192.168.2.22:8787/"
+export const defaultHost = "https://dc.songspotlight.nexpid.xyz/";
+export const defaultClientId = "1157745434140344321";
+
+const api = () =>
+    vstorage.custom.host
+        ? !vstorage.custom.host.endsWith("/")
+            ? `${vstorage.custom.host}/`
+            : vstorage.custom.host
+        : defaultHost;
+
 export default {
     get api() {
-        return vstorage.host
-            ? !vstorage.host.endsWith("/")
-                ? `${vstorage.host}/`
-                : vstorage.host
-            : root;
+        return api();
     },
     oauth2: {
-        clientId: "1157745434140344321",
+        get clientId() {
+            return vstorage.custom.clientId || defaultClientId;
+        },
         get redirectURL() {
-            return `${
-                vstorage.host
-                    ? !vstorage.host.endsWith("/")
-                        ? `${vstorage.host}/`
-                        : vstorage.host
-                    : root
-            }api/oauth2-response`;
+            return `${api()}${redirectRoute}`;
         },
     },
 };

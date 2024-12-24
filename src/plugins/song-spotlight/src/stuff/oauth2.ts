@@ -1,14 +1,14 @@
-import { findByName, findByProps, findByStoreName } from "@vendetta/metro";
+import { findByName, findByProps } from "@vendetta/metro";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { showToast } from "@vendetta/ui/toasts";
 
-import { fillCache, vstorage } from "..";
+import { lang } from "..";
 import constants from "../constants";
-import { getOauth2Response } from "./api";
+import { useAuthorizationStore } from "../stores/AuthorizationStore";
+import { authFetch, getData } from "./api";
 
 const { pushModal, popModal } = findByProps("pushModal", "popModal");
 const OAuth2AuthorizeModal = findByName("OAuth2AuthorizeModal");
-const UserStore = findByStoreName("UserStore");
 
 export function openOauth2Modal() {
     pushModal({
@@ -28,24 +28,18 @@ export function openOauth2Modal() {
                 permissions: 0n,
                 cancelCompletesFlow: false,
                 callback: async ({ location }) => {
+                    if (!location) return;
                     try {
-                        const url = new URL(location);
-                        const code = url.searchParams.get("code");
-                        if (!code) return;
-
-                        const token = await getOauth2Response(code);
-                        vstorage.auth[UserStore.getCurrentUser().id] = token;
-                        fillCache();
+                        const token = await (await authFetch(location))!.text();
+                        useAuthorizationStore.getState().setToken(token);
+                        getData();
 
                         showToast(
-                            "Successfully authenticated",
+                            lang.format("toast.oauth.authorized", {}),
                             getAssetIDByName("CircleCheckIcon-primary"),
                         );
-                    } catch (e: any) {
-                        showToast(
-                            String(e),
-                            getAssetIDByName("CircleXIcon-primary"),
-                        );
+                    } catch {
+                        // handled in authFetch
                     }
                 },
                 dismissOAuthModal: () => popModal("oauth2-authorize"),

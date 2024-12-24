@@ -1,52 +1,34 @@
 import { storage } from "@vendetta/plugin";
-import { createStorage, wrapSync } from "@vendetta/storage";
+
+import { Lang } from "$/lang";
 
 import settings from "./components/Settings";
-import { currentAuthorization, getSaveData } from "./stuff/api";
 import patcher from "./stuff/patcher";
-import { API } from "./types/api";
-
-export interface AuthRecord {
-    accessToken: string;
-    refreshToken: string;
-    expiresAt: number;
-}
 
 export const vstorage = storage as {
-    host?: string;
-    auth: Record<string, AuthRecord>;
+    custom: {
+        host: string;
+        clientId: string;
+    };
 };
 
-let _cache: any;
-export const cache: {
-    data?: API.Save;
-} = wrapSync(
-    createStorage({
-        get: () => _cache,
-        set: x => {
-            _cache = x;
-        },
-    }),
-);
+export const initState = {
+    inits: [] as string[],
+};
 
-export async function fillCache() {
-    try {
-        cache.data = await getSaveData();
-    } catch {
-        return;
-    }
-}
-
-let unpatch: () => void;
+export const lang = new Lang("song_spotlight");
+const patches = new Array<any>();
 export default {
     onLoad: () => {
-        vstorage.auth ??= {};
+        vstorage.custom ??= {
+            host: "",
+            clientId: "",
+        };
 
-        if (currentAuthorization()) fillCache();
-        unpatch = patcher();
+        patches.push(patcher());
     },
     onUnload: () => {
-        unpatch();
+        patches.forEach(x => x());
     },
     settings,
 };

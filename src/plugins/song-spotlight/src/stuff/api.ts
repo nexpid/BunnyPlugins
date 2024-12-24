@@ -1,110 +1,115 @@
+import { logger } from "@vendetta";
 import { findByStoreName } from "@vendetta/metro";
+import { getAssetIDByName } from "@vendetta/ui/assets";
+import { showToast } from "@vendetta/ui/toasts";
 
-import { AuthRecord, vstorage } from "..";
+import { lang } from "..";
 import constants from "../constants";
-import { API } from "../types/api";
+import { useAuthorizationStore } from "../stores/AuthorizationStore";
+import { useCacheStore } from "../stores/CacheStore";
+import { UserData } from "../types";
 
 const UserStore = findByStoreName("UserStore");
 
-interface SongSpotlightAPIErrorResponse {
-    message: string;
-    status: number;
-    error?: string;
-}
-export class SongSpotlightAPIError extends Error {
-    constructor(resp: SongSpotlightAPIErrorResponse) {
-        super(
-            `${resp.status}: ${resp.message}${resp.error ? ` (${resp.error})` : ""}`,
-        );
-        this.name = this.constructor.name;
-    }
-}
+export async function authFetch(_url: string | URL, options?: RequestInit) {
+    const url = new URL(_url);
 
-export function currentAuthorization(): AuthRecord | undefined {
-    return vstorage.auth[UserStore.getCurrentUser()?.id];
-}
-export async function getAuthorization(): Promise<string> {
-    const e = new Error("Unauthorized, try logging out and back in again");
-    let auth = currentAuthorization();
-    if (!auth) throw e;
-
-    if (Date.now() >= auth.expiresAt) {
-        const x = await fetch(
-            `${
-                constants.api
-            }api/refresh-access-token?refresh_token=${encodeURIComponent(
-                auth.refreshToken,
-            )}`,
-        );
-        if (x.status !== 200) throw new SongSpotlightAPIError(await x.json());
-        auth = (await x.json()) as AuthRecord;
-
-        vstorage.auth[UserStore.getCurrentUser().id] = auth;
-    }
-
-    return auth.accessToken;
-}
-
-export async function getOauth2Response(code: string): Promise<AuthRecord> {
-    const res = await fetch(
-        `${constants.api}api/get-access-token?code=${encodeURIComponent(code)}`,
-    );
-
-    if (res.status === 200) return await res.json();
-    else throw new SongSpotlightAPIError(await res.json());
-}
-
-export async function getProfileData(id: string): Promise<API.Save> {
-    const params = new URLSearchParams();
-    params.append("id", id);
-
-    const res = await fetch(
-        `${constants.api}api/get-profile-data?${params.toString()}`,
-    );
-
-    if (res.status === 200) return await res.json();
-    else throw new SongSpotlightAPIError(await res.json());
-}
-
-export async function getSaveData(): Promise<API.Save | undefined> {
-    if (!currentAuthorization()) return;
-
-    const res = await fetch(`${constants.api}api/get-data`, {
+    const res = await fetch(url, {
+        ...options,
         headers: {
-            authorization: await getAuthorization(),
-        },
+            ...options?.headers,
+            authorization: useAuthorizationStore.getState().token,
+        } as any,
     });
 
-    if (res.status === 200) return await res.json();
-    else throw new SongSpotlightAPIError(await res.json());
-}
-export async function syncSaveData(
-    songs: API.Save["songs"],
-): Promise<API.Save | undefined> {
-    if (!currentAuthorization()) return;
+    if (res.ok) return res;
+    else {
+        // not modified
+        if (res.status === 304) return null;
 
-    const res = await fetch(`${constants.api}api/sync-data`, {
-        method: "POST",
+        const text = await res.text();
+        showToast(
+            !text.includes("<body>") && res.status >= 400 && res.status <= 599
+                ? lang.format("toast.fetch_error_detailed", { error_msg: text })
+                : lang.format("toast.fetch_error", { urlpath: url.pathname }),
+            getAssetIDByName("CircleXIcon-primary"),
+        );
+        logger.error(
+            "authFetch error",
+            options?.method ?? "GET",
+            url.toString(),
+            res.status,
+            text,
+        );
+        throw new Error(text);
+    }
+}
+
+export const redirectRoute = "api/auth/authorize";
+
+export async function getData(): Promise<UserData | undefined> {
+    return await authFetch(`${constants.api}api/data`, {
         headers: {
-            authorization: await getAuthorization(),
+            "if-modified-since": useCacheStore.getState().at,
+        } as any,
+    }).then(async res => {
+        if (!res) return useCacheStore.getState().data;
+
+        const dt = await res.json();
+        useCacheStore
+            .getState()
+            .updateData(
+                null,
+                dt,
+                res.headers.get("last-modified") ?? undefined,
+            );
+        return dt;
+    });
+}
+export async function listData(userId: string): Promise<UserData | undefined> {
+    if (userId === UserStore.getCurrentUser()?.id) return await getData();
+
+    return await authFetch(`${constants.api}api/data/${userId}`, {
+        headers: {
+            "if-modified-since": useCacheStore.getState().dir[userId]?.at,
+        } as any,
+    }).then(async res => {
+        if (!res) return useCacheStore.getState().dir[userId]?.data;
+
+        const dt = await res.json();
+        useCacheStore
+            .getState()
+            .updateData(
+                userId,
+                dt || undefined,
+                res.headers.get("last-modified") ?? undefined,
+            );
+        return dt;
+    });
+}
+export async function saveData(data: UserData): Promise<true> {
+    return await authFetch(`${constants.api}api/data`, {
+        method: "PUT",
+        body: JSON.stringify(data),
+        headers: {
             "content-type": "application/json",
         },
-        body: JSON.stringify(songs),
-    });
-
-    if (res.status === 200) return await res.json();
-    else throw new SongSpotlightAPIError(await res.json());
+    })
+        .then(res => res!.json())
+        .then(json => {
+            useCacheStore
+                .getState()
+                .updateData(null, data, new Date().toUTCString());
+            return json;
+        });
 }
-export async function deleteSaveData(): Promise<true | undefined> {
-    if (!currentAuthorization()) return;
-
-    const res = await fetch(`${constants.api}api/delete-data`, {
+export async function deleteData(): Promise<true> {
+    return await authFetch(`${constants.api}api/data`, {
         method: "DELETE",
-        headers: {
-            authorization: await getAuthorization(),
-        },
-    });
-
-    if (res.status === 200) return await res.json();
-    else throw new SongSpotlightAPIError(await res.json());
+    })
+        .then(res => res!.json())
+        .then(json => {
+            useCacheStore.getState().updateData(null);
+            return json;
+        });
 }

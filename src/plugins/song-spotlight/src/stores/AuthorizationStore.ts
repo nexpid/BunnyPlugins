@@ -40,7 +40,7 @@ export const useAuthorizationStore = zustand.create<
             isAuthorized: () => !!get().token,
         }),
         {
-            name: "cloudsync-auth",
+            name: "songspotlight-auth",
             storage: createJSONStorage(() => RNCacheModule),
             partialize: ({ tokens }) => ({ tokens }),
             onRehydrateStorage: () => state => state?.init(),

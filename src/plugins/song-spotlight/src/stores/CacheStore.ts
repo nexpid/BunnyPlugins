@@ -11,9 +11,15 @@ const UserStore = findByStoreName("UserStore");
 interface CacheState {
     data: UserData | undefined;
     at: string | undefined;
-    dir: Record<string, { data: UserData; at: string }>;
+    dir: Record<
+        string,
+        {
+            data: UserData | undefined;
+            at: string | undefined;
+        }
+    >;
     init: () => void;
-    updateData: (data?: UserData, at?: string) => void;
+    updateData: (userId: null | string, data?: UserData, at?: string) => void;
     hasData: () => boolean;
 }
 
@@ -31,20 +37,27 @@ export const useCacheStore = zustand.create<
                     get().dir[UserStore.getCurrentUser()?.id] ?? {};
                 set({ data, at });
             },
-            updateData(data, at) {
-                set({
-                    data,
-                    at,
-                    dir: {
-                        ...get().dir,
-                        [UserStore.getCurrentUser()?.id]: { data, at },
-                    },
-                });
+            updateData(userId, data, at) {
+                const you = UserStore.getCurrentUser()?.id;
+                if (!userId || userId === you)
+                    set({
+                        data,
+                        at,
+                        dir: {
+                            ...get().dir,
+                            [userId ?? you]: {
+                                data,
+                                at,
+                            },
+                        },
+                    });
+                else set({ dir: { ...get().dir, [userId]: { data, at } } });
             },
             hasData: () => !!get().data && !!get().at,
         }),
         {
-            name: "cloudsync-cache",
+            version: 2,
+            name: "songspotlight-cache",
             storage: createJSONStorage(() => RNCacheModule),
             partialize: ({ dir }) => ({ dir }),
             onRehydrateStorage: () => state => state?.init(),
