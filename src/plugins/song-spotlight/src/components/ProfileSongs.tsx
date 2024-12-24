@@ -1,5 +1,5 @@
 import { logger } from "@vendetta";
-import { findByName, findByProps } from "@vendetta/metro";
+import { findByName, findByProps, findByStoreName } from "@vendetta/metro";
 import { React, ReactNative as RN, stylesheet } from "@vendetta/metro/common";
 import { semanticColors } from "@vendetta/ui";
 import { showToast } from "@vendetta/ui/toasts";
@@ -8,7 +8,8 @@ import { type ViewProps } from "react-native";
 import { FlashList } from "$/deps";
 
 import { lang } from "..";
-import { listData } from "../stuff/api";
+import { useCacheStore } from "../stores/CacheStore";
+import { getData, listData } from "../stuff/api";
 import { UserData } from "../types";
 import ProfileSong from "./songs/ProfileSong";
 
@@ -17,6 +18,7 @@ const { TableRowGroupTitle } = findByProps("TableRowGroup", "TableRow");
 const { YouScreenProfileCard } = findByProps("YouScreenProfileCard");
 const SimplifiedUserProfileCard = findByName("SimplifiedUserProfileCard");
 const UserProfileSection = findByName("UserProfileSection");
+const UserStore = findByStoreName("UserStore");
 const { useThemeContext } = findByProps("useThemeContext");
 
 export default function ProfileSongs({
@@ -37,10 +39,20 @@ export default function ProfileSongs({
         },
     });
 
+    const { data: ownData } = useCacheStore();
     const [data, setData] = React.useState<UserData | undefined>(undefined);
     const themeContext = useThemeContext();
 
     React.useEffect(() => {
+        if (userId === UserStore.getCurrentUser()?.id) {
+            setData(ownData);
+            if (!ownData) getData();
+            return;
+        }
+    }, [ownData, userId]);
+
+    React.useEffect(() => {
+        if (userId === UserStore.getCurrentUser()?.id) return;
         setData(undefined);
 
         listData(userId)
@@ -58,7 +70,6 @@ export default function ProfileSongs({
     const [currentlyPlaying, setCurrentlyPlaying] = React.useState<
         string | null
     >(null);
-    React.useEffect(() => () => setCurrentlyPlaying(null), []);
 
     if (!data?.length) return null;
 

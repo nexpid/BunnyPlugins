@@ -9,6 +9,7 @@ import { showToast } from "@vendetta/ui/toasts";
 
 import { BetterTableRowGroup } from "$/components/BetterTableRow";
 import Text from "$/components/Text";
+import { Reanimated } from "$/deps";
 import { Button } from "$/lib/redesign";
 import { managePage } from "$/lib/ui";
 import { deepEquals } from "$/types";
@@ -18,7 +19,7 @@ import { useAuthorizationStore } from "../stores/AuthorizationStore";
 import { useCacheStore } from "../stores/CacheStore";
 import { deleteData, getData, saveData } from "../stuff/api";
 import { openOauth2Modal } from "../stuff/oauth2";
-import { UserData } from "../types";
+import { Song, UserData } from "../types";
 import AddSong from "./songs/AddSong";
 import SongInfo from "./songs/SongInfo";
 
@@ -34,14 +35,8 @@ export const ModifiedDataContext = React.createContext({
     setData: (data: UserData) => void;
 });
 
-export default function () {
-    useProxy(vstorage);
-
+function Songs({ isFetching }: { isFetching: boolean }) {
     const styles = stylesheet.createThemedStyleSheet({
-        songList: {
-            flexDirection: "column",
-            gap: 8,
-        },
         songDisabled: {
             backgroundColor: semanticColors.BG_MOD_FAINT,
             borderRadius: 8,
@@ -49,20 +44,111 @@ export default function () {
         },
     });
 
+    const { data, setData } = React.useContext(ModifiedDataContext);
+
+    const [manPositions, setManPositions] = React.useState<
+        Record<string, number>
+    >({});
+    const dervPositions = Object.fromEntries(
+        data.map((item, index) => [item.service + item.type + item.id, index]),
+    );
+
+    // can't use useEffect/useMemo because it doesn't update instantly and causes a quick flicker
+    const oldData = React.useRef(
+        data.map(item => item.service + item.type + item.id).join(","),
+    );
+    const newData = data
+        .map(item => item.service + item.type + item.id)
+        .join(",");
+
+    let positions = { ...dervPositions, ...manPositions };
+    if (newData !== oldData.current) {
+        oldData.current = newData;
+
+        setManPositions({});
+        positions = dervPositions;
+    }
+
+    return (
+        <Reanimated.default.FlatList
+            data={
+                new Array(6)
+                    .fill(null)
+                    .map((_, i) =>
+                        !data[i] && (data[i - 1] || i === 0)
+                            ? true
+                            : (data[i] ?? null),
+                    ) as (Song | true | null)[]
+            }
+            extraData={positions}
+            keyExtractor={(item, index) =>
+                item === true
+                    ? "add-song"
+                    : item
+                      ? item.service + item.type + item.id
+                      : `empty-${index}`
+            }
+            renderItem={({ item, index }) =>
+                item === true ? (
+                    <AddSong disabled={isFetching} />
+                ) : item ? (
+                    <SongInfo
+                        song={item}
+                        disabled={isFetching}
+                        index={index}
+                        itemCount={data.length}
+                        positions={positions}
+                        updatePos={setManPositions}
+                        commit={() => {
+                            const newData = Object.entries(positions)
+                                .map(([hash, index]) => ({
+                                    item: data.find(
+                                        item =>
+                                            item.service +
+                                                item.type +
+                                                item.id ===
+                                            hash,
+                                    ),
+                                    index,
+                                }))
+                                .filter(({ item }) => item)
+                                .sort((a, b) => a.index - b.index)
+                                .map(({ item }) => item) as Song[];
+                            setData(newData);
+                        }}
+                    />
+                ) : (
+                    <FormRow label="" style={styles.songDisabled} />
+                )
+            }
+            style={isFetching && { opacity: 0.8 }}
+            ItemSeparatorComponent={() => <RN.View style={{ height: 8 }} />}
+        />
+    );
+}
+
+export default function Settings({ newData }: { newData?: UserData }) {
+    useProxy(vstorage);
+
     const { isAuthorized } = useAuthorizationStore();
     const [isFetching, setIsFetching] = React.useState(false);
 
     const { data: _data } = useCacheStore();
-    const [data, setData] = React.useState(_data);
+    const [data, setData] = React.useState(newData ?? _data);
     const isDataModified = React.useMemo(
         () => data && _data && !deepEquals(data, _data),
         [data, _data],
     );
 
-    React.useEffect(() => setData(_data), [_data]);
+    const initial = React.useRef(true);
+    React.useEffect(
+        () =>
+            void (initial.current ? (initial.current = false) : setData(_data)),
+        [_data],
+    );
 
     const userId = UserStore.getCurrentUser()?.id ?? null;
-    if (!initState.inits.includes(userId)) {
+    if (!initState.inits.includes(userId) && !newData) {
         initState.inits.push(userId);
         isAuthorized() &&
             (setIsFetching(true),
@@ -114,29 +200,7 @@ export default function () {
                     icon={getAssetIDByName("MusicIcon")}
                     padding>
                     {isAuthorized() && data ? (
-                        <RN.View
-                            style={[
-                                styles.songList,
-                                isFetching && { opacity: 0.8 },
-                            ]}>
-                            {new Array(6)
-                                .fill(null)
-                                .map((_, i) =>
-                                    !data[i] && data[i - 1] ? (
-                                        <AddSong disabled={isFetching} />
-                                    ) : data[i] ? (
-                                        <SongInfo
-                                            song={data[i]}
-                                            disabled={isFetching}
-                                        />
-                                    ) : (
-                                        <FormRow
-                                            label=""
-                                            style={styles.songDisabled}
-                                        />
-                                    ),
-                                )}
-                        </RN.View>
+                        <Songs isFetching={isFetching} />
                     ) : !isAuthorized() ? (
                         <Text
                             variant="text-md/semibold"
