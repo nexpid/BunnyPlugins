@@ -20,7 +20,7 @@ const commonNouns = [
 
 const emojis = ["🎅", "❄️", "🎁", "🎄"];
 
-export const isJolly = false;
+export const isJolly = true;
 
 export function jollifyManifest(manifest: Readmes.Manifest) {
     manifest.authors = manifest.authors.map(author => ({

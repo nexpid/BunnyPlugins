@@ -59,7 +59,7 @@
   - [<img alt="copy_link" src="https://img.shields.io/badge/copy_link-1e2030?style=for-the-badge" />](https://bunny.nexpid.xyz/plugin-browser) [<img alt="view_code" src="https://img.shields.io/badge/view_code-363a4f?style=for-the-badge" />](https://github.com/nexpid/BunnyPlugins/tree/dev/src/plugins/plugin-browser)
 - Plugin Embeds — Shows an embed with plugin info when a plugin link is sent in chat
   - [<img alt="copy_link" src="https://img.shields.io/badge/copy_link-1e2030?style=for-the-badge" />](https://bunny.nexpid.xyz/plugin-embeds) [<img alt="view_code" src="https://img.shields.io/badge/view_code-363a4f?style=for-the-badge" />](https://github.com/nexpid/BunnyPlugins/tree/dev/src/plugins/plugin-embeds)
-- Song Spotlight — Makes it so you can pin songs to your profile
+- Song Spotlight — Show off songs on your Discord profile!
   - [<img alt="copy_link" src="https://img.shields.io/badge/copy_link-1e2030?style=for-the-badge" />](https://bunny.nexpid.xyz/song-spotlight) [<img alt="view_code" src="https://img.shields.io/badge/view_code-363a4f?style=for-the-badge" />](https://github.com/nexpid/BunnyPlugins/tree/dev/src/plugins/song-spotlight) [<img alt="view_backend_code" src="https://img.shields.io/badge/view_backend_code-494d64?style=for-the-badge" />](https://github.com/nexpid/SongSpotlight)
 - Twemoji Everywhere — Turns all (possible) system emoji into Twemoji 👋😀🎉
   - [<img alt="copy_link" src="https://img.shields.io/badge/copy_link-1e2030?style=for-the-badge" />](https://bunny.nexpid.xyz/twemoji-everywhere) [<img alt="view_code" src="https://img.shields.io/badge/view_code-363a4f?style=for-the-badge" />](https://github.com/nexpid/BunnyPlugins/tree/dev/src/plugins/twemoji-everywhere)

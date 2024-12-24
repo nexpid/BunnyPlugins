@@ -12,4 +12,4 @@
 
 <h1 align="center">Song Spotlight</h1>
 
-Makes it so you can pin songs to your profile
+Show off songs on your Discord profile!
