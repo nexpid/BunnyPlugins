@@ -14,6 +14,11 @@ const services = [
             )
                 return null;
 
+            const res = await fetch(
+                `https://open.spotify.com/embed/${type}/${id}`,
+            ).then(x => x.text());
+            if (res.includes("Error_wrapper")) return null;
+
             return {
                 service: "spotify",
                 type,
@@ -36,6 +41,12 @@ const services = [
 
             const embedded = await fetch(
                 `https://soundcloud.com/oembed?format=json&url=${encodeURIComponent(link.toString())}`,
+                {
+                    cache: "force-cache",
+                    headers: {
+                        "cache-control": "public; max-age=1800",
+                    },
+                },
             ).then(x => x.json());
             if (!embedded.html) return null;
 
@@ -56,7 +67,9 @@ const services = [
         return null;
     },
     async function applemusic(link) {
-        if (link.hostname === "music.apple.com") {
+        if (
+            ["music.apple.com", "geo.music.apple.com"].includes(link.hostname)
+        ) {
             let splits = link.pathname.slice(1).split("/");
             if (splits[0].length <= 3) splits = splits.slice(1);
 
@@ -69,6 +82,11 @@ const services = [
             )
                 return null;
 
+            const { status } = await fetch(
+                `https://music.apple.com/us/${type}/songspotlight/${id}`,
+            );
+            if (status !== 200) return null;
+
             return {
                 service: "applemusic",
                 type,
@@ -78,14 +96,46 @@ const services = [
 
         return null;
     },
+    async function songlink(link) {
+        // don't support custom links (artist.link/kurt, ...) yet
+        if (link.hostname === "song.link") {
+            const [router, _id] = link.pathname.slice(1).split("/");
+
+            const id = Number(_id);
+            if (router !== "i" || !Number.isInteger(id) || id < 1e9)
+                return null;
+
+            const res = await fetch(link, {
+                cache: "force-cache",
+                headers: {
+                    "cache-control": "public; max-age=1800",
+                },
+            }).then(x => x.text());
+
+            const nextData = res
+                .split('type="application/json">')[1]
+                .split("</script")[0];
+            const json = JSON.parse(nextData);
+
+            const links = json.props.pageProps.pageData?.sections
+                ?.map(sec => sec.links ?? [])
+                ?.flat();
+            if (!links) return null;
+
+            // soundcloud doesn't work correctly for some reason idk
+            const linked = (
+                links.find(x => x.platform === "spotify") ??
+                links.find(x => x.platform === "appleMusic")
+            )?.url;
+            if (linked) return await resolveLinkToSong(linked);
+        }
+    },
 ] as ((url: URL) => Promise<Song | null>)[];
 
-const parseCacheSymbol = Symbol.for("songspotlight.cache.linktosong");
+export const parseCacheSymbol = Symbol.for("songspotlight.cache.linktosong");
 (window as any)[parseCacheSymbol] ??= new Map();
 
-export function resolveLinkToSong(
-    link: string,
-): null | Song | Promise<null | Song> {
+export async function resolveLinkToSong(link: string): Promise<null | Song> {
     const clean = new URL(link);
     clean.protocol = "https";
     clean.search = "";

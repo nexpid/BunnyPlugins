@@ -56,7 +56,7 @@ const serviceToApp = {
     (song: any) => string[] | Promise<string[] | false>
 >;
 
-const linkCacheSymbol = Symbol.for("songspotlight.cache.servicelink");
+export const linkCacheSymbol = Symbol.for("songspotlight.cache.servicelink");
 (window as any)[linkCacheSymbol] ??= new Map();
 
 export async function getServiceLink(

@@ -19,6 +19,9 @@ import { useAuthorizationStore } from "../stores/AuthorizationStore";
 import { useCacheStore } from "../stores/CacheStore";
 import { deleteData, getData, saveData } from "../stuff/api";
 import { openOauth2Modal } from "../stuff/oauth2";
+import { linkCacheSymbol } from "../stuff/songs";
+import { infoCacheSymbol } from "../stuff/songs/info";
+import { parseCacheSymbol } from "../stuff/songs/parse";
 import { Song, UserData } from "../types";
 import AddSong from "./songs/AddSong";
 import SongInfo from "./songs/SongInfo";
@@ -334,6 +337,26 @@ export default function Settings({ newData }: { newData?: UserData }) {
                             onPress={openOauth2Modal}
                         />
                     )}
+                    <FormRow
+                        label={lang.format(
+                            "settings.clear_link_cache.title",
+                            {},
+                        )}
+                        leading={
+                            <FormRow.Icon
+                                source={getAssetIDByName("LinkIcon")}
+                            />
+                        }
+                        onPress={() => {
+                            showToast(
+                                lang.format("toast.cleared_link_cache", {}),
+                                getAssetIDByName("TrashIcon"),
+                            );
+                            (window as any)[infoCacheSymbol] = new Map();
+                            (window as any)[linkCacheSymbol] = new Map();
+                            (window as any)[parseCacheSymbol] = new Map();
+                        }}
+                    />
                 </BetterTableRowGroup>
                 <RN.View style={{ height: 12 }} />
             </RN.ScrollView>

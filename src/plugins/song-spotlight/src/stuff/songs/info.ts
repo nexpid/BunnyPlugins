@@ -334,7 +334,7 @@ const services = {
     },
 } satisfies Record<Song["service"], (song: any) => Promise<SongInfo | false>>;
 
-const infoCacheSymbol = Symbol.for("songspotlight.cache.songinfo");
+export const infoCacheSymbol = Symbol.for("songspotlight.cache.songinfo");
 (window as any)[infoCacheSymbol] ??= new Map();
 
 export async function getSongInfo(song: Song): Promise<false | SongInfo> {

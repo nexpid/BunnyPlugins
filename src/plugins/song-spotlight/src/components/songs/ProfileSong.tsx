@@ -232,7 +232,6 @@ export default function ProfileSong({
                                                     ...data,
                                                     song,
                                                 ].slice(0, 6);
-                                                console.log(newData);
 
                                                 hideActionSheet();
                                                 openModal("settings", () => (

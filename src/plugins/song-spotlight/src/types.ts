@@ -19,4 +19,9 @@ export type Song = SpotifySong | SoundcloudSong | AppleMusicSong;
 
 export type UserData = Song[];
 
-export const humanReadableServices = ["Spotify", "SoundCloud", "Apple Music"];
+export const humanReadableServices = [
+    "Spotify",
+    "SoundCloud",
+    "Apple Music",
+    "song.link",
+];

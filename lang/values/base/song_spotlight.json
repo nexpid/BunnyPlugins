@@ -14,6 +14,7 @@
   "toast.song_already_exists": "You've already added this song!",
   "toast.song_fetch_failed": "Failed to fetch song!",
   "toast.steal_song_no_space_left": "No space left on your profile!",
+  "toast.cleared_link_cache": "Cleared link cache!",
 
   "settings.update_songs": "Update",
   "settings.songs.title": "Your songs",
@@ -29,6 +30,7 @@
   "settings.auth.delete_songs.title": "Delete songs",
   "settings.auth.delete_songs.description": "Permanently delete your songs",
   "settings.auth.authorize": "Authorize",
+  "settings.clear_link_cache.title": "Clear link cache",
 
   "alert.log_out.title": "Log out",
   "alert.log_out.body": "Are you sure you want to log out of Song Spotlight?",
