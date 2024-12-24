@@ -18,6 +18,8 @@ jobs:
     steps:
       - name: checkout
         uses: actions/checkout@v4
+        with:
+          ref: dev
 
       - name: sync crowdin
         uses: crowdin/github-action@v2
@@ -28,6 +30,7 @@ jobs:
           commit_message: "chore(i18n): sync translations"
           localization_branch_name: i18n
           create_pull_request: false
+          skip_ref_checkout: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
