@@ -62,13 +62,18 @@ jobs:
 
       - name: merge main to dev
         working-directory: dev
-        # FIX: not something we can merge
-        # run: git merge main
         run: |
-          git fetch
+          # FIX: git fetches shallowly
+          git fetch --unshallow
+          git fetch origin
+
           git checkout main
+          git pull origin main
+
           git checkout dev
           git merge main
+
+          git push origin dev
 
       - name: write lang files
         working-directory: dev
@@ -99,10 +104,14 @@ jobs:
           ref: main
 
       - name: merge dev to main
-        # FIX: not something we can merge
-        # run: git merge dev
         run: |
-          git fetch
-          git checkout main
+          # FIX: git fetches shallowly
+          git fetch --unshallow
+
           git checkout dev
+          git pull origin dev
+
+          git checkout main
           git merge dev
+
+          git push origin main
