@@ -1,6 +1,6 @@
 import { findByProps } from "@vendetta/metro";
 import { React, ReactNative as RN } from "@vendetta/metro/common";
-import { semanticColors } from "@vendetta/ui";
+import { rawColors, semanticColors } from "@vendetta/ui";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { showToast } from "@vendetta/ui/toasts";
 
@@ -34,12 +34,10 @@ const { useThemeContext } = findByProps("useThemeContext");
 
 export default function ProfileSong({
     song,
-    themed,
     customBorder,
     playing,
 }: {
     song: Song;
-    themed?: boolean;
     customBorder?: string;
     playing: {
         currentlyPlaying: string | null;
@@ -66,34 +64,28 @@ export default function ProfileSong({
             .catch(() => setSongInfo(false));
     }, [song.service + song.type + song.id]);
 
+    const cardBackground =
+        themeContext.theme === "light"
+            ? `${rawColors.PRIMARY_400}29`
+            : `${rawColors.PLUM_0}08`;
+    const noCardBackground =
+        themeContext.theme === "light"
+            ? `${rawColors.PRIMARY_400}14`
+            : `${rawColors.PLUM_0}09`;
+    const cardBorder = customBorder ?? semanticColors.BORDER_SUBTLE;
+
     const styles = createThemeContextStyleSheet({
         card: {
             width: "100%",
-            backgroundColor: semanticColors.CARD_PRIMARY_BG,
-            borderColor: customBorder ?? semanticColors.BORDER_SUBTLE,
+            backgroundColor: cardBackground,
+            borderColor: cardBorder,
             borderWidth: 1,
             borderRadius: 10,
         },
-        themedCard: {
-            backgroundColor:
-                themeContext.theme === "light"
-                    ? semanticColors.BG_MOD_SUBTLE
-                    : "#ffffff08",
-        },
         noCard: {
-            backgroundColor: semanticColors.CARD_SECONDARY_BG,
+            backgroundColor: noCardBackground,
             borderRadius: 10,
-            borderColor: semanticColors.CARD_SECONDARY_BG,
-        },
-        themedNoCard: {
-            backgroundColor:
-                themeContext.theme === "light"
-                    ? semanticColors.BG_MOD_FAINT
-                    : "#ffffff07",
-            borderColor:
-                themeContext.theme === "light"
-                    ? semanticColors.BG_MOD_FAINT
-                    : "#ffffff07",
+            borderColor: noCardBackground,
         },
         thumbnail: {
             width: 64,
@@ -106,10 +98,10 @@ export default function ProfileSong({
             alignItems: "center",
             justifyContent: "center",
             borderRadius: 4,
-            backgroundColor: semanticColors.BG_MOD_SUBTLE,
+            backgroundColor: cardBorder,
         },
         entriesMain: {
-            borderTopColor: customBorder ?? semanticColors.BORDER_SUBTLE,
+            borderTopColor: cardBorder,
             borderTopWidth: 1,
             paddingHorizontal: 10,
             height:
@@ -125,7 +117,7 @@ export default function ProfileSong({
             height: 24,
             borderBottomLeftRadius: 9,
             borderTopRightRadius: 10,
-            backgroundColor: customBorder ?? semanticColors.BORDER_SUBTLE,
+            backgroundColor: cardBorder,
             justifyContent: "center",
             alignItems: "center",
         },
@@ -136,12 +128,7 @@ export default function ProfileSong({
         },
     });
 
-    const cardThing = () => ({
-        ...styles.card,
-        ...(_songInfo && themed && styles.themedCard),
-        ...(!_songInfo && styles.noCard),
-        ...(!_songInfo && themed && styles.themedNoCard),
-    });
+    const cardThing = () => (_songInfo ? styles.card : styles.noCard);
 
     const opacityValue = Reanimated.useSharedValue(_songInfo ? 1 : 0);
     const backgroundColor = Reanimated.useSharedValue(
@@ -150,18 +137,18 @@ export default function ProfileSong({
     const borderColor = Reanimated.useSharedValue(cardThing().borderColor);
 
     React.useEffect(() => {
+        opacityValue.value = Reanimated.withSpring(_songInfo ? 1 : 0);
         backgroundColor.value = Reanimated.withSpring(
             cardThing().backgroundColor,
         );
         borderColor.value = Reanimated.withSpring(cardThing().borderColor);
-        opacityValue.value = Reanimated.withSpring(_songInfo ? 1 : 0);
     }, [!!_songInfo]);
 
     return (
         <Reanimated.default.View
             style={[
-                [styles.card, themed && _songInfo && styles.themedCard],
-                !_songInfo && [styles.noCard, themed && styles.themedNoCard],
+                styles.card,
+                !_songInfo && styles.noCard,
                 { backgroundColor, borderColor },
             ]}>
             <Reanimated.default.View

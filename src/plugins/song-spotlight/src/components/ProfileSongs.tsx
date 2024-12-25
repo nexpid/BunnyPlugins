@@ -19,7 +19,6 @@ const { YouScreenProfileCard } = findByProps("YouScreenProfileCard");
 const SimplifiedUserProfileCard = findByName("SimplifiedUserProfileCard");
 const UserProfileSection = findByName("UserProfileSection");
 const UserStore = findByStoreName("UserStore");
-const { useThemeContext } = findByProps("useThemeContext");
 
 export default function ProfileSongs({
     userId,
@@ -41,7 +40,6 @@ export default function ProfileSongs({
 
     const { data: ownData } = useCacheStore();
     const [data, setData] = React.useState<UserData | undefined>(undefined);
-    const themeContext = useThemeContext();
 
     React.useEffect(() => {
         if (userId === UserStore.getCurrentUser()?.id) {
@@ -81,7 +79,6 @@ export default function ProfileSongs({
             renderItem={({ item }) => (
                 <ProfileSong
                     song={item}
-                    themed={!!style || !!themeContext.primaryColor}
                     customBorder={customBorder}
                     playing={{ currentlyPlaying, setCurrentlyPlaying }}
                 />
