@@ -60,9 +60,15 @@ jobs:
         with:
           root: dev/
 
-      - name: sync dev and main
+      - name: merge main to dev
         working-directory: dev
-        run: git pull origin main --rebase
+        # FIX: not something we can merge
+        # run: git merge main
+        run: |
+          git fetch
+          git checkout main
+          git checkout dev
+          git merge main
 
       - name: write lang files
         working-directory: dev
@@ -89,8 +95,14 @@ jobs:
     steps:
       - name: checkout
         uses: actions/checkout@v4
+        with:
+          ref: main
 
       - name: merge dev to main
+        # FIX: not something we can merge
+        # run: git merge dev
         run: |
-          git pull origin dev --ff-only
-          git push origin main
+          git fetch
+          git checkout main
+          git checkout dev
+          git merge dev
