@@ -12,18 +12,11 @@ const { bunny } = window as any;
 const { TableRowIcon } = findByProps("TableRowIcon");
 
 const tabsNavigationRef = bunny.metro.findByPropsLazy("getRootNavigationRef");
-
 const settingConstants = bunny.metro.findByPropsLazy("SETTING_RENDERER_CONFIG");
 const SettingsOverviewScreen = bunny.metro.findByNameLazy(
     "SettingsOverviewScreen",
     false,
 );
-
-function useIsFirstRender() {
-    let firstRender = false;
-    React.useEffect(() => void (firstRender = true), []);
-    return firstRender;
-}
 
 export function patchTabsUI(tabs: PinToSettingsTabs, patches: (() => void)[]) {
     const row = {
@@ -60,22 +53,27 @@ export function patchTabsUI(tabs: PinToSettingsTabs, patches: (() => void)[]) {
         set: v => (rendererConfigValue = v),
     });
 
+    const firstRender = Symbol("pinToSettings meow meow");
+
     patches.push(
-        after("default", SettingsOverviewScreen, (_, ret) => {
-            if (useIsFirstRender()) return;
+        after("default", SettingsOverviewScreen, (args, ret) => {
+            // shrug??
+            if (!args[0][firstRender]) {
+                args[0][firstRender] = true;
 
-            const { sections } = findInReactTree(
-                ret,
-                i => i.props?.sections,
-            ).props;
-            const section = sections?.find((x: any) =>
-                ["Bunny", "Revenge"].some(
-                    mod => x.label === mod && x.title === mod,
-                ),
-            );
+                const { sections } = findInReactTree(
+                    ret,
+                    i => i.props?.sections,
+                ).props;
+                const section = sections?.find((x: any) =>
+                    ["Bunny", "Revenge"].some(
+                        mod => x.label === mod && x.title === mod,
+                    ),
+                );
 
-            if (section?.settings)
-                section.settings = [...section.settings, tabs.key];
+                if (section?.settings)
+                    section.settings = [...section.settings, tabs.key];
+            }
         }),
     );
 }
