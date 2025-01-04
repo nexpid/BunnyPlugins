@@ -7,6 +7,8 @@ on:
     paths:
       - src/**/*.*
   workflow_dispatch:
+  schedule:
+    - cron: "0 12 1 1,12 *" # At 12:00 on January 1st & December 1st
 
 concurrency:
   group: ${{ github.workflow }}
@@ -25,8 +27,6 @@ jobs:
       - name: setup workspace
         uses: ./.github/actions/ci
   build:
-    needs: ci
-
     runs-on: ubuntu-latest
     permissions:
       contents: write
