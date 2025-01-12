@@ -1,21 +1,21 @@
 // https://raw.githubusercontent.com/pyoncord/Bunny/dev/src/core/ui/settings/pages/Plugins/PluginCard.tsx
 // this is a modified version with some plugin browser specific changes
 
-import { React, ReactNative as RN, stylesheet } from "@vendetta/metro/common";
-import { rawColors, semanticColors } from "@vendetta/ui";
-import { getAssetIDByName } from "@vendetta/ui/assets";
-import { Forms } from "@vendetta/ui/components";
+import { React, ReactNative as RN, stylesheet } from '@vendetta/metro/common'
+import { rawColors, semanticColors } from '@vendetta/ui'
+import { getAssetIDByName } from '@vendetta/ui/assets'
+import { Forms } from '@vendetta/ui/components'
 
 import {
     hideActionSheet,
     showSimpleActionSheet,
-} from "$/components/ActionSheet";
-import Text from "$/components/Text";
-import { Reanimated } from "$/deps";
-import { buttonVariantPolyfill, IconButton, Stack } from "$/lib/redesign";
-import { lerp } from "$/types";
+} from '$/components/ActionSheet'
+import Text from '$/components/Text'
+import { Reanimated } from '$/deps'
+import { buttonVariantPolyfill, IconButton, Stack } from '$/lib/redesign'
+import { lerp } from '$/types'
 
-const { FormRow } = Forms;
+const { FormRow } = Forms
 
 // TODO: These styles work weirdly. iOS has cramped text, Android with low DPI probably does too. Fix?
 
@@ -28,13 +28,13 @@ const styles = stylesheet.createThemedStyleSheet({
         backgroundColor: semanticColors.CARD_PRIMARY_BG,
     },
     content: {
-        flexDirection: "row",
-        alignItems: "center",
+        flexDirection: 'row',
+        alignItems: 'center',
         flex: 1,
     },
     title: {
-        flexDirection: "row",
-        alignItems: "center",
+        flexDirection: 'row',
+        alignItems: 'center',
         gap: 6,
         flexShrink: 1,
     },
@@ -44,49 +44,49 @@ const styles = stylesheet.createThemedStyleSheet({
         height: 18,
     },
     actions: {
-        flexDirection: "row-reverse",
-        alignItems: "center",
+        flexDirection: 'row-reverse',
+        alignItems: 'center',
         gap: 5,
     },
-});
+})
 
 interface Action {
-    icon: string;
-    disabled?: boolean;
-    isDestructive?: boolean;
-    loading?: boolean;
-    onPress: () => void;
+    icon: string
+    disabled?: boolean
+    isDestructive?: boolean
+    loading?: boolean
+    onPress: () => void
 }
 
-type OverflowAction = Omit<Action, "loading"> & {
-    label: string;
-};
+type OverflowAction = Omit<Action, 'loading'> & {
+    label: string
+}
 
 interface CardProps {
-    headerLabel: React.ReactNode;
-    headerSuffix?: React.ReactNode;
-    headerSublabel?: React.ReactNode;
-    headerIcon?: number;
-    descriptionLabel?: string;
-    actions: Action[];
-    overflowTitle: string;
-    overflowActions: OverflowAction[];
-    highlight?: boolean;
-    disabled?: boolean;
+    headerLabel: React.ReactNode
+    headerSuffix?: React.ReactNode
+    headerSublabel?: React.ReactNode
+    headerIcon?: number
+    descriptionLabel?: string
+    actions: Action[]
+    overflowTitle: string
+    overflowActions: OverflowAction[]
+    highlight?: boolean
+    disabled?: boolean
 }
 
 export default function Card(props: CardProps) {
-    const baseColor = styles.card.backgroundColor as string;
+    const baseColor = styles.card.backgroundColor as string
     const highlightColor = lerp(
         baseColor,
         rawColors.BRAND_500,
         0.08,
-    ) as any as string;
+    ) as any as string
 
-    const color = Reanimated.useSharedValue(baseColor);
+    const color = Reanimated.useSharedValue(baseColor)
 
     React.useEffect(() => {
-        color.value = baseColor;
+        color.value = baseColor
         if (props.highlight)
             color.value = Reanimated.withSequence(
                 Reanimated.withTiming(highlightColor, {
@@ -97,8 +97,8 @@ export default function Card(props: CardProps) {
                     duration: 500,
                     easing: Reanimated.Easing.cubic,
                 }),
-            );
-    }, [props.highlight]);
+            )
+    }, [props.highlight])
 
     return (
         <Reanimated.default.View
@@ -108,7 +108,8 @@ export default function Card(props: CardProps) {
                     backgroundColor: color,
                 },
                 props.disabled && { opacity: 0.5 },
-            ]}>
+            ]}
+        >
             <Stack spacing={16}>
                 <RN.View style={styles.content}>
                     <Stack spacing={0} style={{ flex: 1 }}>
@@ -125,7 +126,8 @@ export default function Card(props: CardProps) {
                                 color="HEADER_PRIMARY"
                                 lineClamp={1}
                                 ellipsis="tail"
-                                style={{ flexShrink: 1 }}>
+                                style={{ flexShrink: 1 }}
+                            >
                                 {props.headerLabel}
                             </Text>
                             {props.headerSuffix}
@@ -155,7 +157,7 @@ export default function Card(props: CardProps) {
                                             isDestructive
                                                 ? buttonVariantPolyfill()
                                                       .destructive
-                                                : "secondary"
+                                                : 'secondary'
                                         }
                                         icon={getAssetIDByName(icon)}
                                     />
@@ -165,7 +167,7 @@ export default function Card(props: CardProps) {
                                 <IconButton
                                     onPress={() => {
                                         showSimpleActionSheet({
-                                            key: "CardOverflow",
+                                            key: 'CardOverflow',
                                             header: {
                                                 title: props.overflowTitle,
                                                 icon: props.headerIcon &&
@@ -186,12 +188,12 @@ export default function Card(props: CardProps) {
                                                     ),
                                                 }),
                                             ),
-                                        });
+                                        })
                                     }}
                                     size="sm"
                                     variant="secondary"
                                     icon={getAssetIDByName(
-                                        "CircleInformationIcon-primary",
+                                        'CircleInformationIcon-primary',
                                     )}
                                 />
                             )}
@@ -205,5 +207,5 @@ export default function Card(props: CardProps) {
                 )}
             </Stack>
         </Reanimated.default.View>
-    );
+    )
 }

@@ -1,24 +1,24 @@
-import { plugins } from "@vendetta/plugins";
-import { semanticColors } from "@vendetta/ui";
+import { plugins } from '@vendetta/plugins'
+import { semanticColors } from '@vendetta/ui'
 
-import { androidifyColor, resolveSemanticColor } from "$/types";
+import { androidifyColor, resolveSemanticColor } from '$/types'
 
-import { pluginInstallingCache, updateMessages } from "./messages";
+import { pluginInstallingCache, updateMessages } from './messages'
 
-const pluginInfoCache = {} as Record<string, PluginManifest | null>;
+const pluginInfoCache = {} as Record<string, PluginManifest | null>
 const getPluginInfo = (
     plugin: string,
 ): {
-    res: PluginManifest | null | false;
-    promise?: Promise<PluginManifest | null>;
+    res: PluginManifest | null | false
+    promise?: Promise<PluginManifest | null>
 } => {
     if (pluginInfoCache[plugin] !== undefined)
-        return { res: pluginInfoCache[plugin] };
+        return { res: pluginInfoCache[plugin] }
 
     if (plugins[plugin])
         return {
             res: (pluginInfoCache[plugin] = plugins[plugin].manifest),
-        };
+        }
 
     // suffer
     return {
@@ -27,17 +27,17 @@ const getPluginInfo = (
             try {
                 pluginInfoCache[plugin] = await (
                     await fetch(`${plugin}manifest.json`, {
-                        headers: { "cache-control": "public; max-age=30" },
+                        headers: { 'cache-control': 'public; max-age=30' },
                     })
-                ).json();
-            } catch (e) {
-                pluginInfoCache[plugin] = null;
+                ).json()
+            } catch (_e) {
+                pluginInfoCache[plugin] = null
             }
-            updateMessages(plugin);
-            return pluginInfoCache[plugin];
+            updateMessages(plugin)
+            return pluginInfoCache[plugin]
         })(),
-    };
-};
+    }
+}
 
 export const getCodedLink = (plugin: string) => {
     const obj = {
@@ -49,44 +49,44 @@ export const getCodedLink = (plugin: string) => {
         headerColor: androidifyColor(
             resolveSemanticColor(semanticColors.HEADER_PRIMARY),
         ),
-        headerText: "",
+        headerText: '',
         acceptLabelBackgroundColor: 0,
-        titleText: "",
+        titleText: '',
         type: null,
         extendedType: 4,
         participantAvatarUris: [],
-        acceptLabelText: "",
-        noParticipantsText: "",
+        acceptLabelText: '',
+        noParticipantsText: '',
         ctaEnabled: false,
         plugin,
-    };
+    }
 
-    const info = getPluginInfo(plugin).res;
-    const installing = pluginInstallingCache[plugin];
+    const info = getPluginInfo(plugin).res
+    const installing = pluginInstallingCache[plugin]
 
     if (info === false) {
-        obj.headerText = "...";
+        obj.headerText = '...'
     } else if (info === null) {
-        obj.headerText = "unknown plugin";
+        obj.headerText = 'unknown plugin'
     } else {
-        obj.titleText = info.name;
-        obj.noParticipantsText = `\n${info.description}`;
-        obj.ctaEnabled = !installing;
+        obj.titleText = info.name
+        obj.noParticipantsText = `\n${info.description}`
+        obj.ctaEnabled = !installing
 
-        const has = !!plugins[plugin];
+        const has = !!plugins[plugin]
         obj.acceptLabelBackgroundColor = androidifyColor(
             resolveSemanticColor(
                 !has || installing
                     ? semanticColors.BUTTON_POSITIVE_BACKGROUND
                     : semanticColors.BUTTON_DANGER_BACKGROUND,
             ),
-        );
+        )
         obj.acceptLabelText = installing
-            ? "..."
+            ? '...'
             : has
-              ? "Uninstall Plugin"
-              : "Install Plugin";
+              ? 'Uninstall Plugin'
+              : 'Install Plugin'
     }
 
-    return obj;
-};
+    return obj
+}

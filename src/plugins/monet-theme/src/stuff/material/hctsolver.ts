@@ -1,12 +1,9 @@
-/* eslint-disable @typescript-eslint/no-extraneous-class */
 // https://github.com/material-foundation/material-color-utilities/blob/ca894db8b6aebb2833f1805ae61573c92e3f1660/typescript/hct/hct_solver.ts#L27-L554
 // material_color_utilities is designed to have a consistent API across
 // platforms and modular components that can be moved around easily. Using a
 // class as a namespace facilitates this.
-//
-// tslint:disable:class-as-namespace
 
-import { ViewingConditions } from "./cam16";
+import { ViewingConditions } from './cam16'
 import {
     argbFromLinrgb,
     argbFromLstar,
@@ -14,25 +11,27 @@ import {
     sanitizeDegreesDouble,
     signum,
     yFromLstar,
-} from "./utils";
+} from './utils'
 
 /**
  * A class that solves the HCT equation.
  */
+
+// biome-ignore lint/complexity/noStaticOnlyClass: Let's ignore it just this once
 export class HctSolver {
     static SCALED_DISCOUNT_FROM_LINRGB = [
         [0.001200833568784504, 0.002389694492170889, 0.0002795742885861124],
         [0.0005891086651375999, 0.0029785502573438758, 0.0003270666104008398],
         [0.00010146692491640572, 0.0005364214359186694, 0.0032979401770712076],
-    ];
+    ]
 
     static LINRGB_FROM_SCALED_DISCOUNT = [
         [1373.2198709594231, -1100.4251190754821, -7.278681089101213],
         [-271.815969077903, 559.6580465940733, -32.46047482791194],
         [1.9622899599665666, -57.173814538844006, 308.7233197812385],
-    ];
+    ]
 
-    static Y_FROM_LINRGB = [0.2126, 0.7152, 0.0722];
+    static Y_FROM_LINRGB = [0.2126, 0.7152, 0.0722]
 
     static CRITICAL_PLANES = [
         0.015176349177441876, 0.045529047532325624, 0.07588174588720938,
@@ -120,7 +119,7 @@ export class HctSolver {
         92.58406282226491, 93.43925555268066, 94.29903859396902,
         95.16341895893969, 96.03240364439274, 96.9059996312159,
         97.78421388448044, 98.6670533535366, 99.55452497210776,
-    ];
+    ]
 
     /**
      * Sanitizes a small enough angle in radians.
@@ -130,7 +129,7 @@ export class HctSolver {
      * @return A coterminal angle between 0 and 2pi.
      */
     private static sanitizeRadians(angle: number): number {
-        return (angle + Math.PI * 8) % (Math.PI * 2);
+        return (angle + Math.PI * 8) % (Math.PI * 2)
     }
 
     /**
@@ -143,19 +142,19 @@ export class HctSolver {
      * regular RGB space
      */
     private static trueDelinearized(rgbComponent: number): number {
-        const normalized = rgbComponent / 100.0;
-        let delinearized = 0.0;
+        const normalized = rgbComponent / 100.0
+        let delinearized = 0.0
         if (normalized <= 0.0031308) {
-            delinearized = normalized * 12.92;
+            delinearized = normalized * 12.92
         } else {
-            delinearized = 1.055 * Math.pow(normalized, 1.0 / 2.4) - 0.055;
+            delinearized = 1.055 * normalized ** (1.0 / 2.4) - 0.055
         }
-        return delinearized * 255.0;
+        return delinearized * 255.0
     }
 
     private static chromaticAdaptation(component: number): number {
-        const af = Math.pow(Math.abs(component), 0.42);
-        return (signum(component) * 400.0 * af) / (af + 27.13);
+        const af = Math.abs(component) ** 0.42
+        return (signum(component) * 400.0 * af) / (af + 27.13)
     }
 
     /**
@@ -168,21 +167,21 @@ export class HctSolver {
         const scaledDiscount = matrixMultiply(
             linrgb,
             HctSolver.SCALED_DISCOUNT_FROM_LINRGB,
-        );
-        const rA = HctSolver.chromaticAdaptation(scaledDiscount[0]);
-        const gA = HctSolver.chromaticAdaptation(scaledDiscount[1]);
-        const bA = HctSolver.chromaticAdaptation(scaledDiscount[2]);
+        )
+        const rA = HctSolver.chromaticAdaptation(scaledDiscount[0])
+        const gA = HctSolver.chromaticAdaptation(scaledDiscount[1])
+        const bA = HctSolver.chromaticAdaptation(scaledDiscount[2])
         // redness-greenness
-        const a = (11.0 * rA + -12.0 * gA + bA) / 11.0;
+        const a = (11.0 * rA + -12.0 * gA + bA) / 11.0
         // yellowness-blueness
-        const b = (rA + gA - 2.0 * bA) / 9.0;
-        return Math.atan2(b, a);
+        const b = (rA + gA - 2.0 * bA) / 9.0
+        return Math.atan2(b, a)
     }
 
     private static areInCyclicOrder(a: number, b: number, c: number): boolean {
-        const deltaAB = HctSolver.sanitizeRadians(b - a);
-        const deltaAC = HctSolver.sanitizeRadians(c - a);
-        return deltaAB < deltaAC;
+        const deltaAB = HctSolver.sanitizeRadians(b - a)
+        const deltaAC = HctSolver.sanitizeRadians(c - a)
+        return deltaAB < deltaAC
     }
 
     /**
@@ -198,7 +197,7 @@ export class HctSolver {
         mid: number,
         target: number,
     ): number {
-        return (mid - source) / (target - source);
+        return (mid - source) / (target - source)
     }
 
     private static lerpPoint(
@@ -210,7 +209,7 @@ export class HctSolver {
             source[0] + (target[0] - source[0]) * t,
             source[1] + (target[1] - source[1]) * t,
             source[2] + (target[2] - source[2]) * t,
-        ];
+        ]
     }
 
     /**
@@ -230,12 +229,12 @@ export class HctSolver {
         target: number[],
         axis: number,
     ): number[] {
-        const t = HctSolver.intercept(source[axis], coordinate, target[axis]);
-        return HctSolver.lerpPoint(source, t, target);
+        const t = HctSolver.intercept(source[axis], coordinate, target[axis])
+        return HctSolver.lerpPoint(source, t, target)
     }
 
     private static isBounded(x: number): boolean {
-        return x >= 0.0 && x <= 100.0;
+        return x >= 0.0 && x <= 100.0
     }
 
     /**
@@ -249,39 +248,36 @@ export class HctSolver {
      * [-1.0, -1.0, -1.0] is returned.
      */
     private static nthVertex(y: number, n: number): number[] {
-        const kR = HctSolver.Y_FROM_LINRGB[0];
-        const kG = HctSolver.Y_FROM_LINRGB[1];
-        const kB = HctSolver.Y_FROM_LINRGB[2];
-        const coordA = n % 4 <= 1 ? 0.0 : 100.0;
-        const coordB = n % 2 === 0 ? 0.0 : 100.0;
+        const kR = HctSolver.Y_FROM_LINRGB[0]
+        const kG = HctSolver.Y_FROM_LINRGB[1]
+        const kB = HctSolver.Y_FROM_LINRGB[2]
+        const coordA = n % 4 <= 1 ? 0.0 : 100.0
+        const coordB = n % 2 === 0 ? 0.0 : 100.0
         if (n < 4) {
-            const g = coordA;
-            const b = coordB;
-            const r = (y - g * kG - b * kB) / kR;
+            const g = coordA
+            const b = coordB
+            const r = (y - g * kG - b * kB) / kR
             if (HctSolver.isBounded(r)) {
-                return [r, g, b];
-            } else {
-                return [-1.0, -1.0, -1.0];
+                return [r, g, b]
             }
-        } else if (n < 8) {
-            const b = coordA;
-            const r = coordB;
-            const g = (y - r * kR - b * kB) / kG;
-            if (HctSolver.isBounded(g)) {
-                return [r, g, b];
-            } else {
-                return [-1.0, -1.0, -1.0];
-            }
-        } else {
-            const r = coordA;
-            const g = coordB;
-            const b = (y - r * kR - g * kG) / kB;
-            if (HctSolver.isBounded(b)) {
-                return [r, g, b];
-            } else {
-                return [-1.0, -1.0, -1.0];
-            }
+            return [-1.0, -1.0, -1.0]
         }
+        if (n < 8) {
+            const b = coordA
+            const r = coordB
+            const g = (y - r * kR - b * kB) / kG
+            if (HctSolver.isBounded(g)) {
+                return [r, g, b]
+            }
+            return [-1.0, -1.0, -1.0]
+        }
+        const r = coordA
+        const g = coordB
+        const b = (y - r * kR - g * kG) / kB
+        if (HctSolver.isBounded(b)) {
+            return [r, g, b]
+        }
+        return [-1.0, -1.0, -1.0]
     }
 
     /**
@@ -294,53 +290,53 @@ export class HctSolver {
      * desired color.
      */
     private static bisectToSegment(y: number, targetHue: number): number[][] {
-        let left = [-1.0, -1.0, -1.0];
-        let right = left;
-        let leftHue = 0.0;
-        let rightHue = 0.0;
-        let initialized = false;
-        let uncut = true;
+        let left = [-1.0, -1.0, -1.0]
+        let right = left
+        let leftHue = 0.0
+        let rightHue = 0.0
+        let initialized = false
+        let uncut = true
         for (let n = 0; n < 12; n++) {
-            const mid = HctSolver.nthVertex(y, n);
+            const mid = HctSolver.nthVertex(y, n)
             if (mid[0] < 0) {
-                continue;
+                continue
             }
-            const midHue = HctSolver.hueOf(mid);
+            const midHue = HctSolver.hueOf(mid)
             if (!initialized) {
-                left = mid;
-                right = mid;
-                leftHue = midHue;
-                rightHue = midHue;
-                initialized = true;
-                continue;
+                left = mid
+                right = mid
+                leftHue = midHue
+                rightHue = midHue
+                initialized = true
+                continue
             }
             if (
                 uncut ||
                 HctSolver.areInCyclicOrder(leftHue, midHue, rightHue)
             ) {
-                uncut = false;
+                uncut = false
                 if (HctSolver.areInCyclicOrder(leftHue, targetHue, midHue)) {
-                    right = mid;
-                    rightHue = midHue;
+                    right = mid
+                    rightHue = midHue
                 } else {
-                    left = mid;
-                    leftHue = midHue;
+                    left = mid
+                    leftHue = midHue
                 }
             }
         }
-        return [left, right];
+        return [left, right]
     }
 
     private static midpoint(a: number[], b: number[]): number[] {
-        return [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2, (a[2] + b[2]) / 2];
+        return [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2, (a[2] + b[2]) / 2]
     }
 
     private static criticalPlaneBelow(x: number): number {
-        return Math.floor(x - 0.5);
+        return Math.floor(x - 0.5)
     }
 
     private static criticalPlaneAbove(x: number): number {
-        return Math.ceil(x - 0.5);
+        return Math.ceil(x - 0.5)
     }
 
     /**
@@ -352,68 +348,62 @@ export class HctSolver {
      * @return The desired color, in linear RGB coordinates.
      */
     private static bisectToLimit(y: number, targetHue: number): number[] {
-        const segment = HctSolver.bisectToSegment(y, targetHue);
-        let left = segment[0];
-        let leftHue = HctSolver.hueOf(left);
-        let right = segment[1];
+        const segment = HctSolver.bisectToSegment(y, targetHue)
+        let left = segment[0]
+        let leftHue = HctSolver.hueOf(left)
+        let right = segment[1]
         for (let axis = 0; axis < 3; axis++) {
             if (left[axis] !== right[axis]) {
-                let lPlane = -1;
-                let rPlane = 255;
+                let lPlane = -1
+                let rPlane = 255
                 if (left[axis] < right[axis]) {
                     lPlane = HctSolver.criticalPlaneBelow(
                         HctSolver.trueDelinearized(left[axis]),
-                    );
+                    )
                     rPlane = HctSolver.criticalPlaneAbove(
                         HctSolver.trueDelinearized(right[axis]),
-                    );
+                    )
                 } else {
                     lPlane = HctSolver.criticalPlaneAbove(
                         HctSolver.trueDelinearized(left[axis]),
-                    );
+                    )
                     rPlane = HctSolver.criticalPlaneBelow(
                         HctSolver.trueDelinearized(right[axis]),
-                    );
+                    )
                 }
                 for (let i = 0; i < 8; i++) {
                     if (Math.abs(rPlane - lPlane) <= 1) {
-                        break;
+                        break
+                    }
+                    const mPlane = Math.floor((lPlane + rPlane) / 2.0)
+                    const midPlaneCoordinate = HctSolver.CRITICAL_PLANES[mPlane]
+                    const mid = HctSolver.setCoordinate(
+                        left,
+                        midPlaneCoordinate,
+                        right,
+                        axis,
+                    )
+                    const midHue = HctSolver.hueOf(mid)
+                    if (
+                        HctSolver.areInCyclicOrder(leftHue, targetHue, midHue)
+                    ) {
+                        right = mid
+                        rPlane = mPlane
                     } else {
-                        const mPlane = Math.floor((lPlane + rPlane) / 2.0);
-                        const midPlaneCoordinate =
-                            HctSolver.CRITICAL_PLANES[mPlane];
-                        const mid = HctSolver.setCoordinate(
-                            left,
-                            midPlaneCoordinate,
-                            right,
-                            axis,
-                        );
-                        const midHue = HctSolver.hueOf(mid);
-                        if (
-                            HctSolver.areInCyclicOrder(
-                                leftHue,
-                                targetHue,
-                                midHue,
-                            )
-                        ) {
-                            right = mid;
-                            rPlane = mPlane;
-                        } else {
-                            left = mid;
-                            leftHue = midHue;
-                            lPlane = mPlane;
-                        }
+                        left = mid
+                        leftHue = midHue
+                        lPlane = mPlane
                     }
                 }
             }
         }
-        return HctSolver.midpoint(left, right);
+        return HctSolver.midpoint(left, right)
     }
 
     private static inverseChromaticAdaptation(adapted: number): number {
-        const adaptedAbs = Math.abs(adapted);
-        const base = Math.max(0, (27.13 * adaptedAbs) / (400.0 - adaptedAbs));
-        return signum(adapted) * Math.pow(base, 1.0 / 0.42);
+        const adaptedAbs = Math.abs(adapted)
+        const base = Math.max(0, (27.13 * adaptedAbs) / (400.0 - adaptedAbs))
+        return signum(adapted) * base ** (1.0 / 0.42)
     }
 
     /**
@@ -431,65 +421,61 @@ export class HctSolver {
         y: number,
     ): number {
         // Initial estimate of j.
-        let j = Math.sqrt(y) * 11.0;
+        let j = Math.sqrt(y) * 11.0
         // ===========================================================
         // Operations inlined from Cam16 to avoid repeated calculation
         // ===========================================================
-        const viewingConditions = ViewingConditions.DEFAULT;
-        const tInnerCoeff =
-            1 / Math.pow(1.64 - Math.pow(0.29, viewingConditions.n), 0.73);
-        const eHue = 0.25 * (Math.cos(hueRadians + 2.0) + 3.8);
+        const viewingConditions = ViewingConditions.DEFAULT
+        const tInnerCoeff = 1 / (1.64 - 0.29 ** viewingConditions.n) ** 0.73
+        const eHue = 0.25 * (Math.cos(hueRadians + 2.0) + 3.8)
         const p1 =
             eHue *
             (50000.0 / 13.0) *
             viewingConditions.nc *
-            viewingConditions.ncb;
-        const hSin = Math.sin(hueRadians);
-        const hCos = Math.cos(hueRadians);
+            viewingConditions.ncb
+        const hSin = Math.sin(hueRadians)
+        const hCos = Math.cos(hueRadians)
         for (let iterationRound = 0; iterationRound < 5; iterationRound++) {
             // ===========================================================
             // Operations inlined from Cam16 to avoid repeated calculation
             // ===========================================================
-            const jNormalized = j / 100.0;
+            const jNormalized = j / 100.0
             const alpha =
                 chroma === 0.0 || j === 0.0
                     ? 0.0
-                    : chroma / Math.sqrt(jNormalized);
-            const t = Math.pow(alpha * tInnerCoeff, 1.0 / 0.9);
+                    : chroma / Math.sqrt(jNormalized)
+            const t = (alpha * tInnerCoeff) ** (1.0 / 0.9)
             const ac =
                 viewingConditions.aw *
-                Math.pow(
-                    jNormalized,
-                    1.0 / viewingConditions.c / viewingConditions.z,
-                );
-            const p2 = ac / viewingConditions.nbb;
+                jNormalized ** (1.0 / viewingConditions.c / viewingConditions.z)
+            const p2 = ac / viewingConditions.nbb
             const gamma =
                 (23.0 * (p2 + 0.305) * t) /
-                (23.0 * p1 + 11 * t * hCos + 108.0 * t * hSin);
-            const a = gamma * hCos;
-            const b = gamma * hSin;
-            const rA = (460.0 * p2 + 451.0 * a + 288.0 * b) / 1403.0;
-            const gA = (460.0 * p2 - 891.0 * a - 261.0 * b) / 1403.0;
-            const bA = (460.0 * p2 - 220.0 * a - 6300.0 * b) / 1403.0;
-            const rCScaled = HctSolver.inverseChromaticAdaptation(rA);
-            const gCScaled = HctSolver.inverseChromaticAdaptation(gA);
-            const bCScaled = HctSolver.inverseChromaticAdaptation(bA);
+                (23.0 * p1 + 11 * t * hCos + 108.0 * t * hSin)
+            const a = gamma * hCos
+            const b = gamma * hSin
+            const rA = (460.0 * p2 + 451.0 * a + 288.0 * b) / 1403.0
+            const gA = (460.0 * p2 - 891.0 * a - 261.0 * b) / 1403.0
+            const bA = (460.0 * p2 - 220.0 * a - 6300.0 * b) / 1403.0
+            const rCScaled = HctSolver.inverseChromaticAdaptation(rA)
+            const gCScaled = HctSolver.inverseChromaticAdaptation(gA)
+            const bCScaled = HctSolver.inverseChromaticAdaptation(bA)
             const linrgb = matrixMultiply(
                 [rCScaled, gCScaled, bCScaled],
                 HctSolver.LINRGB_FROM_SCALED_DISCOUNT,
-            );
+            )
             // ===========================================================
             // Operations inlined from Cam16 to avoid repeated calculation
             // ===========================================================
             if (linrgb[0] < 0 || linrgb[1] < 0 || linrgb[2] < 0) {
-                return 0;
+                return 0
             }
-            const kR = HctSolver.Y_FROM_LINRGB[0];
-            const kG = HctSolver.Y_FROM_LINRGB[1];
-            const kB = HctSolver.Y_FROM_LINRGB[2];
-            const fnj = kR * linrgb[0] + kG * linrgb[1] + kB * linrgb[2];
+            const kR = HctSolver.Y_FROM_LINRGB[0]
+            const kG = HctSolver.Y_FROM_LINRGB[1]
+            const kB = HctSolver.Y_FROM_LINRGB[2]
+            const fnj = kR * linrgb[0] + kG * linrgb[1] + kB * linrgb[2]
             if (fnj <= 0) {
-                return 0;
+                return 0
             }
             if (iterationRound === 4 || Math.abs(fnj - y) < 0.002) {
                 if (
@@ -497,15 +483,15 @@ export class HctSolver {
                     linrgb[1] > 100.01 ||
                     linrgb[2] > 100.01
                 ) {
-                    return 0;
+                    return 0
                 }
-                return argbFromLinrgb(linrgb);
+                return argbFromLinrgb(linrgb)
             }
             // Iterates with Newton method,
             // Using 2 * fn(j) / j as the approximation of fn'(j)
-            j -= ((fnj - y) * j) / (2 * fnj);
+            j -= ((fnj - y) * j) / (2 * fnj)
         }
-        return 0;
+        return 0
     }
 
     /**
@@ -526,17 +512,17 @@ export class HctSolver {
         lstar: number,
     ): number {
         if (chroma < 0.0001 || lstar < 0.0001 || lstar > 99.9999) {
-            return argbFromLstar(lstar);
+            return argbFromLstar(lstar)
         }
-        hueDegrees = sanitizeDegreesDouble(hueDegrees);
-        const hueRadians = (hueDegrees / 180) * Math.PI;
-        const y = yFromLstar(lstar);
-        const exactAnswer = HctSolver.findResultByJ(hueRadians, chroma, y);
+        hueDegrees = sanitizeDegreesDouble(hueDegrees)
+        const hueRadians = (hueDegrees / 180) * Math.PI
+        const y = yFromLstar(lstar)
+        const exactAnswer = HctSolver.findResultByJ(hueRadians, chroma, y)
         if (exactAnswer !== 0) {
-            return exactAnswer;
+            return exactAnswer
         }
-        const linrgb = HctSolver.bisectToLimit(y, hueRadians);
-        return argbFromLinrgb(linrgb);
+        const linrgb = HctSolver.bisectToLimit(y, hueRadians)
+        return argbFromLinrgb(linrgb)
     }
 }
 // ---

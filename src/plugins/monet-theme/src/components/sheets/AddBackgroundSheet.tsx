@@ -1,43 +1,43 @@
-import { React, ReactNative as RN } from "@vendetta/metro/common";
-import { getAssetIDByName } from "@vendetta/ui/assets";
-import { Forms } from "@vendetta/ui/components";
+import { React, ReactNative as RN } from '@vendetta/metro/common'
+import { getAssetIDByName } from '@vendetta/ui/assets'
+import { Forms } from '@vendetta/ui/components'
 
-import { ActionSheet, hideActionSheet } from "$/components/ActionSheet";
-import { DocumentPicker } from "$/deps";
-import { Button, TextInput } from "$/lib/redesign";
+import { ActionSheet, hideActionSheet } from '$/components/ActionSheet'
+import { DocumentPicker } from '$/deps'
+import { Button, TextInput } from '$/lib/redesign'
 
-const { FormRow } = Forms;
+const { FormRow } = Forms
 
 export default function AddBackgroundSheet({
     add,
 }: {
-    add: (title: string, location: string) => void;
+    add: (title: string, location: string) => void
 }) {
     const [file, setFile] = React.useState<{
-        name: string;
-        path: string;
-    } | null>(null);
-    const [label, setLabel] = React.useState("");
+        name: string
+        path: string
+    } | null>(null)
+    const [label, setLabel] = React.useState('')
 
     return (
-        <ActionSheet title={"Add custom background"}>
+        <ActionSheet title={'Add custom background'}>
             <FormRow
                 label="Select an image"
                 subLabel={file?.name}
                 leading={
-                    <FormRow.Icon source={getAssetIDByName("ImageIcon")} />
+                    <FormRow.Icon source={getAssetIDByName('ImageIcon')} />
                 }
                 onPress={() => {
                     DocumentPicker.pickSingle({
                         type: DocumentPicker.types.images,
-                        mode: "open",
-                        copyTo: "documentDirectory",
+                        mode: 'open',
+                        copyTo: 'documentDirectory',
                     }).then(file => {
                         setFile({
                             name: file.name!,
                             path: file.fileCopyUri!,
-                        });
-                    });
+                        })
+                    })
                 }}
             />
             <TextInput
@@ -53,15 +53,15 @@ export default function AddBackgroundSheet({
                 variant="primary"
                 size="md"
                 iconPosition="start"
-                icon={getAssetIDByName("PlusIcon")}
+                icon={getAssetIDByName('PlusIcon')}
                 onPress={() => {
-                    if (!file || !label) return;
+                    if (!file || !label) return
 
-                    add(label, `file://${file.path}`);
-                    hideActionSheet();
+                    add(label, `file://${file.path}`)
+                    hideActionSheet()
                 }}
                 disabled={!file || !label}
             />
         </ActionSheet>
-    );
+    )
 }

@@ -1,73 +1,73 @@
-import { findByProps } from "@vendetta/metro";
+import { findByProps } from '@vendetta/metro'
 import {
     clipboard,
     React,
     ReactNative as RN,
     stylesheet,
     url,
-} from "@vendetta/metro/common";
-import { rawColors, semanticColors } from "@vendetta/ui";
-import { getAssetIDByName } from "@vendetta/ui/assets";
-import { showToast } from "@vendetta/ui/toasts";
+} from '@vendetta/metro/common'
+import { rawColors, semanticColors } from '@vendetta/ui'
+import { getAssetIDByName } from '@vendetta/ui/assets'
+import { showToast } from '@vendetta/ui/toasts'
 
-import Text from "$/components/Text";
-import usePromise from "$/hooks/usePromise";
-import intlProxy from "$/lib/intlProxy";
-import { Button } from "$/lib/redesign";
-import { managePage } from "$/lib/ui";
+import Text from '$/components/Text'
+import usePromise from '$/hooks/usePromise'
+import intlProxy from '$/lib/intlProxy'
+import { Button } from '$/lib/redesign'
+import { managePage } from '$/lib/ui'
 
 import {
-    APICollectionApplication,
+    type APICollectionApplication,
     getAppDirectoryApplication,
-} from "../../stuff/api";
-import { parse } from "../../stuff/markdown";
-import { openOauth2Modal } from "../../stuff/oauth2";
-import { inServers, parseDesc } from "../../stuff/util";
+} from '../../stuff/api'
+import { parse } from '../../stuff/markdown'
+import { openOauth2Modal } from '../../stuff/oauth2'
+import { inServers, parseDesc } from '../../stuff/util'
 
 const { TableRowGroup, TableRow, TableRowIcon, TableRowGroupTitle } =
-    findByProps("TableRowGroup", "TableRow");
-const { TableRowDivider } = findByProps("TableRowDivider");
+    findByProps('TableRowGroup', 'TableRow')
+const { TableRowDivider } = findByProps('TableRowDivider')
 
 export default function AppInfoPage({
     app,
     guildId,
 }: {
-    app: APICollectionApplication;
-    guildId?: string;
+    app: APICollectionApplication
+    guildId?: string
 }) {
     const styles = stylesheet.createThemedStyleSheet({
         carouselEmpty: {
             backgroundColor: rawColors.BRAND_500,
-            width: "100%",
+            width: '100%',
             aspectRatio: 6 / 2,
             borderRadius: 8,
         },
 
         carousel: {
             backgroundColor: semanticColors.CARD_PRIMARY_BG,
-            width: "100%",
+            width: '100%',
             aspectRatio: 5 / 3,
             borderRadius: 8,
         },
         carouselDots: {
-            position: "absolute",
+            position: 'absolute',
             bottom: 8,
-            justifyContent: "center",
-            flexDirection: "row",
-            width: "100%",
+            justifyContent: 'center',
+            flexDirection: 'row',
+            width: '100%',
             height: 6,
             gap: 9,
         },
         carouselDot: {
-            height: "100%",
+            height: '100%',
             aspectRatio: 1,
             borderRadius: 2147483647,
         },
         carouselDotActive: {
-            backgroundColor: "#fff",
+            backgroundColor: '#fff',
         },
         carouselDotInactive: {
-            backgroundColor: "#fff4",
+            backgroundColor: '#fff4',
         },
 
         appIcon: {
@@ -93,7 +93,7 @@ export default function AppInfoPage({
             marginBottom: 24,
         },
 
-        baseAppActions: { flexDirection: "row", gap: 12 },
+        baseAppActions: { flexDirection: 'row', gap: 12 },
         baseAppActionIcon: {
             marginRight: 4,
             height: 20,
@@ -102,9 +102,9 @@ export default function AppInfoPage({
         },
 
         popularCommand: {
-            flexDirection: "row",
+            flexDirection: 'row',
             gap: 8,
-            alignItems: "center",
+            alignItems: 'center',
         },
         popularCommandCmd: {
             backgroundColor: semanticColors.BG_MOD_SUBTLE,
@@ -113,28 +113,28 @@ export default function AppInfoPage({
             borderColor: semanticColors.BG_MOD_STRONG,
             borderRadius: 8,
         },
-    });
+    })
 
     managePage({
         title: app.name,
-    });
+    })
 
-    const carouselProgress = React.useRef(new RN.Animated.Value(0)).current;
-    const carouselWidth = RN.Dimensions.get("window").width - 32;
+    const carouselProgress = React.useRef(new RN.Animated.Value(0)).current
+    const carouselWidth = RN.Dimensions.get('window').width - 32
     const carouselIndexContent =
-        app.directory_entry.carousel_items?.map((_, i) => i) ?? [];
+        app.directory_entry.carousel_items?.map((_, i) => i) ?? []
 
     const detailedInfoPromise = usePromise(
         () => getAppDirectoryApplication(app.id),
         [],
-    );
+    )
 
     const detailedInfo =
         detailedInfoPromise.fulfilled &&
         detailedInfoPromise.success &&
-        detailedInfoPromise.response;
+        detailedInfoPromise.response
     if (!detailedInfo)
-        return <RN.ActivityIndicator size="large" style={{ flex: 1 }} />;
+        return <RN.ActivityIndicator size="large" style={{ flex: 1 }} />
 
     return (
         <RN.ScrollView
@@ -142,7 +142,8 @@ export default function AppInfoPage({
                 flex: 1,
                 paddingHorizontal: 16,
                 paddingTop: 16,
-            }}>
+            }}
+        >
             {carouselIndexContent.length ? (
                 <RN.View style={styles.carousel}>
                     <RN.FlatList
@@ -154,9 +155,9 @@ export default function AppInfoPage({
                             x => x.type === 1,
                         )}
                         style={{
-                            width: "100%",
-                            height: "100%",
-                            position: "relative",
+                            width: '100%',
+                            height: '100%',
+                            position: 'relative',
                         }}
                         scrollEventThrottle={16}
                         onScroll={({ nativeEvent }) => {
@@ -172,12 +173,12 @@ export default function AppInfoPage({
                                 duration: 100,
                                 easing: RN.Easing.linear,
                                 useNativeDriver: true,
-                            }).start();
+                            }).start()
                         }}
                         renderItem={({ item: img }) => (
                             <RN.Image
                                 style={{
-                                    height: "100%",
+                                    height: '100%',
                                     width: carouselWidth,
                                     borderRadius: 8,
                                 }}
@@ -241,7 +242,8 @@ export default function AppInfoPage({
                     variant="text-md/normal"
                     color="TEXT_MUTED"
                     style={{ paddingBottom: 8 }}
-                    lineClamp={1}>
+                    lineClamp={1}
+                >
                     {inServers(app.directory_entry.guild_count)}
                 </Text>
                 {app.categories.length > 0 && (
@@ -249,8 +251,9 @@ export default function AppInfoPage({
                         variant="text-md/normal"
                         color="TEXT_MUTED"
                         style={{ paddingBottom: 8 }}
-                        lineClamp={1}>
-                        {app.categories.map(x => x.name).join(", ")}
+                        lineClamp={1}
+                    >
+                        {app.categories.map(x => x.name).join(', ')}
                     </Text>
                 )}
                 <RN.View style={{ marginBottom: 12 }}>
@@ -262,15 +265,15 @@ export default function AppInfoPage({
                         text={intlProxy.APP_DIRECTORY_PROFILE_SHARE_BUTTON}
                         variant="secondary"
                         size="md"
-                        icon={getAssetIDByName("copy")}
+                        icon={getAssetIDByName('copy')}
                         onPress={() => {
                             clipboard.setString(
                                 `https://discord.com/application-directory/${app.id}`,
-                            );
+                            )
                             showToast(
                                 intlProxy.COPIED_LINK,
-                                getAssetIDByName("toast_copy_link"),
-                            );
+                                getAssetIDByName('toast_copy_link'),
+                            )
                         }}
                     />
                     <Button
@@ -278,7 +281,7 @@ export default function AppInfoPage({
                         text={intlProxy.APP_DIRECTORY_PROFILE_ADD_BUTTON}
                         variant="primary"
                         size="md"
-                        icon={getAssetIDByName("DownloadIcon")}
+                        icon={getAssetIDByName('DownloadIcon')}
                         onPress={() =>
                             app.custom_install_url
                                 ? url.openURL(app.custom_install_url)
@@ -308,8 +311,9 @@ export default function AppInfoPage({
                             color="TEXT_NORMAL"
                             style={{
                                 marginBottom: i !== a.length - 1 ? 24 : 0,
-                            }}>
-                            {parse(content.join("\n"))}
+                            }}
+                        >
+                            {parse(content.join('\n'))}
                         </Text>
                     </>
                 ))}
@@ -328,17 +332,20 @@ export default function AppInfoPage({
                                         marginBottom:
                                             i !== a.length - 1 ? 8 : 0,
                                     },
-                                ]}>
+                                ]}
+                            >
                                 <Text
                                     variant="text-md/semibold"
                                     color="TEXT_NORMAL"
-                                    style={styles.popularCommandCmd}>
+                                    style={styles.popularCommandCmd}
+                                >
                                     /{x.name}
                                 </Text>
                                 <Text
                                     variant="text-md/normal"
                                     color="HEADER_SECONDARY"
-                                    lineClamp={1}>
+                                    lineClamp={1}
+                                >
                                     {x.description}
                                 </Text>
                             </RN.View>
@@ -353,23 +360,23 @@ export default function AppInfoPage({
                     />
                 </RN.View>
                 <TableRowGroup>
-                    {...app.directory_entry.external_urls.map(x => (
+                    {...(app.directory_entry.external_urls.map(x => (
                         <TableRow
                             label={x.name}
                             icon={
                                 <TableRowIcon
-                                    source={getAssetIDByName("LinkIcon")}
+                                    source={getAssetIDByName('LinkIcon')}
                                 />
                             }
                             onPress={() => url.openURL(x.url)}
                         />
-                    )) ?? []}
+                    )) ?? [])}
                     {app.terms_of_service_url && (
                         <TableRow
                             label={intlProxy.APP_DIRECTORY_PROFILE_TERMS_LINK}
                             icon={
                                 <TableRowIcon
-                                    source={getAssetIDByName("LinkIcon")}
+                                    source={getAssetIDByName('LinkIcon')}
                                 />
                             }
                             onPress={() =>
@@ -382,7 +389,7 @@ export default function AppInfoPage({
                             label={intlProxy.APP_DIRECTORY_PROFILE_PRIVACY_LINK}
                             icon={
                                 <TableRowIcon
-                                    source={getAssetIDByName("LockIcon")}
+                                    source={getAssetIDByName('LockIcon')}
                                 />
                             }
                             onPress={() => url.openURL(app.privacy_policy_url)}
@@ -392,12 +399,12 @@ export default function AppInfoPage({
             </RN.View>
             <RN.View style={{ height: 16 }} />
         </RN.ScrollView>
-    );
+    )
 }
 
 export function getAppInfoPageRender(
     app: APICollectionApplication,
     guildId?: string,
 ) {
-    return () => <AppInfoPage app={app} guildId={guildId} />;
+    return () => <AppInfoPage app={app} guildId={guildId} />
 }

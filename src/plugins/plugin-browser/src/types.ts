@@ -1,17 +1,17 @@
 export interface FullPlugin {
-    name: string;
-    description: string;
+    name: string
+    description: string
     authors: {
-        name: string;
-        id: string;
-    }[];
-    main: string;
+        name: string
+        id: string
+    }[]
+    main: string
     vendetta: {
-        icon?: string;
-        original: string;
-    };
+        icon?: string
+        original: string
+    }
     bunny?: {
-        disabled?: boolean;
-    };
-    hash: string;
+        disabled?: boolean
+    }
+    hash: string
 }

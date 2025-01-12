@@ -1,63 +1,63 @@
-import { findByProps } from "@vendetta/metro";
-import { after } from "@vendetta/patcher";
+import { findByProps } from '@vendetta/metro'
+import { after } from '@vendetta/patcher'
 
-const MessageMarkupRendererGuhh = findByProps("renderMessageMarkupToAST");
+const MessageMarkupRendererGuhh = findByProps('renderMessageMarkupToAST')
 
 export default () => {
     const unpatch = after(
-        "renderMessageMarkupToAST",
+        'renderMessageMarkupToAST',
         MessageMarkupRendererGuhh,
         (_, ret) => {
             const branch = (x: { content: any[] }, isHeading: boolean) => {
-                const jumboableChain = new Array<any>();
-                const content = new Array<any>();
+                const jumboableChain = new Array<any>()
+                const content = new Array<any>()
 
                 for (const y of x.content) {
                     const guh =
-                        y.type === "emoji"
+                        y.type === 'emoji'
                             ? {
-                                  type: "text",
+                                  type: 'text',
                                   content: y.surrogate,
                               }
-                            : y;
+                            : y
 
-                    if (Array.isArray(y.content)) guh.content = branch(y, true);
+                    if (Array.isArray(y.content)) guh.content = branch(y, true)
 
                     if (
-                        (y.type === "emoji" ||
-                            y.type === "customEmoji" ||
-                            (y.type === "text" && y.content?.match(/^\s*$/))) &&
+                        (y.type === 'emoji' ||
+                            y.type === 'customEmoji' ||
+                            (y.type === 'text' && y.content?.match(/^\s*$/))) &&
                         y.jumboable &&
                         !isHeading
                     ) {
-                        if (y.type !== "text") {
-                            delete guh.jumboable;
-                            jumboableChain.push(guh);
+                        if (y.type !== 'text') {
+                            guh.jumboable = undefined
+                            jumboableChain.push(guh)
                         }
                     } else {
                         if (jumboableChain.length > 0)
                             content.push({
-                                type: "heading",
+                                type: 'heading',
                                 level: 1,
                                 content: jumboableChain,
-                            });
-                        jumboableChain.length = 0;
-                        content.push(guh);
+                            })
+                        jumboableChain.length = 0
+                        content.push(guh)
                     }
                 }
 
                 if (jumboableChain.length > 0)
                     content.push({
-                        type: "heading",
+                        type: 'heading',
                         level: 1,
                         content: jumboableChain,
-                    });
-                return content;
-            };
+                    })
+                return content
+            }
 
-            ret.content = branch(ret, false);
+            ret.content = branch(ret, false)
         },
-    );
+    )
 
-    return () => unpatch();
-};
+    return () => unpatch()
+}

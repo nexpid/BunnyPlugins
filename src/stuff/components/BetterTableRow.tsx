@@ -1,7 +1,7 @@
-import { ReactNative as RN, stylesheet } from "@vendetta/metro/common";
-import { semanticColors } from "@vendetta/ui";
+import { ReactNative as RN, stylesheet } from '@vendetta/metro/common'
+import { semanticColors } from '@vendetta/ui'
 
-import Text from "./Text";
+import Text from './Text'
 
 export function BetterTableRowTitle({
     title,
@@ -9,10 +9,10 @@ export function BetterTableRowTitle({
     icon,
     padding,
 }: {
-    title: string;
-    onPress?: () => void;
-    icon?: number;
-    padding?: boolean;
+    title: string
+    onPress?: () => void
+    icon?: number
+    padding?: boolean
 }) {
     const styles = stylesheet.createThemedStyleSheet({
         androidRipple: {
@@ -25,8 +25,8 @@ export function BetterTableRowTitle({
             marginTop: 1.5,
             tintColor: semanticColors.TEXT_MUTED,
         },
-    });
-    const UseCompontent = onPress ? RN.Pressable : RN.View;
+    })
+    const UseCompontent = onPress ? RN.Pressable : RN.View
 
     return (
         <UseCompontent
@@ -37,9 +37,10 @@ export function BetterTableRowTitle({
                 marginHorizontal: padding ? 16 : 0,
                 marginTop: padding ? 8 : 0,
                 gap: 4,
-                flexDirection: "row",
-                alignItems: "center",
-            }}>
+                flexDirection: 'row',
+                alignItems: 'center',
+            }}
+        >
             {icon && (
                 <RN.Image
                     style={styles.icon}
@@ -51,7 +52,7 @@ export function BetterTableRowTitle({
                 {title}
             </Text>
         </UseCompontent>
-    );
+    )
 }
 
 export function BetterTableRowGroup({
@@ -62,11 +63,11 @@ export function BetterTableRowGroup({
     padding,
     nearby,
 }: React.PropsWithChildren<{
-    title?: string | React.ReactNode;
-    onTitlePress?: () => void;
-    icon?: number;
-    padding?: boolean;
-    nearby?: boolean;
+    title?: string | React.ReactNode
+    onTitlePress?: () => void
+    icon?: number
+    padding?: boolean
+    nearby?: boolean
 }>) {
     const styles = stylesheet.createThemedStyleSheet({
         main: {
@@ -74,15 +75,15 @@ export function BetterTableRowGroup({
             borderColor: semanticColors.BORDER_FAINT,
             borderWidth: 1,
             borderRadius: 16,
-            overflow: "hidden",
+            overflow: 'hidden',
             flex: 1,
         },
-    });
+    })
 
     return (
         <RN.View style={{ marginHorizontal: 16, marginTop: nearby ? 8 : 16 }}>
             {title ? (
-                typeof title === "string" ? (
+                typeof title === 'string' ? (
                     <BetterTableRowTitle
                         title={title}
                         onPress={onTitlePress}
@@ -95,7 +96,8 @@ export function BetterTableRowGroup({
             <RN.View style={styles.main}>
                 {padding ? (
                     <RN.View
-                        style={{ paddingHorizontal: 16, paddingVertical: 16 }}>
+                        style={{ paddingHorizontal: 16, paddingVertical: 16 }}
+                    >
                         {children}
                     </RN.View>
                 ) : (
@@ -103,5 +105,5 @@ export function BetterTableRowGroup({
                 )}
             </RN.View>
         </RN.View>
-    );
+    )
 }

@@ -1,5 +1,5 @@
-import { logger, plugin, settings } from "@vendetta";
-import { findByStoreName } from "@vendetta/metro";
+import { logger, plugin, settings } from '@vendetta'
+import { findByStoreName } from '@vendetta/metro'
 import {
     i18n,
     NavigationNative,
@@ -7,104 +7,104 @@ import {
     ReactNative as RN,
     stylesheet,
     url,
-} from "@vendetta/metro/common";
-import { storage } from "@vendetta/plugin";
-import { useProxy } from "@vendetta/storage";
-import { semanticColors } from "@vendetta/ui";
-import { showConfirmationAlert } from "@vendetta/ui/alerts";
-import { getAssetIDByName } from "@vendetta/ui/assets";
-import { Forms } from "@vendetta/ui/components";
-import { showToast } from "@vendetta/ui/toasts";
+} from '@vendetta/metro/common'
+import { storage } from '@vendetta/plugin'
+import { useProxy } from '@vendetta/storage'
+import { semanticColors } from '@vendetta/ui'
+import { showConfirmationAlert } from '@vendetta/ui/alerts'
+import { getAssetIDByName } from '@vendetta/ui/assets'
+import { Forms } from '@vendetta/ui/components'
+import { showToast } from '@vendetta/ui/toasts'
 
-import { ActionSheet } from "$/components/ActionSheet";
-import { BetterTableRowGroup } from "$/components/BetterTableRow";
-import Text from "$/components/Text";
-import { DocumentPicker, Reanimated, RNFileModule } from "$/deps";
-import { Lang } from "$/lang";
+import { ActionSheet } from '$/components/ActionSheet'
+import { BetterTableRowGroup } from '$/components/BetterTableRow'
+import Text from '$/components/Text'
+import { DocumentPicker, Reanimated, RNFileModule } from '$/deps'
+import { Lang } from '$/lang'
 
-import { initState, lang, vstorage } from "..";
-import { useAuthorizationStore } from "../stores/AuthorizationStore";
-import { useCacheStore } from "../stores/CacheStore";
+import { initState, lang, vstorage } from '..'
+import { useAuthorizationStore } from '../stores/AuthorizationStore'
+import { useCacheStore } from '../stores/CacheStore'
 import {
     decompressRawData,
     deleteData,
     getData,
     rawDataURL,
     saveData,
-} from "../stuff/api";
-import { openOauth2Modal } from "../stuff/oauth2";
-import { grabEverything, setImportCallback } from "../stuff/syncStuff";
-import { UserData } from "../types";
-import DataStat from "./DataStat";
-import NerdConfig from "./NerdConfig";
-import IgnoredPluginsPage from "./pages/IgnoredPluginsPage";
-import ImportActionSheet from "./sheets/ImportActionSheet";
-import TooMuchDataSheet from "./sheets/TooMuchDataSheet";
-import WwyltdSheet from "./sheets/WwyltdSheet";
+} from '../stuff/api'
+import { openOauth2Modal } from '../stuff/oauth2'
+import { grabEverything, setImportCallback } from '../stuff/syncStuff'
+import type { UserData } from '../types'
+import DataStat from './DataStat'
+import NerdConfig from './NerdConfig'
+import IgnoredPluginsPage from './pages/IgnoredPluginsPage'
+import ImportActionSheet from './sheets/ImportActionSheet'
+import TooMuchDataSheet from './sheets/TooMuchDataSheet'
+import WwyltdSheet from './sheets/WwyltdSheet'
 
-const UserStore = findByStoreName("UserStore");
+const UserStore = findByStoreName('UserStore')
 
-const { FormRow, FormSwitchRow } = Forms;
+const { FormRow, FormSwitchRow } = Forms
 
 export default function () {
-    useProxy(storage);
-    const [, forceUpdate] = React.useReducer(x => ~x, 0);
+    useProxy(storage)
+    const [, forceUpdate] = React.useReducer(x => ~x, 0)
 
-    const [showDev, setShowDev] = React.useState(false);
-    const [isBusy, setIsBusy] = React.useState<string[]>([]);
-    const { data, at, hasData } = useCacheStore();
-    const { isAuthorized } = useAuthorizationStore();
+    const [showDev, setShowDev] = React.useState(false)
+    const [isBusy, setIsBusy] = React.useState<string[]>([])
+    const { data, at, hasData } = useCacheStore()
+    const { isAuthorized } = useAuthorizationStore()
 
-    const userId = UserStore.getCurrentUser()?.id ?? null;
+    const userId = UserStore.getCurrentUser()?.id ?? null
     if (initState.didInit !== userId) {
-        initState.didInit = userId;
-        isAuthorized() && getData();
+        initState.didInit = userId
+        isAuthorized() && getData()
     }
 
-    const navigation = NavigationNative.useNavigation();
+    const navigation = NavigationNative.useNavigation()
 
     const setBusy = (x: string) =>
-        !isBusy.includes(x) && setIsBusy([...isBusy, x]);
+        !isBusy.includes(x) && setIsBusy([...isBusy, x])
     const unBusy = (x: string) => {
-        setIsBusy(isBusy.filter(y => x !== y));
-    };
-    let lastTap = 0;
+        setIsBusy(isBusy.filter(y => x !== y))
+    }
+    let lastTap = 0
 
-    const bumpyScaleX = Reanimated.useSharedValue(1);
-    const bumpyScaleY = Reanimated.useSharedValue(1);
+    const bumpyScaleX = Reanimated.useSharedValue(1)
+    const bumpyScaleY = Reanimated.useSharedValue(1)
 
-    const bumpyPressScale = Reanimated.useSharedValue(1);
-    const bumpyPressRot = Reanimated.useSharedValue("0deg");
+    const bumpyPressScale = Reanimated.useSharedValue(1)
+    const bumpyPressRot = Reanimated.useSharedValue('0deg')
 
     const doBumpiness = () => {
         if (
             !settings.developerSettings ||
             vstorage.realTrackingAnalyticsSentToChina.pressedSettings
         )
-            return;
+            return
 
-        bumpyPressScale.value = 1.09;
-        bumpyPressScale.value = Reanimated.withTiming(1, { duration: 300 });
+        bumpyPressScale.value = 1.09
+        bumpyPressScale.value = Reanimated.withTiming(1, { duration: 300 })
 
-        const actRot = Math.random() * 10 + 3;
-        bumpyPressRot.value = `${Math.random() < 0.5 ? -actRot : actRot}deg`;
-        bumpyPressRot.value = Reanimated.withTiming("0deg", { duration: 300 });
-    };
+        const actRot = Math.random() * 10 + 3
+        bumpyPressRot.value = `${Math.random() < 0.5 ? -actRot : actRot}deg`
+        bumpyPressRot.value = Reanimated.withTiming('0deg', { duration: 300 })
+    }
 
     React.useEffect(() => {
         if (
             !settings.developerSettings ||
             vstorage.realTrackingAnalyticsSentToChina.pressedSettings
         ) {
-            bumpyScaleX.value = Reanimated.withTiming(1, { duration: 150 });
-            bumpyScaleY.value = Reanimated.withTiming(1, { duration: 150 });
-            return;
+            bumpyScaleX.value = Reanimated.withTiming(1, { duration: 150 })
+            bumpyScaleY.value = Reanimated.withTiming(1, { duration: 150 })
+            return
         }
 
-        const mult = 1.08;
+        const mult = 1.08
 
-        bumpyScaleX.value = 1 / mult;
-        bumpyScaleY.value = mult;
+        bumpyScaleX.value = 1 / mult
+        bumpyScaleY.value = mult
 
         bumpyScaleX.value = Reanimated.withRepeat(
             Reanimated.withTiming(mult, {
@@ -113,7 +113,7 @@ export default function () {
             }),
             -1,
             true,
-        );
+        )
         bumpyScaleY.value = Reanimated.withRepeat(
             Reanimated.withTiming(1 / mult, {
                 easing: Reanimated.Easing.inOut(Reanimated.Easing.quad),
@@ -121,11 +121,11 @@ export default function () {
             }),
             -1,
             true,
-        );
+        )
     }, [
         settings.developerSettings,
         vstorage.realTrackingAnalyticsSentToChina.pressedSettings,
-    ]);
+    ])
 
     const styles = stylesheet.createThemedStyleSheet({
         androidRipple: {
@@ -139,56 +139,59 @@ export default function () {
             marginTop: 1.5,
             tintColor: semanticColors.TEXT_MUTED,
         },
-    });
+    })
 
     return (
         <RN.ScrollView>
             <BetterTableRowGroup
-                title={lang.format("settings.your_data.title", {})}
-                icon={getAssetIDByName(plugin.manifest.vendetta?.icon ?? "")}
-                padding={true}>
+                title={lang.format('settings.your_data.title', {})}
+                icon={getAssetIDByName(plugin.manifest.vendetta?.icon ?? '')}
+                padding={true}
+            >
                 <RN.View
                     style={{
-                        flexDirection: "row",
-                        alignItems: "center",
-                        justifyContent: "center",
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        justifyContent: 'center',
                         marginVertical: 8,
-                    }}>
+                    }}
+                >
                     <DataStat
-                        count={data ? Object.keys(data.plugins).length : "-"}
-                        subtitle={"settings.your_data.plugins"}
+                        count={data ? Object.keys(data.plugins).length : '-'}
+                        subtitle={'settings.your_data.plugins'}
                     />
                     <DataStat
-                        count={data ? Object.keys(data.themes).length : "-"}
-                        subtitle={"settings.your_data.themes"}
+                        count={data ? Object.keys(data.themes).length : '-'}
+                        subtitle={'settings.your_data.themes'}
                     />
                     <DataStat
                         count={
                             data
                                 ? Object.keys(data.fonts.installed).length +
                                   data.fonts.custom.length
-                                : "-"
+                                : '-'
                         }
-                        subtitle={"settings.your_data.fonts"}
+                        subtitle={'settings.your_data.fonts'}
                     />
                 </RN.View>
                 {at && (
                     <Text
                         variant="text-sm/medium"
                         color="TEXT_MUTED"
-                        align="center">
+                        align="center"
+                    >
                         {Lang.basicFormat(
-                            lang.format("settings.your_data.last_synced", {
+                            lang.format('settings.your_data.last_synced', {
                                 date: new Date(at).toLocaleString(
                                     i18n.getLocale(),
                                     {
-                                        weekday: "long",
-                                        year: "numeric",
-                                        month: "long",
-                                        day: "numeric",
-                                        hour: "numeric",
-                                        minute: "numeric",
-                                        second: "numeric",
+                                        weekday: 'long',
+                                        year: 'numeric',
+                                        month: 'long',
+                                        day: 'numeric',
+                                        hour: 'numeric',
+                                        minute: 'numeric',
+                                        second: 'numeric',
                                     },
                                 ),
                             }),
@@ -201,7 +204,7 @@ export default function () {
                     <RN.Pressable
                         android_ripple={styles.androidRipple}
                         disabled={false}
-                        accessibilityRole={"button"}
+                        accessibilityRole={'button'}
                         onPress={
                             settings.developerSettings
                                 ? () => {
@@ -210,25 +213,25 @@ export default function () {
                                               .realTrackingAnalyticsSentToChina
                                               .pressedSettings
                                       )
-                                          doBumpiness();
+                                          doBumpiness()
 
                                       if (lastTap >= Date.now()) {
-                                          vstorage.realTrackingAnalyticsSentToChina.pressedSettings =
-                                              true;
-                                          setShowDev(!showDev);
-                                          lastTap = 0;
-                                      } else lastTap = Date.now() + 500;
+                                          vstorage.realTrackingAnalyticsSentToChina.pressedSettings = true
+                                          setShowDev(!showDev)
+                                          lastTap = 0
+                                      } else lastTap = Date.now() + 500
                                   }
                                 : undefined
                         }
-                        style={{ width: "100%", marginBottom: 8 }}>
+                        style={{ width: '100%', marginBottom: 8 }}
+                    >
                         <Reanimated.default.View
                             style={[
                                 {
                                     gap: 4,
-                                    flexDirection: "row",
-                                    alignItems: "center",
-                                    alignSelf: "flex-start",
+                                    flexDirection: 'row',
+                                    alignItems: 'center',
+                                    alignSelf: 'flex-start',
                                 },
                                 {
                                     transform: [
@@ -238,62 +241,63 @@ export default function () {
                                         { rotate: bumpyPressRot },
                                     ],
                                 },
-                            ]}>
+                            ]}
+                        >
                             <RN.Image
                                 style={styles.titleIcon}
-                                source={getAssetIDByName("SettingsIcon")}
+                                source={getAssetIDByName('SettingsIcon')}
                                 resizeMode="cover"
                             />
                             <Text variant="text-sm/semibold" color="TEXT_MUTED">
-                                {lang.format("settings.config.title", {})}
+                                {lang.format('settings.config.title', {})}
                             </Text>
                         </Reanimated.default.View>
                     </RN.Pressable>
                 }
-                icon={getAssetIDByName("SettingsIcon")}>
+                icon={getAssetIDByName('SettingsIcon')}
+            >
                 <FormSwitchRow
-                    label={lang.format("settings.config.auto_save.title", {})}
+                    label={lang.format('settings.config.auto_save.title', {})}
                     subLabel={
                         vstorage.realTrackingAnalyticsSentToChina
                             .tooMuchData ? (
                             <Text color="TEXT_DANGER" variant="text-sm/bold">
                                 {lang.format(
-                                    "settings.config.auto_save.description.error",
+                                    'settings.config.auto_save.description.error',
                                     {},
                                 )}
                             </Text>
                         ) : (
                             lang.format(
-                                "settings.config.auto_save.description",
+                                'settings.config.auto_save.description',
                                 {},
                             )
                         )
                     }
                     leading={
                         <FormRow.Icon
-                            source={getAssetIDByName("RefreshIcon")}
+                            source={getAssetIDByName('RefreshIcon')}
                         />
                     }
                     onValueChange={() => {
-                        vstorage.realTrackingAnalyticsSentToChina.tooMuchData =
-                            false;
-                        vstorage.config.autoSync = !vstorage.config.autoSync;
+                        vstorage.realTrackingAnalyticsSentToChina.tooMuchData = false
+                        vstorage.config.autoSync = !vstorage.config.autoSync
                         // TODO don't use forceUpdate here
-                        forceUpdate();
+                        forceUpdate()
                     }}
                     value={vstorage.config.autoSync}
                 />
                 <FormSwitchRow
                     label={lang.format(
-                        "settings.config.settings_pin.title",
+                        'settings.config.settings_pin.title',
                         {},
                     )}
                     subLabel={lang.format(
-                        "settings.config.settings_pin.description",
+                        'settings.config.settings_pin.description',
                         {},
                     )}
                     leading={
-                        <FormRow.Icon source={getAssetIDByName("PinIcon")} />
+                        <FormRow.Icon source={getAssetIDByName('PinIcon')} />
                     }
                     onValueChange={() =>
                         (vstorage.config.addToSettings =
@@ -302,17 +306,17 @@ export default function () {
                     value={vstorage.config.addToSettings}
                 />
                 <FormRow
-                    label={lang.format("page.ignored_plugins.title", {
+                    label={lang.format('page.ignored_plugins.title', {
                         count: vstorage.config.ignoredPlugins.length.toString(),
                     })}
                     leading={
                         <FormRow.Icon
-                            source={getAssetIDByName("ListBulletsIcon")}
+                            source={getAssetIDByName('ListBulletsIcon')}
                         />
                     }
                     trailing={<FormRow.Arrow />}
                     onPress={() =>
-                        navigation.push("VendettaCustomPage", {
+                        navigation.push('VendettaCustomPage', {
                             render: IgnoredPluginsPage,
                         })
                     }
@@ -320,22 +324,23 @@ export default function () {
             </BetterTableRowGroup>
             {showDev && <NerdConfig />}
             <BetterTableRowGroup
-                title={lang.format("settings.auth.title", {})}
-                icon={getAssetIDByName("LockIcon")}>
+                title={lang.format('settings.auth.title', {})}
+                icon={getAssetIDByName('LockIcon')}
+            >
                 {isAuthorized() ? (
                     <>
                         <FormRow
                             label={lang.format(
-                                "settings.auth.log_out.title",
+                                'settings.auth.log_out.title',
                                 {},
                             )}
                             subLabel={lang.format(
-                                "settings.auth.log_out.description",
+                                'settings.auth.log_out.description',
                                 {},
                             )}
                             leading={
                                 <FormRow.Icon
-                                    source={getAssetIDByName("DoorExitIcon")}
+                                    source={getAssetIDByName('DoorExitIcon')}
                                 />
                             }
                             destructive
@@ -343,44 +348,43 @@ export default function () {
                                 !isBusy.length &&
                                 showConfirmationAlert({
                                     title: lang.format(
-                                        "alert.log_out.title",
+                                        'alert.log_out.title',
                                         {},
                                     ),
                                     content: lang.format(
-                                        "alert.log_out.body",
+                                        'alert.log_out.body',
                                         {},
                                     ),
                                     onConfirm: () => {
-                                        useCacheStore.getState().updateData();
+                                        useCacheStore.getState().updateData()
                                         useAuthorizationStore
                                             .getState()
-                                            .setToken(undefined);
-                                        vstorage.realTrackingAnalyticsSentToChina.tooMuchData =
-                                            false;
+                                            .setToken(undefined)
+                                        vstorage.realTrackingAnalyticsSentToChina.tooMuchData = false
 
                                         showToast(
-                                            lang.format("toast.logout", {}),
-                                            getAssetIDByName("DoorExitIcon"),
-                                        );
+                                            lang.format('toast.logout', {}),
+                                            getAssetIDByName('DoorExitIcon'),
+                                        )
                                     },
                                 })
                             }
                         />
                         <FormRow
                             label={lang.format(
-                                "settings.auth.delete_data.title",
+                                'settings.auth.delete_data.title',
                                 {},
                             )}
                             subLabel={lang.format(
-                                "settings.auth.delete_data.description",
+                                'settings.auth.delete_data.description',
                                 {},
                             )}
                             leading={
-                                isBusy.includes("delete_data") ? (
+                                isBusy.includes('delete_data') ? (
                                     <RN.ActivityIndicator size="small" />
                                 ) : (
                                     <FormRow.Icon
-                                        source={getAssetIDByName("TrashIcon")}
+                                        source={getAssetIDByName('TrashIcon')}
                                     />
                                 )
                             }
@@ -388,33 +392,33 @@ export default function () {
                                 !isBusy.length &&
                                 showConfirmationAlert({
                                     title: lang.format(
-                                        "alert.delete_data.title",
+                                        'alert.delete_data.title',
                                         {},
                                     ),
                                     content: lang.format(
-                                        "alert.delete_data.body",
+                                        'alert.delete_data.body',
                                         {},
                                     ),
                                     confirmText: lang.format(
-                                        "alert.delete_data.confirm",
+                                        'alert.delete_data.confirm',
                                         {},
                                     ),
-                                    confirmColor: "red" as ButtonColors,
+                                    confirmColor: 'red' as ButtonColors,
                                     onConfirm: async () => {
-                                        setBusy("delete_data");
-                                        await deleteData();
+                                        setBusy('delete_data')
+                                        await deleteData()
                                         useAuthorizationStore
                                             .getState()
-                                            .setToken(undefined);
+                                            .setToken(undefined)
 
-                                        unBusy("delete_data");
+                                        unBusy('delete_data')
                                         showToast(
                                             lang.format(
-                                                "toast.deleted_data",
+                                                'toast.deleted_data',
                                                 {},
                                             ),
-                                            getAssetIDByName("TrashIcon"),
-                                        );
+                                            getAssetIDByName('TrashIcon'),
+                                        )
                                     },
                                 })
                             }
@@ -422,10 +426,10 @@ export default function () {
                     </>
                 ) : (
                     <FormRow
-                        label={lang.format("settings.auth.authorize", {})}
+                        label={lang.format('settings.auth.authorize', {})}
                         leading={
                             <FormRow.Icon
-                                source={getAssetIDByName("LinkIcon")}
+                                source={getAssetIDByName('LinkIcon')}
                             />
                         }
                         trailing={FormRow.Arrow}
@@ -434,31 +438,32 @@ export default function () {
                 )}
             </BetterTableRowGroup>
             <BetterTableRowGroup
-                title={lang.format("settings.manage_data.title", {})}
-                icon={getAssetIDByName("UserIcon")}
-                padding={!isAuthorized() || !hasData()}>
+                title={lang.format('settings.manage_data.title', {})}
+                icon={getAssetIDByName('UserIcon')}
+                padding={!isAuthorized() || !hasData()}
+            >
                 {isAuthorized() && hasData() ? (
                     <>
                         <FormRow
                             label={lang.format(
-                                "settings.manage_data.save_data.title",
+                                'settings.manage_data.save_data.title',
                                 {},
                             )}
                             subLabel={lang.format(
-                                "settings.manage_data.save_data.description",
+                                'settings.manage_data.save_data.description',
                                 {},
                             )}
                             leading={
-                                isBusy.includes("save_api") ? (
+                                isBusy.includes('save_api') ? (
                                     <RN.ActivityIndicator size="small" />
                                 ) : (
                                     <FormRow.Icon
-                                        source={getAssetIDByName("UploadIcon")}
+                                        source={getAssetIDByName('UploadIcon')}
                                     />
                                 )
                             }
                             onPress={() => {
-                                if (isBusy.length) return;
+                                if (isBusy.length) return
 
                                 if (
                                     vstorage.realTrackingAnalyticsSentToChina
@@ -466,43 +471,43 @@ export default function () {
                                 )
                                     return ActionSheet.open(TooMuchDataSheet, {
                                         navigation,
-                                    });
+                                    })
 
                                 showConfirmationAlert({
                                     title: lang.format(
-                                        "alert.save_data.title",
+                                        'alert.save_data.title',
                                         {},
                                     ),
                                     content: lang.format(
-                                        "alert.save_data.body",
+                                        'alert.save_data.body',
                                         {},
                                     ),
                                     confirmText: lang.format(
-                                        "alert.save_data.confirm",
+                                        'alert.save_data.confirm',
                                         {},
                                     ),
                                     onConfirm: async () => {
-                                        setBusy("save_api");
+                                        setBusy('save_api')
                                         try {
                                             const everything =
-                                                await grabEverything();
-                                            await saveData(everything);
+                                                await grabEverything()
+                                            await saveData(everything)
 
                                             showToast(
                                                 lang.format(
-                                                    "toast.saved_data",
+                                                    'toast.saved_data',
                                                     {},
                                                 ),
                                                 getAssetIDByName(
-                                                    "CircleCheckIcon-primary",
+                                                    'CircleCheckIcon-primary',
                                                 ),
-                                            );
+                                            )
                                         } catch (e: any) {
                                             if (
                                                 e?.message
                                                     ?.toLowerCase()
                                                     .includes(
-                                                        "request entity too large",
+                                                        'request entity too large',
                                                     )
                                             )
                                                 ActionSheet.open(
@@ -510,42 +515,42 @@ export default function () {
                                                     {
                                                         navigation,
                                                     },
-                                                );
+                                                )
                                         }
 
-                                        unBusy("save_api");
+                                        unBusy('save_api')
                                     },
-                                });
+                                })
                             }}
                         />
                         <FormRow
-                            label={lang.format("sheet.import_data.title", {})}
+                            label={lang.format('sheet.import_data.title', {})}
                             subLabel={lang.format(
-                                "settings.manage_data.import_data.description",
+                                'settings.manage_data.import_data.description',
                                 {},
                             )}
                             leading={
-                                isBusy.includes("import_api") ? (
+                                isBusy.includes('import_api') ? (
                                     <RN.ActivityIndicator size="small" />
                                 ) : (
                                     <FormRow.Icon
                                         source={getAssetIDByName(
-                                            "DownloadIcon",
+                                            'DownloadIcon',
                                         )}
                                     />
                                 )
                             }
                             onPress={() => {
-                                if (isBusy.length) return;
+                                if (isBusy.length) return
 
                                 ActionSheet.open(ImportActionSheet, {
                                     navigation,
-                                });
+                                })
                                 setImportCallback(x =>
                                     x
-                                        ? setBusy("import_api")
-                                        : unBusy("import_api"),
-                                );
+                                        ? setBusy('import_api')
+                                        : unBusy('import_api'),
+                                )
                             }}
                         />
                     </>
@@ -553,8 +558,9 @@ export default function () {
                     <Text
                         variant="text-md/semibold"
                         color="TEXT_NORMAL"
-                        align="center">
-                        {lang.format("settings.label.auth_needed", {})}
+                        align="center"
+                    >
+                        {lang.format('settings.label.auth_needed', {})}
                     </Text>
                 ) : (
                     <RN.ActivityIndicator size="small" style={{ flex: 1 }} />
@@ -564,19 +570,19 @@ export default function () {
                 <BetterTableRowGroup nearby>
                     <FormRow
                         label={lang.format(
-                            "settings.manage_data.download_compressed.title",
+                            'settings.manage_data.download_compressed.title',
                             {},
                         )}
                         subLabel={lang.format(
-                            "settings.manage_data.download_compressed.description",
+                            'settings.manage_data.download_compressed.description',
                             {},
                         )}
                         leading={
-                            isBusy.includes("download_compressed") ? (
+                            isBusy.includes('download_compressed') ? (
                                 <RN.ActivityIndicator size="small" />
                             ) : (
                                 <FormRow.Icon
-                                    source={getAssetIDByName("DownloadIcon")}
+                                    source={getAssetIDByName('DownloadIcon')}
                                 />
                             )
                         }
@@ -623,77 +629,77 @@ export default function () {
                     />
                     <FormRow
                         label={lang.format(
-                            "settings.manage_data.import_compressed.title",
+                            'settings.manage_data.import_compressed.title',
                             {},
                         )}
                         subLabel={lang.format(
-                            "settings.manage_data.import_compressed.description",
+                            'settings.manage_data.import_compressed.description',
                             {},
                         )}
                         leading={
-                            isBusy.includes("import_compressed") ? (
+                            isBusy.includes('import_compressed') ? (
                                 <RN.ActivityIndicator size="small" />
                             ) : (
                                 <FormRow.Icon
-                                    source={getAssetIDByName("UploadIcon")}
+                                    source={getAssetIDByName('UploadIcon')}
                                 />
                             )
                         }
                         onPress={async () => {
-                            if (isBusy.length) return;
-                            setBusy("import_compressed");
+                            if (isBusy.length) return
+                            setBusy('import_compressed')
 
-                            let text: string | null = null;
+                            let text: string | null = null
                             try {
                                 const { fileCopyUri, type } =
                                     await DocumentPicker.pickSingle({
                                         type: DocumentPicker.types.plainText,
-                                        mode: "open",
-                                        copyTo: "cachesDirectory",
-                                    });
-                                if (type === "text/plain" && fileCopyUri)
+                                        mode: 'open',
+                                        copyTo: 'cachesDirectory',
+                                    })
+                                if (type === 'text/plain' && fileCopyUri)
                                     text = await RNFileModule.readFile(
                                         fileCopyUri.slice(5),
-                                        "utf8",
-                                    );
+                                        'utf8',
+                                    )
                             } catch (e) {
                                 if (!DocumentPicker.isCancel(e))
                                     showToast(
                                         lang.format(
-                                            "toast.failed_file_open",
+                                            'toast.failed_file_open',
                                             {},
                                         ),
-                                        getAssetIDByName("CircleXIcon-primary"),
+                                        getAssetIDByName('CircleXIcon-primary'),
                                     ),
-                                        logger.error(e);
+                                        logger.error(e)
                             }
 
-                            unBusy("import_compressed");
-                            if (!text) return;
+                            unBusy('import_compressed')
+                            if (!text) return
 
-                            let backup: UserData;
+                            let backup: UserData
                             try {
-                                backup = await decompressRawData(text);
+                                backup = await decompressRawData(text)
                             } catch {
-                                unBusy("import_compressed");
-                                return;
+                                unBusy('import_compressed')
+                                return
                             }
 
                             ActionSheet.open(WwyltdSheet, {
                                 backup,
                                 navigation,
-                            });
-                            unBusy("import_compressed");
+                            })
+                            unBusy('import_compressed')
                             setImportCallback(val =>
                                 val
-                                    ? setBusy("import_compressed")
-                                    : unBusy("import_compressed"),
-                            );
+                                    ? setBusy('import_compressed')
+                                    : unBusy('import_compressed'),
+                            )
                         }}
                     />
                 </BetterTableRowGroup>
             )}
             <RN.View style={{ height: 12 }} />
         </RN.ScrollView>
-    );
+    )
 }

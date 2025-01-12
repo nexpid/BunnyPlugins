@@ -3,20 +3,20 @@ import {
     ReactNative as RN,
     stylesheet,
     url,
-} from "@vendetta/metro/common";
-import { semanticColors } from "@vendetta/ui";
-import { getAssetIDByName } from "@vendetta/ui/assets";
+} from '@vendetta/metro/common'
+import { semanticColors } from '@vendetta/ui'
+import { getAssetIDByName } from '@vendetta/ui/assets'
 
-import Text from "$/components/Text";
-import { Reanimated } from "$/deps";
-import { Lang } from "$/lang";
-import { Button, FloatingActionButton } from "$/lib/redesign";
-import { openModal } from "$/types";
+import Text from '$/components/Text'
+import { Reanimated } from '$/deps'
+import { Lang } from '$/lang'
+import { Button, FloatingActionButton } from '$/lib/redesign'
+import { openModal } from '$/types'
 
-import { lang, PatchType } from "..";
-import { state, useState } from "../stuff/active";
-import load from "../stuff/loader";
-import ConfigModal from "./modals/ConfigModal";
+import { lang, PatchType } from '..'
+import { state, useState } from '../stuff/active'
+import load from '../stuff/loader'
+import ConfigModal from './modals/ConfigModal'
 
 const ListItem = ({
     state,
@@ -24,14 +24,14 @@ const ListItem = ({
     children,
     trolley,
 }: React.PropsWithChildren<{
-    state: boolean;
-    index: number;
-    trolley: boolean;
+    state: boolean
+    index: number
+    trolley: boolean
 }>) => {
     const trolleySupercalifragilisticexpialidocious =
-        Reanimated.useSharedValue("0deg");
+        Reanimated.useSharedValue('0deg')
 
-    const color = state ? "TEXT_POSITIVE" : "TEXT_DANGER";
+    const color = state ? 'TEXT_POSITIVE' : 'TEXT_DANGER'
 
     const styles = stylesheet.createThemedStyleSheet({
         icon: {
@@ -41,28 +41,28 @@ const ListItem = ({
             marginTop: 3,
         },
         row: {
-            flexDirection: "row",
-            alignItems: "center",
+            flexDirection: 'row',
+            alignItems: 'center',
             gap: 4,
         },
-    });
+    })
 
     React.useEffect(() => {
         if (trolley)
             trolleySupercalifragilisticexpialidocious.value =
                 Reanimated.withRepeat(
-                    Reanimated.withTiming("360deg", {
+                    Reanimated.withTiming('360deg', {
                         duration: 1000,
                         easing: Reanimated.Easing.linear,
                     }),
                     -1,
                     false,
-                );
-    }, []);
+                )
+    }, [])
 
     const thing = Reanimated.FadeInLeft.duration(200)
         .easing(Reanimated.Easing.out(Reanimated.Easing.ease))
-        .delay(index * 25);
+        .delay(index * 25)
 
     return (
         <Reanimated.default.View
@@ -81,77 +81,80 @@ const ListItem = ({
                 } as any,
             ]}
             entering={thing}
-            exiting={out}>
+            exiting={out}
+        >
             <RN.Image
                 source={
                     state
-                        ? getAssetIDByName("CircleCheckIcon-primary")
-                        : getAssetIDByName("CircleXIcon-primary")
+                        ? getAssetIDByName('CircleCheckIcon-primary')
+                        : getAssetIDByName('CircleXIcon-primary')
                 }
                 style={styles.icon}
                 resizeMode="cover"
             />
             <Text
-                variant={state ? "text-md/semibold" : "text-md/medium"}
-                color={color}>
+                variant={state ? 'text-md/semibold' : 'text-md/medium'}
+                color={color}
+            >
                 {children}
             </Text>
         </Reanimated.default.View>
-    );
-};
+    )
+}
 
-let startTrollingTimeout: any;
-let startTrollingCounter = 0;
+let startTrollingTimeout: any
+let startTrollingCounter = 0
 
 const transition = Reanimated.LinearTransition.duration(100).easing(
     Reanimated.Easing.inOut(Reanimated.Easing.ease),
-);
+)
 const inUp = Reanimated.FadeInUp.duration(200).easing(
     Reanimated.Easing.out(Reanimated.Easing.ease),
-);
-const out = Reanimated.FadeOut.duration(80).easing(Reanimated.Easing.ease);
+)
+const out = Reanimated.FadeOut.duration(80).easing(Reanimated.Easing.ease)
 
 export default function () {
-    useState();
+    useState()
 
     const trolley = React.useMemo(() => {
         if (!startTrollingTimeout)
             startTrollingTimeout = setTimeout(() => {
-                startTrollingCounter = 0;
-                startTrollingTimeout = null;
-            }, 5_000);
-        startTrollingCounter++;
+                startTrollingCounter = 0
+                startTrollingTimeout = null
+            }, 5_000)
+        startTrollingCounter++
 
         if (startTrollingCounter >= 3) {
-            clearTimeout(startTrollingTimeout);
-            startTrollingCounter = 0;
-            return true;
-        } else return false;
-    }, []);
+            clearTimeout(startTrollingTimeout)
+            startTrollingCounter = 0
+            return true
+        }
+        return false
+    }, [])
 
     const styles = stylesheet.createThemedStyleSheet({
         base: {
-            width: "100%",
-            height: "100%",
-            justifyContent: "center",
-            alignItems: "center",
+            width: '100%',
+            height: '100%',
+            justifyContent: 'center',
+            alignItems: 'center',
             paddingHorizontal: 12,
             gap: 15,
         },
         container: {
-            width: "100%",
+            width: '100%',
             padding: 12,
             backgroundColor: semanticColors.CARD_PRIMARY_BG,
             borderColor: semanticColors.BORDER_FAINT,
             borderWidth: 1,
             borderRadius: 16,
             gap: 2,
-            overflow: "hidden",
+            overflow: 'hidden',
         },
         bottomButtons: {
-            width: "100%",
-            flexDirection: "row",
-            alignItems: "center",
+            width: '100%',
+            flexDirection: 'row',
+            alignItems: 'center',
             gap: trolley ? 0 : 8,
         },
         titleIcon: {
@@ -169,44 +172,44 @@ export default function () {
             tintColor: semanticColors.REDESIGN_BUTTON_SECONDARY_TEXT,
         },
         row: {
-            flexDirection: "row",
-            alignItems: "center",
+            flexDirection: 'row',
+            alignItems: 'center',
             gap: 6,
             marginBottom: 2,
         },
-    });
+    })
 
-    const trolleyRot = Reanimated.useSharedValue("0deg");
-    const trolleyShake = Reanimated.useSharedValue("0deg");
-    const trolleyClyde = Reanimated.useSharedValue("0deg");
+    const trolleyRot = Reanimated.useSharedValue('0deg')
+    const trolleyShake = Reanimated.useSharedValue('0deg')
+    const trolleyClyde = Reanimated.useSharedValue('0deg')
 
     React.useEffect(() => {
-        if (!trolley) return;
+        if (!trolley) return
         trolleyRot.value = Reanimated.withRepeat(
-            Reanimated.withTiming("360deg", {
+            Reanimated.withTiming('360deg', {
                 duration: 600,
                 easing: Reanimated.Easing.linear,
             }),
             -1,
             false,
-        );
+        )
 
-        trolleyShake.value = "-7deg";
+        trolleyShake.value = '-7deg'
         trolleyShake.value = Reanimated.withRepeat(
-            Reanimated.withTiming("7deg", { duration: 200 }),
+            Reanimated.withTiming('7deg', { duration: 200 }),
             -1,
             true,
-        );
+        )
 
         trolleyClyde.value = Reanimated.withRepeat(
-            Reanimated.withTiming("360deg", {
+            Reanimated.withTiming('360deg', {
                 duration: 1500,
                 easing: Reanimated.Easing.linear,
             }),
             -1,
             false,
-        );
-    }, []);
+        )
+    }, [])
 
     return (
         <RN.View style={styles.base}>
@@ -215,7 +218,8 @@ export default function () {
                     styles.container,
                     { transform: [{ rotate: trolleyShake }] },
                 ]}
-                layout={transition}>
+                layout={transition}
+            >
                 {state.loading ? (
                     <RN.ActivityIndicator
                         size="large"
@@ -226,17 +230,18 @@ export default function () {
                         <Reanimated.default.View
                             style={styles.row}
                             entering={inUp}
-                            exiting={out}>
+                            exiting={out}
+                        >
                             <Reanimated.default.Image
                                 source={
                                     trolley
-                                        ? getAssetIDByName("clyde-avatar")
+                                        ? getAssetIDByName('clyde-avatar')
                                         : state.active
                                           ? getAssetIDByName(
-                                                "CircleCheckIcon-primary",
+                                                'CircleCheckIcon-primary',
                                             )
                                           : getAssetIDByName(
-                                                "CircleXIcon-primary",
+                                                'CircleXIcon-primary',
                                             )
                                 }
                                 style={
@@ -256,20 +261,22 @@ export default function () {
                             />
                             <Text
                                 variant="text-lg/semibold"
-                                color="TEXT_NORMAL">
+                                color="TEXT_NORMAL"
+                            >
                                 {trolley ? (
                                     <>
-                                        Themes+ is{" "}
+                                        Themes+ is{' '}
                                         <Text
                                             variant="heading-xxl/bold"
-                                            color="TEXT_WARNING">
+                                            color="TEXT_WARNING"
+                                        >
                                             AAAAAAAAAAAAAAAAAAAAAAAAAHHHH
                                             AAAAAAAAAAAA AAAAAAAGHHHHHHHHH
                                         </Text>
                                     </>
                                 ) : (
                                     Lang.basicFormat(
-                                        lang.format("settings.header", {
+                                        lang.format('settings.header', {
                                             active: state.active,
                                         }),
                                     )
@@ -279,20 +286,21 @@ export default function () {
                         {state.active
                             ? Object.values(PatchType)
                                   .sort((a, b) => {
-                                      const isA = state.patches.includes(a);
-                                      const isB = state.patches.includes(b);
+                                      const isA = state.patches.includes(a)
+                                      const isB = state.patches.includes(b)
 
                                       // patches are sorted by their activity & alphabetically
                                       if (isA === isB)
-                                          return a < b ? -1 : a > b ? 1 : 0;
-                                      else return isA ? -1 : isB ? 1 : 0;
+                                          return a < b ? -1 : a > b ? 1 : 0
+                                      return isA ? -1 : isB ? 1 : 0
                                   })
                                   .map((x, i) => (
                                       <ListItem
-                                          key={i}
+                                          key={x}
                                           index={i}
                                           state={state.patches.includes(x)}
-                                          trolley={trolley}>
+                                          trolley={trolley}
+                                      >
                                           {lang.format(
                                               `settings.patch.${x}`,
                                               {},
@@ -301,10 +309,11 @@ export default function () {
                                   ))
                             : state.inactive.map((x, i) => (
                                   <ListItem
-                                      key={i}
+                                      key={x}
                                       index={i}
                                       state={false}
-                                      trolley={trolley}>
+                                      trolley={trolley}
+                                  >
                                       {lang.format(
                                           `settings.inactive.${x}`,
                                           {},
@@ -320,15 +329,16 @@ export default function () {
                     styles.bottomButtons,
                     { transform: [{ rotate: trolleyRot }] },
                 ]}
-                layout={transition}>
+                layout={transition}
+            >
                 <Button
-                    size={trolley ? "sm" : "md"}
+                    size={trolley ? 'sm' : 'md'}
                     variant="primary"
-                    text={lang.format("settings.reload", {})}
+                    text={lang.format('settings.reload', {})}
                     iconPosition="start"
                     icon={
                         <RN.Image
-                            source={getAssetIDByName("RetryIcon")}
+                            source={getAssetIDByName('RetryIcon')}
                             style={styles.btnIcon}
                             resizeMode="cover"
                         />
@@ -338,17 +348,17 @@ export default function () {
                     style={{ flex: trolley ? 0.25 : 0.5 }}
                 />
                 <Button
-                    size={trolley ? "lg" : "md"}
+                    size={trolley ? 'lg' : 'md'}
                     variant="secondary"
                     text={
                         trolley
-                            ? `${lang.format("modal.config.title", {}).toUpperCase()}!!!!!!!`
-                            : lang.format("modal.config.title", {})
+                            ? `${lang.format('modal.config.title', {}).toUpperCase()}!!!!!!!`
+                            : lang.format('modal.config.title', {})
                     }
                     iconPosition="start"
                     icon={
                         <RN.Image
-                            source={getAssetIDByName("SettingsIcon")}
+                            source={getAssetIDByName('SettingsIcon')}
                             style={[
                                 styles.btnIcon,
                                 styles.btnIconSecdonary,
@@ -358,18 +368,18 @@ export default function () {
                         />
                     }
                     onPress={() => {
-                        openModal("config-modal", ConfigModal);
+                        openModal('config-modal', ConfigModal)
                     }}
                     style={{ flex: trolley ? 0.75 : 0.5 }}
                 />
             </Reanimated.default.View>
             <FloatingActionButton
-                icon={getAssetIDByName("CircleQuestionIcon-primary")}
+                icon={getAssetIDByName('CircleQuestionIcon-primary')}
                 positionBottom={16}
                 onPress={() =>
-                    url.openURL("https://github.com/nexpid/ThemesPlus")
+                    url.openURL('https://github.com/nexpid/ThemesPlus')
                 }
             />
         </RN.View>
-    );
+    )
 }

@@ -1,22 +1,22 @@
-import { ReactNative as RN, stylesheet } from "@vendetta/metro/common";
-import { semanticColors } from "@vendetta/ui";
-import { getAssetIDByName } from "@vendetta/ui/assets";
+import { ReactNative as RN, stylesheet } from '@vendetta/metro/common'
+import { semanticColors } from '@vendetta/ui'
+import { getAssetIDByName } from '@vendetta/ui/assets'
 
-import Text from "$/components/Text";
-import { openModal } from "$/types";
+import Text from '$/components/Text'
+import { openModal } from '$/types'
 
-import { hasAnyPin } from "..";
-import LocalPinnedModal from "./modals/LocalPinnedModal";
+import { hasAnyPin } from '..'
+import LocalPinnedModal from './modals/LocalPinnedModal'
 
 export default function ChannelPinsRow() {
-    if (!hasAnyPin()) return null;
+    if (!hasAnyPin()) return null
 
     const styles = stylesheet.createThemedStyleSheet({
         container: {
             marginHorizontal: 8,
             paddingHorizontal: 8,
-            alignItems: "center",
-            flexDirection: "row",
+            alignItems: 'center',
+            flexDirection: 'row',
             borderRadius: 4,
             height: 48,
         },
@@ -24,9 +24,9 @@ export default function ChannelPinsRow() {
             width: 32,
             height: 32,
             borderRadius: 16,
-            position: "relative",
-            justifyContent: "center",
-            alignItems: "center",
+            position: 'relative',
+            justifyContent: 'center',
+            alignItems: 'center',
             backgroundColor: semanticColors.BG_MOD_STRONG,
         },
         iconImg: {
@@ -42,18 +42,19 @@ export default function ChannelPinsRow() {
             color: semanticColors.STATUS_WARNING_TEXT,
             cornerRadius: 4,
         } as any,
-    });
+    })
 
     return (
         <RN.Pressable
             style={styles.container}
             android_ripple={styles.androidRipple}
             onPress={() => {
-                openModal("local-pinned", LocalPinnedModal);
-            }}>
+                openModal('local-pinned', LocalPinnedModal)
+            }}
+        >
             <RN.View style={styles.icon}>
                 <RN.Image
-                    source={getAssetIDByName("PinIcon")}
+                    source={getAssetIDByName('PinIcon')}
                     style={styles.iconImg}
                     resizeMode="cover"
                 />
@@ -61,9 +62,10 @@ export default function ChannelPinsRow() {
             <Text
                 variant="text-md/medium"
                 color="CHANNELS_DEFAULT"
-                style={styles.text}>
+                style={styles.text}
+            >
                 Local Pinned
             </Text>
         </RN.Pressable>
-    );
+    )
 }

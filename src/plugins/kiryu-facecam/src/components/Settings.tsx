@@ -3,30 +3,30 @@ import {
     React,
     ReactNative as RN,
     stylesheet,
-} from "@vendetta/metro/common";
-import { useProxy } from "@vendetta/storage";
-import { semanticColors } from "@vendetta/ui";
-import { getAssetIDByName } from "@vendetta/ui/assets";
-import { Forms } from "@vendetta/ui/components";
+} from '@vendetta/metro/common'
+import { useProxy } from '@vendetta/storage'
+import { semanticColors } from '@vendetta/ui'
+import { getAssetIDByName } from '@vendetta/ui/assets'
+import { Forms } from '@vendetta/ui/components'
 
-import { ActionSheet } from "$/components/ActionSheet";
-import { BetterTableRowGroup } from "$/components/BetterTableRow";
-import ChooseSheet from "$/components/sheets/ChooseSheet";
-import { TrailingText } from "$/components/Text";
-import { Reanimated } from "$/deps";
-import { Slider } from "$/lib/redesign";
+import { ActionSheet } from '$/components/ActionSheet'
+import { BetterTableRowGroup } from '$/components/BetterTableRow'
+import ChooseSheet from '$/components/sheets/ChooseSheet'
+import { TrailingText } from '$/components/Text'
+import { Reanimated } from '$/deps'
+import { Slider } from '$/lib/redesign'
 
-import kazuma from "../../assets/kazuma.png";
-import { lang, vstorage } from "..";
-import { kyrDt, kyriuStyles } from "./Kiryu";
+import kazuma from '../../assets/kazuma.png'
+import { lang, vstorage } from '..'
+import { kyrDt, kyriuStyles } from './Kiryu'
 
-const { FormRow, FormSwitchRow } = Forms;
+const { FormRow, FormSwitchRow } = Forms
 
-const rem = (rad: number) => rad * 16;
-const height = Math.floor(rem((kyrDt.h / kyrDt.w) * 15));
+const rem = (rad: number) => rad * 16
+const height = Math.floor(rem((kyrDt.h / kyrDt.w) * 15))
 
 const SettingsKyriu = () => {
-    useProxy(vstorage);
+    useProxy(vstorage)
 
     const styles = stylesheet.createThemedStyleSheet({
         preview: {
@@ -37,72 +37,70 @@ const SettingsKyriu = () => {
             borderRadius: 8,
             borderWidth: 4,
             borderColor: semanticColors.BG_MOD_SUBTLE,
-            borderStyle: "dotted",
+            borderStyle: 'dotted',
 
-            flexDirection: "row",
+            flexDirection: 'row',
             justifyContent:
-                vstorage.styling.xPos === "left"
-                    ? "flex-start"
-                    : vstorage.styling.xPos === "right"
-                      ? "flex-end"
-                      : "center",
-            alignItems: "flex-start",
+                vstorage.styling.xPos === 'left'
+                    ? 'flex-start'
+                    : vstorage.styling.xPos === 'right'
+                      ? 'flex-end'
+                      : 'center',
+            alignItems: 'flex-start',
 
-            overflow: "hidden",
+            overflow: 'hidden',
         },
-    });
+    })
 
-    let yPosOff = 0;
-    let yPos = 0;
+    let yPosOff = 0
+    let yPos = 0
 
-    if (vstorage.styling.yPos === "top") {
-        yPosOff = -height - rem(5);
-        yPos = 0;
-    } else if (vstorage.styling.yPos === "middle") {
-        yPosOff = -height - rem(5);
-        yPos = 16;
+    if (vstorage.styling.yPos === 'top') {
+        yPosOff = -height - rem(5)
+        yPos = 0
+    } else if (vstorage.styling.yPos === 'middle') {
+        yPosOff = -height - rem(5)
+        yPos = 16
     } else {
-        yPosOff = height + 32 + rem(5);
-        yPos = 32;
+        yPosOff = height + 32 + rem(5)
+        yPos = 32
     }
 
     const posVal = Reanimated.useSharedValue(
-        vstorage.appear.style === "fly" ? yPosOff : yPos,
-    );
+        vstorage.appear.style === 'fly' ? yPosOff : yPos,
+    )
     const opVal = Reanimated.useSharedValue(
-        vstorage.appear.style !== "fade" ? vstorage.styling.opacity / 10 : 0,
-    );
+        vstorage.appear.style !== 'fade' ? vstorage.styling.opacity / 10 : 0,
+    )
     const rotVal = Reanimated.useSharedValue(
-        vstorage.effects.swinging.enabled ? "-5deg" : "0deg",
-    );
-    const scaleVal = Reanimated.useSharedValue(1);
+        vstorage.effects.swinging.enabled ? '-5deg' : '0deg',
+    )
+    const scaleVal = Reanimated.useSharedValue(1)
 
     React.useEffect(() => {
-        posVal.value = vstorage.appear.style === "fly" ? yPosOff : yPos;
+        posVal.value = vstorage.appear.style === 'fly' ? yPosOff : yPos
         opVal.value =
-            vstorage.appear.style !== "fade"
-                ? vstorage.styling.opacity / 10
-                : 0;
-        rotVal.value = vstorage.effects.swinging.enabled ? "-5deg" : "0deg";
+            vstorage.appear.style !== 'fade' ? vstorage.styling.opacity / 10 : 0
+        rotVal.value = vstorage.effects.swinging.enabled ? '-5deg' : '0deg'
 
-        if (vstorage.appear.style === "fly")
+        if (vstorage.appear.style === 'fly')
             posVal.value = Reanimated.withTiming(yPos, {
                 duration: vstorage.appear.speed,
                 easing: Reanimated.Easing.out(Reanimated.Easing.back(1.5)),
-            });
-        else if (vstorage.appear.style === "fade")
+            })
+        else if (vstorage.appear.style === 'fade')
             opVal.value = Reanimated.withTiming(vstorage.styling.opacity / 10, {
                 duration: vstorage.appear.speed,
-            });
+            })
 
         if (vstorage.effects.swinging.enabled)
             rotVal.value = Reanimated.withRepeat(
-                Reanimated.withTiming("5deg", {
+                Reanimated.withTiming('5deg', {
                     duration: vstorage.effects.swinging.speed,
                 }),
                 -1,
                 true,
-            );
+            )
 
         if (vstorage.effects.bounce.enabled)
             scaleVal.value = Reanimated.withRepeat(
@@ -117,9 +115,9 @@ const SettingsKyriu = () => {
                 ),
                 -1,
                 true,
-            );
-        else scaleVal.value = 1;
-    });
+            )
+        else scaleVal.value = 1
+    })
 
     return (
         <RN.View style={styles.preview} pointerEvents="none">
@@ -131,7 +129,8 @@ const SettingsKyriu = () => {
                         opacity: opVal,
                         transform: [{ rotate: rotVal }, { scale: scaleVal }],
                     },
-                ]}>
+                ]}
+            >
                 <RN.Image
                     source={kazuma}
                     style={kyriuStyles.empty}
@@ -139,56 +138,56 @@ const SettingsKyriu = () => {
                 />
             </Reanimated.default.View>
         </RN.View>
-    );
-};
+    )
+}
 
-type Category = "styling" | "appear" | "effects";
+type Category = 'styling' | 'appear' | 'effects'
 const categoryIcons = {
-    styling: getAssetIDByName("PaintPaletteIcon"),
-    appear: getAssetIDByName("ImageIcon"),
-    effects: getAssetIDByName("MagicWandIcon"),
-} satisfies Record<Category, number>;
+    styling: getAssetIDByName('PaintPaletteIcon'),
+    appear: getAssetIDByName('ImageIcon'),
+    effects: getAssetIDByName('MagicWandIcon'),
+} satisfies Record<Category, number>
 
 const advance = (navigation: any, category: Category) =>
-    navigation.push("VendettaCustomPage", {
+    navigation.push('VendettaCustomPage', {
         title: lang.format(`settings.${category}.title`, {}),
         render: Settings(category),
-    });
+    })
 
 const BasePage = ({ navigation }: { navigation: any }) => {
     return (
         <>
             <FormRow
-                label={lang.format("settings.styling.title", {})}
+                label={lang.format('settings.styling.title', {})}
                 leading={<FormRow.Icon source={categoryIcons.styling} />}
                 trailing={<FormRow.Arrow />}
-                onPress={() => advance(navigation, "styling")}
+                onPress={() => advance(navigation, 'styling')}
             />
             <FormRow
-                label={lang.format("settings.appear.title", {})}
+                label={lang.format('settings.appear.title', {})}
                 leading={<FormRow.Icon source={categoryIcons.appear} />}
                 trailing={<FormRow.Arrow />}
-                onPress={() => advance(navigation, "appear")}
+                onPress={() => advance(navigation, 'appear')}
             />
             <FormRow
-                label={lang.format("settings.effects.title", {})}
+                label={lang.format('settings.effects.title', {})}
                 leading={<FormRow.Icon source={categoryIcons.effects} />}
                 trailing={<FormRow.Arrow />}
-                onPress={() => advance(navigation, "effects")}
+                onPress={() => advance(navigation, 'effects')}
             />
         </>
-    );
-};
+    )
+}
 
 const StylingPage = () => {
-    useProxy(vstorage);
+    useProxy(vstorage)
 
     return (
         <>
             <FormRow
-                label={lang.format("settings.styling.opacity", {})}
+                label={lang.format('settings.styling.opacity', {})}
                 leading={
-                    <FormRow.Icon source={getAssetIDByName("EyeDropperIcon")} />
+                    <FormRow.Icon source={getAssetIDByName('EyeDropperIcon')} />
                 }
                 trailing={
                     <TrailingText>
@@ -205,9 +204,9 @@ const StylingPage = () => {
                 maximumValue={10}
             />
             <FormRow
-                label={lang.format("settings.styling.pos_x", {})}
+                label={lang.format('settings.styling.pos_x', {})}
                 leading={
-                    <FormRow.Icon source={getAssetIDByName("SignPostIcon")} />
+                    <FormRow.Icon source={getAssetIDByName('SignPostIcon')} />
                 }
                 trailing={
                     <TrailingText>
@@ -219,41 +218,41 @@ const StylingPage = () => {
                 }
                 onPress={() => {
                     ActionSheet.open(ChooseSheet, {
-                        title: lang.format("settings.styling.pos_x", {}),
+                        title: lang.format('settings.styling.pos_x', {}),
                         value: vstorage.styling.xPos,
                         options: [
                             {
                                 name: lang.format(
-                                    "settings.styling.pos_x.left",
+                                    'settings.styling.pos_x.left',
                                     {},
                                 ),
-                                value: "left",
+                                value: 'left',
                             },
                             {
                                 name: lang.format(
-                                    "settings.styling.pos_x.center",
+                                    'settings.styling.pos_x.center',
                                     {},
                                 ),
-                                value: "center",
+                                value: 'center',
                             },
                             {
                                 name: lang.format(
-                                    "settings.styling.pos_x.right",
+                                    'settings.styling.pos_x.right',
                                     {},
                                 ),
-                                value: "right",
+                                value: 'right',
                             },
                         ],
                         callback(v: any) {
-                            vstorage.styling.xPos = v;
+                            vstorage.styling.xPos = v
                         },
-                    });
+                    })
                 }}
             />
             <FormRow
-                label={lang.format("settings.styling.pos_y", {})}
+                label={lang.format('settings.styling.pos_y', {})}
                 leading={
-                    <FormRow.Icon source={getAssetIDByName("SignPostIcon")} />
+                    <FormRow.Icon source={getAssetIDByName('SignPostIcon')} />
                 }
                 trailing={
                     <TrailingText>
@@ -265,50 +264,50 @@ const StylingPage = () => {
                 }
                 onPress={() => {
                     ActionSheet.open(ChooseSheet, {
-                        title: lang.format("settings.styling.pos_y", {}),
+                        title: lang.format('settings.styling.pos_y', {}),
                         value: vstorage.styling.yPos,
                         options: [
                             {
                                 name: lang.format(
-                                    "settings.styling.pos_y.top",
+                                    'settings.styling.pos_y.top',
                                     {},
                                 ),
-                                value: "top",
+                                value: 'top',
                             },
                             {
                                 name: lang.format(
-                                    "settings.styling.pos_y.middle",
+                                    'settings.styling.pos_y.middle',
                                     {},
                                 ),
-                                value: "middle",
+                                value: 'middle',
                             },
                             {
                                 name: lang.format(
-                                    "settings.styling.pos_y.bottom",
+                                    'settings.styling.pos_y.bottom',
                                     {},
                                 ),
-                                value: "bottom",
+                                value: 'bottom',
                             },
                         ],
                         callback(v: any) {
-                            vstorage.styling.yPos = v;
+                            vstorage.styling.yPos = v
                         },
-                    });
+                    })
                 }}
             />
         </>
-    );
-};
+    )
+}
 
 const AppearPage = () => {
-    useProxy(vstorage);
+    useProxy(vstorage)
 
     return (
         <>
             <FormRow
-                label={lang.format("settings.appear.style", {})}
+                label={lang.format('settings.appear.style', {})}
                 leading={
-                    <FormRow.Icon source={getAssetIDByName("BicycleIcon")} />
+                    <FormRow.Icon source={getAssetIDByName('BicycleIcon')} />
                 }
                 trailing={
                     <TrailingText>
@@ -320,41 +319,41 @@ const AppearPage = () => {
                 }
                 onPress={() => {
                     ActionSheet.open(ChooseSheet, {
-                        title: lang.format("settings.appear.style", {}),
+                        title: lang.format('settings.appear.style', {}),
                         value: vstorage.appear.style,
                         options: [
                             {
                                 name: lang.format(
-                                    "settings.appear.style.fly",
+                                    'settings.appear.style.fly',
                                     {},
                                 ),
-                                value: "fly",
+                                value: 'fly',
                             },
                             {
                                 name: lang.format(
-                                    "settings.appear.style.fade",
+                                    'settings.appear.style.fade',
                                     {},
                                 ),
-                                value: "fade",
+                                value: 'fade',
                             },
                             {
                                 name: lang.format(
-                                    "settings.appear.style.always",
+                                    'settings.appear.style.always',
                                     {},
                                 ),
-                                value: "always",
+                                value: 'always',
                             },
                         ],
                         callback(v: any) {
-                            vstorage.appear.style = v;
+                            vstorage.appear.style = v
                         },
-                    });
+                    })
                 }}
             />
             <FormRow
-                label={lang.format("settings.appear.speed", {})}
+                label={lang.format('settings.appear.speed', {})}
                 leading={
-                    <FormRow.Icon source={getAssetIDByName("NitroWheelIcon")} />
+                    <FormRow.Icon source={getAssetIDByName('NitroWheelIcon')} />
                 }
                 trailing={
                     <TrailingText>
@@ -371,22 +370,23 @@ const AppearPage = () => {
                 maximumValue={1500}
             />
         </>
-    );
-};
+    )
+}
 
 const EffectsPage = () => {
-    useProxy(vstorage);
+    useProxy(vstorage)
 
     return (
         <>
             <BetterTableRowGroup
-                title={lang.format("settings.effects.title", {})}
-                icon={categoryIcons.effects}>
+                title={lang.format('settings.effects.title', {})}
+                icon={categoryIcons.effects}
+            >
                 <FormSwitchRow
-                    label={lang.format("settings.effects.swinging.enabled", {})}
+                    label={lang.format('settings.effects.swinging.enabled', {})}
                     leading={
                         <FormRow.Icon
-                            source={getAssetIDByName("ActivitiesIcon")}
+                            source={getAssetIDByName('ActivitiesIcon')}
                         />
                     }
                     onValueChange={() =>
@@ -396,10 +396,10 @@ const EffectsPage = () => {
                     value={vstorage.effects.swinging.enabled}
                 />
                 <FormRow
-                    label={lang.format("settings.effects.swinging.speed", {})}
+                    label={lang.format('settings.effects.swinging.speed', {})}
                     leading={
                         <FormRow.Icon
-                            source={getAssetIDByName("NitroWheelIcon")}
+                            source={getAssetIDByName('NitroWheelIcon')}
                         />
                     }
                     trailing={
@@ -423,9 +423,9 @@ const EffectsPage = () => {
             </BetterTableRowGroup>
             <BetterTableRowGroup nearby>
                 <FormSwitchRow
-                    label={lang.format("settings.effects.bounce.enabled", {})}
+                    label={lang.format('settings.effects.bounce.enabled', {})}
                     leading={
-                        <FormRow.Icon source={getAssetIDByName("ObjectIcon")} />
+                        <FormRow.Icon source={getAssetIDByName('ObjectIcon')} />
                     }
                     onValueChange={() =>
                         (vstorage.effects.bounce.enabled =
@@ -434,10 +434,10 @@ const EffectsPage = () => {
                     value={vstorage.effects.bounce.enabled}
                 />
                 <FormRow
-                    label={lang.format("settings.effects.bounce.speed", {})}
+                    label={lang.format('settings.effects.bounce.speed', {})}
                     leading={
                         <FormRow.Icon
-                            source={getAssetIDByName("NitroWheelIcon")}
+                            source={getAssetIDByName('NitroWheelIcon')}
                         />
                     }
                     trailing={
@@ -458,12 +458,12 @@ const EffectsPage = () => {
                 />
                 <FormRow
                     label={lang.format(
-                        "settings.effects.bounce.multiplier",
+                        'settings.effects.bounce.multiplier',
                         {},
                     )}
                     leading={
                         <FormRow.Icon
-                            source={getAssetIDByName("SendMessageIcon")}
+                            source={getAssetIDByName('SendMessageIcon')}
                         />
                     }
                     trailing={
@@ -487,36 +487,37 @@ const EffectsPage = () => {
                 />
             </BetterTableRowGroup>
         </>
-    );
-};
+    )
+}
 
 export default function Settings(category?: Category) {
     return () => {
-        const navigation = NavigationNative.useNavigation();
+        const navigation = NavigationNative.useNavigation()
 
         return (
             <RN.ScrollView style={{ flex: 1 }}>
                 <SettingsKyriu />
-                {category === "effects" ? (
+                {category === 'effects' ? (
                     <EffectsPage />
                 ) : (
                     <BetterTableRowGroup
                         title={lang.format(
                             category
                                 ? `settings.${category}.title`
-                                : "settings.title",
+                                : 'settings.title',
                             {},
                         )}
                         icon={
                             category
                                 ? categoryIcons[category]
-                                : getAssetIDByName("SettingsIcon")
-                        }>
-                        {category === "styling" ? (
+                                : getAssetIDByName('SettingsIcon')
+                        }
+                    >
+                        {category === 'styling' ? (
                             <StylingPage />
-                        ) : category === "appear" ? (
+                        ) : category === 'appear' ? (
                             <AppearPage />
-                        ) : category === "effects" ? (
+                        ) : category === 'effects' ? (
                             <EffectsPage />
                         ) : (
                             <BasePage navigation={navigation} />
@@ -524,6 +525,6 @@ export default function Settings(category?: Category) {
                     </BetterTableRowGroup>
                 )}
             </RN.ScrollView>
-        );
-    };
+        )
+    }
 }

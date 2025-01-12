@@ -1,35 +1,35 @@
-import { settings } from "@vendetta";
-import { React, ReactNative as RN, stylesheet } from "@vendetta/metro/common";
-import { plugins } from "@vendetta/plugins";
-import { themes } from "@vendetta/themes";
-import { semanticColors } from "@vendetta/ui";
-import { showConfirmationAlert } from "@vendetta/ui/alerts";
-import { getAssetIDByName } from "@vendetta/ui/assets";
-import { Forms } from "@vendetta/ui/components";
+import { settings } from '@vendetta'
+import { React, ReactNative as RN, stylesheet } from '@vendetta/metro/common'
+import { plugins } from '@vendetta/plugins'
+import { themes } from '@vendetta/themes'
+import { semanticColors } from '@vendetta/ui'
+import { showConfirmationAlert } from '@vendetta/ui/alerts'
+import { getAssetIDByName } from '@vendetta/ui/assets'
+import { Forms } from '@vendetta/ui/components'
 
-import { ActionSheet, hideActionSheet } from "$/components/ActionSheet";
-import Text from "$/components/Text";
-import { Button } from "$/lib/redesign";
+import { ActionSheet, hideActionSheet } from '$/components/ActionSheet'
+import Text from '$/components/Text'
+import { Button } from '$/lib/redesign'
 
-import { canImport, isPluginProxied, lang } from "../..";
-import { useCacheStore } from "../../stores/CacheStore";
-import { getFonts, hasFontByName, hasFontBySource } from "../../stuff/fonts";
-import { importData, SyncImportOptions } from "../../stuff/syncStuff";
-import { UserData } from "../../types";
-import { openImportLogsPage } from "../pages/ImportLogsPage";
+import { canImport, isPluginProxied, lang } from '../..'
+import { useCacheStore } from '../../stores/CacheStore'
+import { getFonts, hasFontByName, hasFontBySource } from '../../stuff/fonts'
+import { importData, type SyncImportOptions } from '../../stuff/syncStuff'
+import type { UserData } from '../../types'
+import { openImportLogsPage } from '../pages/ImportLogsPage'
 
-const { FormCheckboxRow } = Forms;
+const { FormCheckboxRow } = Forms
 
 export default function ImportActionSheet({
     defOptions,
     data = useCacheStore.getState().data!,
     navigation,
 }: {
-    defOptions?: SyncImportOptions;
-    data?: UserData;
-    navigation: any;
+    defOptions?: SyncImportOptions
+    data?: UserData
+    navigation: any
 }) {
-    const fonts = getFonts();
+    const fonts = getFonts()
     const has = {
         unproxiedPlugins: Object.keys(data.plugins).filter(
             id => !plugins[id] && !isPluginProxied(id) && canImport(id),
@@ -44,11 +44,11 @@ export default function ImportActionSheet({
             ).length +
             data.fonts.custom.filter(({ name }) => !hasFontByName(name, fonts))
                 .length,
-    };
+    }
     const total = [has.unproxiedPlugins, has.plugins, has.themes].reduce(
         (x, a) => x + a,
         0,
-    );
+    )
     const [options, setOptions] = React.useState<SyncImportOptions>(
         defOptions ?? {
             unproxiedPlugins: false,
@@ -56,7 +56,7 @@ export default function ImportActionSheet({
             themes: !!has.themes,
             fonts: !!has.fonts,
         },
-    );
+    )
 
     const styles = stylesheet.createThemedStyleSheet({
         icon: {
@@ -69,40 +69,37 @@ export default function ImportActionSheet({
             tintColor: semanticColors.TEXT_NORMAL,
             marginRight: 8,
         },
-    });
+    })
 
     return (
-        <ActionSheet title={lang.format("sheet.import_data.title", {})}>
+        <ActionSheet title={lang.format('sheet.import_data.title', {})}>
             {!total && (
-                <>
-                    <RN.View
-                        style={{
-                            flexDirection: "row",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            marginTop: 8,
-                        }}>
-                        <RN.Image
-                            source={getAssetIDByName(
-                                "CircleInformationIcon-primary",
-                            )}
-                            style={styles.icon}
-                            resizeMode="cover"
-                        />
-                        <Text
-                            variant="text-md/semibold"
-                            color="TEXT_BRAND"
-                            align="center">
-                            {lang.format(
-                                "sheet.import_data.already_synced",
-                                {},
-                            )}
-                        </Text>
-                    </RN.View>
-                </>
+                <RN.View
+                    style={{
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        marginTop: 8,
+                    }}
+                >
+                    <RN.Image
+                        source={getAssetIDByName(
+                            'CircleInformationIcon-primary',
+                        )}
+                        style={styles.icon}
+                        resizeMode="cover"
+                    />
+                    <Text
+                        variant="text-md/semibold"
+                        color="TEXT_BRAND"
+                        align="center"
+                    >
+                        {lang.format('sheet.import_data.already_synced', {})}
+                    </Text>
+                </RN.View>
             )}
             <FormCheckboxRow
-                label={lang.format("sheet.import_data.unproxied_plugins", {
+                label={lang.format('sheet.import_data.unproxied_plugins', {
                     count: String(has.unproxiedPlugins),
                 })}
                 disabled={!has.unproxiedPlugins}
@@ -113,16 +110,16 @@ export default function ImportActionSheet({
                     !settings.developerSettings
                         ? showConfirmationAlert({
                               title: lang.format(
-                                  "alert.unproxied_plugin_warn.title",
+                                  'alert.unproxied_plugin_warn.title',
                                   {},
                               ),
                               content: lang.format(
-                                  "alert.unproxied_plugin_warn.body",
+                                  'alert.unproxied_plugin_warn.body',
                                   {},
                               ),
                               isDismissable: true,
                               confirmText: lang.format(
-                                  "alert.unproxied_plugin_warn.confirm",
+                                  'alert.unproxied_plugin_warn.confirm',
                                   {},
                               ),
                               onConfirm: () => {
@@ -133,7 +130,7 @@ export default function ImportActionSheet({
                                           ...options,
                                           unproxiedPlugins: true,
                                       },
-                                  });
+                                  })
                               },
                           })
                         : setOptions({
@@ -144,7 +141,7 @@ export default function ImportActionSheet({
                 selected={options.unproxiedPlugins}
             />
             <FormCheckboxRow
-                label={lang.format("sheet.import_data.plugins", {
+                label={lang.format('sheet.import_data.plugins', {
                     count: String(has.plugins),
                 })}
                 disabled={!has.plugins}
@@ -158,7 +155,7 @@ export default function ImportActionSheet({
                 selected={options.plugins}
             />
             <FormCheckboxRow
-                label={lang.format("sheet.import_data.themes", {
+                label={lang.format('sheet.import_data.themes', {
                     count: String(has.themes),
                 })}
                 disabled={!has.themes}
@@ -172,7 +169,7 @@ export default function ImportActionSheet({
                 selected={options.themes}
             />
             <FormCheckboxRow
-                label={lang.format("sheet.import_data.fonts", {
+                label={lang.format('sheet.import_data.fonts', {
                     count: String(has.fonts),
                 })}
                 disabled={!has.fonts}
@@ -186,15 +183,15 @@ export default function ImportActionSheet({
                 selected={options.fonts}
             />
             <Button
-                text={lang.format("sheet.import_data.import", {})}
+                text={lang.format('sheet.import_data.import', {})}
                 variant="primary"
                 size="md"
                 iconPosition="start"
-                icon={getAssetIDByName("DownloadIcon")}
+                icon={getAssetIDByName('DownloadIcon')}
                 onPress={() => {
-                    openImportLogsPage(navigation);
-                    importData(data, options);
-                    hideActionSheet();
+                    openImportLogsPage(navigation)
+                    importData(data, options)
+                    hideActionSheet()
                 }}
                 style={{
                     marginHorizontal: 16,
@@ -208,5 +205,5 @@ export default function ImportActionSheet({
                 }
             />
         </ActionSheet>
-    );
+    )
 }

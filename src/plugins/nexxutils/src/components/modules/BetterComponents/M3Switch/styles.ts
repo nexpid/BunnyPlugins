@@ -1,25 +1,25 @@
-import { stylesheet } from "@vendetta/metro/common";
-import { rawColors } from "@vendetta/ui";
+import { stylesheet } from '@vendetta/metro/common'
+import { rawColors } from '@vendetta/ui'
 
-import { resolveCustomSemantic } from "$/types";
+import { resolveCustomSemantic } from '$/types'
 
 export interface ColorStyles {
-    backgroundColor: string;
-    borderColor?: string;
-    opacity?: number;
+    backgroundColor: string
+    borderColor?: string
+    opacity?: number
 }
 
 export interface IconColorStyles {
-    tintColor: string;
-    opacity?: number;
+    tintColor: string
+    opacity?: number
 }
 
 export interface LayoutStyles {
-    width?: number;
-    height?: number;
-    left?: number;
-    right?: number;
-    [extra: string]: any;
+    width?: number
+    height?: number
+    left?: number
+    right?: number
+    [extra: string]: any
 }
 
 const mdSysColor = {
@@ -43,7 +43,7 @@ const mdSysColor = {
 
     outline: () =>
         resolveCustomSemantic(rawColors.PRIMARY_400, rawColors.PRIMARY_500),
-};
+}
 
 export const layoutStyles = stylesheet.createThemedStyleSheet({
     track: {
@@ -53,15 +53,15 @@ export const layoutStyles = stylesheet.createThemedStyleSheet({
         borderRadius: 2147483647,
     },
     handleContainer: {
-        position: "absolute",
-        justifyContent: "center",
-        alignItems: "center",
+        position: 'absolute',
+        justifyContent: 'center',
+        alignItems: 'center',
     },
     handle: {
-        position: "absolute",
+        position: 'absolute',
         borderRadius: 2147483647,
-        justifyContent: "center",
-        alignItems: "center",
+        justifyContent: 'center',
+        alignItems: 'center',
     },
     handleOn: {
         width: 24,
@@ -89,7 +89,7 @@ export const layoutStyles = stylesheet.createThemedStyleSheet({
         left: 0,
     },
     icon: {
-        position: "absolute",
+        position: 'absolute',
         left: 0,
         top: 0,
         width: 16,
@@ -104,7 +104,7 @@ export const layoutStyles = stylesheet.createThemedStyleSheet({
         width: 40,
         height: 40,
     },
-});
+})
 export const makeEnabledStyles = () =>
     stylesheet.createThemedStyleSheet({
         trackOn: {
@@ -141,7 +141,7 @@ export const makeEnabledStyles = () =>
             backgroundColor: mdSysColor.onSurface(),
             opacity: 0.12,
         },
-    });
+    })
 export const makeDisabledStyles = () =>
     stylesheet.createThemedStyleSheet({
         trackOn: {
@@ -169,11 +169,11 @@ export const makeDisabledStyles = () =>
             tintColor: mdSysColor.surfaceContainerHighest(),
             opacity: 0.38,
         },
-    });
+    })
 
 export function getStyles() {
     return {
         enabledStyles: makeEnabledStyles(),
         disabledStyles: makeDisabledStyles(),
-    };
+    }
 }

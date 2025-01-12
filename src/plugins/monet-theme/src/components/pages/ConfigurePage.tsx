@@ -1,26 +1,30 @@
-import { React, ReactNative as RN, stylesheet } from "@vendetta/metro/common";
-import { useProxy } from "@vendetta/storage";
-import { semanticColors } from "@vendetta/ui";
-import { getAssetIDByName } from "@vendetta/ui/assets";
-import { showToast } from "@vendetta/ui/toasts";
-import { type ImageSourcePropType } from "react-native";
+import {
+    type React,
+    ReactNative as RN,
+    stylesheet,
+} from '@vendetta/metro/common'
+import { useProxy } from '@vendetta/storage'
+import { semanticColors } from '@vendetta/ui'
+import { getAssetIDByName } from '@vendetta/ui/assets'
+import { showToast } from '@vendetta/ui/toasts'
+import type { ImageSourcePropType } from 'react-native'
 
 import {
     ActionSheet,
     hideActionSheet,
     showSimpleActionSheet,
-} from "$/components/ActionSheet";
-import { BetterTableRowGroup } from "$/components/BetterTableRow";
-import Text from "$/components/Text";
-import { hasPressableScale, PressableScale } from "$/lib/redesign";
-import { getDiscordTheme } from "$/types";
+} from '$/components/ActionSheet'
+import { BetterTableRowGroup } from '$/components/BetterTableRow'
+import Text from '$/components/Text'
+import { hasPressableScale, PressableScale } from '$/lib/redesign'
+import { getDiscordTheme } from '$/types'
 
-import { vstorage } from "../..";
+import { vstorage } from '../..'
 import wallpapers, {
-    Collection,
-    CollectionEntry,
-} from "../../stuff/wallpapers";
-import AddBackgroundSheet from "../sheets/AddBackgroundSheet";
+    type Collection,
+    type CollectionEntry,
+} from '../../stuff/wallpapers'
+import AddBackgroundSheet from '../sheets/AddBackgroundSheet'
 
 function Wallpaper({
     label,
@@ -30,14 +34,14 @@ function Wallpaper({
     onPress,
     onLongPress,
 }: React.PropsWithChildren<{
-    label: string;
-    image: ImageSourcePropType;
-    centerImage?: boolean;
-    selected: boolean;
-    onPress: () => void;
-    onLongPress?: () => void;
+    label: string
+    image: ImageSourcePropType
+    centerImage?: boolean
+    selected: boolean
+    onPress: () => void
+    onLongPress?: () => void
 }>) {
-    const dims = RN.Dimensions.get("window");
+    const dims = RN.Dimensions.get('window')
     const styles = stylesheet.createThemedStyleSheet({
         android_ripple: {
             color: semanticColors.ANDROID_RIPPLE,
@@ -51,8 +55,8 @@ function Wallpaper({
             marginRight: 8,
         },
         centerThing: {
-            alignItems: "center",
-            justifyContent: "center",
+            alignItems: 'center',
+            justifyContent: 'center',
         },
         selectedThing: {
             borderWidth: 2,
@@ -63,7 +67,7 @@ function Wallpaper({
             height: 24,
             tintColor: semanticColors.INTERACTIVE_NORMAL,
         },
-    });
+    })
 
     return (
         <RN.View>
@@ -75,13 +79,14 @@ function Wallpaper({
                     centerImage && styles.centerThing,
                     selected && styles.selectedThing,
                 ]}
-                android_ripple={hasPressableScale && styles.android_ripple}>
+                android_ripple={hasPressableScale && styles.android_ripple}
+            >
                 <RN.Image
                     source={image}
                     style={
                         centerImage
                             ? styles.centerImage
-                            : { width: "100%", height: "100%", borderRadius: 8 }
+                            : { width: '100%', height: '100%', borderRadius: 8 }
                     }
                     resizeMode="cover"
                 />
@@ -90,42 +95,44 @@ function Wallpaper({
                 variant="text-sm/semibold"
                 color="TEXT_NORMAL"
                 align="center"
-                style={{ marginTop: 8 }}>
+                style={{ marginTop: 8 }}
+            >
                 {label}
             </Text>
         </RN.View>
-    );
+    )
 }
 
 function WallpaperCollection({
     collection,
     configurable,
 }: {
-    collection: Collection;
+    collection: Collection
     configurable?: {
-        add: (title: string, location: string) => void;
-        remove: (entry: CollectionEntry) => void;
-    };
+        add: (title: string, location: string) => void
+        remove: (entry: CollectionEntry) => void
+    }
 }) {
     return (
         <RN.View>
             <Text
                 variant="text-md/medium"
                 color="TEXT_NORMAL"
-                style={{ marginBottom: 8 }}>
+                style={{ marginBottom: 8 }}
+            >
                 {collection.label}
             </Text>
             <RN.ScrollView horizontal>
                 {configurable && (
                     <Wallpaper
                         label="Add"
-                        image={getAssetIDByName("ImagePlusIcon")}
+                        image={getAssetIDByName('ImagePlusIcon')}
                         centerImage
                         selected={false}
                         onPress={() => {
                             ActionSheet.open(AddBackgroundSheet, {
                                 add: configurable.add,
-                            });
+                            })
                         }}
                     />
                 )}
@@ -137,69 +144,70 @@ function WallpaperCollection({
                         onPress={() => {
                             if (vstorage.config.wallpaper === x.url) {
                                 showToast(
-                                    "Removed background",
-                                    getAssetIDByName("TrashIcon"),
-                                );
-                                vstorage.config.wallpaper = "none";
+                                    'Removed background',
+                                    getAssetIDByName('TrashIcon'),
+                                )
+                                vstorage.config.wallpaper = 'none'
                             } else {
                                 showToast(
                                     `Set background to ${x.title}`,
-                                    getAssetIDByName("ImagePlusIcon"),
-                                );
-                                vstorage.config.wallpaper = x.url;
+                                    getAssetIDByName('ImagePlusIcon'),
+                                )
+                                vstorage.config.wallpaper = x.url
                             }
                         }}
                         onLongPress={
                             configurable &&
                             (() => {
                                 showSimpleActionSheet({
-                                    key: "CardOverflow",
+                                    key: 'CardOverflow',
                                     header: {
                                         title: x.title,
                                         onClose: () => {
-                                            hideActionSheet();
+                                            hideActionSheet()
                                         },
                                     },
                                     options: [
                                         {
-                                            label: "Remove",
-                                            icon: getAssetIDByName("TrashIcon"),
+                                            label: 'Remove',
+                                            icon: getAssetIDByName('TrashIcon'),
                                             isDestructive: true,
                                             onPress: () => {
                                                 showToast(
                                                     `Removed ${x.title}`,
                                                     getAssetIDByName(
-                                                        "TrashIcon",
+                                                        'TrashIcon',
                                                     ),
-                                                );
-                                                configurable.remove(x);
+                                                )
+                                                configurable.remove(x)
                                             },
                                         },
                                     ],
-                                });
+                                })
                             })
                         }
                     />
                 ))}
             </RN.ScrollView>
         </RN.View>
-    );
+    )
 }
 
 export const ConfigurePage = () => {
-    useProxy(vstorage);
+    useProxy(vstorage)
 
-    const bestVariant = getDiscordTheme() !== "light" ? "dark" : "light";
+    const bestVariant = getDiscordTheme() !== 'light' ? 'dark' : 'light'
     const collections = wallpapers.filter(
-        x => x.variant === bestVariant || x.variant === "any",
-    );
+        x => x.variant === bestVariant || x.variant === 'any',
+    )
 
     return (
         <RN.ScrollView style={{ flex: 1 }}>
             <BetterTableRowGroup
                 title="Backgrounds"
-                icon={getAssetIDByName("ImageIcon")}
-                padding>
+                icon={getAssetIDByName('ImageIcon')}
+                padding
+            >
                 {collections.map(x => (
                     <>
                         <WallpaperCollection collection={x} />
@@ -215,30 +223,30 @@ export const ConfigurePage = () => {
                                     title,
                                     url: location,
                                 },
-                            ];
+                            ]
                         },
                         remove: entry => {
                             vstorage.config.custom =
                                 vstorage.config.custom.filter(
                                     x => x.url !== entry.url,
-                                );
+                                )
                         },
                     }}
                     collection={{
-                        label: "Custom",
-                        variant: "any",
+                        label: 'Custom',
+                        variant: 'any',
                         content: vstorage.config.custom,
                     }}
                 />
             </BetterTableRowGroup>
             <RN.View style={{ marginBottom: 12 }} />
         </RN.ScrollView>
-    );
-};
+    )
+}
 
 export function openConfigurePage(navigation: any) {
-    navigation.push("VendettaCustomPage", {
-        title: "Theme configuration",
+    navigation.push('VendettaCustomPage', {
+        title: 'Theme configuration',
         render: ConfigurePage,
-    });
+    })
 }

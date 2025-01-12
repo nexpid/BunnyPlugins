@@ -1,15 +1,15 @@
-import { ReactNative as RN } from "@vendetta/metro/common";
+import { ReactNative as RN } from '@vendetta/metro/common'
 
-import { getSrc } from "../stuff/twemoji";
+import { getSrc } from '../stuff/twemoji'
 
 export default function ({
     emoji,
     src = getSrc(emoji),
     size = 16,
 }: {
-    emoji: string;
-    src?: string;
-    size?: number;
+    emoji: string
+    src?: string
+    size?: number
 }) {
     return (
         <RN.Image
@@ -26,5 +26,5 @@ export default function ({
             // @ts-expect-error custom property
             vanilla={true}
         />
-    );
+    )
 }

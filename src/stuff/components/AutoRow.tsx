@@ -1,24 +1,24 @@
-import { findByProps } from "@vendetta/metro";
-import { ReactNative as RN, stylesheet } from "@vendetta/metro/common";
-import { semanticColors } from "@vendetta/ui";
-import { Forms } from "@vendetta/ui/components";
+import { findByProps } from '@vendetta/metro'
+import { ReactNative as RN, stylesheet } from '@vendetta/metro/common'
+import { semanticColors } from '@vendetta/ui'
+import { Forms } from '@vendetta/ui/components'
 
-const { FormRow } = Forms;
-const { TableRow } = findByProps("TableRow");
+const { FormRow } = Forms
+const { TableRow } = findByProps('TableRow')
 
 export const { useInMainTabsExperiment } = findByProps(
-    "useInMainTabsExperiment",
-    "isInMainTabsExperiment",
-);
+    'useInMainTabsExperiment',
+    'isInMainTabsExperiment',
+)
 
 export default function AutoRow({
     label,
     icon,
     onPress,
 }: {
-    label: string;
-    icon: number;
-    onPress?: () => void;
+    label: string
+    icon: number
+    onPress?: () => void
 }) {
     const styles = stylesheet.createThemedStyleSheet({
         icon: {
@@ -27,8 +27,8 @@ export default function AutoRow({
             tintColor: semanticColors.INTERACTIVE_NORMAL,
             opacity: 0.6,
         },
-    });
-    const tabbed = useInMainTabsExperiment();
+    })
+    const tabbed = useInMainTabsExperiment()
 
     if (tabbed)
         return (
@@ -37,13 +37,13 @@ export default function AutoRow({
                 icon={<RN.Image style={styles.icon} source={icon} />}
                 onPress={onPress}
             />
-        );
-    else
-        return (
-            <FormRow
-                label={label}
-                leading={<FormRow.Icon source={icon} />}
-                onPress={onPress}
-            />
-        );
+        )
+
+    return (
+        <FormRow
+            label={label}
+            leading={<FormRow.Icon source={icon} />}
+            onPress={onPress}
+        />
+    )
 }

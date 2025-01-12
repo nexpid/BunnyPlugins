@@ -3,37 +3,37 @@ import {
     React,
     ReactNative as RN,
     stylesheet,
-} from "@vendetta/metro/common";
-import { useProxy } from "@vendetta/storage";
-import { semanticColors } from "@vendetta/ui";
-import { getAssetIDByName } from "@vendetta/ui/assets";
-import { Forms } from "@vendetta/ui/components";
-import { showToast } from "@vendetta/ui/toasts";
+} from '@vendetta/metro/common'
+import { useProxy } from '@vendetta/storage'
+import { semanticColors } from '@vendetta/ui'
+import { getAssetIDByName } from '@vendetta/ui/assets'
+import { Forms } from '@vendetta/ui/components'
+import { showToast } from '@vendetta/ui/toasts'
 
-import { ActionSheet } from "$/components/ActionSheet";
-import { BetterTableRowGroup } from "$/components/BetterTableRow";
-import Modal from "$/components/Modal";
-import ChooseSheet from "$/components/sheets/ChooseSheet";
-import Text from "$/components/Text";
-import { Lang } from "$/lang";
+import { ActionSheet } from '$/components/ActionSheet'
+import { BetterTableRowGroup } from '$/components/BetterTableRow'
+import Modal from '$/components/Modal'
+import ChooseSheet from '$/components/sheets/ChooseSheet'
+import Text from '$/components/Text'
+import { Lang } from '$/lang'
 import {
     RowButton,
     SegmentedControlPages,
     Tabs,
     TextInput,
     useSegmentedControlState,
-} from "$/lib/redesign";
+} from '$/lib/redesign'
 
-import { ConfigIconpackMode, lang, vstorage } from "../..";
-import { state } from "../../stuff/active";
-import { customUrl } from "../../stuff/util";
-import IconpackRow from "../IconpackRow";
+import { ConfigIconpackMode, lang, vstorage } from '../..'
+import { state } from '../../stuff/active'
+import { customUrl } from '../../stuff/util'
+import IconpackRow from '../IconpackRow'
 
-const { FormRow, FormCheckboxRow } = Forms;
+const { FormRow, FormCheckboxRow } = Forms
 
 const tabs = {
     iconpack: {
-        title: () => lang.format("modal.config.iconpack.title", {}),
+        title: () => lang.format('modal.config.iconpack.title', {}),
         render() {
             const styles = stylesheet.createThemedStyleSheet({
                 previewBase: {
@@ -41,8 +41,8 @@ const tabs = {
                     height: 60,
                     backgroundColor: semanticColors.BG_MOD_FAINT,
                     borderRadius: 8,
-                    justifyContent: "center",
-                    alignItems: "center",
+                    justifyContent: 'center',
+                    alignItems: 'center',
                     marginBottom: 4,
                     marginTop: 8,
                 },
@@ -58,19 +58,19 @@ const tabs = {
                         constants.Fonts.CODE_NORMAL,
                     includeFontPadding: false,
                 },
-            });
+            })
 
-            const [_, forceUpdate] = React.useReducer(x => ~x, 0);
-            useProxy(vstorage);
+            const [_, forceUpdate] = React.useReducer(x => ~x, 0)
+            useProxy(vstorage)
 
-            const superSecretTimeout = React.useRef<any>(null);
+            const superSecretTimeout = React.useRef<any>(null)
 
             return (
                 <>
                     <RN.View style={{ marginHorizontal: 16, marginTop: 8 }}>
                         <RowButton
                             label={lang.format(
-                                "modal.config.iconpack.mode",
+                                'modal.config.iconpack.mode',
                                 {},
                             )}
                             subLabel={lang.format(
@@ -80,7 +80,7 @@ const tabs = {
                             onPress={() => {
                                 ActionSheet.open(ChooseSheet, {
                                     title: lang.format(
-                                        "modal.config.iconpack.mode",
+                                        'modal.config.iconpack.mode',
                                         {},
                                     ),
                                     value: vstorage.iconpack.mode,
@@ -100,24 +100,24 @@ const tabs = {
                                         value: e,
                                     })),
                                     callback(v: any) {
-                                        vstorage.iconpack.mode = v;
+                                        vstorage.iconpack.mode = v
                                     },
-                                });
+                                })
                             }}
                             onPressIn={() =>
                                 (superSecretTimeout.current = setTimeout(() => {
                                     if (!vstorage.iconpackDownloading)
                                         showToast(
-                                            "Yay!",
-                                            getAssetIDByName("SparklesIcon"),
-                                        );
+                                            'Yay!',
+                                            getAssetIDByName('SparklesIcon'),
+                                        )
 
                                     vstorage.iconpackDownloading =
-                                        !vstorage.iconpackDownloading;
+                                        !vstorage.iconpackDownloading
                                 }, 3_000))
                             }
                             onPressOut={() => {
-                                clearTimeout(superSecretTimeout.current);
+                                clearTimeout(superSecretTimeout.current)
                             }}
                         />
                     </RN.View>
@@ -125,22 +125,23 @@ const tabs = {
                         <>
                             <BetterTableRowGroup
                                 title={lang.format(
-                                    "modal.config.iconpack.choose",
+                                    'modal.config.iconpack.choose',
                                     {},
-                                )}>
+                                )}
+                            >
                                 {state.iconpack.list.map(pack => (
                                     <IconpackRow
                                         pack={pack}
                                         onPress={() => {
-                                            vstorage.iconpack.pack = pack.id;
-                                            vstorage.iconpack.isCustom = false;
-                                            forceUpdate();
+                                            vstorage.iconpack.pack = pack.id
+                                            vstorage.iconpack.isCustom = false
+                                            forceUpdate()
                                         }}
                                     />
                                 ))}
                                 <FormRow
                                     label={lang.format(
-                                        "modal.config.iconpack.choose.custom",
+                                        'modal.config.iconpack.choose.custom',
                                         {},
                                     )}
                                     trailing={
@@ -151,9 +152,9 @@ const tabs = {
                                         />
                                     }
                                     onPress={() => {
-                                        vstorage.iconpack.isCustom = true;
-                                        delete vstorage.iconpack.pack;
-                                        forceUpdate();
+                                        vstorage.iconpack.isCustom = true
+                                        vstorage.iconpack.pack = undefined
+                                        forceUpdate()
                                     }}
                                 />
                             </BetterTableRowGroup>
@@ -161,33 +162,38 @@ const tabs = {
                                 <>
                                     <BetterTableRowGroup
                                         title={lang.format(
-                                            "modal.config.iconpack.choose.custom",
+                                            'modal.config.iconpack.choose.custom',
                                             {},
                                         )}
-                                        padding>
+                                        padding
+                                    >
                                         <RN.View
                                             style={{
                                                 paddingHorizontal: 16,
                                                 paddingTop: 16,
-                                            }}>
+                                            }}
+                                        >
                                             <RN.View
                                                 style={[
                                                     {
                                                         justifyContent:
-                                                            "center",
-                                                        alignItems: "center",
+                                                            'center',
+                                                        alignItems: 'center',
                                                     },
-                                                ]}>
+                                                ]}
+                                            >
                                                 <Text
                                                     variant="text-sm/semibold"
-                                                    color="TEXT_SECONDARY">
+                                                    color="TEXT_SECONDARY"
+                                                >
                                                     {lang.format(
-                                                        "modal.config.iconpack.custom.preview",
+                                                        'modal.config.iconpack.custom.preview',
                                                         {},
                                                     )}
                                                 </Text>
                                                 <RN.View
-                                                    style={styles.previewBase}>
+                                                    style={styles.previewBase}
+                                                >
                                                     <RN.Image
                                                         style={
                                                             styles.previewImage
@@ -201,9 +207,8 @@ const tabs = {
                                                 <Text
                                                     variant="text-xxs/medium"
                                                     color="TEXT_MUTED"
-                                                    style={
-                                                        styles.previewSource
-                                                    }>
+                                                    style={styles.previewSource}
+                                                >
                                                     {customUrl()}
                                                     images/native/main_tabs/Messages
                                                     {
@@ -224,11 +229,11 @@ const tabs = {
                                                         v)
                                                 }
                                                 label={lang.format(
-                                                    "modal.config.iconpack.custom.url",
+                                                    'modal.config.iconpack.custom.url',
                                                     {},
                                                 )}
                                                 description={lang.format(
-                                                    "modal.config.iconpack.custom.url.desc",
+                                                    'modal.config.iconpack.custom.url.desc',
                                                     {},
                                                 )}
                                                 placeholder="https://example.com"
@@ -245,12 +250,12 @@ const tabs = {
                                                         v)
                                                 }
                                                 label={lang.format(
-                                                    "modal.config.iconpack.custom.suffix",
+                                                    'modal.config.iconpack.custom.suffix',
                                                     {},
                                                 )}
                                                 description={Lang.basicFormat(
                                                     lang.format(
-                                                        "modal.config.iconpack.custom.suffix.desc",
+                                                        'modal.config.iconpack.custom.suffix.desc',
                                                         {},
                                                     ),
                                                 )}
@@ -261,19 +266,19 @@ const tabs = {
                                     <BetterTableRowGroup nearby>
                                         <FormCheckboxRow
                                             label={lang.format(
-                                                "modal.config.iconpack.custom.config.bigger_status",
+                                                'modal.config.iconpack.custom.config.bigger_status',
                                                 {},
                                             )}
                                             subLabel={Lang.basicFormat(
                                                 lang.format(
-                                                    "modal.config.iconpack.custom.config.bigger_status.desc",
+                                                    'modal.config.iconpack.custom.config.bigger_status.desc',
                                                     {},
                                                 ),
                                             )}
                                             leading={
                                                 <FormRow.Icon
                                                     source={getAssetIDByName(
-                                                        "PencilIcon",
+                                                        'PencilIcon',
                                                     )}
                                                 />
                                             }
@@ -294,10 +299,10 @@ const tabs = {
                     )}
                     <RN.View style={{ height: 20 }} />
                 </>
-            );
+            )
         },
     },
-} satisfies Record<string, { title: () => string; render: React.FC }>;
+} satisfies Record<string, { title: () => string; render: React.FC }>
 
 export default function ConfigModal() {
     const state = useSegmentedControlState({
@@ -307,14 +312,15 @@ export default function ConfigModal() {
             id,
             page: data.render(),
         })),
-        pageWidth: RN.Dimensions.get("window").width,
-    });
-    useProxy(vstorage);
+        pageWidth: RN.Dimensions.get('window').width,
+    })
+    useProxy(vstorage)
 
     return (
         <Modal
             mkey="config-modal"
-            title={lang.format("modal.config.title", {})}>
+            title={lang.format('modal.config.title', {})}
+        >
             <RN.View style={{ flex: 0, marginTop: 12 }}>
                 <Tabs state={state} />
             </RN.View>
@@ -322,5 +328,5 @@ export default function ConfigModal() {
                 <SegmentedControlPages state={state} />
             </RN.ScrollView>
         </Modal>
-    );
+    )
 }

@@ -1,31 +1,31 @@
 // CODE REVIEW: always include a fallback sharedValue.value style before using the actual sharedValue because reanimated is buggy :P
 
-import { React, ReactNative as RN } from "@vendetta/metro/common";
-import { getAssetIDByName } from "@vendetta/ui/assets";
+import { React, ReactNative as RN } from '@vendetta/metro/common'
+import { getAssetIDByName } from '@vendetta/ui/assets'
 
-import { Reanimated } from "$/deps";
+import { Reanimated } from '$/deps'
 
 import {
-    ColorStyles,
+    type ColorStyles,
     getStyles,
-    IconColorStyles,
-    LayoutStyles,
+    type IconColorStyles,
+    type LayoutStyles,
     layoutStyles,
-} from "./styles";
+} from './styles'
 
 const AnimatedPressable = Reanimated.default.createAnimatedComponent(
     RN.Pressable,
-);
+)
 
-const emphasizedDecelerate = Reanimated.Easing.bezier(0.05, 0.7, 0.1, 1);
-const emphasizedAccelerate = Reanimated.Easing.bezier(0.3, 0, 0.8, 0.15);
+const emphasizedDecelerate = Reanimated.Easing.bezier(0.05, 0.7, 0.1, 1)
+const emphasizedAccelerate = Reanimated.Easing.bezier(0.3, 0, 0.8, 0.15)
 
 const SwitchStateContext = React.createContext({
     value: false,
     disabled: false,
     isPressing: false,
     showIcons: false,
-});
+})
 
 function Track({
     onValueChange,
@@ -33,12 +33,12 @@ function Track({
     style,
     children,
 }: React.PropsWithChildren<{
-    onValueChange?: (value: boolean) => void;
-    setIsPressing: (value: boolean) => void;
-    style: any;
+    onValueChange?: (value: boolean) => void
+    setIsPressing: (value: boolean) => void
+    style: any
 }>) {
-    const { value, disabled } = React.useContext(SwitchStateContext);
-    const { enabledStyles, disabledStyles } = getStyles();
+    const { value, disabled } = React.useContext(SwitchStateContext)
+    const { enabledStyles, disabledStyles } = getStyles()
 
     // Colors
     const colors = (
@@ -49,26 +49,26 @@ function Track({
             : disabled
               ? disabledStyles.trackOff
               : enabledStyles.trackOff
-    ) as ColorStyles;
+    ) as ColorStyles
 
-    const backgroundColor = Reanimated.useSharedValue(colors.backgroundColor);
-    const borderColor = Reanimated.useSharedValue(colors.borderColor);
-    const opacity = Reanimated.useSharedValue(colors.opacity ?? 1);
+    const backgroundColor = Reanimated.useSharedValue(colors.backgroundColor)
+    const borderColor = Reanimated.useSharedValue(colors.borderColor)
+    const opacity = Reanimated.useSharedValue(colors.opacity ?? 1)
 
     React.useEffect(() => {
         const config = {
             duration: 100,
             easing: emphasizedAccelerate,
             reducedMotion: Reanimated.ReduceMotion.Never,
-        };
+        }
 
         backgroundColor.value = Reanimated.withTiming(
             colors.backgroundColor,
             config,
-        );
-        borderColor.value = Reanimated.withTiming(colors.borderColor!, config);
-        opacity.value = Reanimated.withTiming(colors.opacity ?? 1, config);
-    }, [value, disabled]);
+        )
+        borderColor.value = Reanimated.withTiming(colors.borderColor!, config)
+        opacity.value = Reanimated.withTiming(colors.opacity ?? 1, config)
+    }, [value, disabled])
 
     return (
         <AnimatedPressable
@@ -91,16 +91,17 @@ function Track({
             onHoverOut={() => setIsPressing(false)}
             onPressIn={() => setIsPressing(true)}
             onPressOut={() => setIsPressing(false)}
-            key="track">
+            key="track"
+        >
             {children}
         </AnimatedPressable>
-    );
+    )
 }
 
 function Handle({ children }: React.PropsWithChildren<any>) {
     const { value, disabled, isPressing, showIcons } =
-        React.useContext(SwitchStateContext);
-    const { enabledStyles, disabledStyles } = getStyles();
+        React.useContext(SwitchStateContext)
+    const { enabledStyles, disabledStyles } = getStyles()
 
     // Layout
     const layout = (
@@ -113,49 +114,49 @@ function Handle({ children }: React.PropsWithChildren<any>) {
               : showIcons
                 ? layoutStyles.handleOffBig
                 : layoutStyles.handleOff
-    ) as LayoutStyles;
+    ) as LayoutStyles
 
     function getState() {
-        const width = layoutStyles.track.width!;
-        const { left, right } = layout;
-        const size = layout.width!;
+        const width = layoutStyles.track.width!
+        const { left, right } = layout
+        const size = layout.width!
 
         const x =
-            typeof left === "number"
+            typeof left === 'number'
                 ? left
-                : typeof right === "number"
+                : typeof right === 'number'
                   ? width - size - 4 - right
-                  : 0;
+                  : 0
 
-        return { left: x };
+        return { left: x }
     }
 
-    const defState = getState();
-    const width = Reanimated.useSharedValue(layout.width!);
-    const height = Reanimated.useSharedValue(layout.height!);
-    const left = Reanimated.useSharedValue(defState.left);
-    const top = Reanimated.useSharedValue(layout.height! / -2);
+    const defState = getState()
+    const width = Reanimated.useSharedValue(layout.width!)
+    const height = Reanimated.useSharedValue(layout.height!)
+    const left = Reanimated.useSharedValue(defState.left)
+    const top = Reanimated.useSharedValue(layout.height! / -2)
 
     React.useEffect(() => {
-        const state = getState();
+        const state = getState()
 
         width.value = Reanimated.withTiming(layout.width!, {
             duration: 200,
             easing: emphasizedDecelerate,
-        });
+        })
         height.value = Reanimated.withTiming(layout.height!, {
             duration: 200,
             easing: emphasizedDecelerate,
-        });
+        })
         left.value = Reanimated.withTiming(state.left, {
             duration: 200,
             easing: emphasizedDecelerate,
-        });
+        })
         top.value = Reanimated.withTiming(layout.height! / -2, {
             duration: 200,
             easing: emphasizedDecelerate,
-        });
-    }, [value, disabled, isPressing]);
+        })
+    }, [value, disabled, isPressing])
 
     // Colors
     const colors = (
@@ -170,20 +171,20 @@ function Handle({ children }: React.PropsWithChildren<any>) {
               : value
                 ? enabledStyles.handleOn
                 : enabledStyles.handleOff
-    ) as ColorStyles;
+    ) as ColorStyles
 
-    const backgroundColor = Reanimated.useSharedValue(colors.backgroundColor);
-    const opacity = Reanimated.useSharedValue(colors.opacity ?? 1);
+    const backgroundColor = Reanimated.useSharedValue(colors.backgroundColor)
+    const opacity = Reanimated.useSharedValue(colors.opacity ?? 1)
 
     React.useEffect(() => {
-        const config = { duration: 100, easing: emphasizedAccelerate };
+        const config = { duration: 100, easing: emphasizedAccelerate }
 
         backgroundColor.value = Reanimated.withTiming(
             colors.backgroundColor,
             config,
-        );
-        opacity.value = Reanimated.withTiming(colors.opacity ?? 1, config);
-    }, [value, disabled, isPressing]);
+        )
+        opacity.value = Reanimated.withTiming(colors.opacity ?? 1, config)
+    }, [value, disabled, isPressing])
 
     const innerStyle = [
         layoutStyles.handle,
@@ -194,7 +195,7 @@ function Handle({ children }: React.PropsWithChildren<any>) {
         },
         { width, height, top },
         { zIndex: -50 },
-    ];
+    ]
 
     return (
         <Reanimated.default.View
@@ -204,16 +205,19 @@ function Handle({ children }: React.PropsWithChildren<any>) {
                 { left: left.value, top: (layoutStyles.track.height - 4) / 2 },
                 { left },
             ]}
-            key="handle-container">
+            key="handle-container"
+        >
             <RN.View>
                 <Reanimated.default.View
                     style={innerStyle}
-                    key="handle-children-spacing">
+                    key="handle-children-spacing"
+                >
                     {children}
                 </Reanimated.default.View>
                 <Reanimated.default.View
                     style={[innerStyle, { zIndex: 51 }]}
-                    key="handle-icon-spacing">
+                    key="handle-icon-spacing"
+                >
                     <Icon />
                 </Reanimated.default.View>
                 <Reanimated.default.View
@@ -232,12 +236,12 @@ function Handle({ children }: React.PropsWithChildren<any>) {
                 />
             </RN.View>
         </Reanimated.default.View>
-    );
+    )
 }
 
 function Icon() {
-    const { value, disabled, showIcons } = React.useContext(SwitchStateContext);
-    const { enabledStyles, disabledStyles } = getStyles();
+    const { value, disabled, showIcons } = React.useContext(SwitchStateContext)
+    const { enabledStyles, disabledStyles } = getStyles()
 
     // Colors
     const colors = (
@@ -248,36 +252,36 @@ function Icon() {
             : value
               ? enabledStyles.iconOn
               : enabledStyles.iconOff
-    ) as IconColorStyles;
+    ) as IconColorStyles
 
-    const tintColor = Reanimated.useSharedValue(colors.tintColor);
+    const tintColor = Reanimated.useSharedValue(colors.tintColor)
     const enabOpacity = Reanimated.useSharedValue(
         value ? (colors.opacity ?? 1) : 0,
-    );
+    )
     const disbOpacity = Reanimated.useSharedValue(
         !value ? (colors.opacity ?? 1) : 0,
-    );
+    )
 
     React.useEffect(() => {
         tintColor.value = Reanimated.withTiming(colors.tintColor, {
             duration: 100,
             easing: emphasizedDecelerate,
-        });
+        })
         enabOpacity.value = Reanimated.withDelay(
             50,
             Reanimated.withTiming(value ? (colors.opacity ?? 1) : 0, {
                 duration: 50,
                 easing: emphasizedDecelerate,
             }),
-        );
+        )
         disbOpacity.value = Reanimated.withDelay(
             50,
             Reanimated.withTiming(!value ? (colors.opacity ?? 1) : 0, {
                 duration: 50,
                 easing: emphasizedDecelerate,
             }),
-        );
-    }, [value, disabled]);
+        )
+    }, [value, disabled])
 
     return (
         <RN.View key="icon" style={{ width: 16, height: 16 }}>
@@ -288,7 +292,7 @@ function Icon() {
                     { tintColor: tintColor.value, opacity: enabOpacity.value },
                     { tintColor, opacity: enabOpacity },
                 ]}
-                source={getAssetIDByName("CheckmarkLargeIcon")}
+                source={getAssetIDByName('CheckmarkLargeIcon')}
                 key="icon-enabled"
             />
             {showIcons && (
@@ -302,44 +306,43 @@ function Icon() {
                         },
                         { tintColor, opacity: disbOpacity },
                     ]}
-                    source={getAssetIDByName("XLargeIcon")}
+                    source={getAssetIDByName('XLargeIcon')}
                     key="icon-disabled"
                 />
             )}
         </RN.View>
-    );
+    )
 }
 
 function Ripple() {
-    const { value, disabled, isPressing } =
-        React.useContext(SwitchStateContext);
-    const { enabledStyles } = getStyles();
+    const { value, disabled, isPressing } = React.useContext(SwitchStateContext)
+    const { enabledStyles } = getStyles()
 
     // Layout
     const layout = (
         isPressing && !disabled
             ? layoutStyles.ripplePressed
             : layoutStyles.ripple
-    ) as LayoutStyles;
+    ) as LayoutStyles
 
-    const width = Reanimated.useSharedValue(layout.width!);
-    const height = Reanimated.useSharedValue(layout.height!);
-    const top = Reanimated.useSharedValue(layout.height! / -2);
+    const width = Reanimated.useSharedValue(layout.width!)
+    const height = Reanimated.useSharedValue(layout.height!)
+    const top = Reanimated.useSharedValue(layout.height! / -2)
 
     React.useEffect(() => {
         width.value = Reanimated.withTiming(layout.width!, {
             duration: 200,
             easing: emphasizedDecelerate,
-        });
+        })
         height.value = Reanimated.withTiming(layout.height!, {
             duration: 200,
             easing: emphasizedDecelerate,
-        });
+        })
         top.value = Reanimated.withTiming(layout.height! / -2, {
             duration: 200,
             easing: emphasizedDecelerate,
-        });
-    }, [value, disabled, isPressing]);
+        })
+    }, [value, disabled, isPressing])
 
     // Colors
     const colors = (
@@ -348,24 +351,24 @@ function Ripple() {
                 ? enabledStyles.rippleOnPressed
                 : enabledStyles.rippleOffPressed
             : {
-                  backgroundColor: "#fff",
+                  backgroundColor: '#fff',
                   opacity: 0,
               }
-    ) as ColorStyles;
+    ) as ColorStyles
 
-    const backgroundColor = Reanimated.useSharedValue(colors.backgroundColor);
-    const opacity = Reanimated.useSharedValue(colors.opacity ?? 1);
+    const backgroundColor = Reanimated.useSharedValue(colors.backgroundColor)
+    const opacity = Reanimated.useSharedValue(colors.opacity ?? 1)
 
     React.useEffect(() => {
         backgroundColor.value = Reanimated.withTiming(colors.backgroundColor, {
             duration: 200,
             easing: emphasizedDecelerate,
-        });
+        })
         opacity.value = Reanimated.withTiming(colors.opacity ?? 1, {
             duration: 200,
             easing: emphasizedDecelerate,
-        });
-    }, [value, disabled, isPressing]);
+        })
+    }, [value, disabled, isPressing])
 
     return (
         <Reanimated.default.View
@@ -387,7 +390,7 @@ function Ripple() {
             ]}
             key="ripple"
         />
-    );
+    )
 }
 
 export default function M3Switch({
@@ -397,13 +400,13 @@ export default function M3Switch({
     showIcons,
     style,
 }: {
-    value?: boolean;
-    onValueChange?: (val: boolean) => void;
-    disabled?: boolean;
-    showIcons?: boolean;
-    style?: any;
+    value?: boolean
+    onValueChange?: (val: boolean) => void
+    disabled?: boolean
+    showIcons?: boolean
+    style?: any
 }) {
-    const [isPressing, setIsPressing] = React.useState(false);
+    const [isPressing, setIsPressing] = React.useState(false)
 
     return (
         <SwitchStateContext.Provider
@@ -412,15 +415,17 @@ export default function M3Switch({
                 disabled: !!disabled,
                 showIcons: !!showIcons,
                 isPressing,
-            }}>
+            }}
+        >
             <Track
                 setIsPressing={setIsPressing}
                 onValueChange={onValueChange}
-                style={style}>
+                style={style}
+            >
                 <Handle>
                     <Ripple />
                 </Handle>
             </Track>
         </SwitchStateContext.Provider>
-    );
+    )
 }

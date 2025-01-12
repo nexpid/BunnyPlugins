@@ -1,21 +1,21 @@
-import { findByName, findByStoreName } from "@vendetta/metro";
+import { findByName, findByStoreName } from '@vendetta/metro'
 import {
     NavigationNative,
     React,
     ReactNative as RN,
     stylesheet,
-} from "@vendetta/metro/common";
-import { semanticColors } from "@vendetta/ui";
-import { Button } from "@vendetta/ui/components";
+} from '@vendetta/metro/common'
+import { semanticColors } from '@vendetta/ui'
+import { Button } from '@vendetta/ui/components'
 
-import { ActionSheet } from "$/components/ActionSheet";
-import Text from "$/components/Text";
+import { ActionSheet } from '$/components/ActionSheet'
+import Text from '$/components/Text'
 
 import {
     ActivityType,
-    SettingsActivity,
+    type SettingsActivity,
     settingsActivityToRaw,
-} from "../stuff/activity";
+} from '../stuff/activity'
 import {
     ActivityTypeActionSheet,
     ApplicationActionSheet,
@@ -23,53 +23,53 @@ import {
     ImageActionSheet,
     simpleInput,
     TimestampActionSheet,
-} from "../stuff/prompts";
-import { displayImage, parseTimestamp, stringifyTimeDiff } from "../stuff/util";
+} from '../stuff/prompts'
+import { displayImage, parseTimestamp, stringifyTimeDiff } from '../stuff/util'
 import {
     activityTypePreview,
     forceUpdateSettings,
     placeholders,
-} from "./Settings";
+} from './Settings'
 
-const UserStore = findByStoreName("UserStore");
+const UserStore = findByStoreName('UserStore')
 
-const UserActivityContainer = findByName("UserActivityContainer");
+const UserActivityContainer = findByName('UserActivityContainer')
 
 const styles = stylesheet.createThemedStyleSheet({
     actTypeCont: {
-        flexDirection: "row",
+        flexDirection: 'row',
         marginBottom: 12,
-        justifyContent: "space-between",
+        justifyContent: 'space-between',
     },
     card: {
         borderWidth: 1,
         borderRadius: 8,
         borderColor: semanticColors.BACKGROUND_MODIFIER_ACCENT,
     },
-    card2: { alignItems: "flex-start", flexDirection: "row" },
-    images: { position: "relative", marginRight: 10 },
+    card2: { alignItems: 'flex-start', flexDirection: 'row' },
+    images: { position: 'relative', marginRight: 10 },
     smallImageBg: {
         borderColor: semanticColors.BACKGROUND_PRIMARY,
         backgroundColor: semanticColors.BACKGROUND_PRIMARY,
         borderWidth: 1,
         borderRadius: 18,
-        position: "absolute",
+        position: 'absolute',
         right: -4,
         bottom: -4,
     },
-});
+})
 
-export let forceUpdateRPCPreview: () => void;
+export let forceUpdateRPCPreview: () => void
 
 export default ({ edit, act }: { edit: boolean; act: SettingsActivity }) => {
-    const [_, forceUpdate] = React.useReducer(x => ~x, 0);
-    forceUpdateRPCPreview = forceUpdate;
+    const [_, forceUpdate] = React.useReducer(x => ~x, 0)
+    forceUpdateRPCPreview = forceUpdate
 
-    const navigation = NavigationNative.useNavigation();
+    const navigation = NavigationNative.useNavigation()
     const update = () => {
-        forceUpdate();
-        forceUpdateSettings();
-    };
+        forceUpdate()
+        forceUpdateSettings()
+    }
 
     if (edit)
         return (
@@ -82,12 +82,13 @@ export default ({ edit, act }: { edit: boolean; act: SettingsActivity }) => {
                             ActionSheet.open(ActivityTypeActionSheet, {
                                 type: act.type ?? ActivityType.Playing,
                                 update: x => {
-                                    act.type = x;
-                                    update();
+                                    act.type = x
+                                    update()
                                 },
-                            });
-                        }}>
-                        {activityTypePreview[act.type ?? ActivityType.Playing]}{" "}
+                            })
+                        }}
+                    >
+                        {activityTypePreview[act.type ?? ActivityType.Playing]}{' '}
                         ...
                     </Text>
                 </RN.View>
@@ -99,20 +100,21 @@ export default ({ edit, act }: { edit: boolean; act: SettingsActivity }) => {
                                     onPress={() => {
                                         ActionSheet.open(ImageActionSheet, {
                                             appId: act.app.id,
-                                            role: "Large",
+                                            role: 'Large',
                                             image: act.assets.largeImg,
                                             navigation,
                                             update: x => {
-                                                act.assets.largeImg = x;
-                                                update();
+                                                act.assets.largeImg = x
+                                                update()
                                             },
-                                        });
-                                    }}>
+                                        })
+                                    }}
+                                >
                                     <RN.Image
                                         source={{
                                             uri:
                                                 displayImage(
-                                                    act.assets.largeImg ?? ".",
+                                                    act.assets.largeImg ?? '.',
                                                     act.app.id,
                                                 ) ?? placeholders.image,
                                         }}
@@ -128,21 +130,22 @@ export default ({ edit, act }: { edit: boolean; act: SettingsActivity }) => {
                                         onPress={() => {
                                             ActionSheet.open(ImageActionSheet, {
                                                 appId: act.app.id,
-                                                role: "Small",
+                                                role: 'Small',
                                                 image: act.assets.smallImg,
                                                 navigation,
                                                 update: x => {
-                                                    act.assets.smallImg = x;
-                                                    update();
+                                                    act.assets.smallImg = x
+                                                    update()
                                                 },
-                                            });
-                                        }}>
+                                            })
+                                        }}
+                                    >
                                         <RN.Image
                                             source={{
                                                 uri:
                                                     displayImage(
                                                         act.assets.smallImg ??
-                                                            ".",
+                                                            '.',
                                                         act.app.id,
                                                     ) ?? placeholders.image,
                                             }}
@@ -176,8 +179,8 @@ export default ({ edit, act }: { edit: boolean; act: SettingsActivity }) => {
                                                                 ),
                                                             )
                                                         )
-                                                            delete act.assets
-                                                                .smallImg;
+                                                            act.assets.smallImg =
+                                                                undefined
                                                         if (
                                                             !Number.isNaN(
                                                                 Number(
@@ -186,17 +189,18 @@ export default ({ edit, act }: { edit: boolean; act: SettingsActivity }) => {
                                                                 ),
                                                             )
                                                         )
-                                                            delete act.assets
-                                                                .largeImg;
+                                                            act.assets.largeImg =
+                                                                undefined
                                                     }
 
-                                                    act.app.id = x?.id;
-                                                    act.app.name = x?.name;
-                                                    update();
+                                                    act.app.id = x?.id
+                                                    act.app.name = x?.name
+                                                    update()
                                                 },
                                             },
-                                        );
-                                    }}>
+                                        )
+                                    }}
+                                >
                                     {act.app.name ?? placeholders.appName}
                                 </Text>
                                 <Text
@@ -204,14 +208,15 @@ export default ({ edit, act }: { edit: boolean; act: SettingsActivity }) => {
                                     color="TEXT_NORMAL"
                                     onPress={() => {
                                         simpleInput({
-                                            role: "Details",
+                                            role: 'Details',
                                             current: act.details,
                                             update: x => {
-                                                act.details = x;
-                                                update();
+                                                act.details = x
+                                                update()
                                             },
-                                        });
-                                    }}>
+                                        })
+                                    }}
+                                >
                                     {act.details ?? placeholders.details}
                                 </Text>
                                 <Text
@@ -219,14 +224,15 @@ export default ({ edit, act }: { edit: boolean; act: SettingsActivity }) => {
                                     color="TEXT_NORMAL"
                                     onPress={() => {
                                         simpleInput({
-                                            role: "State",
+                                            role: 'State',
                                             current: act.state,
                                             update: x => {
-                                                act.state = x;
-                                                update();
+                                                act.state = x
+                                                update()
                                             },
-                                        });
-                                    }}>
+                                        })
+                                    }}
+                                >
                                     {act.state ?? placeholders.state}
                                 </Text>
                                 <Text
@@ -237,28 +243,28 @@ export default ({ edit, act }: { edit: boolean; act: SettingsActivity }) => {
                                             start: act.timestamps.start,
                                             end: act.timestamps.end,
                                             update: x => {
-                                                act.timestamps.start = x.start;
-                                                act.timestamps.end = x.end;
-                                                update();
+                                                act.timestamps.start = x.start
+                                                act.timestamps.end = x.end
+                                                update()
                                             },
-                                        });
+                                        })
                                     }}
                                     liveUpdate={true}
                                     getChildren={() =>
-                                        typeof act.timestamps.end === "string"
+                                        typeof act.timestamps.end === 'string'
                                             ? `{${act.timestamps.end}}`
                                             : typeof act.timestamps.end ===
-                                                "number"
+                                                'number'
                                               ? `${stringifyTimeDiff(
                                                     parseTimestamp(
                                                         act.timestamps.end,
                                                     ) - Date.now(),
                                                 )} left`
                                               : typeof act.timestamps.start ===
-                                                  "string"
+                                                  'string'
                                                 ? `{${act.timestamps.start}}`
                                                 : typeof act.timestamps
-                                                        .start === "number"
+                                                        .start === 'number'
                                                   ? `${stringifyTimeDiff(
                                                         Date.now() -
                                                             parseTimestamp(
@@ -276,20 +282,20 @@ export default ({ edit, act }: { edit: boolean; act: SettingsActivity }) => {
                                 text={
                                     act.buttons[0]?.text ?? placeholders.button1
                                 }
-                                style={{ backgroundColor: "grey" }}
-                                size={"small"}
+                                style={{ backgroundColor: 'grey' }}
+                                size={'small'}
                                 onPress={() => {
                                     ActionSheet.open(ButtonActionSheet, {
-                                        role: "1",
+                                        role: '1',
                                         text: act.buttons[0]?.text,
                                         url: act.buttons[0]?.url,
                                         update: data => {
-                                            if (!data) act.buttons.splice(0, 1);
-                                            else act.buttons[0] = data;
+                                            if (!data) act.buttons.splice(0, 1)
+                                            else act.buttons[0] = data
 
-                                            update();
+                                            update()
                                         },
-                                    });
+                                    })
                                 }}
                             />
                         </RN.View>
@@ -298,32 +304,32 @@ export default ({ edit, act }: { edit: boolean; act: SettingsActivity }) => {
                                 text={
                                     act.buttons[1]?.text ?? placeholders.button2
                                 }
-                                style={{ backgroundColor: "grey" }}
-                                size={"small"}
+                                style={{ backgroundColor: 'grey' }}
+                                size={'small'}
                                 onPress={() => {
                                     ActionSheet.open(ButtonActionSheet, {
-                                        role: "2",
+                                        role: '2',
                                         text: act.buttons[1]?.text,
                                         url: act.buttons[1]?.url,
                                         update: data => {
-                                            if (!data) act.buttons.splice(1, 1);
-                                            else act.buttons[1] = data;
+                                            if (!data) act.buttons.splice(1, 1)
+                                            else act.buttons[1] = data
 
-                                            update();
+                                            update()
                                         },
-                                    });
+                                    })
                                 }}
                             />
                         </RN.View>
                     </RN.View>
                 </RN.View>
             </>
-        );
-    else
-        return (
-            <UserActivityContainer
-                user={UserStore.getCurrentUser()}
-                activity={settingsActivityToRaw(act).activity}
-            />
-        );
-};
+        )
+
+    return (
+        <UserActivityContainer
+            user={UserStore.getCurrentUser()}
+            activity={settingsActivityToRaw(act).activity}
+        />
+    )
+}

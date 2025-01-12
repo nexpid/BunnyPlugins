@@ -1,13 +1,13 @@
-import { ReactNative as RN, stylesheet } from "@vendetta/metro/common";
-import { semanticColors } from "@vendetta/ui";
-import { getAssetIDByName } from "@vendetta/ui/assets";
+import { ReactNative as RN, stylesheet } from '@vendetta/metro/common'
+import { semanticColors } from '@vendetta/ui'
+import { getAssetIDByName } from '@vendetta/ui/assets'
 
 export default function SliderIcon({
     side,
     onPress,
 }: {
-    side: "start" | "end";
-    onPress: () => void;
+    side: 'start' | 'end'
+    onPress: () => void
 }) {
     const styles = stylesheet.createThemedStyleSheet({
         androidRipple: {
@@ -16,24 +16,25 @@ export default function SliderIcon({
         iconSecondary: {
             width: 24,
             height: 24,
-            tintColor: "transparent",
+            tintColor: 'transparent',
         },
         icon: {
             width: 24,
             height: 24,
             tintColor: semanticColors.INTERACTIVE_NORMAL,
-            position: "absolute",
+            position: 'absolute',
             top: 0,
         },
-    });
+    })
 
-    const icon = side === "start" ? "CircleMinusIcon" : "CirclePlusIcon";
+    const icon = side === 'start' ? 'CircleMinusIcon' : 'CirclePlusIcon'
 
     return (
         <RN.Pressable
             android_ripple={styles.androidRipple}
             accessible={false}
-            onPress={onPress}>
+            onPress={onPress}
+        >
             <RN.View>
                 <RN.Image
                     style={styles.iconSecondary}
@@ -45,5 +46,5 @@ export default function SliderIcon({
                 />
             </RN.View>
         </RN.Pressable>
-    );
+    )
 }

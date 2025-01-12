@@ -1,19 +1,24 @@
-import { React, ReactNative as RN } from "@vendetta/metro/common";
-import { Button } from "@vendetta/ui/components";
+import { React, ReactNative as RN } from '@vendetta/metro/common'
+import { Button } from '@vendetta/ui/components'
 
-import UserPlayIcon from "../../../../assets/SpotifyListenAlong/UserPlayIcon.png";
-import { doSync, ListenButtonProps, useListenButton, useLoading } from "./core";
+import UserPlayIcon from '../../../../assets/SpotifyListenAlong/UserPlayIcon.png'
+import {
+    doSync,
+    type ListenButtonProps,
+    useListenButton,
+    useLoading,
+} from './core'
 
 export default function ClassicListenButton({
     button,
     activity,
 }: ListenButtonProps) {
-    const { disabled, userId } = useListenButton(activity);
-    const { loading: _loading, trigger } = useLoading();
-    const loading = _loading && !disabled;
+    const { disabled, userId } = useListenButton(activity)
+    const { loading: _loading, trigger } = useLoading()
+    const loading = _loading && !disabled
 
     return (
-        <RN.View style={{ flexDirection: "row", flex: 1 }}>
+        <RN.View style={{ flexDirection: 'row', flex: 1 }}>
             <RN.View style={{ paddingRight: 6 }}>
                 <Button
                     size="small"
@@ -32,7 +37,7 @@ export default function ClassicListenButton({
                                 style={{
                                     width: 20,
                                     height: 20,
-                                    tintColor: "#fff",
+                                    tintColor: '#fff',
                                 }}
                             />
                         )
@@ -48,5 +53,5 @@ export default function ClassicListenButton({
                 <Button {...button} />
             </RN.View>
         </RN.View>
-    );
+    )
 }

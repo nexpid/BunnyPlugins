@@ -1,19 +1,19 @@
-import { findByProps } from "@vendetta/metro";
+import { findByProps } from '@vendetta/metro'
 import {
     NavigationNative,
     React,
     ReactNative as RN,
     stylesheet,
-} from "@vendetta/metro/common";
-import { semanticColors } from "@vendetta/ui";
-import { Search } from "@vendetta/ui/components";
+} from '@vendetta/metro/common'
+import { semanticColors } from '@vendetta/ui'
+import { Search } from '@vendetta/ui/components'
 
-import { TextStyleSheet } from "$/types";
+import { TextStyleSheet } from '$/types'
 
-import { AppRichAsset, getApplicationAssets } from "../../stuff/api";
-import { richAssetListAppId, richAssetListCallback } from "../../stuff/prompts";
+import { type AppRichAsset, getApplicationAssets } from '../../stuff/api'
+import { richAssetListAppId, richAssetListCallback } from '../../stuff/prompts'
 
-const TabletManagerIdk = findByProps("isTablet");
+const TabletManagerIdk = findByProps('isTablet')
 
 const styles = stylesheet.createThemedStyleSheet({
     card: {
@@ -29,38 +29,38 @@ const styles = stylesheet.createThemedStyleSheet({
         borderTopRightRadius: 8,
         paddingHorizontal: 8,
         paddingVertical: 8,
-        width: "100%",
+        width: '100%',
     },
     cardHeaderText: {
-        ...TextStyleSheet["text-sm/semibold"],
+        ...TextStyleSheet['text-sm/semibold'],
         color: semanticColors.TEXT_NORMAL,
     },
     cardImage: {
-        width: "100%",
+        width: '100%',
         flex: 1,
         borderBottomLeftRadius: 8,
         borderBottomRightRadius: 8,
     },
-});
+})
 
 export const RichAssetList = () => {
-    const navigation = NavigationNative.useNavigation();
-    const [search, setSearch] = React.useState("");
-    const [data, setData] = React.useState<AppRichAsset[]>();
+    const navigation = NavigationNative.useNavigation()
+    const [search, setSearch] = React.useState('')
+    const [data, setData] = React.useState<AppRichAsset[]>()
 
     React.useEffect(() => {
-        setSearch("");
-    });
-    if (!data) getApplicationAssets(richAssetListAppId).then(setData);
+        setSearch('')
+    })
+    if (!data) getApplicationAssets(richAssetListAppId).then(setData)
 
-    let wentBack = false;
+    let wentBack = false
     return data ? (
         <RN.FlatList
             ListEmptyComponent={
                 <Search
                     style={{ marginBottom: 10 }}
                     onChangeText={(x: string) => {
-                        setSearch(x.toLowerCase());
+                        setSearch(x.toLowerCase())
                     }}
                 />
             }
@@ -69,20 +69,21 @@ export const RichAssetList = () => {
             data={data.filter(x => x.name.toLowerCase().includes(search))}
             numColumns={TabletManagerIdk.isTablet ? 3 : 2}
             renderItem={x => {
-                const { item } = x;
+                const { item } = x
 
                 return (
                     <RN.TouchableOpacity
                         onPress={() => {
-                            if (wentBack) return;
-                            wentBack = true;
-                            navigation.goBack();
-                            richAssetListCallback?.(item.id);
+                            if (wentBack) return
+                            wentBack = true
+                            navigation.goBack()
+                            richAssetListCallback?.(item.id)
                         }}
                         style={{
                             width: `${TabletManagerIdk.isTablet ? 1 / 0.03 : 1 / 0.02}%`,
                             aspectRatio: 1,
-                        }}>
+                        }}
+                    >
                         <RN.View style={styles.card}>
                             <RN.View style={styles.cardHeader}>
                                 <RN.Text style={styles.cardHeaderText}>
@@ -96,17 +97,17 @@ export const RichAssetList = () => {
                             />
                         </RN.View>
                     </RN.TouchableOpacity>
-                );
+                )
             }}
         />
     ) : (
         <RN.ActivityIndicator style={{ flex: 1 }} />
-    );
-};
+    )
+}
 
 export function showRichAssetList(navigation) {
-    navigation.push("VendettaCustomPage", {
+    navigation.push('VendettaCustomPage', {
         render: RichAssetList,
-        title: "Select Asset",
-    });
+        title: 'Select Asset',
+    })
 }

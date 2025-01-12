@@ -4,51 +4,51 @@ import {
     React,
     ReactNative as RN,
     stylesheet,
-} from "@vendetta/metro/common";
-import { semanticColors } from "@vendetta/ui";
-import { getAssetIDByName } from "@vendetta/ui/assets";
-import { Search } from "@vendetta/ui/components";
+} from '@vendetta/metro/common'
+import { semanticColors } from '@vendetta/ui'
+import { getAssetIDByName } from '@vendetta/ui/assets'
+import { Search } from '@vendetta/ui/components'
 
-import Text from "$/components/Text";
-import usePromise from "$/hooks/usePromise";
-import { managePage } from "$/lib/ui";
+import Text from '$/components/Text'
+import usePromise from '$/hooks/usePromise'
+import { managePage } from '$/lib/ui'
 
 import {
-    APIAppDirectorySearch,
-    APICollectionApplication,
-    APICollectionItem,
+    type APIAppDirectorySearch,
+    type APICollectionApplication,
+    type APICollectionItem,
     APICollectionType,
     getAppDirectoryCategories,
     getAppDirectoryCollections,
     searchAppDirectory,
-} from "../../stuff/api";
-import { inServers } from "../../stuff/util";
-import { getAppInfoPageRender } from "./AppInfoPage";
+} from '../../stuff/api'
+import { inServers } from '../../stuff/util'
+import { getAppInfoPageRender } from './AppInfoPage'
 
 export default function AppDirectoryPage({
     guildId,
     pushScreen,
 }: {
-    guildId?: string;
-    pushScreen?: any;
+    guildId?: string
+    pushScreen?: any
 }) {
-    const locale = i18n.getLocale();
+    const locale = i18n.getLocale()
 
-    const [search, setSearch] = React.useState("");
+    const [search, setSearch] = React.useState('')
     const [selCategory, setSelCategory] = React.useState<number | undefined>(
         undefined,
-    );
+    )
 
     const categoriesPromise = usePromise(
         () => getAppDirectoryCategories(),
         [locale],
-    );
+    )
     const collectionsPromise = usePromise(
         () => getAppDirectoryCollections(),
         [locale],
-    );
+    )
 
-    const [searchPage, setSearchPage] = React.useState(0);
+    const [searchPage, setSearchPage] = React.useState(0)
     const searchResultsPromise = usePromise<APIAppDirectorySearch | null>(
         () =>
             search || selCategory !== undefined
@@ -60,37 +60,37 @@ export default function AppDirectoryPage({
                   )
                 : (() => new Promise(res => res(null)))(),
         [search, searchPage, selCategory, locale],
-    );
+    )
 
     const categories =
         categoriesPromise.fulfilled &&
         categoriesPromise.success &&
-        categoriesPromise.response;
+        categoriesPromise.response
     const collections =
         collectionsPromise.fulfilled &&
         collectionsPromise.success &&
-        collectionsPromise.response.sort((a, b) => a.position - b.position);
+        collectionsPromise.response.sort((a, b) => a.position - b.position)
     const searchResults =
         searchResultsPromise.fulfilled &&
         searchResultsPromise.success &&
-        searchResultsPromise.response;
+        searchResultsPromise.response
 
     React.useEffect(() => {
-        if (!search) setSelCategory(undefined);
-        else if (search && !selCategory) setSelCategory(0);
-    }, [search]);
+        if (!search) setSelCategory(undefined)
+        else if (search && !selCategory) setSelCategory(0)
+    }, [search])
 
     React.useEffect(() => {
-        if (!searchResults) setSearchPage(0);
-    }, [searchResults]);
+        if (!searchResults) setSearchPage(0)
+    }, [searchResults])
 
-    const jwidth = RN.Dimensions.get("screen").width - 32;
+    const jwidth = RN.Dimensions.get('screen').width - 32
 
     const styles = stylesheet.createThemedStyleSheet({
         category: {
             backgroundColor: semanticColors.BG_SURFACE_OVERLAY,
-            flexDirection: "row",
-            justifyContent: "center",
+            flexDirection: 'row',
+            justifyContent: 'center',
             gap: 8,
             padding: 8,
             borderRadius: 8,
@@ -104,10 +104,10 @@ export default function AppDirectoryPage({
             tintColor: semanticColors.INTERACTIVE_NORMAL,
         },
         bottomNav: {
-            flexDirection: "row",
+            flexDirection: 'row',
             marginTop: 16,
             gap: 8,
-            justifyContent: "center",
+            justifyContent: 'center',
         },
         bottomNavItem: {
             backgroundColor: semanticColors.BG_MOD_SUBTLE,
@@ -134,7 +134,7 @@ export default function AppDirectoryPage({
             cornerRadius: 8,
             foreground: true,
         } as any,
-    });
+    })
     const collectionStyles = stylesheet.createThemedStyleSheet({
         card: {
             backgroundColor: semanticColors.CARD_PRIMARY_BG,
@@ -145,18 +145,18 @@ export default function AppDirectoryPage({
             backgroundColor: semanticColors.CARD_SECONDARY_BG,
             borderTopLeftRadius: 8,
             borderTopRightRadius: 8,
-            width: "100%",
+            width: '100%',
             aspectRatio: 2.5 / 1,
         },
         cardContent: {
             paddingHorizontal: 16,
             paddingVertical: 16,
-            flexDirection: "column",
+            flexDirection: 'column',
             gap: 4,
         },
 
         smallProfile: {
-            flexDirection: "row",
+            flexDirection: 'row',
             gap: 16,
         },
         smallAvatar: {
@@ -166,56 +166,56 @@ export default function AppDirectoryPage({
             borderRadius: 2147483647,
         },
         smallProfileThing: {
-            flexDirection: "column",
-            justifyContent: "center",
+            flexDirection: 'column',
+            justifyContent: 'center',
             gap: 4,
         },
-    });
+    })
 
-    const navigation = NavigationNative.useNavigation();
+    const navigation = NavigationNative.useNavigation()
     managePage({
-        title: "App Directory",
-    });
+        title: 'App Directory',
+    })
 
     const onAppPress =
         (app: APICollectionItem | APICollectionApplication) => () =>
             pushScreen
-                ? pushScreen("APP_INFO", {
-                      app: "application" in app ? app.application : app,
+                ? pushScreen('APP_INFO', {
+                      app: 'application' in app ? app.application : app,
                       guildId,
                   })
-                : navigation.push("VendettaCustomPage", {
+                : navigation.push('VendettaCustomPage', {
                       title:
-                          "application" in app
+                          'application' in app
                               ? app.application.name
                               : app.name,
                       render: getAppInfoPageRender(
-                          "application" in app ? app.application : app,
+                          'application' in app ? app.application : app,
                           guildId,
                       ),
-                  });
+                  })
 
     const pushPageI = searchResults
         ? Math.max(Math.min(searchPage - 3, searchResults.num_pages - 7), 0)
-        : 0;
+        : 0
     const pushPages = searchResults
         ? new Array(searchResults.num_pages)
               .fill(0)
               .map((_, i) => ({ num: i + 1, selected: i === searchPage }))
               .slice(pushPageI, pushPageI + 7)
-        : [];
+        : []
 
-    const pageFirst = pushPages[0]?.num === 1;
+    const pageFirst = pushPages[0]?.num === 1
     const pageLast =
         searchResults &&
-        pushPages[pushPages.length - 1]?.num === searchResults.num_pages;
+        pushPages[pushPages.length - 1]?.num === searchResults.num_pages
     const renderPushPages = pushPages.slice(
         pageFirst ? 0 : 2,
         pageLast ? pushPages.length : pushPages.length - 2,
-    );
+    )
 
-    const isFirst = searchPage === 0;
-    const isLast = searchResults && searchPage === searchResults.num_pages - 1;
+    const isFirst = searchPage === 0
+    const isLast = searchResults && searchPage === searchResults.num_pages - 1
 
     return (
         <RN.ScrollView
@@ -223,13 +223,14 @@ export default function AppDirectoryPage({
                 flex: 1,
                 paddingHorizontal: 16,
                 paddingTop: 12,
-            }}>
+            }}
+        >
             <Search placeholder="Search..." onChangeText={setSearch} />
             <RN.View style={{ height: 12 }} />
             {categories ? (
                 <RN.FlatList
                     horizontal
-                    data={[{ id: 0, name: "All" }, ...categories].sort(
+                    data={[{ id: 0, name: 'All' }, ...categories].sort(
                         (a, b) =>
                             selCategory
                                 ? a.id === selCategory
@@ -249,28 +250,30 @@ export default function AppDirectoryPage({
                             android_ripple={styles.androidRipple}
                             onPress={() => {
                                 if (selCategory === item.id && !search)
-                                    setSelCategory(undefined);
-                                else setSelCategory(item.id);
+                                    setSelCategory(undefined)
+                                else setSelCategory(item.id)
                                 RN.LayoutAnimation.configureNext(
                                     RN.LayoutAnimation.Presets.easeInEaseOut,
-                                );
-                            }}>
+                                )
+                            }}
+                        >
                             <RN.Image
                                 style={styles.categoryIcon}
                                 source={getAssetIDByName(
                                     {
-                                        0: "GlobeEarthIcon",
-                                        4: "ic_monitor_24px",
-                                        6: "GameControllerIcon",
-                                        8: "PencilSparkleIcon",
-                                        9: "FriendsIcon",
-                                        10: "WrenchIcon",
-                                    }[item.id] ?? "",
+                                        0: 'GlobeEarthIcon',
+                                        4: 'ic_monitor_24px',
+                                        6: 'GameControllerIcon',
+                                        8: 'PencilSparkleIcon',
+                                        9: 'FriendsIcon',
+                                        10: 'WrenchIcon',
+                                    }[item.id] ?? '',
                                 )}
                             />
                             <Text
                                 variant="text-md/semibold"
-                                color="TEXT_NORMAL">
+                                color="TEXT_NORMAL"
+                            >
                                 {item.name}
                             </Text>
                         </RN.Pressable>
@@ -298,13 +301,16 @@ export default function AppDirectoryPage({
                                 <RN.Pressable
                                     style={collectionStyles.card}
                                     android_ripple={styles.androidRipple}
-                                    onPress={onAppPress(app)}>
+                                    onPress={onAppPress(app)}
+                                >
                                     <RN.View
-                                        style={collectionStyles.cardContent}>
+                                        style={collectionStyles.cardContent}
+                                    >
                                         <RN.View
                                             style={
                                                 collectionStyles.smallProfile
-                                            }>
+                                            }
+                                        >
                                             <RN.Image
                                                 style={
                                                     collectionStyles.smallAvatar
@@ -316,16 +322,19 @@ export default function AppDirectoryPage({
                                             <RN.View
                                                 style={
                                                     collectionStyles.smallProfileThing
-                                                }>
+                                                }
+                                            >
                                                 <Text
                                                     variant="text-md/semibold"
-                                                    color="TEXT_NORMAL">
+                                                    color="TEXT_NORMAL"
+                                                >
                                                     {app.name}
                                                 </Text>
                                                 {app.categories[0] && (
                                                     <Text
                                                         variant="text-md/medium"
-                                                        color="TEXT_MUTED">
+                                                        color="TEXT_MUTED"
+                                                    >
                                                         {app.categories[0].name}
                                                     </Text>
                                                 )}
@@ -334,7 +343,8 @@ export default function AppDirectoryPage({
                                         <Text
                                             variant="text-md/medium"
                                             color="TEXT_MUTED"
-                                            style={{ paddingBottom: 8 }}>
+                                            style={{ paddingBottom: 8 }}
+                                        >
                                             {inServers(
                                                 app.directory_entry.guild_count,
                                             )}
@@ -342,7 +352,8 @@ export default function AppDirectoryPage({
                                         <Text
                                             variant="text-md/semibold"
                                             color="TEXT_NORMAL"
-                                            lineClamp={2}>
+                                            lineClamp={2}
+                                        >
                                             {
                                                 app.directory_entry
                                                     .short_description
@@ -368,15 +379,17 @@ export default function AppDirectoryPage({
                                             ),
                                             0,
                                         ),
-                                    );
+                                    )
                                 }}
                                 disabled={isFirst}
-                                key={"page-back"}>
+                                key={'page-back'}
+                            >
                                 <Text
                                     variant="text-sm/bold"
                                     color={
-                                        isFirst ? "TEXT_MUTED" : "TEXT_NORMAL"
-                                    }>
+                                        isFirst ? 'TEXT_MUTED' : 'TEXT_NORMAL'
+                                    }
+                                >
                                     &lt;
                                 </Text>
                             </RN.Pressable>
@@ -385,19 +398,22 @@ export default function AppDirectoryPage({
                                     <RN.Pressable
                                         style={styles.bottomNavItem}
                                         onPress={() => {
-                                            setSearchPage(0);
+                                            setSearchPage(0)
                                         }}
-                                        key={"page-1"}>
+                                        key={'page-1'}
+                                    >
                                         <Text
                                             variant="text-sm/semibold"
-                                            color="TEXT_NORMAL">
+                                            color="TEXT_NORMAL"
+                                        >
                                             1
                                         </Text>
                                     </RN.Pressable>
                                     <Text
                                         variant="text-md/semibold"
                                         color="TEXT_MUTED"
-                                        key={"page-sep-left"}>
+                                        key={'page-sep-left'}
+                                    >
                                         ...
                                     </Text>
                                 </>
@@ -410,12 +426,14 @@ export default function AppDirectoryPage({
                                             : styles.bottomNavItem
                                     }
                                     onPress={() => {
-                                        setSearchPage(x.num - 1);
+                                        setSearchPage(x.num - 1)
                                     }}
-                                    key={`page-${x.num}`}>
+                                    key={`page-${x.num}`}
+                                >
                                     <Text
                                         variant="text-sm/semibold"
-                                        color="TEXT_NORMAL">
+                                        color="TEXT_NORMAL"
+                                    >
                                         {x.num}
                                     </Text>
                                 </RN.Pressable>
@@ -425,7 +443,8 @@ export default function AppDirectoryPage({
                                     <Text
                                         variant="text-md/semibold"
                                         color="TEXT_MUTED"
-                                        key={"page-sep-right"}>
+                                        key={'page-sep-right'}
+                                    >
                                         ...
                                     </Text>
                                     <RN.Pressable
@@ -433,12 +452,14 @@ export default function AppDirectoryPage({
                                         onPress={() => {
                                             setSearchPage(
                                                 searchResults.num_pages - 1,
-                                            );
+                                            )
                                         }}
-                                        key={`page-${searchResults.num_pages}`}>
+                                        key={`page-${searchResults.num_pages}`}
+                                    >
                                         <Text
                                             variant="text-sm/semibold"
-                                            color="TEXT_NORMAL">
+                                            color="TEXT_NORMAL"
+                                        >
                                             {searchResults.num_pages}
                                         </Text>
                                     </RN.Pressable>
@@ -459,15 +480,17 @@ export default function AppDirectoryPage({
                                             ),
                                             0,
                                         ),
-                                    );
+                                    )
                                 }}
                                 disabled={isLast}
-                                key={"page-next"}>
+                                key={'page-next'}
+                            >
                                 <Text
                                     variant="text-sm/bold"
                                     color={
-                                        isLast ? "TEXT_MUTED" : "TEXT_NORMAL"
-                                    }>
+                                        isLast ? 'TEXT_MUTED' : 'TEXT_NORMAL'
+                                    }
+                                >
                                     &gt;
                                 </Text>
                             </RN.Pressable>
@@ -483,7 +506,8 @@ export default function AppDirectoryPage({
                                     style={{
                                         paddingBottom: 24,
                                         paddingTop: i !== 0 ? 30 : 0,
-                                    }}>
+                                    }}
+                                >
                                     {x.title}
                                 </Text>
                                 <RN.FlatList
@@ -501,7 +525,8 @@ export default function AppDirectoryPage({
                                                 android_ripple={
                                                     styles.androidRipple
                                                 }
-                                                onPress={onAppPress(app)}>
+                                                onPress={onAppPress(app)}
+                                            >
                                                 {app.image_hash && (
                                                     <RN.Image
                                                         style={
@@ -516,19 +541,22 @@ export default function AppDirectoryPage({
                                                 <RN.View
                                                     style={
                                                         collectionStyles.cardContent
-                                                    }>
+                                                    }
+                                                >
                                                     <Text
                                                         variant="text-lg/semibold"
                                                         color="TEXT_NORMAL"
                                                         style={{
                                                             paddingBottom: 4,
-                                                        }}>
+                                                        }}
+                                                    >
                                                         {app.application.name}
                                                     </Text>
                                                     <Text
                                                         variant="text-md/semibold"
                                                         color="TEXT_NORMAL"
-                                                        lineClamp={2}>
+                                                        lineClamp={2}
+                                                    >
                                                         {
                                                             app.application
                                                                 .directory_entry
@@ -547,7 +575,8 @@ export default function AppDirectoryPage({
                                                 android_ripple={
                                                     styles.androidRipple
                                                 }
-                                                onPress={onAppPress(app)}>
+                                                onPress={onAppPress(app)}
+                                            >
                                                 {app.image_hash && (
                                                     <RN.Image
                                                         style={
@@ -562,10 +591,12 @@ export default function AppDirectoryPage({
                                                 <RN.View
                                                     style={
                                                         collectionStyles.cardContent
-                                                    }>
+                                                    }
+                                                >
                                                     <Text
                                                         variant="text-md/semibold"
-                                                        color="TEXT_NORMAL">
+                                                        color="TEXT_NORMAL"
+                                                    >
                                                         {app.application.name}
                                                     </Text>
                                                     <Text
@@ -573,7 +604,8 @@ export default function AppDirectoryPage({
                                                         color="TEXT_MUTED"
                                                         style={{
                                                             paddingBottom: 8,
-                                                        }}>
+                                                        }}
+                                                    >
                                                         {app.application
                                                             .categories[0] && (
                                                             <>
@@ -588,9 +620,10 @@ export default function AppDirectoryPage({
                                                                     color="TEXT_MUTED"
                                                                     style={{
                                                                         opacity: 0.5,
-                                                                    }}>
-                                                                    {"  "}·
-                                                                    {"  "}
+                                                                    }}
+                                                                >
+                                                                    {'  '}·
+                                                                    {'  '}
                                                                 </Text>
                                                             </>
                                                         )}
@@ -603,7 +636,8 @@ export default function AppDirectoryPage({
                                                     <Text
                                                         variant="text-md/semibold"
                                                         color="TEXT_NORMAL"
-                                                        lineClamp={2}>
+                                                        lineClamp={2}
+                                                    >
                                                         {
                                                             app.application
                                                                 .directory_entry
@@ -621,15 +655,18 @@ export default function AppDirectoryPage({
                                                 android_ripple={
                                                     styles.androidRipple
                                                 }
-                                                onPress={onAppPress(app)}>
+                                                onPress={onAppPress(app)}
+                                            >
                                                 <RN.View
                                                     style={
                                                         collectionStyles.cardContent
-                                                    }>
+                                                    }
+                                                >
                                                     <RN.View
                                                         style={
                                                             collectionStyles.smallProfile
-                                                        }>
+                                                        }
+                                                    >
                                                         <RN.Image
                                                             style={
                                                                 collectionStyles.smallAvatar
@@ -641,10 +678,12 @@ export default function AppDirectoryPage({
                                                         <RN.View
                                                             style={
                                                                 collectionStyles.smallProfileThing
-                                                            }>
+                                                            }
+                                                        >
                                                             <Text
                                                                 variant="text-md/semibold"
-                                                                color="TEXT_NORMAL">
+                                                                color="TEXT_NORMAL"
+                                                            >
                                                                 {
                                                                     app
                                                                         .application
@@ -655,7 +694,8 @@ export default function AppDirectoryPage({
                                                                 .categories[0] && (
                                                                 <Text
                                                                     variant="text-md/medium"
-                                                                    color="TEXT_MUTED">
+                                                                    color="TEXT_MUTED"
+                                                                >
                                                                     {
                                                                         app
                                                                             .application
@@ -671,7 +711,8 @@ export default function AppDirectoryPage({
                                                         color="TEXT_MUTED"
                                                         style={{
                                                             paddingBottom: 8,
-                                                        }}>
+                                                        }}
+                                                    >
                                                         {inServers(
                                                             app.application
                                                                 .directory_entry
@@ -681,7 +722,8 @@ export default function AppDirectoryPage({
                                                     <Text
                                                         variant="text-md/semibold"
                                                         color="TEXT_NORMAL"
-                                                        lineClamp={2}>
+                                                        lineClamp={2}
+                                                    >
                                                         {
                                                             app.application
                                                                 .directory_entry
@@ -705,5 +747,5 @@ export default function AppDirectoryPage({
             )}
             <RN.View style={{ height: 48 }} />
         </RN.ScrollView>
-    );
+    )
 }

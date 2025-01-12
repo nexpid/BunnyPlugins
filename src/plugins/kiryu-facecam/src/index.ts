@@ -1,48 +1,48 @@
-import { storage } from "@vendetta/plugin";
+import { storage } from '@vendetta/plugin'
 
-import { Lang } from "$/lang";
+import { Lang } from '$/lang'
 
-import Settings from "./components/Settings";
-import patcher from "./stuff/patcher";
+import Settings from './components/Settings'
+import patcher from './stuff/patcher'
 
 export const vstorage = storage as {
     styling: {
-        opacity: number;
-        xPos: "left" | "center" | "right";
-        yPos: "top" | "middle" | "bottom";
-    };
+        opacity: number
+        xPos: 'left' | 'center' | 'right'
+        yPos: 'top' | 'middle' | 'bottom'
+    }
     appear: {
-        style: "fly" | "fade" | "always";
-        speed: number;
-    };
+        style: 'fly' | 'fade' | 'always'
+        speed: number
+    }
     effects: {
         swinging: {
-            enabled: boolean;
-            speed: number;
-        };
+            enabled: boolean
+            speed: number
+        }
         bounce: {
-            enabled: boolean;
-            multiplier: number;
-            speed: number;
-        };
-    };
-};
+            enabled: boolean
+            multiplier: number
+            speed: number
+        }
+    }
+}
 
-export const lang = new Lang("kiryu_facecam");
+export const lang = new Lang('kiryu_facecam')
 
-let unpatch: () => void;
+let unpatch: () => void
 
 export default {
     onLoad: () => {
         vstorage.styling ??= {
             opacity: 10,
-            xPos: "center",
-            yPos: "top",
-        };
+            xPos: 'center',
+            yPos: 'top',
+        }
         vstorage.appear ??= {
-            style: "fly",
+            style: 'fly',
             speed: 500,
-        };
+        }
         vstorage.effects ??= {
             swinging: {
                 enabled: true,
@@ -53,11 +53,11 @@ export default {
                 multiplier: 1.05,
                 speed: 100,
             },
-        };
-        unpatch = patcher();
+        }
+        unpatch = patcher()
     },
     onUnload: () => {
-        unpatch();
+        unpatch()
     },
     settings: Settings(),
-};
+}

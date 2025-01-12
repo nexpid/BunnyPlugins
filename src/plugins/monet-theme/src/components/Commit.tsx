@@ -1,81 +1,81 @@
-import { i18n, ReactNative as RN, stylesheet } from "@vendetta/metro/common";
-import { useProxy } from "@vendetta/storage";
-import { semanticColors } from "@vendetta/ui";
-import { type PressableProps } from "react-native";
+import { i18n, ReactNative as RN, stylesheet } from '@vendetta/metro/common'
+import { useProxy } from '@vendetta/storage'
+import { semanticColors } from '@vendetta/ui'
+import type { PressableProps } from 'react-native'
 
-import Text from "$/components/Text";
-import { PressableScale, Stack } from "$/lib/redesign";
-import { getDiscordTheme } from "$/types";
+import Text from '$/components/Text'
+import { PressableScale, Stack } from '$/lib/redesign'
+import { getDiscordTheme } from '$/types'
 
-import { vstorage } from "..";
+import { vstorage } from '..'
 import {
     conventionalCommitRegex,
     parseConventionalCommit,
-} from "../stuff/conventionalCommits";
+} from '../stuff/conventionalCommits'
 
 export interface CommitUser {
-    login: string;
-    id: number;
-    node_id: string;
-    avatar_url: string;
-    gravatar_id: string;
-    url: string;
-    html_url: string;
-    followers_url: string;
-    following_url: string;
-    gists_url: string;
-    starred_url: string;
-    subscriptions_url: string;
-    organizations_url: string;
-    repos_url: string;
-    events_url: string;
-    received_events_url: string;
-    type: string;
-    site_admin: false;
+    login: string
+    id: number
+    node_id: string
+    avatar_url: string
+    gravatar_id: string
+    url: string
+    html_url: string
+    followers_url: string
+    following_url: string
+    gists_url: string
+    starred_url: string
+    subscriptions_url: string
+    organizations_url: string
+    repos_url: string
+    events_url: string
+    received_events_url: string
+    type: string
+    site_admin: false
 }
 export interface CommitObj {
-    sha: string;
-    node_id: string;
+    sha: string
+    node_id: string
     commit: {
         author: {
-            name: string;
-            email: string;
-            date: string;
-        };
+            name: string
+            email: string
+            date: string
+        }
         commiter: {
-            name: string;
-            email: string;
-            date: string;
-        };
-        message: string;
+            name: string
+            email: string
+            date: string
+        }
+        message: string
         tree: {
-            sha: string;
-            url: string;
-        };
-        url: string;
-        comment_count: number;
+            sha: string
+            url: string
+        }
+        url: string
+        comment_count: number
         verification: {
-            verified: boolean;
-            reason: string;
-            signature: any;
-            payload: any;
-        };
-    };
-    url: string;
-    html_url: string;
-    comments_url: string;
-    author: CommitUser;
-    committer: CommitUser;
+            verified: boolean
+            reason: string
+            signature: any
+            payload: any
+        }
+    }
+    url: string
+    html_url: string
+    comments_url: string
+    author: CommitUser
+    committer: CommitUser
     parents: {
-        sha: string;
-        url: string;
-        html_url: string;
-    }[];
+        sha: string
+        url: string
+        html_url: string
+    }[]
 }
 
 export enum CommitState {
-    Selected,
-    Default,
+    Selected = 0,
+    Default = 1,
 }
 
 const conventionalCommitLabelColors = {
@@ -87,7 +87,7 @@ const conventionalCommitLabelColors = {
     test: [251, 202, 4, 48, 96, 50],
     ci: [197, 222, 245, 208, 70, 86],
     perf: [83, 25, 231, 256, 81, 50],
-};
+}
 
 export default function Commit({
     commit,
@@ -95,11 +95,11 @@ export default function Commit({
     contextProps,
     ...props
 }: {
-    commit: CommitObj;
-    state?: CommitState;
-    contextProps?: any;
+    commit: CommitObj
+    state?: CommitState
+    contextProps?: any
 } & PressableProps) {
-    useProxy(vstorage);
+    useProxy(vstorage)
 
     const styles = stylesheet.createThemedStyleSheet({
         androidRipple: {
@@ -118,11 +118,11 @@ export default function Commit({
             borderColor: semanticColors.TEXT_BRAND,
         },
         cardDefault: {
-            borderColor: "#fffa",
+            borderColor: '#fffa',
         },
         title: {
-            flexDirection: "row",
-            alignItems: "center",
+            flexDirection: 'row',
+            alignItems: 'center',
             gap: 6,
         },
         avatar: {
@@ -139,46 +139,47 @@ export default function Commit({
             borderWidth: 1,
             transform: [{ translateY: 2 }],
         },
-    });
+    })
 
     let title = (
         <Text variant="text-md/medium" color="TEXT_NORMAL" lineClamp={1}>
             {commit.commit.message}
         </Text>
-    );
+    )
 
-    const labelTitle = parseConventionalCommit(commit.commit.message);
+    const labelTitle = parseConventionalCommit(commit.commit.message)
     if (labelTitle) {
         const labelColor = conventionalCommitLabelColors[
             labelTitle.rawType
-        ] ?? [255, 255, 255, 0, 0, 100];
+        ] ?? [255, 255, 255, 0, 0, 100]
 
         // color logic shamelessly stolen from GitHub
         const perceivedLightness =
             (labelColor[0] * 0.2126 +
                 labelColor[1] * 0.7152 +
                 labelColor[2] * 0.0722) /
-            255;
+            255
 
-        const lightnessThreshold = getDiscordTheme() === "light" ? 0.453 : 0.6;
+        const lightnessThreshold = getDiscordTheme() === 'light' ? 0.453 : 0.6
         const lightnessSwitch =
             Math.max(
                 0,
                 Math.min(1 / (lightnessThreshold - perceivedLightness), 1),
-            ) * 100;
+            ) * 100
         const lightenBy =
-            (lightnessThreshold - perceivedLightness) * lightnessSwitch;
+            (lightnessThreshold - perceivedLightness) * lightnessSwitch
 
         title = (
             <Text
                 variant="text-md/medium"
                 color="TEXT_NORMAL"
                 style={styles.labelTitle}
-                lineClamp={1}>
+                lineClamp={1}
+            >
                 <RN.View
                     style={[
                         styles.label,
-                        getDiscordTheme() === "light"
+                        getDiscordTheme() === 'light'
                             ? {
                                   backgroundColor: `rgb(${labelColor[0]}, ${labelColor[1]}, ${labelColor[2]})`,
                                   borderWidth: 0,
@@ -187,26 +188,28 @@ export default function Commit({
                                   backgroundColor: `rgba(${labelColor[0]}, ${labelColor[1]}, ${labelColor[2]}, 0.3)`,
                                   borderColor: `hsla(${labelColor[3]}, ${labelColor[4]}%, ${labelColor[5] + lightenBy}%, 0.18)`,
                               },
-                    ]}>
+                    ]}
+                >
                     <RN.Text
                         style={
-                            getDiscordTheme() === "light"
+                            getDiscordTheme() === 'light'
                                 ? {
                                       color: `hsl(0, 0%, ${lightnessSwitch}%)`,
                                   }
                                 : {
                                       color: `hsl(${labelColor[3]}, ${labelColor[4]}%, ${labelColor[5] + lightenBy}%)`,
                                   }
-                        }>
+                        }
+                    >
                         {labelTitle.type}
                     </RN.Text>
-                </RN.View>{" "}
+                </RN.View>{' '}
                 {labelTitle.scope && (
                     <Text color="TEXT_MUTED">{labelTitle.scope}</Text>
                 )}
-                {commit.commit.message.replace(conventionalCommitRegex, "")}
+                {commit.commit.message.replace(conventionalCommitRegex, '')}
             </Text>
-        );
+        )
     }
 
     return (
@@ -220,27 +223,30 @@ export default function Commit({
             key={commit.sha}
             pointerEvents="box-only"
             {...contextProps}
-            {...props}>
+            {...props}
+        >
             <Stack spacing={6}>
                 <RN.View style={styles.title}>
                     <RN.Image
                         style={styles.avatar}
                         source={{
                             uri: commit.committer.avatar_url,
-                            cache: "force-cache",
+                            cache: 'force-cache',
                         }}
                         resizeMode="cover"
                     />
                     <Text
                         variant="text-md/medium"
                         color="TEXT_NORMAL"
-                        style={{ transform: [{ translateY: -1 }] }}>
+                        style={{ transform: [{ translateY: -1 }] }}
+                    >
                         {commit.committer.login}
                     </Text>
                     <Text
                         variant="text-xs/medium"
                         color="TEXT_MUTED"
-                        style={{ marginLeft: "auto" }}>
+                        style={{ marginLeft: 'auto' }}
+                    >
                         {new Date(commit.commit.author.date).toLocaleDateString(
                             i18n.getLocale(),
                         )}
@@ -249,5 +255,5 @@ export default function Commit({
                 {title}
             </Stack>
         </PressableScale>
-    );
+    )
 }

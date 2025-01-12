@@ -1,10 +1,10 @@
-import { React, ReactNative as RN, stylesheet } from "@vendetta/metro/common";
-import { rawColors, semanticColors } from "@vendetta/ui";
+import { React, ReactNative as RN, stylesheet } from '@vendetta/metro/common'
+import { rawColors, semanticColors } from '@vendetta/ui'
 
-import Text from "$/components/Text";
-import { lerp, resolveCustomSemantic, resolveSemanticColor } from "$/types";
+import Text from '$/components/Text'
+import { lerp, resolveCustomSemantic, resolveSemanticColor } from '$/types'
 
-const AnimatedPressable = RN.Animated.createAnimatedComponent(RN.Pressable);
+const AnimatedPressable = RN.Animated.createAnimatedComponent(RN.Pressable)
 
 export default ({
     label,
@@ -13,11 +13,11 @@ export default ({
     loading,
     onPress,
 }: {
-    label: string;
-    color: string;
-    disabled?: boolean;
-    loading?: boolean;
-    onPress?: () => void;
+    label: string
+    color: string
+    disabled?: boolean
+    loading?: boolean
+    onPress?: () => void
 }) => {
     const rawVal = {
         BRAND: rawColors.BRAND_500,
@@ -25,14 +25,14 @@ export default ({
         POSITIVE: rawColors.GREEN_500,
         PRIMARAY: rawColors.PRIMARY_500,
         NORMAL: rawColors.PRIMARY_500,
-    }[color];
+    }[color]
     const bleh = resolveCustomSemantic(
-        lerp(rawVal, "#FFFFFF", 0.25),
-        lerp(rawVal, "#000000", 0.15),
-    );
+        lerp(rawVal, '#FFFFFF', 0.25),
+        lerp(rawVal, '#000000', 0.15),
+    )
     const styles = stylesheet.createThemedStyleSheet({
         container: {
-            alignItems: "baseline",
+            alignItems: 'baseline',
             paddingHorizontal: 12,
             paddingVertical: 10,
             borderRadius: 2147483647,
@@ -43,14 +43,14 @@ export default ({
         active: {
             backgroundColor: `${bleh}14`,
         },
-    });
+    })
 
-    const enabled = !loading && !disabled;
+    const enabled = !loading && !disabled
 
-    const [isPressing, setIsPressing] = React.useState(false);
+    const [isPressing, setIsPressing] = React.useState(false)
     const pressVal = React.useRef(
         new RN.Animated.Value(isPressing ? 1 : 0),
-    ).current;
+    ).current
 
     React.useEffect(() => {
         RN.Animated.timing(pressVal, {
@@ -58,8 +58,8 @@ export default ({
             duration: 100,
             easing: RN.Easing.linear,
             useNativeDriver: true,
-        }).start();
-    }, [isPressing]);
+        }).start()
+    }, [isPressing])
 
     return (
         <AnimatedPressable
@@ -76,10 +76,10 @@ export default ({
                 },
             ]}
             onPressIn={() => {
-                setIsPressing(true);
+                setIsPressing(true)
             }}
             onPressOut={() => {
-                setIsPressing(false);
+                setIsPressing(false)
             }}
             onPress={() => enabled && onPress?.()}
             accessibilityRole="button"
@@ -89,7 +89,8 @@ export default ({
             accessible={enabled}
             collapsable={false}
             disabled={!enabled}
-            pointerEvents={enabled ? "box-only" : "none"}>
+            pointerEvents={enabled ? 'box-only' : 'none'}
+        >
             {loading ? (
                 <RN.ActivityIndicator
                     size="small"
@@ -100,10 +101,11 @@ export default ({
             ) : (
                 <Text
                     variant="text-md/semibold"
-                    color={enabled ? `TEXT_${color}` : "TEXT_MUTED"}>
+                    color={enabled ? `TEXT_${color}` : 'TEXT_MUTED'}
+                >
                     {label}
                 </Text>
             )}
         </AnimatedPressable>
-    );
-};
+    )
+}

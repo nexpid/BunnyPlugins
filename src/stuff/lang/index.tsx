@@ -1,41 +1,41 @@
-import { findByName } from "@vendetta/metro";
-import { i18n, ReactNative as RN } from "@vendetta/metro/common";
+import { findByName } from '@vendetta/metro'
+import { i18n, ReactNative as RN } from '@vendetta/metro/common'
 
-import { fluxSubscribe } from "$/types";
+import { fluxSubscribe } from '$/types'
 
-import type LangValues from "../../../lang/defs";
-import { useLangStore } from "./LangStore";
+import type LangValues from '../../../lang/defs'
+import { useLangStore } from './LangStore'
 
 // from Pyoncord
-const IntlMessageFormat = findByName("MessageFormat");
+const IntlMessageFormat = findByName('MessageFormat')
 
 export class Lang<Plugin extends keyof LangValues> {
-    private _unload: () => void;
+    private _unload: () => void
 
-    public Values: LangValues[Plugin]["values"] | undefined;
+    public Values: LangValues[Plugin]['values'] | undefined
 
     constructor(public plugin: Plugin) {
         useLangStore.persist.setOptions({
             name: `nexpid-lang-${plugin.toString()}`,
             onRehydrateStorage: () => state => state?.update(this.plugin),
-        });
-        void useLangStore.persist.rehydrate();
+        })
+        void useLangStore.persist.rehydrate()
 
         this._unload = fluxSubscribe(
-            "I18N_LOAD_SUCCESS",
+            'I18N_LOAD_SUCCESS',
             () => void useLangStore.persist.rehydrate(),
-        );
+        )
     }
 
     unload() {
-        this._unload();
+        this._unload()
     }
 
     static getLang(): string {
-        const lang = i18n.getLocale()?.replace(/-/g, "_") ?? "en";
+        const lang = i18n.getLocale()?.replace(/-/g, '_') ?? 'en'
 
-        if (lang.startsWith("en_")) return "en";
-        else return lang;
+        if (lang.startsWith('en_')) return 'en'
+        return lang
     }
 
     static basicFormat(text: string): React.ReactNode {
@@ -43,49 +43,49 @@ export class Lang<Plugin extends keyof LangValues> {
             {
                 regex: /\*\*(.*?)\*\*/g,
                 react: (txt: string) => (
-                    <RN.Text style={{ fontWeight: "900" }}>{txt}</RN.Text>
+                    <RN.Text style={{ fontWeight: '900' }}>{txt}</RN.Text>
                 ),
             },
-        ];
+        ]
 
-        const txt = text.split("") as (string | React.ReactNode)[];
-        let off = 0;
+        const txt = text.split('') as (string | React.ReactNode)[]
+        let off = 0
         for (const rule of rules) {
-            const matches = Array.from(text.matchAll(rule.regex));
+            const matches = Array.from(text.matchAll(rule.regex))
             for (const match of matches)
                 if (match[1] && match.index) {
                     txt.splice(
                         match.index - off,
                         match[0].length,
                         rule.react(match[1]),
-                    );
-                    off += match[0].length - 1;
+                    )
+                    off += match[0].length - 1
                 }
         }
 
-        return txt;
+        return txt
     }
 
-    format<Key extends keyof LangValues[Plugin]["values"]>(
+    format<Key extends keyof LangValues[Plugin]['values']>(
         _key: Key,
-        input: Key extends keyof LangValues[Plugin]["fillers"]
-            ? LangValues[Plugin]["fillers"][Key]
+        input: Key extends keyof LangValues[Plugin]['fillers']
+            ? LangValues[Plugin]['fillers'][Key]
             : Record<string, never>,
     ): string {
-        const key = _key as string;
-        if (PREVIEW_LANG) return key;
+        const key = _key as string
+        if (PREVIEW_LANG) return key
 
-        const locale = Lang.getLang();
+        const locale = Lang.getLang()
 
-        const { values } = useLangStore.getState();
-        if (!values) return String(key);
+        const { values } = useLangStore.getState()
+        if (!values) return String(key)
 
         const val =
-            values[locale]?.[key] ?? values.en?.[key] ?? DEFAULT_LANG?.[key];
-        if (!val) return String(key);
+            values[locale]?.[key] ?? values.en?.[key] ?? DEFAULT_LANG?.[key]
+        if (!val) return String(key)
 
         if (Object.keys(input as any).length > 0)
-            return new IntlMessageFormat(val).format(input);
-        else return val;
+            return new IntlMessageFormat(val).format(input)
+        return val
     }
 }

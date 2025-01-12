@@ -1,5 +1,5 @@
-import { ReactNative as RN, stylesheet } from "@vendetta/metro/common";
-import { semanticColors } from "@vendetta/ui";
+import { ReactNative as RN, stylesheet } from '@vendetta/metro/common'
+import { semanticColors } from '@vendetta/ui'
 
 export default function SuperAwesomeIcon({
     onPress,
@@ -9,12 +9,12 @@ export default function SuperAwesomeIcon({
     destructive,
     color,
 }: {
-    onPress?: () => void;
-    onLongPress?: () => void;
-    destructive?: boolean;
-    color?: any;
-    icon: number;
-    style: "header" | "card" | import("react-native").ImageStyle;
+    onPress?: () => void
+    onLongPress?: () => void
+    destructive?: boolean
+    color?: any
+    icon: number
+    style: 'header' | 'card' | import('react-native').ImageStyle
 }) {
     const styles = stylesheet.createThemedStyleSheet({
         headerStyleIcon: {
@@ -32,14 +32,14 @@ export default function SuperAwesomeIcon({
         destructiveIcon: {
             tintColor: semanticColors.TEXT_DANGER,
         },
-    });
+    })
 
     return (
         <RN.TouchableOpacity onPress={onPress} onLongPress={onLongPress}>
             <RN.Image
                 style={[
-                    typeof style === "string"
-                        ? style === "header"
+                    typeof style === 'string'
+                        ? style === 'header'
                             ? styles.headerStyleIcon
                             : styles.cardStyleIcon
                         : style,
@@ -49,5 +49,5 @@ export default function SuperAwesomeIcon({
                 source={icon}
             />
         </RN.TouchableOpacity>
-    );
+    )
 }

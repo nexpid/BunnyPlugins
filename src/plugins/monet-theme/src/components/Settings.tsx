@@ -1,46 +1,46 @@
-import { logger } from "@vendetta";
-import { getDebugInfo } from "@vendetta/debug";
+import { logger } from '@vendetta'
+import { getDebugInfo } from '@vendetta/debug'
 import {
     clipboard,
     NavigationNative,
     React,
     ReactNative as RN,
     stylesheet,
-} from "@vendetta/metro/common";
-import { useProxy } from "@vendetta/storage";
-import { semanticColors } from "@vendetta/ui";
-import { showInputAlert } from "@vendetta/ui/alerts";
-import { getAssetIDByName } from "@vendetta/ui/assets";
-import { Forms } from "@vendetta/ui/components";
-import { showToast } from "@vendetta/ui/toasts";
+} from '@vendetta/metro/common'
+import { useProxy } from '@vendetta/storage'
+import { semanticColors } from '@vendetta/ui'
+import { showInputAlert } from '@vendetta/ui/alerts'
+import { getAssetIDByName } from '@vendetta/ui/assets'
+import { Forms } from '@vendetta/ui/components'
+import { showToast } from '@vendetta/ui/toasts'
 
 import {
     BetterTableRowGroup,
     BetterTableRowTitle,
-} from "$/components/BetterTableRow";
-import { RichText } from "$/components/RichText";
-import Skeleton from "$/components/Skeleton";
-import Text from "$/components/Text";
+} from '$/components/BetterTableRow'
+import { RichText } from '$/components/RichText'
+import Skeleton from '$/components/Skeleton'
+import Text from '$/components/Text'
 import {
     buttonVariantPolyfill,
     ContextMenu,
     IconButton,
     PressableScale,
-} from "$/lib/redesign";
-import { ThemeDataWithPlus, VendettaSysColors } from "$/typings";
+} from '$/lib/redesign'
+import type { ThemeDataWithPlus, VendettaSysColors } from '$/typings'
 
-import RepainterIcon from "../../assets/icons/RepainterIcon.png";
-import { getSysColors, hasTheme, vstorage } from "..";
-import { apply, build } from "../stuff/buildTheme";
-import { checkForURL, fetchRawTheme, parseTheme } from "../stuff/repainter";
-import Color from "./Color";
-import Commit from "./Commit";
-import useCommits from "./hooks/useCommits";
-import usePatches from "./hooks/usePatches";
-import CommitsPage from "./pages/CommitsPage";
-import { openConfigurePage } from "./pages/ConfigurePage";
+import RepainterIcon from '../../assets/icons/RepainterIcon.png'
+import { getSysColors, hasTheme, vstorage } from '..'
+import { apply, build } from '../stuff/buildTheme'
+import { checkForURL, fetchRawTheme, parseTheme } from '../stuff/repainter'
+import Color from './Color'
+import Commit from './Commit'
+import useCommits from './hooks/useCommits'
+import usePatches from './hooks/usePatches'
+import CommitsPage from './pages/CommitsPage'
+import { openConfigurePage } from './pages/ConfigurePage'
 
-const { FormRow, FormSwitchRow } = Forms;
+const { FormRow, FormSwitchRow } = Forms
 
 export function setColorsFromDynamic(clr: VendettaSysColors) {
     vstorage.colors = {
@@ -49,23 +49,23 @@ export function setColorsFromDynamic(clr: VendettaSysColors) {
         accent1: clr.accent1[7],
         accent2: clr.accent2[7],
         accent3: clr.accent3[7],
-    };
+    }
 }
 
 export default () => {
-    const navigation = NavigationNative.useNavigation();
+    const navigation = NavigationNative.useNavigation()
 
-    const { commits, revalidate: revalidateCommits } = useCommits();
-    const { patches, revalidate: revalidatePatches } = usePatches();
+    const { commits, revalidate: revalidateCommits } = useCommits()
+    const { patches, revalidate: revalidatePatches } = usePatches()
 
-    const [isLoadedTheme, setIsLoadedTheme] = React.useState(hasTheme());
+    const [isLoadedTheme, setIsLoadedTheme] = React.useState(hasTheme())
 
-    useProxy(vstorage);
+    useProxy(vstorage)
 
     const styles = stylesheet.createThemedStyleSheet({
         pill: {
-            flexDirection: "row",
-            alignItems: "center",
+            flexDirection: 'row',
+            alignItems: 'center',
             paddingHorizontal: 6,
             paddingVertical: 4,
             backgroundColor: semanticColors.BG_MOD_SUBTLE,
@@ -87,75 +87,79 @@ export default () => {
             marginRight: 6,
             tintColor: semanticColors.TEXT_NORMAL,
         },
-    });
+    })
 
-    let showMessage: string | undefined = undefined;
+    let showMessage: string | undefined = undefined
 
-    const debug = getDebugInfo() as any;
-    const syscolors = getSysColors();
+    const debug = getDebugInfo() as any
+    const syscolors = getSysColors()
 
-    if (debug.os.name !== "Android")
-        showMessage = "Dynamic colors are only available on Android.";
+    if (debug.os.name !== 'Android')
+        showMessage = 'Dynamic colors are only available on Android.'
     else if (debug.os.sdk < 31)
         showMessage =
-            "Dynamic colors are only available on Android 12+ (SDK 31+).";
-    else if (syscolors === null)
-        showMessage = "Dynamic colors are unavailable.";
+            'Dynamic colors are only available on Android 12+ (SDK 31+).'
+    else if (syscolors === null) showMessage = 'Dynamic colors are unavailable.'
 
-    const lastThemePressTime = React.useRef(0);
+    const lastThemePressTime = React.useRef(0)
 
     return (
         <RN.ScrollView style={{ flex: 1 }}>
             {showMessage && (
                 <RN.View
                     style={{
-                        flexDirection: "row",
-                        alignItems: "center",
-                        justifyContent: "center",
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        justifyContent: 'center',
                         marginTop: 8,
-                    }}>
+                    }}
+                >
                     <RN.Image
                         source={getAssetIDByName(
-                            "CircleInformationIcon-primary",
+                            'CircleInformationIcon-primary',
                         )}
                         style={styles.help}
                     />
-                    <Text variant="text-md/semibold" color={"TEXT_BRAND"}>
+                    <Text variant="text-md/semibold" color={'TEXT_BRAND'}>
                         {showMessage}
                     </Text>
                 </RN.View>
             )}
             <BetterTableRowGroup
                 title="Colors"
-                icon={getAssetIDByName("PaintPaletteIcon")}
-                padding>
+                icon={getAssetIDByName('PaintPaletteIcon')}
+                padding
+            >
                 <RN.View
                     style={{
                         marginBottom: 8,
-                        flexDirection: "row",
-                        alignItems: "center",
-                        justifyContent: "center",
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        justifyContent: 'center',
                         gap: 8,
-                    }}>
+                    }}
+                >
                     {syscolors && (
                         <PressableScale
                             android_ripple={styles.androidRipple}
                             style={styles.pill}
                             onPress={() => {
-                                setColorsFromDynamic(syscolors);
+                                setColorsFromDynamic(syscolors)
                                 showToast(
-                                    "Autofilled colors",
-                                    getAssetIDByName("PencilSparkleIcon"),
-                                );
-                            }}>
+                                    'Autofilled colors',
+                                    getAssetIDByName('PencilSparkleIcon'),
+                                )
+                            }}
+                        >
                             <RN.Image
-                                source={getAssetIDByName("PencilSparkleIcon")}
+                                source={getAssetIDByName('PencilSparkleIcon')}
                                 style={styles.labelIcon}
                                 resizeMode="cover"
                             />
                             <Text
                                 variant="text-sm/semibold"
-                                color="TEXT_NORMAL">
+                                color="TEXT_NORMAL"
+                            >
                                 Autofill
                             </Text>
                         </PressableScale>
@@ -165,36 +169,37 @@ export default () => {
                         style={styles.pill}
                         onPress={async () => {
                             const link = checkForURL(
-                                (await clipboard.getString()) ?? "",
-                            );
+                                (await clipboard.getString()) ?? '',
+                            )
                             showInputAlert({
-                                title: "Enter Repainter link",
+                                title: 'Enter Repainter link',
                                 placeholder:
-                                    "https://repainter.app/themes/123ABC",
+                                    'https://repainter.app/themes/123ABC',
                                 initialValue: link,
-                                confirmText: "Use",
+                                confirmText: 'Use',
                                 onConfirm: async i => {
-                                    const link = checkForURL(i);
+                                    const link = checkForURL(i)
                                     if (!link)
                                         throw new Error(
-                                            "No Repainter link found!",
-                                        );
+                                            'No Repainter link found!',
+                                        )
 
                                     const theme = parseTheme(
                                         await fetchRawTheme(link),
-                                    );
-                                    vstorage.colors = theme.colors;
+                                    )
+                                    vstorage.colors = theme.colors
 
                                     showToast(
-                                        "Imported Repainter theme",
+                                        'Imported Repainter theme',
                                         // @ts-expect-error Invalid type!!
                                         RepainterIcon,
-                                    );
+                                    )
                                 },
-                                confirmColor: "brand" as ButtonColors,
-                                cancelText: "Cancel",
-                            });
-                        }}>
+                                confirmColor: 'brand' as ButtonColors,
+                                cancelText: 'Cancel',
+                            })
+                        }}
+                    >
                         <RN.Image
                             source={RepainterIcon}
                             style={styles.labelIcon}
@@ -207,32 +212,33 @@ export default () => {
                 </RN.View>
                 <RN.View
                     style={{
-                        flexDirection: "row",
-                        alignItems: "center",
-                        justifyContent: "center",
-                    }}>
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                    }}
+                >
                     <Color
-                        title={"Neutral"}
+                        title={'Neutral'}
                         color={vstorage.colors.neutral1}
                         update={c => (vstorage.colors.neutral1 = c)}
                     />
                     <Color
-                        title={"Neutral variant"}
+                        title={'Neutral variant'}
                         color={vstorage.colors.neutral2}
                         update={c => (vstorage.colors.neutral2 = c)}
                     />
                     <Color
-                        title={"Primary"}
+                        title={'Primary'}
                         color={vstorage.colors.accent1}
                         update={c => (vstorage.colors.accent1 = c)}
                     />
                     <Color
-                        title={"Secondary"}
+                        title={'Secondary'}
                         color={vstorage.colors.accent2}
                         update={c => (vstorage.colors.accent2 = c)}
                     />
                     <Color
-                        title={"Tertiary"}
+                        title={'Tertiary'}
                         color={vstorage.colors.accent3}
                         update={c => (vstorage.colors.accent3 = c)}
                     />
@@ -240,20 +246,20 @@ export default () => {
             </BetterTableRowGroup>
             <BetterTableRowTitle
                 title="Theme"
-                icon={getAssetIDByName("SettingsIcon")}
+                icon={getAssetIDByName('SettingsIcon')}
                 onPress={() => {
                     if (lastThemePressTime.current >= Date.now()) {
-                        lastThemePressTime.current = 0;
+                        lastThemePressTime.current = 0
 
                         const otter =
-                            vstorage.patches.from === "local" ? "git" : "local";
+                            vstorage.patches.from === 'local' ? 'git' : 'local'
                         showToast(
-                            `Switched to ${otter === "git" ? "GitHub" : "local"} patches`,
-                            getAssetIDByName("RetryIcon"),
-                        );
-                        vstorage.patches.from = otter;
-                        revalidatePatches();
-                    } else lastThemePressTime.current = Date.now() + 750;
+                            `Switched to ${otter === 'git' ? 'GitHub' : 'local'} patches`,
+                            getAssetIDByName('RetryIcon'),
+                        )
+                        vstorage.patches.from = otter
+                        revalidatePatches()
+                    } else lastThemePressTime.current = Date.now() + 750
                 }}
                 padding
             />
@@ -264,21 +270,22 @@ export default () => {
                     title="Patches"
                     items={[
                         {
-                            label: "Use latest",
-                            variant: "default",
+                            label: 'Use latest',
+                            variant: 'default',
                             action: () => (
-                                delete vstorage.patches.commit,
+                                (vstorage.patches.commit = undefined),
                                 showToast(
-                                    "Using latest commit for patches",
-                                    getAssetIDByName("ArrowAngleLeftUpIcon"),
+                                    'Using latest commit for patches',
+                                    getAssetIDByName('ArrowAngleLeftUpIcon'),
                                 )
                             ),
                             iconSource: getAssetIDByName(
-                                "ArrowAngleLeftUpIcon",
+                                'ArrowAngleLeftUpIcon',
                             ),
                         },
                     ]}
-                    triggerOnLongPress>
+                    triggerOnLongPress
+                >
                     {(props: any) => (
                         <Commit
                             commit={
@@ -287,7 +294,7 @@ export default () => {
                                 ) ?? commits[0]
                             }
                             onPress={() =>
-                                navigation.push("VendettaCustomPage", {
+                                navigation.push('VendettaCustomPage', {
                                     render: CommitsPage,
                                 })
                             }
@@ -300,21 +307,24 @@ export default () => {
                     style={{
                         marginTop: 35,
                         marginBottom: 20,
-                        flexDirection: "column",
-                        justifyContent: "center",
-                        alignItems: "center",
-                    }}>
+                        flexDirection: 'column',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                    }}
+                >
                     <Text
                         variant="text-md/semibold"
                         color="TEXT_DANGER"
-                        align="center">
+                        align="center"
+                    >
                         You've been ratelimited by GitHub.
                     </Text>
                     <Text
                         variant="text-md/semibold"
                         color="TEXT_DANGER"
                         align="center"
-                        onPress={revalidateCommits}>
+                        onPress={revalidateCommits}
+                    >
                         <RichText.Underline>Tap to retry</RichText.Underline>
                     </Text>
                 </RN.View>
@@ -330,7 +340,7 @@ export default () => {
                         label="Load Theme"
                         leading={
                             <FormRow.Icon
-                                source={getAssetIDByName("WrenchIcon")}
+                                source={getAssetIDByName('WrenchIcon')}
                             />
                         }
                         trailing={
@@ -343,45 +353,45 @@ export default () => {
                                 variant={
                                     isLoadedTheme
                                         ? buttonVariantPolyfill().destructive
-                                        : "secondary"
+                                        : 'secondary'
                                 }
-                                icon={getAssetIDByName("TrashIcon")}
+                                icon={getAssetIDByName('TrashIcon')}
                             />
                         }
                         onPress={async () => {
-                            let theme: ThemeDataWithPlus;
+                            let theme: ThemeDataWithPlus
                             try {
-                                theme = build(patches);
+                                theme = build(patches)
                             } catch (e) {
                                 const err =
                                     e instanceof Error
                                         ? e
-                                        : new Error(String(e));
+                                        : new Error(String(e))
                                 logger.error(
-                                    "Error during applying theme",
+                                    'Error during applying theme',
                                     err.stack,
-                                );
+                                )
 
                                 showToast(
                                     String(err),
-                                    getAssetIDByName("CircleXIcon-primary"),
-                                );
-                                return;
+                                    getAssetIDByName('CircleXIcon-primary'),
+                                )
+                                return
                             }
 
-                            if (apply(theme)) setIsLoadedTheme(true);
+                            if (apply(theme)) setIsLoadedTheme(true)
                         }}
                     />
                     <FormRow
                         label="Configure Theme"
                         leading={
                             <FormRow.Icon
-                                source={getAssetIDByName("SettingsIcon")}
+                                source={getAssetIDByName('SettingsIcon')}
                             />
                         }
                         trailing={<FormRow.Arrow />}
                         onPress={() => {
-                            openConfigurePage(navigation);
+                            openConfigurePage(navigation)
                         }}
                     />
                     <FormSwitchRow
@@ -389,7 +399,7 @@ export default () => {
                         subLabel="Automatically reapplies Monet Theme when you change your Discord color scheme or restart the app"
                         leading={
                             <FormRow.Icon
-                                source={getAssetIDByName("DownloadIcon")}
+                                source={getAssetIDByName('DownloadIcon')}
                             />
                         }
                         onValueChange={() =>
@@ -401,13 +411,13 @@ export default () => {
                     <FormRow
                         label="Reload Theme Patches"
                         subLabel={`Patch v${patches.version} (${
-                            vstorage.patches.from === "local"
-                                ? "from a local source"
-                                : "from GitHub"
+                            vstorage.patches.from === 'local'
+                                ? 'from a local source'
+                                : 'from GitHub'
                         })`}
                         leading={
                             <FormRow.Icon
-                                source={getAssetIDByName("ActivitiesIcon")}
+                                source={getAssetIDByName('ActivitiesIcon')}
                             />
                         }
                         onPress={revalidatePatches}
@@ -416,5 +426,5 @@ export default () => {
             )}
             <RN.View style={{ height: 12 }} />
         </RN.ScrollView>
-    );
-};
+    )
+}

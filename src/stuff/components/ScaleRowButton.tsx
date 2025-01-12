@@ -1,5 +1,5 @@
-import { PressableScale, RowButton } from "$/lib/redesign";
-import { RowButton as RowButtonType } from "$/lib/redesign/types";
+import { PressableScale, RowButton } from '$/lib/redesign'
+import type { RowButton as RowButtonType } from '$/lib/redesign/types'
 
 export default function ScaleRowButton({
     onPress,
@@ -12,8 +12,9 @@ export default function ScaleRowButton({
             onPress={onPress}
             onPressIn={onPressIn}
             onPressOut={onPressOut}
-            pointerEvents="box-only">
+            pointerEvents="box-only"
+        >
             <RowButton {...props} />
         </PressableScale>
-    );
+    )
 }

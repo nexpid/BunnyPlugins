@@ -1,13 +1,13 @@
-import { React } from "@vendetta/metro/common";
+import { React } from '@vendetta/metro/common'
 
-import { MobileAudioSound } from "$/deps";
+import { MobileAudioSound } from '$/deps'
 
-import { SongInfo } from "../stuff/songs/info";
+import type { SongInfo } from '../stuff/songs/info'
 
 export interface AudioPlayer {
-    play(urlOrNext?: string | true): void;
-    pause(): void;
-    current: string | null;
+    play(urlOrNext?: string | true): void
+    pause(): void
+    current: string | null
 }
 
 export default function AudioPlayer({
@@ -15,114 +15,116 @@ export default function AudioPlayer({
     playing,
     children,
 }: {
-    song: SongInfo;
+    song: SongInfo
     playing: {
-        currentlyPlaying: string | null;
-        setCurrentlyPlaying: (value: string | null) => void;
-    };
+        currentlyPlaying: string | null
+        setCurrentlyPlaying: (value: string | null) => void
+    }
     children: ({
         player,
         loaded,
     }: {
-        player: AudioPlayer;
-        loaded: string[];
-        resolved: string[];
-    }) => React.ReactNode;
+        player: AudioPlayer
+        loaded: string[]
+        resolved: string[]
+    }) => React.ReactNode
 }) {
-    const { currentlyPlaying, setCurrentlyPlaying } = playing;
+    const { currentlyPlaying, setCurrentlyPlaying } = playing
 
-    const sounds = React.useRef<Record<string, MobileAudioSound>>({});
-    const [resolved, setResolved] = React.useState<Record<string, boolean>>({});
+    const sounds = React.useRef<Record<string, MobileAudioSound>>({})
+    const [resolved, setResolved] = React.useState<Record<string, boolean>>({})
 
-    const audioPlayer = React.useRef<Omit<AudioPlayer, "current">>({
+    const audioPlayer = React.useRef<Omit<AudioPlayer, 'current'>>({
         play() {},
         pause() {},
-    });
+    })
     audioPlayer.current = {
         play(urlOrNext) {
             const resolveds = Object.entries(resolved)
                 .filter(([_, val]) => val)
-                .map(([key]) => key);
+                .map(([key]) => key)
 
-            if (typeof urlOrNext === "string" && resolved[urlOrNext])
-                setCurrentlyPlaying(urlOrNext);
+            if (typeof urlOrNext === 'string' && resolved[urlOrNext])
+                setCurrentlyPlaying(urlOrNext)
             else if (urlOrNext === true) {
                 const index = currentlyPlaying
                     ? resolveds.indexOf(currentlyPlaying)
-                    : -1;
-                const url = resolveds[index + 1];
+                    : -1
+                const url = resolveds[index + 1]
 
-                if (url) setCurrentlyPlaying(url);
-                else setCurrentlyPlaying(null);
+                if (url) setCurrentlyPlaying(url)
+                else setCurrentlyPlaying(null)
             } else if (!urlOrNext && resolveds[0])
-                setCurrentlyPlaying(resolveds[0]);
+                setCurrentlyPlaying(resolveds[0])
         },
         pause() {
-            setCurrentlyPlaying(null);
+            setCurrentlyPlaying(null)
         },
-    };
+    }
 
     const songs = (
-        song.type === "single"
+        song.type === 'single'
             ? [song.previewUrl]
             : song.entries.map(x => x.previewUrl)
-    ).filter(x => !!x) as string[];
+    ).filter(x => !!x) as string[]
 
     React.useEffect(() => {
-        if (currentlyPlaying) sounds.current[currentlyPlaying]?.stop();
+        if (currentlyPlaying) sounds.current[currentlyPlaying]?.stop()
 
         sounds.current = Object.fromEntries(
             songs.map((url, i) => [
                 url,
-                new MobileAudioSound(url, "media", 1, {
+                new MobileAudioSound(url, 'media', 1, {
                     onLoad(val) {
                         setResolved(res => ({
                             ...res,
                             [url]: val,
-                        }));
+                        }))
                     },
                     onEnd() {
                         const next = songs.find(
                             (nextSng, nextI) => nextI > i && resolved[nextSng],
-                        );
+                        )
                         if (next && sounds.current[next])
-                            setCurrentlyPlaying(next);
-                        else setCurrentlyPlaying(null);
+                            setCurrentlyPlaying(next)
+                        else setCurrentlyPlaying(null)
                     },
                 }),
             ]),
-        );
-    }, [songs.join(" ")]);
+        )
+    }, [songs.join(' ')])
 
+    React.useEffect(() => {
+        for (const [url, snd] of Object.entries(sounds.current)) {
+            if (currentlyPlaying === url) {
+                if (!snd.isPlaying) snd.play()
+            } else {
+                if (snd.isPlaying) snd.stop()
+            }
+        }
+    }, [currentlyPlaying])
     React.useEffect(
-        () =>
-            Object.entries(sounds.current).forEach(([url, snd]) =>
-                currentlyPlaying === url
-                    ? !snd.isPlaying && snd.play()
-                    : snd.isPlaying && snd.stop(),
-            ),
-        [currentlyPlaying],
-    );
-    React.useEffect(
-        () => () => Object.values(sounds.current).forEach(x => x.stop()),
+        () => () => {
+            for (const x of Object.values(sounds.current)) x.stop()
+        },
         [],
-    );
+    )
 
     return (
         <>
             {children({
                 player: {
                     get play() {
-                        return audioPlayer.current.play;
+                        return audioPlayer.current.play
                     },
                     get pause() {
-                        return audioPlayer.current.pause;
+                        return audioPlayer.current.pause
                     },
                     get current() {
                         return playing.currentlyPlaying &&
                             songs.includes(playing.currentlyPlaying)
                             ? playing.currentlyPlaying
-                            : null;
+                            : null
                     },
                 },
                 loaded: Object.entries(resolved)
@@ -131,5 +133,5 @@ export default function AudioPlayer({
                 resolved: Object.keys(resolved),
             })}
         </>
-    );
+    )
 }

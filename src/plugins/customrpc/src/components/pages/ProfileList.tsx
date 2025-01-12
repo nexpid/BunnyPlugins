@@ -3,117 +3,117 @@ import {
     NavigationNative,
     React,
     ReactNative as RN,
-} from "@vendetta/metro/common";
-import { showConfirmationAlert, showInputAlert } from "@vendetta/ui/alerts";
-import { getAssetIDByName } from "@vendetta/ui/assets";
-import { Forms, Search } from "@vendetta/ui/components";
-import { showToast } from "@vendetta/ui/toasts";
+} from '@vendetta/metro/common'
+import { showConfirmationAlert, showInputAlert } from '@vendetta/ui/alerts'
+import { getAssetIDByName } from '@vendetta/ui/assets'
+import { Forms, Search } from '@vendetta/ui/components'
+import { showToast } from '@vendetta/ui/toasts'
 
 import {
     hideActionSheet,
     showSimpleActionSheet,
-} from "$/components/ActionSheet";
-import SuperAwesomeIcon from "$/components/SuperAwesomeIcon";
+} from '$/components/ActionSheet'
+import SuperAwesomeIcon from '$/components/SuperAwesomeIcon'
 
-import { vstorage } from "../..";
+import { vstorage } from '../..'
 import {
     makeEmptySettingsActivity,
     SettingsActivity,
-} from "../../stuff/activity";
-import { activitySavedPrompt } from "../../stuff/prompts";
-import { forceUpdateSettings } from "../Settings";
+} from '../../stuff/activity'
+import { activitySavedPrompt } from '../../stuff/prompts'
+import { forceUpdateSettings } from '../Settings'
 
-const { FormRadioRow, FormRow } = Forms;
+const { FormRadioRow, FormRow } = Forms
 
 const headerRightCallbacks: {
-    import?: () => void;
-    add?: () => void;
+    import?: () => void
+    add?: () => void
 } = {
     import: undefined,
     add: undefined,
-};
+}
 
 export const ProfileList = () => {
-    const navigation = NavigationNative.useNavigation();
-    const [_, forceUpdate] = React.useReducer(x => ~x, 0);
-    const [search, setSearch] = React.useState("");
+    const navigation = NavigationNative.useNavigation()
+    const [_, forceUpdate] = React.useReducer(x => ~x, 0)
+    const [search, setSearch] = React.useState('')
 
     React.useEffect(() => {
-        setSearch("");
-    }, []);
+        setSearch('')
+    }, [])
 
     headerRightCallbacks.add = () => {
         showInputAlert({
-            title: "Enter new profile name",
-            placeholder: "Super Awesome RPC",
-            confirmText: "Add",
-            confirmColor: "brand" as ButtonColors,
+            title: 'Enter new profile name',
+            placeholder: 'Super Awesome RPC',
+            confirmText: 'Add',
+            confirmColor: 'brand' as ButtonColors,
             onConfirm: txt => {
                 if (txt.match(/^\s*$/)) {
                     showToast(
-                        "Profile name cannot be empty",
-                        getAssetIDByName("CircleXIcon-primary"),
-                    );
-                    return;
+                        'Profile name cannot be empty',
+                        getAssetIDByName('CircleXIcon-primary'),
+                    )
+                    return
                 }
-                txt = txt.trim();
+                txt = txt.trim()
 
                 if (vstorage.profiles[txt]) {
                     showToast(
-                        "A profile with that name already exists",
-                        getAssetIDByName("CircleXIcon-primary"),
-                    );
-                    return;
+                        'A profile with that name already exists',
+                        getAssetIDByName('CircleXIcon-primary'),
+                    )
+                    return
                 }
 
                 vstorage.profiles[txt] = JSON.parse(
                     JSON.stringify(vstorage.activity.editing),
-                );
-                vstorage.activity.profile = txt;
-                forceUpdate();
+                )
+                vstorage.activity.profile = txt
+                forceUpdate()
                 showToast(
-                    "Created profile",
-                    getAssetIDByName("CircleCheckIcon-primary"),
-                );
+                    'Created profile',
+                    getAssetIDByName('CircleCheckIcon-primary'),
+                )
             },
-            cancelText: "Cancel",
-        });
-    };
+            cancelText: 'Cancel',
+        })
+    }
     headerRightCallbacks.import = async () => {
-        let activity: SettingsActivity;
+        let activity: SettingsActivity
         try {
-            activity = JSON.parse(await clipboard.getString());
+            activity = JSON.parse(await clipboard.getString())
         } catch {
-            showToast("Failed to parse JSON");
-            return;
+            showToast('Failed to parse JSON')
+            return
         }
 
-        const data = SettingsActivity.validate(activity);
+        const data = SettingsActivity.validate(activity)
         if (data.error) {
             showToast(
-                "Invalid profile data",
-                getAssetIDByName("CircleXIcon-primary"),
-            );
-            return;
+                'Invalid profile data',
+                getAssetIDByName('CircleXIcon-primary'),
+            )
+            return
         }
 
         let counter = 0,
-            name = "Imported Profile";
+            name = 'Imported Profile'
         while (vstorage.profiles[name]) {
-            counter++;
-            name = `Imported Profile (${counter})`;
+            counter++
+            name = `Imported Profile (${counter})`
         }
 
-        vstorage.profiles[name] = data.value as SettingsActivity;
-        vstorage.activity.profile = name;
-        forceUpdate();
+        vstorage.profiles[name] = data.value as SettingsActivity
+        vstorage.activity.profile = name
+        forceUpdate()
         showToast(
-            "Imported profile",
-            getAssetIDByName("CircleCheckIcon-primary"),
-        );
-    };
+            'Imported profile',
+            getAssetIDByName('CircleCheckIcon-primary'),
+        )
+    }
 
-    let wentBack = false;
+    let wentBack = false
 
     return (
         <RN.FlatList
@@ -121,7 +121,7 @@ export const ProfileList = () => {
                 <Search
                     style={{ marginBottom: 10 }}
                     onChangeText={(txt: string) => {
-                        setSearch(txt.toLowerCase());
+                        setSearch(txt.toLowerCase())
                     }}
                 />
             }
@@ -135,17 +135,17 @@ export const ProfileList = () => {
                     label={item}
                     onLongPress={() => {
                         showSimpleActionSheet({
-                            key: "CardOverflow",
+                            key: 'CardOverflow',
                             header: {
                                 title: item,
                                 onClose: () => {
-                                    hideActionSheet();
+                                    hideActionSheet()
                                 },
                             },
                             options: [
                                 {
-                                    label: "Copy Profile",
-                                    icon: getAssetIDByName("copy"),
+                                    label: 'Copy Profile',
+                                    icon: getAssetIDByName('copy'),
                                     onPress: () => {
                                         clipboard.setString(
                                             JSON.stringify(
@@ -153,172 +153,172 @@ export const ProfileList = () => {
                                                 undefined,
                                                 3,
                                             ),
-                                        );
+                                        )
                                         showToast(
-                                            "Copied",
-                                            getAssetIDByName("toast_copy_link"),
-                                        );
+                                            'Copied',
+                                            getAssetIDByName('toast_copy_link'),
+                                        )
                                     },
                                 },
                                 {
-                                    label: "Rename Profile",
-                                    icon: getAssetIDByName("PencilIcon"),
+                                    label: 'Rename Profile',
+                                    icon: getAssetIDByName('PencilIcon'),
                                     onPress: () => {
                                         showInputAlert({
-                                            title: "Enter new profile name",
+                                            title: 'Enter new profile name',
                                             placeholder:
-                                                "Super Awesome RPC 2.0",
+                                                'Super Awesome RPC 2.0',
                                             initialValue: item,
-                                            confirmText: "Rename",
+                                            confirmText: 'Rename',
                                             confirmColor:
-                                                "brand" as ButtonColors,
-                                            onConfirm: function (txt) {
+                                                'brand' as ButtonColors,
+                                            onConfirm: txt => {
                                                 if (txt.match(/^\s*$/)) {
                                                     showToast(
-                                                        "Profile name cannot be empty",
+                                                        'Profile name cannot be empty',
                                                         getAssetIDByName(
-                                                            "CircleXIcon-primary",
+                                                            'CircleXIcon-primary',
                                                         ),
-                                                    );
-                                                    return;
+                                                    )
+                                                    return
                                                 }
-                                                txt = txt.trim();
+                                                txt = txt.trim()
 
                                                 if (vstorage.profiles[txt]) {
                                                     showToast(
-                                                        "A profile with that name already exists",
+                                                        'A profile with that name already exists',
                                                         getAssetIDByName(
-                                                            "CircleXIcon-primary",
+                                                            'CircleXIcon-primary',
                                                         ),
-                                                    );
-                                                    return;
+                                                    )
+                                                    return
                                                 }
 
                                                 vstorage.profiles[txt] =
-                                                    vstorage.profiles[item];
+                                                    vstorage.profiles[item]
                                                 if (
                                                     vstorage.activity
                                                         .profile === item
                                                 )
                                                     vstorage.activity.profile =
-                                                        txt;
-                                                delete vstorage.profiles[item];
-                                                forceUpdate();
+                                                        txt
+                                                delete vstorage.profiles[item]
+                                                forceUpdate()
 
                                                 showToast(
-                                                    "Renamed profile",
+                                                    'Renamed profile',
                                                     getAssetIDByName(
-                                                        "CircleCheckIcon-primary",
+                                                        'CircleCheckIcon-primary',
                                                     ),
-                                                );
+                                                )
                                             },
-                                            cancelText: "Cancel",
-                                        });
+                                            cancelText: 'Cancel',
+                                        })
                                     },
                                 },
                                 {
-                                    label: "Delete Profile",
-                                    icon: getAssetIDByName("trash"),
+                                    label: 'Delete Profile',
+                                    icon: getAssetIDByName('trash'),
                                     isDestructive: true,
                                     onPress: () => {
                                         showConfirmationAlert({
-                                            title: "Delete Profile",
+                                            title: 'Delete Profile',
                                             content:
-                                                "Are you sure you want to delete this profile? This cannot be undone.",
-                                            confirmText: "Delete",
-                                            confirmColor: "red" as ButtonColors,
-                                            onConfirm: function () {
+                                                'Are you sure you want to delete this profile? This cannot be undone.',
+                                            confirmText: 'Delete',
+                                            confirmColor: 'red' as ButtonColors,
+                                            onConfirm: () => {
                                                 if (
                                                     vstorage.activity
                                                         .profile === item
                                                 ) {
-                                                    delete vstorage.activity
-                                                        .profile;
+                                                    vstorage.activity.profile =
+                                                        undefined
                                                     vstorage.activity.editing =
-                                                        makeEmptySettingsActivity();
+                                                        makeEmptySettingsActivity()
                                                 }
 
-                                                delete vstorage.profiles[item];
-                                                forceUpdate();
-                                                forceUpdateSettings();
+                                                delete vstorage.profiles[item]
+                                                forceUpdate()
+                                                forceUpdateSettings()
                                                 showToast(
-                                                    "Deleted",
+                                                    'Deleted',
                                                     getAssetIDByName(
-                                                        "CircleCheckIcon-primary",
+                                                        'CircleCheckIcon-primary',
                                                     ),
-                                                );
+                                                )
                                             },
-                                            cancelText: "Cancel",
-                                        });
+                                            cancelText: 'Cancel',
+                                        })
                                     },
                                 },
                             ],
-                        });
+                        })
                     }}
                     onPress={() => {
-                        if (wentBack) return;
+                        if (wentBack) return
                         if (vstorage.activity.profile === item) {
                             showToast(
                                 `${item} is already loaded`,
-                                getAssetIDByName("CircleXIcon-primary"),
-                            );
-                            return;
+                                getAssetIDByName('CircleXIcon-primary'),
+                            )
+                            return
                         }
                         activitySavedPrompt({
-                            role: "discard your changes",
-                            button: "Discard",
+                            role: 'discard your changes',
+                            button: 'Discard',
                             run: () => {
                                 vstorage.activity.editing = JSON.parse(
                                     JSON.stringify(vstorage.profiles[item]),
-                                );
-                                vstorage.activity.profile = item;
+                                )
+                                vstorage.activity.profile = item
 
-                                wentBack = true;
-                                navigation.goBack();
-                                forceUpdateSettings();
+                                wentBack = true
+                                navigation.goBack()
+                                forceUpdateSettings()
                                 showToast(
-                                    "Loaded",
-                                    getAssetIDByName("CircleCheckIcon-primary"),
-                                );
+                                    'Loaded',
+                                    getAssetIDByName('CircleCheckIcon-primary'),
+                                )
                             },
-                            secondaryButton: "Save profile",
+                            secondaryButton: 'Save profile',
                             secondaryRun: () => {
-                                if (!vstorage.activity.profile) return;
+                                if (!vstorage.activity.profile) return
 
                                 vstorage.profiles[vstorage.activity.profile] =
                                     JSON.parse(
                                         JSON.stringify(
                                             vstorage.activity.editing,
                                         ),
-                                    );
+                                    )
                             },
-                        });
+                        })
                     }}
                     trailing={<FormRow.Arrow />}
                     selected={vstorage.activity.profile === item}
                 />
             )}
         />
-    );
-};
+    )
+}
 
 export function showProfileList(navigation: any) {
-    navigation.push("VendettaCustomPage", {
+    navigation.push('VendettaCustomPage', {
         render: ProfileList,
-        title: "Profiles",
+        title: 'Profiles',
         headerRight: () => (
-            <RN.View style={{ flexDirection: "row-reverse" }}>
+            <RN.View style={{ flexDirection: 'row-reverse' }}>
                 <SuperAwesomeIcon
                     style="header"
-                    icon={getAssetIDByName("PlusLargeIcon")}
+                    icon={getAssetIDByName('PlusLargeIcon')}
                     onPress={() => headerRightCallbacks.add?.()}
                 />
                 <SuperAwesomeIcon
                     style="header"
-                    icon={getAssetIDByName("UploadIcon")}
+                    icon={getAssetIDByName('UploadIcon')}
                     onPress={() => headerRightCallbacks.import?.()}
                 />
             </RN.View>
         ),
-    });
+    })
 }

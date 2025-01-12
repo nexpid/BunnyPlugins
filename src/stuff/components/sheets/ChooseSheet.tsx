@@ -1,10 +1,10 @@
-import { React, ReactNative as RN } from "@vendetta/metro/common";
-import { Forms } from "@vendetta/ui/components";
-import { type ImageSourcePropType } from "react-native";
+import { React, ReactNative as RN } from '@vendetta/metro/common'
+import { Forms } from '@vendetta/ui/components'
+import type { ImageSourcePropType } from 'react-native'
 
-import { ActionSheet } from "../ActionSheet";
+import { ActionSheet } from '../ActionSheet'
 
-const { FormRow } = Forms;
+const { FormRow } = Forms
 
 export default function ChooseSheet({
     title,
@@ -12,19 +12,19 @@ export default function ChooseSheet({
     options,
     callback,
 }: {
-    title: string;
-    value: string | number | boolean | null;
+    title: string
+    value: string | number | boolean | null
     options: {
-        name: string;
-        description?: string;
-        value: typeof _value;
-        icon?: ImageSourcePropType;
-        iconColor?: any;
-        iconComponent?: React.ReactNode;
-    }[];
-    callback: (v: typeof _value) => void;
+        name: string
+        description?: string
+        value: typeof _value
+        icon?: ImageSourcePropType
+        iconColor?: any
+        iconComponent?: React.ReactNode
+    }[]
+    callback: (v: typeof _value) => void
 }) {
-    const [value, setValue] = React.useState(_value);
+    const [value, setValue] = React.useState(_value)
 
     return (
         <ActionSheet title={title}>
@@ -49,11 +49,11 @@ export default function ChooseSheet({
                     }
                     leading={<FormRow.Radio selected={x.value === value} />}
                     onPress={() => {
-                        setValue(x.value);
-                        callback(x.value);
+                        setValue(x.value)
+                        callback(x.value)
                     }}
                 />
             ))}
         </ActionSheet>
-    );
+    )
 }

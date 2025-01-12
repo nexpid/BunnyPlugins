@@ -1,8 +1,8 @@
-import { React } from "@vendetta/metro/common";
+import { React } from '@vendetta/metro/common'
 
-import { Reanimated, Svg } from "$/deps";
+import { Reanimated, Svg } from '$/deps'
 
-const AnimatedCircle = Reanimated.default.createAnimatedComponent(Svg.Circle);
+const AnimatedCircle = Reanimated.default.createAnimatedComponent(Svg.Circle)
 
 export default function ProgressCircle({
     radius,
@@ -10,10 +10,10 @@ export default function ProgressCircle({
     color,
     progress,
 }: {
-    radius: number;
-    stroke: number;
-    color: string;
-    progress: number;
+    radius: number
+    stroke: number
+    color: string
+    progress: number
 }) {
     const { viewbox, circleRadius, circumference } = React.useMemo(
         () => ({
@@ -22,10 +22,10 @@ export default function ProgressCircle({
             circumference: 2 * Math.PI * (radius + stroke / 2),
         }),
         [radius, stroke],
-    );
+    )
 
-    const strokeDashoffset = Reanimated.useSharedValue(circumference);
-    const strokeWidth = Reanimated.useSharedValue(1);
+    const strokeDashoffset = Reanimated.useSharedValue(circumference)
+    const strokeWidth = Reanimated.useSharedValue(1)
 
     React.useEffect(() => {
         strokeDashoffset.value = Reanimated.withTiming(
@@ -33,11 +33,11 @@ export default function ProgressCircle({
             {
                 duration: 250,
             },
-        );
+        )
         strokeWidth.value = Reanimated.withTiming(progress !== 0 ? stroke : 0, {
             duration: 250,
-        });
-    }, [progress, circumference, stroke]);
+        })
+    }, [progress, circumference, stroke])
 
     return (
         <Svg.Svg
@@ -45,21 +45,22 @@ export default function ProgressCircle({
             height={viewbox}
             viewBox={`0 0 ${viewbox} ${viewbox}`}
             style={{
-                position: "absolute",
-                transform: [{ rotate: "-90deg" }, { translateY: stroke }],
+                position: 'absolute',
+                transform: [{ rotate: '-90deg' }, { translateY: stroke }],
             }}
-            pointerEvents="none">
+            pointerEvents="none"
+        >
             <AnimatedCircle
                 cx="50%"
                 cy="50%"
                 stroke={color}
                 r={circleRadius}
-                fill={"#0000"}
+                fill={'#0000'}
                 strokeLinecap="round"
                 strokeDasharray={circumference}
                 strokeDashoffset={strokeDashoffset}
                 strokeWidth={strokeWidth}
             />
         </Svg.Svg>
-    );
+    )
 }

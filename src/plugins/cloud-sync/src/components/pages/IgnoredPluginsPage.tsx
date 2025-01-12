@@ -1,31 +1,31 @@
-import { logger } from "@vendetta";
-import { React, ReactNative as RN } from "@vendetta/metro/common";
-import { plugins } from "@vendetta/plugins";
-import { showConfirmationAlert } from "@vendetta/ui/alerts";
-import { getAssetIDByName } from "@vendetta/ui/assets";
-import { Search } from "@vendetta/ui/components";
-import { showToast } from "@vendetta/ui/toasts";
+import { logger } from '@vendetta'
+import { React, ReactNative as RN } from '@vendetta/metro/common'
+import { plugins } from '@vendetta/plugins'
+import { showConfirmationAlert } from '@vendetta/ui/alerts'
+import { getAssetIDByName } from '@vendetta/ui/assets'
+import { Search } from '@vendetta/ui/components'
+import { showToast } from '@vendetta/ui/toasts'
 
-import { buttonVariantPolyfill, IconButton, RowButton } from "$/lib/redesign";
-import { managePage } from "$/lib/ui";
-import { formatBytes } from "$/types";
+import { buttonVariantPolyfill, IconButton, RowButton } from '$/lib/redesign'
+import { managePage } from '$/lib/ui'
+import { formatBytes } from '$/types'
 
-import { lang, vstorage } from "../..";
-import { grabEverything } from "../../stuff/syncStuff";
+import { lang, vstorage } from '../..'
+import { grabEverything } from '../../stuff/syncStuff'
 
 export default function IgnoredPluginsPage() {
-    const [search, setSearch] = React.useState("");
+    const [search, setSearch] = React.useState('')
     const [sizedPlugins, setSizedPlugins] = React.useState<
         | {
-              id: string;
-              plugin: Plugin;
-              size: number;
+              id: string
+              plugin: Plugin
+              size: number
           }[]
         | null
-    >(null);
-    const [_, forceUpdate] = React.useReducer(x => ~x, 0);
+    >(null)
+    const [_, forceUpdate] = React.useReducer(x => ~x, 0)
 
-    React.useEffect(() => setSearch(""), []);
+    React.useEffect(() => setSearch(''), [])
     React.useEffect(
         () =>
             void grabEverything(true)
@@ -35,7 +35,7 @@ export default function IgnoredPluginsPage() {
                             .map(([id, plugin]) => ({
                                 id,
                                 plugin,
-                                size: (val.plugins[id]?.storage ?? "").length,
+                                size: (val.plugins[id]?.storage ?? '').length,
                             }))
                             .sort((a, b) => b.size - a.size),
                     ),
@@ -43,17 +43,17 @@ export default function IgnoredPluginsPage() {
                 .catch(
                     e => (
                         showToast(
-                            "Failed to grab plugins womp womp what a bummer",
+                            'Failed to grab plugins womp womp what a bummer',
                         ),
-                        logger.error("grabEverything", e)
+                        logger.error('grabEverything', e)
                     ),
                 ),
         [],
-    );
+    )
 
     managePage(
         {
-            title: lang.format("page.ignored_plugins.title", {
+            title: lang.format('page.ignored_plugins.title', {
                 count: vstorage.config.ignoredPlugins.length.toString(),
             }),
             headerRight: () => (
@@ -61,30 +61,30 @@ export default function IgnoredPluginsPage() {
                     onPress={() => {
                         showConfirmationAlert({
                             title: lang.format(
-                                "alert.clear_ignored_plugins.title",
+                                'alert.clear_ignored_plugins.title',
                                 {},
                             ),
                             content: lang.format(
-                                "alert.clear_ignored_plugins.body",
+                                'alert.clear_ignored_plugins.body',
                                 {},
                             ),
                             confirmText: lang.format(
-                                "alert.clear_ignored_plugins.confirm",
+                                'alert.clear_ignored_plugins.confirm',
                                 {},
                             ),
-                            confirmColor: "red" as ButtonColors,
+                            confirmColor: 'red' as ButtonColors,
                             onConfirm: () => {
-                                vstorage.config.ignoredPlugins = [];
-                                forceUpdate();
+                                vstorage.config.ignoredPlugins = []
+                                forceUpdate()
                             },
-                        });
+                        })
                     }}
                     disabled={vstorage.config.ignoredPlugins.length === 0}
-                    icon={getAssetIDByName("TrashIcon")}
+                    icon={getAssetIDByName('TrashIcon')}
                     size="sm"
                     variant={
                         vstorage.config.ignoredPlugins.length === 0
-                            ? "secondary"
+                            ? 'secondary'
                             : buttonVariantPolyfill().destructive
                     }
                 />
@@ -92,10 +92,10 @@ export default function IgnoredPluginsPage() {
         },
         undefined,
         vstorage.config.ignoredPlugins.length,
-    );
+    )
 
     if (!sizedPlugins)
-        return <RN.ActivityIndicator style={{ flex: 1 }} size="large" />;
+        return <RN.ActivityIndicator style={{ flex: 1 }} size="large" />
 
     return (
         <RN.FlatList
@@ -103,7 +103,7 @@ export default function IgnoredPluginsPage() {
                 <Search
                     style={{ marginBottom: 10 }}
                     onChangeText={x => {
-                        setSearch(x.toLowerCase());
+                        setSearch(x.toLowerCase())
                     }}
                 />
             }
@@ -117,7 +117,7 @@ export default function IgnoredPluginsPage() {
                 return (
                     <RowButton
                         icon={getAssetIDByName(
-                            plugin.manifest.vendetta?.icon ?? "",
+                            plugin.manifest.vendetta?.icon ?? '',
                         )}
                         label={plugin.manifest.name}
                         subLabel={formatBytes(size)}
@@ -126,14 +126,14 @@ export default function IgnoredPluginsPage() {
                             <IconButton
                                 variant={
                                     vstorage.config.ignoredPlugins.includes(id)
-                                        ? "primary"
-                                        : "secondary"
+                                        ? 'primary'
+                                        : 'secondary'
                                 }
                                 size="md"
                                 icon={getAssetIDByName(
                                     vstorage.config.ignoredPlugins.includes(id)
-                                        ? "EyeIcon"
-                                        : "EyeSlashIcon",
+                                        ? 'EyeIcon'
+                                        : 'EyeSlashIcon',
                                 )}
                                 onPress={() => {
                                     if (
@@ -146,38 +146,15 @@ export default function IgnoredPluginsPage() {
                                                 id,
                                             ),
                                             1,
-                                        );
-                                    else
-                                        vstorage.config.ignoredPlugins.push(id);
-                                    forceUpdate();
+                                        )
+                                    else vstorage.config.ignoredPlugins.push(id)
+                                    forceUpdate()
                                 }}
                             />
                         }
                     />
-                );
-                // return (
-                //     <FormCheckboxRow
-                //         label={item.manifest.name}
-                //         leading={
-                //             <FormRow.Icon
-                //                 source={getAssetIDByName(
-                //                     item.manifest.vendetta?.icon ?? "",
-                //                 )}
-                //             />
-                //         }
-                //         onPress={() => {
-                //             if (vstorage.config.ignoredPlugins.includes(id))
-                //                 vstorage.config.ignoredPlugins.splice(
-                //                     vstorage.config.ignoredPlugins.indexOf(id),
-                //                     1,
-                //                 );
-                //             else vstorage.config.ignoredPlugins.push(id);
-                //             forceUpdate();
-                //         }}
-                //         selected={vstorage.config.ignoredPlugins.includes(id)}
-                //     />
-                // );
+                )
             }}
         />
-    );
+    )
 }

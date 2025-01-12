@@ -8,41 +8,41 @@
 
 // Using https://www.conventionalcommits.org/ as a reference.
 export const conventionalCommitRegex =
-    /^(?<type>\w+)(?:\((?<scope>.+)\))?(?<major>!)?: /;
+    /^(?<type>\w+)(?:\((?<scope>.+)\))?(?<major>!)?: /
 
 // Do not send PRs for types not listed here: https://github.com/conventional-changelog/commitlint/tree/master/%40commitlint/config-conventional#rules
 // No more types will be added nor do we accept options.
 const types = new Map([
-    ["feat", "Feature"],
-    ["fix", "Fix"],
-    ["chore", "Chore"],
-    ["revert", "Revert"],
-    ["style", "Style"],
-    ["docs", "Docs"],
-    ["build", "Build"],
-    ["refactor", "Refactor"],
-    ["test", "Test"],
-    ["ci", "CI"],
-    ["perf", "Performance"],
-]);
+    ['feat', 'Feature'],
+    ['fix', 'Fix'],
+    ['chore', 'Chore'],
+    ['revert', 'Revert'],
+    ['style', 'Style'],
+    ['docs', 'Docs'],
+    ['build', 'Build'],
+    ['refactor', 'Refactor'],
+    ['test', 'Test'],
+    ['ci', 'CI'],
+    ['perf', 'Performance'],
+])
 
 export function parseConventionalCommit(commitTitle: string):
     | {
-          rawType: string;
-          type: string;
-          scope?: string;
-          raw: string;
+          rawType: string
+          type: string
+          scope?: string
+          raw: string
       }
     | undefined {
-    const match = conventionalCommitRegex.exec(commitTitle);
+    const match = conventionalCommitRegex.exec(commitTitle)
     if (!match?.groups?.type) {
-        return;
+        return
     }
 
-    const { type: rawType, scope, major } = match.groups;
-    const type = types.get(rawType);
+    const { type: rawType, scope, major } = match.groups
+    const type = types.get(rawType)
     if (!type) {
-        return;
+        return
     }
 
     return {
@@ -50,5 +50,5 @@ export function parseConventionalCommit(commitTitle: string):
         type: major ? `${type}!` : type,
         scope: scope ? `${scope}: ` : undefined,
         raw: match[0],
-    };
+    }
 }

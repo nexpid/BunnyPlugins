@@ -1,12 +1,12 @@
-import { findByProps, findByStoreName } from "@vendetta/metro";
-import { React } from "@vendetta/metro/common";
+import { findByProps, findByStoreName } from '@vendetta/metro'
+import { React } from '@vendetta/metro/common'
 
-import Text from "./Text";
+import Text from './Text'
 
-const { showUserProfile } = findByProps("showUserProfile");
-const { fetchProfile } = findByProps("fetchProfile");
+const { showUserProfile } = findByProps('showUserProfile')
+const { fetchProfile } = findByProps('fetchProfile')
 
-const UserStore = findByStoreName("UserStore");
+const UserStore = findByStoreName('UserStore')
 
 export default function SmartMention({
     userId,
@@ -14,13 +14,13 @@ export default function SmartMention({
     loadUsername,
     children,
 }: React.PropsWithChildren<{
-    userId: string;
-    color?: string;
-    loadUsername?: boolean;
+    userId: string
+    color?: string
+    loadUsername?: boolean
 }>) {
     const [loadedUsername, setLoadedUsername] = React.useState<null | string>(
         null,
-    );
+    )
 
     React.useEffect(
         () =>
@@ -29,23 +29,24 @@ export default function SmartMention({
             (UserStore.getUser(userId)
                 ? setLoadedUsername(UserStore.getUser(userId).username)
                 : fetchProfile(userId).then(x => {
-                      setLoadedUsername(x.user.username);
+                      setLoadedUsername(x.user.username)
                   })),
         [loadUsername],
-    );
+    )
 
     return (
         <Text
             variant="text-md/bold"
-            color={color ?? "TEXT_NORMAL"}
+            color={color ?? 'TEXT_NORMAL'}
             onPress={() =>
                 UserStore.getUser(userId)
                     ? showUserProfile({ userId })
                     : fetchProfile(userId).then(() =>
                           showUserProfile({ userId }),
                       )
-            }>
-            {loadUsername ? `@${loadedUsername ?? "..."}` : children}
+            }
+        >
+            {loadUsername ? `@${loadedUsername ?? '...'}` : children}
         </Text>
-    );
+    )
 }

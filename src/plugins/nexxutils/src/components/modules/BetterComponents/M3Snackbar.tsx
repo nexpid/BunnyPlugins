@@ -1,17 +1,17 @@
-import { ReactNative as RN, stylesheet } from "@vendetta/metro/common";
-import { rawColors } from "@vendetta/ui";
+import { ReactNative as RN, stylesheet } from '@vendetta/metro/common'
+import { rawColors } from '@vendetta/ui'
 
-import Text from "$/components/Text";
-import { Reanimated } from "$/deps";
-import { resolveCustomSemantic } from "$/types";
+import Text from '$/components/Text'
+import { Reanimated } from '$/deps'
+import { resolveCustomSemantic } from '$/types'
 
 export default function (props: {
-    content: any;
-    source?: any;
-    icon?: any;
-    isOnBottom?: boolean;
+    content: any
+    source?: any
+    icon?: any
+    isOnBottom?: boolean
 }) {
-    const height = RN.Dimensions.get("window").height - 40;
+    const height = RN.Dimensions.get('window').height - 40
     const styles = stylesheet.createThemedStyleSheet({
         container: {
             backgroundColor: resolveCustomSemantic(
@@ -23,10 +23,10 @@ export default function (props: {
             borderRadius: 8,
             paddingHorizontal: 16,
             paddingVertical: 14,
-            flexDirection: "row",
+            flexDirection: 'row',
         },
         containerBottom: {
-            position: "absolute",
+            position: 'absolute',
             bottom: -height,
         },
         text: {
@@ -37,18 +37,18 @@ export default function (props: {
             width: 280,
         },
         iconContainer: {
-            alignSelf: "flex-end",
+            alignSelf: 'flex-end',
             width: 48,
-            height: "100%",
-            justifyContent: "center",
-            alignItems: "center",
+            height: '100%',
+            justifyContent: 'center',
+            alignItems: 'center',
         },
         icon: {
             width: 24,
             height: 24,
         },
         shadow: {
-            shadowColor: "#000",
+            shadowColor: '#000',
             shadowOffset: {
                 width: 0,
                 height: 12,
@@ -58,16 +58,16 @@ export default function (props: {
 
             elevation: 24,
         },
-    });
+    })
 
-    const img = props.source ?? props.icon;
+    const img = props.source ?? props.icon
     const Content =
-        typeof props.content === "function"
+        typeof props.content === 'function'
             ? props.content
-            : () => props.content ?? null;
+            : () => props.content ?? null
     const Image =
         img &&
-        (typeof img === "function"
+        (typeof img === 'function'
             ? img
             : () => (
                   <RN.Image
@@ -75,7 +75,7 @@ export default function (props: {
                       style={styles.icon}
                       resizeMode="contain"
                   />
-              ));
+              ))
 
     return (
         <Reanimated.default.View
@@ -88,7 +88,8 @@ export default function (props: {
                 props.isOnBottom
                     ? Reanimated.FadeInUp.duration(150)
                     : Reanimated.FadeInDown.duration(150)
-            }>
+            }
+        >
             <Text variant="text-md/semibold" style={styles.text}>
                 <Content />
             </Text>
@@ -98,5 +99,5 @@ export default function (props: {
                 </RN.View>
             )}
         </Reanimated.default.View>
-    );
+    )
 }
