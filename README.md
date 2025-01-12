@@ -14,7 +14,7 @@
 </div>
 
 > [!IMPORTANT]  
-> My plugins assume you're using version atleast **211.10** (211210) from **January 1st 2023**, they might not work properly if you use an older version than that.
+> My plugins assume you're using version atleast **250.10** (250210) from **September 28th, 2024**, they might not work properly if you use an older version than that.
 
 > [!CAUTION]  
 > If you have any plugins that are installed under the **dev.bunny.nexpid.xyz** subdomain, make sure to reinstall them under **bunny.nexpid.xyz**, as the dev subdomain is being sunsetted.
