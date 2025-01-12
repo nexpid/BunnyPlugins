@@ -21,8 +21,15 @@ const ThemeStore = findByStoreName('ThemeStore')
 
 export const getSysColors = () =>
     (window as any).__vendetta_syscolors as VendettaSysColors | null
-export const hasTheme = () =>
-    (window as any).bunny.themes.getCurrentTheme()?.id.includes('monet-theme')
+
+export const hasThemeKey = Symbol.for('monettheme.isThemed')
+export const hasTheme = () => {
+    const { bunny, [hasThemeKey]: isThemed } = window as any
+    return (
+        !bunny.themes.getCurrentTheme() &&
+        (bunny.themes.getThemeFromLoader()?.id === 'monet-theme' || isThemed)
+    )
+}
 
 export const vstorage = storage as {
     colors: {

@@ -12,7 +12,7 @@ import {
 } from '$/components/ActionSheet'
 import Text from '$/components/Text'
 import { Reanimated } from '$/deps'
-import { buttonVariantPolyfill, IconButton, Stack } from '$/lib/redesign'
+import { IconButton, Stack } from '$/lib/redesign'
 import { lerp } from '$/types'
 
 const { FormRow } = Forms
@@ -155,8 +155,7 @@ export default function Card(props: CardProps) {
                                         size="sm"
                                         variant={
                                             isDestructive
-                                                ? buttonVariantPolyfill()
-                                                      .destructive
+                                                ? 'destructive'
                                                 : 'secondary'
                                         }
                                         icon={getAssetIDByName(icon)}

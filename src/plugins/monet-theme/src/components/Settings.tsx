@@ -21,12 +21,7 @@ import {
 import { RichText } from '$/components/RichText'
 import Skeleton from '$/components/Skeleton'
 import Text from '$/components/Text'
-import {
-    buttonVariantPolyfill,
-    ContextMenu,
-    IconButton,
-    PressableScale,
-} from '$/lib/redesign'
+import { ContextMenu, IconButton, PressableScale } from '$/lib/redesign'
 import type { ThemeDataWithPlus, VendettaSysColors } from '$/typings'
 
 import RepainterIcon from '../../assets/icons/RepainterIcon.png'
@@ -351,9 +346,7 @@ export default () => {
                                 disabled={!isLoadedTheme}
                                 size="sm"
                                 variant={
-                                    isLoadedTheme
-                                        ? buttonVariantPolyfill().destructive
-                                        : 'secondary'
+                                    isLoadedTheme ? 'destructive' : 'secondary'
                                 }
                                 icon={getAssetIDByName('TrashIcon')}
                             />

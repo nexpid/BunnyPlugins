@@ -6,7 +6,7 @@ import { getAssetIDByName } from '@vendetta/ui/assets'
 import { Search } from '@vendetta/ui/components'
 import { showToast } from '@vendetta/ui/toasts'
 
-import { buttonVariantPolyfill, IconButton, RowButton } from '$/lib/redesign'
+import { IconButton, RowButton } from '$/lib/redesign'
 import { managePage } from '$/lib/ui'
 import { formatBytes } from '$/types'
 
@@ -85,7 +85,7 @@ export default function IgnoredPluginsPage() {
                     variant={
                         vstorage.config.ignoredPlugins.length === 0
                             ? 'secondary'
-                            : buttonVariantPolyfill().destructive
+                            : 'destructive'
                     }
                 />
             ),

@@ -15,10 +15,6 @@ export type ButtonVariant =
     | 'secondary-overlay'
     | 'destructive'
     | 'active'
-    /** @deprecated use destructive */
-    | 'danger'
-    /** @deprecated use active */
-    | 'positive'
 
 export interface PrimitiveButton {
     onPress?: () => void

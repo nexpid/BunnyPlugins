@@ -16,7 +16,7 @@ import {
 } from '$/components/ActionSheet'
 import { BetterTableRowGroup } from '$/components/BetterTableRow'
 import Text from '$/components/Text'
-import { hasPressableScale, PressableScale } from '$/lib/redesign'
+import { PressableScale } from '$/lib/redesign'
 import { getDiscordTheme } from '$/types'
 
 import { vstorage } from '../..'
@@ -79,7 +79,7 @@ function Wallpaper({
                     centerImage && styles.centerThing,
                     selected && styles.selectedThing,
                 ]}
-                android_ripple={hasPressableScale && styles.android_ripple}
+                android_ripple={styles.android_ripple}
             >
                 <RN.Image
                     source={image}

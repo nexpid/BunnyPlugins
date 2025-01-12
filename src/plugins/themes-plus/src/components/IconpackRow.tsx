@@ -7,7 +7,7 @@ import { showToast } from '@vendetta/ui/toasts'
 import InlineCheckbox from '$/components/InlineCheckbox'
 import Text from '$/components/Text'
 import { Lang } from '$/lang'
-import { buttonVariantPolyfill, IconButton } from '$/lib/redesign'
+import { IconButton } from '$/lib/redesign'
 import { formatBytes } from '$/types'
 
 import { lang, vstorage } from '..'
@@ -209,8 +209,7 @@ export default function IconpackRow({
                                     packStatus?.installed
                                         ? packStatus.outdated
                                             ? 'primary'
-                                            : buttonVariantPolyfill()
-                                                  .destructive
+                                            : 'destructive'
                                         : 'secondary'
                                 }
                                 disabled={

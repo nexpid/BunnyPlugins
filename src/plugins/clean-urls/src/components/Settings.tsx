@@ -39,7 +39,6 @@ export default () => {
                 <FormSwitchRow
                     label="Remove referral parameters"
                     subLabel={`https://amazon.com/product${vstorage.config.referrals ? '/' : '?tag=nexpid-50'}`}
-                    // STUB[epic=icon] QuestsIcon
                     leading={
                         <FormRow.Icon source={getAssetIDByName('QuestsIcon')} />
                     }

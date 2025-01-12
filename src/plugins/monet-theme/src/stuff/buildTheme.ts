@@ -6,7 +6,7 @@ import { showToast } from '@vendetta/ui/toasts'
 import { getDiscordTheme } from '$/types'
 import type { ThemeDataWithPlus } from '$/typings'
 
-import { vstorage } from '..'
+import { hasThemeKey, vstorage } from '..'
 import type { Patches, PatchThing } from '../types'
 import { getLABShade, parseColor } from './colors'
 
@@ -23,7 +23,7 @@ export function apply(theme: ThemeDataWithPlus | null) {
 
     try {
         bunny.themes.selectTheme(val)
-        bunny.themes.applyTheme(val)
+        ;(window as any)[hasThemeKey] = !!val
 
         if (!val) showToast('Cleared theme', getAssetIDByName('TrashIcon'))
         else showToast('Applied theme', getAssetIDByName('PaintPaletteIcon'))

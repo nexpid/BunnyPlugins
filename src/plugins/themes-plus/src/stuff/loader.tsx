@@ -8,7 +8,7 @@ import patchMentionLineColors from '../patches/mentionLineColor'
 import type { IconpackConfig, IconpackData } from '../types'
 import { state, updateState } from './active'
 import constants from './constants'
-import getIconpackData from './iconpackDataGetter'
+import getIconpackData, { type FetchedIconpackData } from './iconpackDataGetter'
 import { cFetch, customUrl } from './util'
 
 const UserStore = findByStoreName('UserStore')
@@ -122,7 +122,7 @@ export default async function load() {
 
     if (!isCustomIconpack && state.iconpack.iconpack) {
         // TODO this should be an actual type
-        let dt: Awaited<ReturnType<typeof getIconpackData>>
+        let dt: FetchedIconpackData
         try {
             dt = await getIconpackData(
                 state.iconpack.iconpack.id,

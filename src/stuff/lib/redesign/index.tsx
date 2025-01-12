@@ -1,9 +1,6 @@
 import { findByProps } from '@vendetta/metro'
-import { React, ReactNative, ReactNative as RN } from '@vendetta/metro/common'
-import { semanticColors } from '@vendetta/ui'
+import { React, ReactNative as RN } from '@vendetta/metro/common'
 import { showToast } from '@vendetta/ui/toasts'
-
-import CompatSlider from '$/components/compat/CompatSlider'
 
 import type * as t from './types' // shamelessly stolen from Bunny
 
@@ -25,50 +22,6 @@ const findProp = (...props: string[]) => findByProps(...props)?.[props[0]]
 const findPropPolyfill = (isFunction: boolean, ...props: string[]) =>
     findProp(...props) ?? NotFound(props[0], isFunction)
 
-/*
-  button variant update around version 222.4:
-  removed:
-    - primary-on-blurple
-    - primary-alt
-    - primary-alt-on-blurple
-    - secondary-alt
-    - secondary-input
-  changed:
-    - danger > destructive
-    - positive > active
-*/
-
-// STUB[epic=plugin] button variant polyfill
-export function buttonVariantPolyfill() {
-    if ('REDESIGN_BUTTON_ACTIVE_TEXT' in semanticColors)
-        return {
-            active: 'active',
-            destructive: 'destructive',
-        } as const
-
-    return {
-        active: 'positive',
-        destructive: 'danger',
-    } as const
-}
-
-// STUB[epic=plugin] compat pressable scale
-const _PressableScale = findProp('PressableScale')
-
-// STUB[epic=plugin] compat slider
-const _Slider = findProp('Slider')
-
-const BetterSlider = (props: any) => (
-    <RN.View style={{ marginHorizontal: 16, marginTop: 16, marginBottom: 12 }}>
-        <_Slider
-            {...props}
-            onValueChange={(val: any) =>
-                props.value !== val && props.onValueChange?.(val)
-            }
-        />
-    </RN.View>
-)
-
 // components
 
 // buttons
@@ -78,8 +31,10 @@ export const FloatingActionButton = findPropPolyfill(
     false,
     'FloatingActionButton',
 ) as t.FAB
-export const PressableScale = (_PressableScale ??
-    ReactNative.Pressable) as typeof ReactNative.Pressable
+export const PressableScale = findPropPolyfill(
+    false,
+    'PressableScale',
+) as typeof RN.Pressable
 export const IconButton = findPropPolyfill(false, 'IconButton') as t.IconButton
 export const ContextMenu = findPropPolyfill(
     false,
@@ -87,7 +42,17 @@ export const ContextMenu = findPropPolyfill(
 ) as t.ContextMenu
 
 // inputs
-export const Slider = (_Slider ? BetterSlider : CompatSlider) as t.Slider
+const _Slider = findPropPolyfill(false, 'Slider')
+export const Slider = (props => (
+    <RN.View style={{ marginHorizontal: 16, marginTop: 16, marginBottom: 12 }}>
+        <_Slider
+            {...props}
+            onValueChange={(val: any) =>
+                props.value !== val && props.onValueChange?.(val)
+            }
+        />
+    </RN.View>
+)) as t.Slider
 export const TextInput = findPropPolyfill(false, 'TextInput') as t.TextInput
 
 // tabs
@@ -107,7 +72,3 @@ export const useSegmentedControlState = findPropPolyfill(
     true,
     'useSegmentedControlState',
 ) as t.useSegmentedControlState
-
-// misc
-
-export const hasPressableScale = _PressableScale !== undefined
