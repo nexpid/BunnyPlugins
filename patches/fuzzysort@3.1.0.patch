@@ -1,0 +1,13 @@
+diff --git a/fuzzysort.js b/fuzzysort.js
+index a622201e4146e6aa17328680e44f0f2c6d687c15..24a4a243e4d8c13a343a54b7731750d974aee641 100644
+--- a/fuzzysort.js
++++ b/fuzzysort.js
+@@ -588,7 +588,7 @@
+   }
+ 
+   // we use this instead of just .normalize('NFD').replace(/[\u0300-\u036f]/g, '') because that screws with japanese characters
+-  var remove_accents = (str) => str.replace(/\p{Script=Latin}+/gu, match => match.normalize('NFD')).replace(/[\u0300-\u036f]/g, '')
++  var remove_accents = (str) => str.replace(/[A-Za-zÀ-ÖØ-öø-ÿĀ-ʯḀ-ỿ]+/g, match => match.normalize('NFD')).replace(/[\u0300-\u036f]/g, '')
+ 
+   var prepareLowerInfo = (str) => {
+     str = remove_accents(str)

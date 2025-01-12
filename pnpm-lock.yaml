@@ -5,6 +5,9 @@ settings:
   excludeLinksFromLockfile: false
 
 patchedDependencies:
+  fuzzysort@3.1.0:
+    hash: bimxxw4622jjburfe3votrtl5m
+    path: patches/fuzzysort@3.1.0.patch
   picocolors@1.0.1:
     hash: 6swi6tv3myzmgefw5pw432whxi
     path: patches/picocolors@1.0.1.patch
@@ -27,7 +30,7 @@ importers:
         version: 0.20.2
       fuzzysort:
         specifier: ^3.1.0
-        version: 3.1.0
+        version: 3.1.0(patch_hash=bimxxw4622jjburfe3votrtl5m)
       image-size:
         specifier: ^1.2.0
         version: 1.2.0
@@ -5358,7 +5361,7 @@ snapshots:
 
   function-bind@1.1.2: {}
 
-  fuzzysort@3.1.0: {}
+  fuzzysort@3.1.0(patch_hash=bimxxw4622jjburfe3votrtl5m): {}
 
   gensync@1.0.0-beta.2: {}
 
