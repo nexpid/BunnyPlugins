@@ -1,9 +1,8 @@
 {
   "recommendations": [
+    "biomejs.biome",
     "ExodiusStudios.comment-anchors",
     "usernamehw.errorlens",
-    "dbaeumer.vscode-eslint",
-    "esbenp.prettier-vscode",
     "yoavbls.pretty-ts-errors",
     "kejun.markdown-alert"
   ]
