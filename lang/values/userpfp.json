@@ -27,6 +27,6 @@
   "tr": {"toast.patch_error":"UserPFP couldn't patch avatars!","toast.fetch_error":"UserPFP couldn't fetch avatars!"},
   "uk": {"toast.patch_error":"UserPFP couldn't patch avatars!","toast.fetch_error":"UserPFP couldn't fetch avatars!"},
   "vi": {"toast.patch_error":"UserPFP couldn't patch avatars!","toast.fetch_error":"UserPFP couldn't fetch avatars!"},
-  "zh-Hans": {"toast.patch_error":"UserPFP couldn't patch avatars!","toast.fetch_error":"UserPFP couldn't fetch avatars!"},
+  "zh-Hans": {"toast.patch_error":"用户PFP 无法补丁头像！","toast.fetch_error":"用户PFP 无法获取头像！"},
   "zh-Hant": {"toast.patch_error":"UserPFP 無法設定頭像！","toast.fetch_error":"UserPFP 無法設定頭像！"}
 }
