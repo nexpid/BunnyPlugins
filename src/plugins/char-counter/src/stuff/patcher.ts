@@ -57,7 +57,10 @@ export default () => {
     patches.push(
         after('default', JumpToPresentButton, (_, ret) => {
             if (ret?.props?.style && vstorage.position === 'pill')
-                ret.props.style[1].bottom += 32 + 8
+                ret.props.style = [
+                    ...ret.props.style,
+                    { bottom: ret.props.style[1].bottom + 32 + 8 },
+                ]
         }),
     )
 
