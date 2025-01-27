@@ -92,9 +92,7 @@ export default new Module({
             this.patches.add(
                 after('render', RN.Image, ([{ source, style }]) => {
                     const name =
-                        typeof source === 'object' &&
-                        !Array.isArray(source) &&
-                        typeof source.original === 'number'
+                        typeof source?.original === 'number'
                             ? getAssetByID(source.original)?.name
                             : typeof source === 'number'
                               ? getAssetByID(source)?.name
