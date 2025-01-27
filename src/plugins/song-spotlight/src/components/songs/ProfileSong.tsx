@@ -165,7 +165,7 @@ export default function ProfileSong({
                         style={styles.serviceIcon}
                     />
                 </RN.View>
-                <AudioPlayer song={songInfo} playing={playing}>
+                <AudioPlayer song={songInfo} id={song.id} playing={playing}>
                     {({ player, loaded, resolved }) => (
                         <>
                             <Stack
@@ -272,7 +272,13 @@ export default function ProfileSong({
                                         </PressableScale>
                                     )}
                                 </ContextMenu>
-                                <Stack spacing={-1} style={{ width: '75%' }}>
+                                <Stack
+                                    spacing={-1}
+                                    style={{
+                                        width: '75%',
+                                        flexShrink: 1,
+                                    }}
+                                >
                                     <Stack
                                         direction="horizontal"
                                         spacing={8}
@@ -281,6 +287,7 @@ export default function ProfileSong({
                                         <Text
                                             variant="text-md/bold"
                                             color="TEXT_NORMAL"
+                                            style={{ flexShrink: 1 }}
                                             lineClamp={1}
                                         >
                                             {songInfo.label}
@@ -304,10 +311,7 @@ export default function ProfileSong({
                                         color="TEXT_MUTED"
                                         lineClamp={1}
                                         style={{
-                                            width:
-                                                songInfo.type === 'single'
-                                                    ? '85%'
-                                                    : '70%',
+                                            flexShrink: 1,
                                         }}
                                     >
                                         {songInfo.sublabel}
@@ -316,7 +320,7 @@ export default function ProfileSong({
                                 <RN.View
                                     style={{
                                         marginLeft: 'auto',
-                                        marginTop: 'auto',
+                                        justifyContent: 'flex-end',
                                     }}
                                 >
                                     <Stack

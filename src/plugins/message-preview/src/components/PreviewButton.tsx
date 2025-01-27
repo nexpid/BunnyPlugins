@@ -1,12 +1,12 @@
 import { React, ReactNative as RN, stylesheet } from '@vendetta/metro/common'
-import { after } from '@vendetta/patcher'
+import { before } from '@vendetta/patcher'
 import { semanticColors } from '@vendetta/ui'
 import { getAssetIDByName } from '@vendetta/ui/assets'
 
 import { Reanimated } from '$/deps'
 
 import openPreview from '../stuff/openPreview'
-import { patches } from '../stuff/patcher'
+import type { ChatInputProps } from '../stuff/patcher'
 
 const ACTION_ICON_SIZE = 40
 const styles = stylesheet.createThemedStyleSheet({
@@ -35,16 +35,20 @@ const styles = stylesheet.createThemedStyleSheet({
     },
 })
 
-export default ({ inputProps }): JSX.Element => {
+export default function PreviewButton({
+    inputProps,
+}: { inputProps: ChatInputProps }) {
     const [text, setText] = React.useState('')
+
+    React.useEffect(() => {
+        const des = before('handleTextChanged', inputProps, ([txt]) =>
+            setText(txt),
+        )
+        return () => void des()
+    }, [])
+
     const fade = Reanimated.useSharedValue(0)
-
-    patches.push(
-        after('onChangeText', inputProps, ([txt]) => setText(txt), true),
-    )
-
     const shouldAppear = text.length > 0
-    const UseComponent = shouldAppear ? RN.Pressable : RN.View
 
     React.useEffect(() => {
         fade.value = Reanimated.withTiming(shouldAppear ? 1 : 0, {
@@ -62,19 +66,23 @@ export default ({ inputProps }): JSX.Element => {
                     top: -ACTION_ICON_SIZE,
                     zIndex: 3,
                 },
+                { opacity: fade.value },
                 { opacity: fade },
             ]}
         >
-            <UseComponent
+            <RN.Pressable
                 android_ripple={styles.androidRipple}
                 onPress={shouldAppear ? () => openPreview() : undefined}
-                style={styles.actionButton}
+                style={[
+                    styles.actionButton,
+                    { pointerEvents: shouldAppear ? 'auto' : 'none' },
+                ]}
             >
                 <RN.Image
                     style={styles.actionIcon}
                     source={getAssetIDByName('EyeIcon')}
                 />
-            </UseComponent>
+            </RN.Pressable>
         </Reanimated.default.View>
     )
 }

@@ -15,10 +15,15 @@ import ProfileSong from './songs/ProfileSong'
 
 const { TableRowGroupTitle } = findByProps('TableRowGroup', 'TableRow')
 
-const { YouScreenProfileCard } = findByProps('YouScreenProfileCard')
+// pre 264.5
+const YouScreenProfileCard = findByProps(
+    'YouScreenProfileCard',
+)?.YouScreenProfileCard
 const SimplifiedUserProfileCard = findByName('SimplifiedUserProfileCard')
 const UserProfileSection = findByName('UserProfileSection')
 const UserStore = findByStoreName('UserStore')
+// post 264.5
+const UserProfileCard = findByName('UserProfileCard')
 
 export default function ProfileSongs({
     userId,
@@ -89,24 +94,41 @@ export default function ProfileSongs({
         />
     )
 
-    return variant === 'you' ? (
-        <YouScreenProfileCard style={{ minHeight: 200 }}>
-            <TableRowGroupTitle title={lang.format('plugin.name', {})} />
-            {songs}
-        </YouScreenProfileCard>
-    ) : variant === 'simplified' ? (
-        <SimplifiedUserProfileCard
-            title={lang.format('plugin.name', {})}
-            style={[styles.card, style]}
-        >
-            {songs}
-        </SimplifiedUserProfileCard>
-    ) : (
-        <UserProfileSection
-            title={lang.format('plugin.name', {})}
-            style={{ minHeight: 200 }}
-        >
-            {songs}
-        </UserProfileSection>
-    )
+    if (variant === 'you' && YouScreenProfileCard)
+        return (
+            <YouScreenProfileCard style={{ minHeight: 200 }}>
+                <TableRowGroupTitle title={lang.format('plugin.name', {})} />
+                {songs}
+            </YouScreenProfileCard>
+        )
+    if (variant === 'simplified' && SimplifiedUserProfileCard)
+        return (
+            <SimplifiedUserProfileCard
+                title={lang.format('plugin.name', {})}
+                style={[styles.card, style]}
+            >
+                {songs}
+            </SimplifiedUserProfileCard>
+        )
+    // post 264.5
+    if (UserProfileCard)
+        return (
+            <UserProfileCard
+                title={lang.format('plugin.name', {})}
+                style={[styles.card, style]}
+            >
+                {songs}
+            </UserProfileCard>
+        )
+    // pre 264.5
+    if (UserProfileSection)
+        return (
+            <UserProfileSection
+                title={lang.format('plugin.name', {})}
+                style={{ minHeight: 200 }}
+            >
+                {songs}
+            </UserProfileSection>
+        )
+    return null
 }

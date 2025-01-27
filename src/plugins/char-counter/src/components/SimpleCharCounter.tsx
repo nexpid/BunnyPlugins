@@ -1,62 +1,61 @@
 import { React, stylesheet } from '@vendetta/metro/common'
-import { useProxy } from '@vendetta/storage'
 
 import Text from '$/components/Text'
 import { Reanimated } from '$/deps'
 
 import { vstorage } from '..'
 import getMessageLength, { display, hasSLM } from '../stuff/getMessageLength'
-import { lastText } from '../stuff/patcher'
+import type { ChatInputProps } from '../stuff/patcher'
+import { before } from '@vendetta/patcher'
 
 const styles = stylesheet.createThemedStyleSheet({
     container: {
-        textAlign: 'center',
-        paddingBottom: 2,
-        paddingRight: 5,
-        marginTop: -5,
+        position: 'absolute',
+        right: 0,
+        bottom: -8,
     },
 })
 
-export default function () {
-    useProxy(lastText)
-    const fade = Reanimated.useSharedValue(vstorage.minChars === 0 ? 1 : 0)
-    const [visible, setVisible] = React.useState(vstorage.minChars === 0)
+export default function SimpleCharCounter({
+    inputProps,
+}: { inputProps: ChatInputProps }) {
+    const [text, setText] = React.useState('')
 
-    const curLength = lastText.value.length,
+    React.useEffect(() => {
+        const des = before('handleTextChanged', inputProps, ([txt]) =>
+            setText(txt),
+        )
+        return () => void des()
+    }, [])
+
+    const fade = Reanimated.useSharedValue(vstorage.minChars === 0 ? 1 : 0)
+
+    const curLength = text.length,
         maxLength = getMessageLength()
     const extraMessages = hasSLM() ? Math.floor(curLength / maxLength) : 0
-    const dspLength = curLength - extraMessages * maxLength
 
+    const actualLength = curLength - extraMessages * maxLength
     const shouldAppear = curLength >= vstorage.minChars
 
-    const shallTimeout = React.useRef<any>(0)
     React.useEffect(() => {
-        if (shouldAppear) setVisible(true)
-
         fade.value = Reanimated.withTiming(shouldAppear ? 1 : 0, {
             duration: 100,
         })
-        clearTimeout(shallTimeout.current)
-
-        if (!shouldAppear)
-            shallTimeout.current = setTimeout(() => {
-                setVisible(false)
-            }, 100)
     }, [shouldAppear])
 
     return (
         <Reanimated.default.View
             style={[
                 styles.container,
-                !visible && { display: 'none' },
+                { opacity: fade.value },
                 { opacity: fade },
             ]}
         >
             <Text
                 variant="text-xs/semibold"
-                color={dspLength <= maxLength ? 'TEXT_NORMAL' : 'TEXT_DANGER'}
+                color={actualLength <= maxLength ? 'TEXT_MUTED' : 'TEXT_DANGER'}
             >
-                {display(dspLength)}
+                {display(actualLength)}
             </Text>
         </Reanimated.default.View>
     )

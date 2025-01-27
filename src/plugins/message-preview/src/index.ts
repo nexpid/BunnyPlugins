@@ -4,8 +4,8 @@ import Settings from './components/Settings'
 import patcher from './stuff/patcher'
 
 export const vstorage = storage as {
-    buttonType: string
-    previewType: string
+    buttonType: 'pill' | 'send'
+    previewType: 'popup' | 'clyde'
 }
 
 let unpatch: any

@@ -1,5 +1,4 @@
 import { React, ReactNative as RN, stylesheet } from '@vendetta/metro/common'
-import { after } from '@vendetta/patcher'
 import { semanticColors } from '@vendetta/ui'
 
 import Text from '$/components/Text'
@@ -8,7 +7,8 @@ import { TextStyleSheet } from '$/types'
 
 import { vstorage } from '..'
 import getMessageLength, { display, hasSLM } from '../stuff/getMessageLength'
-import { lastText } from '../stuff/patcher'
+import type { ChatInputProps } from '../stuff/patcher'
+import { before } from '@vendetta/patcher'
 
 const xsFontSize = TextStyleSheet['text-xs/semibold'].fontSize
 const styles = stylesheet.createThemedStyleSheet({
@@ -50,37 +50,36 @@ const styles = stylesheet.createThemedStyleSheet({
     },
 })
 
-export default ({ inputProps }: { inputProps: any }) => {
+export default ({ inputProps }: { inputProps: ChatInputProps }) => {
     const [isToggled, setIsToggled] = React.useState(false)
     const [text, setText] = React.useState('')
+
+    React.useEffect(() => {
+        const des = before('handleTextChanged', inputProps, ([txt]) =>
+            setText(txt),
+        )
+        return () => void des()
+    }, [])
 
     const fade = Reanimated.useSharedValue(vstorage.minChars === 0 ? 1 : 0)
     const fadeExtra = Reanimated.useSharedValue(0)
 
-    lastText.value = text
-    after('onChangeText', inputProps, ([txt]) => setText(txt), true)
-
     const curLength = text.length,
         maxLength = getMessageLength()
     const extraMessages = hasSLM() ? Math.floor(curLength / maxLength) : 0
-    const dspLength = curLength - extraMessages * maxLength
 
-    const elY =
-        (styles.text as any).fontSize * 2 + (styles.text as any).paddingVertical
-
+    const actualLength = curLength - extraMessages * maxLength
     const shouldAppear = curLength >= (vstorage.minChars ?? 1)
+
     React.useEffect(() => {
         fade.value = Reanimated.withTiming(
             shouldAppear ? (isToggled ? 0.3 : 1) : 0,
             { duration: 100 },
         )
-    }, [shouldAppear, isToggled])
-
-    React.useEffect(() => {
         fadeExtra.value = Reanimated.withTiming(extraMessages > 0 ? 1 : 0, {
             duration: 100,
         })
-    }, [extraMessages])
+    }, [shouldAppear, isToggled, extraMessages])
 
     return (
         <Reanimated.default.View
@@ -89,8 +88,12 @@ export default ({ inputProps }: { inputProps: any }) => {
                     flexDirection: 'row-reverse',
                     position: 'absolute',
                     right: 0,
-                    top: -elY,
+                    top: -(
+                        (styles.text as any).fontSize * 2 +
+                        (styles.text as any).paddingVertical
+                    ),
                     zIndex: 1,
+                    opacity: fade.value,
                 },
                 {
                     opacity: fade,
@@ -110,7 +113,11 @@ export default ({ inputProps }: { inputProps: any }) => {
                 }
             >
                 <Reanimated.default.View
-                    style={[styles.extraMessagesCircle, { opacity: fadeExtra }]}
+                    style={[
+                        styles.extraMessagesCircle,
+                        { opacity: fadeExtra.value },
+                        { opacity: fadeExtra },
+                    ]}
                 >
                     <Text
                         variant="text-xs/semibold"
@@ -123,14 +130,16 @@ export default ({ inputProps }: { inputProps: any }) => {
                 <Text
                     variant="text-xs/semibold"
                     color={
-                        dspLength <= maxLength ? 'TEXT_NORMAL' : 'TEXT_DANGER'
+                        actualLength <= maxLength
+                            ? 'TEXT_NORMAL'
+                            : 'TEXT_DANGER'
                     }
                     style={{
                         paddingHorizontal: 8,
                         paddingVertical: 8,
                     }}
                 >
-                    {display(dspLength)}
+                    {display(actualLength)}
                 </Text>
             </RN.Pressable>
         </Reanimated.default.View>

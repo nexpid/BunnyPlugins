@@ -1,14 +1,15 @@
 import { findByName } from '@vendetta/metro'
 import { React, ReactNative as RN } from '@vendetta/metro/common'
-import { after } from '@vendetta/patcher'
+import { after, before } from '@vendetta/patcher'
 import { findInReactTree } from '@vendetta/utils'
 
+import intlProxy from '$/lib/intlProxy'
+
 import { vstorage } from '..'
-import CharCounter from '../components/CharCounter'
-import SimpleCharCounter from '../components/SimpleCharCounter'
+import PreviewButton from '../components/PreviewButton'
+import openPreview from './openPreview'
 
 const ChatInputGuardWrapper = findByName('ChatInputGuardWrapper', false)
-const JumpToPresentButton = findByName('JumpToPresentButton', false)
 
 export interface ChatInputProps {
     handleTextChanged: (text: string) => void
@@ -25,7 +26,7 @@ export default () => {
             )?.props?.chatInputRef?.current as ChatInputProps
             if (!inputProps?.handleTextChanged) return
 
-            if (vstorage.position === 'pill') {
+            if (vstorage.buttonType === 'pill') {
                 const children = findInReactTree(
                     ret.props.children,
                     x =>
@@ -35,29 +36,22 @@ export default () => {
                 if (!children) return
 
                 children.unshift(
-                    React.createElement(CharCounter, { inputProps }),
-                )
-            } else {
-                const chatCont = findInReactTree(
-                    ret.props.children,
-                    x =>
-                        x?.children?.[0].type?.displayName ===
-                        'ChatInputNativeComponent',
-                ) as { children: any[]; style: any[] }
-                if (!chatCont) return
-
-                chatCont.style = [...chatCont.style, { marginBottom: 8 }]
-                chatCont.children.push(
-                    React.createElement(SimpleCharCounter, { inputProps }),
+                    React.createElement(PreviewButton, { inputProps }),
                 )
             }
         }),
     )
 
+    // thank you rosie
     patches.push(
-        after('default', JumpToPresentButton, (_, ret) => {
-            if (ret?.props?.style && vstorage.position === 'pill')
-                ret.props.style[1].bottom += 32 + 8
+        // @ts-expect-error not in RN typings
+        before('render', RN.Pressable.type, ([a]) => {
+            if (
+                a?.accessibilityLabel === intlProxy.SEND &&
+                a?.onPress?.name === 'handlePressSend'
+            )
+                a.onLongPress = () =>
+                    vstorage.buttonType === 'send' && openPreview()
         }),
     )
 

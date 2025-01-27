@@ -231,6 +231,7 @@ export default function SongInfo({
                                     style={{
                                         padding: 16,
                                         alignItems: 'center',
+                                        flexShrink: 1,
                                     }}
                                 >
                                     <FormRow.Icon

@@ -7,6 +7,7 @@ import { findInReactTree } from '@vendetta/utils'
 
 import intlProxy from '../intlProxy'
 import type { PinToSettingsTabs } from '.'
+import { logger } from '@vendetta'
 
 const { FormSection, FormRow } = Forms
 
@@ -39,47 +40,55 @@ function Section({ tabs }: { tabs: PinToSettingsTabs }) {
 export function patchPanelUI(tabs: PinToSettingsTabs, patches: (() => void)[]) {
     const { bunny } = window as any
 
-    patches.push(
-        after(
-            'default',
-            bunny.metro.findByNameLazy('UserSettingsOverviewWrapper', false),
-            (_, ret) => {
-                const UserSettingsOverview = findInReactTree(
-                    ret.props.children,
-                    n => n.type?.name === 'UserSettingsOverview',
-                )
+    // panel settings were removed in version 264.5 💔
+    try {
+        patches.push(
+            after(
+                'default',
+                bunny.metro.findByNameLazy(
+                    'UserSettingsOverviewWrapper',
+                    false,
+                ),
+                (_, ret) => {
+                    const UserSettingsOverview = findInReactTree(
+                        ret.props.children,
+                        n => n.type?.name === 'UserSettingsOverview',
+                    )
 
-                patches.push(
-                    after(
-                        'render',
-                        UserSettingsOverview.type.prototype,
-                        (_args, res) => {
-                            const titles = [
-                                intlProxy.BILLING_SETTINGS,
-                                intlProxy.PREMIUM_SETTINGS,
-                            ]
+                    patches.push(
+                        after(
+                            'render',
+                            UserSettingsOverview.type.prototype,
+                            (_args, res) => {
+                                const titles = [
+                                    intlProxy.BILLING_SETTINGS,
+                                    intlProxy.PREMIUM_SETTINGS,
+                                ]
 
-                            const sections = findInReactTree(
-                                res.props.children,
-                                n => n?.children?.[1]?.type === FormSection,
-                            )?.children
+                                const sections = findInReactTree(
+                                    res.props.children,
+                                    n => n?.children?.[1]?.type === FormSection,
+                                )?.children
 
-                            if (sections) {
-                                const index = sections.findIndex((c: any) =>
-                                    titles.includes(c?.props.label),
-                                )
+                                if (sections) {
+                                    const index = sections.findIndex((c: any) =>
+                                        titles.includes(c?.props.label),
+                                    )
 
-                                sections.splice(
-                                    -~index || 4,
-                                    0,
-                                    <Section tabs={tabs} />,
-                                )
-                            }
-                        },
-                    ),
-                )
-            },
-            true,
-        ),
-    )
+                                    sections.splice(
+                                        -~index || 4,
+                                        0,
+                                        <Section tabs={tabs} />,
+                                    )
+                                }
+                            },
+                        ),
+                    )
+                },
+                true,
+            ),
+        )
+    } catch {
+        logger.info('Panel UI patch failed graciously 💔')
+    }
 }

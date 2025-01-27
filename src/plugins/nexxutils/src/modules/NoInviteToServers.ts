@@ -17,6 +17,8 @@ export default new Module({
     icon: getAssetIDByName('UserPlusIcon'),
     handlers: {
         onStart() {
+            if (!UserProfileRow) return
+
             this.patches.add(
                 after('default', UserProfileRow, (args, ret) =>
                     args[0].label === intlProxy.GUILD_INVITE_CTA
