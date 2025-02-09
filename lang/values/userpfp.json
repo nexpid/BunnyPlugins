@@ -5,7 +5,7 @@
   "de": {"toast.patch_error":"UserPFP couldn't patch avatars!","toast.fetch_error":"UserPFP couldn't fetch avatars!"},
   "el": {"toast.patch_error":"UserPFP couldn't patch avatars!","toast.fetch_error":"UserPFP couldn't fetch avatars!"},
   "en": {"toast.patch_error":"UserPFP couldn't patch avatars!","toast.fetch_error":"UserPFP couldn't fetch avatars!"},
-  "es": {"toast.patch_error":"UserPFP couldn't patch avatars!","toast.fetch_error":"UserPFP couldn't fetch avatars!"},
+  "es": {"toast.patch_error":"UserPFP no pudo parchear los avatares!","toast.fetch_error":"UserPFP no pudo obtener avatars!"},
   "es_419": {"toast.patch_error":"UserPFP couldn't patch avatars!","toast.fetch_error":"UserPFP couldn't fetch avatars!"},
   "fi": {"toast.patch_error":"UserPFP couldn't patch avatars!","toast.fetch_error":"UserPFP couldn't fetch avatars!"},
   "fr": {"toast.patch_error":"Le patch des avatars via UserPFP a échoué!","toast.fetch_error":"UserPFP n'a pas pu récupérer les avatars!"},
