@@ -1,7 +1,6 @@
 import { logger, plugin, settings } from '@vendetta'
 import { findByStoreName } from '@vendetta/metro'
 import {
-    i18n,
     NavigationNative,
     React,
     ReactNative as RN,
@@ -22,6 +21,7 @@ import Text from '$/components/Text'
 import { DocumentPicker, Reanimated, RNFileModule } from '$/deps'
 import { Lang } from '$/lang'
 
+import { getLocale } from '$/lib/intlProxy'
 import { initState, lang, vstorage } from '..'
 import { useAuthorizationStore } from '../stores/AuthorizationStore'
 import { useCacheStore } from '../stores/CacheStore'
@@ -182,18 +182,15 @@ export default function () {
                     >
                         {Lang.basicFormat(
                             lang.format('settings.your_data.last_synced', {
-                                date: new Date(at).toLocaleString(
-                                    i18n.getLocale(),
-                                    {
-                                        weekday: 'long',
-                                        year: 'numeric',
-                                        month: 'long',
-                                        day: 'numeric',
-                                        hour: 'numeric',
-                                        minute: 'numeric',
-                                        second: 'numeric',
-                                    },
-                                ),
+                                date: new Date(at).toLocaleString(getLocale(), {
+                                    weekday: 'long',
+                                    year: 'numeric',
+                                    month: 'long',
+                                    day: 'numeric',
+                                    hour: 'numeric',
+                                    minute: 'numeric',
+                                    second: 'numeric',
+                                }),
                             }),
                         )}
                     </Text>

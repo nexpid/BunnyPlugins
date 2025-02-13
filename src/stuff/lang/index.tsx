@@ -1,8 +1,9 @@
 import { findByName } from '@vendetta/metro'
-import { i18n, ReactNative as RN } from '@vendetta/metro/common'
+import { ReactNative as RN } from '@vendetta/metro/common'
 
 import { fluxSubscribe } from '$/types'
 
+import { getLocale } from '$/lib/intlProxy'
 import type LangValues from '../../../lang/defs'
 import { useLangStore } from './LangStore'
 
@@ -32,10 +33,9 @@ export class Lang<Plugin extends keyof LangValues> {
     }
 
     static getLang(): string {
-        const lang = i18n.getLocale()?.replace(/-/g, '_') ?? 'en'
+        const lang = getLocale().replace(/-/g, '_')
 
-        if (lang.startsWith('en_')) return 'en'
-        return lang
+        return lang.startsWith('en') ? 'en' : lang
     }
 
     static basicFormat(text: string): React.ReactNode {

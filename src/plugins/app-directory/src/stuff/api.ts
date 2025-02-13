@@ -1,5 +1,5 @@
+import { getLocale } from '$/lib/intlProxy'
 import { findByProps } from '@vendetta/metro'
-import { i18n } from '@vendetta/metro/common'
 
 const cache = new Map<string, any>()
 
@@ -10,7 +10,7 @@ export interface APICategory {
     name: string
 }
 export async function getAppDirectoryCategories(): Promise<APICategory[]> {
-    const locale = i18n.getLocale()
+    const locale = getLocale()
 
     const cacheKey = `app_directory_categories|${locale}`
     const res =
@@ -123,7 +123,7 @@ export interface APICollection {
 }
 
 export async function getAppDirectoryCollections(): Promise<APICollection[]> {
-    const locale = i18n.getLocale()
+    const locale = getLocale()
 
     const cacheKey = `app_directory_collections|${locale}`
     const res =
@@ -145,7 +145,7 @@ export type APIAppDirectoryApplication = APICollectionApplication & {
 export async function getAppDirectoryApplication(
     appId: string,
 ): Promise<APIAppDirectoryApplication> {
-    const locale = i18n.getLocale()
+    const locale = getLocale()
 
     const cacheKey = `app_directory_application|${appId},${locale}`
     const res =
@@ -178,7 +178,7 @@ export async function searchAppDirectory(
     category: number,
     guildId?: string,
 ): Promise<APIAppDirectorySearch> {
-    const locale = i18n.getLocale()
+    const locale = getLocale()
 
     const cacheKey = `app_directory_search|${query},${page},${category},${guildId},${locale}`
 

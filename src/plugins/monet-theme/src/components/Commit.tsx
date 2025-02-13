@@ -1,4 +1,4 @@
-import { i18n, ReactNative as RN, stylesheet } from '@vendetta/metro/common'
+import { ReactNative as RN, stylesheet } from '@vendetta/metro/common'
 import { useProxy } from '@vendetta/storage'
 import { semanticColors } from '@vendetta/ui'
 import type { PressableProps } from 'react-native'
@@ -7,6 +7,7 @@ import Text from '$/components/Text'
 import { PressableScale, Stack } from '$/lib/redesign'
 import { getDiscordTheme } from '$/types'
 
+import { getLocale } from '$/lib/intlProxy'
 import { vstorage } from '..'
 import {
     conventionalCommitRegex,
@@ -248,7 +249,7 @@ export default function Commit({
                         style={{ marginLeft: 'auto' }}
                     >
                         {new Date(commit.commit.author.date).toLocaleDateString(
-                            i18n.getLocale(),
+                            getLocale(),
                         )}
                     </Text>
                 </RN.View>

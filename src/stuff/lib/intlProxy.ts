@@ -7,6 +7,11 @@ import { i18n } from '@vendetta/metro/common'
 const { intl, t: intlMap } = findByProps('intl') ?? {}
 const { runtimeHashMessageKey } = findByProps('runtimeHashMessageKey') ?? {}
 
+export function getLocale() {
+    const lang = intl?.currentLocale ?? i18n.getLocale?.() ?? 'en'
+    return lang
+}
+
 const isUsingi18n =
     !!i18n.Messages.DISCORD || !intl || !intlMap || !runtimeHashMessageKey
 

@@ -1,5 +1,4 @@
 import {
-    i18n,
     NavigationNative,
     React,
     ReactNative as RN,
@@ -13,6 +12,7 @@ import Text from '$/components/Text'
 import usePromise from '$/hooks/usePromise'
 import { managePage } from '$/lib/ui'
 
+import { getLocale } from '$/lib/intlProxy'
 import {
     type APIAppDirectorySearch,
     type APICollectionApplication,
@@ -32,7 +32,7 @@ export default function AppDirectoryPage({
     guildId?: string
     pushScreen?: any
 }) {
-    const locale = i18n.getLocale()
+    const locale = getLocale()
 
     const [search, setSearch] = React.useState('')
     const [selCategory, setSelCategory] = React.useState<number | undefined>(
