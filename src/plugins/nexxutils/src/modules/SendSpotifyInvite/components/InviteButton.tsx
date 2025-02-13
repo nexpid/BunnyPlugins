@@ -20,7 +20,7 @@ const sendInvite = () => {
     sendMessage(
         channel,
         {
-            content: "",
+            content: '',
             // content: getDraft(channel, 0),
             tts: false,
             invalidEmojis: [],
