@@ -107,8 +107,8 @@ export class Module<Settings extends Record<string, ModuleSetting>> {
     private handlers: {
         onStart: (this: Module<Settings>) => void
         onStop: (this: Module<Settings>) => void
-    };
-    private started = false;
+    }
+    private started = false
 
     patches = new Patches()
 
@@ -121,7 +121,7 @@ export class Module<Settings extends Record<string, ModuleSetting>> {
         settings,
         extra,
         handlers,
-        disabled
+        disabled,
     }: {
         id: string
         label: string
@@ -133,7 +133,7 @@ export class Module<Settings extends Record<string, ModuleSetting>> {
         handlers: {
             onStart: (this: Module<Settings>) => void
             onStop: (this: Module<Settings>) => void
-        },
+        }
         disabled?: boolean
     }) {
         this.id = id
@@ -149,7 +149,7 @@ export class Module<Settings extends Record<string, ModuleSetting>> {
         ) as Settings
         this.extra = extra
         this.handlers = handlers
-        this.disabled = disabled ?? false;
+        this.disabled = disabled ?? false
     }
 
     private callable<Args extends any[]>(
@@ -223,12 +223,14 @@ export class Module<Settings extends Record<string, ModuleSetting>> {
                 action?: () => any
             }[] = []
 
-            if (this.disabled) extra.push({
-                content: "This plugin has been temporarily disabled by nexpid",
-                color: "TEXT_MUTED",
-                icon: "BeakerIcon",
-                iconColor: "TEXT_MUTED"
-            });
+            if (this.disabled)
+                extra.push({
+                    content:
+                        'This plugin has been temporarily disabled by nexpid',
+                    color: 'TEXT_MUTED',
+                    icon: 'BeakerIcon',
+                    iconColor: 'TEXT_MUTED',
+                })
 
             if (this.extra?.credits)
                 extra.push({
@@ -395,7 +397,7 @@ export class Module<Settings extends Record<string, ModuleSetting>> {
                                 <FormSwitchRow
                                     label="Enabled"
                                     onValueChange={() => {
-                                        if (this.disabled) return;
+                                        if (this.disabled) return
                                         this.toggle()
                                         forceUpdate()
                                     }}
@@ -549,13 +551,13 @@ export class Module<Settings extends Record<string, ModuleSetting>> {
         }
     }
     start() {
-        if (this.disabled || this.started) return;
+        if (this.disabled || this.started) return
         try {
-            this.started = true;
+            this.started = true
             this.handlers.onStart.bind(this)()
         } catch (e) {
             this.stop()
-            this.started = false;
+            this.started = false
             const err = e instanceof Error ? e : new Error(String(e))
 
             logger.error(`[${this.label}]: Error on starting!\n${err}`)
@@ -568,13 +570,13 @@ export class Module<Settings extends Record<string, ModuleSetting>> {
         }
     }
     stop() {
-        if (!this.started) return;
+        if (!this.started) return
         try {
-            this.started = false;
+            this.started = false
             this.handlers.onStop.bind(this)()
             this.patches.unpatch()
         } catch (e) {
-            this.started = true;
+            this.started = true
             const err = e instanceof Error ? e : new Error(String(e))
 
             logger.error(`[${this.label}]: Error on stopping!\n${err.stack}`)

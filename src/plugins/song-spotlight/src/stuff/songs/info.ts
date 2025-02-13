@@ -49,7 +49,7 @@ const skeletonSongInfoBase = (() => ({
     label: 'Song Spotlight',
     sublabel: 'John Doe',
     thumbnailUrl: randomCover(),
-})) as () => SongInfoBase;
+})) as () => SongInfoBase
 
 export const skeletonSongInfo = {
     single: (() => ({
@@ -345,7 +345,7 @@ export async function getSongInfo(song: Song): Promise<false | SongInfo> {
     if ((window as any)[infoCacheSymbol].has(hash))
         return (window as any)[infoCacheSymbol].get(hash)!
 
-    const res = await services[song.service](song as any);
+    const res = await services[song.service](song as any)
     if (res && res.type === 'entries') res.entries = res.entries.slice(0, 15)
     ;(window as any)[infoCacheSymbol].set(hash, res)
     return res
