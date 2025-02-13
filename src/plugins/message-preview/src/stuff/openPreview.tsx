@@ -16,7 +16,7 @@ const UploadAttachmentStore = findByStoreName('UploadAttachmentStore')
 
 const { receiveMessage } = findByProps('receiveMessage')
 const { createBotMessage } = findByProps('createBotMessage')
-const { getText } = findByProps('getText')
+const { getDraft } = findByProps('getDraft')
 
 const getAttachments = async (channelId: string) =>
     await Promise.all(
@@ -45,7 +45,7 @@ const getAttachments = async (channelId: string) =>
 
 export default async function openPreview() {
     const channelId = SelectedChannelStore.getChannelId()
-    const content = getText(channelId, 0)
+    const content = getDraft(channelId, 0)
     if (
         content.trim() === '' &&
         !UploadAttachmentStore.getUploads(channelId).length
