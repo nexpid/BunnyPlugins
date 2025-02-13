@@ -50,9 +50,14 @@ export class MobileAudioSound {
     public isLoaded?: boolean
     public isPlaying?: boolean
 
+    /** Discord when it comes to not changing everything every fucking version!!! */
+    private get ensureSoundGetter() {
+        return this.mas?._ensureSound || this.mas?.ensureSound;
+    }
+
     /** Preloads the audio, which automatically makes us better than Discord because they DON'T do that for some reason */
     private async _preloadSound(skip?: boolean) {
-        const { _duration } = await this.mas._ensureSound()
+        const { _duration } = await this.ensureSoundGetter.bind(this.mas)();
         this.duration = RN.Platform.select({
             ios: _duration ? _duration * 1000 : _duration,
             default: _duration,
@@ -83,7 +88,9 @@ export class MobileAudioSound {
                 voice: 'mute',
             }[usage],
             volume,
+            "default"
         )
+        this.mas.volume = volume;
 
         this._preloadSound()
         for (const [key, val] of Object.entries(events ?? {})) this[key] = val
@@ -97,6 +104,7 @@ export class MobileAudioSound {
             await this._preloadSound()
         if (!this.isLoaded) return
 
+        this.mas.volume = this.volume;
         await this.mas.play()
         this.isPlaying = true
         this.onPlay?.()

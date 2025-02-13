@@ -44,25 +44,25 @@ export type SongInfo = SongInfoBase &
 const randomCover = () =>
     `https://cdn.discordapp.com/embed/avatars/${Math.floor(Math.random() * 5) + 1}.png`
 
-const skeletonSongInfoBase = {
+const skeletonSongInfoBase = (() => ({
     service: 'spotify',
     label: 'Song Spotlight',
     sublabel: 'John Doe',
-    thumbnailUrl: 'https://cdn.discordapp.com/embed/avatars/0.png',
-} as SongInfoBase
+    thumbnailUrl: randomCover(),
+})) as () => SongInfoBase;
 
 export const skeletonSongInfo = {
-    single: {
-        ...skeletonSongInfoBase,
+    single: (() => ({
+        ...skeletonSongInfoBase(),
         type: 'single',
         explicit: false,
         duration: 60000,
-    } as SongInfo,
-    entries: {
-        ...skeletonSongInfoBase,
+    })) as () => SongInfo,
+    entries: (() => ({
+        ...skeletonSongInfoBase(),
         type: 'entries',
         entries: [],
-    } as SongInfo,
+    })) as () => SongInfo,
 }
 
 export function soundcloudUrl(_url: string) {
@@ -345,7 +345,7 @@ export async function getSongInfo(song: Song): Promise<false | SongInfo> {
     if ((window as any)[infoCacheSymbol].has(hash))
         return (window as any)[infoCacheSymbol].get(hash)!
 
-    const res = await services[song.service](song as any)
+    const res = await services[song.service](song as any);
     if (res && res.type === 'entries') res.entries = res.entries.slice(0, 15)
     ;(window as any)[infoCacheSymbol].set(hash, res)
     return res

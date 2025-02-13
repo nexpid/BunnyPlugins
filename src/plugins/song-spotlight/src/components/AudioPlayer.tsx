@@ -14,6 +14,9 @@ const coolSep = '\u0001\u0002'
 // Q: ^ what's up with the weird type-service-id${coolSep}previewUrl thing? why not just use the previewUrl directly as a key?
 // A: if we have the same song twice (once itself, second time in a playlist), both play at once. so we use this complicated key system instead to avoid this!!
 
+const spotifyPreviewVolume = 0.25;
+const defaultPreviewVolume = 0.4
+
 export default function AudioPlayer({
     song,
     id,
@@ -90,9 +93,11 @@ export default function AudioPlayer({
         sounds.current = Object.fromEntries(
             songs.map((key, i) => {
                 const url = key.split(coolSep)[1]
+                const [_, service, __] = key.split(coolSep)[0].split("-");
                 return [
                     key,
-                    new MobileAudioSound(url, 'media', 1, {
+                    // spotify previews be so loud
+                    new MobileAudioSound(url, 'media', service === "spotify" ? spotifyPreviewVolume : defaultPreviewVolume, {
                         onLoad(val) {
                             setResolved(res => ({
                                 ...res,
@@ -130,34 +135,30 @@ export default function AudioPlayer({
         [],
     )
 
-    return (
-        <>
-            {children({
-                player: {
-                    get play() {
-                        return audioPlayer.current.play
-                    },
-                    get pause() {
-                        return audioPlayer.current.pause
-                    },
-                    get current() {
-                        return playing.currentlyPlaying &&
-                            songs.find(
-                                key =>
-                                    key.split(coolSep)[1] ===
-                                    playing.currentlyPlaying?.split(coolSep)[1],
-                            )
-                            ? playing.currentlyPlaying.split(coolSep)[1]
-                            : null
-                    },
-                },
-                loaded: Object.entries(resolved)
-                    .filter(([_, res]) => res)
-                    .map(([key]) => key.split(coolSep)[1]),
-                resolved: Object.keys(resolved).map(
-                    key => key.split(coolSep)[1],
-                ),
-            })}
-        </>
-    )
+    return children({
+        player: {
+            get play() {
+                return audioPlayer.current.play
+            },
+            get pause() {
+                return audioPlayer.current.pause
+            },
+            get current() {
+                return playing.currentlyPlaying &&
+                    songs.find(
+                        key =>
+                            key.split(coolSep)[1] ===
+                            playing.currentlyPlaying?.split(coolSep)[1],
+                    )
+                    ? playing.currentlyPlaying.split(coolSep)[1]
+                    : null
+            },
+        },
+        loaded: Object.entries(resolved)
+            .filter(([_, res]) => res)
+            .map(([key]) => key.split(coolSep)[1]),
+        resolved: Object.keys(resolved).map(
+            key => key.split(coolSep)[1],
+        ),
+    });
 }

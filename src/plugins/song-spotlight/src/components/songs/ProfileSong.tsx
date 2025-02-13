@@ -54,7 +54,7 @@ export default function ProfileSong({
     )
     const songInfo =
         _songInfo ||
-        (isEntries ? skeletonSongInfo.entries : skeletonSongInfo.single)
+        (isEntries ? skeletonSongInfo.entries() : skeletonSongInfo.single())
 
     React.useEffect(() => {
         setSongInfo(null)

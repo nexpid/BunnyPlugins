@@ -4,25 +4,29 @@
     "TypeScript": {
       "formatter": "language_server",
       "language_servers": [
-        "biome"
+        "biome",
+        "!typescript-language-server"
       ]
     },
     "TSX": {
       "formatter": "language_server",
       "language_servers": [
-        "biome"
+        "biome",
+        "!typescript-language-server"
       ]
     },
     "JavaScript": {
       "formatter": "language_server",
       "language_servers": [
-        "biome"
+        "biome",
+        "!typescript-language-server"
       ]
     },
     "JSX": {
       "formatter": "language_server",
       "language_servers": [
-        "biome"
+        "biome",
+        "!typescript-language-server"
       ]
     },
     "JSON": {
