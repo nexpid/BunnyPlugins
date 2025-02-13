@@ -6,10 +6,10 @@ import { showConfirmationAlert } from '@vendetta/ui/alerts'
 import { getAssetIDByName } from '@vendetta/ui/assets'
 import { showToast } from '@vendetta/ui/toasts'
 
-import M3Dialog from '../components/modules/BetterComponents/M3Dialog'
-import M3Snackbar from '../components/modules/BetterComponents/M3Snackbar'
-import M3Switch from '../components/modules/BetterComponents/M3Switch'
-import { Module, ModuleCategory } from '../stuff/Module'
+import M3Dialog from './components/M3Dialog'
+import M3Snackbar from './components/M3Snackbar'
+import M3Switch from './components/M3Switch'
+import { Module, ModuleCategory } from '../../stuff/Module'
 
 const { FormSwitch } = find(
     x => typeof x?.FormSwitch === 'function' && !('FormRow' in x),

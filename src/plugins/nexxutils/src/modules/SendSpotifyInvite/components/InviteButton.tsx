@@ -9,7 +9,8 @@ const SpotifyStore = findByStoreName('SpotifyStore')
 const SelectedChannelStore = findByStoreName('SelectedChannelStore')
 
 const { sendMessage } = findByProps('sendMessage', 'revealMessage')
-const { getText, clearText } = findByProps('clearText')
+// const { getDraft } = findByProps('getDraft')
+// const { clearDraft } = findByProps('clearDraft')
 
 const sendInvite = () => {
     const activity = SpotifyStore.getActivity()
@@ -19,7 +20,8 @@ const sendInvite = () => {
     sendMessage(
         channel,
         {
-            content: getText(channel, 0),
+            content: "",
+            // content: getDraft(channel, 0),
             tts: false,
             invalidEmojis: [],
             validNonShortcutEmojis: [],
@@ -33,7 +35,7 @@ const sendInvite = () => {
         },
     )
 
-    clearText(channel, 0)
+    // clearDraft(channel, 0)
 }
 
 export default function InviteButton() {

@@ -3,9 +3,9 @@ import { React } from '@vendetta/metro/common'
 import { after } from '@vendetta/patcher'
 import { getAssetIDByName } from '@vendetta/ui/assets'
 
-import ClassicListenButton from '../components/modules/SpotifyListenAlong/ClassicListenButton'
-import SimplifiedListenButton from '../components/modules/SpotifyListenAlong/SimplifiedListenButton'
-import { Module, ModuleCategory } from '../stuff/Module'
+import ClassicListenButton from './components/ClassicListenButton'
+import SimplifiedListenButton from './components/SimplifiedListenButton'
+import { Module, ModuleCategory } from '../../stuff/Module'
 
 const { SpotifyPlayButton } = findByProps('SpotifyPlayButton')
 const PlayOnSpotifyButton = findByProps('PlayOnSpotifyButton')
