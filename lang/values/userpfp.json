@@ -20,7 +20,7 @@
   "no": {"toast.patch_error":"UserPFP couldn't patch avatars!","toast.fetch_error":"UserPFP couldn't fetch avatars!"},
   "pl": {"toast.patch_error":"UserPFP couldn't patch avatars!","toast.fetch_error":"UserPFP couldn't fetch avatars!"},
   "pt_BR": {"toast.patch_error":"UserPFP couldn't patch avatars!","toast.fetch_error":"UserPFP couldn't fetch avatars!"},
-  "ro": {"toast.patch_error":"UserPFP couldn't patch avatars!","toast.fetch_error":"UserPFP couldn't fetch avatars!"},
+  "ro": {"toast.patch_error":"UserPFP nu a putut da patch la avatar!","toast.fetch_error":"UserPFP nu a putut găsi avatar-ul!"},
   "ru": {"toast.patch_error":"UserPFP ну удалось заменить аватары!","toast.fetch_error":"UserPFP не может загрузить аватары!"},
   "sv": {"toast.patch_error":"UserPFP couldn't patch avatars!","toast.fetch_error":"UserPFP couldn't fetch avatars!"},
   "th": {"toast.patch_error":"UserPFP couldn't patch avatars!","toast.fetch_error":"UserPFP couldn't fetch avatars!"},
