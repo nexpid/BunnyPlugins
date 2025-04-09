@@ -1,6 +1,7 @@
 import { ReactNative as RN, stylesheet } from '@vendetta/metro/common'
 import { useProxy } from '@vendetta/storage'
 import { semanticColors } from '@vendetta/ui'
+import { getAssetIDByName } from '@vendetta/ui/assets'
 import type { PressableProps } from 'react-native'
 
 import Text from '$/components/Text'
@@ -43,7 +44,7 @@ export interface CommitObj {
             email: string
             date: string
         }
-        commiter: {
+        committer: {
             name: string
             email: string
             date: string
@@ -65,8 +66,8 @@ export interface CommitObj {
     url: string
     html_url: string
     comments_url: string
-    author: CommitUser
-    committer: CommitUser
+    author?: CommitUser
+    committer?: CommitUser
     parents: {
         sha: string
         url: string
@@ -230,10 +231,14 @@ export default function Commit({
                 <RN.View style={styles.title}>
                     <RN.Image
                         style={styles.avatar}
-                        source={{
-                            uri: commit.committer.avatar_url,
-                            cache: 'force-cache',
-                        }}
+                        source={
+                            commit.committer
+                                ? {
+                                      uri: commit.committer.avatar_url,
+                                      cache: 'force-cache',
+                                  }
+                                : getAssetIDByName('default_avatar_0')
+                        }
                         resizeMode="cover"
                     />
                     <Text
@@ -241,16 +246,16 @@ export default function Commit({
                         color="TEXT_NORMAL"
                         style={{ transform: [{ translateY: -1 }] }}
                     >
-                        {commit.committer.login}
+                        {commit.commit.committer.name}
                     </Text>
                     <Text
                         variant="text-xs/medium"
                         color="TEXT_MUTED"
                         style={{ marginLeft: 'auto' }}
                     >
-                        {new Date(commit.commit.author.date).toLocaleDateString(
-                            getLocale(),
-                        )}
+                        {new Date(
+                            commit.commit.committer.date,
+                        ).toLocaleDateString(getLocale())}
                     </Text>
                 </RN.View>
                 {title}

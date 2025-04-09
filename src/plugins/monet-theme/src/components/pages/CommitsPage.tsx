@@ -57,25 +57,35 @@ export default function CommitsPage() {
         vstorage.patches.commit,
     )
 
+    const parsedCommits = React.useMemo(
+        () =>
+            commits
+                ? commits.map((commit, i) => ({
+                      commit,
+                      state:
+                          vstorage.patches.commit === commit.sha
+                              ? CommitState.Selected
+                              : i === 0 && !vstorage.patches.commit
+                                ? CommitState.Default
+                                : undefined,
+                  }))
+                : [],
+        [commits, vstorage.patches.commit],
+    )
+
     return (
         <FlashList
             ItemSeparatorComponent={() => <RN.View style={{ height: 12 }} />}
             ListFooterComponent={<RN.View style={{ height: 20 }} />}
             estimatedItemSize={79.54}
-            data={commits ?? []}
+            data={parsedCommits}
             extraData={vstorage.patches.commit}
-            keyExtractor={item => item.sha}
-            renderItem={({ item, index }) => (
+            keyExtractor={item => item.commit.sha}
+            renderItem={({ item: { commit, state } }) => (
                 <Commit
-                    commit={item}
-                    onPress={() => (vstorage.patches.commit = item.sha)}
-                    state={
-                        vstorage.patches.commit === item.sha
-                            ? CommitState.Selected
-                            : index === 0 && !vstorage.patches.commit
-                              ? CommitState.Default
-                              : undefined
-                    }
+                    commit={commit}
+                    onPress={() => (vstorage.patches.commit = commit.sha)}
+                    state={state}
                 />
             )}
             removeClippedSubviews
