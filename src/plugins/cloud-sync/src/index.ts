@@ -19,6 +19,10 @@ const UserStore = findByStoreName("UserStore");
 export const vstorage = storage as {
 	config: {
 		autoSync: boolean;
+		// Set once the user flips the switch by hand. While unset,
+		// auto-sync manages itself: off when there is nothing to back up,
+		// on as soon as real content exists.
+		autoSyncManual?: boolean;
 		addToSettings: boolean;
 		ignoredPlugins: string[];
 	};
@@ -46,19 +50,27 @@ export function canImport(id: string) {
 }
 
 const autoSync = async () => {
-	if (
-		!vstorage.config.autoSync
-		|| !useAuthorizationStore.getState().isAuthorized()
-	) {
+	if (!useAuthorizationStore.getState().isAuthorized()) {
 		return;
 	}
 
 	const cache = useCacheStore.getState();
 	const everything = await grabEverything();
 
-	// only autosync if user has atleast 1 plugin installed, this sorta fixes
-	// the issue of cloud sync autosyncing if the user's plugin save corrupts
-	if (!Object.keys(everything.plugins).length) return;
+	const hasContent = Object.keys(everything.plugins).length > 0
+		|| Object.keys(everything.themes).length > 0
+		|| Object.keys(everything.fonts.installed).length + everything.fonts.custom.length > 0;
+
+	if (!hasContent) {
+		// Nothing to back up (fresh install or wiped state): an empty
+		// state must never be uploaded over a real backup.
+		return;
+	}
+
+	if (!vstorage.config.autoSync && !vstorage.config.autoSyncManual) {
+		// Real content appeared and the user never chose: enable itself.
+		vstorage.config.autoSync = true;
+	}
 
 	if (JSON.stringify(cache.data) !== JSON.stringify(everything)) {
 		// let's double check
@@ -74,16 +86,19 @@ const autoSync = async () => {
 					if (useAuthorizationStore.getState().isAuthorized()) {
 						await saveData(everything);
 					}
-				} catch (e: any) {
-					if (
-						e?.message
-							?.toLowerCase()
-							.includes("request entity too large")
-					) {
-						vstorage.realTrackingAnalyticsSentToChina.tooMuchData = true;
-						vstorage.config.autoSync = false;
+					} catch (e: any) {
+						if (
+							e?.message
+								?.toLowerCase()
+								.includes("request entity too large")
+						) {
+							vstorage.realTrackingAnalyticsSentToChina.tooMuchData = true;
+							vstorage.config.autoSync = false;
+							// Stay off until the user re-enables by hand,
+							// otherwise the next change would retry in a loop.
+							vstorage.config.autoSyncManual = true;
+						}
 					}
-				}
 			});
 		}
 	}

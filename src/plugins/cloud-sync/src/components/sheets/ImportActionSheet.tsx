@@ -1,4 +1,5 @@
 import { settings } from "@vendetta";
+import { findByProps } from "@vendetta/metro";
 import { React, ReactNative as RN, stylesheet } from "@vendetta/metro/common";
 import { plugins } from "@vendetta/plugins";
 import { themes } from "@vendetta/themes";
@@ -10,7 +11,6 @@ import { ActionSheet, hideActionSheet } from "$/components/ActionSheet";
 import Text from "$/components/Text";
 
 import { Button } from "$/lib/redesign";
-import { Forms } from "@vendetta/ui/components";
 import { canImport, isPluginProxied, lang } from "../..";
 import { useCacheStore } from "../../stores/CacheStore";
 import { getFonts, hasFontByName, hasFontBySource } from "../../stuff/fonts";
@@ -18,7 +18,7 @@ import { importData, type SyncImportOptions } from "../../stuff/syncStuff";
 import type { UserData } from "../../types";
 import { openImportLogsPage } from "../pages/ImportLogsPage";
 
-const { FormCheckboxRow } = Forms;
+const { TableCheckboxRow } = findByProps("TableCheckboxRow", "TableRow");
 
 export default function ImportActionSheet({
 	defOptions,
@@ -97,7 +97,7 @@ export default function ImportActionSheet({
 					</Text>
 				</RN.View>
 			)}
-			<FormCheckboxRow
+			<TableCheckboxRow
 				label={lang.format("sheet.import_data.unproxied_plugins", {
 					count: String(has.unproxiedPlugins),
 				})}
@@ -136,9 +136,9 @@ export default function ImportActionSheet({
 							...options,
 							unproxiedPlugins: !options.unproxiedPlugins,
 						}))}
-				selected={options.unproxiedPlugins}
+				checked={options.unproxiedPlugins}
 			/>
-			<FormCheckboxRow
+			<TableCheckboxRow
 				label={lang.format("sheet.import_data.plugins", {
 					count: String(has.plugins),
 				})}
@@ -149,9 +149,9 @@ export default function ImportActionSheet({
 						...options,
 						plugins: !options.plugins,
 					})}
-				selected={options.plugins}
+				checked={options.plugins}
 			/>
-			<FormCheckboxRow
+			<TableCheckboxRow
 				label={lang.format("sheet.import_data.themes", {
 					count: String(has.themes),
 				})}
@@ -162,9 +162,9 @@ export default function ImportActionSheet({
 						...options,
 						themes: !options.themes,
 					})}
-				selected={options.themes}
+				checked={options.themes}
 			/>
-			<FormCheckboxRow
+			<TableCheckboxRow
 				label={lang.format("sheet.import_data.fonts", {
 					count: String(has.fonts),
 				})}
@@ -175,7 +175,7 @@ export default function ImportActionSheet({
 						...options,
 						fonts: !options.fonts,
 					})}
-				selected={options.fonts}
+				checked={options.fonts}
 			/>
 			<Button
 				text={lang.format("sheet.import_data.import", {})}

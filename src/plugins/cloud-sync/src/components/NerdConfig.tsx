@@ -1,13 +1,14 @@
+import { findByProps } from "@vendetta/metro";
 import { React } from "@vendetta/metro/common";
 import { getAssetIDByName } from "@vendetta/ui/assets";
-import { Forms } from "@vendetta/ui/components";
 
 import { BetterTableRowGroup } from "$/components/BetterTableRow";
+import { TextInput } from "$/lib/redesign";
 
 import { lang, vstorage } from "..";
 import constants, { defaultClientId, defaultHost } from "../constants";
 
-const { FormRow, FormInput } = Forms;
+const { TableRow } = findByProps("TableRow", "TableRowGroup");
 
 export default function NerdConfig() {
 	const [host, setHost] = React.useState(constants.api);
@@ -15,12 +16,12 @@ export default function NerdConfig() {
 
 	return (
 		<BetterTableRowGroup nearby>
-			<FormRow
+			<TableRow
 				label={lang.format("settings.dev.api_url.title", {})}
 				subLabel={lang.format("settings.dev.api_url.description", {})}
-				leading={<FormRow.Icon source={getAssetIDByName("PencilIcon")} />}
+				icon={<TableRow.Icon source={getAssetIDByName("PencilIcon")} />}
 			/>
-			<FormInput
+			<TextInput
 				placeholder={defaultHost}
 				value={host}
 				onChange={(x: string) => (
@@ -29,13 +30,12 @@ export default function NerdConfig() {
 				onBlur={() => setHost(constants.api)}
 				style={{ marginTop: -25, marginHorizontal: 12 }}
 			/>
-			<FormRow
+			<TableRow
 				label={lang.format("settings.dev.client_id.title", {})}
 				subLabel={lang.format("settings.dev.client_id.description", {})}
-				leading={<FormRow.Icon source={getAssetIDByName("PencilIcon")} />}
+				icon={<TableRow.Icon source={getAssetIDByName("PencilIcon")} />}
 			/>
-			<FormInput
-				title=""
+			<TextInput
 				placeholder={defaultClientId}
 				value={clientId}
 				onChange={(x: string) => (

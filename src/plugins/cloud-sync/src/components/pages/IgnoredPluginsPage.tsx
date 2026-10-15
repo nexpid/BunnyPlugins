@@ -1,17 +1,30 @@
 import { logger } from "@vendetta";
 import { React, ReactNative as RN } from "@vendetta/metro/common";
 import { plugins } from "@vendetta/plugins";
+import { semanticColors } from "@vendetta/ui";
 import { showConfirmationAlert } from "@vendetta/ui/alerts";
 import { getAssetIDByName } from "@vendetta/ui/assets";
-import { Search } from "@vendetta/ui/components";
 import { showToast } from "@vendetta/ui/toasts";
 
-import { IconButton, RowButton } from "$/lib/redesign";
+import { IconButton, RowButton, TextInput } from "$/lib/redesign";
 import { managePage } from "$/lib/ui";
 import { formatBytes } from "$/types";
 
 import { lang, vstorage } from "../..";
 import { grabEverything } from "../../stuff/syncStuff";
+
+function SearchIcon() {
+	return (
+		<RN.Image
+			style={{
+				width: 16,
+				height: 16,
+				tintColor: semanticColors.INTERACTIVE_ICON_DEFAULT,
+			}}
+			source={getAssetIDByName("icon-search")}
+		/>
+	);
+}
 
 export default function IgnoredPluginsPage() {
 	const [search, setSearch] = React.useState("");
@@ -98,12 +111,22 @@ export default function IgnoredPluginsPage() {
 	return (
 		<RN.FlatList
 			ListHeaderComponent={
-				<Search
-					style={{ marginBottom: 10 }}
-					onChangeText={x => {
-						setSearch(x.toLowerCase());
-					}}
-				/>
+				<RN.View style={{ marginBottom: 10 }}>
+					<TextInput
+						placeholder="Search"
+						value={search}
+						onChange={x => {
+							setSearch(x.toLowerCase());
+						}}
+						leadingIcon={SearchIcon}
+						isClearable
+						size="md"
+						isRound
+						autoCapitalize="none"
+						autoCorrect={false}
+						returnKeyType="search"
+					/>
+				</RN.View>
 			}
 			style={{ paddingHorizontal: 10, paddingTop: 10 }}
 			contentContainerStyle={{ paddingBottom: 20 }}
