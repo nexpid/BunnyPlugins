@@ -1,4 +1,4 @@
-import { findByName, findByProps } from "@vendetta/metro";
+import { findByProps } from "@vendetta/metro";
 import { getAssetIDByName } from "@vendetta/ui/assets";
 import { showToast } from "@vendetta/ui/toasts";
 
@@ -7,8 +7,10 @@ import constants from "../constants";
 import { useAuthorizationStore } from "../stores/AuthorizationStore";
 import { authFetch, getData } from "./api";
 
+const { bunny } = window as any;
+
 const { pushModal, popModal } = findByProps("pushModal", "popModal");
-const OAuth2AuthorizeModal = findByName("OAuth2AuthorizeModal");
+const OAuth2AuthorizeModal = bunny?.metro?.findByFilePath("modules/oauth2/native/OAuth2AuthorizeModal.tsx", true);
 
 export function openOauth2Modal() {
 	pushModal({

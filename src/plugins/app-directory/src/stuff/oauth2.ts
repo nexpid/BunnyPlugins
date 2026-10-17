@@ -1,7 +1,9 @@
-import { findByName, findByProps } from "@vendetta/metro";
+import { findByProps } from "@vendetta/metro";
+
+const { bunny } = window as any;
 
 const { pushModal, popModal } = findByProps("pushModal", "popModal");
-const OAuth2AuthorizeModal = findByName("OAuth2AuthorizeModal");
+const OAuth2AuthorizeModal = bunny?.metro?.findByFilePath("modules/oauth2/native/OAuth2AuthorizeModal.tsx", true);
 
 export function openOauth2Modal(applicationId: string, installParams: any) {
 	pushModal({
