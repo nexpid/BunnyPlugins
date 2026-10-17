@@ -12,7 +12,10 @@ import { authFetch, getData } from "./api";
 const { bunny } = window as any;
 
 const { pushModal, popModal } = findByProps("pushModal", "popModal");
-const OAuth2AuthorizeModal = bunny?.metro?.findByFilePath("modules/oauth2/native/OAuth2AuthorizeModal.tsx", true);
+const OAuth2AuthorizeModal = bunny?.metro?.findByFilePath(
+	"modules/oauth2/native/OAuth2AuthorizeModal.tsx",
+	true,
+);
 
 function identifyClient() {
 	if (GITHUB === "https://github.com/kmmiio99o/ShiggyCord") return "shiggycord";
